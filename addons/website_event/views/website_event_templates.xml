@@ -67,9 +67,9 @@
                                     </t>
                                 </div>
                                 <div>
-                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-field-options='{"hide_seconds":"True"}'> </span>
+                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
                                 </div>
-                                <div itemprop="location" t-field="event.address_id" t-field-options='{
+                                <div itemprop="location" t-field="event.address_id" t-options='{
                                     "widget": "contact",
                                     "fields": ["city"]
                                     }'/>
@@ -241,7 +241,7 @@
             <h1 class="text-center">Event Location</h1>
         </section>
         <h4 class="text-center text-muted"
-            t-field="event.address_id" t-field-options='{
+            t-field="event.address_id" t-options='{
                 "widget": "contact",
                 "fields": ["address", "phone", "mobile", "fax"]
             }'/>
@@ -272,12 +272,12 @@
                 <small t-if="event.is_participating" class="label label-info">Participating</small>
             </div>
             <h4 class="text-center text-muted">
-                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-field-options='{"hide_seconds":"True"}'/> to
-                <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-field-options='{"hide_seconds":"True"}'/>
+                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'/> to
+                <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'/>
                 <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
             </h4>
             <h4 class="text-center text-muted"
-                t-field="event.address_id" t-field-options='{
+                t-field="event.address_id" t-options='{
                 "widget": "contact",
                 "fields": ["city"]
                 }'/>
@@ -320,7 +320,7 @@
                         <t t-raw="comment.body"/>
                         <small class="pull-right muted text-right">
                             <div t-field="comment.author_id"/>
-                            <div t-field="comment.date" t-field-options='{"hide_seconds":"True"}'/>
+                            <div t-field="comment.date" t-options='{"hide_seconds":"True"}'/>
                         </small>
                     </div>
                 </li>
@@ -337,7 +337,7 @@
                     <a t-att-href="event.google_map_link()" target="_BLANK">
                         <img t-att-src="event.google_map_img()" width="100%%"/>
                     </a>
-                    <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-field-options='{
+                    <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
                         "widget": "contact",
                         "fields": ["address", "phone", "mobile", "fax", "email"]
                         }'/>
@@ -349,8 +349,8 @@
                     <h4>When</h4>
                 </div>
                 <div class="panel-body">
-                    <i class="fa fa-clock-o"></i> From <span t-field="event.with_context(tz=event.date_tz).date_begin" t-field-options='{"hide_seconds":"True"}'> </span><br/>
-                    <i class="fa fa-clock-o"></i> To <span t-field="event.with_context(tz=event.date_tz).date_end" t-field-options='{"hide_seconds":"True"}'> </span>
+                    <i class="fa fa-clock-o"></i> From <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span><br/>
+                    <i class="fa fa-clock-o"></i> To <span t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
                 </div>
             </div>
 
@@ -358,7 +358,7 @@
                 <div class="panel-heading">
                     <h4>Organizer</h4>
                 </div>
-                <div class="panel-body" t-field="event.organizer_id" t-field-options='{
+                <div class="panel-body" t-field="event.organizer_id" t-options='{
                     "widget": "contact",
                     "fields": ["name", "phone", "mobile", "fax", "email"]
                     }'/>
@@ -507,7 +507,7 @@
                 <div class="col-md-9 mt16">
                     <h4><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h4>
                     <i class="fa fa-clock-o"/> <span itemprop="startDate" t-esc="event.date_begin_located[:-3]"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located[:-3]"> </span>
-                    <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-field-options='{
+                    <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
                             "widget": "contact",
                             "fields": ["address", "phone", "mobile", "fax", "email"]
                             }'/>

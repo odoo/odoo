@@ -57,7 +57,7 @@
                         </div>
                         <div class="o_my_details">
                             <h3 class="page-header">Your Details <a href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
-                            <div t-field="user.partner_id" t-field-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
+                            <div t-field="user.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
                         </div>
                         <div class="o_my_archives" t-if="archive_groups">
                             <t t-call="website_portal.portal_archive_groups"/>

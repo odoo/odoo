@@ -136,7 +136,7 @@
 
                 <div t-foreach="blog_posts" t-as="blog_post" class="mb32">
                     <t t-if="blog_post.author_avatar">
-                        <span t-field="blog_post.author_avatar" class="o_not_editable" t-field-options='{"widget": "image", "class": "img-circle pull-right mt16 media-object"}' />
+                        <span t-field="blog_post.author_avatar" class="o_not_editable" t-options='{"widget": "image", "class": "img-circle pull-right mt16 media-object"}' />
                     </t>
                     <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }">
                         <h2 t-field="blog_post.name" class="mb4">Untitled Post</h2>
@@ -144,12 +144,12 @@
                     <div class="text-muted">
                             <h4 t-field="blog_post.subtitle" class="mb4 mt4"></h4>
                         <div name='blog_post_data' class='mb0'>
-                            <span t-field="blog_post.author_id" style="display: inline-block;" t-field-options='{
+                            <span t-field="blog_post.author_id" style="display: inline-block;" t-options='{
                                 "widget": "contact",
                                 "fields": ["name"]
                             }'/>
-                            &#5760; <t t-if="blog_post.published_date"><span t-field="blog_post.published_date" t-field-options='{"format": "MMMM yyyy"}'/></t>
-                            <t t-if="not blog_post.published_date"><span t-field="blog_post.create_date" t-field-options='{"format": "MMMM yyyy"}'/></t>
+                            &#5760; <t t-if="blog_post.published_date"><span t-field="blog_post.published_date" t-options='{"format": "MMMM yyyy"}'/></t>
+                            <t t-if="not blog_post.published_date"><span t-field="blog_post.create_date" t-options='{"format": "MMMM yyyy"}'/></t>
                             <span t-if="len(blog_post.message_ids) &gt; 0">
                                 &#5760; <t t-esc="len(blog_post.message_ids)"/>
                                 <t t-if="len(blog_post.message_ids) &lt;= 1" >comment</t>
@@ -211,9 +211,9 @@
                 <p class="post-meta text-muted text-center" name="blog_post_data"/>
                 <div>
                     <t t-if="blog_post.author_avatar">
-                        <span t-field="blog_post.author_avatar" class="o_not_editable" t-field-options='{"widget": "image", "class": "img-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
+                        <span t-field="blog_post.author_avatar" class="o_not_editable" t-options='{"widget": "image", "class": "img-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
                     </t>
-                    <span t-field="blog_post.author_id" style="display: inline-block;" t-field-options='{
+                    <span t-field="blog_post.author_id" style="display: inline-block;" t-options='{
                         "widget": "contact",
                         "fields": ["name"]
                     }'/>
@@ -236,9 +236,9 @@
                 <h2 t-field="next_post.subtitle" placeholder="Subtitle"/>
                 <div>
                     <t t-if="next_post.author_avatar">
-                        <span t-field="next_post.author_avatar" t-field-options='{"widget": "image", "class": "img-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
+                        <span t-field="next_post.author_avatar" t-options='{"widget": "image", "class": "img-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
                     </t>
-                    <span t-field="next_post.author_id" style="display: inline-block;" t-field-options='{
+                    <span t-field="next_post.author_id" style="display: inline-block;" t-options='{
                             "widget": "contact",
                             "fields": ["name"]
                         }'/>

@@ -34,11 +34,11 @@
                         </div>
                         <div class="col-xs-3">
                             <strong>Starting Balance</strong>:<br/>
-                            <span t-field="o.balance_start" t-field-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/>
+                            <span t-field="o.balance_start" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/>
                         </div>
                         <div class="col-xs-3">
                             <strong>Ending Balance</strong>:<br/>
-                            <span t-field="o.balance_end_real" t-field-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/>
+                            <span t-field="o.balance_end_real" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/>
                         </div>
                     </div>
 
@@ -56,7 +56,7 @@
                                 <td><span t-esc="line.partner_id.name"/></td>
                                 <td class="text-right">
                                     <span t-field="line.amount" 
-                                        t-field-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/>
+                                        t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/>
                                 </td>
                             </tr>
                         </tbody>
