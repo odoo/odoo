@@ -184,10 +184,12 @@ class PackOperation(models.Model):
     @api.multi
     def action_split_lots(self):
         action_ctx = dict(self.env.context)
+        # If it's a returned stock move, we do not want to create a lot
+        returned_move = self.linked_move_operation_ids.mapped('move_id').mapped('origin_returned_move_id')
         picking_type = self.picking_id.picking_type_id
         action_ctx.update({
             'serial': self.product_id.tracking == 'serial',
-            'only_create': picking_type.use_create_lots and not picking_type.use_existing_lots,
+            'only_create': picking_type.use_create_lots and not picking_type.use_existing_lots and not returned_move,
             'create_lots': picking_type.use_create_lots,
             'state_done': self.picking_id.state == 'done',
             'show_reserved': any([lot for lot in self.pack_lot_ids if lot.qty_todo > 0.0])})

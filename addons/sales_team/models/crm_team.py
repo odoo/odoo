@@ -15,12 +15,14 @@ class CrmTeam(models.Model):
     def _get_default_team_id(self, user_id=None):
         if not user_id:
             user_id = self.env.uid
-        team_id = self.env['crm.team'].sudo().search(
-            ['|', ('user_id', '=', user_id), ('member_ids', 'in', [user_id])],
-            limit=1)
-        if not team_id and 'default_team_id' in self.env.context:
+        team_id = None
+        if 'default_team_id' in self.env.context:
             team_id = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
-        if not team_id and 'default_team_id' not in self.env.context:
+        if not team_id or not team_id.exists():
+            team_id = self.env['crm.team'].sudo().search(
+                ['|', ('user_id', '=', user_id), ('member_ids', 'in', [user_id])],
+                limit=1)
+        if not team_id:
             default_team_id = self.env.ref('sales_team.team_sales_department', raise_if_not_found=False)
             if default_team_id and (self.env.context.get('default_type') != 'lead' or default_team_id.use_leads):
                 team_id = default_team_id
