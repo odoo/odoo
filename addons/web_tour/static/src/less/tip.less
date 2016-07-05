@@ -4,13 +4,12 @@
 }
 
 .o_tooltip {
-    @o-tip-background-color: lighten(@odoo-brand-primary, 5%);
-    @o-tip-size: 26px;
+    @o-tip-color: lighten(@odoo-brand-primary, 10%);
+    @o-tip-size: 24px;
     @o-tip-border-width: 2px;
-
-    @o-tip-arrow-length: floor(@o-tip-size * 0.5);
-    @o-tip-arrow-width: floor(@o-tip-size * 0.8);
-    @o-tip-arrow-integration: floor(@o-tip-size * 0.1);
+    @o-tip-arrow-length: 10px;
+    @o-tip-arrow-width: 20px;
+    @o-tip-arrow-integration: 2px;
 
     @o-tip-duration-in: 300ms;
     @o-tip-size-duration-in: floor(@o-tip-duration-in * 3 / 4);
@@ -29,8 +28,6 @@
     @o-tip-size-delay-out: floor(@o-tip-duration-out * 0);
     @o-tip-border-radius-duration-out: floor(@o-tip-duration-out * 2 / 3);
     @o-tip-border-radius-delay-out: floor(@o-tip-duration-out / 3);
-    @o-tip-bg-color-duration-out: floor(@o-tip-duration-out * 1);
-    @o-tip-bg-color-delay-out: floor(@o-tip-duration-out * 0);
     @o-tip-arrow-duration-out: floor(@o-tip-duration-out / 2);
     @o-tip-arrow-delay-out: floor(@o-tip-duration-out / 2);
 
@@ -39,19 +36,18 @@
     opacity: 0;
     width: @o-tip-size;
     height: @o-tip-size;
-    border: @o-tip-border-width solid @odoo-brand-primary;
+    border: @o-tip-border-width solid @o-tip-color;
     border-radius: 50%;
     padding: 0; // ! Cannot be changed ! Javascript rely on this.
     z-index: @zindex-modal+1;
-    background-color: @o-tip-background-color;
-    box-shadow: 0 0 2px 0 @odoo-brand-lightsecondary;
+    background-color: @o-tip-color;
+    box-shadow: 0 2px 2px 1px rgba(150, 150, 150, 0.3);
 
     transition:
         width @o-tip-size-duration-out ease @o-tip-size-delay-out,
         height @o-tip-size-duration-out ease @o-tip-size-delay-out,
         margin @o-tip-size-duration-out ease @o-tip-size-delay-out,
-        border-radius @o-tip-border-radius-duration-out ease @o-tip-border-radius-delay-out,
-        background-color @o-tip-bg-color-duration-out ease @o-tip-bg-color-delay-out;
+        border-radius @o-tip-border-radius-duration-out ease @o-tip-border-radius-delay-out;
 
     &.o_animated {
         .o-animation(move-bottom-top, 500ms, ease-in, 0ms, infinite, alternate);
@@ -68,36 +64,31 @@
     &.right::before {
         .o-position-absolute(@left: -@o-tip-arrow-length+@o-tip-arrow-integration, @top: (@o-tip-size - @o-tip-arrow-width) / 2);
         border-width: @o-tip-arrow-width/2 @o-tip-arrow-length @o-tip-arrow-width/2 0;
-        border-right-color: @o-tip-background-color;
+        border-right-color: @o-tip-color;
     }
     &.top::before {
         .o-position-absolute(@bottom: -@o-tip-arrow-length+@o-tip-arrow-integration, @left: (@o-tip-size - @o-tip-arrow-width) / 2);
         border-width: @o-tip-arrow-length @o-tip-arrow-width/2 0 @o-tip-arrow-width/2;
-        border-top-color: @o-tip-background-color;
+        border-top-color: @o-tip-color;
     }
     &.left::before {
         .o-position-absolute(@right: -@o-tip-arrow-length+@o-tip-arrow-integration, @top: (@o-tip-size - @o-tip-arrow-width) / 2);
         border-width: @o-tip-arrow-width/2 0 @o-tip-arrow-width/2 @o-tip-arrow-length;
-        border-left-color: @o-tip-background-color;
+        border-left-color: @o-tip-color;
     }
     &.bottom::before {
         .o-position-absolute(@top: -@o-tip-arrow-length+@o-tip-arrow-integration, @left: (@o-tip-size - @o-tip-arrow-width) / 2);
         border-width: 0 @o-tip-arrow-width/2 @o-tip-arrow-length @o-tip-arrow-width/2;
-        border-bottom-color: @o-tip-background-color;
+        border-bottom-color: @o-tip-color;
     }
 
     &::after {
-        @square-size: @o-tip-size*sqrt(2)/2;
-        @square-pos: (@o-tip-size - @square-size)/2;
-        .o-position-absolute(@square-pos, @square-pos, @square-pos, @square-pos);
-        content: "?";
-        line-height: @square-size;
-        text-align: center;
-        font-size: @square-size;
-        font-weight: 800;
-        border-color: @o-tip-background-color;
-        color: @odoo-brand-lightsecondary;
-        transition: margin @o-tip-size-duration-out ease @o-tip-size-delay-out;
+        content: "";
+        .o-position-absolute(-@o-tip-border-width, -@o-tip-border-width, -@o-tip-border-width, -@o-tip-border-width);
+        border-color: @o-tip-color;
+        border-radius: 50%;
+        transition: margin @o-tip-size-duration-out ease @o-tip-size-delay-out, border-radius @o-tip-duration-out linear 0s;
+        background: radial-gradient(lighten(@o-tip-color, 7%), @o-tip-color);
     }
 
     > .o_tooltip_overlay {
@@ -142,8 +133,8 @@
             transition: all @o-tip-arrow-duration-in ease @o-tip-arrow-delay-in;
         }
         &::after {
-            content: "";
             border: 0 solid rgba(0, 0, 0, 0);
+            border-radius: 0;
         }
 
         > .o_tooltip_overlay {
@@ -157,7 +148,7 @@
         &.right {
             &::before {
                 left: -@o-tip-arrow-length;
-                border-right-color: @odoo-brand-primary;
+                border-right-color: @o-tip-color;
             }
             &::after {
                 .o-position-absolute(@left: -@o-tip-arrow-length+@o-tip-border-width*2, @top: (@o-tip-size - @o-tip-arrow-width) / 2);
@@ -169,7 +160,7 @@
         &.top {
             &::before {
                 bottom: -@o-tip-arrow-length;
-                border-top-color: @odoo-brand-primary;
+                border-top-color: @o-tip-color;
             }
             &::after {
                 .o-position-absolute(@bottom: -@o-tip-arrow-length+@o-tip-border-width*2, @left: (@o-tip-size - @o-tip-arrow-width) / 2);
@@ -181,7 +172,7 @@
         &.left {
             &::before {
                 right: -@o-tip-arrow-length;
-                border-left-color: @odoo-brand-primary;
+                border-left-color: @o-tip-color;
             }
             &::after {
                 .o-position-absolute(@right: -@o-tip-arrow-length+@o-tip-border-width*2, @top: (@o-tip-size - @o-tip-arrow-width) / 2);
@@ -193,7 +184,7 @@
         &.bottom {
             &::before {
                 top: -@o-tip-arrow-length;
-                border-bottom-color: @odoo-brand-primary;
+                border-bottom-color: @o-tip-color;
             }
             &::after {
                 .o-position-absolute(@top: -@o-tip-arrow-length+@o-tip-border-width*2, @left: (@o-tip-size - @o-tip-arrow-width) / 2);
