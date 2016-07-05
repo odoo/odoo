@@ -11,7 +11,7 @@ This module adds project issues inside your account's page on website if project
     """,
     'depends': ['project_issue', 'website_project'],
     'data': [
-        'security/project_issue_security.xml',
+        'security/portal_security.xml',
         'security/ir.model.access.csv',
         'views/project_issue_templates.xml',
     ],
