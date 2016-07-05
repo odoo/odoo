@@ -12,7 +12,6 @@ import urllib2
 import werkzeug.wrappers
 
 import openerp
-from openerp.addons.base.ir.ir_qweb import AssetsBundle
 from openerp.addons.web.controllers.main import WebClient, Binary
 from openerp.addons.web import http
 from openerp.http import request
@@ -345,6 +344,8 @@ class Website(openerp.addons.web.controllers.main.Home):
         """
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         view = pool["ir.ui.view"]
+        qweb = pool["ir.qweb"]
+
         context = dict(request.context or {}, active_test=True)
 
         def set_active(ids, active):
@@ -355,8 +356,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         set_active(enable, True)
 
         if get_bundle:
-            bundle = AssetsBundle('web.assets_frontend', env=request.env(context={}))
-            return bundle.to_html()
+            return qweb._get_asset(cr, uid, 'web.assets_frontend', context)
 
         return True
 
