@@ -115,8 +115,7 @@ odoo.define("website.tour.banner", function (require) {
         });
 
         tour.register("banner", {
-            skip_enabled: true,
-            url: "/page/homepage?debug=assets",
+            url: "/",
         }, [{
             trigger: "a[data-action=edit]",
             content: _t("Every page of your website can be modified through the <b>Edit</b> button."),
@@ -133,14 +132,10 @@ odoo.define("website.tour.banner", function (require) {
             position: "left",
             run: "text",
         }, {
-            trigger: ".oe_snippet_parent",
-            extra_trigger: "#wrapwrap .s_text_block_image_fw h2:not(:containsExact(\"Headline\"))",
-            content: _t("Select the parent container to get the global options of the banner."),
-            position: "left",
-        }, {
             trigger: ".oe_overlay_options .oe_options",
+            extra_trigger: "#wrapwrap .s_text_block_image_fw h2:not(:containsExact(\"Headline\"))",
             content: _t("Customize any block through this menu. Try to change the background of the banner."),
-            position: "right",
+            position: "bottom",
         }, {
             trigger: "#snippet_structure .oe_snippet:eq(6) .oe_snippet_thumbnail",
             content: _t("Drag the \"Features\" block and drop it below the banner."),

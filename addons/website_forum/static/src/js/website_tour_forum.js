@@ -130,16 +130,11 @@ odoo.define("website_forum.tour_forum", function (require) {
         });
 
         tour.register("question", {
-            skip_enabled: true,
-            url: "/forum",
+            url: "/",
         }, [{
-            trigger: "#oe_main_menu_navbar a[data-action=new_page]",
-            content: _t("Use this button to create a new forum like any other document (page, menu, products, event, ...)."),
-            position: "bottom",
-        }, {
             trigger: "a[data-action=new_forum]",
             content: _t("Select this menu item to create a new forum."),
-            position: "left",
+            position: "bottom",
         }, {
             trigger: "#editor_new_forum input[type=text]",
             content: _t("Enter a name for your new forum."),

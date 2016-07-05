@@ -21,7 +21,7 @@
                     <label for="page-name" class="col-sm-3 control-label">
                         <t t-esc="field_name"/>:
                     </label>
-                    <div class="col-sm-9">
+                    <div class="col-sm-8">
                         <input t-if="field_type == 'input'" type="text" class="form-control" required="required"/>
                         <textarea t-if="field_type == 'textarea'" class="form-control" required="required" rows="5"></textarea>
                         <select t-if="field_type == 'select'" class="form-control"></select>
