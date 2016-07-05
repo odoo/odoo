@@ -567,7 +567,8 @@ class AccountInvoice(models.Model):
                 if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
                     val['account_analytic_id'] = line.account_analytic_id.id
 
-                key = str(tax['id']) + '-' + str(val['account_id'])
+                key = self.env['account.tax'].browse(tax['id']).get_grouping_key(val)
+
                 if key not in tax_grouped:
                     tax_grouped[key] = val
                 else:
