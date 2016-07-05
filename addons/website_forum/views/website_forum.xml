@@ -201,12 +201,12 @@
                             </div>
                             <div class="panel-body">
                                 <table class="table">
-                                    <thead><tr><td> Asked: <strong><span t-field="question.create_date" t-field-options='{"format":"short"}'/></strong></td></tr></thead>
+                                    <thead><tr><td> Asked: <strong><span t-field="question.create_date" t-options='{"format":"short"}'/></strong></td></tr></thead>
                                     <tr><td> Seen: <strong><t t-raw="question.views"/></strong>
                                         <span t-if="question.views&gt;1"> times</span>
                                         <span t-if="question.views&lt;=1"> time</span>
                                     </td></tr>
-                                    <tr><td> Last updated: <strong><span t-field="question.write_date" t-field-options='{"format":"short"}'/></strong></td></tr>
+                                    <tr><td> Last updated: <strong><span t-field="question.write_date" t-options='{"format":"short"}'/></strong></td></tr>
                                 </table>
                             </div>
                         </div>
@@ -252,8 +252,8 @@
             <i t-if="question.post_type == 'question'" t-attf-class="fa fa-question-circle" t-att-title="question.post_type.capitalize()" />
             <i t-if="question.post_type == 'discussion'" t-attf-class="fa fa-comments-o" t-att-title="question.post_type.capitalize()" />
             <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" t-att-title="question.post_type.capitalize()" />
-            <span>By </span><span t-field="question.create_uid" t-field-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
-            <span> • </span><span t-field="question.write_date" t-field-options='{"format":"short"}'/>
+            <span>By </span><span t-field="question.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
+            <span> • </span><span t-field="question.write_date" t-options='{"format":"short"}'/>
             <span> • </span><span t-field="question.views" /> View<t t-if="question.views&gt;1">s</t>
             <span> • </span><a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
 
@@ -782,9 +782,9 @@
                     <span>By </span>
                     <a t-att-href="(question.create_uid.id == request.session.uid or question.create_uid.sudo().website_published) and '/forum/%s/user/%s' % (slug(forum), question.create_uid.id) or None"
                         t-field="question.create_uid"
-                        t-field-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'
+                        t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>
-                    <span> on </span><span t-field="question.create_date" t-field-options='{"format":"short"}'/>
+                    <span> on </span><span t-field="question.create_date" t-options='{"format":"short"}'/>
                     <span> • </span><span t-field="question.views"/> views
                 </div>
 
@@ -795,7 +795,7 @@
                     <t t-if="question.closed_uid">
                         <b> by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.closed_uid.id }"
                             t-field="question.closed_uid"
-                            t-field-options='{"widget": "contact", "fields": ["name"]}'
+                            t-options='{"widget": "contact", "fields": ["name"]}'
                             style="display: inline-block;"/></b>
                     </t>
                     <b> on <span t-field="question.closed_date"/></b>
@@ -940,11 +940,11 @@
                 </a>
                 <a t-att-href="user_profile_url"
                     t-field="answer.create_uid"
-                    t-field-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'
+                    t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'
                     style="display: inline-block;"/>
                 <div class="text-muted">
                     <a t-attf-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}#answer_#{answer.id}">On</a>
-                    <span t-field="answer.create_date" t-field-options='{"format":"short"}'/>
+                    <span t-field="answer.create_date" t-options='{"format":"short"}'/>
                 </div>
             </div>
             <div class="clearfix"><span t-field="answer.content" class="oe_no_empty"/></div>
@@ -1028,12 +1028,12 @@
         <div class="o_forum_tooltip_header">
             <h4 class="o_forum_tooltip_heading"><a t-att-href="user_profile_url"
                 t-field="answer.create_uid"
-                t-field-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'
+                t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'
                 style="display: inline-block;"/>
             </h4>
-            <span t-field="answer.create_uid" t-field-options='{"widget": "contact", "UserBio": True, "badges": True, "fields": ["karma"]}'/>
+            <span t-field="answer.create_uid" t-options='{"widget": "contact", "UserBio": True, "badges": True, "fields": ["karma"]}'/>
         </div>
-        <div t-field="answer.create_uid" t-field-options='{"widget": "contact", "website_description": True, "fields": ["partner_id"]}'/>
+        <div t-field="answer.create_uid" t-options='{"widget": "contact", "website_description": True, "fields": ["partner_id"]}'/>
     </div>
 </template>
 
@@ -1065,9 +1065,9 @@
                         </t>
                     </t>
                     <a t-attf-href="/forum/#{slug(forum)}/partner/#{message.author_id.id}"
-                        t-field="message.author_id" t-field-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'
+                        t-field="message.author_id" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>
-                    on <span t-field="message.date" t-field-options='{"format":"short"}'/>
+                    on <span t-field="message.date" t-options='{"format":"short"}'/>
                 </small>
             </div>
             <div class="css_editable_mode_hidden">
@@ -1214,7 +1214,7 @@
                 <div>
                     <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
                     <t t-if="user.country_id">
-                        <span t-field="user.country_id.image" t-field-options='{"widget": "image", "class": "country_flag"}' class='ml4'/>
+                        <span t-field="user.country_id.image" t-options='{"widget": "image", "class": "country_flag"}' class='ml4'/>
                     </t>
                     <b class='ml8'><t t-esc="user.karma"/></b>
                     <t t-raw="separator"/>
@@ -1355,10 +1355,10 @@
                 </tr>
                 <tr>
                     <td>member since</td>
-                    <td><span t-field="user.create_date" t-field-options='{"format": "short"}'/></td>
+                    <td><span t-field="user.create_date" t-options='{"format": "short"}'/></td>
                 </tr><tr>
                     <td>last connection</td>
-                    <td><span t-field="user.login_date" t-field-options='{"format": "short"}'/></td>
+                    <td><span t-field="user.login_date" t-options='{"format": "short"}'/></td>
                 </tr>
                 <tr>
                     <td rowspan="2" valign="top"><span class="text-muted">bio</span></td>
@@ -1374,7 +1374,7 @@
                         <span t-field="user.city"/>
                         <span t-if="user.city and user.country_id">, </span>
                         <span t-field="user.country_id"/>
-                        <t t-if="user.country_id"> <span t-field="user.country_id.image" t-field-options='{"widget": "image", "class": "country_flag"}'/></t>
+                        <t t-if="user.country_id"> <span t-field="user.country_id.image" t-options='{"widget": "image", "class": "country_flag"}'/></t>
 
                     </td>
                 </tr>
@@ -1443,7 +1443,7 @@
             <div class="tab-pane" id="activity" t-if="uid == user.id">
                 <ul class="list-unstyled">
                     <li t-foreach="activities" t-as="activity">
-                        <span t-field="activity.date" t-field-options='{"format": "short"}'/>
+                        <span t-field="activity.date" t-options='{"format": "short"}'/>
                         <span t-esc="activity.subtype_id.name" class="label label-info"/>
                         <t t-set="post" t-value="posts[activity.res_id]"/>
                         <span t-if="post[1]">

@@ -11,18 +11,18 @@
                     <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoicing and shipping address:</strong>
                     <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoicing address:</strong>
                     <div t-field="doc.partner_invoice_id"
-                        t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+                        t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
                     <p t-if="doc.partner_id.vat">VAT: <span t-field="doc.partner_id.vat"/></p>
                     <div t-if="doc.partner_shipping_id != doc.partner_invoice_id" class="mt8">
                         <strong>Shipping address:</strong>
                         <div t-field="doc.partner_shipping_id"
-                            t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+                            t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
                         <p t-if="doc.partner_id.vat">VAT: <span t-field="doc.partner_id.vat"/></p>
                     </div>
                 </div>
                 <div class="col-xs-5 col-xs-offset-1">
                     <div t-field="doc.partner_id"
-                        t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                        t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
                 </div>
             </div>
 
@@ -98,11 +98,11 @@
                                     </td>
                                     <td class="text-right" groups="sale.group_show_price_subtotal">
                                         <span t-field="l.price_subtotal"
-                                            t-field-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                            t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                     </td>
                                     <td class="text-right" groups="sale.group_show_price_total">
                                         <span t-field="l.price_total"
-                                            t-field-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                            t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                     </td>
                                 </tr>
                             </t>
@@ -112,7 +112,7 @@
                                     <td colspan="6">
                                         <strong>Subtotal: </strong>
                                         <t t-set="subtotal" t-value="sum(line.price_subtotal for line in layout_category['lines'])"/>
-                                        <span t-esc="format(subtotal, 'monetary', doc.pricelist_id.currency_id)"/>
+                                        <span t-esc="subtotal" t-options="{'widget': 'monetary', 'display_currency': doc.pricelist_id.currency_id}"/>
                                     </td>
                                 </tr>
                             </t>
@@ -133,7 +133,7 @@
                             <td><strong>Total Without Taxes</strong></td>
                             <td class="text-right">
                                 <span t-field="doc.amount_untaxed"
-                                    t-field-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                    t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                             </td>
                         </tr>
                         <t t-foreach="doc._get_tax_amount_by_group()" t-as="amount_by_group">
@@ -148,7 +148,7 @@
                             <td><strong>Total</strong></td>
                             <td class="text-right">
                                 <span t-field="doc.amount_total"
-                                    t-field-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                    t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                             </td>
                         </tr>
                     </table>

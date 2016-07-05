@@ -2,11 +2,11 @@
 import ast
 from urlparse import urlparse
 from lxml import html
-import math
 
 from .qweb import QWeb, Contextifier
 from .assetsbundle import AssetsBundle
 from lxml import etree
+from collections import OrderedDict
 
 from openerp import api, models, tools
 from openerp.tools import safe_eval
@@ -144,11 +144,41 @@ class IrQWeb(models.AbstractModel, QWeb):
             ))
         ]
 
+    # for backward compatibility to remove after v10
+    def _compile_widget_options(self, el, directive_type):
+        field_options = super(IrQWeb, self)._compile_widget_options(el, directive_type)
+
+        if ('t-%s-options' % directive_type) in el.attrib:
+            if tools.config['dev_mode']:
+                _logger.warning("Use new syntax t-options instead of t-%s-options" % directive_type)
+            if not field_options:
+                field_options = el.attrib.pop('t-%s-options' % directive_type)
+
+        if field_options and 'monetary' in field_options:
+            try:
+                options = "{'widget': 'monetary'"
+                for k, v in json.loads(field_options).iteritems():
+                    print k, v
+                    if k in ('display_currency', 'from_currency'):
+                        options = "%s, '%s': %s" % (options, k, v)
+                    else:
+                        options = "%s, '%s': '%s'" % (options, k, v)
+                options = "%s}" % options
+                field_options = options
+                _logger.warning("Use new syntax for '%s' monetary widget t-options (python dict instead of deprecated JSON syntax)." % etree.tostring(el))
+            except ValueError:
+                pass
+
+        return field_options
+    # end backward
+
     # method called by computing code
 
     @tools.conditional(
+        # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
+        # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async', 'values.get("time_cache_assets")'),
+        tools.ormcache('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async'),
     )
     def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
         files, remains = self._get_asset_content(xmlid, options)
@@ -231,33 +261,30 @@ class IrQWeb(models.AbstractModel, QWeb):
         converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
 
         # get content
-        content = converter.record_to_html(record, field_name, field_options, values)
+        content = converter.record_to_html(record, field_name, field_options)
         attributes = converter.attributes(record, field_name, field_options, values)
 
         return (attributes, content, inherit_branding or translate)
 
-    # formating methods
-    def _format_func_monetary(self, value, display_currency=None, from_currency=None):
-        env = display_currency.env
-        precision = int(round(math.log10(display_currency.rounding)))
-        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
-        lang = env['res.lang']._lang_get(env.context.get('lang', 'en_US'))
-        formatted_amount = lang.format(fmt, value, grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}')
-        pre = post = u''
-        if display_currency.position == 'before':
-            pre = u'{symbol}\N{NO-BREAK SPACE}'
-        else:
-            post = u'\N{NO-BREAK SPACE}{symbol}'
-        return u'{pre}{0}{post}'.format(
-            formatted_amount, pre=pre, post=post
-        ).format(symbol=display_currency.symbol,)
+    def _get_widget(self, value, expression, tagName, field_options, options, values):
+        field_options['type'] = field_options['widget']
+        field_options['tagName'] = tagName
+        field_options['expression'] = expression
 
-    def _format_func_htmlcontact(self, value, options, values=None):
-        return self.pool['ir.qweb.field.contact'].record_to_html(
-            self.env.cr, self.env.uid, dict(contact=value), 'contact', dict(options or {}), context=self.env.context
-        )
+        # field converter
+        model = 'ir.qweb.field.' + field_options['type']
+        converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
+
+        # get content
+        content = converter.value_to_html(value, field_options)
+        attributes = OrderedDict()
+        attributes['data-oe-type'] = field_options['type']
+        attributes['data-oe-expression'] = field_options['expression']
+
+        return (attributes, content, None)
 
     # compile expression add safe_eval
+
     def _compile_expr(self, expr):
         """ Compiles a purported Python expression to ast, verifies that it's safe
         (according to safe_eval's semantics) and alter its variable references to

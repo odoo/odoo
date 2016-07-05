@@ -12,7 +12,7 @@ class LivechatController(http.Controller):
     def livechat_lib(self, ext, **kwargs):
         # _get_asset return the bundle html code (script and link list) but we want to use the attachment content
         xmlid = 'im_livechat.external_lib'
-        files, remains = request.registry["ir.qweb"]._get_asset_content(request.cr, request.uid, xmlid, request.context)
+        files, remains = request.env["ir.qweb"]._get_asset_content(xmlid, options=request.context)
         asset = AssetsBundle(xmlid, files, remains)
 
         mock_attachment = getattr(asset, ext)()

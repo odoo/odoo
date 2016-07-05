@@ -580,7 +580,7 @@
                                                 <t t-call="website.publish_short">
                                                     <t t-set="object" t-value="message"/>
                                                 </t>
-                                                <span t-field="message.author_id" style="display: inline-block;" t-field-options='{"widget": "contact", "fields": ["name"]}'/>
+                                                <span t-field="message.author_id" style="display: inline-block;" t-options='{"widget": "contact", "fields": ["name"]}'/>
                                                 <span class="text-muted">on<span t-field="message.date"/></span>
                                                 <div t-field="message.body" class="discussion_scroll_post"></div>
                                             </div>
