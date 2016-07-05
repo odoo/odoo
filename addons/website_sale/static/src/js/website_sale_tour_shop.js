@@ -116,16 +116,11 @@ odoo.define("website_sale.tour_shop", function (require) {
         });
 
         tour.register("shop", {
-            skip_enabled: true,
-            url: "/shop",
+            url: "/",
         }, [{
-            trigger: "#oe_main_menu_navbar a[data-action=new_page]",
-            content: _t("You successfully installed the e-commerce.<br/>Click here to add a new product."),
-            position: "bottom",
-        }, {
             trigger: "a[data-action=new_product]",
             content: _t("Select <b>New Product</b> to create it and manage its properties to boost your sales."),
-            position: "left",
+            position: "bottom",
         }, {
             trigger: ".modal-dialog #editor_new_product input[type=text]",
             content: _t("Enter a name for your new product"),

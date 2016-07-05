@@ -129,16 +129,11 @@ odoo.define("website_blog.tour", function (require) {
         });
 
         tour.register("blog", {
-            skip_enabled: true,
-            url: "/blog",
+            url: "/",
         }, [{
-            trigger: "#oe_main_menu_navbar a[data-action=new_page]",
-            content: _t("Use this button to create a new blog post like any other document (page, menu, products, event, ...)."),
-            position: "bottom",
-        }, {
             trigger: "a[data-action=new_blog_post]",
             content: _t("Select this menu item to create a new blog post."),
-            position: "left",
+            position: "bottom",
         }, {
             trigger: "h1[data-oe-expression=\"blog_post.name\"]",
             content: _t("Write a title, the subtitle is optional."),
