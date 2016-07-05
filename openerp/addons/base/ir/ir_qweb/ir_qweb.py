@@ -175,8 +175,10 @@ class IrQWeb(models.AbstractModel, QWeb):
     # method called by computing code
 
     @tools.conditional(
+        # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
+        # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async', 'values.get("time_cache_assets")'),
+        tools.ormcache('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async'),
     )
     def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
         files, remains = self._get_asset_content(xmlid, options)
