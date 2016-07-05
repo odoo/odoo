@@ -17,7 +17,6 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
     },
     set_bundle: function(translation_bundle) {
         var self = this;
-        this.db = {};
         this.multi_lang = translation_bundle.multi_lang
         var modules = _.keys(translation_bundle.modules);
         modules.sort();
