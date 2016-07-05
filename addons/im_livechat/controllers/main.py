@@ -10,7 +10,11 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/external_lib.<any(css,js):ext>', type='http', auth='none')
     def livechat_lib(self, ext, **kwargs):
-        asset = AssetsBundle("im_livechat.external_lib")
+        # _get_asset return the bundle html code (script and link list) but we want to use the attachment content
+        xmlid = 'im_livechat.external_lib'
+        files, remains = request.registry["ir.qweb"]._get_asset_content(request.cr, request.uid, xmlid, request.context)
+        asset = AssetsBundle(xmlid, files, remains)
+
         mock_attachment = getattr(asset, ext)()
         if isinstance(mock_attachment, list):  # suppose that CSS asset will not required to be split in pages
             mock_attachment = mock_attachment[0]
