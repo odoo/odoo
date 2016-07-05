@@ -45,11 +45,6 @@ class TestPortalProject(TestPortalProjectBase):
                         'access rights: project user cannot see all tasks of an employees project')
         # Do: Bert reads project -> crash, no group
         self.assertRaises(AccessError, pigs.sudo(self.user_noone).read, ['user_id'])
-        # Do: Chell reads project -> ko (portal ko employee)
-        self.assertRaises(AccessError, pigs.sudo(self.user_portal).read, ['user_id'])
-        # Test: no project task visible + assigned
-        tasks = self.env['project.task'].sudo(self.user_portal).search([('project_id', '=', pigs.id)])
-        self.assertFalse(tasks.ids, 'access rights: portal user should not see tasks of an employees project, even if assigned')
         # Do: Donovan reads project -> ko (public ko employee)
         self.assertRaises(AccessError, pigs.sudo(self.user_public).read, ['user_id'])
         # Do: project user is employee and can create a task
@@ -73,27 +68,14 @@ class TestPortalProject(TestPortalProjectBase):
         # Do: Bert reads project -> crash, no group
         self.assertRaises(AccessError, pigs.sudo(self.user_noone).read, ['user_id'])
 
-        # Do: Chell reads project -> ko (portal ko employee)
-        self.assertRaises(AccessError, pigs.sudo(self.user_portal).read, ['user_id'])
-        # Test: no project task visible
-        tasks = self.env['project.task'].sudo(self.user_portal).search([('project_id', '=', pigs.id)])
-        self.assertEqual(tasks, self.task_3,
-                         'access rights: portal user should not see tasks of a not-followed followers project, only assigned')
-
         # Do: Donovan reads project -> ko (public ko employee)
         self.assertRaises(AccessError, pigs.sudo(self.user_public).read, ['user_id'])
-
-        # Data: subscribe Alfred, Chell and Donovan as follower
-        pigs.message_subscribe_users(user_ids=[self.user_projectuser.id, self.user_portal.id, self.user_public.id])
-        self.task_1.sudo(self.user_projectmanager).message_subscribe_users(user_ids=[self.user_portal.id, self.user_projectuser.id])
-        self.task_3.sudo(self.user_projectmanager).message_subscribe_users(user_ids=[self.user_portal.id, self.user_projectuser.id])
 
         # Do: Alfred reads project -> ok (follower ok followers)
         prout = pigs.sudo(self.user_projectuser)
         prout.invalidate_cache()
         prout.read(['user_id'])
-        # Do: Chell reads project -> ok (follower ok follower)
-        pigs.sudo(self.user_portal).read(['user_id'])
+
         # Do: Donovan reads project -> ko (public ko follower even if follower)
         self.assertRaises(AccessError, pigs.sudo(self.user_public).read, ['user_id'])
         # Do: project user is follower of the project and can create a task
