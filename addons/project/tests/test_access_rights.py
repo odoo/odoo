@@ -71,6 +71,8 @@ class TestPortalProject(TestPortalProjectBase):
         # Do: Donovan reads project -> ko (public ko employee)
         self.assertRaises(AccessError, pigs.sudo(self.user_public).read, ['user_id'])
 
+        pigs.message_subscribe_users(user_ids=[self.user_projectuser.id])
+
         # Do: Alfred reads project -> ok (follower ok followers)
         prout = pigs.sudo(self.user_projectuser)
         prout.invalidate_cache()
