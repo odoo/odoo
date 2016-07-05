@@ -20,10 +20,8 @@
 
 <template id="registration_template" inherit_id="website_event.registration_template">
     <xpath expr="//thead/tr/th[contains(@class, 'o_th_price')]" position="after">
-        <t t-set='show_left_place' t-value="any([ticket for ticket in event.event_ticket_ids if (ticket.seats_max and ((ticket.seats_reserved or 0)*100 / ticket.seats_max)&gt;75)])"/>
-        <th t-if="show_left_place">
-            <span class='th_left_place'></span>
-        </th>
+        <t t-set='show_tickets_left' t-value="any([ticket for ticket in event.event_ticket_ids if (ticket.seats_max and ((ticket.seats_reserved or 0)*100 / ticket.seats_max)&gt;75)])"/>
+        <th t-if="show_tickets_left"></th>
     </xpath>
     <xpath expr="//tbody" position="replace">
         <tbody>
@@ -61,7 +59,7 @@
                             <span>Free</span>
                         </t>
                     </td>
-                    <td t-if="show_left_place">
+                    <td t-if="show_tickets_left">
                         <span t-if="ticket.seats_max and ((ticket.seats_reserved or 0)*100 / ticket.seats_max)&gt;75" class="text-muted">
                             <t t-esc="ticket.seats_max - ticket.seats_reserved"/> <span>left</span>
                         </span>
