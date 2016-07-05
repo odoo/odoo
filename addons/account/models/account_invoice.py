@@ -678,9 +678,8 @@ class AccountInvoice(models.Model):
                 tax = tax_line.tax_id
                 if tax.amount_type == "group":
                     for child_tax in tax.children_tax_ids:
-                        done_taxes.append(tax.id)
-                else:
-                    done_taxes.append(tax.id)
+                        done_taxes.append(child_tax.id)
+                done_taxes.append(tax.id)
                 res.append({
                     'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
