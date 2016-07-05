@@ -32,6 +32,7 @@ class PurchaseConfigSettings(models.TransientModel):
     module_stock_dropshipping = fields.Boolean("Dropshipping")
     group_manage_vendor_price = fields.Boolean("Vendor Pricelists",
         implied_group="purchase.group_manage_vendor_price")
+    module_account_3way_match = fields.Boolean("3-way matching: purchases, receptions and bills")
     module_sale = fields.Boolean("Sales")
     module_mrp = fields.Boolean("Manufacturing")
     is_installed_sale = fields.Boolean()
