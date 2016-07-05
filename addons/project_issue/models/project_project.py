@@ -19,8 +19,10 @@ class Project(models.Model):
         res.append(("project.issue", "Issues"))
         return res
 
+    @api.multi
     def _compute_issue_count(self):
-        self.issue_count = self.env['project.issue'].search_count([('project_id', '=', self.id), '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)])
+        for project in self:
+            project.issue_count = self.env['project.issue'].search_count([('project_id', '=', project.id), '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)])
 
     def _issue_needaction_count(self):
         issue_data = self.env['project.issue'].read_group([('project_id', 'in', self.ids), ('message_needaction', '=', True)], ['project_id'], ['project_id'])

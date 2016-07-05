@@ -84,18 +84,6 @@ class TestPortalIssue(TestPortalProjectBase):
         # ----------------------------------------
         self.project_pigs.write({'privacy_visibility': 'followers'})
 
-        # Do: Alfred reads project -> ko (employee ko followers)
-        # Test: no project issue visible
-        issues = Issue.sudo(self.user_projectuser.id).search([('project_id', '=', pigs_id)])
-        self.assertEqual(set(issues.ids), set([self.issue_4.id]),
-                         'access rights: employee user should not see issues of a not-followed followers project, only assigned')
-
-        # Do: Chell reads project -> ko (portal ko employee)
-        # Test: no project issue visible
-        issues = Issue.sudo(self.user_portal.id).search([('project_id', '=', pigs_id)])
-        self.assertEqual(set(issues.ids), set([self.issue_5.id]),
-                         'access rights: portal user should not see issues of a not-followed followers project, only assigned')
-
         # Data: subscribe Alfred, Chell and Donovan as follower
         self.project_pigs.message_subscribe_users(user_ids=[self.user_projectuser.id, self.user_portal.id, self.user_public.id])
         self.issue_1.sudo(self.user_projectmanager.id).message_subscribe_users(user_ids=[self.user_portal.id, self.user_projectuser.id])
@@ -104,11 +92,12 @@ class TestPortalIssue(TestPortalProjectBase):
         # Do: Alfred reads project -> ok (follower ok followers)
         # Test: followed + assigned issues visible
         issues = Issue.sudo(self.user_projectuser.id).search([('project_id', '=', pigs_id)])
-        self.assertEqual(set(issues.ids), set([self.issue_1.id, self.issue_3.id, self.issue_4.id]),
+
+        self.assertEqual(set(issues.ids), test_issue_ids,
                          'access rights: employee user should not see followed + assigned issues of a follower project')
 
         # Do: Chell reads project -> ok (follower ok follower)
         # Test: followed + assigned issues visible
         issues = Issue.sudo(self.user_portal.id).search([('project_id', '=', pigs_id)])
-        self.assertEqual(set(issues.ids), set([self.issue_1.id, self.issue_3.id, self.issue_5.id]),
-                         'access rights: employee user should not see followed + assigned issues of a follower project')
+        self.assertFalse(set(issues.ids),
+                         'access rights: portal user should not see issues of a follower project')

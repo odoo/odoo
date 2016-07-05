@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="issues_followup_sheet" inherit_id="website_project_issue.issues_followup" name="Project Issues Timesheets">
+
+    <template id="tasks_followup" inherit_id="website_project.tasks_followup" name="Project Task Timesheets">
         <xpath expr="//div[@class='panel-body']" position="inside">
-            <t t-if="issue.timesheet_ids">
+            <div class="container" t-if="task.timesheet_ids">
                 <hr/>
-                <table class="table table-hover o_my_status_table">
+                <table class="table table-hover">
                     <thead>
                       <tr class="active">
                         <th>Date</th>
-                        <th>Description</th>
+                        <th class="col-md-6">Description</th>
                         <th>Responsible</th>
                         <th>Duration</th>
                       </tr>
                     </thead>
-                    <tr t-foreach="issue.timesheet_ids" t-as="timesheet">
-                        <td><span t-esc="timesheet.date"/></td>
-                        <td><span t-esc="timesheet.name"/></td>
-                        <td><span t-esc="timesheet.sudo().user_id.name"/></td>
+                    <tr t-foreach="task.timesheet_ids" t-as="timesheet">
+                        <td><t t-esc="timesheet.date"/></td>
+                        <td><t t-esc="timesheet.name"/></td>
+                        <td><t t-esc="timesheet.sudo().user_id.name"/></td>
                         <td><span t-field="timesheet.unit_amount" t-field-options='{"widget": "duration", "unit": "hour"}'/></td>
                     </tr>
                 </table>
-            </t>
+            </div>
         </xpath>
     </template>
 </odoo>
