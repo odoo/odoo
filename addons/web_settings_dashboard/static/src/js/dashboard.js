@@ -82,7 +82,7 @@ var DashboardInvitations = Widget.extend({
         var user_emails =  _.filter($(e.delegateTarget).find('#user_emails').val().split(/[\n, ]/), function(email){
             return email !== "";
         });
-        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,63}(?:\.[a-z]{2})?)$/i;
         var is_valid_emails = _.every(user_emails, function(email) {
             return re.test(email);
         });
