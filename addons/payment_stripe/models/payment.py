@@ -19,18 +19,14 @@ STRIPE_HEADERS = {'Stripe-Version': '2016-03-07'}
 class PaymentAcquirerStripe(models.Model):
     _inherit = 'payment.acquirer'
 
+    provider = fields.Selection(selection_add=[('stripe', 'Stripe')])
     stripe_secret_key = fields.Char(required_if_provider='stripe')
     stripe_publishable_key = fields.Char(required_if_provider='stripe')
-    stripe_image_url = fields.Char("Checkout Image URL",
+    stripe_image_url = fields.Char(
+        "Checkout Image URL",
         help="A relative or absolute URL pointing to a square image of your "
              "brand or product. As defined in your Stripe profile. See: "
              "https://stripe.com/docs/checkout")
-
-    @api.model
-    def _get_providers(self):
-        providers = super(PaymentAcquirerStripe, self)._get_providers()
-        providers.append(['stripe', 'Stripe'])
-        return providers
 
     @api.multi
     def stripe_form_generate_values(self, tx_values):
