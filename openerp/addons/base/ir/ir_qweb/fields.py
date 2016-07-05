@@ -91,8 +91,8 @@ class FieldConverter(models.AbstractModel):
         return html_escape(unicodifier(value) or u'', options)
 
     @api.model
-    def record_to_html(self, record, field_name, options, values=None):
-        """ record_to_html(record, field_name, options, values)
+    def record_to_html(self, record, field_name, options):
+        """ record_to_html(record, field_name, options)
 
         Converts the specified field of the browse_record ``record`` to HTML
         :rtype: unicode
@@ -149,11 +149,11 @@ class FloatConverter(models.AbstractModel):
         return unicodifier(formatted)
 
     @api.model
-    def record_to_html(self, record, field_name, options, values=None):
+    def record_to_html(self, record, field_name, options):
         if 'precision' not in options and 'decimal_precision' not in options:
             _, precision = record._fields[field_name].digits or (None, None)
             options = dict(options, precision=precision)
-        return super(FloatConverter, self).record_to_html(record, field_name, options, values=values)
+        return super(FloatConverter, self).record_to_html(record, field_name, options)
 
 
 class DateConverter(models.AbstractModel):
@@ -230,10 +230,10 @@ class SelectionConverter(models.AbstractModel):
         return html_escape(unicodifier(options['selection'][value]) or u'', options)
 
     @api.model
-    def record_to_html(self, record, field_name, options, values=None):
+    def record_to_html(self, record, field_name, options):
         if 'selection' not in options:
             options = dict(options, selection=dict(record._fields[field_name].get_description(self.env)['selection']))
-        return super(SelectionConverter, self).record_to_html(record, field_name, options, values=values)
+        return super(SelectionConverter, self).record_to_html(record, field_name, options)
 
 
 class ManyToOneConverter(models.AbstractModel):
@@ -328,7 +328,7 @@ class MonetaryConverter(models.AbstractModel):
         return u'{pre}<span class="oe_currency_value">{0}</span>{post}'.format(formatted_amount, pre=pre, post=post)
 
     @api.model
-    def record_to_html(self, record, field_name, options, values=None):
+    def record_to_html(self, record, field_name, options):
         options = dict(options)
         #currency should be specified by monetary field
         field = record._fields[field_name]
@@ -406,10 +406,10 @@ class RelativeDatetimeConverter(models.AbstractModel):
         return unicodifier(babel.dates.format_timedelta(value - reference, add_direction=True, locale=locale))
 
     @api.model
-    def record_to_html(self, record, field_name, options, values=None):
+    def record_to_html(self, record, field_name, options):
         if 'now' not in options:
             options = dict(options, now=record._fields[field_name].now())
-        return super(RelativeDatetimeConverter, self).record_to_html(record, field_name, options, values=values)
+        return super(RelativeDatetimeConverter, self).record_to_html(record, field_name, options)
 
 
 class Contact(models.AbstractModel):
@@ -447,7 +447,7 @@ class QwebView(models.AbstractModel):
     _inherit = 'ir.qweb.field.many2one'
 
     @api.model
-    def record_to_html(self, record, field_name, options, values=None):
+    def record_to_html(self, record, field_name, options):
         if not getattr(record, field_name):
             return None
 

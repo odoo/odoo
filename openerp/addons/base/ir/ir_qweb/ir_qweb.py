@@ -259,7 +259,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
 
         # get content
-        content = converter.record_to_html(record, field_name, field_options, values=values)
+        content = converter.record_to_html(record, field_name, field_options)
         attributes = converter.attributes(record, field_name, field_options, values)
 
         return (attributes, content, inherit_branding or translate)
