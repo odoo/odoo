@@ -19,7 +19,7 @@ class TransferPaymentAcquirer(osv.Model):
         providers.append(['transfer', _('Wire Transfer')])
         return providers
 
-    def transfer_get_form_action_url(self, cr, uid, id, context=None):
+    def transfer_get_form_action_url(self, cr, uid, ids, context=None):
         return '/payment/transfer/feedback'
 
     def _format_transfer_data(self, cr, uid, context=None):
@@ -71,7 +71,8 @@ class TransferPaymentTransaction(osv.Model):
 
         return self.browse(cr, uid, tx_ids[0], context=context)
 
-    def _transfer_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
+    def _transfer_form_get_invalid_parameters(self, cr, uid, ids, data, context=None):
+        tx = self.browse(cr, uid, ids, context=context)[0]
         invalid_parameters = []
 
         if float_compare(float(data.get('amount', '0.0')), tx.amount, 2) != 0:
@@ -81,6 +82,7 @@ class TransferPaymentTransaction(osv.Model):
 
         return invalid_parameters
 
-    def _transfer_form_validate(self, cr, uid, tx, data, context=None):
+    def _transfer_form_validate(self, cr, uid, ids, data, context=None):
+        tx = self.browse(cr, uid, ids, context=context)[0]
         _logger.info('Validated transfer payment for tx %s: set as pending' % (tx.reference))
         return tx.write({'state': 'pending'})

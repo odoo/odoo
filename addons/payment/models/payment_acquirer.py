@@ -154,14 +154,14 @@ class PaymentAcquirer(osv.Model):
         image_resize_images(vals)
         return super(PaymentAcquirer, self).write(vals)
 
-    def get_form_action_url(self, cr, uid, id, context=None):
+    def get_form_action_url(self, cr, uid, ids, context=None):
         """ Returns the form action URL, for form-based acquirer implementations. """
-        acquirer = self.browse(cr, uid, id, context=context)
+        acquirer = self.browse(cr, uid, ids, context=context)[0]
         if hasattr(self, '%s_get_form_action_url' % acquirer.provider):
             return getattr(self, '%s_get_form_action_url' % acquirer.provider)(cr, uid, id, context=context)
         return False
 
-    def render(self, cr, uid, id, reference, amount, currency_id, partner_id=False, values=None, context=None):
+    def render(self, cr, uid, ids, reference, amount, currency_id, partner_id=False, values=None, context=None):
         """ Renders the form template of the given acquirer as a qWeb template.
         :param string reference: the transaction reference
         :param float amount: the amount the buyer has to pay
@@ -191,7 +191,7 @@ class PaymentAcquirer(osv.Model):
             context = {}
         if values is None:
             values = {}
-        acquirer = self.browse(cr, uid, id, context=context)
+        acquirer = self.browse(cr, uid, ids, context=context)[0]
 
         # reference and amount
         values.setdefault('reference', reference)
@@ -288,8 +288,8 @@ class PaymentAcquirer(osv.Model):
 
         return acquirer.view_template_id.render(values, engine='ir.qweb')
 
-    def _registration_render(self, cr, uid, id, partner_id, qweb_context=None, context=None):
-        acquirer = self.browse(cr, uid, id, context=context)
+    def _registration_render(self, cr, uid, ids, partner_id, qweb_context=None, context=None):
+        acquirer = self.browse(cr, uid, ids, context=context)[0]
         if qweb_context is None:
             qweb_context = {}
         qweb_context.update(id=id, partner_id=partner_id)
@@ -299,8 +299,8 @@ class PaymentAcquirer(osv.Model):
             qweb_context.update(method(cr, uid, id, qweb_context, context=context))
         return acquirer.registration_view_template_id.render(qweb_context, engine='ir.qweb')
 
-    def s2s_process(self, cr, uid, id, data, context=None):
-        acquirer = self.browse(cr, uid, id, context=context)
+    def s2s_process(self, cr, uid, ids, data, context=None):
+        acquirer = self.browse(cr, uid, ids, context=context)[0]
         cust_method_name = '%s_s2s_form_process' % (acquirer.provider)
         if not self.s2s_validate(cr, uid, id, data, context=context):
             return False
@@ -309,8 +309,8 @@ class PaymentAcquirer(osv.Model):
             return method(cr, uid, data, context=context)
         return True
 
-    def s2s_validate(self, cr, uid, id, data, context=None):
-        acquirer = self.browse(cr, uid, id, context=context)
+    def s2s_validate(self, cr, uid, ids, data, context=None):
+        acquirer = self.browse(cr, uid, ids, context=context)[0]
         cust_method_name = '%s_s2s_form_validate' % (acquirer.provider)
         if hasattr(self, cust_method_name):
             method = getattr(self, cust_method_name)
@@ -517,8 +517,8 @@ class PaymentTransaction(osv.Model):
     # FORM RELATED METHODS
     # --------------------------------------------------
 
-    def render(self, cr, uid, id, context=None):
-        tx = self.browse(cr, uid, id, context=context)
+    def render(self, cr, uid, ids, context=None):
+        tx = self.browse(cr, uid, ids, context=context)[0]
         values = {
             'reference': tx.reference,
             'amount': tx.amount,
@@ -547,7 +547,7 @@ class PaymentTransaction(osv.Model):
 
         invalid_param_method_name = '_%s_form_get_invalid_parameters' % acquirer_name
         if hasattr(self, invalid_param_method_name):
-            invalid_parameters = getattr(self, invalid_param_method_name)(cr, uid, tx, data, context=context)
+            invalid_parameters = getattr(self, invalid_param_method_name)(cr, uid, [tx.id], data, context=context)
 
         if invalid_parameters:
             _error_message = '%s: incorrect tx data:\n' % (acquirer_name)
@@ -558,7 +558,7 @@ class PaymentTransaction(osv.Model):
 
         feedback_method_name = '_%s_form_validate' % acquirer_name
         if hasattr(self, feedback_method_name):
-            return getattr(self, feedback_method_name)(cr, uid, tx, data, context=context)
+            return getattr(self, feedback_method_name)(cr, uid, [tx.id], data, context=context)
 
         return True
 
@@ -570,19 +570,19 @@ class PaymentTransaction(osv.Model):
         self.s2s_feedback(cr, uid, tx_id, tx_result, context=context)
         return tx_id
 
-    def s2s_do_transaction(self, cr, uid, id, context=None, **kwargs):
-        tx = self.browse(cr, uid, id, context=context)
+    def s2s_do_transaction(self, cr, uid, ids, context=None, **kwargs):
+        tx = self.browse(cr, uid, ids, context=context)[0]
         custom_method_name = '%s_s2s_do_transaction' % tx.acquirer_id.provider
         if hasattr(self, custom_method_name):
-            return getattr(self, custom_method_name)(cr, uid, id, context=context, **kwargs)
+            return getattr(self, custom_method_name)(cr, uid, ids, context=context, **kwargs)
 
-    def s2s_get_tx_status(self, cr, uid, tx_id, context=None):
+    def s2s_get_tx_status(self, cr, uid, ids, context=None):
         """ Get the tx status. """
-        tx = self.browse(cr, uid, tx_id, context=context)
+        tx = self.browse(cr, uid, ids, context=context)[0]
 
         invalid_param_method_name = '_%s_s2s_get_tx_status' % tx.acquirer_id.provider
         if hasattr(self, invalid_param_method_name):
-            return getattr(self, invalid_param_method_name)(cr, uid, tx, context=context)
+            return getattr(self, invalid_param_method_name)(cr, uid, ids, context=context)
 
         return True
 

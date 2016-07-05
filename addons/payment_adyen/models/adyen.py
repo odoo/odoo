@@ -119,9 +119,9 @@ class AcquirerAdyen(osv.Model):
         key = acquirer.adyen_skin_hmac_key.encode('ascii')
         return base64.b64encode(hmac.new(key, sign, hashlib.sha1).digest())
 
-    def adyen_form_generate_values(self, cr, uid, id, values, context=None):
+    def adyen_form_generate_values(self, cr, uid, ids, values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
-        acquirer = self.browse(cr, uid, id, context=context)
+        acquirer = self.browse(cr, uid, ids, context=context)[0]
         # tmp
         import datetime
         from dateutil import relativedelta
@@ -163,8 +163,8 @@ class AcquirerAdyen(osv.Model):
 
         return values
 
-    def adyen_get_form_action_url(self, cr, uid, id, context=None):
-        acquirer = self.browse(cr, uid, id, context=context)
+    def adyen_get_form_action_url(self, cr, uid, ids, context=None):
+        acquirer = self.browse(cr, uid, ids, context=context)[0]
         return self._get_adyen_urls(cr, uid, acquirer.environment, context=context)['adyen_form_url']
 
 
@@ -206,7 +206,8 @@ class TxAdyen(osv.Model):
 
         return tx
 
-    def _adyen_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
+    def _adyen_form_get_invalid_parameters(self, cr, uid, ids, data, context=None):
+        tx = self.browse(cr, uid, ids, context=context)[0]
         invalid_parameters = []
 
         # reference at acquirer: pspReference
@@ -221,7 +222,8 @@ class TxAdyen(osv.Model):
 
         return invalid_parameters
 
-    def _adyen_form_validate(self, cr, uid, tx, data, context=None):
+    def _adyen_form_validate(self, cr, uid, ids, data, context=None):
+        tx = self.browse(cr, uid, ids, context=context)[0]
         status = data.get('authResult', 'PENDING')
         if status == 'AUTHORISED':
             tx.write({

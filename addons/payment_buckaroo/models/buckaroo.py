@@ -90,10 +90,9 @@ class AcquirerBuckaroo(osv.Model):
         shasign = sha1(sign.encode('utf-8')).hexdigest()
         return shasign
 
-
-    def buckaroo_form_generate_values(self, cr, uid, id, values, context=None):
+    def buckaroo_form_generate_values(self, cr, uid, ids, values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
-        acquirer = self.browse(cr, uid, id, context=context)
+        acquirer = self.browse(cr, uid, ids, context=context)[0]
         buckaroo_tx_values = dict(values)
         buckaroo_tx_values.update({
             'Brq_websitekey': acquirer.brq_websitekey,
@@ -111,8 +110,8 @@ class AcquirerBuckaroo(osv.Model):
         buckaroo_tx_values['Brq_signature'] = self._buckaroo_generate_digital_sign(acquirer, 'in', buckaroo_tx_values)
         return buckaroo_tx_values
 
-    def buckaroo_get_form_action_url(self, cr, uid, id, context=None):
-        acquirer = self.browse(cr, uid, id, context=context)
+    def buckaroo_get_form_action_url(self, cr, uid, ids, context=None):
+        acquirer = self.browse(cr, uid, ids, context=context)[0]
         return self._get_buckaroo_urls(cr, uid, acquirer.environment, context=context)['buckaroo_form_url']
 
 class TxBuckaroo(osv.Model):
@@ -161,7 +160,8 @@ class TxBuckaroo(osv.Model):
 
         return tx 
 
-    def _buckaroo_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
+    def _buckaroo_form_get_invalid_parameters(self, cr, uid, ids, data, context=None):
+        tx = self.browse(cr, uid, ids, context=context)[0]
         invalid_parameters = []
         data = normalize_keys_upper(data)
         if tx.acquirer_reference and data.get('BRQ_TRANSACTIONS') != tx.acquirer_reference:
@@ -174,7 +174,8 @@ class TxBuckaroo(osv.Model):
 
         return invalid_parameters
 
-    def _buckaroo_form_validate(self, cr, uid, tx, data, context=None):
+    def _buckaroo_form_validate(self, cr, uid, ids, data, context=None):
+        tx = self.browse(cr, uid, ids, context=context)[0]
         data = normalize_keys_upper(data)
         status_code = int(data.get('BRQ_STATUSCODE','0'))
         if status_code in self._buckaroo_valid_tx_status:

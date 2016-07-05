@@ -122,37 +122,37 @@ class TxAuthorize(models.Model):
             raise ValidationError(error_msg)
         return tx[0]
 
-    @api.model
-    def _authorize_form_get_invalid_parameters(self, tx, data):
+    @api.multi
+    def _authorize_form_get_invalid_parameters(self, data):
         invalid_parameters = []
 
         if self.acquirer_reference and data.get('x_trans_id') != self.acquirer_reference:
             invalid_parameters.append(('Transaction Id', data.get('x_trans_id'), self.acquirer_reference))
         # check what is buyed
-        if float_compare(float(data.get('x_amount', '0.0')), tx.amount, 2) != 0:
-            invalid_parameters.append(('Amount', data.get('x_amount'), '%.2f' % tx.amount))
+        if float_compare(float(data.get('x_amount', '0.0')), self.amount, 2) != 0:
+            invalid_parameters.append(('Amount', data.get('x_amount'), '%.2f' % self.amount))
         return invalid_parameters
 
-    @api.model
-    def _authorize_form_validate(self, tx, data):
-        if tx.state == 'done':
-            _logger.warning('Authorize: trying to validate an already validated tx (ref %s)' % tx.reference)
+    @api.multi
+    def _authorize_form_validate(self, data):
+        if self.state == 'done':
+            _logger.warning('Authorize: trying to validate an already validated tx (ref %s)' % self.reference)
             return True
         status_code = int(data.get('x_response_code', '0'))
         if status_code == self._authorize_valid_tx_status:
-            tx.write({
+            self.write({
                 'state': 'done',
                 'acquirer_reference': data.get('x_trans_id'),
             })
             return True
         elif status_code == self._authorize_pending_tx_status:
-            tx.write({
+            self.write({
                 'state': 'pending',
                 'acquirer_reference': data.get('x_trans_id'),
             })
             return True
         elif status_code == self._authorize_cancel_tx_status:
-            tx.write({
+            self.write({
                 'state': 'cancel',
                 'acquirer_reference': data.get('x_trans_id'),
             })
@@ -160,7 +160,7 @@ class TxAuthorize(models.Model):
         else:
             error = data.get('x_response_reason_text')
             _logger.info(error)
-            tx.write({
+            self.write({
                 'state': 'error',
                 'state_message': error,
                 'acquirer_reference': data.get('x_trans_id'),

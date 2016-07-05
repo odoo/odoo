@@ -39,22 +39,22 @@ class PaymentTransactionPayumoney(models.Model):
             raise ValidationError(_('PayUmoney: invalid shasign, received %s, computed %s, for data %s') % (shasign, shasign_check, data))
         return transaction
 
-    @api.model
-    def _payumoney_form_get_invalid_parameters(self, transaction, data):
+    @api.multi
+    def _payumoney_form_get_invalid_parameters(self, data):
         invalid_parameters = []
 
-        if transaction.acquirer_reference and data.get('mihpayid') != transaction.acquirer_reference:
+        if self.acquirer_reference and data.get('mihpayid') != self.acquirer_reference:
             invalid_parameters.append(
-                ('Transaction Id', data.get('mihpayid'), transaction.acquirer_reference))
+                ('Transaction Id', data.get('mihpayid'), self.acquirer_reference))
         #check what is buyed
-        if float_compare(float(data.get('amount', '0.0')), transaction.amount, 2) != 0:
+        if float_compare(float(data.get('amount', '0.0')), self.amount, 2) != 0:
             invalid_parameters.append(
-                ('Amount', data.get('amount'), '%.2f' % transaction.amount))
+                ('Amount', data.get('amount'), '%.2f' % self.amount))
 
         return invalid_parameters
 
-    @api.model
-    def _payumoney_form_validate(self, transaction, data):
+    @api.multi
+    def _payumoney_form_validate(self, data):
         status = data.get('status')
         transaction_status = {
             'success': {
@@ -83,4 +83,4 @@ class PaymentTransactionPayumoney(models.Model):
         if not vals:
             vals = transaction_status['error']
             _logger.info(vals['state_message'])
-        return transaction.write(vals)
+        return self.write(vals)

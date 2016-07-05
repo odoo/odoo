@@ -88,14 +88,14 @@ class PaymentTransactionStripe(models.Model):
             })
             return False
 
-    @api.model
-    def _stripe_form_get_invalid_parameters(self, tx, data):
+    @api.multi
+    def _stripe_form_get_invalid_parameters(self, data):
         invalid_parameters = []
         reference = data['metadata']['reference']
-        if reference != tx.reference:
-            invalid_parameters.append(('Reference', reference, tx.reference))
+        if reference != self.reference:
+            invalid_parameters.append(('Reference', reference, self.reference))
         return invalid_parameters
 
-    @api.model
-    def _stripe_form_validate(self, tx, data):
-        return tx._stripe_s2s_validate_tree(data)
+    @api.multi
+    def _stripe_form_validate(self,  data):
+        return self._stripe_s2s_validate_tree(data)
