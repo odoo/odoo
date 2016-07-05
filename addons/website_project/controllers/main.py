@@ -84,7 +84,7 @@ class WebsiteAccount(website_account):
             'update': {'label': _('Last Stage Update'), 'order': 'date_last_stage_update desc'},
         }
 
-        projects = request.env['project.project'].search([])
+        projects = request.env['project.project'].search([('privacy_visibility', '=', 'portal')])
 
         project_filters = {
             'all': {'label': _('All'), 'domain': []},
