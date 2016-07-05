@@ -4,6 +4,7 @@ odoo.define('web_tour.TourManager', function(require) {
 var core = require('web.core');
 var local_storage = require('web.local_storage');
 var Model = require('web.Model');
+var session = require('web.session');
 var Tip = require('web_tour.Tip');
 
 var _t = core._t;
@@ -25,6 +26,7 @@ return core.Class.extend({
         this.consumed_tours = consumed_tours || [];
         this.running_tour = local_storage.getItem(getRunningKey());
         this.TourModel = new Model('web_tour.tour');
+        this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
     },
     /**
      * Registers a tour described by the following arguments (in order)
@@ -36,6 +38,7 @@ return core.Class.extend({
      * @param [Array] dict of steps, each step being a dict containing a tip description
      */
     register: function() {
+        var self = this;
         var args = Array.prototype.slice.call(arguments);
         var last_arg = args[args.length - 1];
         var name = args[0];
@@ -48,7 +51,9 @@ return core.Class.extend({
         var tour = {
             name: name,
             current_step: parseInt(local_storage.getItem(getStepKey(name))) || 0,
-            steps: steps,
+            steps: _.filter(steps, function (step) {
+                return !step.edition || step.edition === self.edition;
+            }),
             url: options.url,
             test: options.test,
         };
