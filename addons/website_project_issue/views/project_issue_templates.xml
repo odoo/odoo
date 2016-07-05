@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="portal_my_home_menu_issue" name="Portal layout : issues menu entry" inherit_id="website_portal.portal_layout" priority="30">
+    <template id="portal_layout" name="Portal layout: Issues menu entry" inherit_id="website_portal.portal_layout" priority="30">
         <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
             <li t-att-class="page_name == 'issue' and 'active' or ''">
                  <a href="/my/issues">Issues</a>
@@ -9,7 +9,7 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_issue" name="Portal My Home : issue entries" inherit_id="website_portal.portal_my_home" priority="30">
+    <template id="portal_my_home" name="Portal My Home: Issue entries" inherit_id="website_portal.portal_my_home" priority="30">
         <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
             <h3 class="page-header">
                 <a href="/my/issues">Your Issues
@@ -26,39 +26,67 @@
         </xpath>
     </template>
 
-    <template id="portal_my_issues" name="My Issues" priority="30">
+    <template id="my_issues" name="My Issues">
         <t t-call="website_portal.portal_layout">
-            <h3 class="page-header">Your Issues</h3>
-            <t t-if="not issues">
-                <p>There are currently no issues for your account.</p>
-            </t>
-            <t t-if="issues">
-                <table class="table table-hover status_table">
+            <h3 class="page-header">
+                Your Issues
+                <div class="dropdown pull-right mr8">
+                    <button id="sortby" class="btn btn-default" type="button" data-toggle="dropdown">
+                        <span class="fa fa-sort" /> <span t-esc="sortings.get(sortby, {}).get('label', 'Newest')"/>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="sortby">
+                        <li t-foreach="sortings" t-as="option" t-att-class="sortby == option and 'active'">
+                            <a t-att-href="default_url + '?' + keep_query('date_begin', 'date_end', 'project', sortby=option)"><span t-esc="sortings.get(option).get('label')"/></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="dropdown pull-right mr8">
+                    <button id="project_filters" class="btn btn-default" type="button" data-toggle="dropdown">
+                        Projects: <span t-esc="project_filters.get(project, {}).get('label', 'All')"/>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="project_filters">
+                        <li t-foreach="project_filters" t-as="option" t-att-class="project == option and 'active'">
+                            <a t-att-href="default_url + '?' + keep_query('date_begin', 'date_end', 'sortby', project=option)"><span t-esc="project_filters.get(option).get('label')"/></a>
+                        </li>
+                    </ul>
+                </div>
+            </h3>
+            <div class="panel panel-default">
+                <t t-if="not issues">
+                    <div class="alert alert-warning mt8" role="alert">
+                        There are no issues.
+                    </div>
+                </t>
+                <table t-if="issues" class="table table-hover status_table">
                     <thead>
                         <tr class="active">
                             <th>Issue</th>
-                            <th>Description</th><th/>
-                            <th>Status</th>
+                            <th class="col-md-8">Description</th>
+                            <th>Stage</th>
                         </tr>
                     </thead>
                     <t t-foreach="issues" t-as="issue">
                         <tr>
                             <td>
-                                <a t-attf-href="/my/issues/#{issue.id}?{{ keep_query() }}">Issue <t t-esc="issue.id"/></a>
+                                <a t-attf-href="/my/issues/#{issue.id}?{{ keep_query() }}">Issue <t t-esc="issue.id" /></a>
                             </td>
-                            <td><span t-field="issue.name"/></td><td/>
-                            <td><span t-field="issue.stage_id.name"/></td>
+                            <td><span t-field="issue.name"/></td>
+                            <td>
+                                <span class="label label-info" title="Current stage of the issue" t-esc="issue.stage_id.name" />
+                            </td>
                         </tr>
                     </t>
                 </table>
-                <div t-if="pager" class="o_portal_pager text-center">
-                    <t t-call="website.pager"/>
-                </div>
-            </t>
+            </div>
+            <div t-if="pager" class="o_portal_pager text-center">
+                <t t-call="website.pager"/>
+            </div>
         </t>
     </template>
 
-    <template id="issues_followup" name="Project Issues">
+    <template id="my_issues_issue" name="My Issue">
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="container">
@@ -122,4 +150,29 @@
             </div>
         </t>
     </template>
+
+    <template id="my_projects" inherit_id="website_project.my_projects">
+        <xpath expr="//table/thead/tr/th[last()]" position="after">
+            <th></th>
+        </xpath>
+        <xpath expr="//table/tbody/tr/td[last()]" position="after">
+            <td>
+                <a t-if="project.use_issues" t-attf-href="/my/issues?project=#{project.id}">
+                    <t t-esc="project.issue_count" />
+                    <t t-esc="project.label_issues" />
+                </a>
+            </td>
+        </xpath>
+    </template>
+
+    <template id="my_project" inherit_id="website_project.my_project">
+        <xpath expr="//div[@class='panel-body']/div[@class='row']/div[@class='col-md-6'][last()]/div[@class='pull-right']" position="before">
+            <a t-attf-href="/my/issues?project=#{project.id}" class="btn btn-default btn-lg pull-right ml8">
+                <span class="fa fa-bug" />
+                <span t-esc="project.issue_count" />
+                <span t-field="project.label_issues" />
+            </a>
+        </xpath>
+    </template>
+
 </odoo>
