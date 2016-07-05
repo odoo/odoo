@@ -921,6 +921,91 @@ class QWeb(object):
             value=value
         )]
 
+    def _compile_directive_content(self, el, options):
+        body = []
+        if el.text is not None:
+            body.append(self._append(ast.Str(unicodifier(el.text))))
+        if el.getchildren():
+            for item in el:
+                # ignore comments & processing instructions
+                if isinstance(item, etree._Comment):
+                    continue
+                body.extend(self._compile_node(item, options))
+                body.extend(self._compile_tail(item))
+        return body
+
+    def _compile_directive_else(self, el, options):
+        if el.attrib.pop('t-else') == '_t_skip_else_':
+            return []
+        if not options.pop('t_if', None):
+            raise ValueError("t-else directive must be preceded by t-if directive")
+        compiled = self._compile_directives(el, options)
+        el.attrib['t-else'] = '_t_skip_else_'
+        return compiled
+
+    def _compile_directive_if(self, el, options):
+        orelse = []
+        next_el = el.getnext()
+        if next_el is not None and 't-else' in next_el.attrib:
+            if el.tail and not el.tail.isspace():
+                raise ValueError("Unexpected non-whitespace characters between t-if and t-else directives")
+            el.tail = None
+            orelse = self._compile_node(next_el, dict(options, t_if=True))
+        return [
+            # if $t-if:
+            #    next tag directive
+            # else:
+            #    $t-else
+            ast.If(
+                test=self._compile_expr(el.attrib.pop('t-if')),
+                body=self._compile_directives(el, options),
+                orelse=orelse
+            )
+        ]
+
+    def _compile_directive_groups(self, el, options):
+        return [
+            # if self.user_has_groups($groups):
+            #    next tag directive
+            ast.If(
+                test=ast.Call(
+                    func=ast.Attribute(
+                        value=ast.Name(id='self', ctx=ast.Load()),
+                        attr='user_has_groups',
+                        ctx=ast.Load()
+                    ),
+                    args=[ast.Str(el.attrib.pop('t-groups'))], keywords=[],
+                    starargs=None, kwargs=None
+                ),
+                body=self._compile_directives(el, options),
+                orelse=[]
+            )
+        ]
+
+    def _compile_directive_foreach(self, el, options):
+        expr = self._compile_expr(el.attrib.pop('t-foreach'))
+        varname = el.attrib.pop('t-as').replace('.', '_')
+        values = self._make_name('values')
+
+        # create function $foreach
+        def_name = self._create_def(options, self._compile_directives(el, options), prefix='foreach', lineno=el.sourceline)
+
+        # for x in foreach_iterator(values, $expr, $varname):
+        #     $foreach(self, append, values, options)
+        return [ast.For(
+            target=ast.Name(id=values, ctx=ast.Store()),
+            iter=ast.Call(
+                func=ast.Name(id='foreach_iterator', ctx=ast.Load()),
+                args=[ast.Name(id='values', ctx=ast.Load()), expr, ast.Str(varname)],
+                keywords=[], starargs=None, kwargs=None
+            ),
+            body=[ast.Expr(self._call_def(def_name, values=values))],
+            orelse=[]
+        )]
+
+    def _compile_tail(self, el):
+        return el.tail is not None and [self._append(ast.Str(unicodifier(el.tail)))] or []
+
     def _compile_directive_esc(self, el, options):
         field_options = self._compile_widget_options(el, 'esc')
         content = self._compile_widget(el, el.attrib.pop('t-esc'), field_options, 'escape')
@@ -1017,91 +1102,6 @@ class QWeb(object):
     def _compile_widget_options(self, el, directive_type):
         return el.attrib.pop('t-options', None)
     # end backward
-
-    def _compile_directive_content(self, el, options):
-        body = []
-        if el.text is not None:
-            body.append(self._append(ast.Str(unicodifier(el.text))))
-        if el.getchildren():
-            for item in el:
-                # ignore comments & processing instructions
-                if isinstance(item, etree._Comment):
-                    continue
-                body.extend(self._compile_node(item, options))
-                body.extend(self._compile_tail(item))
-        return body
-
-    def _compile_directive_else(self, el, options):
-        if el.attrib.pop('t-else') == '_t_skip_else_':
-            return []
-        if not options.pop('t_if', None):
-            raise ValueError("t-else directive must be preceded by t-if directive")
-        compiled = self._compile_directives(el, options)
-        el.attrib['t-else'] = '_t_skip_else_'
-        return compiled
-
-    def _compile_directive_if(self, el, options):
-        orelse = []
-        next_el = el.getnext()
-        if next_el is not None and 't-else' in next_el.attrib:
-            if el.tail and not el.tail.isspace():
-                raise ValueError("Unexpected non-whitespace characters between t-if and t-else directives")
-            el.tail = None
-            orelse = self._compile_node(next_el, dict(options, t_if=True))
-        return [
-            # if $t-if:
-            #    next tag directive
-            # else:
-            #    $t-else
-            ast.If(
-                test=self._compile_expr(el.attrib.pop('t-if')),
-                body=self._compile_directives(el, options),
-                orelse=orelse
-            )
-        ]
-
-    def _compile_directive_groups(self, el, options):
-        return [
-            # if self.user_has_groups($groups):
-            #    next tag directive
-            ast.If(
-                test=ast.Call(
-                    func=ast.Attribute(
-                        value=ast.Name(id='self', ctx=ast.Load()),
-                        attr='user_has_groups',
-                        ctx=ast.Load()
-                    ),
-                    args=[ast.Str(el.attrib.pop('t-groups'))], keywords=[],
-                    starargs=None, kwargs=None
-                ),
-                body=self._compile_directives(el, options),
-                orelse=[]
-            )
-        ]
-
-    def _compile_directive_foreach(self, el, options):
-        expr = self._compile_expr(el.attrib.pop('t-foreach'))
-        varname = el.attrib.pop('t-as').replace('.', '_')
-        values = self._make_name('values')
-
-        # create function $foreach
-        def_name = self._create_def(options, self._compile_directives(el, options), prefix='foreach', lineno=el.sourceline)
-
-        # for x in foreach_iterator(values, $expr, $varname):
-        #     $foreach(self, append, values, options)
-        return [ast.For(
-            target=ast.Name(id=values, ctx=ast.Store()),
-            iter=ast.Call(
-                func=ast.Name(id='foreach_iterator', ctx=ast.Load()),
-                args=[ast.Name(id='values', ctx=ast.Load()), expr, ast.Str(varname)],
-                keywords=[], starargs=None, kwargs=None
-            ),
-            body=[ast.Expr(self._call_def(def_name, values=values))],
-            orelse=[]
-        )]
-
-    def _compile_tail(self, el):
-        return el.tail is not None and [self._append(ast.Str(unicodifier(el.tail)))] or []
 
     def _compile_directive_field(self, el, options):
         """ Compile something like ``<span t-field="record.phone">+1 555 555 8069</span>`` """
