@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.payment.models.payment_acquirer import ValidationError
-from openerp.osv import osv
-from openerp.tools.float_utils import float_compare
-from openerp.tools.translate import _
+from odoo import api, fields, models, _
+from odoo.addons.payment.models.payment_acquirer import ValidationError
+from odoo.tools.float_utils import float_compare
 
 import logging
 import pprint
@@ -11,22 +10,19 @@ import pprint
 _logger = logging.getLogger(__name__)
 
 
-class TransferPaymentAcquirer(osv.Model):
+class TransferPaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
-    def _get_providers(self, cr, uid, context=None):
-        providers = super(TransferPaymentAcquirer, self)._get_providers(cr, uid, context=context)
-        providers.append(['transfer', _('Wire Transfer')])
-        return providers
+    provider = fields.Selection(selection_add=[('transfer', 'Wire Transfer')])
 
-    def transfer_get_form_action_url(self, cr, uid, ids, context=None):
+    def transfer_get_form_action_url(self):
         return '/payment/transfer/feedback'
 
-    def _format_transfer_data(self, cr, uid, context=None):
-        company_id = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.id
+    def _format_transfer_data(self):
+        company_id = self.env.user.company_id.id
         # filter only bank accounts marked as visible
-        journal_ids = self.pool['account.journal'].search(cr, uid, [('type', '=', 'bank'), ('display_on_footer', '=', True), ('company_id', '=', company_id)], context=context)
-        accounts = self.pool['account.journal'].browse(cr, uid, journal_ids, context=context).mapped('bank_account_id').name_get()
+        journals = self.env['account.journal'].search([('type', '=', 'bank'), ('display_on_footer', '=', True), ('company_id', '=', company_id)])
+        accounts = journals.mapped('bank_account_id').name_get()
         bank_title = _('Bank Accounts') if len(accounts) > 1 else _('Bank Account')
         bank_accounts = ''.join(['<ul>'] + ['<li>%s</li>' % name for id, name in accounts] + ['</ul>'])
         post_msg = '''<div>
@@ -41,48 +37,45 @@ class TransferPaymentAcquirer(osv.Model):
         }
         return post_msg
 
-    def create(self, cr, uid, values, context=None):
+    @api.model
+    def create(self, values):
         """ Hook in create to create a default post_msg. This is done in create
         to have access to the name and other creation values. If no post_msg
         or a void post_msg is given at creation, generate a default one. """
         if values.get('provider') == 'transfer' and not values.get('post_msg'):
-            values['post_msg'] = self._format_transfer_data(cr, uid, context=context)
-        return super(TransferPaymentAcquirer, self).create(cr, uid, values, context=context)
+            values['post_msg'] = self._format_transfer_data()
+        return super(TransferPaymentAcquirer, self).create(values)
 
 
-class TransferPaymentTransaction(osv.Model):
+class TransferPaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
-    def _transfer_form_get_tx_from_data(self, cr, uid, data, context=None):
+    @api.model
+    def _transfer_form_get_tx_from_data(self, data):
         reference, amount, currency_name = data.get('reference'), data.get('amount'), data.get('currency_name')
-        tx_ids = self.search(
-            cr, uid, [
-                ('reference', '=', reference),
-            ], context=context)
+        tx = self.search([('reference', '=', reference)])
 
-        if not tx_ids or len(tx_ids) > 1:
+        if not tx or len(tx) > 1:
             error_msg = _('received data for reference %s') % (pprint.pformat(reference))
-            if not tx_ids:
+            if not tx:
                 error_msg += _('; no order found')
             else:
                 error_msg += _('; multiple order found')
             _logger.info(error_msg)
             raise ValidationError(error_msg)
 
-        return self.browse(cr, uid, tx_ids[0], context=context)
+        return tx
 
-    def _transfer_form_get_invalid_parameters(self, cr, uid, ids, data, context=None):
-        tx = self.browse(cr, uid, ids, context=context)[0]
+    def _transfer_form_get_invalid_parameters(self, data):
         invalid_parameters = []
 
-        if float_compare(float(data.get('amount', '0.0')), tx.amount, 2) != 0:
-            invalid_parameters.append(('amount', data.get('amount'), '%.2f' % tx.amount))
-        if data.get('currency') != tx.currency_id.name:
-            invalid_parameters.append(('currency', data.get('currency'), tx.currency_id.name))
+        if float_compare(float(data.get('amount', '0.0')), self.amount, 2) != 0:
+            invalid_parameters.append(('amount', data.get('amount'), '%.2f' % self.amount))
+        if data.get('currency') != self.currency_id.name:
+            invalid_parameters.append(('currency', data.get('currency'), self.currency_id.name))
 
         return invalid_parameters
 
-    def _transfer_form_validate(self, cr, uid, ids, data, context=None):
-        tx = self.browse(cr, uid, ids, context=context)[0]
-        _logger.info('Validated transfer payment for tx %s: set as pending' % (tx.reference))
-        return tx.write({'state': 'pending'})
+    def _transfer_form_validate(self, data):
+        _logger.info('Validated transfer payment for tx %s: set as pending' % (self.reference))
+        return self.write({'state': 'pending'})
