@@ -65,14 +65,10 @@
             <field name="date_start" eval="time.strftime('%Y-%m-01 10:00:00')"/>
             <field name="name">Website for Sales &amp; WMS</field>
             <field name="color">3</field>
-            <field name="partner_id" ref="portal.partner_demo_portal"/>
-            <field name="privacy_visibility">portal</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="alias_model">project.task</field>
             <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
         </record>
-        <function model="project.project" name="message_subscribe"
-            eval="[ref('project_project_1')], [ref('portal.partner_demo_portal')]"/>
 
         <record id="project_project_2" model="project.project">
             <field name="name">Research &amp; Development</field>
