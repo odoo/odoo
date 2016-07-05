@@ -119,10 +119,12 @@ return Widget.extend({
     _get_ideal_location: function () {
         var $location = this.$anchor;
         var o;
+        var p;
         do {
             $location = $location.parent();
             o = $location.css("overflow");
-        } while ((o === "visible" || o === "hidden") && $location[0] !== document.body);
+            p = $location.css("position");
+        } while ((o === "visible" || o === "hidden") && p !== "fixed" && $location[0] !== document.body);
 
         return $location;
     },
