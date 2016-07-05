@@ -21,8 +21,8 @@ class ReportController(Controller):
     # Report controllers
     #------------------------------------------------------
     @route([
-        '/report/<path:converter>/<reportname>',
-        '/report/<path:converter>/<reportname>/<docids>',
+        '/report/<converter>/<reportname>',
+        '/report/<converter>/<reportname>/<docids>',
     ], type='http', auth='user', website=True)
     def report_routes(self, reportname, docids=None, converter=None, **data):
         report_obj = request.registry['report']
