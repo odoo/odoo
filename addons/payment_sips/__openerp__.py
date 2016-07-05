@@ -29,9 +29,9 @@ Works with Worldline keys version 2.0, contains implementation of
 payments acquirer using Worldline SIPS.""",
     'depends': ['payment'],
     'data': [
-        'views/sips.xml',
-        'views/payment_acquirer.xml',
-        'data/sips.xml',
+        'views/payment_views.xml',
+        'views/payment_sips_templates.xml',
+        'data/payment_acquirer_data.xml',
     ],
     'installable': True,
 }
