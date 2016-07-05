@@ -12,5 +12,4 @@ Allows your customers to manage their account from a beautiful web interface.
     'data': [
         'views/templates.xml',
     ],
-    'installable': True,
 }

@@ -13,7 +13,6 @@
         'product',
         'analytic',
         'mail',
-        'portal',
         'resource',
         'web_kanban',
         'web_planner',
