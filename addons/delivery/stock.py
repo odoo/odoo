@@ -79,6 +79,10 @@ class stock_picking(osv.osv):
             :return: dict containing the values to create the invoice line,
                      or None to create nothing
         """
+        if picking.sale_id:
+            delivery_line = picking.sale_id.order_line.filtered(lambda l: l.is_delivery and l.invoiced)
+            if delivery_line:
+                return None
         carrier_obj = self.pool.get('delivery.carrier')
         grid_obj = self.pool.get('delivery.grid')
         currency_obj = self.pool.get('res.currency')
