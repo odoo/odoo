@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import json
+
 import logging
 import pprint
 import werkzeug
 
-from openerp import http, SUPERUSER_ID
-from openerp.http import request
+from odoo import http
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ class BuckarooController(http.Controller):
     def buckaroo_return(self, **post):
         """ Buckaroo."""
         _logger.info('Buckaroo: entering form_feedback with post data %s', pprint.pformat(post))  # debug
-        request.registry['payment.transaction'].form_feedback(request.cr, SUPERUSER_ID, post, 'buckaroo', context=request.context)
+        request.env['payment.transaction'].sudo().form_feedback(post, 'buckaroo')
         post = dict((key.upper(), value) for key, value in post.items())
         return_url = post.get('ADD_RETURNDATA') or '/'
         return werkzeug.utils.redirect(return_url)

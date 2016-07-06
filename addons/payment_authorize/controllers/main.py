@@ -3,8 +3,8 @@ import pprint
 import logging
 import urlparse
 
-from openerp import http
-from openerp.http import request
+from odoo import http
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
