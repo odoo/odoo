@@ -1492,6 +1492,8 @@ class procurement_order(osv.osv):
                 name += '\n' + procurement.product_id.description_purchase
             price = prices[procurement.product_id.id][pricelist_id]
             price = uom_obj._compute_price(cr, uid, procurement.product_uom.id, price, to_uom_id=procurement.product_id.product_tmpl_id.uom_po_id.id)
+            if not schedule_date:
+                schedule_date = self._get_purchase_schedule_date(cr, uid, procurement, procurement.company_id, context=context)
 
             values = {
                 'name': name,
@@ -1656,7 +1658,7 @@ class procurement_order(osv.osv):
             # Create lines for which no line exists yet
             if procs_to_create:
                 partner = po.partner_id
-                schedule_date = datetime.strptime(po.minimum_planned_date, DEFAULT_SERVER_DATETIME_FORMAT)
+                schedule_date = po.minimum_planned_date and datetime.strptime(po.minimum_planned_date, DEFAULT_SERVER_DATETIME_FORMAT)
                 value_lines = self._get_po_line_values_from_procs(cr, uid, procs_to_create, partner, schedule_date, context=context)
                 line_values += [(0, 0, value_lines[x]) for x in value_lines.keys()]
                 for proc in procs_to_create:
