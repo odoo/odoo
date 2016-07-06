@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <template id="cod_acquirer_button">
+            <form action="/shop/payment/validate" method="post" target="_self">
+                <!-- submit -->
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <button type="submit" width="100px"
+                    t-att-class="submit_class">
+                    <span>Confirm Order<span class="fa fa-long-arrow-right"/></span>
+                </button>
+            </form>
+        </template>
+    </data>
+</odoo>

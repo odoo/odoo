@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="payment.payment_acquirer_ups" model="payment.acquirer">
+        <field name="name">COD</field>
+        <field name="image" type="base64" file="payment_cod/static/description/icon.png"/>
+        <field name="provider">cod</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="view_template_id" ref="cod_acquirer_button"/>
+        <field name="environment">test</field>
+        <field name="is_cod">True</field>
+        <field name="auto_confirm">none</field>
+        <field name="website_published">True</field>
+        <field name="pending_msg"><![CDATA[
+<p><i>Pending</i>, Thanks for choosing COD(Collect on Delivery/Cash on Delivery) option. Delivery boy will collect the payment on delivery.</p>]]></field>
+    </record>
+</odoo>
