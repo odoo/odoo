@@ -1,28 +1,24 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import time
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
+from odoo import api, fields, models, _
 
-class hr_timesheet_current_open(osv.osv_memory):
+
+class HrTimesheetCurrentOpen(models.TransientModel):
     _name = 'hr.timesheet.current.open'
     _description = 'hr.timesheet.current.open'
 
-    def open_timesheet(self, cr, uid, ids, context=None):
-        ts = self.pool.get('hr_timesheet_sheet.sheet')
-        if context is None:
-            context = {}
+    @api.model
+    def open_timesheet(self):
         view_type = 'form,tree'
 
-        ids = ts.search(cr, uid, [('user_id','=',uid),('state','in',('draft','new')),('date_from','<=',time.strftime('%Y-%m-%d')), ('date_to','>=',time.strftime('%Y-%m-%d'))], context=context)
-
-        if len(ids) > 1:
+        sheets = self.env['hr_timesheet_sheet.sheet'].search([('user_id', '=', self._uid),
+                                                           ('state', 'in', ('draft', 'new')),
+                                                           ('date_from', '<=', fields.Date.today()),
+                                                           ('date_to', '>=', fields.Date.today())])
+        if len(sheets) > 1:
             view_type = 'tree,form'
-            domain = "[('id','in',["+','.join(map(str, ids))+"]),('user_id', '=', uid)]"
-        elif len(ids)==1:
-            domain = "[('user_id', '=', uid)]"
+            domain = "[('id', 'in', " + str(sheets.ids) + "),('user_id', '=', uid)]"
         else:
             domain = "[('user_id', '=', uid)]"
         value = {
@@ -34,6 +30,6 @@ class hr_timesheet_current_open(osv.osv_memory):
             'view_id': False,
             'type': 'ir.actions.act_window'
         }
-        if len(ids) == 1:
-            value['res_id'] = ids[0]
+        if len(sheets) == 1:
+            value['res_id'] = sheets.ids[0]
         return value

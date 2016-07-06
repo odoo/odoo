@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report
+        id="hr_employee_print_badge"
+        string="Print Badge"
+        model="hr.employee"
+        report_type="qweb-html"
+        name="hr_attendance.print_employee_badge"
+        file="hr_attendance.print_employee_badge"/>
+
+    <template id="print_employee_badge">
+        <t t-call="report.html_container">
+            <div class="page">
+                <t t-foreach="docs" t-as="employee">
+                    <div class="col-sm-6">
+                        <table style="width:243pt; height:153pt; border: 1pt solid black; border-collapse:separate; border-radius:8pt; margin:5pt">
+                            <td style="width:33%;" valign="center">
+                                <table style="width:77pt; height:150pt">
+                                    <tr style="height:30%">
+                                        <td align="center" valign="center">
+                                            <img t-if="employee.company_id and employee.company_id.logo" t-att-src="'data:image/png;base64,%s' % (employee.company_id.logo,)" style="max-height:45pt;max-width:90%" alt="Company Logo"/>
+                                        </td>
+                                    </tr>
+                                    <tr style="height:70%;">
+                                        <td align="center" valign="center">
+                                            <img t-if="employee.image" t-att-src="'data:image/png;base64,%s' % (employee.image,)" style="max-height:85pt;max-width:90%" alt="Employee Image"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="width:67%" valign="center">
+                                <table style="width:155pt; height:85pt">
+                                    <tr><th><div style="font-size:15pt; margin-bottom:0pt;margin-top:0pt;" align="center"><t t-esc="employee.name"/></div></th></tr>
+                                    <tr><td><div align="center" style="font-size:10pt;margin-bottom:5pt;"><t t-esc="employee.job_id.name"/></div></td></tr>
+                                    <tr><td><img t-if="employee.barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', employee.barcode, 600, 120)" style="max-height:50pt;max-width:100%;" align="center"/></td></tr>
+                                </table>
+                            </td>
+                        </table>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>
