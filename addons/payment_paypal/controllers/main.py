@@ -80,3 +80,20 @@ class PaypalController(http.Controller):
         _logger.info('Beginning Paypal cancel with post data %s', pprint.pformat(post))  # debug
         return_url = self._get_return_url(**post)
         return werkzeug.utils.redirect(return_url)
+
+    # --------------------------------------------------
+    # SERVER2SERVER RELATED ROUTES
+    # --------------------------------------------------
+    @http.route(['/payment/paypal/s2s/create_json'], type='json', auth='public')
+    def paypal_direct_create_json(self, **kwargs):
+        acquirer_id = int(kwargs.get('acquirer_id'))
+        acquirer = request.env['payment.acquirer'].browse(acquirer_id)
+        new_id = acquirer.s2s_process(kwargs)
+        return new_id
+
+    @http.route(['/payment/paypal/s2s/create'], type='http', auth='public')
+    def paypal_direct_create(self, **post):
+        acquirer_id = int(post.get('acquirer_id'))
+        acquirer = request.env['payment.acquirer'].browse(acquirer_id)
+        acquirer.s2s_process(post)
+        return werkzeug.utils.redirect(post.get('return_url', '/'))
