@@ -903,7 +903,13 @@ actual arch.
 
     @api.model
     def read_template(self, xml_id):
-        return self._read_template(self.get_view_id(xml_id))
+        if isinstance(id, (int, long)):
+            view_id = id
+        else:
+            if '.' not in id:
+                raise ValueError('Invalid template id: %r' % (id,))
+            view_id = self.get_view_id(id)
+        return self._read_template(view_id)
 
     @api.model
     def get_view_id(self, template):

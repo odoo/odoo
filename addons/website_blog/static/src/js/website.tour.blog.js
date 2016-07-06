@@ -3,12 +3,10 @@ odoo.define("website_blog.tour", function (require) {
 
     var core = require("web.core");
     var tour = require("web_tour.tour");
-    var base = require("web_editor.base");
 
     var _t = core._t;
 
-    base.ready().done(function () {
-        tour.register("blog", {
+    tour.register("blog", {
             url: "/",
         }, [tour.STEPS.WEBSITE_NEW_PAGE, {
             trigger: "a[data-action=new_blog_post]",
@@ -73,6 +71,6 @@ odoo.define("website_blog.tour", function (require) {
             content: _t("<p><b>This tutorial is over.</b> Use this button to discover more features and improve the content of this page.</p><p>You can also add some cool content with your text in edit mode or keep adding pages with the upper right buttons.</p>"),
             position: "bottom",
             width: 500,
-        }]);
-    });
+        }
+    ]);
 });

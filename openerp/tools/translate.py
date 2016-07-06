@@ -1007,8 +1007,7 @@ def trans_generate(lang, modules, cr):
             # QWeb template files
             if fnmatch.fnmatch(root, '*/static/src/xml*'):
                 for fname in fnmatch.filter(files, '*.xml'):
-                    babel_extract_terms(fname, path, root, 'openerp.tools.translate:babel_extract_qweb',
-                                        extra_comments=[WEB_TRANSLATION_COMMENT])
+                    babel_extract_terms(fname, path, root, 'openerp.tools.translate:babel_extract_qweb')
             if not recursive:
                 # due to topdown, first iteration is in first level
                 break

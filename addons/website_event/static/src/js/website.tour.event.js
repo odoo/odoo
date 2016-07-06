@@ -3,12 +3,10 @@ odoo.define("website_event.tour", function (require) {
 
     var core = require("web.core");
     var tour = require("web_tour.tour");
-    var base = require("web_editor.base");
 
     var _t = core._t;
 
-    base.ready().done(function () {
-        tour.register("event", {
+    tour.register("event", {
             url: "/",
         }, [tour.STEPS.WEBSITE_NEW_PAGE, {
             trigger: "a[data-action=new_event]",
@@ -42,6 +40,6 @@ odoo.define("website_event.tour", function (require) {
             extra_trigger: ".js_publish_management button.js_publish_btn.btn-success:visible",
             content: _t("Click here to customize your event further."),
             position: "left",
-        }]);
-    });
+        }
+    ]);
 });

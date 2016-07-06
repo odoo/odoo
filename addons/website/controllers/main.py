@@ -269,17 +269,6 @@ class Website(openerp.addons.web.controllers.main.Home):
             request.cr, request.uid, key, full=full, bundles=bundles,
             context=request.context)
 
-    @http.route('/website/translations', type='json', auth="public", website=True)
-    def get_website_translations(self, lang, mods=None):
-        Modules = request.env['ir.module.module'].sudo()
-        modules = Modules.search([
-            ('name', 'ilike', 'website'),
-            ('state', '=', 'installed')
-        ]).mapped('name')
-        if mods:
-            modules += mods
-        return WebClient().translations(mods=modules, lang=lang)
-
     @http.route(['/website/publish'], type='json', auth="public", website=True)
     def publish(self, id, object):
         _id = int(id)

@@ -89,16 +89,10 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var self = this;
         return this.session_reload().then(function() {
             var modules = self.module_list.join(',');
-            var deferred = self.load_qweb(modules);
             if(self.session_is_valid()) {
-                return deferred.then(function() { return self.load_modules(); });
+                return self.load_modules();
             }
-            return $.when(
-                    deferred,
-                    self.rpc('/web/webclient/bootstrap_translations', {mods: self.module_list}).then(function(trans) {
-                        _t.database.set_bundle(trans);
-                    })
-            );
+            return $.when();
         });
     },
     session_is_valid: function() {
@@ -188,14 +182,12 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var to_load = _.difference(modules, self.module_list).join(',');
         this.module_list = all_modules;
 
-        var loaded = $.when(self.load_translations());
+        var loaded = $.when();
         var locale = "/web/webclient/locale/" + self.user_context.lang || 'en_US';
         var file_list = [ locale ];
         if(to_load.length) {
             loaded = $.when(
-                loaded,
                 self.rpc('/web/webclient/csslist', {mods: to_load}).done(self.load_css.bind(self)),
-                self.load_qweb(to_load),
                 self.rpc('/web/webclient/jslist', {mods: to_load}).done(function(files) {
                     file_list = file_list.concat(files);
                 })
@@ -207,9 +199,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             self.on_modules_loaded();
             self.trigger('module_loaded');
        });
-    },
-    load_translations: function() {
-        return _t.database.load_translations(this, this.module_list, this.user_context.lang);
     },
     load_css: function (files) {
         var self = this;
@@ -228,15 +217,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             d.resolve();
         }
         return d;
-    },
-    load_qweb: function(mods) {
-        this.qweb_mutex.exec(function () {
-            return $.get('/web/webclient/qweb?mods=' + mods).then(function (doc) {
-                if (!doc) { return; }
-                qweb.add_template(doc);
-            });
-        });
-        return this.qweb_mutex.def;
     },
     on_modules_loaded: function() {
         var openerp = window.openerp;

@@ -3,12 +3,10 @@ odoo.define("website_sale.tour_shop", function (require) {
 
     var core = require("web.core");
     var tour = require("web_tour.tour");
-    var base = require("web_editor.base");
 
     var _t = core._t;
 
-    base.ready().done(function () {
-        tour.register("shop", {
+    tour.register("shop", {
             url: "/",
         }, [tour.STEPS.WEBSITE_NEW_PAGE, {
             trigger: "a[data-action=new_product]",
@@ -56,6 +54,6 @@ odoo.define("website_sale.tour_shop", function (require) {
             extra_trigger: "body:not(.editor_enable)",
             content: _t("Click on this button so your customers can see it."),
             position: "top",
-        }]);
-    });
+        }
+    ]);
 });
