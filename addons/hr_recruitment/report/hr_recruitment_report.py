@@ -59,6 +59,8 @@ class hr_recruitment_report(models.Model):
                      extract('epoch' from (s.write_date-s.create_date))/(3600*24) as delay_close,
                      count(*) as nbr
                  from hr_applicant s
+                 where
+                     s.active = true
                  group by
                      s.date_open,
                      s.create_date,
