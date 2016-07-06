@@ -955,6 +955,15 @@ class hr_payslip_line(osv.osv):
         'total': fields.function(_calculate_total, method=True, type='float', string='Total', digits_compute=dp.get_precision('Payroll'),store=True ),
     }
 
+    def create(self, cr, uid, values, context=None):
+        if 'employee_id' not in values or 'contract_id' not in values:
+            payslip = self.pool['hr.payslip'].browse(cr, uid, values.get('slip_id') or [])
+            values['employee_id'] = values.get('employee_id') or payslip.employee_id.id
+            values['contract_id'] = values.get('contract_id') or payslip.contract_id and payslip.contract_id.id
+            if not values['contract_id']:
+                raise UserError(_('You must set a contract to create a payslip line.'))
+        return super(hr_payslip_line, self).create(cr, uid, values, context=context)
+
     _defaults = {
         'quantity': 1.0,
         'rate': 100.0,
