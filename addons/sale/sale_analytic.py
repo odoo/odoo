@@ -43,8 +43,9 @@ class AccountAnalyticLine(models.Model):
         if self.unit_amount == 0.0:
             return 0.0
         price_unit = abs(self.amount / self.unit_amount)
-        if self.currency_id and self.currency_id != order.currency_id:
-            price_unit = self.currency_id.compute(price_unit, order.currency_id)
+        currency_id = self.currency_id or self.account_id.currency_id
+        if currency_id and currency_id != order.currency_id:
+            price_unit = currency_id.compute(price_unit, order.currency_id)
         return price_unit
 
     def _get_sale_order_line_vals(self):
