@@ -5,7 +5,7 @@
             <field name="name">stock.warehouse</field>
             <field name="model">stock.warehouse</field>
             <field name="arch" type="xml">
-                <form string="Warehouse">
+                <form string="Warehouse" create="false">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
@@ -59,16 +59,38 @@
                 </form>
             </field>
         </record>
+        <record id="stock_warehouse_view_form_editable" model="ir.ui.view">
+            <field name="name">stock.warehouse.form.editable</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="groups_id" eval="[(4, ref('stock.group_stock_multi_warehouses'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="create">true</attribute>
+                </xpath>
+            </field>
+        </record>
         <record id="view_warehouse_tree" model="ir.ui.view">
             <field name="name">stock.warehouse.tree</field>
             <field name="model">stock.warehouse</field>
             <field name="arch" type="xml">
-                <tree string="Warehouse">
+                <tree string="Warehouse" create="false">
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="lot_stock_id" groups="stock.group_stock_multi_locations"/>
                     <field name="partner_id"/>
                 </tree>
+            </field>
+        </record>
+        <record id="stock_warehouse_view_tree_editable" model="ir.ui.view">
+            <field name="name">stock.warehouse.tree.editable</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse_tree"/>
+            <field name="groups_id" eval="[(4, ref('stock.group_stock_multi_warehouses'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="create">true</attribute>
+                </xpath>
             </field>
         </record>
         <record id="stock_warehouse_view_search" model="ir.ui.view">
@@ -92,8 +114,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" 
-            groups="base.group_no_one,stock.group_stock_multi_warehouses"
+        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form"
             parent="menu_warehouse_config" sequence="1"/>
 
         <!-- Order Point -->
