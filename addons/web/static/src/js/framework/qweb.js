@@ -16,10 +16,11 @@ function QWeb(debug, default_dict) {
         'csrf_token': odoo.csrf_token,
     });
     qweb.debug = debug;
+    qweb.preprocess_node = preprocess_node;
     return qweb;
 }
 
-QWeb.prototype.preprocess_node = function() {
+function preprocess_node() {
     // Note that 'this' is the Qweb Node
     switch (this.node.nodeType) {
         case Node.TEXT_NODE:
@@ -43,7 +44,7 @@ QWeb.prototype.preprocess_node = function() {
                 }
             }
     }
-};
+}
 
 return QWeb;
 
