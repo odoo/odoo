@@ -4,15 +4,15 @@
 
 {
     'name': 'Timesheets',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Human Resources',
     'sequence': 80,
-    'summary': 'Timesheets, Attendances, Activities',
+    'summary': 'Timesheets, Activities',
     'description': """
 Record and validate timesheets and attendances easily
 =====================================================
 
-This application supplies a new screen enabling you to manage both attendances (Sign in/Sign out) and your work encoding (timesheet) by period. Timesheet entries are made by employees each day. At the end of the defined period, employees validate their sheet and the manager must then approve his team's entries. Periods are defined in the company forms and you can set them to run monthly or weekly.
+This application supplies a new screen enabling you to manage your work encoding (timesheet) by period. Timesheet entries are made by employees each day. At the end of the defined period, employees validate their sheet and the manager must then approve his team's entries. Periods are defined in the company forms and you can set them to run monthly or weekly.
 
 The complete timesheet validation process is:
 ---------------------------------------------
@@ -26,20 +26,19 @@ The validation can be configured in the company:
 * Maximal difference between timesheet and attendances
     """,
     'website': 'https://www.odoo.com/page/employees',
-    'depends': ['hr_timesheet', 'hr_attendance'],
+    'depends': ['hr_timesheet'],
     'data': [
         'security/ir.model.access.csv',
         'security/hr_timesheet_sheet_security.xml',
-        'hr_timesheet_workflow.xml',
-        'hr_timesheet_sheet_data.xml',
-        'views/hr_timesheet_sheet.xml',
-        'hr_timesheet_sheet_view.xml',
-        'hr_timesheet_sheet_config_settings_views.xml',
-        'hr_dashboard.xml',
+        'data/hr_timesheet_workflow.xml',
+        'data/hr_timesheet_sheet_data.xml',
+        'views/hr_timesheet_sheet_templates.xml',
+        'views/hr_timesheet_sheet_views.xml',
+        'views/hr_department_views.xml',
+        'views/hr_timesheet_sheet_config_settings_views.xml',
     ],
-    'test':['../account/test/account_minimal_test.xml', 'test/test_hr_timesheet_sheet.yml'],
     'installable': True,
     'auto_install': False,
     'application': True,
-    'qweb': ['static/src/xml/timesheet.xml',],
+    'qweb': ['static/src/xml/timesheet.xml', ],
 }

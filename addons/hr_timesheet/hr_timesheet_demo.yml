@@ -2,11 +2,12 @@
     Creating demo data that require looking for accounts
 -
     !python {model: ir.model.data} : |
-        import time
+        from datetime import datetime
+        from dateutil.relativedelta import relativedelta
         vals = {
             'name': 'Requirements analysis and specification',
             'user_id': ref('base.user_root'),
-            'date': time.strftime('%Y-%m-%d'),
+            'date': (datetime.now()+relativedelta(days=-1)).strftime('%Y-%m-%d'),
             'unit_amount': 2.00,
             'product_id': ref('product.product_product_1'),
             'product_uom_id': ref('product.product_uom_hour'),
@@ -17,7 +18,7 @@
         vals = {
             'name': 'Design and specification',
             'user_id': ref('base.user_root'),
-            'date': time.strftime('%Y-%m-%d'),
+            'date': (datetime.now()+relativedelta(days=-1)).strftime('%Y-%m-%d'),
             'unit_amount': 1.00,
             'product_id': ref('product.product_product_1'),
             'product_uom_id': ref('product.product_uom_hour'),
@@ -28,7 +29,7 @@
         vals = {
             'name': 'Coding and module testing',
             'user_id': ref('base.user_root'),
-            'date': time.strftime('%Y-%m-%d'),
+            'date': (datetime.now()+relativedelta(days=-1)).strftime('%Y-%m-%d'),
             'unit_amount': 3.00,
             'product_id': ref('product.product_product_1'),
             'product_uom_id': ref('product.product_uom_hour'),
@@ -39,7 +40,7 @@
         vals = {
             'name': 'Integration and system testing',
             'user_id': ref('base.user_root'),
-            'date': time.strftime('%Y-%m-%d'),
+            'date': (datetime.now()+relativedelta(days=-1)).strftime('%Y-%m-%d'),
             'unit_amount': 1.00,
             'product_id': ref('product.product_product_1'),
             'product_uom_id': ref('product.product_uom_hour'),
@@ -50,7 +51,7 @@
         vals = {
             'name': 'Delivery and maintenance',
             'user_id': ref('base.user_root'),
-            'date': time.strftime('%Y-%m-%d'),
+            'date': (datetime.now()+relativedelta(days=-1)).strftime('%Y-%m-%d'),
             'unit_amount': 1.00,
             'product_id': ref('product.product_product_1'),
             'product_uom_id': ref('product.product_uom_hour'),

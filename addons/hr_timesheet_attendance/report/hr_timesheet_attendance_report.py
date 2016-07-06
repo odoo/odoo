@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp import api, fields, models, tools
+from openerp import fields, models
+
 
 class TimesheetAttendance(models.Model):
     _name = 'hr.timesheet.attendance.report'
@@ -27,11 +28,10 @@ class TimesheetAttendance(models.Model):
                     resource_resource.user_id AS user_id,
                     hr_attendance.worked_hours AS attendance,
                     NULL AS timesheet,
-                    date_trunc('day', hr_attendance.name) AS date
+                    date_trunc('day', hr_attendance.check_in) AS date
                 FROM hr_attendance
                 LEFT JOIN hr_employee ON hr_employee.id = hr_attendance.employee_id
                 LEFT JOIN resource_resource on resource_resource.id = hr_employee.resource_id
-                WHERE hr_attendance.action = 'sign_out'
             UNION ALL
                 SELECT
                     ts.id AS id,

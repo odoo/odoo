@@ -2,12 +2,15 @@
 {
     'name': "Timesheets/attendances reporting",
     'description': """
+    Module linking the attendance module to the timesheet app.
     """,
     'category': 'Hidden',
-    'version': '0.1',
+    'version': '1.0',
 
-    # any module necessary for this one to work correctly
-    'depends': ['hr_timesheet', 'hr_attendance'],
-    'data': ['report/hr_timesheet_attendance_report_view.xml'],
+    'depends': ['hr_timesheet_sheet', 'hr_attendance'],
+    'data': [
+        'report/hr_timesheet_attendance_report_view.xml',
+        'views/hr_timesheet_sheet_views.xml',
+    ],
     'auto_install': True,
 }
