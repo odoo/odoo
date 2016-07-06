@@ -8,10 +8,10 @@
     'description': """Paypal Payment Acquirer""",
     'depends': ['payment'],
     'data': [
-        'views/paypal.xml',
-        'views/payment_acquirer.xml',
-        'views/res_config_view.xml',
-        'data/paypal.xml',
+        'views/payment_views.xml',
+        'views/payment_paypal_templates.xml',
+        'views/account_config_settings_views.xml',
+        'data/payment_acquirer_data.xml',
     ],
     'installable': True,
 }
