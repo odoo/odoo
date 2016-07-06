@@ -38,13 +38,12 @@ input segments, workflow.
     'data': [
         'security/marketing_campaign_security.xml',
         'security/ir.model.access.csv',
-        'marketing_campaign_view.xml',
-        'marketing_campaign_data.xml',
-        'marketing_campaign_workflow.xml',
-        'report/campaign_analysis_view.xml',
+        'views/marketing_campaign_views.xml',
+        'data/marketing_campaign_data.xml',
+        'views/marketing_campaign_workflow.xml',
+        'report/campaign_analysis_views.xml',
     ],
-    'demo': ['marketing_campaign_demo.xml'],
-    'test': ['test/marketing_campaign.yml'],
+    'demo': ['data/marketing_campaign_demo.xml'],
     'installable': True,
     'auto_install': False,
 }

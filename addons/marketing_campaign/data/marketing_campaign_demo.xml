@@ -1,9 +1,9 @@
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <!-- Email tempalte -->
         <record id="email_template_1" model="mail.template">
             <field name="name">welcome new partner</field>
-            <field name="email_from">info@openerp.com</field>
+            <field name="email_from">info@odoo.com</field>
             <field name="subject">Welcome to the Odoo Partner Channel!</field>
             <field name="email_to">${(object.email or '')|safe}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -15,7 +15,7 @@
         </record>
         <record id="email_template_2" model="mail.template">
             <field name="name">congrats silver partner</field>
-            <field name="email_from">info@openerp.com</field>
+            <field name="email_from">info@odoo.com</field>
             <field name="subject">Congratulations! You are now a Silver Partner!</field>
             <field name="email_to">${(object.email or '')|safe}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -28,7 +28,7 @@
 
         <record id="email_template_3" model="mail.template">
             <field name="name">congrats gold partner</field>
-            <field name="email_from">info@openerp.com</field>
+            <field name="email_from">info@odoo.com</field>
             <field name="subject">Congratulations! You are now one of our Gold Partners!</field>
             <field name="email_to">${(object.email or '')|safe}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -100,5 +100,4 @@
             <field name="campaign_id" ref="marketing_campaign_openerppartnerchannel"/>
         </record>
 
-    </data>
-</openerp>
+</odoo>
