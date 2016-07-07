@@ -1,92 +1,79 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-from openerp import api
-from openerp.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
-class product_template(osv.osv):
+class ProductTemplate(models.Model):
     _name = 'product.template'
     _inherit = 'product.template'
 
-    def _get_cost_method(self, cr, uid, ids, field, args, context=None):
-        res = {}
-        for product in self.browse(cr, uid, ids, context=context):
-            if product.property_cost_method:
-                res[product.id] = product.property_cost_method
-            else:
-                res[product.id] = product.categ_id.property_cost_method
-        return res
+    property_valuation = fields.Selection([
+        ('manual_periodic', 'Periodic (manual)'),
+        ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
+        copy=True, company_dependent=True, default='manual_periodic',
+        help="If perpetual valuation is enabled for a product, the system will automatically create journal entries "
+             "corresponding to stock moves, with product price as specified by the 'Costing Method'. The inventory "
+             "variation account set on the product category will represent the current inventory value, and the stock "
+             "input and stock output account will hold the counterpart moves for incoming and outgoing products.")
+    valuation = fields.Char('Inventory Valuation', compute='_compute_valuation', inverse='_set_valuation')
+    property_cost_method = fields.Selection([
+        ('standard', 'Standard Price'),
+        ('average', 'Average Price'),
+        ('real', 'Real Price')], string='Costing Method',
+        company_dependent=True, copy=True,
+        help="Standard Price: The cost price is manually updated at the end of a specific period (usually once a year)."
+             "Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation."
+             "Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example).")
+    cost_method = fields.Char('Costing Method', compute='_compute_cost_method', inverse='_set_cost_method')
+    property_stock_account_input = fields.Many2one(
+        'account.account', 'Stock Input Account',
+        company_dependent=True, domain=[('deprecated', '=', False)],
+        help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
+             "there is a specific valuation account set on the source location. When not set on the product, the one from the product category is used.")
+    property_stock_account_output = fields.Many2one(
+        'account.account', 'Stock Output Account',
+        company_dependent=True, domain=[('deprecated', '=', False)],
+        help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
+             "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used.")
 
-    def _get_valuation_type(self, cr, uid, ids, field, args, context=None):
-        res = {}
-        for product in self.browse(cr, uid, ids, context=context):
-            if product.property_valuation:
-                res[product.id] = product.property_valuation
-            else:
-                res[product.id] = product.categ_id.property_valuation
-        return res
+    @api.one
+    @api.depends('property_valuation', 'categ_id.property_valuation')
+    def _compute_valuation(self):
+        self.valuation = self.property_valuation or self.categ_id.property_valuation
 
-    def _set_cost_method(self, cr, uid, ids, name, value, arg, context=None):
-        return self.write(cr, uid, ids, {'property_cost_method': value}, context=context)
+    @api.one
+    def _set_valuation(self):
+        self.property_valuation = self.valuation
 
-    def _set_valuation_type(self, cr, uid, ids, name, value, arg, context=None):
-        return self.write(cr, uid, ids, {'property_valuation': value}, context=context)
+    @api.one
+    @api.depends('property_cost_method', 'categ_id.property_cost_method')
+    def _compute_cost_method(self):
+        self.cost_method = self.property_cost_method or self.categ_id.property_cost_method
 
-    _columns = {
-        'property_valuation': fields.property(type='selection', selection=[('manual_periodic', 'Periodic (manual)'),
-                                        ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
-                                        help="If perpetual valuation is enabled for a product, the system will automatically create journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'" \
-                                             "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
-                                        , copy=True),
-        'valuation': fields.function(_get_valuation_type, fnct_inv=_set_valuation_type, type='char'),  # TDE FIXME: store it ?
-        'property_cost_method': fields.property(type='selection', selection=[('standard', 'Standard Price'), ('average', 'Average Price'), ('real', 'Real Price')],
-            help="""Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).
-                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.
-                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example).""",
-            string="Costing Method", copy=True),
-        'cost_method': fields.function(_get_cost_method, fnct_inv=_set_cost_method, type='char'),  # TDE FIXME: store it ?
-        'property_stock_account_input': fields.property(
-            type='many2one',
-            relation='account.account',
-            string='Stock Input Account',
-            domain=[('deprecated', '=', False)],
-            help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
-                 "there is a specific valuation account set on the source location. When not set on the product, the one from the product category is used."),
-        'property_stock_account_output': fields.property(
-            type='many2one',
-            relation='account.account',
-            string='Stock Output Account',
-            domain=[('deprecated', '=', False)],
-            help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
-                 "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
-    }
+    @api.one
+    def _set_cost_method(self):
+        self.property_cost_method = self.cost_method
 
-    _defaults = {
-        'property_valuation': 'manual_periodic',
-    }
+    @api.onchange('type')
+    def onchange_type_valuation(self):
+        if self.type != 'product':
+            self.valuation = 'manual_periodic'
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('cost_method'):
             vals['property_cost_method'] = vals.pop('cost_method')
         if vals.get('valuation'):
             vals['property_valuation'] = vals.pop('valuation')
-        return super(product_template, self).create(cr, uid, vals, context=context)
-
-    @api.onchange('type')
-    def onchange_type_valuation(self):
-        if self.type != 'product':
-            self.valuation = 'manual_periodic'
-        return {}
+        return super(ProductTemplate, self).create(cr, uid, vals, context=context)
 
     @api.multi
     def _get_product_accounts(self):
         """ Add the stock accounts related to product to the result of super()
         @return: dictionary which contains information regarding stock accounts and super (income+expense accounts)
         """
-        accounts = super(product_template, self)._get_product_accounts()
+        accounts = super(ProductTemplate, self)._get_product_accounts()
         res = self._get_asset_accounts()
         accounts.update({
             'stock_input': res['stock_input'] or self.property_stock_account_input or self.categ_id.property_stock_account_input_categ_id,
@@ -100,7 +87,7 @@ class product_template(osv.osv):
         """ Add the stock journal related to product to the result of super()
         @return: dictionary which contains all needed information regarding stock accounts and journal and super (income+expense accounts)
         """
-        accounts = super(product_template, self).get_product_accounts(fiscal_pos=fiscal_pos)
+        accounts = super(ProductTemplate, self).get_product_accounts(fiscal_pos=fiscal_pos)
         accounts.update({'stock_journal': self.categ_id.property_stock_journal or False})
         return accounts
 
@@ -159,7 +146,7 @@ class product_template(osv.osv):
         return True
 
 
-class product_product(osv.osv):
+class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     @api.onchange('type')
@@ -217,60 +204,49 @@ class product_product(osv.osv):
             self.write(cr, uid, rec_id, {'standard_price': new_price})
         return True
 
-class product_category(osv.osv):
+
+class ProductCategory(models.Model):
     _inherit = 'product.category'
-    _columns = {
-        'property_valuation': fields.property(
-            type='selection',
-            selection=[('manual_periodic', 'Periodic (manual)'),
-                       ('real_time', 'Perpetual (automated)')],
-            string='Inventory Valuation',
-            required=True, copy=True,
-            help="If perpetual valuation is enabled for a product, the system "
-                 "will automatically create journal entries corresponding to "
-                 "stock moves, with product price as specified by the 'Costing "
-                 "Method'. The inventory variation account set on the product "
-                 "category will represent the current inventory value, and the "
-                 "stock input and stock output account will hold the counterpart "
-                 "moves for incoming and outgoing products."),
-        'property_cost_method': fields.property(
-            type='selection',
-            selection=[('standard', 'Standard Price'),
-                       ('average', 'Average Price'),
-                       ('real', 'Real Price')],
-            string="Costing Method",
-            required=True, copy=True,
-            help="Standard Price: The cost price is manually updated at the end "
-                 "of a specific period (usually once a year).\nAverage Price: "
-                 "The cost price is recomputed at each incoming shipment and "
-                 "used for the product valuation.\nReal Price: The cost price "
-                 "displayed is the price of the last outgoing product (will be "
-                 "used in case of inventory loss for example)."""),
-        'property_stock_journal': fields.property(
-            relation='account.journal',
-            type='many2one',
-            string='Stock Journal',
-            help="When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed."),
-        'property_stock_account_input_categ_id': fields.property(
-            type='many2one',
-            relation='account.account',
-            string='Stock Input Account',
-            domain=[('deprecated', '=', False)], oldname="property_stock_account_input_categ",
-            help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
-                 "there is a specific valuation account set on the source location. This is the default value for all products in this category. It "
-                 "can also directly be set on each product"),
-        'property_stock_account_output_categ_id': fields.property(
-            type='many2one',
-            relation='account.account',
-            domain=[('deprecated', '=', False)],
-            string='Stock Output Account', oldname="property_stock_account_output_categ",
-            help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
-                 "there is a specific valuation account set on the destination location. This is the default value for all products in this category. It "
-                 "can also directly be set on each product"),
-        'property_stock_valuation_account_id': fields.property(
-            type='many2one',
-            relation='account.account',
-            string="Stock Valuation Account",
-            domain=[('deprecated', '=', False)],
-            help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",),
-    }
+
+    property_valuation = fields.Selection([
+        ('manual_periodic', 'Periodic (manual)'),
+        ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
+        company_dependent=True, copy=True, required=True,
+        help="If perpetual valuation is enabled for a product, the system "
+             "will automatically create journal entries corresponding to "
+             "stock moves, with product price as specified by the 'Costing "
+             "Method'. The inventory variation account set on the product "
+             "category will represent the current inventory value, and the "
+             "stock input and stock output account will hold the counterpart "
+             "moves for incoming and outgoing products.")
+    property_cost_method = fields.Selection([
+        ('standard', 'Standard Price'),
+        ('average', 'Average Price'),
+        ('real', 'Real Price')], 'Costing Method',
+        company_dependent=True, copy=True, required=True,
+        help="Standard Price: The cost price is manually updated at the end "
+             "of a specific period (usually once a year).\nAverage Price: "
+             "The cost price is recomputed at each incoming shipment and "
+             "used for the product valuation.\nReal Price: The cost price "
+             "displayed is the price of the last outgoing product (will be "
+             "used in case of inventory loss for example).""")
+    property_stock_journal = fields.Many2one(
+        'account.journal', 'Stock Journal', company_dependent=True,
+        help="When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed.")
+    property_stock_account_input_categ_id = fields.Many2one(
+        'account.account', 'Stock Input Account',
+        company_dependent=True, domain=[('deprecated', '=', False)], oldname="property_stock_account_input_categ",
+        help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
+             "there is a specific valuation account set on the source location. This is the default value for all products in this category. It "
+             "can also directly be set on each product")
+    property_stock_account_output_categ_id = fields.Many2one(
+        'account.account', 'Stock Output Account',
+        company_dependent=True, domain=[('deprecated', '=', False)],
+        oldname="property_stock_account_output_categ",
+        help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
+             "there is a specific valuation account set on the destination location. This is the default value for all products in this category. It "
+             "can also directly be set on each product")
+    property_stock_valuation_account_id = fields.Many2one(
+        'account.account', "Stock Valuation Account",
+        company_dependent=True, domain=[('deprecated', '=', False)],
+        help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.")
