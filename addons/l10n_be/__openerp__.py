@@ -49,7 +49,6 @@ Wizards provided by this module:
         'data/fiscal_templates_data.xml',
         'data/account_fiscal_position_tax_template_data.xml',
         'data/account_chart_template_data.yml',
-        'security/ir.model.access.csv',
         'data/menuitem_data.xml'
     ],
     'demo': [
