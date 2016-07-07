@@ -83,59 +83,39 @@ class StockQuant(models.Model):
             if quant.product_id.cost_method == 'real' and quant.location_id.usage != 'internal':
                 move._store_average_cost_price()
 
-    def _account_entry_move(self, cr, uid, ids, move, context=None):
-        """
-        Accounting Valuation Entries
+    def _account_entry_move(self, move):
+        """ Accounting Valuation Entries """
+        if move.product_id.type != 'product' or move.product_id.valuation != 'real_time':
+            # no stock valuation for consumable products
+            return False
+        if any(quant.owner_id or quant.qty <= 0 for quant in self):
+            # if the quant isn't owned by the company, we don't make any valuation en
+            # we don't make any stock valuation for negative quants because the valuation is already made for the counterpart.
+            # At that time the valuation will be made at the product cost price and afterward there will be new accounting entries
+            # to make the adjustments when we know the real cost price.
+            return False
 
-        quants: browse record list of Quants to create accounting valuation entries for. Unempty and all quants are supposed to have the same location id (thay already moved in)
-        move: Move to use. browse record
-        """
-        quants = self.browse(cr, uid, ids, context=context)
-        if context is None:
-            context = {}
-        location_obj = self.pool.get('stock.location')
         location_from = move.location_id
-        location_to = quants[0].location_id
-        company_from = location_from and (location_from.usage == 'internal') and location_from.company_id or False
+        location_to = self[0].location_id
+        company_from = location_from.usage == 'internal' and location_from.company_id or False
         company_to = location_to and (location_to.usage == 'internal') and location_to.company_id or False
 
-        if move.product_id.valuation != 'real_time':
-            return False
-        if move.product_id.type != 'product':
-            #No stock valuation for consumable products
-            return False
-        for q in quants:
-            if q.owner_id:
-                #if the quant isn't owned by the company, we don't make any valuation entry
-                return False
-            if q.qty <= 0:
-                #we don't make any stock valuation for negative quants because the valuation is already made for the counterpart.
-                #At that time the valuation will be made at the product cost price and afterward there will be new accounting entries
-                #to make the adjustments when we know the real cost price.
-                return False
-
-        #in case of routes making the link between several warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
-        # Create Journal Entry for products arriving in the company
+        # Create Journal Entry for products arriving in the company; in case of routes making the link between several
+        # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
         if company_to and (move.location_id.usage not in ('internal', 'transit') and move.location_dest_id.usage == 'internal' or company_from != company_to):
-            ctx = context.copy()
-            ctx['force_company'] = company_to.id
-            journal_id, acc_src, acc_dest, acc_valuation = self.pool['stock.move']._get_accounting_data_for_valuation(cr, uid, [move.id], context=ctx)
-            if location_from and location_from.usage == 'customer':
-                #goods returned from customer
-                self._create_account_move_line(cr, uid, quants.ids, move, acc_dest, acc_valuation, journal_id, context=ctx)
+            journal_id, acc_src, acc_dest, acc_valuation = move._get_accounting_data_for_valuation()
+            if location_from and location_from.usage == 'customer':  # goods returned from customer
+                self.with_context(force_company=company_to.id)._create_account_move_line(move, acc_dest, acc_valuation, journal_id)
             else:
-                self._create_account_move_line(cr, uid, quants.ids, move, acc_src, acc_valuation, journal_id, context=ctx)
+                self.with_context(force_company=company_to.id)._create_account_move_line(move, acc_src, acc_valuation, journal_id)
 
         # Create Journal Entry for products leaving the company
         if company_from and (move.location_id.usage == 'internal' and move.location_dest_id.usage not in ('internal', 'transit') or company_from != company_to):
-            ctx = context.copy()
-            ctx['force_company'] = company_from.id
-            journal_id, acc_src, acc_dest, acc_valuation = self.pool['stock.move']._get_accounting_data_for_valuation(cr, uid, [move.id], context=ctx)
-            if location_to and location_to.usage == 'supplier':
-                #goods returned to supplier
-                self._create_account_move_line(cr, uid, quants.ids, move, acc_valuation, acc_src, journal_id, context=ctx)
+            journal_id, acc_src, acc_dest, acc_valuation = move._get_accounting_data_for_valuation()
+            if location_to and location_to.usage == 'supplier':  # goods returned to supplier
+                self.with_context(force_company=company_to.id)._create_account_move_line(move, acc_valuation, acc_src, journal_id)
             else:
-                self._create_account_move_line(cr, uid, quants.ids, move, acc_valuation, acc_dest, journal_id, context=ctx)
+                self.with_context(force_company=company_to.id)._create_account_move_line(move, acc_valuation, acc_dest, journal_id)
 
     def _quant_create_from_move(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
         quant_obj = self.pool.get('stock.quant')
