@@ -6,19 +6,19 @@
     'version': '1.0',
     'category': 'Warehouse',
     'description': """
-This module adds the picking wave option in warehouse management.
-=================================================================
+This module adds the picking wave option in warehouse management
+================================================================
     """,
     'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['stock'],
-    'data': ['security/ir.model.access.csv',
-            'views/stock_picking_wave_views.xml',
-            'data/stock_picking_wave_data.xml',
-            'data/ir_sequence_data_picking_wave.xml',
-            'wizard/stock_picking_to_wave_views.xml',
-            ],
+    'data': [
+        'security/ir.model.access.csv',
+        'views/stock_picking_wave_views.xml',
+        'data/stock_picking_wave_data.xml',
+        'wizard/stock_picking_to_wave_views.xml',
+    ],
     'demo': [
-            'data/stock_picking_wave_demo.xml',
-             ],
+        'data/stock_picking_wave_demo.xml',
+    ],
     'installable': True,
 }
