@@ -1174,7 +1174,6 @@ class Tag(models.Model):
 
     name = fields.Char('Name', required=True)
     color = fields.Integer('Color Index')
-    team_id = fields.Many2one('crm.team', 'Sales Team')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists !"),
