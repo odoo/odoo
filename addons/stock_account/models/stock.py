@@ -183,10 +183,11 @@ class StockQuant(models.Model):
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    def action_done(self, cr, uid, ids, context=None):
-        self.product_price_update_before_done(cr, uid, ids, context=context)
-        res = super(StockMove, self).action_done(cr, uid, ids, context=context)
-        self.product_price_update_after_done(cr, uid, ids, context=context)
+    @api.multi
+    def action_done(self):
+        self.product_price_update_before_done()
+        res = super(StockMove, self).action_done()
+        self.product_price_update_after_done()
         return res
 
     def product_price_update_before_done(self, cr, uid, ids, context=None):
