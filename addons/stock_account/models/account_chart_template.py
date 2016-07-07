@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.tools.translate import _
-from openerp import api, models
+from odoo import api, models, _
 
 import logging
-
 _logger = logging.getLogger(__name__)
 
 
@@ -15,11 +13,11 @@ class AccountChartTemplate(models.Model):
     @api.model
     def generate_journals(self, acc_template_ref, company, journals_dict=None):
         journal_to_add = [{'name': _('Stock Journal'), 'type': 'general', 'code': 'STJ', 'favorite': False, 'sequence': 8}]
-        super(AccountChartTemplate, self).generate_journals(acc_template_ref=acc_template_ref, company=company, journals_dict=journal_to_add)
+        return super(AccountChartTemplate, self).generate_journals(acc_template_ref=acc_template_ref, company=company, journals_dict=journal_to_add)
 
     @api.multi
     def generate_properties(self, acc_template_ref, company, property_list=None):
-        super(AccountChartTemplate, self).generate_properties(acc_template_ref=acc_template_ref, company=company)
+        res = super(AccountChartTemplate, self).generate_properties(acc_template_ref=acc_template_ref, company=company)
         PropertyObj = self.env['ir.property']  # Property Stock Journal
         value = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'STJ'), ('type', '=', 'general')], limit=1)
         if value:
@@ -32,10 +30,10 @@ class AccountChartTemplate(models.Model):
             }
             properties = PropertyObj.search([('name', '=', 'property_stock_journal'), ('company_id', '=', company.id)])
             if properties:
-                #the property exist: modify it
+                # the property exist: modify it
                 properties.write(vals)
             else:
-                #create the property
+                # create the property
                 PropertyObj.create(vals)
 
         todo_list = [  # Property Stock Accounts
@@ -56,10 +54,10 @@ class AccountChartTemplate(models.Model):
                 }
                 properties = PropertyObj.search([('name', '=', record), ('company_id', '=', company.id)])
                 if properties:
-                    #the property exist: modify it
+                    # the property exist: modify it
                     properties.write(vals)
                 else:
-                    #create the property
+                    # create the property
                     PropertyObj.create(vals)
 
-        return True
+        return res
