@@ -8,7 +8,7 @@ var _t = Core._t;
 Tour.register({
     id:   'test_survey',
     name: _t("try to create and fill survey"),
-    path: '/survey/start/user-feedback-form-1/phantom',
+    path: '/survey/start/1/phantom',
     mode: 'test',
     steps: [
         // Page-1
@@ -180,7 +180,7 @@ Tour.register({
         // Page-4
         // Question: Where do you develop your new features?
         {
-            title:     "Checking 'I host them on my own website'",
+            title:     "Checking 'I host them on my own survey'",
             element:   'input[name="1_4_13_59"][value="59"]',
             sampleText:'59',
         },

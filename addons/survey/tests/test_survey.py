@@ -10,7 +10,6 @@ from urlparse import urljoin
 from openerp import _
 from openerp.exceptions import UserError
 from openerp.tests.common import TransactionCase
-from openerp.addons.website.models.website import slug
 
 
 class TestSurvey(TransactionCase):
@@ -188,7 +187,7 @@ class TestSurvey(TransactionCase):
             survey_url = getattr(self.survey1, urltype + '_url')
             survey_url_relative = getattr(self.survey1.with_context({'relative_url': True}), urltype + '_url')
             self.assertTrue(validate_url(survey_url))
-            url = "survey/%s/%s" % (urltxt, slug(self.survey1))
+            url = "survey/%s/%s" % (urltxt, self.survey1.id)
             full_url = urljoin(base_url, url)
             self.assertEqual(full_url, survey_url)
             self.assertEqual('/' + url, survey_url_relative)

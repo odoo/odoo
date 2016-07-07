@@ -17,7 +17,7 @@ from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT as DTF, ustr
 _logger = logging.getLogger(__name__)
 
 
-class WebsiteSurvey(http.Controller):
+class Survey(http.Controller):
 
     ## HELPER METHODS ##
 
@@ -27,16 +27,16 @@ class WebsiteSurvey(http.Controller):
             return werkzeug.utils.redirect("/survey/")
 
         # In case of auth required, block public user
-        if survey.auth_required and uid == request.website.user_id.id:
-            return request.website.render("survey.auth_required", {'survey': survey, 'token': token})
+        if survey.auth_required and uid == request.env.ref('base.public_user').id:
+            return request.render("survey.auth_required", {'survey': survey, 'token': token})
 
         # In case of non open surveys
         if survey.stage_id.closed:
-            return request.website.render("survey.notopen")
+            return request.render("survey.notopen")
 
         # If there is no pages
         if not survey.page_ids:
-            return request.website.render("survey.nopages")
+            return request.render("survey.nopages",{'survey': survey})
 
         # Everything seems to be ok
         return None
@@ -49,7 +49,7 @@ class WebsiteSurvey(http.Controller):
             dt_deadline = datetime.strptime(user_input.deadline, DTF)
             dt_now = datetime.now()
             if dt_now > dt_deadline:  # survey is not open anymore
-                return request.website.render("survey.notopen")
+                return request.render("survey.notopen")
 
         return None
 
@@ -58,7 +58,7 @@ class WebsiteSurvey(http.Controller):
     # Survey start
     @http.route(['/survey/start/<model("survey.survey"):survey>',
                  '/survey/start/<model("survey.survey"):survey>/<string:token>'],
-                type='http', auth='public', website=True)
+                type='http', auth='public' ,website=True)
     def start_survey(self, survey, token=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         survey_obj = request.registry['survey.survey']
@@ -70,7 +70,7 @@ class WebsiteSurvey(http.Controller):
             user_input_id = user_input_obj.create(cr, uid, {'survey_id': survey.id, 'test_entry': True}, context=context)
             user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
             data = {'survey': survey, 'page': None, 'token': user_input.token}
-            return request.website.render('survey.survey_init', data)
+            return request.render('survey.survey_init', data)
         # END Test mode
 
         # Controls if the survey can be displayed
@@ -81,7 +81,7 @@ class WebsiteSurvey(http.Controller):
         # Manual surveying
         if not token:
             vals = {'survey_id': survey.id}
-            if request.website.user_id.id != uid:
+            if request.env.ref('base.public_user').id != uid:
                 vals['partner_id'] = request.registry['res.users'].browse(cr, uid, uid, context=context).partner_id.id
             user_input_id = user_input_obj.create(cr, uid, vals, context=context)
             user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
@@ -89,7 +89,7 @@ class WebsiteSurvey(http.Controller):
             try:
                 user_input_id = user_input_obj.search(cr, SUPERUSER_ID, [('token', '=', token)], context=context)[0]
             except IndexError:  # Invalid token
-                return request.website.render("website.403")
+                return request.render("survey.403",{'survey': survey})
             else:
                 user_input = user_input_obj.browse(cr, SUPERUSER_ID, [user_input_id], context=context)[0]
 
@@ -101,7 +101,7 @@ class WebsiteSurvey(http.Controller):
         # Select the right page
         if user_input.state == 'new':  # Intro page
             data = {'survey': survey, 'page': None, 'token': user_input.token}
-            return request.website.render('survey.survey_init', data)
+            return request.render('survey.survey_init', data)
         else:
             return request.redirect('/survey/fill/%s/%s' % (survey.id, user_input.token))
 
@@ -124,7 +124,7 @@ class WebsiteSurvey(http.Controller):
         try:
             user_input_id = user_input_obj.search(cr, SUPERUSER_ID, [('token', '=', token)])[0]
         except IndexError:  # Invalid token
-            return request.website.render("website.403")
+            return request.render("survey.403", {'survey': survey})
         else:
             user_input = user_input_obj.browse(cr, SUPERUSER_ID, [user_input_id], context=context)[0]
 
@@ -140,9 +140,9 @@ class WebsiteSurvey(http.Controller):
             data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
             if last:
                 data.update({'last': True})
-            return request.website.render('survey.survey', data)
+            return request.render('survey.survey', data)
         elif user_input.state == 'done':  # Display success message
-            return request.website.render('survey.sfinished', {'survey': survey,
+            return request.render('survey.sfinished', {'survey': survey,
                                                                'token': token,
                                                                'user_input': user_input})
         elif user_input.state == 'skip':
@@ -156,9 +156,9 @@ class WebsiteSurvey(http.Controller):
             data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
             if last:
                 data.update({'last': True})
-            return request.website.render('survey.survey', data)
+            return request.render('survey.survey', data)
         else:
-            return request.website.render("website.403")
+            return request.render("survey.403", {'survey': survey})
 
     # AJAX prefilling of a survey
     @http.route(['/survey/prefill/<model("survey.survey"):survey>/<string:token>',
@@ -252,7 +252,7 @@ class WebsiteSurvey(http.Controller):
             try:
                 user_input_id = user_input_obj.search(cr, SUPERUSER_ID, [('token', '=', post['token'])], context=context)[0]
             except KeyError:  # Invalid token
-                return request.website.render("website.403")
+                return request.render("survey.403", {'survey': survey})
             user_input = user_input_obj.browse(cr, SUPERUSER_ID, user_input_id, context=context)
             user_id = uid if user_input.type != 'link' else SUPERUSER_ID
             for question in questions:
@@ -279,7 +279,7 @@ class WebsiteSurvey(http.Controller):
     def print_survey(self, survey, token=None, **post):
         '''Display an survey in printable view; if <token> is set, it will
         grab the answers of the user_input_id that has <token>.'''
-        return request.website.render('survey.survey_print',
+        return request.render('survey.survey_print',
                                       {'survey': survey,
                                        'token': token,
                                        'page_nr': 0,
@@ -289,7 +289,7 @@ class WebsiteSurvey(http.Controller):
                 type='http', auth='user', website=True)
     def survey_reporting(self, survey, token=None, **post):
         '''Display survey Results & Statistics for given survey.'''
-        result_template ='survey.result'
+        result_template = 'survey.result'
         current_filters = []
         filter_display_data = []
         filter_finish = False
@@ -304,7 +304,7 @@ class WebsiteSurvey(http.Controller):
             filter_data = self.get_filter_data(post)
             current_filters = survey_obj.filter_input_ids(request.cr, request.uid, survey, filter_data, filter_finish, context=request.context)
             filter_display_data = survey_obj.get_filter_display_data(request.cr, request.uid, filter_data, context=request.context)
-        return request.website.render(result_template,
+        return request.render(result_template,
                                       {'survey': survey,
                                        'survey_dict': self.prepare_result_dict(survey, current_filters),
                                        'page_range': self.page_range,
@@ -312,7 +312,7 @@ class WebsiteSurvey(http.Controller):
                                        'filter_display_data': filter_display_data,
                                        'filter_finish': filter_finish
                                        })
-        # Quick retroengineering of what is injected into the template for now:
+        # Quick retro engineering of what is injected into the template for now:
         # (TODO: flatten and simplify this)
         #
         #     survey: a browse record of the survey
@@ -350,7 +350,7 @@ class WebsiteSurvey(http.Controller):
         #     filter_finish: boolean => only finished surveys or not
         #
 
-    def prepare_result_dict(self,survey, current_filters=None):
+    def prepare_result_dict(self, survey, current_filters=None):
         """Returns dictionary having values for rendering template"""
         current_filters = current_filters if current_filters else []
         survey_obj = request.registry['survey.survey']
@@ -358,7 +358,7 @@ class WebsiteSurvey(http.Controller):
         for page in survey.page_ids:
             page_dict = {'page': page, 'question_ids': []}
             for question in page.question_ids:
-                question_dict = {'question':question, 'input_summary':survey_obj.get_input_summary(request.cr, request.uid, question, current_filters, context=request.context), 'prepare_result':survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context), 'graph_data': self.get_graph_data(question, current_filters)}
+                question_dict = {'question': question, 'input_summary': survey_obj.get_input_summary(request.cr, request.uid, question, current_filters, context=request.context), 'prepare_result': survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context), 'graph_data': self.get_graph_data(question, current_filters)}
                 page_dict['question_ids'].append(question_dict)
             result['page_ids'].append(page_dict)
         return result

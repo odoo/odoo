@@ -1,9 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+    <!-- survey assert  -->
+    <template id="survey_assets" name="Survey Results assets">
+        <script src="/web/static/lib/nvd3/d3.v3.js"></script>
+        <script src="/web/static/lib/nvd3/nv.d3.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
+        <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
+        <script type="text/javascript" src="/survey/static/src/js/survey.js" />
+        <script type="text/javascript" src="/survey/static/src/js/tour_test_survey.js"></script>
+        <link href="/web/static/lib/nvd3/nv.d3.css" rel="stylesheet" type="text/css"></link>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/import_bootstrap.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/fonts.less" />
+        <!--Need common helper class(s) like mt mb for survery templates  -->
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/utils.less"/>
+        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/>
+        <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
+        <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
+    </template>
+    
+    <!-- Forbidden error messages-->
+    <template id="403">
+        <t t-call="survey.layout">
+            <div id="wrap">
+                <div class="container">
+                    <h1 class="mt32">403: Forbidden</h1>
+                    <p>The page you were looking for could not be authorized.</p>
+                    <p>Maybe you were looking for this popular page ?</p>
+                    <li><a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form">Home</a></li>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <!-- "Thank you" message when the survey is completed -->
     <template id="sfinished" name="Survey Finished">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
                     <t t-call="survey.back" />
@@ -11,7 +43,7 @@
                         <h1>Thank you!</h1>
                         <div t-field="survey.thank_you_message" class="oe_no_empty" />
                         <div t-if='survey.quizz_mode'>You scored <t t-esc="user_input.quizz_score" /> points.</div>
-                        <div>If you wish, you can <a t-att-href="'/survey/print/%s/%s' % (slug(survey), token)">review your answers</a>.</div>
+                        <div>If you wish, you can <a t-att-href="'/survey/print/%s/%s' % (survey.id, token)">review your answers</a>.</div>
                     </div>
                 </div>
             </div>
@@ -20,7 +52,7 @@
 
     <!-- Message when the survey is not open  -->
     <template id="notopen" name="Survey not open">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
                     <div class="jumbotron mt32">
@@ -34,12 +66,12 @@
 
     <!-- Message when a login is required  -->
     <template id="auth_required" name="Login required for this survey">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
                     <div class="jumbotron mt32">
                         <h1>Login required</h1>
-                        <p>This survey is open only to registered people. Please <a t-attf-href="/web/login?redirect=%2Fsurvey%2Fstart%2F#{ slug(survey) }%2F#{token}">log in</a>.</p>
+                        <p>This survey is open only to registered people. Please <a t-attf-href="/web/login?redirect=%2Fsurvey%2Fstart%2F#{survey.id}%2F#{token}">log in</a>.</p>
                     </div>
                 </div>
             </div>
@@ -48,10 +80,10 @@
 
     <!-- Message when the survey has no pages  -->
     <template id="nopages" name="Survey has no pages">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
-                    <t t-call="survey.back" />
+                     <t t-call="survey.back" />
                     <div class="jumbotron mt32">
                         <h1>Not ready</h1>
                         <p>This survey has no pages by now!</p>
@@ -68,9 +100,42 @@
         </div>
     </template>
 
+    <!-- new layout for survey -->
+    <template id="layout" name="Survey Layout">&lt;!DOCTYPE html&gt;
+        <html>
+            <head>
+                <meta charset="utf-8" />
+                <meta name="viewport" content="initial-scale=1"/>
+                <title><t t-esc="title or 'Odoo Survey'"/></title>
+                <t t-call-assets="web.assets_common"/>
+                <t t-call-assets="survey.survey_assets"/>
+            </head>
+            <body>
+                <header>
+                    <div id="wrapwrap"></div>
+                    <div><title>Odoo</title></div>
+                    <div class="text-center">
+                        <img t-attf-src="/web/binary/company_logo{{ '' }}"/>
+                    </div>
+                </header>
+                <main>
+                    <t t-raw="0"/>
+                </main>
+            </body>
+            <footer>
+                <div class="container mt16 mb8">
+                    <div class="pull-right" t-ignore="true" t-if="not editable"> Powered by <a href="http://www.odoo.com">Odoo</a>
+                    </div>
+                    <div class="pull-left text-muted" itemscope="itemscope" itemtype="http://schema.org/Organization">Copyright &amp;copy; <span t-field="survey.company_id">Company Name</span>
+                    </div>
+                </div>
+            </footer>
+        </html>
+    </template>
+
     <!-- First page of a survey -->
     <template id="survey_init" name="Survey">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="wrap">
                 <div class="oe_structure" />
                 <div class="container">
@@ -78,7 +143,7 @@
                     <div class='jumbotron mt32'>
                         <h1 t-field='survey.title' />
                         <div t-field='survey.description' class="oe_no_empty"/>
-                        <a class="btn btn-primary btn-lg" t-att-href="'/survey/fill/%s/%s' % (slug(survey), token)">
+                        <a class="btn btn-primary btn-lg" t-att-href="'/survey/fill/%s/%s' % (survey.id, token)">
                             Start Survey
                         </a>
                     </div>
@@ -89,14 +154,8 @@
     </template>
 
     <!-- A survey -->
-    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Survey assets">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/survey/static/src/js/survey.js" />
-            <script type="text/javascript" src="/survey/static/src/js/tour_test_survey.js"></script>
-        </xpath>
-    </template>
     <template id="survey" name="Survey">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="wrap">
                 <div class="oe_structure"/>
                 <div class="container">
@@ -116,7 +175,7 @@
             <div t-field='page.description' class="oe_no_empty"/>
         </div>
 
-        <form role="form" method="post" class="js_surveyform" t-att-name="'%s_%s' % (survey.id, page.id)" t-att-action="'/survey/fill/%s/%s' % (slug(survey), token)" t-att-data-prefill="'/survey/prefill/%s/%s/%s' % (slug(survey), token, slug(page))" t-att-data-validate="'/survey/validate/%s' % (slug(survey))" t-att-data-submit="'/survey/submit/%s' % (slug(survey))">
+        <form role="form" method="post" class="js_surveyform" t-att-name="'%s_%s' % (survey.id, page.id)" t-att-action="'/survey/fill/%s/%s' % (survey.id, token)" t-att-data-prefill="'/survey/prefill/%s/%s/%s' % (survey.id, token, page.id)" t-att-data-validate="'/survey/validate/%s' % (survey.id)" t-att-data-submit="'/survey/submit/%s' % (survey.id)">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="page_id" t-att-value="page.id" />
             <input type="hidden" name="token" t-att-value="token" />
@@ -269,15 +328,9 @@
         </div>
     </template>
 
-    <template id="assets_frontend_survey" inherit_id="website.assets_frontend" name="Printing Survey assets">
-        <xpath expr="." position="inside">
-            <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
-        </xpath>
-    </template>
-
     <!-- Printable view of a survey (all pages) -->
     <template id="survey_print" name="Survey">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
                     <t t-call="survey.back" />
@@ -286,7 +339,7 @@
                             <h1><span t-field='survey.title'/></h1>
                             <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty"/></t>
                         </div>
-                        <div role="form" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (slug(survey), token)">
+                        <div role="form" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (survey.id, token)">
                             <t t-foreach="survey.page_ids" t-as="page">
                                 <div class="page-header">
                                     <h1 t-field='page.title' />

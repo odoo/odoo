@@ -17,7 +17,7 @@ sent mails with personal token for the invitation of the survey.
     """,
     'summary': 'Create surveys, collect answers and print statistics',
     'website': 'https://www.odoo.com/page/survey',
-    'depends': ['mail', 'website'],
+    'depends': ['mail'],
     'data': [
         'security/survey_security.xml',
         'security/ir.model.access.csv',

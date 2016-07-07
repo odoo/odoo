@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="survey_form_inherit_view" model="ir.ui.view">
+        <field name="name">Survey inherit form view</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_test_survey']" position="before">
+                <button name="action_test_survey" string="Design Survey" type="object" class="oe_highlight"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="survey_kanban_inherit_view" model="ir.ui.view">
+        <field name="name">Survey inherit kanban view</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//li[@id='survey_test']" position="before">
+                <a name="action_test_survey" type="object">Design</a>
+            </xpath>
+        </field>
+    </record>
+</odoo>
