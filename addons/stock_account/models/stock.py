@@ -113,9 +113,9 @@ class StockQuant(models.Model):
         if company_from and (move.location_id.usage == 'internal' and move.location_dest_id.usage not in ('internal', 'transit') or company_from != company_to):
             journal_id, acc_src, acc_dest, acc_valuation = move._get_accounting_data_for_valuation()
             if location_to and location_to.usage == 'supplier':  # goods returned to supplier
-                self.with_context(force_company=company_to.id)._create_account_move_line(move, acc_valuation, acc_src, journal_id)
+                self.with_context(force_company=company_from.id)._create_account_move_line(move, acc_valuation, acc_src, journal_id)
             else:
-                self.with_context(force_company=company_to.id)._create_account_move_line(move, acc_valuation, acc_dest, journal_id)
+                self.with_context(force_company=company_from.id)._create_account_move_line(move, acc_valuation, acc_dest, journal_id)
 
     def _quant_create_from_move(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
         quant_obj = self.pool.get('stock.quant')
