@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv
+from odoo import api, models
 
 
-class survey_mail_compose_message(osv.TransientModel):
+class SurveyComposeMessage(models.TransientModel):
+
     _inherit = 'survey.mail.compose.message'
 
-    def default_get(self, cr, uid, fields, context=None):
-        res = super(survey_mail_compose_message, self).default_get(cr, uid, fields, context=context)
-        if context.get('active_model') == 'crm.lead' and context.get('active_ids'):
+    @api.model
+    def default_get(self, fields):
+        result = super(SurveyComposeMessage, self).default_get(fields)
+        if self._context.get('active_model') == 'crm.lead' and self._context.get('active_ids'):
             partner_ids = []
             emails_list = []
-            for lead in self.pool.get('crm.lead').browse(cr, uid, context.get('active_ids'), context=context):
+            for lead in self.env['crm.lead'].browse(self._context.get('active_ids')):
                 if lead.partner_id:
                     partner_ids.append(lead.partner_id.id)
                 else:
@@ -21,5 +23,5 @@ class survey_mail_compose_message(osv.TransientModel):
                         emails_list.append(email)
             multi_email = "\n".join(emails_list)
 
-            res.update({'partner_ids': list(set(partner_ids)), 'multi_email': multi_email})
-        return res
+            result.update({'partner_ids': list(set(partner_ids)), 'multi_email': multi_email})
+        return result
