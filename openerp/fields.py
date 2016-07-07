@@ -1067,11 +1067,9 @@ class Boolean(Field):
 
 class Integer(Field):
     type = 'integer'
-
-    def _setup_regular_base(self, model):
-        super(Integer, self)._setup_regular_base(model)
-        if not self.group_operator:
-            self.group_operator = 'sum'
+    _slots = {
+        'group_operator': 'sum',
+    }
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, dict):
@@ -1105,15 +1103,11 @@ class Float(Field):
     type = 'float'
     _slots = {
         '_digits': None,                # digits argument passed to class initializer
+        'group_operator': 'sum',
     }
 
     def __init__(self, string=Default, digits=Default, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
-
-    def _setup_regular_base(self, model):
-        super(Float, self)._setup_regular_base(model)
-        if not self.group_operator:
-            self.group_operator = 'sum'
 
     @property
     def digits(self):
@@ -1153,6 +1147,7 @@ class Monetary(Field):
     type = 'monetary'
     _slots = {
         'currency_field': None,
+        'group_operator': 'sum',
     }
 
     def __init__(self, string=Default, currency_field=Default, **kwargs):
@@ -1168,8 +1163,6 @@ class Monetary(Field):
         super(Monetary, self)._setup_regular_base(model)
         if not self.currency_field:
             self.currency_field = 'currency_id'
-        if not self.group_operator:
-            self.group_operator = 'sum'
 
     def _setup_regular_full(self, model):
         super(Monetary, self)._setup_regular_full(model)
