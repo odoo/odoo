@@ -7,44 +7,49 @@ from openerp.tools.translate import _
 from openerp import SUPERUSER_ID, api, models
 from openerp.exceptions import UserError
 import logging
+
 _logger = logging.getLogger(__name__)
 
+from odoo import new_fields
 
-class stock_inventory(osv.osv):
+
+class StockInventory(models.Model):
     _inherit = "stock.inventory"
-    _columns = {
-        'accounting_date': fields.date('Force Accounting Date', help="Choose the accounting date at which you want to value the stock moves created by the inventory instead of the default one (the inventory end date)"),
-    }
 
-    def post_inventory(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        ctx = context.copy()
-        inv = self.browse(cr, uid, ids, context=context)[0]
-        if inv.accounting_date:
-            ctx['force_period_date'] = inv.accounting_date
-        return super(stock_inventory, self).post_inventory(cr, uid, ids, context=ctx)
+    accounting_date = new_fields.Date(
+        'Force Accounting Date',
+        help="Choose the accounting date at which you want to value the stock "
+             "moves created by the inventory instead of the default one (the "
+             "inventory end date)")
+
+    @api.multi
+    def post_inventory(self):
+        acc_inventories = self.filtered(lambda inventory: inventory.accounting_date)
+        for inventory in acc_inventories:
+            res = super(StockInventory, inventory.with_context(force_period_date=inventory.accounting_date)).post_inventory()
+        other_inventories = self - acc_inventories
+        if other_inventories:
+            res = super(StockInventory, other_inventories).post_inventory()
+        return res
 
 
-#----------------------------------------------------------
-# Stock Location
-#----------------------------------------------------------
-
-class stock_location(osv.osv):
+class StockLocation(models.Model):
     _inherit = "stock.location"
 
-    _columns = {
-        'valuation_in_account_id': fields.many2one('account.account', 'Stock Valuation Account (Incoming)', domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)],
-                                                   help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
-                                                        "this account will be used to hold the value of products being moved from an internal location "
-                                                        "into this location, instead of the generic Stock Output Account set on the product. "
-                                                        "This has no effect for internal locations."),
-        'valuation_out_account_id': fields.many2one('account.account', 'Stock Valuation Account (Outgoing)', domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)],
-                                                   help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
-                                                        "this account will be used to hold the value of products being moved out of this location "
-                                                        "and into an internal location, instead of the generic Stock Output Account set on the product. "
-                                                        "This has no effect for internal locations."),
-    }
+    valuation_in_account_id = fields.Many2one(
+        'account.account', 'Stock Valuation Account (Incoming)',
+        domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)],
+        help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
+             "this account will be used to hold the value of products being moved from an internal location "
+             "into this location, instead of the generic Stock Output Account set on the product. "
+             "This has no effect for internal locations.")
+    valuation_out_account_id = fields.Many2one(
+        'account.account', 'Stock Valuation Account (Outgoing)',
+        domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)],
+        help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
+             "this account will be used to hold the value of products being moved out of this location "
+             "and into an internal location, instead of the generic Stock Output Account set on the product. "
+             "This has no effect for internal locations.")
 
 
 #----------------------------------------------------------
