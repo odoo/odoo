@@ -190,7 +190,7 @@ class MailThread(models.AbstractModel):
         # search for unread messages, directly in SQL to improve performances
         self._cr.execute(""" SELECT msg.res_id FROM mail_message msg
                              RIGHT JOIN mail_message_res_partner_needaction_rel rel
-                             ON rel.mail_message_id = msg.id AND rel.res_partner_id = %s
+                             ON rel.mail_message_id = msg.id AND rel.res_partner_id = %s AND (rel.is_read = false OR rel.is_read IS NULL)
                              WHERE msg.model = %s AND msg.res_id in %s""",
                          (self.env.user.partner_id.id, self._name, tuple(self.ids),))
         for result in self._cr.fetchall():

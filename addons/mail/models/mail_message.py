@@ -82,6 +82,10 @@ class Message(models.Model):
         help='Need Action')
     channel_ids = fields.Many2many(
         'mail.channel', 'mail_message_mail_channel_rel', string='Channels')
+    # notifications
+    notification_ids = fields.One2many(
+        'mail.notification', 'mail_message_id', 'Notifications',
+        auto_join=True, copy=False)
     # user interface
     starred_partner_ids = fields.Many2many(
         'res.partner', 'mail_message_res_partner_starred_rel', string='Favorited By')
@@ -105,7 +109,10 @@ class Message(models.Model):
     @api.multi
     def _get_needaction(self):
         """ Need action on a mail.message = notified on my channel """
-        my_messages = self.sudo().filtered(lambda msg: self.env.user.partner_id in msg.needaction_partner_ids)
+        my_messages = self.env['mail.notification'].sudo().search([
+            ('mail_message_id', 'in', self.ids),
+            ('res_partner_id', '=', self.env.user.partner_id.id),
+            ('is_read', '=', False)]).mapped('mail_message_id')
         for message in self:
             message.needaction = message in my_messages
 
@@ -117,8 +124,8 @@ class Message(models.Model):
     @api.model
     def _search_needaction(self, operator, operand):
         if operator == '=' and operand:
-            return [('needaction_partner_ids', 'in', self.env.user.partner_id.id)]
-        return [('needaction_partner_ids', 'not in', self.env.user.partner_id.id)]
+            return ['&', ('notification_ids.res_partner_id', '=', self.env.user.partner_id.id), ('notification_ids.is_read', '=', False)]
+        return ['&', ('notification_ids.res_partner_id', '=', self.env.user.partner_id.id), ('notification_ids.is_read', '=', True)]
 
     @api.depends('starred_partner_ids')
     def _get_starred(self):
@@ -147,7 +154,8 @@ class Message(models.Model):
         """ Remove all needactions of the current partner. If channel_ids is
             given, restrict to messages written in one of those channels. """
         partner_id = self.env.user.partner_id.id
-        if domain is None:
+        delete_mode = not self.env.user.share  # delete employee notifs, keep customer ones
+        if domain is None and delete_mode:
             query = "DELETE FROM mail_message_res_partner_needaction_rel WHERE res_partner_id IN %s"
             args = [(partner_id,)]
             if channel_ids:
@@ -170,7 +178,14 @@ class Message(models.Model):
             if channel_ids:
                 msg_domain += [('channel_ids', 'in', channel_ids)]
             unread_messages = self.search(expression.AND([msg_domain, domain]))
-            unread_messages.sudo().write({'needaction_partner_ids': [(3, partner_id)]})
+            notifications = self.env['mail.notification'].sudo().search([
+                ('mail_message_id', 'in', unread_messages.ids),
+                ('res_partner_id', '=', self.env.user.partner_id.id),
+                ('is_read', '=', False)])
+            if delete_mode:
+                notifications.unlink()
+            else:
+                notifications.write({'is_read': True})
             ids = unread_messages.mapped('id')
 
         notification = {'type': 'mark_as_read', 'message_ids': ids, 'channel_ids': channel_ids}
@@ -193,14 +208,20 @@ class Message(models.Model):
     def set_message_done(self):
         """ Remove the needaction from messages for the current partner. """
         partner_id = self.env.user.partner_id
-        messages = self.filtered(lambda msg: partner_id in msg.needaction_partner_ids)
-        if not len(messages):
+        delete_mode = not self.env.user.share  # delete employee notifs, keep customer ones
+
+        notifications = self.env['mail.notification'].sudo().search([
+            ('mail_message_id', 'in', self.ids),
+            ('res_partner_id', '=', partner_id.id),
+            ('is_read', '=', False)])
+
+        if not notifications:
             return
-        messages.sudo().write({'needaction_partner_ids': [(3, partner_id.id)]})
 
         # notifies changes in messages through the bus.  To minimize the number of
         # notifications, we need to group the messages depending on their channel_ids
         groups = []
+        messages = notifications.mapped('mail_message_id')
         current_channel_ids = messages[0].channel_ids
         current_group = []
         for record in messages:
@@ -214,6 +235,11 @@ class Message(models.Model):
         groups.append((current_group, current_channel_ids))
         current_group = [record.id]
         current_channel_ids = record.channel_ids
+
+        if delete_mode:
+            notifications.unlink()
+        else:
+            notifications.write({'is_read': True})
 
         for (msg_ids, channel_ids) in groups:
             notification = {'type': 'mark_as_read', 'message_ids': msg_ids, 'channel_ids': [c.id for c in channel_ids]}
@@ -270,6 +296,8 @@ class Message(models.Model):
                 partners |= message.partner_ids
             elif not message.subtype_id and message.partner_ids:  # take specified people of message without a subtype (log)
                 partners |= message.partner_ids
+            if message.needaction_partner_ids:  # notified
+                partners |= message.needaction_partner_ids
             if message.attachment_ids:
                 attachments |= message.attachment_ids
             if message.tracking_value_ids:
@@ -311,6 +339,11 @@ class Message(models.Model):
             else:
                 partner_ids = [partner_tree[partner.id] for partner in message.partner_ids
                                 if partner.id in partner_tree]
+
+            customer_email_data = []
+            for notification in message.notification_ids.filtered(lambda notif: notif.res_partner_id.partner_share):
+                customer_email_data.append((partner_tree[notification.res_partner_id.id][0], partner_tree[notification.res_partner_id.id][1], notification.email_status))
+
             attachment_ids = []
             for attachment in message.attachment_ids:
                 if attachment.id in attachments_tree:
@@ -323,6 +356,10 @@ class Message(models.Model):
             message_dict.update({
                 'author_id': author,
                 'partner_ids': partner_ids,
+                'customer_email_status': (all(d[2] == 'sent' for d in customer_email_data) and 'sent') or
+                                        (any(d[2] == 'exception' for d in customer_email_data) and 'exception') or 
+                                        (any(d[2] == 'bounce' for d in customer_email_data) and 'bounce') or 'ready',
+                'customer_email_data': customer_email_data,
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
             })

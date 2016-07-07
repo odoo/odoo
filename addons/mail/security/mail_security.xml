@@ -23,6 +23,16 @@
             <field name="perm_read" eval="False"/>
         </record>
 
+        <record id="ir_rule_mail_notifications_group_user" model="ir.rule">
+            <field name="name">mail.notifications: group_user: write its own entries</field>
+            <field name="model_id" ref="model_mail_notification"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="domain_force">[('res_partner_id', '=', user.partner_id.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_read" eval="False"/>
+        </record>
+
         <record id="mail_message_subtype_rule_public" model="ir.rule">
             <field name="name">mail.message.subtype: portal/public: read public subtypes</field>
             <field name="model_id" ref="model_mail_message_subtype"/>

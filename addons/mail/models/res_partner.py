@@ -133,6 +133,17 @@ class Partner(models.Model):
             emails |= self.env['mail.mail'].create(create_values)
         return emails, recipients_nbr
 
+    @api.model
+    def _notify_udpate_notifications(self, emails):
+        for email in emails:
+            notifications = self.env['mail.notification'].sudo().search([
+                ('mail_message_id', '=', email.mail_message_id.id),
+                ('res_partner_id', 'in', email.recipient_ids.ids)])
+            notifications.write({
+                'is_email': True,
+                'email_status': 'ready',
+            })
+
     @api.multi
     def _notify(self, message, force_send=False, user_signature=True):
         # TDE TODO: model-dependant ? (like customer -> always email ?)
@@ -166,7 +177,6 @@ class Partner(models.Model):
             base_template_ctx['signature'] = False
         base_mail_values = self._notify_prepare_email_values(message)
 
-
         # classify recipients: actions / no action
         if message.model and message.res_id and hasattr(self.env[message.model], '_message_notification_recipients'):
             recipients = self.env[message.model].browse(message.res_id)._message_notification_recipients(message, self)
@@ -185,6 +195,9 @@ class Partner(models.Model):
                 fol_values = template_fol.generate_email(message.id, fields=['body_html', 'subject'])
                 # send email
                 new_emails, new_recipients_nbr = self._notify_send(fol_values['body'], fol_values['subject'], recipient_template_values['followers'], **base_mail_values)
+                # update notifications
+                self._notify_udpate_notifications(new_emails)
+
                 emails |= new_emails
                 recipients_nbr += new_recipients_nbr
             if recipient_template_values['not_followers']:
@@ -196,6 +209,9 @@ class Partner(models.Model):
                 not_values = template_not.generate_email(message.id, fields=['body_html', 'subject'])
                 # send email
                 new_emails, new_recipients_nbr = self._notify_send(not_values['body'], not_values['subject'], recipient_template_values['not_followers'], **base_mail_values)
+                # update notifications
+                self._notify_udpate_notifications(new_emails)
+
                 emails |= new_emails
                 recipients_nbr += new_recipients_nbr
 
@@ -226,7 +242,7 @@ class Partner(models.Model):
             self.env.cr.execute("""
                 SELECT count(*) as needaction_count
                 FROM mail_message_res_partner_needaction_rel R
-                WHERE R.res_partner_id = %s """, (self.env.user.partner_id.id,))
+                WHERE R.res_partner_id = %s AND (R.is_read = false OR R.is_read IS NULL)""", (self.env.user.partner_id.id,))
             return self.env.cr.dictfetchall()[0].get('needaction_count')
         _logger.error('Call to needaction_count without partner_id')
         return 0

@@ -129,6 +129,19 @@ class MailMail(models.Model):
         :param browse_record mail: the mail that was just sent
         :return: True
         """
+        notif_emails = self.filtered(lambda email: email.notification)
+        if notif_emails:
+            notifications = self.env['mail.notification'].search([
+                ('mail_message_id', 'in', notif_emails.mapped('mail_message_id').ids),
+                ('is_email', '=', True)])
+            if mail_sent:
+                notifications.write({
+                    'email_status': 'sent',
+                })
+            else:
+                notifications.write({
+                    'email_status': 'exception',
+                })
         if mail_sent:
             self.sudo().filtered(lambda self: self.auto_delete).unlink()
         return True
