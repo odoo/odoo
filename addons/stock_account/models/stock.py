@@ -52,11 +52,7 @@ class StockLocation(models.Model):
              "This has no effect for internal locations.")
 
 
-#----------------------------------------------------------
-# Quants
-#----------------------------------------------------------
-
-class stock_quant(osv.osv):
+class StockQuant(models.Model):
     _inherit = "stock.quant"
 
     @api.multi
@@ -64,32 +60,28 @@ class stock_quant(osv.osv):
         real_value_quants = self.filtered(lambda quant: quant.product_id.cost_method == 'real')
         for quant in real_value_quants:
             quant.inventory_value = quant.cost * quant.qty
-        other = self - real_value_quants
-        return super(stock_quant, other)._compute_inventory_value()
+        return super(StockQuant, self - real_value_quants)._compute_inventory_value()
 
-    @api.cr_uid_ids_context
-    def _price_update(self, cr, uid, quant_ids, newprice, context=None):
-        ''' This function is called at the end of negative quant reconciliation and does the accounting entries adjustemnts and the update of the product cost price if needed
-        '''
-        if context is None:
-            context = {}
-        account_move_obj = self.pool['account.move']
-        super(stock_quant, self)._price_update(cr, uid, quant_ids, newprice, context=context)
-        for quant in self.browse(cr, uid, quant_ids, context=context):
+    @api.multi
+    def _price_update(self, newprice):
+        ''' This function is called at the end of negative quant reconciliation
+        and does the accounting entries adjustemnts and the update of the product
+        cost price if needed '''
+        super(StockQuant, self)._price_update(newprice)
+        for quant in self:
             move = quant._get_latest_move()
             valuation_update = newprice - quant.cost
             # this is where we post accounting entries for adjustment, if needed
-            if not quant.company_id.currency_id.is_zero(valuation_update):
-                # If neg quant period already closed (likely with manual valuation), skip update
-                if account_move_obj._check_lock_date(cr, uid, [move.id], context=context):
-                    ctx = dict(context, force_valuation_amount=valuation_update)
-                    self._account_entry_move(cr, uid, [quant], move, context=ctx)
+            # If neg quant period already closed (likely with manual valuation), skip update
+            if not quant.company_id.currency_id.is_zero(valuation_update) and move._check_lock_date():
+                quant.with_context(force_valuation_amount=valuation_update)._account_entry_move(move)
 
-            #update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
-            #1) the product cost's method is 'real'
-            #2) we just fixed a negative quant caused by an outgoing shipment
+            # update the standard price of the product, only if we would have
+            # done it if we'd have had enough stock at first, which means
+            # 1) the product cost's method is 'real'
+            # 2) we just fixed a negative quant caused by an outgoing shipment
             if quant.product_id.cost_method == 'real' and quant.location_id.usage != 'internal':
-                self.pool.get('stock.move')._store_average_cost_price(cr, uid, [move.id], context=context)
+                move._store_average_cost_price()
 
     def _account_entry_move(self, cr, uid, ids, move, context=None):
         """
@@ -147,7 +139,7 @@ class stock_quant(osv.osv):
 
     def _quant_create_from_move(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
         quant_obj = self.pool.get('stock.quant')
-        quant = super(stock_quant, self)._quant_create_from_move(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to, context=context)
+        quant = super(StockQuant, self)._quant_create_from_move(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to, context=context)
         quant._account_entry_move(move)
         if move.product_id.valuation == 'real_time':
             # If the precision required for the variable quant cost is larger than the accounting
@@ -176,7 +168,7 @@ class stock_quant(osv.osv):
 
     @api.multi
     def _quant_update_from_move(self, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
-        res = super(stock_quant, self)._quant_update_from_move(move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)
+        res = super(StockQuant, self)._quant_update_from_move(move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)
         self._account_entry_move(move)
         return res
 
