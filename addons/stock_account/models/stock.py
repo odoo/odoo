@@ -136,9 +136,8 @@ class StockQuant(models.Model):
                 'ref': move.picking_id.name})
             new_account_move.post()
 
-    def _quant_create_from_move(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
-        quant_obj = self.pool.get('stock.quant')
-        quant = super(StockQuant, self)._quant_create_from_move(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to, context=context)
+    def _quant_create_from_move(self, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False):
+        quant = super(StockQuant, self)._quant_create_from_move(qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to)
         quant._account_entry_move(move)
         if move.product_id.valuation == 'real_time':
             # If the precision required for the variable quant cost is larger than the accounting
@@ -157,15 +156,12 @@ class StockQuant(models.Model):
             if float_compare(quant.product_id.uom_id.rounding, 1.0, precision_digits=1) == 0\
                     and float_compare(quant.qty * quant.cost, quant.qty * cost_rounded, precision_rounding=curr_rounding) != 0\
                     and float_compare(quant.qty, 2.0, precision_rounding=quant.product_id.uom_id.rounding) >= 0:
-                qty = quant.qty
-                cost = quant.cost
                 quant_correct = quant._quant_split(quant.qty - 1.0)
-                cost_correct += (qty * cost) - (qty * cost_rounded)
-                quant_obj.write(cr, SUPERUSER_ID, [quant.id], {'cost': cost_rounded}, context=context)
-                quant_obj.write(cr, SUPERUSER_ID, [quant_correct.id], {'cost': cost_correct}, context=context)
+                cost_correct += (quant.qty * quant.cost) - (quant.qty * cost_rounded)
+                quant.sudo().write({'cost': cost_rounded})
+                quant_correct.sudo().write({'cost': cost_correct})
         return quant
 
-    @api.multi
     def _quant_update_from_move(self, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
         res = super(StockQuant, self)._quant_update_from_move(move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)
         self._account_entry_move(move)
@@ -184,31 +180,14 @@ class StockQuant(models.Model):
     #    return remaining_solving_quant, remaining_to_solve_quant
 
 
-class stock_move(osv.osv):
+class StockMove(models.Model):
     _inherit = "stock.move"
 
     def action_done(self, cr, uid, ids, context=None):
         self.product_price_update_before_done(cr, uid, ids, context=context)
-        res = super(stock_move, self).action_done(cr, uid, ids, context=context)
+        res = super(StockMove, self).action_done(cr, uid, ids, context=context)
         self.product_price_update_after_done(cr, uid, ids, context=context)
         return res
-
-    def _store_average_cost_price(self, cr, uid, ids, context=None):
-        ''' move is a browe record '''
-        move = self.browse(cr, uid, ids, context=context)[0]
-        product_obj = self.pool.get('product.product')
-        if any([q.qty <= 0 for q in move.quant_ids]) or move.product_qty == 0:
-            #if there is a negative quant, the standard price shouldn't be updated
-            return
-        #Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will valuate it at 6€
-        average_valuation_price = 0.0
-        for q in move.quant_ids:
-            average_valuation_price += q.qty * q.cost
-        average_valuation_price = average_valuation_price / move.product_qty
-        # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
-        ctx = dict(context or {}, force_company=move.company_id.id)
-        product_obj.write(cr, SUPERUSER_ID, [move.product_id.id], {'standard_price': average_valuation_price}, context=ctx)
-        self.write(cr, uid, [move.id], {'price_unit': average_valuation_price}, context=context)
 
     def product_price_update_before_done(self, cr, uid, ids, context=None):
         product_obj = self.pool.get('product.product')
@@ -247,6 +226,23 @@ class stock_move(osv.osv):
             if move.product_id.cost_method == 'real' and move.location_dest_id.usage != 'internal':
                 #store the average price of the move on the move and product form
                 self._store_average_cost_price(cr, uid, [move.id], context=context)
+
+    def _store_average_cost_price(self, cr, uid, ids, context=None):
+        ''' move is a browe record '''
+        move = self.browse(cr, uid, ids, context=context)[0]
+        product_obj = self.pool.get('product.product')
+        if any([q.qty <= 0 for q in move.quant_ids]) or move.product_qty == 0:
+            #if there is a negative quant, the standard price shouldn't be updated
+            return
+        #Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will valuate it at 6€
+        average_valuation_price = 0.0
+        for q in move.quant_ids:
+            average_valuation_price += q.qty * q.cost
+        average_valuation_price = average_valuation_price / move.product_qty
+        # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
+        ctx = dict(context or {}, force_company=move.company_id.id)
+        product_obj.write(cr, SUPERUSER_ID, [move.product_id.id], {'standard_price': average_valuation_price}, context=ctx)
+        self.write(cr, uid, [move.id], {'price_unit': average_valuation_price}, context=context)
 
     def _get_accounting_data_for_valuation(self, cr, uid, ids, context=None):
         """
