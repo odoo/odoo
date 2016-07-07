@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
-
         <record forcecreate="True" id="property_stock_account_output_prd" model="ir.property">
             <field name="name">property_stock_account_output</field>
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_account_output')]"/>
@@ -26,6 +25,5 @@
             <field eval="False" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
-
     </data>
-</openerp>
+</odoo>

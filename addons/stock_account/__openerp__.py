@@ -40,7 +40,6 @@ Dashboard / Reports for Warehouse Management includes:
         'data/stock_account_data_post_install.yml',
     ],
     'test': [
-
     ],
     'installable': True,
     'auto_install': True,

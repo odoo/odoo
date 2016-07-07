@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="view_stock_config_settings_inherit" model="ir.ui.view">
             <field name="name">stock.config.settings.inherit</field>
@@ -8,11 +8,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='traceability']" position="after">
                     <group string="Stock Accounting">
-                        <field name="module_stock_landed_costs" widget="radio" on_change="onchange_landed_costs(module_stock_landed_costs)"/>
+                        <field name="module_stock_landed_costs" widget="radio"/>
                         <field name="group_stock_inventory_valuation" widget="radio"/>
                     </group>
                 </xpath>
             </field>
         </record>
     </data>
-</openerp>
+</odoo>
