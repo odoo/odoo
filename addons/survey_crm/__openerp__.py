@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-
 {
     'name': 'Survey CRM',
     'version': '2.0',
@@ -15,7 +13,7 @@ This module adds a Survey mass mailing button inside the more option of lead/cus
 """,
     'depends': ['crm', 'survey'],
     'data': [
-        'crm_view.xml',
+        'views/survey_crm_views.xml',
     ],
     'installable': True,
     'auto_install': True
