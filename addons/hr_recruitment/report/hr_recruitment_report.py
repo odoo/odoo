@@ -12,6 +12,7 @@ class hr_recruitment_report(models.Model):
     _rec_name = 'date_create'
     _order = 'date_create desc'
 
+    active = fields.Boolean('Active')
     user_id = fields.Many2one('res.users', 'User', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     date_create = fields.Datetime('Create Date', readonly=True)
@@ -38,6 +39,7 @@ class hr_recruitment_report(models.Model):
             create or replace view hr_recruitment_report as (
                  select
                      min(s.id) as id,
+                     s.active,
                      s.create_date as date_create,
                      date(s.date_closed) as date_closed,
                      s.date_last_stage_update as date_last_stage_update,
@@ -60,6 +62,7 @@ class hr_recruitment_report(models.Model):
                      count(*) as nbr
                  from hr_applicant s
                  group by
+                     s.active,
                      s.date_open,
                      s.create_date,
                      s.write_date,

@@ -57,6 +57,9 @@
                 <separator/>
                 <filter string="New" domain="[('stage_id.sequence', '=', 1)]"/>
                 <separator/>
+                <filter string="Ongoing" domain="[('active', '=', True)]"/>
+                <filter string="Refused" domain="[('active', '=', False)]"/>
+                <separator/>
                 <group expand="0" string="Extended Filters">
                     <field name="priority"/>
                     <field name="stage_id"/>
