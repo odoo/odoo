@@ -29,8 +29,8 @@ class PurchaseConfigSettings(models.TransientModel):
         implied_group='product.group_uom',
         help="""Allows you to select and maintain different units of measure for products.""")
     group_costing_method = fields.Selection([
-        (0, 'Set a fixed cost price on each product'),
-        (1, "Use a 'Fixed', 'Real' or 'Average' price costing method")
+        (0, 'Set a standard cost price on each product'),
+        (1, "Use a 'Standard', 'Real' or 'Average' price costing method")
         ], "Costing Methods",
         implied_group='stock_account.group_inventory_valuation',
         help="""Allows you to compute product cost price based on average cost.""")
