@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from openerp.osv import fields, osv
 from openerp.tools import float_compare, float_round
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID, api, models
 from openerp.exceptions import UserError
-import logging
 
+import logging
 _logger = logging.getLogger(__name__)
 
 from odoo import fields as new_fields
@@ -96,7 +98,7 @@ class StockQuant(models.Model):
             return False
 
         location_from = move.location_id
-        location_to = self[0].location_id
+        location_to = self[0].location_id  # TDE FIXME: as the accounting is based on this value, should probably check all location_to to be the same
         company_from = location_from.usage == 'internal' and location_from.company_id or False
         company_to = location_to and (location_to.usage == 'internal') and location_to.company_id or False
 
@@ -116,6 +118,23 @@ class StockQuant(models.Model):
                 self.with_context(force_company=company_from.id)._create_account_move_line(move, acc_valuation, acc_src, journal_id)
             else:
                 self.with_context(force_company=company_from.id)._create_account_move_line(move, acc_valuation, acc_dest, journal_id)
+
+    def _create_account_move_line(self, move, credit_account_id, debit_account_id, journal_id):
+        # group quants by cost
+        quant_cost_qty = defaultdict(lambda: 0.0)
+        for quant in self:
+            quant_cost_qty[quant.cost] += quant.qty
+
+        AccountMove = self.env['account.move']
+        for cost, qty in quant_cost_qty.iteritems():
+            move_lines = move._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id)
+            date = self._context.get('force_period_date', new_fields.Date.context_today(self))
+            new_account_move = AccountMove.create({
+                'journal_id': journal_id,
+                'line_ids': move_lines,
+                'date': date,
+                'ref': move.picking_id.name})
+            new_account_move.post()
 
     def _quant_create_from_move(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
         quant_obj = self.pool.get('stock.quant')
@@ -151,25 +170,6 @@ class StockQuant(models.Model):
         res = super(StockQuant, self)._quant_update_from_move(move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)
         self._account_entry_move(move)
         return res
-
-    def _create_account_move_line(self, cr, uid, ids, move, credit_account_id, debit_account_id, journal_id, context=None):
-        quants = self.browse(cr, uid, ids, context=context)
-        #group quants by cost
-        quant_cost_qty = {}
-        for quant in quants:
-            if quant_cost_qty.get(quant.cost):
-                quant_cost_qty[quant.cost] += quant.qty
-            else:
-                quant_cost_qty[quant.cost] = quant.qty
-        move_obj = self.pool.get('account.move')
-        for cost, qty in quant_cost_qty.items():
-            move_lines = self.pool['stock.move']._prepare_account_move_line(cr, uid, [move.id], qty, cost, credit_account_id, debit_account_id, context=context)
-            date = context.get('force_period_date', fields.date.context_today(self, cr, uid, context=context))
-            new_move = move_obj.create(cr, uid, {'journal_id': journal_id,
-                                      'line_ids': move_lines,
-                                      'date': date,
-                                      'ref': move.picking_id.name}, context=context)
-            move_obj.post(cr, uid, [new_move], context=context)
 
     #def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
     #    move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
