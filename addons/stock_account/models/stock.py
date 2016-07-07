@@ -84,7 +84,7 @@ class stock_quant(osv.osv):
             #1) the product cost's method is 'real'
             #2) we just fixed a negative quant caused by an outgoing shipment
             if quant.product_id.cost_method == 'real' and quant.location_id.usage != 'internal':
-                self.pool.get('stock.move')._store_average_cost_price(cr, uid, move, context=context)
+                self.pool.get('stock.move')._store_average_cost_price(cr, uid, [move.id], context=context)
 
     def _account_entry_move(self, cr, uid, ids, move, context=None):
         """
@@ -122,23 +122,23 @@ class stock_quant(osv.osv):
         if company_to and (move.location_id.usage not in ('internal', 'transit') and move.location_dest_id.usage == 'internal' or company_from != company_to):
             ctx = context.copy()
             ctx['force_company'] = company_to.id
-            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
+            journal_id, acc_src, acc_dest, acc_valuation = self.pool['stock.move']._get_accounting_data_for_valuation(cr, uid, [move.id], context=ctx)
             if location_from and location_from.usage == 'customer':
                 #goods returned from customer
-                self._create_account_move_line(cr, uid, quants, move, acc_dest, acc_valuation, journal_id, context=ctx)
+                self._create_account_move_line(cr, uid, quants.ids, move, acc_dest, acc_valuation, journal_id, context=ctx)
             else:
-                self._create_account_move_line(cr, uid, quants, move, acc_src, acc_valuation, journal_id, context=ctx)
+                self._create_account_move_line(cr, uid, quants.ids, move, acc_src, acc_valuation, journal_id, context=ctx)
 
         # Create Journal Entry for products leaving the company
         if company_from and (move.location_id.usage == 'internal' and move.location_dest_id.usage not in ('internal', 'transit') or company_from != company_to):
             ctx = context.copy()
             ctx['force_company'] = company_from.id
-            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
+            journal_id, acc_src, acc_dest, acc_valuation = self.pool['stock.move']._get_accounting_data_for_valuation(cr, uid, [move.id], context=ctx)
             if location_to and location_to.usage == 'supplier':
                 #goods returned to supplier
-                self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_src, journal_id, context=ctx)
+                self._create_account_move_line(cr, uid, quants.ids, move, acc_valuation, acc_src, journal_id, context=ctx)
             else:
-                self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_dest, journal_id, context=ctx)
+                self._create_account_move_line(cr, uid, quants.ids, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
     def _quant_create_from_move(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
         quant_obj = self.pool.get('stock.quant')
@@ -175,7 +175,91 @@ class stock_quant(osv.osv):
         self._account_entry_move(move)
         return res
 
-    def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
+    def _create_account_move_line(self, cr, uid, ids, move, credit_account_id, debit_account_id, journal_id, context=None):
+        quants = self.browse(cr, uid, ids, context=context)
+        # group quants by cost
+        quant_cost_qty = {}
+        for quant in quants:
+            if quant_cost_qty.get(quant.cost):
+                quant_cost_qty[quant.cost] += quant.qty
+            else:
+                quant_cost_qty[quant.cost] = quant.qty
+        move_obj = self.pool.get('account.move')
+        for cost, qty in quant_cost_qty.items():
+            move_lines = self.pool['stock.move']._prepare_account_move_line(cr, uid, [move.id], qty, cost, credit_account_id, debit_account_id, context=context)
+            date = context.get('force_period_date', fields.date.context_today(self, cr, uid, context=context))
+            new_move = move_obj.create(cr, uid, {'journal_id': journal_id,
+                                      'line_ids': move_lines,
+                                      'date': date,
+                                      'ref': move.picking_id.name}, context=context)
+            move_obj.post(cr, uid, [new_move], context=context)
+
+
+class stock_move(osv.osv):
+    _inherit = "stock.move"
+
+    def action_done(self, cr, uid, ids, context=None):
+        self.product_price_update_before_done(cr, uid, ids, context=context)
+        res = super(stock_move, self).action_done(cr, uid, ids, context=context)
+        self.product_price_update_after_done(cr, uid, ids, context=context)
+        return res
+
+    def _store_average_cost_price(self, cr, uid, ids, context=None):
+        ''' move is a browe record '''
+        move = self.browse(cr, uid, ids, context=context)[0]
+        product_obj = self.pool.get('product.product')
+        if any([q.qty <= 0 for q in move.quant_ids]) or move.product_qty == 0:
+            #if there is a negative quant, the standard price shouldn't be updated
+            return
+        #Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will valuate it at 6€
+        average_valuation_price = 0.0
+        for q in move.quant_ids:
+            average_valuation_price += q.qty * q.cost
+        average_valuation_price = average_valuation_price / move.product_qty
+        # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
+        ctx = dict(context or {}, force_company=move.company_id.id)
+        product_obj.write(cr, SUPERUSER_ID, [move.product_id.id], {'standard_price': average_valuation_price}, context=ctx)
+        self.write(cr, uid, [move.id], {'price_unit': average_valuation_price}, context=context)
+
+    def product_price_update_before_done(self, cr, uid, ids, context=None):
+        product_obj = self.pool.get('product.product')
+        tmpl_dict = {}
+        for move in self.browse(cr, uid, ids, context=context):
+            #adapt standard price on incomming moves if the product cost_method is 'average'
+            if (move.location_id.usage == 'supplier') and (move.product_id.cost_method == 'average'):
+                product = move.product_id
+                product_id = move.product_id.id
+                qty_available = move.product_id.qty_available
+                if tmpl_dict.get(product_id):
+                    product_avail = qty_available + tmpl_dict[product_id]
+                else:
+                    tmpl_dict[product_id] = 0
+                    product_avail = qty_available
+                # if the incoming move is for a purchase order with foreign currency, need to call this to get the same value that the quant will use.
+                price_unit = move.get_price_unit()
+                if product_avail <= 0:
+                    new_std_price = price_unit
+                else:
+                    # Get the standard price
+                    amount_unit = product.standard_price
+                    new_std_price = ((amount_unit * product_avail) + (price_unit * move.product_qty)) / (product_avail + move.product_qty)
+                tmpl_dict[product_id] += move.product_qty
+                # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
+                ctx = dict(context or {}, force_company=move.company_id.id)
+                product_obj.write(cr, SUPERUSER_ID, [product.id], {'standard_price': new_std_price}, context=ctx)
+
+    def product_price_update_after_done(self, cr, uid, ids, context=None):
+        '''
+        This method adapts the price on the product when necessary
+        '''
+        for move in self.browse(cr, uid, ids, context=context):
+            #adapt standard price on outgoing moves if the product cost_method is 'real', so that a return
+            #or an inventory loss is made using the last value used for an outgoing valuation.
+            if move.product_id.cost_method == 'real' and move.location_dest_id.usage != 'internal':
+                #store the average price of the move on the move and product form
+                self._store_average_cost_price(cr, uid, [move.id], context=context)
+
+    def _get_accounting_data_for_valuation(self, cr, uid, ids, context=None):
         """
         Return the accounts and journal to use to post Journal Entries for the real-time
         valuation of the quant.
@@ -184,6 +268,7 @@ class stock_quant(osv.osv):
         :returns: journal_id, source account, destination account, valuation account
         :raise: openerp.exceptions.UserError if any mandatory account or journal is not defined.
         """
+        move = self.browse(cr, uid, ids, context=context)[0]
         product_obj = self.pool.get('product.template')
         accounts = product_obj.browse(cr, uid, move.product_id.product_tmpl_id.id, context).get_product_accounts()
         if move.location_id.valuation_out_account_id:
@@ -210,11 +295,12 @@ class stock_quant(osv.osv):
         journal_id = accounts['stock_journal'].id
         return journal_id, acc_src, acc_dest, acc_valuation
 
-    def _prepare_account_move_line(self, cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=None):
+    def _prepare_account_move_line(self, cr, uid, ids, qty, cost, credit_account_id, debit_account_id, context=None):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given quant.
         """
+        move = self.browse(cr, uid, ids, context=context)[0]
         if context is None:
             context = {}
         currency_obj = self.pool.get('res.currency')
@@ -289,97 +375,3 @@ class stock_quant(osv.osv):
             }
             res.append((0, 0, price_diff_line))
         return res
-
-    def _create_account_move_line(self, cr, uid, quants, move, credit_account_id, debit_account_id, journal_id, context=None):
-        #group quants by cost
-        quant_cost_qty = {}
-        for quant in quants:
-            if quant_cost_qty.get(quant.cost):
-                quant_cost_qty[quant.cost] += quant.qty
-            else:
-                quant_cost_qty[quant.cost] = quant.qty
-        move_obj = self.pool.get('account.move')
-        for cost, qty in quant_cost_qty.items():
-            move_lines = self._prepare_account_move_line(cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=context)
-            date = context.get('force_period_date', fields.date.context_today(self, cr, uid, context=context))
-            new_move = move_obj.create(cr, uid, {'journal_id': journal_id,
-                                      'line_ids': move_lines,
-                                      'date': date,
-                                      'ref': move.picking_id.name}, context=context)
-            move_obj.post(cr, uid, [new_move], context=context)
-
-    #def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
-    #    move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
-    #    quant_neg_position = quant_neg.negative_dest_location_id.usage
-    #    remaining_solving_quant, remaining_to_solve_quant = super(stock_quant, self)._reconcile_single_negative_quant(cr, uid, to_solve_quant, quant, quant_neg, qty, context=context)
-    #    #update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
-    #    #1) there isn't any negative quant anymore
-    #    #2) the product cost's method is 'real'
-    #    #3) we just fixed a negative quant caused by an outgoing shipment
-    #    if not remaining_to_solve_quant and move.product_id.cost_method == 'real' and quant_neg_position != 'internal':
-    #        self.pool.get('stock.move')._store_average_cost_price(cr, uid, move, context=context)
-    #    return remaining_solving_quant, remaining_to_solve_quant
-
-
-class stock_move(osv.osv):
-    _inherit = "stock.move"
-
-    def action_done(self, cr, uid, ids, context=None):
-        self.product_price_update_before_done(cr, uid, ids, context=context)
-        res = super(stock_move, self).action_done(cr, uid, ids, context=context)
-        self.product_price_update_after_done(cr, uid, ids, context=context)
-        return res
-
-    def _store_average_cost_price(self, cr, uid, move, context=None):
-        ''' move is a browe record '''
-        product_obj = self.pool.get('product.product')
-        if any([q.qty <= 0 for q in move.quant_ids]) or move.product_qty == 0:
-            #if there is a negative quant, the standard price shouldn't be updated
-            return
-        #Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will valuate it at 6€
-        average_valuation_price = 0.0
-        for q in move.quant_ids:
-            average_valuation_price += q.qty * q.cost
-        average_valuation_price = average_valuation_price / move.product_qty
-        # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
-        ctx = dict(context or {}, force_company=move.company_id.id)
-        product_obj.write(cr, SUPERUSER_ID, [move.product_id.id], {'standard_price': average_valuation_price}, context=ctx)
-        self.write(cr, uid, [move.id], {'price_unit': average_valuation_price}, context=context)
-
-    def product_price_update_before_done(self, cr, uid, ids, context=None):
-        product_obj = self.pool.get('product.product')
-        tmpl_dict = {}
-        for move in self.browse(cr, uid, ids, context=context):
-            #adapt standard price on incomming moves if the product cost_method is 'average'
-            if (move.location_id.usage == 'supplier') and (move.product_id.cost_method == 'average'):
-                product = move.product_id
-                product_id = move.product_id.id
-                qty_available = move.product_id.qty_available
-                if tmpl_dict.get(product_id):
-                    product_avail = qty_available + tmpl_dict[product_id]
-                else:
-                    tmpl_dict[product_id] = 0
-                    product_avail = qty_available
-                # if the incoming move is for a purchase order with foreign currency, need to call this to get the same value that the quant will use.
-                price_unit = move.get_price_unit()
-                if product_avail <= 0:
-                    new_std_price = price_unit
-                else:
-                    # Get the standard price
-                    amount_unit = product.standard_price
-                    new_std_price = ((amount_unit * product_avail) + (price_unit * move.product_qty)) / (product_avail + move.product_qty)
-                tmpl_dict[product_id] += move.product_qty
-                # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
-                ctx = dict(context or {}, force_company=move.company_id.id)
-                product_obj.write(cr, SUPERUSER_ID, [product.id], {'standard_price': new_std_price}, context=ctx)
-
-    def product_price_update_after_done(self, cr, uid, ids, context=None):
-        '''
-        This method adapts the price on the product when necessary
-        '''
-        for move in self.browse(cr, uid, ids, context=context):
-            #adapt standard price on outgoing moves if the product cost_method is 'real', so that a return
-            #or an inventory loss is made using the last value used for an outgoing valuation.
-            if move.product_id.cost_method == 'real' and move.location_dest_id.usage != 'internal':
-                #store the average price of the move on the move and product form
-                self._store_average_cost_price(cr, uid, move, context=context)

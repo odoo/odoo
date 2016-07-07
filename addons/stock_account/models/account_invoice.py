@@ -46,7 +46,7 @@ class account_invoice(osv.osv):
                         'name': i_line.name[:64],
                         'price_unit': price_unit,
                         'quantity': i_line.quantity,
-                        'price': self.env['account.invoice.line']._get_price(inv, company_currency, i_line, price_unit),
+                        'price': i_line._get_price(company_currency, price_unit),
                         'account_id':dacc,
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
@@ -58,7 +58,7 @@ class account_invoice(osv.osv):
                         'name': i_line.name[:64],
                         'price_unit': price_unit,
                         'quantity': i_line.quantity,
-                        'price': -1 * self.env['account.invoice.line']._get_price(inv, company_currency, i_line, price_unit),
+                        'price': -1 * i_line._get_price(company_currency, price_unit),
                         'account_id':cacc,
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
@@ -75,13 +75,14 @@ class account_invoice_line(osv.osv):
         self.ensure_one()
         return self.product_id.standard_price
 
-    def _get_price(self, cr, uid, inv, company_currency, i_line, price_unit):
+    def _get_price(self, cr, uid, ids, company_currency, price_unit, context=None):
+        line = self.browse(cr, uid, ids, context=context)[0]
         cur_obj = self.pool.get('res.currency')
-        if inv.currency_id.id != company_currency:
-            price = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, price_unit * i_line.quantity, context={'date': inv.date_invoice})
+        if line.invoice_id.currency_id.id != company_currency:
+            price = cur_obj.compute(cr, uid, company_currency, line.invoice_id.currency_id.id, price_unit * line.quantity, context={'date': line.invoice_id.date_invoice})
         else:
-            price = price_unit * i_line.quantity
-        return round(price, inv.currency_id.decimal_places)
+            price = price_unit * line.quantity
+        return round(price, line.invoice_id.currency_id.decimal_places)
 
     def get_invoice_line_account(self, type, product, fpos, company):
         if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund') and product and product.type == 'product':
