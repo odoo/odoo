@@ -18,7 +18,7 @@ return Widget.extend({
         this._super(parent);
         this.context = options.context;
         this.fields = options.fields;
-        this.fields.__count__ = {string: _t("Quantity"), type: "integer"};
+        this.fields.__count__ = {string: _t("Count"), type: "integer"};
         this.model = new Model(model, {group_by_no_leaf: true});
 
         this.domain = options.domain || [];
