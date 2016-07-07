@@ -128,7 +128,10 @@ class stock_history(osv.osv):
                 product_template_id,
                 SUM(quantity) as quantity,
                 date,
-                SUM(price_unit_on_quant * quantity) / SUM(quantity) as price_unit_on_quant,
+                --SUM(price_unit_on_quant * quantity) / SUM(quantity) as price_unit_on_quant,
+                CASE WHEN SUM(quantity)=0 THEN 0.0
+                    ELSE SUM(price_unit_on_quant * quantity) / SUM(quantity)
+                END AS price_unit_on_quant,
                 source,
                 string_agg(DISTINCT serial_number, ', ' ORDER BY serial_number) AS serial_number
                 FROM
