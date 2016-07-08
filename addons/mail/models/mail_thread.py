@@ -214,6 +214,27 @@ class MailThread(models.AbstractModel):
     def _search_message_needaction(self, operator, operand):
         return [('message_ids.needaction', operator, operand)]
 
+    def _get_tracked_fields_values(self, tracked_fields, values):
+        initial_values = {}
+        for record in self:
+            track_values = {}
+            for key, col_info in tracked_fields.items():
+                deleted_record_ids = []
+                if col_info['type'] == 'one2many':
+                    o2m_values = {'initial_value': getattr(record, key)}
+                    if values.get(key):
+                        for val in values.get(key):
+                            if isinstance(val, (list, tuple)) and val[0]== 2:
+                                deleted_record_ids.append(val[1])
+                    deleted_o2m_names = deleted_record_ids and self.env[col_info['relation']].browse(deleted_record_ids).mapped('display_name')
+                    if deleted_o2m_names:
+                        o2m_values['removed_o2m_names'] = deleted_o2m_names
+                    track_values.update({key: o2m_values})
+                else:
+                    track_values.update({key: getattr(record, key)})
+            initial_values.update({record.id: track_values})
+        return initial_values
+
     # ------------------------------------------------------
     # CRUD overrides for automatic subscription and logging
     # ------------------------------------------------------
@@ -275,8 +296,8 @@ class MailThread(models.AbstractModel):
         if not self._context.get('mail_notrack'):
             tracked_fields = track_self._get_tracked_fields(values.keys())
         if tracked_fields:
-            initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
-                                  for record in track_self)
+            initial_values = track_self._get_tracked_fields_values(tracked_fields, values)
+
 
         # Perform write
         result = super(MailThread, self).write(values)
@@ -457,9 +478,12 @@ class MailThread(models.AbstractModel):
         for col_name, col_info in tracked_fields.items():
             initial_value = initial[col_name]
             new_value = getattr(self, col_name)
-
+            remove_values = False
+            if col_info['type'] == 'one2many':
+                remove_values = initial_value and initial_value.get('removed_o2m_names') or ''
+                initial_value = initial_value and initial_value.get('initial_value') or ''
             if new_value != initial_value and (new_value or initial_value):  # because browse null != False
-                tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info)
+                tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, remove_values)
                 if tracking:
                     tracking_value_ids.append([0, 0, tracking])
 

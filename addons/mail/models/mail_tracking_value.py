@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from openerp import api, fields, models, tools
+from openerp import api, fields, models, tools, _
 
 
 class MailTracking(models.Model):
@@ -25,13 +25,15 @@ class MailTracking(models.Model):
     new_value_text = fields.Text('New Value Text', readonly=1)
     new_value_datetime = fields.Datetime('New Value Datetime', readonly=1)
 
+    field_desc_remove = fields.Char('Remove Field Description', readonly=1)
+    remove_value_char = fields.Char('Remove Value Char', readonly=1)
+
     mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, select=True, ondelete='cascade')
 
     @api.model
-    def create_tracking_values(self, initial_value, new_value, col_name, col_info):
+    def create_tracking_values(self, initial_value, new_value, col_name, col_info, remove_values=None):
         tracked = True
-        values = {'field': col_name, 'field_desc': col_info['string'], 'field_type': col_info['type']}
-
+        values = {'field': col_name, 'field_desc': col_info['string'], 'field_desc_remove': col_info['string'] + _(' Removed'), 'field_type': col_info['type']}
         if col_info['type'] in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
             values.update({
                 'old_value_%s' % col_info['type']: initial_value,
@@ -59,6 +61,27 @@ class MailTracking(models.Model):
                 'old_value_char': initial_value and initial_value.name_get()[0][1] or '',
                 'new_value_char': new_value and new_value.name_get()[0][1] or ''
             })
+        elif col_info['type'] == 'many2many':
+            
+            new_added_values  = (new_value - initial_value) if initial_value else new_value
+            remove_values = initial_value and initial_value - new_value or ''
+
+            values.update({
+                    'old_value_char': '',
+                    'new_value_char':  new_added_values and ', '.join( record.display_name  for record in new_added_values ) or '',
+                    'field_desc': new_added_values and col_info['string'] + _(' Added') or '',
+                    'remove_value_char': remove_values and ', '.join( record.display_name for record in remove_values ) or '',
+                 })
+        elif col_info['type'] == 'one2many':
+
+            new_added_values  = (new_value - initial_value) if initial_value else new_value
+
+            values.update({
+                'old_value_char': '',
+                'new_value_char': new_added_values and ', '.join( record.display_name for record in new_added_values ) or '',
+                'field_desc': new_added_values and col_info['string'] + _(' Added') or '',
+                'remove_value_char': remove_values and  ', '.join( record for record in remove_values) or '',
+            })
         else:
             tracked = False
 
@@ -68,7 +91,7 @@ class MailTracking(models.Model):
 
     @api.multi
     def get_display_value(self, type):
-        assert type in ('new', 'old')
+        assert type in ('new', 'old', 'remove')
         result = []
         for record in self:
             if record.field_type in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
@@ -79,6 +102,8 @@ class MailTracking(models.Model):
                     result.append(new_date.strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
                 else:
                     result.append(record['%s_value_datetime' % type])
+            elif record.field_type == 'one2many':
+                result.append(record['%s_value_char' % type])
             elif record.field_type == 'boolean':
                 result.append(bool(record['%s_value_integer' % type]))
             else:
@@ -94,3 +119,8 @@ class MailTracking(models.Model):
     def get_new_display_value(self):
         # grep : # new_value_integer | new_value_datetime | new_value_char
         return self.get_display_value('new')
+
+    @api.multi
+    def get_remove_display_value(self):
+        # grep : #  removed_value_char
+        return self.get_display_value('remove')

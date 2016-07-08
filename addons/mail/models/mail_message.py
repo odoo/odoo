@@ -296,13 +296,14 @@ class Message(models.Model):
             'name': attachment['name'],
             'mimetype': attachment['mimetype'],
         }) for attachment in attachments_data)
-
         # 3. Tracking values
         tracking_tree = dict((tracking.id, {
             'id': tracking.id,
             'changed_field': tracking.field_desc,
+            'removed_field': tracking.field_desc_remove,
             'old_value': tracking.get_old_display_value()[0],
             'new_value': tracking.get_new_display_value()[0],
+            'remove_value': tracking.field_type in ['one2many', 'many2many'] and tracking.get_remove_display_value()[0] or '',
             'field_type': tracking.field_type,
         }) for tracking in trackings)
 
