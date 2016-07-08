@@ -2084,12 +2084,6 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
 
     @api.multi
-    def message_set_read(self):
-        messages = self.env['mail.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids), ('needaction', '=', True)])
-        messages.write({'needaction_partner_ids': [(3, self.env.user.partner_id.id)]})
-        return messages.ids
-
-    @api.multi
     def message_change_thread(self, new_thread):
         """
         Transfer the list of the mail thread messages from an model to another
