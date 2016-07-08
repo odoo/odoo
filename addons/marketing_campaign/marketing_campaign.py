@@ -393,8 +393,6 @@ class marketing_campaign_activity(osv.osv):
         'revenue': fields.float('Revenue', help="Set an expected revenue if you consider that every campaign item that has reached this point has generated a certain revenue. You can get revenue statistics in the Reporting section", digits=0),
         'signal': fields.char('Signal', 
                               help='An activity with a signal can be called programmatically. Be careful, the workitem is always created when a signal is sent'),
-        'keep_if_condition_not_met': fields.boolean("Don't Delete Workitems",
-                                                    help="By activating this option, workitems that aren't executed because the condition is not met are marked as cancelled instead of being deleted.")
     }
 
     _defaults = {
@@ -652,11 +650,7 @@ class marketing_campaign_workitem(osv.osv):
             campaign_mode = workitem.campaign_id.mode
             if condition:
                 if not eval(condition, eval_context):
-                    if activity.keep_if_condition_not_met:
-                        workitem.write({'state': 'cancelled'})
-                    else:
-                        workitem.unlink()
-                    return
+                    return self.condition_not_met(activity, workitem)
             result = True
             if campaign_mode in ('manual', 'active'):
                 Activities = self.pool.get('marketing.campaign.activity')
@@ -717,6 +711,19 @@ class marketing_campaign_workitem(osv.osv):
             tb = "".join(format_exception(*exc_info()))
             workitem.write({'state': 'exception', 'error_msg': tb})
 
+    def condition_not_met(self, activity, workitem):
+        """
+        Behaviour if the eval of the condition is not ok
+        Useful for inheritance
+        Args:
+            activity: marketing.campaign.activity recordset
+            workitem: marketing.campaign.workitem recordset
+
+        Returns:
+
+        """
+        return
+
     @api.cr_uid_ids_context
     def process(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
@@ -731,12 +738,16 @@ class marketing_campaign_workitem(osv.osv):
             if camp.mode == 'manual':
                 # manual states are not processed automatically
                 continue
+            # Save already processed work items to ignored them after
+            processed_workitem_ids = []
             while True:
                 domain = [('campaign_id', '=', camp.id), ('state', '=', 'todo'), ('date', '!=', False)]
                 if camp.mode in ('test_realtime', 'active'):
                     domain += [('date','<=', time.strftime('%Y-%m-%d %H:%M:%S'))]
-
+                if processed_workitem_ids:
+                    domain += [('id', 'not in', processed_workitem_ids)]
                 workitem_ids = self.search(cr, uid, domain, context=context)
+                processed_workitem_ids += workitem_ids
                 if not workitem_ids:
                     break
 
