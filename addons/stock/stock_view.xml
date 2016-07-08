@@ -1480,7 +1480,7 @@
                         <field name="date_expected"/>
                         <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                     </group>
-                    <group name="quants_grp" string="Reserved">
+                    <group name="quants_grp" string="Reserved" attrs="{'invisible': [('state', '=', 'draft')]}">
                         <field name="string_availability_info"/>
                     </group>
                     <group name="moved_quants_grp" string="Moved Quants" colspan="4" groups="base.group_no_one" attrs="{'invisible': [('state', '!=', 'done')]}">
