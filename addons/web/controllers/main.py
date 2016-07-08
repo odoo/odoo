@@ -296,7 +296,7 @@ def set_cookie_and_redirect(redirect_url):
 
 def load_actions_from_ir_values(key, key2, models, meta):
     Values = request.session.model('ir.values')
-    actions = Values.get(key, key2, models, meta, request.context)
+    actions = Values.get(key, key2, models, meta, context=request.context)
 
     return [(id, name, clean_action(action))
             for id, name, action in actions]

@@ -652,7 +652,7 @@ class ir_values(osv.Model):
             else:
                 new_model.append(data)
         return super(ir_values, self).get(cr, uid, key, key2, new_model,
-                                          meta, context, res_id_req, without_user, key2_req)
+                                          meta, res_id_req, without_user, key2_req, context=context)
 
 
 class calendar_event_type(osv.Model):
