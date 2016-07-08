@@ -200,6 +200,10 @@ class Partner(models.Model, FormatAddress):
     company_id = fields.Many2one('res.company', 'Company', index=True, default=_default_company)
     color = fields.Integer(string='Color Index', default=0)
     user_ids = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
+    partner_share = fields.Boolean(
+        'Share Partner', compute='_compute_partner_share', store=True,
+        help="Either customer (no user), either shared user. Indicated the current partner is a customer without "
+             "access or with a limited access created for sharing data.")
     contact_address = fields.Char(compute='_compute_contact_address', string='Complete Address')
 
     # technical field used for managing commercial fields
@@ -238,6 +242,11 @@ class Partner(models.Model, FormatAddress):
     def _compute_tz_offset(self):
         for partner in self:
             partner.tz_offset = datetime.datetime.now(pytz.timezone(partner.tz or 'GMT')).strftime('%z')
+
+    @api.depends('user_ids.share')
+    def _compute_partner_share(self):
+        for partner in self:
+            partner.partner_share = not partner.user_ids or any(user.share for user in partner.user_ids)
 
     @api.depends(lambda self: self._display_address_depends())
     def _compute_contact_address(self):
