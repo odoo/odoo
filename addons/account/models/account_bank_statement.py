@@ -576,10 +576,11 @@ class AccountBankStatementLine(models.Model):
                     domain = [(f, '>', 0), (f, '<', amount)]
             elif comparator == '=':
                 if f == 'amount_residual':
+                    liquidity_field = amount > 0 and 'debit' or 'credit'
                     domain = [
                         '|', (f, '=', float_round(amount, precision_digits=p)),
                         '&', ('account_id.internal_type', '=', 'liquidity'),
-                        '|', ('debit', '=', amount), ('credit', '=', amount),
+                        (liquidity_field, '=', amount),
                     ]
                 else:
                     domain = [
