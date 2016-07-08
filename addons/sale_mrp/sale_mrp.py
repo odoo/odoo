@@ -11,14 +11,15 @@ class MrpProduction(models.Model):
     sale_name = fields.Char(compute='_compute_sale_name_sale_ref', string='Sale Name', help='Indicate the name of sales order.')
     sale_ref = fields.Char(compute='_compute_sale_name_sale_ref', string='Sale Reference', help='Indicate the Customer Reference from sales order.')
 
+    def _get_parent_move(self, move):
+        if move.move_dest_id:
+            return self._get_parent_move(move.move_dest_id)
+        return move
+
     @api.multi
     def _compute_sale_name_sale_ref(self):
-        def get_parent_move(move):
-            if move.move_dest_id:
-                return get_parent_move(move.move_dest_id)
-            return move
         for production in self:
-            move = get_parent_move(production.move_finished_ids[0])
+            move = production._get_parent_move(production.move_finished_ids[0])
             production.sale_name = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.name or False
             production.sale_ref = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.client_order_ref or False
 
