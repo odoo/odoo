@@ -212,12 +212,9 @@ class ir_attachment(osv.osv):
 
     def _check_contents(self, cr, uid, values, context=None):
         mimetype = values['mimetype'] = self._compute_mimetype(values)
-        needs_escape = 'htm' in mimetype or '/ht' in mimetype # hta, html, xhtml, etc.
-        if needs_escape and not self.pool['res.users']._is_admin(cr, uid, [uid]):
-            if 'datas' in values:
-                values['datas'] = html_escape(values['datas'].decode('base64')).encode('base64')
-            else:
-                values['mimetype'] = 'text/plain'
+        xml_like = 'ht' in mimetype or 'xml' in mimetype # hta, html, xhtml, etc.
+        if xml_like and not self.pool['res.users']._is_admin(cr, uid, [uid]):
+            values['mimetype'] = 'text/plain'
         return values
 
     def _index(self, cr, uid, bin_data, datas_fname, file_type):
