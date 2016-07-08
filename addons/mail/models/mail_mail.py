@@ -119,12 +119,8 @@ class MailMail(models.Model):
             _logger.exception("Failed processing mail queue")
         return res
 
-    @api.cr_uid_context
-    def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
-        return True
-
     @api.multi
-    def _postprocess_sent_message_v9(self, mail_sent=True):
+    def _postprocess_sent_message(self, mail_sent=True):
         """Perform any post-processing necessary after sending ``mail``
         successfully, including deleting it completely along with its
         attachment if the ``auto_delete`` flag of the mail was set.
@@ -133,10 +129,6 @@ class MailMail(models.Model):
         :param browse_record mail: the mail that was just sent
         :return: True
         """
-        # Compat mode until v9
-        for mail in self:
-            self._postprocess_sent_message(mail, mail_sent=mail_sent)
-
         if mail_sent:
             self.sudo().filtered(lambda self: self.auto_delete).unlink()
         return True
@@ -286,7 +278,7 @@ class MailMail(models.Model):
                 # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
                 if mail_sent:
                     _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
-                mail._postprocess_sent_message_v9(mail_sent=mail_sent)
+                mail._postprocess_sent_message(mail_sent=mail_sent)
             except MemoryError:
                 # prevent catching transient MemoryErrors, bubble up to notify user or abort cron job
                 # instead of marking the mail as failed
@@ -304,7 +296,7 @@ class MailMail(models.Model):
                 failure_reason = tools.ustr(e)
                 _logger.exception('failed sending mail (id: %s) due to %s', mail.id, failure_reason)
                 mail.write({'state': 'exception', 'failure_reason': failure_reason})
-                mail._postprocess_sent_message_v9(mail_sent=False)
+                mail._postprocess_sent_message(mail_sent=False)
                 if raise_exception:
                     if isinstance(e, AssertionError):
                         # get the args of the original error, wrap into a value and throw a MailDeliveryException
