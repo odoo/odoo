@@ -366,6 +366,12 @@ class MrpProduction(models.Model):
         return True
 
     @api.multi
+    def open_produce_product(self):
+        self.ensure_one()
+        action = self.env.ref('mrp.act_mrp_product_produce').read()[0]
+        return action
+
+    @api.multi
     def button_plan(self):
         """ Create work orders. And probably do stuff, like things. """
         orders_to_plan = self.filtered(lambda order: order.routing_id and order.state == 'confirmed')
