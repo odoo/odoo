@@ -427,7 +427,8 @@ class configmanager(object):
                       for x in self.options['addons_path'].split(','))
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
-        self.options["demo"] = not opt.without_demo and self.options['init'] or {}
+        self.options['demo'] = (self.options['init']
+                                if not self.options['without_demo'] else {})
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
         self.options['translate_modules'].sort()
