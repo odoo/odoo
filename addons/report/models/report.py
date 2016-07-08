@@ -164,6 +164,14 @@ class Report(osv.Model):
         if not config['test_enable']:
             context = dict(context, commit_assetsbundle=True)
 
+        # Disable the debug mode in the PDF rendering in order to not split the assets bundle
+        # into separated files to load. This is done because of an issue in wkhtmltopdf
+        # failing to load the CSS/Javascript resources in time.
+        # Without this, the header/footer of the reports randomly disapear
+        # because the resources files are not loaded in time.
+        # https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2083
+        context = dict(context, debug=False)
+
         if html is None:
             html = self.get_html(cr, uid, ids, report_name, data=data, context=context)
 
