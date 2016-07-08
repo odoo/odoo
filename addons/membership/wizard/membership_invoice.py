@@ -38,6 +38,6 @@ class MembershipInvoice(models.TransientModel):
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'type': 'ir.actions.act_window',
-            'views': [(False, 'tree'), (form_view_ref and form_view_ref.id or False, 'form')],
-            'search_view_id': search_view_ref and search_view_ref.id or False,
+            'views': [(False, 'tree'), (form_view_ref and form_view_ref.id, 'form')],
+            'search_view_id': search_view_ref and search_view_ref.id,
         }

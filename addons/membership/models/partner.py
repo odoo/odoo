@@ -27,29 +27,32 @@ class Partner(models.Model):
              '-Invoiced Member: A member whose invoice has been created.\n'
              '-Paying member: A member who has paid the membership fee.')
     membership_start = fields.Date(compute='_compute_membership_start',
-        string = 'Membership Start Date', store=True,
+        string ='Membership Start Date', store=True,
         help="Date from which membership becomes active.")
     membership_stop = fields.Date(compute='_compute_membership_stop',
-        string = 'Membership End Date', store=True,
+        string ='Membership End Date', store=True,
         help="Date until which membership remains active.")
     membership_cancel = fields.Date(compute='_compute_membership_cancel',
-        string = 'Cancel Membership Date', store=True,
+        string ='Cancel Membership Date', store=True,
         help="Date on which membership has been cancelled")
 
-    @api.depends('membership_stop', 'associate_member',
-                 'free_member', 'member_lines',
-                 'member_lines.date_to', 'member_lines.date_from',
-                 'member_lines.account_invoice_line',
-                 'member_lines.account_invoice_line.invoice_id',
-                 'member_lines.account_invoice_line.invoice_id.state',
-                 'member_lines.account_invoice_line.invoice_id.payment_ids')
+    @api.depends('member_lines.account_invoice_line.invoice_id.state',
+                 'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
+                 'member_lines.account_invoice_line.invoice_id.payment_ids',
+                 'free_member',
+                 'membership_state',
+                 'associate_member')
     def _compute_membership_state(self):
         values = self._membership_state()
         for partner in self:
             partner.membership_state = values[partner.id]
 
-    @api.depends('associate_member', 'member_lines', 'member_lines.partner',
-                 'member_lines.date_cancel', 'member_lines.date_from')
+    @api.depends('member_lines.account_invoice_line.invoice_id.state',
+                 'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
+                 'member_lines.account_invoice_line.invoice_id.payment_ids',
+                 'free_member',
+                 'membership_state',
+                 'associate_member')
     def _compute_membership_start(self):
         """Return  date of membership"""
         for partner in self:
@@ -57,8 +60,12 @@ class Partner(models.Model):
                 ('partner', '=', partner.associate_member.id or partner.id), ('date_cancel','=',False)
             ], limit=1, order='date_from').date_from
 
-    @api.depends('associate_member', 'member_lines', 'member_lines.partner',
-                 'member_lines.date_cancel', 'member_lines.date_to')
+    @api.depends('member_lines.account_invoice_line.invoice_id.state',
+                 'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
+                 'member_lines.account_invoice_line.invoice_id.payment_ids',
+                 'free_member',
+                 'membership_state',
+                 'associate_member')
     def _compute_membership_stop(self):
         MemberLine = self.env['membership.membership_line']
         for partner in self:
@@ -66,7 +73,12 @@ class Partner(models.Model):
                 ('partner', '=', partner.associate_member.id or partner.id),('date_cancel','=',False)
             ], limit=1, order='date_to desc').date_to
 
-    @api.depends('membership_state', 'member_lines', 'member_lines.partner', 'member_lines.date_cancel')
+    @api.depends('member_lines.account_invoice_line.invoice_id.state',
+                 'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
+                 'member_lines.account_invoice_line.invoice_id.payment_ids',
+                 'free_member',
+                 'membership_state',
+                 'associate_member')
     def _compute_membership_cancel(self):
         for partner in self:
             if partner.membership_state == 'canceled':
@@ -81,6 +93,8 @@ class Partner(models.Model):
         res = {}
         today = fields.Date.today()
         for partner in self:
+            res[partner.id] = 'none'
+
             if partner.membership_cancel and today > partner.membership_cancel:
                 res[partner.id] = 'free' if partner.free_member else 'canceled'
                 continue
@@ -89,7 +103,6 @@ class Partner(models.Model):
                 continue
 
             s = 4
-            res[partner.id] = 'none'
             if partner.member_lines:
                 for mline in partner.member_lines:
                     if mline.date_to >= today and mline.date_from <= today:
@@ -143,10 +156,9 @@ class Partner(models.Model):
                 raise ValidationError(_('Error ! You cannot create recursive associated members.'))
             level -= 1
 
+    @api.model
     def _cron_update_membership(self):
-        partners = self.search([
-            ('membership_state', 'in', ['invoiced', 'paid'])
-        ])
+        partners = self.search([('membership_state', 'in', ['invoiced', 'paid'])])
         if partners:
             partners._store_set_values(['membership_state'])
 
@@ -156,8 +168,6 @@ class Partner(models.Model):
         @param datas: datas has dictionary value which consist Id of Membership product and Cost Amount of Membership.
                       datas = {'membership_product_id': None, 'amount': None}
         """
-        Invoice = self.env['account.invoice']
-        InvoiceLine = self.env['account.invoice.line']
         product_id = product_id or datas.get('membership_product_id')
         amount = datas.get('amount', 0.0)
         invoice_list = []
@@ -165,9 +175,9 @@ class Partner(models.Model):
             addr = partner.address_get(['invoice'])
             if partner.free_member:
                 raise UserError(_("Partner is a free Member."))
-            if not addr.get('invoice'):
+            if not addr.get('invoice', False):
                 raise UserError(_("Partner doesn't have an address to make the invoice."))
-            invoice = Invoice.create({
+            invoice = self.env['account.invoice'].create({
                 'partner_id': partner.id,
                 'account_id': partner.property_account_receivable_id.id,
                 'fiscal_position_id': partner.property_account_position_id.id
@@ -178,7 +188,7 @@ class Partner(models.Model):
                 'invoice_id': invoice.id,
             }
             # create a record in cache, apply onchange then revert back to a dictionnary
-            invoice_line = InvoiceLine.new(line_values)
+            invoice_line = self.env['account.invoice.line'].new(line_values)
             invoice_line._onchange_product_id()
             line_values = invoice_line._convert_to_write({name: invoice_line[name] for name in invoice_line._cache})
             line_values['price_unit'] = amount

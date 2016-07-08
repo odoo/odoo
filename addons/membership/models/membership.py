@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 import odoo.addons.decimal_precision as dp
 
 STATE = [
@@ -29,7 +29,7 @@ class MembershipLine(models.Model):
     date = fields.Date(string='Join Date',
         help="Date on which member has joined the membership")
     member_price = fields.Float(string='Membership Fee',
-        digits_compute= dp.get_precision('Product Price'), required=True,
+        digits_compute=dp.get_precision('Product Price'), required=True,
         help='Amount for the membership')
     account_invoice_line = fields.Many2one('account.invoice.line', string='Account Invoice line', readonly=True, ondelete='cascade')
     account_invoice_id = fields.Many2one('account.invoice', related='account_invoice_line.invoice_id', string='Invoice', readonly=True)
@@ -43,10 +43,7 @@ class MembershipLine(models.Model):
              "-Invoiced Member: A member whose invoice has been created.\n"
              "-Paid Member: A member who has paid the membership amount.")
 
-    @api.depends('account_invoice_line', 'account_invoice_line.invoice_id',
-                 'account_invoice_line.invoice_id.state',
-                 'account_invoice_line.invoice_id.payment_ids',
-                 'account_invoice_line.invoice_id.payment_ids.invoice_ids')
+    @api.depends('account_invoice_line.invoice_id.state','partner.membership_state')
     def _compute_state(self):
         """Compute the state lines """
         Invoice = self.env['account.invoice']

@@ -7,8 +7,7 @@ from odoo import api, fields, models
 class Product(models.Model):
     _inherit = 'product.template'
 
-    membership = fields.Boolean(
-        help='Check if the product is eligible for membership.')
+    membership = fields.Boolean(help='Check if the product is eligible for membership.')
     membership_date_from = fields.Date(string='Membership Start Date',
         help='Date from which membership becomes active.')
     membership_date_to = fields.Date(string='Membership End Date',
