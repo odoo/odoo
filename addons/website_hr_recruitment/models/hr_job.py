@@ -18,7 +18,7 @@ class hr_job(osv.osv):
 
     _columns = {
         'website_published': fields.boolean('Published', copy=False),
-        'website_description': fields.html('Website description'),
+        'website_description': fields.html('Website description', translate=True),
         'website_url': fields.function(_website_url, string="Website URL", type="char"),
     }
     _defaults = {
