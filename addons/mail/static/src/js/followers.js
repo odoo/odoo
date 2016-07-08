@@ -229,7 +229,7 @@ var Followers = form_common.AbstractField.extend({
         this.$('.o_followers_actions').hide();
         this.$('.o_followers_list').hide();
         this.$('.o_followers_title_box > button').prop('disabled', true);
-        this.$('.o_followers_count').html(this._format_followers(this.value.length));
+        this.$('.o_followers_count').html(this.value.length).parent().attr("title", this._format_followers(this.value.length));
     },
 
     /** Display the followers */
@@ -240,7 +240,7 @@ var Followers = form_common.AbstractField.extend({
 
         // clean and display title
         var $followers_list = this.$('.o_followers_list').empty();
-        this.$('.o_followers_count').html(this._format_followers(this.followers.length));
+        this.$('.o_followers_count').html(this.value.length).parent().attr("title", this._format_followers(this.value.length));
         var user_follower = _.filter(this.followers, function (rec) { return rec.is_uid;});
         this.message_is_follower = user_follower.length >= 1;
         this.follower_id = this.message_is_follower ? user_follower[0].id : undefined;
