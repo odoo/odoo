@@ -100,10 +100,10 @@ class MailMail(models.Model):
         return res
 
     @api.multi
-    def _postprocess_sent_message_v9(self, mail_sent=True):
+    def _postprocess_sent_message(self, mail_sent=True):
         for mail in self:
             if mail_sent is True and mail.statistics_ids:
                 mail.statistics_ids.write({'sent': fields.Datetime.now(), 'exception': False})
             elif mail_sent is False and mail.statistics_ids:
                 mail.statistics_ids.write({'exception': fields.Datetime.now()})
-        return super(MailMail, self)._postprocess_sent_message_v9(mail_sent=mail_sent)
+        return super(MailMail, self)._postprocess_sent_message(mail_sent=mail_sent)
