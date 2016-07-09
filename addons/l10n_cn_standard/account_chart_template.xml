@@ -10,9 +10,9 @@
 
     <data noupdate="True">
 
-        <record id="chart10003" model="account.account.template">
-            <field name="name">转让帐户</field>
-            <field name="code">1003</field>
+        <record id="chart1012" model="account.account.template">
+            <field name="name">其他货币资金</field>
+            <field name="code">1012</field>
             <field name="reconcile" eval="True"/>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         </record>
@@ -24,20 +24,13 @@
             <field name="currency_id" ref="base.CNY"/>
             <field name="cash_account_code_prefix">1001</field>
             <field name="bank_account_code_prefix">1002</field>
-            <field name="transfer_account_id" ref="chart10003"/>
+            <field name="transfer_account_id" ref="chart1012"/>
         </record>
-        <record id="chart10003" model="account.account.template">
+        <record id="chart1012" model="account.account.template">
             <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
         </record>
 
         <!-- 会计科目 -->
-        <record id="chart1015" model="account.account.template">
-            <field name="code">1015</field>
-            <field name="name">其他货币资金</field>
-            <field name="reconcile" eval="False"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="chart_template_id" ref="l10n_chart_china_standard_business"/>
-        </record>
         <record id="chart1101" model="account.account.template">
             <field name="code">1101</field>
             <field name="name">交易性金融资产</field>
