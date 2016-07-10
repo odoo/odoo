@@ -5,14 +5,15 @@
 # Translators:
 # danimaribeiro <danimaribeiro@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# grazziano <g.negocios@outlook.com.br>, 2016
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-10-19 10:28+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
+"PO-Revision-Date: 2016-07-09 16:18+0000\n"
+"Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +34,7 @@ msgid ""
 "            compare them and you can validate some and cancel others.\n"
 "          </p>\n"
 "        "
-msgstr "<p class=\"oe_view_nocontent_create\">\n            Clique para iniciar uma nova chamada para o processo de Licitações. \n          </p><p>\n            A licitação é um procedimento para a geração de ofertas concorrentes de\n             diferentes licitantes. No convite à apresentação de propostas, você pode gravar o\n             produtos que você precisa comprar e gerar a criação de RFQs para\n             fornecedores. Uma vez que as propostas tenham sido registrados, você pode revisar e\n             compará-los e você pode validar alguns e cancelar outros.\n          </p>\n        "
+msgstr "<p class=\"oe_view_nocontent_create\">\nClique para iniciar um novo processo de Licitação. \n</p><p>\nA licitação é um procedimento para a geração de ofertas concorrentes de\ndiferentes licitantes. Na licitação, você pode gravar os\nprodutos que você precisa comprar e gerar a criação de PDCs para\nfornecedores. Uma vez que as propostas tenham sido registradas, você pode revisar e\ncompará-las e pode validar algumas e cancelar outras.\n</p>\n        "
 
 #. module: purchase_requisition
 #: field:purchase.requisition,account_analytic_id:0
@@ -59,17 +60,17 @@ msgstr "Linhas da Licitação"
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "Bid Selection"
-msgstr "Licitação Seleção"
+msgstr "Seleção de Licitação"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,exclusive:0
 msgid "Bid Selection Type"
-msgstr "Licitação Tipo de Seleção"
+msgstr "Tipo de Seleção de Licitação"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,date_end:0
 msgid "Bid Submission Deadline"
-msgstr "Prazo de apresentação da proposta"
+msgstr "Prazo de Apresentação da Licitação"
 
 #. module: purchase_requisition
 #: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
@@ -81,22 +82,22 @@ msgstr "Prazo de apresentação da proposta"
 #: field:purchase.requisition.line,requisition_id:0
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Call for Bids"
-msgstr "Chamada de Licitação"
+msgstr "Licitação"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,name:0
 msgid "Call for Bids Reference"
-msgstr "Chamada de Propostas de Referência"
+msgstr "Referência de Licitações"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Bids in negotiation"
-msgstr "Chamada para Propostas em negociação"
+msgstr "Licitações em negociação"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Bids where bids are closed"
-msgstr "Convite à apresentação de propostas onde as ofertas são fechadas"
+msgstr "Convite para licitações onde as ofertas são fechadas"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
@@ -107,7 +108,7 @@ msgstr "Referência de Chamada de Propostas"
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Calls for Bids"
-msgstr "Convites à apresentação de propostas"
+msgstr "Licitação"
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty
@@ -140,7 +141,7 @@ msgstr "Cancelada"
 #, python-format
 msgid ""
 "Cancelled by the call for bids associated to this request for quotation."
-msgstr "Cancelado pela chamada de licitação associado a este pedido de cotação."
+msgstr "Cancelado pela licitação associada a este pedido de cotação."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:85
@@ -151,7 +152,7 @@ msgstr "Cancelado o concurso associado a essa cotação."
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_bid_line_qty
 msgid "Change Bid line quantity"
-msgstr "Alterar a quantidade de linha oferta"
+msgstr "Alterar a quantidade da linha Oferta"
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty
@@ -164,7 +165,7 @@ msgstr "Alterar Quantidade"
 msgid ""
 "Check this box to generate Call for Bids instead of generating requests for "
 "quotation from procurement."
-msgstr "Marque esta caixa para gerar o convite à apresentação de propostas em vez de gerar pedidos de cotação do compras."
+msgstr "Marque esta caixa para gerar o convite para Licitação em vez de gerar pedidos de cotação do compras."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
@@ -247,7 +248,7 @@ msgstr "Data da última mensagem para o registro."
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:39
 #, python-format
 msgid "Define product(s) you want to include in the call for bids."
-msgstr "Definir produto (s) que deseja incluir no edital de licitação."
+msgstr "Defina produto(s) que deseja incluir na licitação."
 
 #. module: purchase_requisition
 #: field:purchase.requisition,description:0
@@ -303,7 +304,7 @@ msgstr "ID"
 #. module: purchase_requisition
 #: help:purchase.requisition,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Se marcado novas mensagens solicitarão sua atenção."
+msgstr "Se marcado, novas mensagens solicitarão sua atenção."
 
 #. module: purchase_requisition
 #: field:purchase.requisition,message_is_follower:0
@@ -352,7 +353,7 @@ msgstr "Histórico de mensagens e comunicação"
 #. module: purchase_requisition
 #: field:purchase.requisition,multiple_rfq_per_supplier:0
 msgid "Multiple RFQ per supplier"
-msgstr "RFQ múltipla por fornecedor"
+msgstr "PDC múltiplo por fornecedor"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
@@ -367,7 +368,7 @@ msgstr "Novo"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "New Call for Bids"
-msgstr "Nova chamada de Licitação"
+msgstr "Nova Licitação"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -387,7 +388,7 @@ msgstr "Pedido de compra criado"
 #. module: purchase_requisition
 #: field:purchase.requisition,picking_type_id:0
 msgid "Picking Type"
-msgstr "Tipo de separação"
+msgstr "Tipo de Separação"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_procurement_order
@@ -503,13 +504,13 @@ msgstr "Quantidade"
 #. module: purchase_requisition
 #: field:purchase.order.line,quantity_bid:0
 msgid "Quantity Bid"
-msgstr "Quantidade Licitação"
+msgstr "Quantidade Oferta"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:192
 #, python-format
 msgid "RFQ created"
-msgstr "RFQ criada"
+msgstr "PDC criado"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -568,34 +569,34 @@ msgstr "Programado Data Ordenação:"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Search Call for Bids"
-msgstr "Pesquisa Chamada de Licitação"
+msgstr "Pesquisar Licitação"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Select multiple RFQ"
-msgstr "Selecione múltiplos RFQ"
+msgstr "Selecione múltiplos PDC"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Select only one RFQ (exclusive)"
-msgstr "Selecione apenas um RFQ (exclusive)"
+msgstr "Selecione apenas um PDC (exclusivo)"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,exclusive:0
 msgid ""
 "Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
 "Select multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
-msgstr "Selecione apenas um RFQ (exclusive): No confirmação de uma ordem de compra, ele cancela a ordem de compra restante.\nSelecione RFQ múltiplos: Permite ter a confirmação a compra múltipla orders.On de uma ordem de compra não cancelar as ordens restantes"
+msgstr "Selecione apenas um PDC (exclusivo): Na confirmação de uma ordem de compra, ele cancela a ordem de compra restante.\nSelecione PDC múltiplos: Permite ter múltiplas ordens de compra. Na de uma ordem de compra não cancela as ordens restantes"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Selection Type:"
-msgstr "Tipo de seleção:"
+msgstr "Tipo de Seleção:"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Send RFQ by Email"
-msgstr "Enviar por E-mail RFQ"
+msgstr "Enviar PDC por E-mail"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
@@ -635,7 +636,7 @@ msgstr "Fornecedor"
 msgid ""
 "Technical field for not loosing the initial information about the quantity "
 "proposed in the bid"
-msgstr "Domínio técnico para não perder a informação inicial sobre a quantidade proposta na licitação"
+msgstr "Campo técnico para não perder a informação inicial sobre a quantidade proposta na oferta"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -675,7 +676,7 @@ msgstr "Veja as Linhas dos Produtos"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "View RFQs/Bids"
-msgstr "Veja RFQs / Licitações"
+msgstr "Veja PDCs/Ofertas"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,warehouse_id:0

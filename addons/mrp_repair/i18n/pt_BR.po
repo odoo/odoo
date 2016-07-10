@@ -4,14 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# grazziano <g.negocios@outlook.com.br>, 2016
 # Wagner Pereira <wagner@wagner.pereira.nom.br>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-10-19 10:30+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
+"PO-Revision-Date: 2016-07-09 17:09+0000\n"
+"Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgid ""
 "* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.             \n"
 "* The 'Done' status is set when repairing is completed.            \n"
 "* The 'Cancelled' status is used when user cancel repair order."
-msgstr " * A situação 'Provisório' é usada quando o usuário está preparando uma ordem de reparo nova ou não confirmada.\n* A situação 'Confirmada' é usada quando um usuário confirmar a ordem de reparos.\n* A situação 'Pronto para o Reparo' é usada para iniciar o reparo, o usuário somente poderá reparar após a confirmação.\n* A situação 'A ser faturado' é usada para gerar a fatura antes ou depois do reparo concluído.\n* A situação 'Concluído' é usada quando a ordem de serviço estiver pronta.\n* A situação 'Cancelada' é usada quando o usuário cancelar a ordem de reparos."
+msgstr " * A situação 'Provisório' é usada quando o usuário está preparando uma ordem de reparo nova ou não confirmada.\n* A situação 'Confirmada' é usada quando um usuário confirmar a ordem de reparos.\n* A situação 'Pronto para o Reparo' é usada para iniciar o reparo, o usuário somente poderá reparar após a confirmação.\n* A situação 'A ser faturado' é usada para gerar a fatura antes ou depois do reparo concluído.\n* A situação 'Concluído' é usada quando a ordem de serviço estiver concluída.\n* A situação 'Cancelada' é usada quando o usuário cancelar a ordem de reparos."
 
 #. module: mrp_repair
 #: view:website:mrp_repair.report_mrprepairorder
@@ -64,7 +65,7 @@ msgid ""
 "                customer or not.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Clique para criar uma ordem de reparos. \n              </p><p>\n                Em uma ordem de reparos, você pode detalhar os componentes que você remover,\n                adicionar, ou substituir e registrar o tempo gasto em diferentes operações.\n              </p><p>\n                A ordem de reparo usa a data da garantia no Número de Série para saber se\n                o reparo deve ser faturado ou não.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nClique para criar uma ordem de reparo. \n</p><p>\nEm uma ordem de reparo, você pode detalhar os componentes que você remove,\nadiciona, ou substitui e registrar o tempo gasto em diferentes operações.\n</p><p>\nA ordem de reparo usa a data da garantia no Número de Série para saber se\no reparo deve ser faturado ou não.\n</p>\n            "
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:41
@@ -148,7 +149,7 @@ msgstr "Confirmado"
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr "Não foi possível encontrar uma lista de preço que combina com este produto e quantidade.\nVocê precisa mudar o produto, a quantidade ou a lista de preço."
+msgstr "Não foi possível encontrar uma lista de preço que combina com este produto e quantidade.\nVocê precisa alterar o produto, a quantidade ou a lista de preço."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -303,7 +304,7 @@ msgstr "ID"
 #. module: mrp_repair
 #: help:mrp.repair,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Se marcado novas mensagens solicitarão sua atenção."
+msgstr "Se marcado, novas mensagens solicitarão sua atenção."
 
 #. module: mrp_repair
 #: field:mrp.repair,internal_notes:0
@@ -313,7 +314,7 @@ msgstr "Anotações Internas"
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
 msgid "Inventory Move"
-msgstr "Movimentação de Estoque"
+msgstr "Movimento de Inventário"
 
 #. module: mrp_repair
 #: field:mrp.repair,invoice_id:0
@@ -425,7 +426,7 @@ msgstr "Movimento"
 #. module: mrp_repair
 #: help:mrp.repair,move_id:0
 msgid "Move created by the repair order"
-msgstr "Movimentação criada pela Ordem de Reparo"
+msgstr "Movimento criado pela ordem de reparo"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -688,13 +689,13 @@ msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
-msgstr "Selecionando 'Antes do reparo' ou 'Após o reparo', irá permitir-lhe gerar a fatura antes ou após o reparo é feito, respectivamente. 'Não faturar' significa que você não quer gerar fatura para esta ordem de reparos."
+msgstr "Selecionando 'Antes do reparo' ou 'Após o reparo', irá permitir-lhe gerar a fatura antes ou após o reparo é concluído, respectivamente. 'Não faturar' significa que você não quer gerar fatura para esta ordem de reparos."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:289
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
-msgstr "O Número de série é obrigatório para a linha de operação com o produto '%s'"
+msgstr "O número de série é necessário para a linha de operação com o produto '%s'"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
