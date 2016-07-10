@@ -4,6 +4,7 @@
 # 
 # Translators:
 # danimaribeiro <danimaribeiro@gmail.com>, 2015
+# grazziano <g.negocios@outlook.com.br>, 2016
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2015
 # Peter Leaf <pablleaf@gmail.com>, 2015
 # Wagner Pereira <wagner@wagner.pereira.nom.br>, 2015
@@ -12,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-11-17 16:45+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
+"PO-Revision-Date: 2016-07-09 16:18+0000\n"
+"Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +47,7 @@ msgid ""
 "${object.company_id.email or ''}\n"
 "${object.company_id.phone or ''}\n"
 "</pre>"
-msgstr "\n<p>\nOlá ${object.name},\n</p>\n<p>\nVocê foi convidado para validar seu email para obter acesso a\n\"${object.company_id.name}\" Fórum(s) de perguntas.\n</p>\n<p>\nPara validar seu email, por favor clique no link abaixo:\n</p>\n<ul>\n<li><a href=\"${ctx.get('token_url')}\">Valide minha conta para \"${object.company_id.name}\" Fórum(s) de perguntas.</a></li>\n</ul>\n<p>\nObrigado,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
+msgstr "\n<p>\nOlá ${object.name},\n</p>\n<p>\nVocê foi convidado para validar seu e-mail para obter acesso a\n\"${object.company_id.name}\" Fórum(s) de perguntas.\n</p>\n<p>\nPara validar seu e-mail, por favor clique no link abaixo:\n</p>\n<ul>\n<li><a href=\"${ctx.get('token_url')}\">Valide minha conta para \"${object.company_id.name}\" Fórum(s) de perguntas.</a></li>\n</ul>\n<p>\nObrigado,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.e-mail or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: website_forum
 #: model:email.template,subject:website_forum.validation_email
@@ -61,7 +62,7 @@ msgstr "&times;"
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "(only one answer per question is allowed)"
-msgstr "(Apenas uma resposta por pergunta é permitido)"
+msgstr "(Apenas uma resposta por pergunta é permitida)"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
@@ -92,7 +93,7 @@ msgstr "<p>Uma nova resposta para <i>%s</i> foi postada. <a href=\"%s/forum/%s/q
 msgid ""
 "<p>A new question <i>%s</i> has been asked on %s. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the question.</a></p>"
-msgstr "<p>Uma nova pergunta <i>%s</i> foi feita sobre %s. <a href=\"%s/forum/%s/question/%s\">Clique aqui para acessar a questão.</a></p>"
+msgstr "<p>Uma nova pergunta <i>%s</i> foi feita em %s. <a href=\"%s/forum/%s/question/%s\">Clique aqui para acessar a pergunta.</a></p>"
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
@@ -107,7 +108,7 @@ msgid ""
 "A tag is a label that categorizes your question with other,\n"
 "            similar questions. Using the right tags makes it easier for\n"
 "            others to find and answer your question."
-msgstr "A tag é um label que categoriza suas questões juntamente a outras\n            questões semelhantes. Usando as tags corretas torna mais fácil para\n            outros encontrar e responder a sua pergunta."
+msgstr "Um marcador é um rótulo que categoriza sua pergunta com outras\nperguntas semelhantes. Usando os marcadores corretos torna-se mais fácil para\noutros encontrarem e responderem a sua pergunta."
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -253,7 +254,7 @@ msgid ""
 "Besides gaining reputation with your questions and answers,\n"
 "            you receive badges for being especially helpful. Badges\n"
 "            appear on your profile page, and your posts."
-msgstr "Além de ganhar reputação com suas perguntas e respostas,\n            você receberá medalhas por ser especialmente útil. As medalhas\n            aparecem na sua página de perfil, e suas mensagens."
+msgstr "Além de ganhar reputação com suas perguntas e respostas,\nvocê receberá medalhas por ser especialmente útil. As medalhas\naparecem na sua página de perfil, e suas mensagens."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -313,7 +314,7 @@ msgstr "Pode votar Ok"
 #. module: website_forum
 #: field:forum.forum,karma_retag:0
 msgid "Change question tags"
-msgstr "Alterar tags de pergunta"
+msgstr "Alterar marcadores de pergunta"
 
 #. module: website_forum
 #: view:website:website_forum.user_badges
@@ -426,7 +427,7 @@ msgstr "Completou própria biografia"
 msgid ""
 "Congratulations! Your email has just been validated. You may now participate"
 " to our forums."
-msgstr "Parabéns! Seu email foi validado. Você pode participar dos nossos fóruns."
+msgstr "Parabéns! Seu e-mail foi validado. Você pode participar dos nossos fóruns."
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -447,7 +448,7 @@ msgstr "Converta as suas próprias respostas para comentários e vice-versa"
 #. module: website_forum
 #: help:forum.post,is_correct:0
 msgid "Correct Answer or Answer on this question accepted."
-msgstr "Corrigir Resposta ou Resposta desta pergunta aceita."
+msgstr "Resposta Correta ou Resposta desta pergunta aceita."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -555,12 +556,12 @@ msgstr "Edite suas próprias mensagens"
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Edit question"
-msgstr "Modificar pergunta"
+msgstr "Editar pergunta"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Edit your Question"
-msgstr "Modificar sua Pergunta"
+msgstr "Editar sua Pergunta"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_7
@@ -584,13 +585,13 @@ msgstr "Esclarecido"
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Enter your Question"
-msgstr "Introduza a sua pergunta"
+msgstr "Introduza a sua Pergunta"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
 #: model:gamification.challenge,name:website_forum.challenge_famous_question
 msgid "Famous Question"
-msgstr "Pergunta famosa"
+msgstr "Pergunta Famosa"
 
 #. module: website_forum
 #: field:forum.post,favourite_count:0
@@ -601,7 +602,7 @@ msgstr "Contagem de Favoritos"
 #: model:gamification.badge,name:website_forum.badge_q_5
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
 msgid "Favorite Question"
-msgstr "Pergunta favorita"
+msgstr "Pergunta Favorita"
 
 #. module: website_forum
 #: field:forum.post,favourite_ids:0
@@ -646,7 +647,7 @@ msgstr "Seguido"
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Followed Questions"
-msgstr "Perguntas sendo seguidas"
+msgstr "Perguntas Seguidas"
 
 #. module: website_forum
 #: field:forum.forum,message_follower_ids:0
@@ -791,7 +792,7 @@ msgstr "ID"
 #. module: website_forum
 #: help:forum.forum,message_unread:0 help:forum.post,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Se marcado novas mensagens solicitarão sua atenção."
+msgstr "Se marcado, novas mensagens solicitarão sua atenção."
 
 #. module: website_forum
 #: view:website:website_forum.close_question
@@ -799,12 +800,12 @@ msgid ""
 "If you close this question, it will be hidden for most users. Only\n"
 "            users having a high karma can see closed questions to moderate\n"
 "            them."
-msgstr "Se você fechar esta pergunta, ele será escondido para a maioria dos usuários. Apenas\n            usuários que têm um alto karma podem ver perguntas fechadas para moderar\n            eles."
+msgstr "Se você fechar esta pergunta, ela será ocultada para a maioria dos usuários. Apenas\nusuários que têm um alto karma podem ver perguntas fechadas para moderá-las."
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "If you wanted to comment on the question or answer, just"
-msgstr "Se você queria comentar sobre a questão ou resposta, apenas"
+msgstr "Se você queria comentar na pergunta ou resposta, apenas"
 
 #. module: website_forum
 #: field:forum.forum,message_is_follower:0
@@ -815,7 +816,7 @@ msgstr "É um Seguidor"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "It appears your email has not been verified."
-msgstr "Parece que seu email não foi verificado."
+msgstr "Parece que seu e-mail não foi verificado."
 
 #. module: website_forum
 #: field:res.users,karma:0 view:website:website_forum.user_detail_full
@@ -1069,19 +1070,19 @@ msgstr "Pessoas"
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Please enter a descriptive question (should finish by a '?')"
-msgstr "Digite uma pergunta descritiva (deve terminar com um \"?\")"
+msgstr "Digite uma pergunta descritiva (deve terminar com um '?')"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Please enter a descriptive question (should finish with a '?')"
-msgstr "Digite uma pergunta descritiva (deve terminar com um \"?\")"
+msgstr "Digite uma pergunta descritiva (deve terminar com um '?')"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid ""
 "Please enter a valid email address in order to receive notifications from "
 "answers or comments."
-msgstr "Por favor insira um endereço de email válido para poder receber notificações de respostas ou comentários."
+msgstr "Por favor insira um endereço de e-mail válido para poder receber notificações de respostas ou comentários."
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
@@ -1142,7 +1143,7 @@ msgstr "Publique sua resposta"
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Post Your Question"
-msgstr "Poste sua pergunta"
+msgstr "Poste Sua Pergunta"
 
 #. module: website_forum
 #: field:forum.tag,post_ids:0
@@ -1160,7 +1161,7 @@ msgstr "Perfil público"
 #: model:gamification.challenge,name:website_forum.challenge_pundit
 #: model:gamification.goal.definition,name:website_forum.definition_pundit
 msgid "Pundit"
-msgstr "pândita"
+msgstr "Pândita"
 
 #. module: website_forum
 #: view:website:website.layout
@@ -1183,7 +1184,7 @@ msgstr "Pergunta Editada"
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_downvote:0
 msgid "Question downvoted"
-msgstr "Pergunta downvoted"
+msgstr "Pergunta menos votada"
 
 #. module: website_forum
 #: view:website:website_forum.404
@@ -1198,7 +1199,7 @@ msgstr "Ferramentas de Pergunta"
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_upvote:0
 msgid "Question upvoted"
-msgstr "Pergunta upvoted"
+msgstr "Pergunta mais votada"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
@@ -1262,7 +1263,7 @@ msgstr "Pesquisar"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Search a question..."
-msgstr "Procure uma pergunta..."
+msgstr "Pesquisar uma pergunta..."
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -1334,7 +1335,7 @@ msgstr "Apoiador"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
 msgid "Tag"
-msgstr "Tag"
+msgstr "Marcador"
 
 #. module: website_forum
 #: field:forum.post,tag_ids:0 view:website:website_forum.ask_question
@@ -1430,22 +1431,22 @@ msgstr "Upvote"
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_student
 msgid "Upvoted question (1)"
-msgstr "Pergunta Upvoted (1)"
+msgstr "Pergunta mais votada (1)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_great_question
 msgid "Upvoted question (15)"
-msgstr "Pergunta Upvoted (15)"
+msgstr "Pergunta mais votada (15)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_nice_question
 msgid "Upvoted question (4)"
-msgstr "Pergunta Upvoted (4)"
+msgstr "Pergunta mais votada (4)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_good_question
 msgid "Upvoted question (6)"
-msgstr "Pergunta Upvoted (6)"
+msgstr "Pergunta mais votada (6)"
 
 #. module: website_forum
 #: field:forum.post.vote,user_id:0
@@ -1666,7 +1667,7 @@ msgstr "membro desde"
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
 msgid "not a real question"
-msgstr "não é uma questão real"
+msgstr "não é uma pergunta real"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_6
