@@ -18,5 +18,5 @@ class hr_job(osv.osv):
         return super(hr_job, self).job_open(cr, uid, ids, context)
 
     _columns = {
-        'website_description': fields.html('Website description', translate=True),
+        'website_description': fields.html('Website description', translate=True, sanitize=False),
     }

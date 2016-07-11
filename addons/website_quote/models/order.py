@@ -18,7 +18,7 @@ class sale_quote_template(osv.osv):
     _description = "Sale Quotation Template"
     _columns = {
         'name': fields.char('Quotation Template', required=True),
-        'website_description': fields.html('Description', translate=True),
+        'website_description': fields.html('Description', translate=True, sanitize=False),
         'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quotation Template Lines', copy=True),
         'note': fields.text('Terms and conditions'),
         'options': fields.one2many('sale.quote.option', 'template_id', 'Optional Products Lines', copy=True),
@@ -108,7 +108,7 @@ class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
     _description = "Sales Order Line"
     _columns = {
-        'website_description': fields.html('Line Description'),
+        'website_description': fields.html('Line Description', sanitize=False),
         'option_line_id': fields.one2many('sale.order.option', 'line_id', 'Optional Products Lines'),
     }
 
@@ -138,7 +138,7 @@ class sale_order_line(osv.osv):
     def product_id_change(self):
         domain = super(sale_order_line, self).product_id_change()
         if self.order_id.template_id:
-            self.name = next((quote_line.name for quote_line in self.order_id.template_id.quote_line if quote_line.product_id.id == self.product_id.id), self.name) 
+            self.name = next((quote_line.name for quote_line in self.order_id.template_id.quote_line if quote_line.product_id.id == self.product_id.id), self.name)
         return domain
 
 
@@ -157,7 +157,7 @@ class sale_order(osv.osv):
     _columns = {
         'access_token': fields.char('Security Token', required=True, copy=False),
         'template_id': fields.many2one('sale.quote.template', 'Quotation Template', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
-        'website_description': fields.html('Description', translate=True),
+        'website_description': fields.html('Description', translate=True, sanitize=False),
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True),
         'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float", digits=0),
         'quote_viewed': fields.boolean('Quotation Viewed'),
@@ -320,7 +320,7 @@ class sale_quote_option(osv.osv):
         'template_id': fields.many2one('sale.quote.template', 'Quotation Template Reference', ondelete='cascade', select=True, required=True),
         'name': fields.text('Description', required=True, translate=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True),
-        'website_description': fields.html('Option Description', translate=True),
+        'website_description': fields.html('Option Description', translate=True, sanitize=False),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
@@ -389,7 +389,7 @@ class sale_order_option(osv.osv):
         'line_id': fields.many2one('sale.order.line', on_delete="set null"),
         'name': fields.text('Description', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)]),
-        'website_description': fields.html('Line Description'),
+        'website_description': fields.html('Line Description', sanitize=False),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
@@ -455,6 +455,6 @@ class product_template(osv.Model):
     _inherit = "product.template"
 
     _columns = {
-        'website_description': fields.html('Description for the website'), # hack, if website_sale is not installed
-        'quote_description': fields.html('Description for the quote'),
+        'website_description': fields.html('Description for the website', sanitize=False), # hack, if website_sale is not installed
+        'quote_description': fields.html('Description for the quote', sanitize=False),
     }
