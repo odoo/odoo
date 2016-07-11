@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_payslip">
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
@@ -54,12 +53,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="get_payslip_lines(o.line_ids)" t-as="p">
-                                <td><span t-field="p.code"/></td>
-                                <td><span t-field="p.name"/></td>
-                                <td><span t-field="p.quantity"/></td>
-                                <td><span t-esc="formatLang(p.amount, currency_obj=o.company_id.currency_id)"/></td>
-                                <td><span t-esc="formatLang(p.total, currency_obj=o.company_id.currency_id)"/></td>
+                                <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip)" t-as="line">
+                                <td><span t-field="line.code"/></td>
+                                <td><span t-field="line.name"/></td>
+                                <td><span t-field="line.quantity"/></td>
+                                <td><span t-esc="line.amount"
+                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                <td><span t-esc="line.total"
+                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+
                             </tr>
                         </tbody>
                     </table>
@@ -70,5 +72,4 @@
         </t>
     </t>
 </template>
-</data>
-</openerp>
+</odoo>
