@@ -24,6 +24,7 @@ anonymization process to recover your previous data.
         'data/ir.model.fields.anonymization.csv',
         'security/ir.model.access.csv',
         'views/anonymization_views.xml',
+        'wizard/anonymize_wizard_views.xml'
     ],
     'installable': True,
     'auto_install': False,
