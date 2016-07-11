@@ -189,7 +189,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
                     anonymized_value = '2011-11-11'
                 elif field_type == 'datetime':
                     anonymized_value = '2011-11-11 11:11:11'
-                elif field_type == 'float':
+                elif field_type in ('float', 'monetary'):
                     anonymized_value = 0.0
                 elif field_type == 'integer':
                     anonymized_value = 0
