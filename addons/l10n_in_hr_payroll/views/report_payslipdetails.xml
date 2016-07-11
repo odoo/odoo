@@ -3,8 +3,8 @@
 <data>
     <template id="report_payslipdetails">
         <t t-call="report.html_container">
-            <t t-call="report.external_layout">
             <t t-foreach="docs" t-as="o">
+                <t t-call="report.external_layout">
                 <div class="page">
                     <h2>Pay Slip Details</h2>
                     <p t-field="o.name"/>
@@ -53,7 +53,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-foreach="get_details_by_rule_category(o.details_by_salary_rule_category)" t-as="h">
+                            <t t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h">
                                 <t t-if="h['level']==0">
                                     <tr>
                                         <td>
@@ -62,8 +62,11 @@
                                         <td>
                                             <strong><span t-esc="h['rule_category']"/></strong>
                                         </td>
-                                        <td>
-                                            <strong><span t-esc="formatLang(h['total'], currency_obj=o.company_id.currency_id)"/></strong>
+                                        <td class="text-right">
+                                            <strong>
+                                                <span t-esc="h['total']"
+                                                      t-esc-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
+                                             </strong>
                                         </td>
                                     </tr>
                                 </t>
@@ -75,8 +78,9 @@
                                         <td>
                                             <span t-esc="'..'*h['level']"/><span t-esc="h['rule_category']"/>
                                         </td>
-                                        <td>
-                                            <span t-esc="formatLang(h['total'], currency_obj=o.company_id.currency_id)"/>
+                                        <td class="text-right">
+                                            <span t-esc="h['total']"
+                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
                                         </td>
                                     </tr>
                                 </t>

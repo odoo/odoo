@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_payslipdetails">
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
@@ -53,15 +52,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="get_details_by_rule_category(o.details_by_salary_rule_category)" t-as="h">
+                            <tr t-foreach="get_details_by_rule_category.get(o.id, [])" t-as="h">
                                 <td>
                                     <span t-esc="h['code']"/>
                                 </td>
                                 <td>
                                     <span t-esc="'..'*h['level']"/><span t-esc="h['rule_category']"/>
                                 </td>
-                                <td>
-                                    <span t-esc="formatLang(h['total'], currency_obj=o.company_id.currency_id)"/>
+                                <td class="text-right">
+                                    <span t-esc="h['total']"
+                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                 </td>
                             </tr>
                         </tbody>
@@ -79,12 +79,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="get_lines_by_contribution_register(o.line_ids)" t-as="p">
+                            <tr t-foreach="get_lines_by_contribution_register.get(o.id, [])" t-as="p">
                                 <td><span t-esc="p.get('code', '')"/></td>
                                 <td><span t-esc="p.get('name', '')"/></td>
                                 <td><span t-esc="p.get('quantity', '')"/></td>
-                                <td><span t-esc="formatLang(p.get('amount', 0))"/></td>
-                                <td><span t-esc="formatLang(p.get('total', 0), currency_obj=o.company_id.currency_id)"/></td>
+                                <td><span t-esc="p.get('amount', 0)"/></td>
+                                <td class="text-right">
+                                    <span t-esc="p.get('total', 0)"
+                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -95,5 +98,4 @@
         </t>
     </t>
 </template>
-</data>
-</openerp>
+</odoo>
