@@ -60,6 +60,11 @@ class MrpBom(models.Model):
         default=lambda self: self.env['res.company']._company_default_get('mrp.bom'),
         required=True)
 
+    @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids')
+    def _check_product_recursion(self):
+        if self.bom_line_ids.filtered(lambda x: x.product_id.product_tmpl_id == self.product_tmpl_id):
+            raise UserError(_('BoM line product %s should not be same as BoM product.') % self.display_name)
+
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
         res = {}
