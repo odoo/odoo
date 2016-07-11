@@ -518,7 +518,7 @@ class YamlInterpreter(object):
             if node.use:
                 value = [inst[node.use] for inst in instances]
             else:
-                value = instance.ids
+                value = instances.ids
         elif node.id:
             if field and field.type == 'reference':
                 record = self.get_record(node.id)
