@@ -500,7 +500,7 @@ class YamlInterpreter(object):
         return {
             key: val
             for key, val in record_dict.iteritems()
-            if (key in model._columns or key in model._inherit_fields)
+            if (key in model._columns or key in model._inherit_fields or model._fields[key].inverse)
         }
 
     def process_ref(self, node, field=None):
