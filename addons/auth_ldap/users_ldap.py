@@ -150,7 +150,7 @@ class CompanyLDAP(osv.osv):
         :rtype: dict
         """
 
-        values = { 'name': tools.ustr(ldap_entry[1]['cn'][0]).encode('utf-8'),
+        values = { 'name': tools.ustr(ldap_entry[1]['cn'][0]),
                    'login': login,
                    'company_id': conf['company']
                    }
