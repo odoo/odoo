@@ -373,6 +373,9 @@ class Slide(models.Model):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.iteritems():
                 values.setdefault(key, value)
+        if values.get('channel_id'):
+            custom_channels = self.env['slide.channel'].search([('custom_slide_id', '=', self.id), ('id', '!=', values.get('channel_id'))])
+            custom_channels.write({'custom_slide_id': False})
         res = super(Slide, self).write(values)
         if values.get('website_published'):
             self.date_published = datetime.datetime.now()
