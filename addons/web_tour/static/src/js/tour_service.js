@@ -33,7 +33,7 @@ return session.is_bound.then(function () {
 
         // Use a MutationObserver to detect DOM changes
         var untracked_classnames = ["o_tooltip", "o_tooltip_content", "o_tooltip_overlay"];
-        var check_tooltip = _.throttle(function (records) {
+        var check_tooltip = _.debounce(function (records) {
             var update = _.some(records, function (record) {
                 return !(is_untracked(record.target)
                     || _.some(record.addedNodes, is_untracked)
@@ -48,7 +48,7 @@ return session.is_bound.then(function () {
             if (update) { // ignore mutations which concern the tooltips
                 tour.update();
             }
-        }, 500, {leading: false});
+        }, 500);
         var observer = new MutationObserver(check_tooltip);
         var observe = function () {
             $(function () {
