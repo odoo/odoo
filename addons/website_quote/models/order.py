@@ -94,18 +94,31 @@ class sale_quote_line(osv.osv):
             values['website_description'] = product.quote_description or product.website_description or ''
         return values
 
+    def _quote_line_translation(self, cr, uid, ids, values, context=None):
+        product_id = values.get('product_id')
+        Translation = self.pool['ir.translation']
+        product_tmpl_id = product_id and self.pool['product.product'].browse(cr, uid, product_id, context=context).product_tmpl_id.id or False
+        res_id = isinstance(ids, list) and ids[0] or ids
+        quote_translations = Translation.search(cr, uid, [('name', '=', 'sale.quote.line,name'), ('res_id', '=', res_id), ('type','=', 'model')], context=context)
+        if not quote_translations:
+            product_translation = Translation.search(cr, uid, [('name', '=', 'product.template,name'), ('res_id', '=', product_tmpl_id), ('type','=', 'model')], context=context)
+            for translation_id in product_translation:
+                Translation.copy(cr, uid, translation_id, default={'name': 'sale.quote.line,name', 'res_id': res_id}, context=context)
+
     def create(self, cr, uid, values, context=None):
         values = self._inject_quote_description(cr, uid, values, context)
         ret = super(sale_quote_line, self).create(cr, uid, values, context=context)
         # hack because create don t make the job for a related field
         if values.get('website_description'):
             self.write(cr, uid, ret, {'website_description': values['website_description']}, context=context)
+        self._quote_line_translation(cr, uid, ret, values, context)
         return ret
 
     def write(self, cr, uid, ids, values, context=None):
         values = self._inject_quote_description(cr, uid, values, context)
-        return super(sale_quote_line, self).write(cr, uid, ids, values, context=context)
-
+        res = super(sale_quote_line, self).write(cr, uid, ids, values, context=context)
+        self._quote_line_translation(cr, uid, ids, values, context=context)
+        return res
 
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
