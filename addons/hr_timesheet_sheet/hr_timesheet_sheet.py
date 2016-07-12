@@ -70,8 +70,6 @@ class hr_timesheet_sheet(osv.osv):
                 raise UserError(_('In order to create a timesheet for this employee, you must link him/her to a user.'))
             if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id, context=context):
                 raise UserError(_('You cannot have 2 timesheets that overlap!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
-            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).product_id:
-                raise UserError(_('In order to create a timesheet for this employee, you must link the employee to a product.'))
         if vals.get('attendances_ids'):
             # If attendances, we sort them by date asc before writing them, to satisfy the alternance constraint
             # In addition to the date order, deleting attendances are done before inserting attendances
