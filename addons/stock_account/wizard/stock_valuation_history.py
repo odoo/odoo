@@ -97,7 +97,7 @@ class stock_history(osv.osv):
             if line.product_id.cost_method == 'real':
                 res[line.id] = line.quantity * line.price_unit_on_quant
             else:
-                res[line.id] = line.quantity * product_obj.get_history_price(cr, uid, line.product_id.id, line.company_id.id, date=date, context=context)
+                res[line.id] = line.quantity * product_obj.get_history_price(cr, uid, [line.product_id.id], line.company_id.id, date=date, context=context)
         return res
 
     _columns = {
