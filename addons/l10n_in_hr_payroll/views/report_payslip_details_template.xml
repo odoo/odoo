@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
     <template id="report_payslipdetails">
         <t t-call="report.html_container">
             <t t-foreach="docs" t-as="o">
@@ -62,11 +61,8 @@
                                         <td>
                                             <strong><span t-esc="h['rule_category']"/></strong>
                                         </td>
-                                        <td class="text-right">
-                                            <strong>
-                                                <span t-esc="h['total']"
-                                                      t-esc-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
-                                             </strong>
+                                        <td>
+                                            <strong><span t-esc="format(h['total'], 'monetary', o.company_id.currency_id)"/></strong>
                                         </td>
                                     </tr>
                                 </t>
@@ -78,9 +74,8 @@
                                         <td>
                                             <span t-esc="'..'*h['level']"/><span t-esc="h['rule_category']"/>
                                         </td>
-                                        <td class="text-right">
-                                            <span t-esc="h['total']"
-                                                  t-esc-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
+                                        <td>
+                                            <span t-esc="format(h['total'], 'monetary', o.company_id.currency_id)"/>
                                         </td>
                                     </tr>
                                 </t>
@@ -94,5 +89,4 @@
             </t>
         </t>
     </template>
-</data>
-</openerp>
+</odoo>

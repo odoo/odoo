@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_hryearlysalary">
     <t t-call="report.html_container">
+    <t t-foreach="docs" t-as="o">
       <t t-foreach="get_employee(data['form'])" t-as="employee">
         <t t-call="report.internal_layout">
             <div class="page">
                     <h2><span t-field="employee.company_id"/></h2>
                     <p> From 
-                        <u><span t-esc="formatLang(data['form']['date_from'], date=True)"/></u> 
-                    To  <u><span t-esc="formatLang(data['form']['date_to'], date=True)"/></u> </p>
+                        <u><span t-field="o.date_from" />
+                        </u>
+                    To  <u><span t-field="o.date_to" />
+                        </u> </p>
                     <table class="table table-condensed table-bordered">
                         <tr>
                             <td><strong>Employee Code</strong></td>
@@ -27,7 +29,7 @@
                             <td><strong>Bank</strong></td>
                             <td>
                             <t t-if="employee.bank_account_id">
-                                    <span t-field="employee.bank_account_id.bank.name"/>
+                                    <span t-field="employee.bank_account_id.bank_id.name"/>
                             </t>
                             </td>
                         </tr>
@@ -92,10 +94,10 @@
                                  <t t-if="allowance[0] not in ['Basic','Gross']">
                                      <td><span t-esc="allowance[0]"/></td>
                                      <t t-foreach="allowance[1:13]" t-as="allow">
-                                         <td><span t-esc="formatLang(allow)"/></td>
+                                         <td><span t-esc="allow"/></td>
                                      </t>
                                  </t>
-                                 <td t-esc="formatLang(allowance[13],currency_obj= company.currency_id)"/>
+                                 <td t-esc="format(allowance[13], 'monetary', employee.company_id.currency_id)"/>
                              </tr>
                              <td><strong> Deductions:</strong></td>
                                <tr t-foreach="get_deduct()" t-as="deduct">
@@ -106,9 +108,9 @@
                                        <td><span t-esc="deduct[0]"/></td>
                                    </t>
                                    <t t-foreach="deduct[1:12]" t-as="d">
-                                       <td><span t-esc="formatLang(d)"/></td>
+                                       <td><span t-esc="d"/></td>
                                    </t>
-                                   <td t-esc="formatLang(deduct[13],currency_obj= company.currency_id)"/>
+                                   <td t-esc="format(deduct[13], 'monetary', employee.company_id.currency_id)"/>
                                </tr>
                         </tbody>
                     </table>
@@ -116,6 +118,6 @@
         </t>
         </t>
     </t>
+    </t>
 </template>
-</data>
-</openerp>
+</odoo>
