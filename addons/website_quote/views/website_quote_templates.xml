@@ -333,7 +333,7 @@
                                   <h4>Payment Method:</h4>
                                   <ul class="list-unstyled">
                                     <li t-foreach="acquirers or []" t-as="acquirer">
-                                      <label t-if="acquirer.button">
+                                      <label t-if="buttons.get(acquirer.id)">
                                           <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer"/>
                                           <img class="media-object" style="width: 60px; display: inline-block;"
                                               t-att-title="acquirer.name"
@@ -346,7 +346,7 @@
                                 <div class="col-md-6">
                                     <t t-foreach="acquirers or []" t-as="acquirer">
                                         <div t-att-data-id="acquirer.id" class="oe_quote_acquirer_button hidden pull-right">
-                                          <div t-raw="acquirer.button"/>
+                                          <div t-raw="buttons.get(acquirer.id)"/>
                                           <div t-field="acquirer.pre_msg"/>
                                           <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
                                         </div>
