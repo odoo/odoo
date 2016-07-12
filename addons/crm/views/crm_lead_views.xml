@@ -670,8 +670,10 @@
             <field name="model_id" ref="model_crm_lead"/>
             <field name="state">code</field>
             <field name="code">
-                if env.context.get('active_model') == 'crm.lead' and env.context.get('active_ids'):
-                    env['crm.lead'].browse(context['active_ids']).action_set_lost()
+                if context.get('active_model') == 'crm.lead' and context.get('active_ids'):
+                    action_values = env.ref('crm.crm_lead_lost_action').read()[0]
+                    action_values.update({'context': context})
+                    action = action_values
             </field>
         </record>
 
