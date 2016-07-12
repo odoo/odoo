@@ -1,16 +1,25 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import datetime
 
-from openerp.osv import fields, osv
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from odoo import api, fields, models
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 
 
-class resource_calendar_leaves(osv.osv):
+class ResourceCalendarAttendance(models.Model):
+    _inherit = "resource.calendar.attendance"
+
+    group_id = fields.Many2one('procurement.group', 'Procurement Group')
+
+
+class ResourceCalendarLeaves(models.Model):
     _inherit = "resource.calendar.leaves"
-    _columns = {
-        'group_id': fields.many2one('procurement.group', string="Procurement Group"),
-    }
 
-class resource_calendar(osv.osv):
+    group_id = fields.Many2one('procurement.group', 'Procurement Group')
+
+
+class ResourceCalendar(models.Model):
     _inherit = "resource.calendar"
 
     # Keep as it takes into account times
@@ -32,6 +41,8 @@ class resource_calendar(osv.osv):
         :return list leaves: list of tuples (start_datetime, end_datetime) of
                              leave intervals
         """
+        # TDE FIXME: waw, overriding completely a method + changing its result
+        # and its behavior, very nice. Please FIXME.
         resource_calendar = self.browse(cr, uid, id, context=context)
         leaves = []
         for leave in resource_calendar.leave_ids:
@@ -75,6 +86,8 @@ class resource_calendar(osv.osv):
                                     that are intervals to remove from the base interval
         :return list intervals: a list of tuples (begin datetime, end datetime)
                                 that are the remaining valid intervals """
+        # TDE FIXME: waw, overriding completely a method + changing its result
+        # and its behavior, very nice. Please FIXME.
         if not interval:
             return interval
         if leave_intervals is None:
@@ -109,11 +122,3 @@ class resource_calendar(osv.osv):
             else:
                 intervals.append((current_interval[0], current_interval[1],))
         return intervals
-
-
-class resource_calendar_attendance(osv.osv):
-    _inherit = "resource.calendar.attendance"
-
-    _columns = {
-        'group_id': fields.many2one('procurement.group', 'Procurement Group'),
-    }
