@@ -22,11 +22,8 @@ class StockMove(models.Model):
         result = super(StockMove, self).action_done()
 
         # Update delivered quantities on sale order lines
-        todo = self.env['sale.order.line']
-        for move in self:
-            if (move.procurement_id.sale_line_id) and (move.product_id.expense_policy=='no'):
-                todo |= move.procurement_id.sale_line_id
-        for line in todo:
+        sale_order_lines = self.filtered(lambda move: move.procurement_id.sale_line_id and move.product_id.expense_policy == 'no').mapped('procurement_id.sale_line_id')
+        for line in sale_order_lines:
             line.qty_delivered = line._get_delivered_qty()
         return result
 
@@ -47,24 +44,21 @@ class StockMove(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    @api.depends('move_lines')
+    sale_id = fields.Many2one('sale.order', "Sale Order", compute='_compute_sale_id', search='_search_sale_id')
+
+    @api.one
+    @api.depends('move_lines.procurement_id.sale_line_id.order_id')
     def _compute_sale_id(self):
-        for picking in self:
-            sale_order = False
-            for move in picking.move_lines:
-                if move.procurement_id.sale_line_id:
-                    sale_order = move.procurement_id.sale_line_id.order_id
-                    break
-            picking.sale_id = sale_order.id if sale_order else False
+        for move in self.move_lines:
+            if move.procurement_id.sale_line_id:
+                self.sale_id = move.procurement_id.sale_line_id.order_id
+                return
 
     def _search_sale_id(self, operator, value):
         moves = self.env['stock.move'].search(
             [('picking_id', '!=', False), ('procurement_id.sale_line_id.order_id', operator, value)]
         )
         return [('id', 'in', moves.mapped('picking_id').ids)]
-
-    sale_id = fields.Many2one(comodel_name='sale.order', string="Sale Order",
-                              compute='_compute_sale_id', search='_search_sale_id')
 
     @api.multi
     def _create_backorder(self, backorder_moves=[]):

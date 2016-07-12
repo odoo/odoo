@@ -51,34 +51,20 @@ class SaleOrder(models.Model):
         of given sales order ids. It can either be a in a list or in a form
         view, if there is only one delivery order to show.
         '''
-        action = self.env.ref('stock.action_picking_tree_all')
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
 
-        result = {
-            'name': action.name,
-            'help': action.help,
-            'type': action.type,
-            'view_type': action.view_type,
-            'view_mode': action.view_mode,
-            'target': action.target,
-            'context': action.context,
-            'res_model': action.res_model,
-        }
-
-        pick_ids = sum([order.picking_ids.ids for order in self], [])
-
-        if len(pick_ids) > 1:
-            result['domain'] = "[('id','in',["+','.join(map(str, pick_ids))+"])]"
-        elif len(pick_ids) == 1:
-            form = self.env.ref('stock.view_picking_form', False)
-            form_id = form.id if form else False
-            result['views'] = [(form_id, 'form')]
-            result['res_id'] = pick_ids[0]
-        return result
+        pickings = self.mapped('picking_ids')
+        if len(pickings) > 1:
+            action['domain'] = [('id', 'in', pickings.ids)]
+        elif pickings:
+            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            action['res_id'] = pickings.id
+        return action
 
     @api.multi
     def action_cancel(self):
         self.order_line.mapped('procurement_ids').cancel()
-        super(SaleOrder, self).action_cancel()
+        return super(SaleOrder, self).action_cancel()
 
     @api.multi
     def _prepare_invoice(self):
@@ -132,13 +118,11 @@ class SaleOrderLine(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id_set_customer_lead(self):
         self.customer_lead = self.product_id.sale_delay
-        return {}
 
     @api.onchange('product_packaging')
     def _onchange_product_packaging(self):
         if self.product_packaging:
             return self._check_package()
-        return {}
 
     @api.onchange('product_id')
     def _onchange_product_id_uom_check_availability(self):
