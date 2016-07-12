@@ -55,6 +55,12 @@
         <field name="global" eval="True" />
         <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
     </record>
+    <record id="rule_pos_session_multi_company" model="ir.rule">
+        <field name="name">Point Of Sale Session</field>
+        <field name="model_id" ref="model_pos_session" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('config_id.company_id', '=', user.company_id.id)]</field>
+    </record>
     <record id="rule_pos_config_multi_company" model="ir.rule">
         <field name="name">Point Of Sale Config</field>
         <field name="model_id" ref="model_pos_config" />
