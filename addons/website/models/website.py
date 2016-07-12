@@ -138,8 +138,6 @@ def unslug(s):
         return None, None
     return m.group(1), int(m.group(2))
 
-def urlplus(url, params):
-    return werkzeug.Href(url)(params or None)
 
 class website(osv.osv):
     def _get_menu(self, cr, uid, ids, name, arg, context=None):
@@ -648,79 +646,6 @@ class website_menu(osv.osv):
             self.write(cr, uid, [menu['id']], menu, context=context)
         return True
 
-
-class ir_attachment(osv.osv):
-    _inherit = "ir.attachment"
-
-    _columns = {
-        'website_url': fields.related("local_url", string="Attachment URL", type='char', deprecated=True), # related for backward compatibility with saas-6
-    }
-
-class res_partner(osv.osv):
-    _inherit = "res.partner"
-
-    def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
-        partner = self.browse(cr, uid, ids[0], context=context)
-        params = {
-            'center': '%s, %s %s, %s' % (partner.street or '', partner.city or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
-            'size': "%sx%s" % (height, width),
-            'zoom': zoom,
-            'sensor': 'false',
-        }
-        return urlplus('//maps.googleapis.com/maps/api/staticmap' , params)
-
-    def google_map_link(self, cr, uid, ids, zoom=10, context=None):
-        partner = self.browse(cr, uid, ids[0], context=context)
-        params = {
-            'q': '%s, %s %s, %s' % (partner.street or '', partner.city  or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
-            'z': zoom,
-        }
-        return urlplus('https://maps.google.com/maps' , params)
-
-class res_company(osv.osv):
-    _inherit = "res.company"
-    def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
-        partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).partner_id
-        return partner and partner.google_map_img(zoom, width, height, context=context) or None
-    def google_map_link(self, cr, uid, ids, zoom=8, context=None):
-        partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).partner_id
-        return partner and partner.google_map_link(zoom, context=context) or None
-
-class base_language_install(osv.osv_memory):
-    _inherit = "base.language.install"
-    _columns = {
-        'website_ids': fields.many2many('website', string='Websites to translate'),
-    }
-
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:
-            context = {}
-        defaults = super(base_language_install, self).default_get(cr, uid, fields, context)
-        website_id = context.get('params', {}).get('website_id')
-        if website_id:
-            if 'website_ids' not in defaults:
-                defaults['website_ids'] = []
-            defaults['website_ids'].append(website_id)
-        return defaults
-
-    def lang_install(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        action = super(base_language_install, self).lang_install(cr, uid, ids, context)
-        language_obj = self.browse(cr, uid, ids)[0]
-        website_ids = [website.id for website in language_obj['website_ids']]
-        lang_id = self.pool['res.lang'].search(cr, uid, [('code', '=', language_obj['lang'])])
-        if website_ids and lang_id:
-            data = {'language_ids': [(4, lang_id[0])]}
-            self.pool['website'].write(cr, uid, website_ids, data)
-        params = context.get('params', {})
-        if 'url_return' in params:
-            return {
-                'url': params['url_return'].replace('[lang]', language_obj['lang']),
-                'type': 'ir.actions.act_url',
-                'target': 'self'
-            }
-        return action
 
 class website_seo_metadata(osv.AbstractModel):
     _name = 'website.seo.metadata'
