@@ -21,7 +21,7 @@ from the documentation.
 
 If you are a developer you may type the following command at your terminal:
 
-    wget -O- https://raw.githubusercontent.com/odoo/odoo/9.0/odoo.py | python
+    wget -O- https://raw.githubusercontent.com/odoo/odoo/9.0/odoo.py | python2
 
 Then follow <a href="https://www.odoo.com/documentation/9.0/tutorials.html">the developer tutorials</a>
 
@@ -36,4 +36,3 @@ To add the odoo-dev remote use this command:
 To fetch odoo merge pull requests refs use this command:
 
     $ ./odoo.py setup_git_review
-
