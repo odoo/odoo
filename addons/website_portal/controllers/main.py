@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-from openerp import http
-from openerp.http import request
-from openerp import tools
-from openerp.tools.translate import _
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import http
+from odoo.http import request
+from odoo import tools
+from odoo.tools.translate import _
 
 from odoo.fields import Date
 
