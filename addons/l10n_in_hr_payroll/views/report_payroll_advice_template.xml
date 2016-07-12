@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_payrolladvice">
     <t t-call="report.html_container">
         <t t-call="report.external_layout">
-            <t t-foreach="objects" t-as="o">
+            <t t-foreach="docs" t-as="o">
                 <div class="page">
                     <table>
                         <tr>
@@ -60,7 +59,7 @@
                                     <span t-esc="l['ifsc_code']"/>
                                 </td>
                                 <td>
-                                    <span t-esc="formatLang(l['bysal'], currency_obj = company.currency_id)"/>
+                                    <span t-esc="l['bysal']" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
                                 </td>
                                  <td>
                                     <span t-esc="l['debit_credit']"/>
@@ -75,18 +74,17 @@
                                     <strong >Total :</strong>
                                 </td>
                                 <td colspan="2">
-                                    <strong><span t-esc="formatLang(get_bysal_total(), currency_obj = company.currency_id)"/></strong>
+                                    <strong><span t-esc="get_bysal_total()" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/></strong>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <p>Yours Sincerely</p>
-                    <p>For <span t-esc="company.name"/></p>
+                    <p>For <span t-esc="o.company_id.name"/></p>
                     <p class="mt32">Authorized Signature</p>
                 </div>
             </t>
         </t>
     </t>
 </template>
-</data>
-</openerp>
+</odoo>

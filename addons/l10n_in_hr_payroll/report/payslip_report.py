@@ -1,39 +1,41 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import tools
-from openerp.osv import fields, osv
+from odoo import api, fields, models
+from odoo.tools.sql import drop_view_if_exists
 
-class payslip_report(osv.osv):
+
+class PayslipReport(models.Model):
     _name = "payslip.report"
     _description = "Payslip Analysis"
     _auto = False
-    _columns = {
-        'name':fields.char('Name', readonly=True),
-        'date_from': fields.date('Date From', readonly=True,),
-        'date_to': fields.date('Date To', readonly=True,),
-        'year': fields.char('Year', size=4, readonly=True),
-        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
-            ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'), ('09', 'September'),
-            ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
-        'state': fields.selection([
-            ('draft', 'Draft'),
-            ('done', 'Done'),
-            ('cancel', 'Rejected'),
-        ], 'Status', readonly=True),
-        'employee_id': fields.many2one('hr.employee', 'Employee', readonly=True),
-        'nbr': fields.integer('# Payslip lines', readonly=True),
-        'number': fields.char('Number', readonly=True),
-        'struct_id': fields.many2one('hr.payroll.structure', 'Structure', readonly=True),
-        'company_id':fields.many2one('res.company', 'Company', readonly=True),
-        'paid': fields.boolean('Made Payment Order ? ', readonly=True),
-        'total': fields.float('Total', readonly=True),
-        'category_id':fields.many2one('hr.salary.rule.category', 'Category', readonly=True),
-    }
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'payslip_report')
-        cr.execute("""
+
+    name = fields.Char(readonly=True)
+    date_from = fields.Date(string='Date From', readonly=True)
+    date_to = fields.Date(string='Date To', readonly=True)
+    year = fields.Char(size=4, readonly=True)
+    month = fields.Selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
+        ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'), ('09', 'September'),
+        ('10', 'October'), ('11', 'November'), ('12', 'December')], readonly=True)
+    day = fields.Char(size=128, readonly=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('done', 'Done'),
+        ('cancel', 'Rejected'),
+    ], string='Status', readonly=True)
+    employee_id = fields.Many2one('hr.employee', string='Employee', readonly=True)
+    nbr = fields.Integer(string='# Payslip lines', readonly=True)
+    number = fields.Char(readonly=True)
+    struct_id = fields.Many2one('hr.payroll.structure', string='Structure', readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    paid = fields.Boolean(string='Made Payment Order ? ', readonly=True)
+    total = fields.Float(readonly=True)
+    category_id = fields.Many2one('hr.salary.rule.category', string='Category', readonly=True)
+
+    @api.model_cr
+    def init(self):
+        drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute("""
             create or replace view payslip_report as (
                 select
                     min(l.id) as id,
@@ -58,7 +60,7 @@ class payslip_report(osv.osv):
                 from
                     hr_payslip as p
                     left join hr_payslip_line as l on (p.id=l.slip_id)
-                where 
+                where
                     l.employee_id IS NOT NULL
                 group by
                     p.number,l.name,p.date_from,p.date_to,p.state,p.company_id,p.paid,
