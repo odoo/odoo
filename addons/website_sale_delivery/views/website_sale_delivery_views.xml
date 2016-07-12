@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record model="ir.ui.view" id="view_delivery_carrier_form_website_delivery">
+
+    <record id="view_delivery_carrier_form_website_delivery" model="ir.ui.view">
         <field name="name">delivery.carrier.website.form</field>
         <field name="model">delivery.carrier</field>
         <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
@@ -18,6 +19,10 @@
         </field>
     </record>
 
-    <menuitem id="menu_ecommerce_delivery" parent="website_sale.menu_ecommerce_settings" name="Delivery Methods" action="delivery.action_delivery_carrier_form"/>
+    <menuitem
+        id="menu_ecommerce_delivery"
+        parent="website_sale.menu_ecommerce_settings"
+        name="Delivery Methods"
+        action="delivery.action_delivery_carrier_form"/>
 
- </odoo>
+</odoo>
