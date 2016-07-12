@@ -122,13 +122,6 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
             res['arch'] = etree.tostring(eview)
         return res
 
-    def _raise_after_history_update(self, history, error_type, error_msg):
-        history.write({
-            'state': 'in_exception',
-            'msg': error_msg,
-        })
-        raise UserError('%s: %s' % (error_type, error_msg))
-
     @api.multi
     def anonymize_database(self):
         """Sets the 'anonymized' state to defined fields"""
@@ -143,11 +136,12 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
 
         # check that all the defined fields are in the 'clear' state
         state = self.env['ir.model.fields.anonymization']._get_global_state()
+        error_type = _('Error !')
         if state == 'anonymized':
-            self._raise_after_history_update(history, _('Error !'), _("The database is currently anonymized, you cannot anonymize it again."))
+            raise UserError('%s: %s' % (error_type, _("The database is currently anonymized, you cannot anonymize it again.")))
         elif state == 'unstable':
-            self._raise_after_history_update(history, _('Error !'), _("The database anonymization is currently in an unstable state. Some fields are anonymized,"
-                                                                      " while some fields are not anonymized. You should try to solve this problem before trying to do anything."))
+            raise UserError('%s: %s' % (error_type, _("The database anonymization is currently in an unstable state. Some fields are anonymized,"
+                                                      " while some fields are not anonymized. You should try to solve this problem before trying to do anything.")))
 
         # do the anonymization:
         dirpath = os.environ.get('HOME') or os.getcwd()
@@ -156,7 +150,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
 
         ano_fields = self.env['ir.model.fields.anonymization'].search([('state', '!=', 'not_existing')])
         if not ano_fields:
-            self._raise_after_history_update(history, _('Error !'), _("No fields are going to be anonymized."))
+            raise UserError('%s: %s' % (error_type, _("No fields are going to be anonymized.")))
 
         data = []
 
@@ -194,10 +188,10 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
                 elif field_type == 'integer':
                     anonymized_value = 0
                 elif field_type in ['binary', 'many2many', 'many2one', 'one2many', 'reference']:  # cannot anonymize these kind of fields
-                    self._raise_after_history_update(history, _('Error !'), _("Cannot anonymize fields of these types: binary, many2many, many2one, one2many, reference."))
+                    raise UserError('%s: %s' % (error_type, _("Cannot anonymize fields of these types: binary, many2many, many2one, one2many, reference.")))
 
                 if anonymized_value is None:
-                    self._raise_after_history_update(history, _('Error !'), _("Anonymized value can not be empty."))
+                    raise UserError('%s: %s' % (error_type, _("Anonymized value can not be empty.")))
 
                 sql = "update %(table)s set %(field)s = %%(anonymized_value)s where id = %%(id)s" % {
                     'table': table_name,
@@ -257,13 +251,6 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
         self.ensure_one()
         IrModelFieldsAnonymization = self.env['ir.model.fields.anonymization']
 
-        # create a new history record:
-        history = self.env['ir.model.fields.anonymization.history'].create({
-            'date': fields.Datetime.now(),
-            'state': 'started',
-            'direction': 'anonymized -> clear'
-        })
-
         # check that all the defined fields are in the 'anonymized' state
         state = IrModelFieldsAnonymization._get_global_state()
         if state == 'clear':
@@ -318,11 +305,13 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
             # add a result message in the wizard:
             self.msg = '\n'.join(["Successfully reversed the anonymization.", ""])
 
-            # update the history record:
-            history.write({
+            # create a new history record:
+            history = self.env['ir.model.fields.anonymization.history'].create({
+                'date': fields.Datetime.now(),
                 'field_ids': [[6, 0, ano_fields.ids]],
                 'msg': self.msg,
                 'filepath': False,
+                'direction': 'anonymized -> clear',
                 'state': 'done'
             })
 
