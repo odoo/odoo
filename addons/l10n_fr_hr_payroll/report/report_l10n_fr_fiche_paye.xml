@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
-<template id="report_l10nfrfichepaye">
+<odoo>
+<template id="report_l10n_fr_fiche_paye">
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
             <t t-call="report.internal_layout">
                 <div class="page">
                     <div class="oe_structure"/>
-                    <div class="row">   
+                    <div class="row">
                         <div class="col-xs-4">
                             <h2>Bulletin de paie</h2>
-                            <h4>Paie du <span t-esc="formatLang(o.date_from, date=True)"/> au <span t-esc="formatLang(o.date_to, date=True)"/></h4>
+                            <h4>Paie du <span t-field="o.date_from"/> au <span t-field="o.date_to"/></h4>
                         </div>
                         <div class="col-xs-4 pull-right">
                             <table class="table table-bordered" stype="border: 2px solid black;">
@@ -158,5 +157,4 @@ BULLETIN DE PAIE SANS LIMITATION DE DUREE</p>
         </t>
     </t>
 </template>
-</data>
-</openerp>
+</odoo>
