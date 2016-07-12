@@ -1,4 +1,6 @@
-# -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Website Builder',
     'category': 'Website',
@@ -14,19 +16,20 @@ Odoo Website CMS
     'depends': ['web', 'web_editor', 'web_planner'],
     'installable': True,
     'data': [
-        'data/data.xml',
+        'data/website_data.xml',
         'data/web_planner_data.xml',
         'security/ir.model.access.csv',
-        'security/ir_ui_view.xml',
+        'security/website_security.xml',
+
         'views/website_templates.xml',
-        'views/website_views.xml',
+        'views/website_navbar_templates.xml',
         'views/snippets.xml',
-        'views/res_config.xml',
-        'views/ir_actions.xml',
-        'views/website_backend_navbar.xml',
+        'views/website_views.xml',
+        'views/res_config_views.xml',
+        'views/ir_actions_views.xml',
     ],
     'demo': [
-        'data/demo.xml',
+        'data/website_demo.xml',
     ],
     'qweb': ['static/src/xml/website.backend.xml'],
     'application': True,
