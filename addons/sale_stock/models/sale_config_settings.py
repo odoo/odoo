@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
-from openerp import api, fields, models, _
-from openerp.exceptions import AccessError
+from odoo import api, fields, models, _
+from odoo.exceptions import AccessError
+
 
 class SaleConfiguration(models.TransientModel):
     _inherit = 'sale.config.settings'
@@ -43,5 +43,4 @@ class SaleConfiguration(models.TransientModel):
 
         default_picking_policy = 'one' if self.default_picking_policy else 'direct'
         self.env['ir.values'].sudo().set_default('sale.order', 'picking_policy', default_picking_policy)
-        res = super(SaleConfiguration, self).set_sale_defaults()
-        return res
+        return super(SaleConfiguration, self).set_sale_defaults()
