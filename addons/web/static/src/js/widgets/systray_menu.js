@@ -24,9 +24,12 @@ var SystrayMenu = Widget.extend({
     },
     load_items: function() {
         var self = this;
+        SystrayMenu.Items = _.sortBy(SystrayMenu.Items, function (item) {
+            return !_.isUndefined(item.prototype.sequence) ? item.prototype.sequence : 50;
+        });
         _.each(SystrayMenu.Items, function(widgetCls) {
             var cur_systray_item = new widgetCls(self);
-            self.items.push(cur_systray_item.appendTo(self.$el));
+            self.items.push(cur_systray_item.prependTo(self.$el));
         });
     },
 });
