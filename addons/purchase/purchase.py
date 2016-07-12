@@ -806,43 +806,18 @@ class ProcurementOrder(models.Model):
             return all(move.state == 'done' for move in self.move_ids)
         return super(ProcurementOrder, self)._check()
 
-    @api.v8
     def _get_purchase_schedule_date(self):
+        """Return the datetime value to use as Schedule Date (``date_planned``) for the
+           Purchase Order Lines created to satisfy the given procurement. """
         procurement_date_planned = datetime.strptime(self.date_planned, DEFAULT_SERVER_DATETIME_FORMAT)
         schedule_date = (procurement_date_planned - relativedelta(days=self.company_id.po_lead))
         return schedule_date
 
-    @api.v7
-    def _get_purchase_schedule_date(self, procurement):
-        """Return the datetime value to use as Schedule Date (``date_planned``) for the
-           Purchase Order Lines created to satisfy the given procurement.
-
-           :param browse_record procurement: the procurement for which a PO will be created.
-           :rtype: datetime
-           :return: the desired Schedule Date for the PO lines
-        """
-        procurement_date_planned = datetime.strptime(procurement.date_planned, DEFAULT_SERVER_DATETIME_FORMAT)
-        schedule_date = (procurement_date_planned - relativedelta(days=procurement.company_id.po_lead))
-        return schedule_date
-
-    @api.v8
     def _get_purchase_order_date(self, schedule_date):
+        """Return the datetime value to use as Order Date (``date_order``) for the
+           Purchase Order created to satisfy the given procurement. """
         self.ensure_one()
         seller_delay = int(self.product_id._select_seller(self.product_id).delay)
-        return schedule_date - relativedelta(days=seller_delay)
-
-    @api.v7
-    def _get_purchase_order_date(self, cr, uid, procurement, company, schedule_date, context=None):
-        """Return the datetime value to use as Order Date (``date_order``) for the
-           Purchase Order created to satisfy the given procurement.
-
-           :param browse_record procurement: the procurement for which a PO will be created.
-           :param browse_report company: the company to which the new PO will belong to.
-           :param datetime schedule_date: desired Scheduled Date for the Purchase Order lines.
-           :rtype: datetime
-           :return: the desired Order Date for the PO
-        """
-        seller_delay = int(procurement.product_id._select_seller(procurement.product_id).delay)
         return schedule_date - relativedelta(days=seller_delay)
 
     @api.multi

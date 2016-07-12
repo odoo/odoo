@@ -13,21 +13,6 @@ class resource_calendar_leaves(osv.osv):
 class resource_calendar(osv.osv):
     _inherit = "resource.calendar"
 
-    #Could remove this as it does not help a lot
-    def _calculate_next_day(self, cr, uid, ids, fields, names, context=None):
-        res = {}
-        for calend in self.browse(cr, uid, ids, context=context):
-            # date1 = self.get_next_day(cr, uid, calend.id, datetime.utcnow() + relativedelta(days = 1))
-            _format = '%Y-%m-%d %H:%M:%S'
-            sched_date = self.schedule_days_get_date(
-                cr, uid, calend.id, 1, day_date=datetime.datetime.utcnow(), compute_leaves=True)
-            res[calend.id] = sched_date and sched_date.strftime(_format) or False
-        return res
-
-    _columns = {
-            'next_day': fields.function(_calculate_next_day, string='Next day it should trigger', type='datetime'),
-        }
-
     # Keep as it takes into account times
     def get_leave_intervals(self, cr, uid, id, resource_id=None,
                             start_datetime=None, end_datetime=None,
