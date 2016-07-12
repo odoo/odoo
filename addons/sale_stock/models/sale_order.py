@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from openerp import api, fields, models, _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
-from openerp.exceptions import UserError
+
+from odoo import api, fields, models, _
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
+from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
@@ -16,13 +17,16 @@ class SaleOrder(models.Model):
         warehouse_ids = self.env['stock.warehouse'].search([('company_id', '=', company)], limit=1)
         return warehouse_ids
 
-    incoterm = fields.Many2one('stock.incoterms', 'Incoterms', help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
+    incoterm = fields.Many2one(
+        'stock.incoterms', 'Incoterms',
+        help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
     picking_policy = fields.Selection([
         ('direct', 'Deliver each product when available'),
         ('one', 'Deliver all products at once')],
         string='Shipping Policy', required=True, readonly=True, default='direct',
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse',
+    warehouse_id = fields.Many2one(
+        'stock.warehouse', string='Warehouse',
         required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         default=_default_warehouse_id)
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this sale')
@@ -92,6 +96,7 @@ class SaleOrder(models.Model):
     def _get_customer_lead(self, product_tmpl_id):
         super(SaleOrder, self)._get_customer_lead(product_tmpl_id)
         return product_tmpl_id.sale_delay
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
