@@ -10,6 +10,6 @@ Allows your customers to manage their account from a beautiful web interface.
         'website',
     ],
     'data': [
-        'views/templates.xml',
+        'views/website_portal_templates.xml',
     ],
 }

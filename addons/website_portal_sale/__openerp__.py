@@ -12,10 +12,10 @@ Add your sales document in the frontend portal. Your customers will be able to c
         'website_payment',
     ],
     'data': [
-        'views/templates.xml',
+        'views/website_portal_sale_templates.xml',
     ],
     'demo': [
-        'data/demo.xml'
+        'data/sale_demo.xml'
     ],
     'installable': True,
 }
