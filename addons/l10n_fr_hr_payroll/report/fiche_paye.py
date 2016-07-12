@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class FichePayeParser(models.AbstractModel):
-    _name = 'report.l10n_fr_hr_payroll.report_l10nfrfichepaye'
+    _name = 'report.l10n_fr_hr_payroll.report_l10n_fr_fiche_paye'
 
     def get_payslip_lines(self, objs):
         res = []
@@ -19,9 +19,9 @@ class FichePayeParser(models.AbstractModel):
 
     def get_total_by_rule_category(self, obj, code):
         category_total = 0
-        cate_ids = self.env['hr.salary.rule.category'].search([('code', '=', code)], limit=1)
-        if cate_ids:
-            line_ids = self.env['hr.payslip.line'].search([('slip_id', '=', obj.id), ('category_id', 'child_of', cate_ids)])
+        category_id = self.env['hr.salary.rule.category'].search([('code', '=', code)], limit=1).id
+        if category_id:
+            line_ids = self.env['hr.payslip.line'].search([('slip_id', '=', obj.id), ('category_id', 'child_of', category_id)])
             for line in line_ids:
                 category_total += line.total
         return category_total
@@ -31,9 +31,9 @@ class FichePayeParser(models.AbstractModel):
 
     @api.multi
     def render_html(self, data):
-        payslip = self.env['hr.payslip'].browse(self.env.context.get('active_ids', []))
+        payslip = self.env['hr.payslip'].browse(self.ids)
         docargs = {
-            'doc_ids': self.env.context.get('active_ids', []),
+            'doc_ids': self.ids,
             'doc_model': 'hr.payslip',
             'data': data,
             'docs': payslip,
