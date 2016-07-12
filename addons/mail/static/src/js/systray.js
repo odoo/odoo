@@ -42,8 +42,6 @@ var InboxItem = Widget.extend({
     }, 1000, true),
 });
 
-SystrayMenu.Items.push(InboxItem);
-
 /**
  * Menu item appended in the systray part of the navbar
  *
@@ -148,5 +146,6 @@ var MessagingMenu = Widget.extend({
 });
 
 SystrayMenu.Items.push(MessagingMenu);
+SystrayMenu.Items.push(InboxItem);
 
 });
