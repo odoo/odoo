@@ -66,9 +66,9 @@ class sale_quote(http.Controller):
                 'submit_class': 'btn btn-primary',
                 'submit_txt': _('Pay & Confirm')
             }
+            values['buttons'] = {}
             for acquirer in values['acquirers']:
-                # TOFIX: very ugly/unreliable way to assign property to recordset, recordset added to list for shallow reference
-                acquirer.button = acquirer.with_context(**extra_context).render(
+                values['buttons'][acquirer.id] = acquirer.with_context(**extra_context).render(
                     '/',
                     Order.amount_total,
                     Order.pricelist_id.currency_id.id,
