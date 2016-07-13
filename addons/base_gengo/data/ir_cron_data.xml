@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <!--Scheduler sync Receive Request-->
         <record id="gengo_sync_receive_request_scheduler" model="ir.cron">
@@ -9,9 +9,9 @@
             <field name="interval_type">hours</field>
             <field name="numbercall">-1</field>
             <field name="doall" eval="False" />
-            <field eval="'base.gengo.translations'" name="model"></field>
-            <field eval="'_sync_response'" name="function"/>
-            <field eval="'(20,)'" name="args"/>
+            <field name="model" eval="'base.gengo.translations'"></field>
+            <field name="function" eval="'_sync_response'"/>
+            <field name="args" eval="'(20,)'"/>
         </record>
 
         <!--Scheduler Sync Send Request-->
@@ -22,9 +22,9 @@
             <field name="interval_type">hours</field>
             <field name="numbercall">-1</field>
             <field name="doall" eval="False"/>
-            <field eval="'base.gengo.translations'" name="model"></field>
-            <field eval="'_sync_request'" name="function"/>
-            <field eval="'(20,)'" name="args"/>
+            <field name="model" eval="'base.gengo.translations'"></field>
+            <field name="function" eval="'_sync_request'"/>
+            <field name="args" eval="'(20,)'"/>
         </record>
     </data>
-</openerp>
+</odoo>
