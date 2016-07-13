@@ -305,7 +305,7 @@ class ir_http(osv.AbstractModel):
                 mimetype = attach_mimetype and attach_mimetype[0]['mimetype']
             if not mimetype:
                 mimetype = default_mimetype
-        headers.append(('Content-Type', mimetype))
+        headers += [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
 
         # cache
         etag = hasattr(request, 'httprequest') and request.httprequest.headers.get('If-None-Match')
