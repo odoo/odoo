@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Base import module',
     'description': """
@@ -11,7 +13,5 @@ for customization purpose.
     'depends': ['web'],
     'installable': True,
     'auto_install': False,
-    'data': ['views/base_import_module.xml'],
-    'qweb': [],
-    'test': [],
+    'data': ['views/base_import_module_view.xml'],
 }
