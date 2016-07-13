@@ -3,7 +3,7 @@
 
 {
     'name': 'Online Jobs',
-    'category': 'Human Resources',
+    'category': 'Website',
     'version': '1.0',
     'summary': 'Job Descriptions And Application Forms',
     'description': """
