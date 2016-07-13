@@ -6,6 +6,9 @@
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="model">res.company</field>
             <field name="arch" type="xml">
+                <xpath expr="//group[@name='account_grp']" position="attributes">
+                    <attribute name="string">Accounting</attribute>
+                </xpath>
                 <xpath expr="//group[@name='account_grp']" position="inside">
                     <field name="anglo_saxon_accounting"/>
                     <field name="bank_account_code_prefix" groups="base.group_no_one"/>
