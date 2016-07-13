@@ -15,7 +15,7 @@ Keeps track of depreciations, and creates corresponding journal entries.
     'category': 'Accounting',
     'sequence': 32,
     'demo': [
-        'account_asset_demo.yml',
+        'data/account_asset_demo.yml',
     ],
     # 'test': [
     #     '../account/test/account_minimal_test.xml',
@@ -24,13 +24,13 @@ Keeps track of depreciations, and creates corresponding journal entries.
     'data': [
         'security/account_asset_security.xml',
         'security/ir.model.access.csv',
-        'wizard/account_asset_change_duration_view.xml',
-        'wizard/wizard_asset_compute_view.xml',
-        'views/account_asset_view.xml',
-        'views/account_asset_invoice_view.xml',
-        'report/account_asset_report_view.xml',
-        'views/account_asset.xml',
-        'account_asset_cron.xml',
+        'wizard/asset_depreciation_confirmation_wizard_views.xml',
+        'wizard/asset_modify_views.xml',
+        'views/account_asset_views.xml',
+        'views/account_invoice_views.xml',
+        'views/account_asset_templates.xml',
+        'report/account_asset_report_views.xml',
+        'data/account_asset_data.xml',
     ],
     'qweb': [
         "static/src/xml/account_asset_template.xml",
