@@ -1,4 +1,4 @@
-Cyprus, July 12th, 2016
+Cyprus, July 13th, 2016
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Alexandros Vagkidas d43m0n@gmail.com https://github.com/realsandox
+Alexandros Vagkidas a.vagkidas@jfdbrokers.com https://github.com/realsandox
