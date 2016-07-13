@@ -4,7 +4,7 @@ odoo.define('web_tour.Tip', function(require) {
 var core = require('web.core');
 var Widget = require('web.Widget');
 
-return Widget.extend({
+var Tip = Widget.extend({
     template: "Tip",
     events: {
         mouseenter: "_to_info_mode",
@@ -152,14 +152,8 @@ return Widget.extend({
         this.$el.addClass("o_animated");
     },
     _bind_anchor_events: function () {
-        var consume_event = "mousedown";
-        if (this.$anchor.is("textarea") || this.$anchor.filter("input").is(function () {
-            return !!$(this).attr("type").match(/^(email|number|password|search|tel|text|url)$/);
-        })) {
-            consume_event = "input";
-        }
-
-        this.$anchor.on(consume_event + ".anchor", (function (e) {
+        this.consume_event = Tip.getConsumeEventType(this.$anchor);
+        this.$anchor.on(this.consume_event + ".anchor", (function (e) {
             if (e.type !== "mousedown" || e.which === 1) { // only left click
                 this.trigger("tip_consumed");
                 this._unbind_anchor_events();
@@ -262,5 +256,16 @@ return Widget.extend({
         });
     },
 });
+
+Tip.getConsumeEventType = function ($element) {
+    if ($element.is("textarea") || $element.filter("input").is(function () {
+        return !!$(this).attr("type").match(/^(email|number|password|search|tel|text|url)$/);
+    })) {
+        return "input";
+    }
+    return "mousedown";
+};
+
+return Tip;
 
 });

@@ -16,6 +16,7 @@ if (config.device.size_class <= config.device.SIZES.XS) {
         run: function () {
             console.warn("Tours are disabled for mobile mode.");
         },
+        STEPS: {},
     };
 }
 
@@ -57,6 +58,7 @@ return session.is_bound.then(function () {
                     childList: true,
                     subtree: true,
                 });
+                tour.update();
             });
         };
 
