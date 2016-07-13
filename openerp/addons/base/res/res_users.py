@@ -678,8 +678,7 @@ class GroupsView(models.Model):
     @api.multi
     def write(self, values):
         res = super(GroupsView, self).write(values)
-        if 'category_id' in values:
-            self._update_user_groups_view()
+        self._update_user_groups_view()
         # ir_values.get_actions() depends on action records
         self.env['ir.values'].clear_caches()
         return res
@@ -733,7 +732,7 @@ class GroupsView(models.Model):
                             xml2.append(E.field(name=field_name, **attrs))
 
             xml2.append({'class': "o_label_nowrap"})
-            xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")
+            xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4", **attrs), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
             xml_content = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding="utf-8")
             view.with_context(lang=None).write({'arch': xml_content})
