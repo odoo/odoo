@@ -259,7 +259,7 @@ class AccountBankStatement(models.Model):
         return {
             'name': _('Journal Items'),
             'view_type': 'form',
-            'view_mode': 'tree',
+            'view_mode': 'tree,form',
             'res_model': 'account.move.line',
             'view_id': False,
             'type': 'ir.actions.act_window',
@@ -442,7 +442,7 @@ class AccountBankStatementLine(models.Model):
             moves_to_cancel.unlink()
 
         if payment_to_unreconcile:
-            payment_to_unreconcile.write({'state': 'posted'})
+            payment_to_unreconcile.unreconcile()
 
     ####################################################
     # Reconciliation interface methods
