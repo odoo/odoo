@@ -28,6 +28,12 @@ class StockPickingWave(models.Model):
         ('cancel', 'Cancelled')], default='draft',
         copy=False, track_visibility='onchange', required=True)
 
+    @api.model
+    def create(self, vals):
+        if vals.get('name', '/') == '/':
+            vals['name'] = self.env['ir.sequence'].next_by_code('picking.wave') or '/'
+        return super(StockPickingWave, self).create(vals)
+
     @api.multi
     def confirm_picking(self):
         pickings_todo = self.mapped('picking_ids')
@@ -45,12 +51,6 @@ class StockPickingWave(models.Model):
         if not pickings:
             raise UserError(_('Nothing to print.'))
         return self.env["report"].with_context(active_ids=pickings.ids, active_model='stock.picking').get_action(pickings, 'stock.report_picking')
-
-    @api.model
-    def create(self, vals):
-        if vals.get('name', '/') == '/':
-            vals['name'] = self.env['ir.sequence'].next_by_code('picking.wave') or '/'
-        return super(StockPickingWave, self).create(vals)
 
     @api.multi
     def done(self):
