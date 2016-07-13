@@ -1,47 +1,47 @@
-# Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * google_calendar
+# 
+# Translators:
+# danimaribeiro <danimaribeiro@gmail.com>, 2015
+# danimaribeiro <danimaribeiro@gmail.com>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# grazziano <g.negocios@outlook.com.br>, 2016
+# Mateus Lopes <mateus1@gmail.com>, 2015
+# Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-09-06 14:09+0000\n"
-"Last-Translator: Fábio Martinelli - http://zupy.com.br "
-"<webmaster@zupy.com.br>\n"
-"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 12:39+0000\n"
+"PO-Revision-Date: 2016-07-09 16:18+0000\n"
+"Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-07 07:48+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"/google_account/authentication\""
-msgstr "\"/google_account/authentication\""
+msgid "\"Authorized redirect URI\""
+msgstr "'URL de redirecionamento autorizado'"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Calendar API\""
-msgstr "\"API de Calendário\""
+msgid "'/google_account/authentication'"
+msgstr "'/google_account/authentication'"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Consent Screen\""
-msgstr "\"Tela de Consentimento\""
+msgid "'Calendar API'"
+msgstr "'Calendário API'"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Create Project\""
-msgstr "\"Criar Projeto\""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Redirect RI\""
-msgstr "\"Redirecionar RI\""
+msgid "'Configure consent screen'"
+msgstr "'Configure a tela de consentimento'"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -50,13 +50,23 @@ msgstr "'Criar Client ID'"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "'Create New Client ID'"
-msgstr "'Criar novo Client ID'"
+msgid "'Create Project'"
+msgstr "'Criar Projeto'"
+
+#. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid "'Create new Client ID'"
+msgstr "'Criar nova identificação do cliente'"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid "'Credentials'"
 msgstr "'Credenciais'"
+
+#. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid "'Enable API'"
+msgstr "'Habilitar API'"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -70,8 +80,13 @@ msgstr "(do menu APIs and autenticação) e clique no botão"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid ") that you need to insert in the 2 fields below !"
-msgstr ") que você precisa inserir nos dois campos abaixo!"
+msgid ") that you need to insert in the 2 fields below!"
+msgstr ") que você precisa inserir nos 2 campos abaixo!"
+
+#. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid ", then click on"
+msgstr ", em seguida, clique em"
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.action_config_settings_google_calendar
@@ -84,15 +99,18 @@ msgid "API Credentials"
 msgstr "Credenciais da API"
 
 #. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid "Activate the Calendar API by clicking on the blue button"
+msgstr "Ative a API de Calendário clicando no botão azul"
+
+#. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/calendar_sync.js:55
 #, python-format
 msgid ""
 "All events have been disconnected from your previous account. You can now "
 "restart the synchronization"
-msgstr ""
-"Todos os eventos foram desconectados da sua conta anterior. Agora você pode "
-"reiniciar a sincronização"
+msgstr "Todos os eventos foram desconectados da sua conta anterior. Agora você pode reiniciar a sincronização"
 
 #. module: google_calendar
 #. openerp-web
@@ -101,9 +119,7 @@ msgstr ""
 msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
-msgstr ""
-"Um administrador precisa configurar o Google Syncronization antes de você "
-"usá-lo!"
+msgstr "Um administrador precisa configurar o Google Syncronization antes de você usá-lo!"
 
 #. module: google_calendar
 #. openerp-web
@@ -112,9 +128,7 @@ msgstr ""
 msgid ""
 "An error occured while disconnecting events from your previous account. "
 "Please retry or contact your administrator."
-msgstr ""
-"Ocorreu um erro ao desconectar os eventos da sua conta anterior. Por favor "
-"tente novamente ou entre em contato o administrador."
+msgstr "Ocorreu um erro ao desconectar os eventos da sua conta anterior. Por favor tente novamente ou entre em contato o administrador."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -130,6 +144,11 @@ msgstr "Agenda"
 #: field:res.users,google_calendar_cal_id:0
 msgid "Calendar ID"
 msgstr "ID da Agenda"
+
+#. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid "Check that the Application type is set on"
+msgstr "Verifique se o tipo de aplicação está definido em"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -172,12 +191,6 @@ msgstr "Você deseja fazer isso agora?"
 #: model:ir.model,name:google_calendar.model_calendar_event
 msgid "Event"
 msgstr "Evento"
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid ""
-"Fill in the Name of application and check that the platform is well on"
-msgstr "Preencha o Nome da Aplicação e verifique se a plataforma está bem em"
 
 #. module: google_calendar
 #. openerp-web
@@ -228,20 +241,16 @@ msgstr "No menu do lado esquerdo, selecione o submenu"
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid ""
-"In the menu on left side, select the sub menu APIs (from menu APIs and auth) "
-"and activate"
-msgstr ""
-"No menu do lado esquerdo, selecione o submenu  APIs (do menu APIs and auth) "
-"e ative"
+"In the menu on left side, select the sub menu APIs (from menu APIs and auth)"
+" and click on"
+msgstr "No menu do lado esquerdo , selecione as APIs sub menu ( a partir de APIs de menu e auth ) e clique em"
 
 #. module: google_calendar
 #: help:res.users,google_calendar_cal_id:0
 msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
-msgstr ""
-"Último Calendar ID que foi sincronizado. Se estiver alterado, nós "
-"removeremos todos os links entre o GoogleID e o ID interno do Goole no Odoo"
+msgstr "Último ID de Calendário que foi sincronizado. Se estiver alterado, nós removeremos todos os links entre o GoogleID e o ID interno do Goole no Odoo"
 
 #. module: google_calendar
 #: field:res.users,google_calendar_last_sync_date:0
@@ -270,24 +279,18 @@ msgstr "Atualizar Token"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid ""
-"Remark : You can, if you want, personalize the consent screen that your "
-"users will see by clicking on"
-msgstr ""
-"Lembre-se: Se você desejar, você pode personalizar a tela de permissão que "
-"seus usuários irão visualizar clicando em"
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid "Return at Top"
-msgstr "Retornar para o topo"
+msgstr "Retornar para o Topo"
 
 #. module: google_calendar
 #: field:base.config.settings,google_cal_sync:0
-msgid ""
-"Show tutorial to know how to get my 'Client ID' and my 'Client Secret'"
-msgstr ""
-"Mostre o passo a passo de como obter meu 'Client ID' e 'Client Secret'"
+msgid "Show tutorial to know how to get my 'Client ID' and my 'Client Secret'"
+msgstr "Mostre o passo a passo de como obter meu 'Client ID' e 'Client Secret'"
+
+#. module: google_calendar
+#: view:base.config.settings:google_calendar.view_calendar_config_settings
+msgid "Specify an email address and a product name, then save."
+msgstr "Especifique um endereço de e-mail e um nome de produto, depois salve."
 
 #. module: google_calendar
 #. openerp-web
@@ -303,9 +306,7 @@ msgstr "Sincronizar com"
 msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
-msgstr ""
-"O Google Synchronization precisar ser configurado antes de poder ser usado, "
-"você deseja fazer isso agora?"
+msgstr "O Google Synchronization precisar ser configurado antes de poder ser usado, você deseja fazer isso agora?"
 
 #. module: google_calendar
 #. openerp-web
@@ -314,18 +315,14 @@ msgstr ""
 msgid ""
 "The account you are trying to synchronize (%s) is not the same as the last "
 "one used (%s)!"
-msgstr ""
-"A conta que você está tentando sincronizar (%s) não é a mesma que foi usada "
-"pela última vez (%s)!"
+msgstr "A conta que você está tentando sincronizar (%s) não é a mesma que foi usada pela última vez (%s)!"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
 msgid ""
 "To setup the signin process with Google, first you have to perform the "
 "following steps"
-msgstr ""
-"Para configurar o processo de autenticação com o Google, primeiro você deve "
-"serguir os seguintes passsos"
+msgstr "Para configurar o processo de autenticação com o Google, primeiro você deve serguir os seguintes passsos"
 
 #. module: google_calendar
 #: field:res.users,google_calendar_token_validity:0
@@ -349,8 +346,8 @@ msgstr "Usuários"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "When it's done, check that the button of"
-msgstr "Quando concluído, marque o botão de"
+msgid "When it's done, the Calendar API overview will be available"
+msgstr "Quando terminar, a visão geral da API calendário estará disponível"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -362,27 +359,14 @@ msgstr "Você deve clicar em"
 msgid ""
 "You should now configure the allowed pages on which you will be redirected. "
 "To do it, you need to complete the field"
-msgstr ""
-"Você precisa configurar as páginas permitidas que você será redirecionado. "
-"Para fazer isto, você precisa completar o campo"
+msgstr "Você precisa configurar as páginas permitidas que você será redirecionado. Para fazer isto, você precisa completar o campo"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/calendar_sync.js:28
 #, python-format
-msgid ""
-"You will be redirected to Google to authorize access to your calendar!"
-msgstr ""
-"Você será redirecionado ao Google para autorizar o acesso a sua agenda!"
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid ""
-"You will need to accept again the \"Google APIs Terms of services\" and "
-"\"Calendar API Terms of service\""
-msgstr ""
-"Você precisa aceitar novamente os \"Termos de serviço do Google APIs\" e "
-"\"Termos de serviço da API do Google Agenda\""
+msgid "You will be redirected to Google to authorize access to your calendar!"
+msgstr "Você será redirecionado ao Google para autorizar o acesso a sua agenda!"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -394,9 +378,7 @@ msgstr "e"
 msgid ""
 "and enter a project name and change your id if you want. Don't forget to "
 "accept the Terms of Services"
-msgstr ""
-"E digite um nome para o projeto e altere o id caso você queira. Não esqueça "
-"de aceitar os Temos de Serviço"
+msgstr "E digite um nome para o projeto e altere o id caso você queira. Não esqueça de aceitar os Temos de Serviço"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
@@ -405,20 +387,5 @@ msgstr "e defina como valor (seu próprio domínio seguido por"
 
 #. module: google_calendar
 #: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "by clicking on button \"OFF\"."
-msgstr "Clicando no botão \"SAIR\"."
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "https://cloud.google.com/console"
-msgstr "https://cloud.google.com/console"
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "in the left menu."
-msgstr "no menu esquerdo."
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "is well in green and with text \"ON\""
-msgstr "está verde e com o texto \"LIGADO\""
+msgid "https://console.developers.google.com/"
+msgstr "https://console.developers.google.com/"
