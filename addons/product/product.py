@@ -1218,6 +1218,7 @@ class product_product(osv.osv):
             'company_id': company_id,
         }, context=context)
 
+    @api.cr_uid_ids_context
     def get_history_price(self, cr, uid, product_id, company_id, date=None, context=None):
         if context is None:
             context = {}

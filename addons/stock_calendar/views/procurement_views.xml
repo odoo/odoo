@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- For testing purposes -->
+    <record id="view_procurement_form_stock_inherit" model="ir.ui.view">
+        <field name="name">procurement.order.form.stock.inherit</field>
+        <field name="model">procurement.order</field>
+        <field name="inherit_id" ref="procurement.procurement_form_view"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <button name="assign_group_date" string="Calculate dates according to Orderpoint" type="object"/>
+            </field>
+        </field>
+    </record>
+</odoo>
