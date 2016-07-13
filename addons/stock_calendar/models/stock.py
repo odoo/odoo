@@ -68,7 +68,7 @@ class StockWarehouseOrderpoint(models.Model):
         purchase_date = False
         delivery_date = start_date
         if self.calendar_id and self.calendar_id.attendance_ids:
-            res = self.calendar_id._schedule_days(-1, start_date, compute_leaves=True)[0]  # CLEANME
+            res = self.calendar_id._schedule_days(-1, start_date, compute_leaves=True)
             if res and res[0][0] < start_date:
                 group_to_find = res[0][2] and Attendance.browse(res[0][2]).group_id.id
                 delivery_date = res[0][0]
@@ -76,7 +76,7 @@ class StockWarehouseOrderpoint(models.Model):
                 if self.purchase_calendar_id and self.purchase_calendar_id.attendance_ids:
                     while not purchase_date:
                         found_date = found_date + relativedelta(days=-1)  # won't allow to deliver within the day
-                        res = self.purchase_calendar_id._schedule_days(-1, found_date, compute_leaves=True)[0]  # CLEANME
+                        res = self.purchase_calendar_id._schedule_days(-1, found_date, compute_leaves=True)
                         for re in res:
                             group = re[2] and Attendance.browse(re[2]).group_id.id
                             found_date = re[0]
@@ -94,7 +94,7 @@ class StockWarehouseOrderpoint(models.Model):
         now_date = datetime.utcnow()
 
         # Search first calendar day (without group)
-        res = self.calendar_id._schedule_days(1, new_date, compute_leaves=True)[0]  # CLEANME
+        res = self.calendar_id._schedule_days(1, new_date, compute_leaves=True)
         att_group = res and res[0][2] and Attendance.browse(res[0][2]).group_id.id
         # If hours are smaller than the current date, search a day further
         if res and res[0][0] < now_date:
@@ -112,7 +112,7 @@ class StockWarehouseOrderpoint(models.Model):
         while res and group and att_group != group and number < 100:
             number += 1
             new_date = res[0][1] + relativedelta(days=1)
-            res = self.calendar_id._schedule_days(1, new_date, compute_leaves=True)[0]
+            res = self.calendar_id._schedule_days(1, new_date, compute_leaves=True)
             att_group = False
             for re in res:
                 if re[2]:
@@ -128,7 +128,7 @@ class StockWarehouseOrderpoint(models.Model):
         if res:
             date1 = res[0][1]
             new_date = res[0][1] + relativedelta(days=1)
-            res = self.calendar_id._schedule_days(1, new_date, compute_leaves=True)[0]
+            res = self.calendar_id._schedule_days(1, new_date, compute_leaves=True)
             if res:
                 return (date1, res[0][1])
         return (False, False)

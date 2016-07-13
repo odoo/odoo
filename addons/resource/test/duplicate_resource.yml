@@ -1,6 +1,0 @@
--
- I duplicate the resource "Analyst"
--
-  !python {model: resource.resource}: |
-    copied_id = self.copy(cr, uid, ref("resource_analyst"))
-    assert copied_id, "Unable to Duplicate Resource"
