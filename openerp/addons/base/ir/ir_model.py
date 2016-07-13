@@ -1100,7 +1100,14 @@ class IrModelData(models.Model):
     @api.model
     def ir_set(self, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):
         ir_values = self.env['ir.values']
-        ir_values.set(key, key2, name, models, value, replace, isobject, meta)
+        for model in models:
+            res_id = False
+            if isinstance(model, (list, tuple)):
+                model, res_id = model
+            if key == 'default':
+                    ir_values.set_default(model, field_name=name, value=value, condition=key2)
+            elif key == 'action':
+                return ir_values.set_action(name, action_slot=key2, model=model, action=value, res_id=res_id)
         return True
 
     @api.model
