@@ -211,9 +211,13 @@ class ir_attachment(osv.osv):
         return mimetype or 'application/octet-stream'
 
     def _check_contents(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
         mimetype = values['mimetype'] = self._compute_mimetype(values)
         xml_like = 'ht' in mimetype or 'xml' in mimetype # hta, html, xhtml, etc.
-        if xml_like and not self.pool['res.users']._is_admin(cr, uid, [uid]):
+        force_text = (xml_like and (not self.pool['res.users']._is_admin(cr, uid, [uid]) or
+            context.get('attachments_mime_plainxml')))
+        if force_text:
             values['mimetype'] = 'text/plain'
         return values
 

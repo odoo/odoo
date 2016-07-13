@@ -1105,6 +1105,7 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def message_route_process(self, message, message_dict, routes):
+        self = self.with_context(attachments_mime_plainxml=True) # import XML attachments as text
         # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
         partner_ids = message_dict.pop('partner_ids', [])
         thread_id = False
