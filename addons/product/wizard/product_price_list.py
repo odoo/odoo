@@ -1,28 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-from odoo import api
+from odoo import api, fields, models
 
-class product_price_list(osv.osv_memory):
+
+class product_price_list(models.TransientModel):
     _name = 'product.price_list'
     _description = 'Price List'
 
-    _columns = {
-        'price_list': fields.many2one('product.pricelist', 'PriceList', required=True),
-        'qty1': fields.integer('Quantity-1'),
-        'qty2': fields.integer('Quantity-2'),
-        'qty3': fields.integer('Quantity-3'),
-        'qty4': fields.integer('Quantity-4'),
-        'qty5': fields.integer('Quantity-5'),
-    }
-    _defaults = {
-        'qty1': 1,
-        'qty2': 5,
-        'qty3': 10,
-        'qty4': 0,
-        'qty5': 0,
-    }
+    price_list = fields.Many2one('product.pricelist', 'PriceList', required=True)
+    qty1 = fields.Integer('Quantity-1', default=1)
+    qty2 = fields.Integer('Quantity-2', default=5)
+    qty3 = fields.Integer('Quantity-3', default=10)
+    qty4 = fields.Integer('Quantity-4', default=0)
+    qty5 = fields.Integer('Quantity-5', default=0)
 
     @api.multi
     def print_report(self):

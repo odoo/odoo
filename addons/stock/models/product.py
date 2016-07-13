@@ -343,6 +343,7 @@ class Product(models.Model):
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
+    type = fields.Selection(selection_add=[('product', 'Stockable Product')])
     property_stock_procurement = fields.Many2one(
         'stock.location', "Procurement Location",
         company_dependent=True, domain=[('usage', 'like', 'procurement')],
@@ -442,13 +443,6 @@ class ProductTemplate(models.Model):
             template.nbr_reordering_rules = res[template.id]['nbr_reordering_rules']
             template.reordering_min_qty = res[template.id]['reordering_min_qty']
             template.reordering_max_qty = res[template.id]['reordering_max_qty']
-
-    @api.model
-    def _get_product_template_type(self):
-        res = super(ProductTemplate, self)._get_product_template_type()
-        if 'product' not in [item[0] for item in res]:
-            res.append(('product', _('Stockable Product')))
-        return res
 
     @api.onchange('tracking')
     def onchange_tracking(self):

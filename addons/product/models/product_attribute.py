@@ -1,124 +1,103 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
-import time
-
-import openerp
-from openerp import api, tools, SUPERUSER_ID
-from openerp.osv import osv, fields, expression
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
-import psycopg2
-
-import openerp.addons.decimal_precision as dp
-from openerp.tools.float_utils import float_round, float_compare
-from openerp.exceptions import UserError
-from openerp.exceptions import except_orm
+from odoo import api, fields, models, _
+from odoo.addons import decimal_precision as dp
+from odoo.exceptions import UserError, ValidationError
 
 
-class product_attribute(osv.osv):
+class ProductAttribute(models.Model):
     _name = "product.attribute"
     _description = "Product Attribute"
     _order = 'sequence, name'
-    _columns = {
-        'name': fields.char('Name', translate=True, required=True),
-        'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values', copy=True),
-        'sequence': fields.integer('Sequence', help="Determine the display order"),
-        'attribute_line_ids': fields.one2many('product.attribute.line', 'attribute_id', 'Lines'),
-    }
 
-class product_attribute_value(osv.osv):
+    name = fields.Char('Name', required=True, translate=True)
+    value_ids = fields.One2many('product.attribute.value', 'attribute_id', 'Values', copy=True)
+    sequence = fields.Integer('Sequence', help="Determine the display order")
+    attribute_line_ids = fields.One2many('product.attribute.line', 'attribute_id', 'Lines')
+
+
+class ProductAttributevalue(models.Model):
     _name = "product.attribute.value"
     _order = 'sequence'
-    def _get_price_extra(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, 0)
-        if not context.get('active_id'):
-            return result
 
-        for obj in self.browse(cr, uid, ids, context=context):
-            for price_id in obj.price_ids:
-                if price_id.product_tmpl_id.id == context.get('active_id'):
-                    result[obj.id] = price_id.price_extra
-                    break
-        return result
+    name = fields.Char('Value', required=True, translate=True)
+    sequence = fields.Integer('Sequence', help="Determine the display order")
+    attribute_id = fields.Many2one('product.attribute', 'Attribute', ondelete='cascade', required=True)
+    product_ids = fields.Many2many('product.product', id1='att_id', id2='prod_id', string='Variants', readonly=True)
+    price_extra = fields.Float(
+        'Attribute Price Extra', compute='_compute_price_extra', inverse='_set_price_extra',
+        default=0.0, digits_compute=dp.get_precision('Product Price'),
+        help="Price Extra: Extra price for the variant with this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200.")
+    price_ids = fields.One2many('product.attribute.price', 'value_id', 'Attribute Prices', readonly=True)
 
-    def _set_price_extra(self, cr, uid, id, name, value, args, context=None):
-        if context is None:
-            context = {}
-        if 'active_id' not in context:
-            return None
-        p_obj = self.pool['product.attribute.price']
-        p_ids = p_obj.search(cr, uid, [('value_id', '=', id), ('product_tmpl_id', '=', context['active_id'])], context=context)
-        if p_ids:
-            p_obj.write(cr, uid, p_ids, {'price_extra': value}, context=context)
-        else:
-            p_obj.create(cr, uid, {
-                    'product_tmpl_id': context['active_id'],
-                    'value_id': id,
-                    'price_extra': value,
-                }, context=context)
-
-    def name_get(self, cr, uid, ids, context=None):
-        if context and not context.get('show_attribute', True):
-            return super(product_attribute_value, self).name_get(cr, uid, ids, context=context)
-        res = []
-        for value in self.browse(cr, uid, ids, context=context):
-            res.append([value.id, "%s: %s" % (value.attribute_id.name, value.name)])
-        return res
-
-    _columns = {
-        'sequence': fields.integer('Sequence', help="Determine the display order"),
-        'name': fields.char('Value', translate=True, required=True),
-        'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True, ondelete='cascade'),
-        'product_ids': fields.many2many('product.product', id1='att_id', id2='prod_id', string='Variants', readonly=True),
-        'price_extra': fields.function(_get_price_extra, type='float', string='Attribute Price Extra',
-            fnct_inv=_set_price_extra,
-            digits_compute=dp.get_precision('Product Price'),
-            help="Price Extra: Extra price for the variant with this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200."),
-        'price_ids': fields.one2many('product.attribute.price', 'value_id', string='Attribute Prices', readonly=True),
-    }
     _sql_constraints = [
         ('value_company_uniq', 'unique (name,attribute_id)', 'This attribute value already exists !')
     ]
-    _defaults = {
-        'price_extra': 0.0,
-    }
-    def unlink(self, cr, uid, ids, context=None):
-        ctx = dict(context or {}, active_test=False)
-        product_ids = self.pool['product.product'].search(cr, uid, [('attribute_value_ids', 'in', ids)], context=ctx)
-        if product_ids:
+
+    @api.one
+    def _compute_price_extra(self):
+        if self._context.get('active_id'):
+            price = self.price_ids.filtered(lambda price: price.product_tmpl_id.id == self._context['active_id'])
+            self.price_extra = price.price_extra
+        else:
+            self.price_extra = 0.0
+
+    def _set_price_extra(self):
+        if not self._context.get('active_id'):
+            return
+
+        AttributePrice = self.env['product.attribute.price']
+        prices = AttributePrice.search([('value_id', 'in', self.ids), ('product_tmpl_id', '=', self._context['active_id'])])
+        updated = prices.mapped('value_id')
+        if prices:
+            prices.write({'price_extra': self.price_extra})
+        else:
+            for value in self - updated:
+                AttributePrice.create({
+                    'product_tmpl_id': self._context['active_id'],
+                    'value_id': value.id,
+                    'price_extra': self.price_extra,
+                })
+
+    @api.multi
+    def name_get(self):
+        if not self._context.get('show_attribute', True):  # TDE FIXME: not used
+            return super(ProductAttributevalue, self).name_get()
+        return [(value.id, "%s: %s" % (value.attribute_id.name, value.name)) for value in self]
+
+    @api.multi
+    def unlink(self):
+        linked_products = self.env['product.product'].with_context(active_test=False).search([('attribute_value_ids', 'in', self.ids)])
+        if linked_products:
             raise UserError(_('The operation cannot be completed:\nYou are trying to delete an attribute value with a reference on a product variant.'))
-        return super(product_attribute_value, self).unlink(cr, uid, ids, context=context)
+        return super(ProductAttributevalue, self).unlink()
 
-class product_attribute_price(osv.osv):
+
+class ProductAttributePrice(models.Model):
     _name = "product.attribute.price"
-    _columns = {
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade'),
-        'value_id': fields.many2one('product.attribute.value', 'Product Attribute Value', required=True, ondelete='cascade'),
-        'price_extra': fields.float('Price Extra', digits_compute=dp.get_precision('Product Price')),
-    }
 
-class product_attribute_line(osv.osv):
+    product_tmpl_id = fields.Many2one('product.template', 'Product Template', ondelete='cascade', required=True)
+    value_id = fields.Many2one('product.attribute.value', 'Product Attribute Value', ondelete='cascade', required=True)
+    price_extra = fields.Float('Price Extra', digits_compute=dp.get_precision('Product Price'))
+
+
+class ProductAttributeLine(models.Model):
     _name = "product.attribute.line"
     _rec_name = 'attribute_id'
-    _columns = {
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade'),
-        'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True, ondelete='restrict'),
-        'value_ids': fields.many2many('product.attribute.value', id1='line_id', id2='val_id', string='Attribute Values'),
-    }
 
-    def _check_valid_attribute(self, cr, uid, ids, context=None):
-        for obj_pal in self.browse(cr, uid, ids, context=context):
-            if not (obj_pal.value_ids <= obj_pal.attribute_id.value_ids):
-                return False
+    product_tmpl_id = fields.Many2one('product.template', 'Product Template', ondelete='cascade', required=True)
+    attribute_id = fields.Many2one('product.attribute', 'Attribute', ondelete='restrict', required=True)
+    value_ids = fields.Many2many('product.attribute.value', id1='line_id', id2='val_id', string='Attribute Values')
+
+    @api.constrains('value_ids', 'attribute_id')
+    def _check_valid_attribute(self):
+        if any(line.value_ids > line.attribute_id.value_ids for line in self):
+            raise ValidationError(_('Error ! You cannot use this attribute with the following value.'))
         return True
 
-    _constraints = [
-        (_check_valid_attribute, 'Error ! You cannot use this attribute with the following value.', ['attribute_id'])
-    ]
-
-    def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100):
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
         # TDE FIXME: currently overriding the domain; however as it includes a
         # search on a m2o and one on a m2m, probably this will quickly become
         # difficult to compute - check if performance optimization is required
@@ -126,7 +105,4 @@ class product_attribute_line(osv.osv):
             new_args = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)]
         else:
             new_args = args
-        return super(product_attribute_line, self).name_search(
-            cr, uid, name=name,
-            args=new_args,
-            operator=operator, context=context, limit=limit)
+        return super(ProductAttributeLine, self).name_search(name=name, args=new_args, operator=operator, limit=limit)
