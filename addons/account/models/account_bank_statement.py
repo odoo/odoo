@@ -442,7 +442,7 @@ class AccountBankStatementLine(models.Model):
             moves_to_cancel.unlink()
 
         if payment_to_unreconcile:
-            payment_to_unreconcile.write({'state': 'posted'})
+            payment_to_unreconcile.unreconcile()
 
     ####################################################
     # Reconciliation interface methods

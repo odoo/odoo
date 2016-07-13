@@ -291,6 +291,17 @@ class account_payment(models.Model):
         return True
 
     @api.multi
+    def unreconcile(self):
+        """ Set back the payments in 'posted' or 'sent' state, without deleting the journal entries.
+            Called when cancelling a bank statement line linked to a pre-registered payment.
+        """
+        for payment in self:
+            if payment.payment_reference:
+                payment.write({'state': 'sent'})
+            else:
+                payment.write({'state': 'posted'})
+
+    @api.multi
     def cancel(self):
         for rec in self:
             for move in rec.move_line_ids.mapped('move_id'):
