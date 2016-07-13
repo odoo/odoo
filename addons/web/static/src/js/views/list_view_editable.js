@@ -273,7 +273,7 @@ ListView.include(/** @lends instance.web.ListView# */{
 
         if(this.editable()) {
             this.$el.addClass('oe_list_editable');
-            return $.when(result, this.editor.prependTo(this.$el).done(this.proxy('setup_events')));
+            return $.when(result, this.editor.appendTo(this.$el).done(this.proxy('setup_events')));
         } else {
             this.$el.removeClass('oe_list_editable');
         }
