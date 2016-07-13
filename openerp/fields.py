@@ -455,8 +455,10 @@ class Field(object):
 
         if not self.string and not self.related:
             # related fields get their string from their parent field
+            import inflect  # This is a Proof Of Concept
+            inf_engine = inflect.engine()
             self.string = (
-                name[:-4] + 's' if name.endswith('_ids') else
+                inf_engine.plural(name[:-4]) if name.endswith('_ids') else
                 name[:-3] if name.endswith('_id') else name
             ).replace('_', ' ').capitalize()
 
@@ -1251,7 +1253,7 @@ class _String(Field):
             return self.translate(callback, value)
         else:
             return value
-    
+
 
 class Char(_String):
     """ Basic string field, can be length-limited, usually displayed as a
