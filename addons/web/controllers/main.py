@@ -297,7 +297,16 @@ def set_cookie_and_redirect(redirect_url):
 
 def load_actions_from_ir_values(key, key2, models, meta):
     Values = request.session.model('ir.values')
-    actions = Values.get(key, key2, models, meta, request.context)
+    actions = []
+    for model in models:
+        res_id = False
+        if isinstance(model, (list, tuple)):
+            model, res_id = model
+        if key == 'default':
+            action = Values.get_defaults(model, condition=key2, context=request.context)
+        elif key == 'action':
+            action = Values.get_actions(action_slot=key2, model=model, res_id=res_id, context=request.context)
+        actions.append(action)
 
     return [(id, name, clean_action(action))
             for id, name, action in actions]
