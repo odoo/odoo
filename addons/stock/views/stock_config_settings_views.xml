@@ -81,7 +81,13 @@
                         <field name="group_stock_packaging" widget="radio"/>
                     </group>
                     <group string="Extra Features">
-                        <!-- <field name="module_mrp_plm" widget="upgrade_radio"/> -->
+                        <label for="module_quality"/>
+                        <div>
+                            <div>
+                                <field name="module_quality" widget="upgrade_boolean"/>
+                                <label for="module_quality" string="Manage quality control points, checks and measures"/>
+                            </div>
+                        </div>
                     </group>
                 </form>
             </field>
