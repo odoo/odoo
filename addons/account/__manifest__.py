@@ -63,6 +63,8 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/res_config_view.xml',
         'views/web_planner_data.xml',
         'views/account_journal_dashboard_view.xml',
+        'report/account_report_payment_receipt_templates.xml',
+        'data/payment_receipt_data.xml',
     ],
     'demo': [
         'demo/account_demo.xml',

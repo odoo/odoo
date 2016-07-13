@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_payment_receipt">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <h3><strong>Payment Receipt: <span t-field="o.name"/></strong></h3>
+                        <div class="row mt64">
+                            <div class="col-xs-6" t-if="o.payment_date">
+                                <strong>Payment Date: </strong> <span t-field="o.payment_date"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6" t-if="o.partner_type">
+                                <t t-if="o.partner_type == 'customer'">
+                                    <strong>Customer: </strong>
+                                </t>
+                                <t t-if="o.partner_type == 'supplier'">
+                                    <strong>Vendor: </strong>
+                                </t><span t-field="o.partner_id"/>
+                            </div>
+                            <div class="col-xs-6" t-if="o.payment_method_id">
+                                <strong>Payment Method: </strong><span t-field="o.payment_method_id.name"/>
+                            </div>
+                        </div>
+                        <div class="row mb64">
+                            <div class="col-xs-6" t-if="o.amount">
+                                <strong>Payment Amount: </strong><span t-field="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                             </div>
+                            <div class="col-xs-6" t-if="o.communication">
+                                <strong>Memo: </strong><span t-field="o.communication"/>
+                             </div>
+                        </div>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Invoice Date</th>
+                                    <th>Invoice Number</th>
+                                    <th class="text-right">Original Amount</th>
+                                    <th class="text-right">Amount Paid</th>
+                                    <th class="text-right">Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.invoice_ids" t-as="inv">
+                                    <td><span t-field="inv.date_invoice"/></td>
+                                    <td><span t-field="inv.number"/></td>
+                                    <td class="text-right"><span t-field="inv.amount_total"/></td>
+                                    <td class="text-right"><span t-esc="inv.amount_total - inv.residual" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                    <td class="text-right"><span t-field="inv.residual"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
