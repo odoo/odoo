@@ -3,16 +3,15 @@
 
 from itertools import groupby
 from datetime import datetime, timedelta
-from openerp import SUPERUSER_ID
-from openerp import api, fields, models, _
-import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
-from openerp.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.misc import formatLang
-from openerp.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
+from odoo import api, fields, models, _
+import odoo.addons.decimal_precision as dp
+from odoo.exceptions import UserError
+from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.misc import formatLang
+from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 
-class res_company(models.Model):
+class ResCompany(models.Model):
     _inherit = "res.company"
     sale_note = fields.Text(string='Default Terms and Conditions', translate=True)
 
