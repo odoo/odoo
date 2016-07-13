@@ -406,7 +406,7 @@ actual arch.
                 ('model_ids.module', 'in', tuple(self.pool._init_modules)),
             ])
 
-        views += self.search(conditions)
+        views |= self.search(conditions)
 
         return [(view.arch, view.id)
                 for view in views.sudo()
