@@ -1,22 +1,25 @@
-# Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment
+# 
+# Translators:
+# danimaribeiro <danimaribeiro@gmail.com>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# grazziano <g.negocios@outlook.com.br>, 2016
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-09-14 01:46+0000\n"
-"Last-Translator: Fábio Martinelli - http://zupy.com.br "
-"<webmaster@zupy.com.br>\n"
-"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2016-07-09 17:08+0000\n"
+"Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-14 08:33+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment
 #: help:account.config.settings,module_payment_adyen:0
@@ -46,7 +49,7 @@ msgstr "Comprador"
 #. module: payment
 #: field:payment.transaction,acquirer_reference:0
 msgid "Acquirer Order Reference"
-msgstr ""
+msgstr "Referência do pedido no gateway"
 
 #. module: payment
 #: field:payment.transaction,partner_address:0
@@ -94,8 +97,7 @@ msgid "Country"
 msgstr "País"
 
 #. module: payment
-#: field:payment.acquirer,create_uid:0
-#: field:payment.transaction,create_uid:0
+#: field:payment.acquirer,create_uid:0 field:payment.transaction,create_uid:0
 msgid "Created by"
 msgstr "Criado por"
 
@@ -133,7 +135,7 @@ msgstr "Provisório"
 #. module: payment
 #: field:payment.transaction,partner_email:0
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: payment
 #: field:payment.acquirer,environment:0
@@ -158,9 +160,7 @@ msgstr "Valor das taxas; definido pelo sistema, porque depende do comprador"
 #. module: payment
 #: help:payment.transaction,state_message:0
 msgid "Field used to store error and/or validation messages for information"
-msgstr ""
-"Campo usado para armazenar erros e/ou mensagens de validação para a "
-"informação"
+msgstr "Campo usado para armazenar erros e/ou mensagens de validação para a informação"
 
 #. module: payment
 #: field:payment.acquirer,fees_dom_fixed:0
@@ -197,21 +197,17 @@ msgstr "Agrupar por"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Contém o resumo da conversação (número de mensagens, ...). Este resumo é "
-"gerado diretamente em formato HTML para que possa ser inserido nas visões "
-"kanban."
+msgstr "Contém o resumo da conversação (número de mensagens, ...). Este resumo é gerado diretamente em formato HTML para que possa ser inserido nas visões kanban."
 
 #. module: payment
-#: field:payment.acquirer,id:0
-#: field:payment.transaction,id:0
+#: field:payment.acquirer,id:0 field:payment.transaction,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: payment
 #: help:payment.transaction,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Se marcado novas mensagens solicitarão sua atenção."
+msgstr "Se marcado, novas mensagens solicitarão sua atenção."
 
 #. module: payment
 #: field:payment.transaction,message_is_follower:0
@@ -229,23 +225,19 @@ msgid "Last Message Date"
 msgstr "Data da última mensagem"
 
 #. module: payment
-#: field:payment.acquirer,write_uid:0
-#: field:payment.transaction,write_uid:0
+#: field:payment.acquirer,write_uid:0 field:payment.transaction,write_uid:0
 msgid "Last Updated by"
 msgstr "Última atualização por"
 
 #. module: payment
-#: field:payment.acquirer,write_date:0
-#: field:payment.transaction,write_date:0
+#: field:payment.acquirer,write_date:0 field:payment.transaction,write_date:0
 msgid "Last Updated on"
 msgstr "Última atualização em"
 
 #. module: payment
 #: help:payment.acquirer,website_published:0
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr ""
-"Faça este tipos de pagamento disponíveis ao comprador (faturas de clientes, "
-"etc)"
+msgstr "Faça este tipos de pagamento disponíveis ao comprador (faturas de clientes, etc)"
 
 #. module: payment
 #: field:account.config.settings,module_payment_adyen:0
@@ -273,8 +265,7 @@ msgid "Manual"
 msgstr "Manual"
 
 #. module: payment
-#: field:payment.acquirer,pre_msg:0
-#: field:payment.transaction,state_message:0
+#: field:payment.acquirer,pre_msg:0 field:payment.transaction,state_message:0
 msgid "Message"
 msgstr "Mensagem"
 
@@ -324,7 +315,7 @@ msgid "Partner Reference"
 msgstr "Referência do Parceiro"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:273
+#: code:addons/payment/models/payment_acquirer.py:274
 #, python-format
 msgid "Pay safely online"
 msgstr "Pagar online com segurança"
@@ -389,17 +380,17 @@ msgstr "Fornecedor"
 #. module: payment
 #: help:payment.transaction,acquirer_reference:0
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr ""
+msgstr "Referência da transação armazenada no banco do gateway de pagamento"
 
 #. module: payment
 #: help:payment.transaction,partner_reference:0
 msgid "Reference of the customer in the acquirer database"
-msgstr ""
+msgstr "Referência do cliente no banco de dados adquirente"
 
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr "Campos obrigatórios não preenchidos"
+msgstr "Campos necessários não preenchidos"
 
 #. module: payment
 #: view:payment.transaction:payment.transaction_form
@@ -413,11 +404,8 @@ msgstr "Servidor a Servidor"
 
 #. module: payment
 #: help:payment.acquirer,validation:0
-msgid ""
-"Static payments are payments like transfer, that require manual steps."
-msgstr ""
-"Pagamentos Estáticos são pagamentos como transferência, que necessitam de "
-"passos manuais."
+msgid "Static payments are payments like transfer, that require manual steps."
+msgstr "Pagamentos Estáticos são pagamentos como transferência, que necessitam de passos manuais."
 
 #. module: payment
 #: field:payment.transaction,state:0
@@ -448,9 +436,8 @@ msgstr "A referência dessa transação de pagamento deve ser exclusiva!"
 #: view:payment.acquirer:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                    It is be rendered with qWeb with the "
-"following evaluation context:"
-msgstr ""
+"                                    It is be rendered with qWeb with the following evaluation context:"
+msgstr "Este modelo torna o botão adquirente com todos os valores necessários.\n                                     É ser rendido com Qweb com o seguinte contexto de avaliação:"
 
 #. module: payment
 #: field:payment.transaction,type:0
@@ -470,17 +457,17 @@ msgstr "Data de Validação"
 #. module: payment
 #: field:payment.acquirer,fees_dom_var:0
 msgid "Variable domestic fees (in percents)"
-msgstr ""
+msgstr "Taxas variáveis domésticas (em porcentagens)"
 
 #. module: payment
 #: field:payment.acquirer,fees_int_var:0
 msgid "Variable international fees (in percents)"
-msgstr ""
+msgstr "Taxas internacionais variáveis (em porcentagem)"
 
 #. module: payment
 #: field:payment.acquirer,website_published:0
 msgid "Visible in Portal / Website"
-msgstr ""
+msgstr "Visível no Portal / Site"
 
 #. module: payment
 #: field:payment.transaction,website_message_ids:0
@@ -490,7 +477,7 @@ msgstr "Mensagens do Site"
 #. module: payment
 #: help:payment.transaction,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Histórico de Comunicação do Site"
 
 #. module: payment
 #: field:payment.transaction,partner_zip:0
@@ -500,51 +487,51 @@ msgstr "CEP"
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr ""
+msgstr "adquirente: payment.acquirer procurar registros"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr ""
+msgstr "quantidade: o valor da transação, um float"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "context: the current context dictionary"
-msgstr ""
+msgstr "contexto: o dicionário de contexto Atual"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr ""
+msgstr "Moeda: o registro  de moeda da transação"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr ""
+msgstr "parceiro: o registro de procura parceiro comprador, não necessariamente definido"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr ""
+msgstr "partner_values: valores específicos sobre o comprador, por exemplo provenientes de um formulário de envio"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr ""
+msgstr "referência: o número de referência da transação"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
-msgstr ""
+msgstr "tx_url: URL de transação para enviar o formulário"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "tx_values: transaction values"
-msgstr ""
+msgstr "tx_values: valores da transação"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr ""
+msgstr "user: atual recorde usuário navegue"
