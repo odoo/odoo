@@ -28,7 +28,7 @@ Main Features
 * Allows the user to create an invoice automatically
 * Refund previous sales
     """,
-    'depends': ['sale_stock', 'barcodes'],
+    'depends': ['stock_account', 'barcodes'],
     'data': [
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
