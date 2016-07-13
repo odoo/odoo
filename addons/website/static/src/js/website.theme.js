@@ -127,7 +127,7 @@ var Theme = Widget.extend({
         }
         this.$el.addClass('loading');
 
-        if (!reload && !session.debug) {
+        if (!reload && session.debug !== "assets") {
             var self = this;
             return ajax.jsonRpc('/website/theme_customize', 'call', {
                 enable: enable,

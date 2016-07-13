@@ -155,8 +155,11 @@ var Apps = Widget.extend({
         self.get_client().then(function(client) {
             self.client = client;
 
-            var qs = (session.debug ? 'debug&' : '') + 'db=' + client.dbname;
-            var u = client.origin + '/apps/embed/client?' + qs;
+            var qs = {db: client.dbname};
+            if (session.debug) {
+                qs.debug = session.debug;
+            }
+            var u = $.param.querystring(client.origin + "/apps/embed/client", qs);
             var css = {width: '100%', height: '400px'};
             self.$ifr = $('<iframe>').attr('src', u);
 
