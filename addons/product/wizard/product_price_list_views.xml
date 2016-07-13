@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 
     <!--   Product Price List -->
-
         <record id="view_product_price_list" model="ir.ui.view">
               <field name="name">Price per unit</field>
               <field name="model">product.price_list</field>
@@ -32,6 +30,4 @@
             src_model="product.product"
             groups="product.group_sale_pricelist"
             view_mode="form" target="new" view_type="form" />
-
-</data>
-</openerp>
+</odoo>

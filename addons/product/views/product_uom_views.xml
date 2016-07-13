@@ -21,7 +21,7 @@
                     <group>
                         <field name="name"/>
                         <field name="category_id"/>
-                        <field name="uom_type" on_change="onchange_type(uom_type)"/>
+                        <field name="uom_type"/>
                         <field name="factor"
                             digits="[42,5]"
                             attrs="{'invisible':[('uom_type','!=','smaller')],
