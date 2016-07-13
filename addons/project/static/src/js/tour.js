@@ -6,7 +6,9 @@ var tour = require('web_tour.tour');
 
 var _t = core._t;
 
-tour.register('project_tour', [{
+tour.register('project_tour', {
+    url: "/web",
+}, [tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="base.menu_main_pm"], .oe_menu_toggler[data-menu-xmlid="base.menu_main_pm"]',
     content: _t('Want a better way to <b>manage your projects</b>? <i>It starts here.</i>'),
     position: 'bottom',
@@ -20,10 +22,17 @@ tour.register('project_tour', [{
     trigger: 'input.o_project_name',
     content: _t('Choose a <b>project name</b>. (e.g. Website Launch, Product Development, Office Party, etc.)'),
     position: 'right',
+    run: function (actions) {
+        actions.auto();
+        actions.auto(".modal:visible .btn.btn-primary");
+    },
 }, {
     trigger: '.o_project_kanban .o_kanban_record:first-child',
     content: _t('Click on the card to <b>go to your project</b> and start organizing tasks.'),
     position: 'right',
+    run: function (actions) {
+        actions.auto(this.$anchor.find(".o_project_kanban_box:first > a"));
+    },
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create",
     content: _t("Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. Specification &gt; Development &gt; Done</i>"),
@@ -34,22 +43,26 @@ tour.register('project_tour', [{
     content: _t("Now that the project is setup, <b>create a few tasks</b>."),
     position: "right"
 }, {
-    trigger: ".o_kanban_record:nth-child(3)",
+    trigger: ".o_kanban_group:first-child .o_kanban_record:last-child",
     extra_trigger: '.o_kanban_project_tasks',
     content: _t("<b>Drag &amp; drop tasks</b> between columns as you work on them."),
-    position: "right"
+    position: "right",
+    run: "drag_and_drop .o_kanban_group:nth-child(2)",
 }, {
     trigger: ".o_kanban_record .o_priority_star",
     extra_trigger: '.o_kanban_project_tasks',
     content: _t("<b>Star tasks</b> to mark team priorities."),
-    position: "bottom"
+    position: "bottom",
 }, {
     trigger: ".o_kanban_record",
     extra_trigger: '.o_kanban_project_tasks',
     content: _t("Click on a card to get the details of the task."),
-    position: "bottom"
+    position: "bottom",
+    run: function (actions) {
+        actions.auto(".o_kanban_record .oe_kanban_action[data-type=edit]");
+    },
 }, {
-    trigger: ".o_form_button_edit:visible",
+    trigger: ".o_form_button_edit",
     extra_trigger: '.o_form_project_tasks',
     content: _t('Click on this button to modify the task.'),
     position: "bottom"
@@ -57,7 +70,13 @@ tour.register('project_tour', [{
     trigger: ".o_form_field.o_task_user_field",
     extra_trigger: '.o_form_project_tasks.o_form_editable',
     content: _t('<b>Assign the task</b> to someone. <i>You can create and invite a new user on the fly.</i>'),
-    position: "bottom"
+    position: "bottom",
+    run: function (actions) {
+        actions.text("Demo User", this.$anchor.find("input"));
+    },
+}, {
+    trigger: ".ui-autocomplete > li > a",
+    auto: true,
 }, {
     trigger: ".o_form_button_save",
     extra_trigger: '.o_form_project_tasks.o_form_editable',
@@ -65,15 +84,11 @@ tour.register('project_tour', [{
     position: "bottom"
 }, {
     trigger: ".breadcrumb li:not(.active):last",
-    extra_trigger: '.o_form_project_tasks',
+    extra_trigger: '.o_form_project_tasks.o_form_readonly',
     content: _t("Click on layers in the path to easily <b>return to tasks</b>."),
     position: "bottom"
-}, {
-    trigger: ".o_main_navbar .o_menu_toggle",
-    content: _t('Click the <i>Home icon</i> to navigate across apps.'),
-    edition: "enterprise",
-    position: "bottom"
-}, {
+}, tour.STEPS.TOGGLE_APPSWITCHER,
+tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="base.menu_administration"], .oe_menu_toggler[data-menu-xmlid="base.menu_administration"]',
     content: _t("Configuration options are available in the Settings app."),
     position: "bottom"

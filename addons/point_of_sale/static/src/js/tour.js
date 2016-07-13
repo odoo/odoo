@@ -6,7 +6,9 @@ var tour = require('web_tour.tour');
 
 var _t = core._t;
 
-tour.register('point_of_sale_tour', [{
+tour.register('point_of_sale_tour', {
+    url: "/web",
+}, [{
     trigger: '.o_app[data-menu-xmlid="point_of_sale.menu_point_root"], .oe_menu_toggler[data-menu-xmlid="point_of_sale.menu_point_root"]',
     content: _t("Ready to launch your <b>point of sale</b>? <i>Click here</i>."),
     position: 'bottom',
