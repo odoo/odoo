@@ -858,7 +858,7 @@ class AccountInvoice(models.Model):
             if invoice.type in ('in_invoice', 'in_refund') and invoice.reference:
                 if self.search([('type', '=', invoice.type), ('reference', '=', invoice.reference), ('company_id', '=', invoice.company_id.id), ('commercial_partner_id', '=', invoice.commercial_partner_id.id), ('id', '!=', invoice.id)]):
                     raise UserError(_("Duplicated vendor reference detected. You probably encoded twice the same vendor bill/refund."))
-            if invoice.reconciled and invoice.state != 'paid':
+            if invoice.reconciled and invoice.state == 'paid':
                 raise UserError(_('You cannot re-open an invoice which is partially paid or paid. You need to unreconcile related payment entries first'))
         return self.write({'state': 'open'})
 
