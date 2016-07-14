@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from functools import partial
-
-from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 
 
@@ -94,44 +91,3 @@ class report_paperformat(osv.Model):
     }
 
 
-class res_company(osv.Model):
-    _inherit = 'res.company'
-
-    _columns = {'paperformat_id': fields.many2one('report.paperformat', 'Paper format')}
-
-    def init(self, cr):
-        # set a default paperformat based on rml one.
-        ref = partial(self.pool['ir.model.data'].xmlid_to_res_id, cr, SUPERUSER_ID)
-
-        ids = self.search(cr, SUPERUSER_ID, [('paperformat_id', '=', False)])
-        for company in self.browse(cr, SUPERUSER_ID, ids):
-            paperformat_id = {
-                'a4': ref('report.paperformat_euro'),
-                'us_letter': ref('report.paperformat_us'),
-            }.get(company.rml_paper_format) or ref('report.paperformat_euro')
-
-            if paperformat_id:
-                company.write({'paperformat_id': paperformat_id})
-
-        sup = super(res_company, self)
-        if hasattr(sup, 'init'):
-            sup.init(cr)
-
-
-class ir_actions_report(osv.Model):
-    _inherit = 'ir.actions.report.xml'
-
-    def associated_view(self, cr, uid, ids, context):
-        """Used in the ir.actions.report.xml form view in order to search naively after the view(s)
-        used in the rendering.
-        """
-        try:
-            report_name = self.browse(cr, uid, ids[0], context).report_name
-            act_window_obj = self.pool.get('ir.actions.act_window')
-            view_action = act_window_obj.for_xml_id(cr, uid, 'base', 'action_ui_view', context=context)
-            view_action['domain'] = [('name', 'ilike', report_name.split('.')[1]), ('type', '=', 'qweb')]
-            return view_action
-        except:
-            return False
-
-    _columns = {'paperformat_id': fields.many2one('report.paperformat', 'Paper format')}

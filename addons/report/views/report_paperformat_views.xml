@@ -71,26 +71,6 @@
             groups="base.group_no_one"
             />
 
-        <!-- Add a paperformat and web button to the report form view -->
-        <record id="act_report_xml_view_inherit" model="ir.ui.view">
-            <field name="name">act_report_xml_view_inherit</field>
-            <field name="inherit_id" ref="base.act_report_xml_view" />
-            <field name="model">ir.actions.report.xml</field>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//field[@name='attachment']" position="after">
-                        <field name="paperformat_id" attrs="{'invisible':[('report_type','not in',['qweb-pdf'])]}"/>
-                        <button
-                            type="object"
-                            class="oe_link"
-                            string="Search associated QWeb views"
-                            name="associated_view"
-                            attrs="{'invisible':[('report_type', 'not in', ['qweb-pdf', 'qweb-html'])]}"
-                        />
-                    </xpath>
-                </data>
-            </field>
-        </record>
 
         <!-- Customize the company form view by adding paperformat field as well as demo reports -->
         <!-- Demo reports definition -->
@@ -124,28 +104,6 @@
             file="report.preview_externalreport"
             string="Preview External Report"
             report_type="qweb-pdf"/>
-
-        <record id="reporting_settings_form_inherited" model="ir.ui.view">
-            <field name="name">view_company_form_inherited</field>
-            <field name="inherit_id" ref="base.view_company_form" />
-            <field name="model">res.company</field>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//page[@name='report']/group[1]" position="inside">
-                        <group col="2" colspan="2">
-                            <field name="paperformat_id" />
-                        </group>
-                        <group col="1" colspan="2" groups="base.group_no_one">
-                            <button name="%(action_report_internalpreview)d" string="Preview Internal Report" type="action"/>
-                            <button name="%(action_report_externalpreview)d" string="Preview External Report" type="action"/>
-                            <button name="edit_external_header" string="Edit external header" type="object" class="oe_link"/>
-                            <button name="edit_external_footer" string="Edit external footer" type="object" class="oe_link"/>
-                            <button name="edit_internal_header" string="Edit internal header" type="object" class="oe_link"/>
-                        </group>
-                    </xpath>
-                </data>
-            </field>
-        </record>
 
     </data>
 </openerp>
