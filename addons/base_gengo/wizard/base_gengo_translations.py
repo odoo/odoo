@@ -7,7 +7,7 @@ import time
 import uuid
 
 from odoo import api, fields, models, tools, _
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -176,7 +176,10 @@ class BaseGengoTranslations(models.TransientModel):
         if job.get('status', False) in ('approved', 'canceled'):
             vals['state'] = 'translated'
         if vals:
-            translation.write(vals)
+            try:
+                translation.write(vals)
+            except ValidationError:
+                pass
 
     @api.model
     def _update_terms(self, response, term_ids):
