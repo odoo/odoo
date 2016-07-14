@@ -248,7 +248,7 @@ class XmlDeclaration(models.TransientModel):
             else:
                 amount = 0
             weight = (inv_line.product_id.weight or 0.0) * \
-                self.env['product.uom']._compute_qty(inv_line.uom_id.id, inv_line.quantity, inv_line.product_id.uom_id.id)
+                inv_line.uom_id._compute_quantity(inv_line.quantity, inv_line.product_id.uom_id)
             if not inv_line.product_id.uom_id.category_id:
                 supply_units = inv_line.quantity
             else:

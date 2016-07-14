@@ -68,10 +68,9 @@ class StockPicking(models.Model):
     @api.depends('pack_operation_ids')
     def _compute_bulk_weight(self):
         weight = 0.0
-        uom_obj = self.env['product.uom']
         for packop in self.pack_operation_ids:
             if packop.product_id and not packop.result_package_id:
-                weight += uom_obj._compute_qty_obj(packop.product_uom_id , packop.product_qty, packop.product_id.uom_id) * packop.product_id.weight
+                weight += packop.product_uom_id._compute_quantity(packop.product_qty, packop.product_id.uom_id) * packop.product_id.weight
         self.weight_bulk = weight
 
     @api.one

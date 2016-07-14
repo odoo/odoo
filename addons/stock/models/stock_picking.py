@@ -557,7 +557,7 @@ class Picking(models.Model):
             uom = product_to_uom[mapping.product.id]
             val_dict = {
                 'picking_id': self.id,
-                'product_qty': Uom._compute_qty_obj(mapping.product.uom_id, qty, uom),
+                'product_qty': mapping.product.uom_id._compute_quantity(qty, uom),
                 'product_id': mapping.product.id,
                 'package_id': mapping.package.id,
                 'owner_id': mapping.owner.id,
@@ -686,7 +686,7 @@ class Picking(models.Model):
         for ops in operations:
             lot_qty = {}
             for packlot in ops.pack_lot_ids:
-                lot_qty[packlot.lot_id.id] = Uom._compute_qty_obj(ops.product_uom_id, packlot.qty, ops.product_id.uom_id)
+                lot_qty[packlot.lot_id.id] = ops.product_uom_id._compute_quantity(packlot.qty, ops.product_id.uom_id)
             # for each operation, create the links with the stock move by seeking on the matching reserved quants,
             # and deffer the operation if there is some ambiguity on the move to select
             if ops.package_id and not ops.product_id and (not done_qtys or ops.qty_done):
@@ -704,7 +704,7 @@ class Picking(models.Model):
             elif ops.product_id.id:
                 # Check moves with same product
                 product_qty = ops.qty_done if done_qtys else ops.product_qty
-                qty_to_assign = Uom._compute_qty_obj(ops.product_uom_id, product_qty, ops.product_id.uom_id)
+                qty_to_assign = ops.product_uom_id._compute_quantity(product_qty, ops.product_id.uom_id)
                 precision_rounding = ops.product_id.uom_id.rounding
                 for move_dict in prod2move_ids.get(ops.product_id.id, []):
                     move = move_dict['move']
@@ -927,7 +927,7 @@ class Picking(models.Model):
             if op.product_uom_id.factor > product.uom_id.factor:  # If the pack operation's is a smaller unit
                 uom_id = op.product_uom_id.id
                 # HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
-                qty = Uom._compute_qty_obj(product.uom_id, remaining_qty, op.product_uom_id, rounding_method='HALF-UP')
+                qty = product.uom_id._compute_quantity(remaining_qty, op.product_uom_id, rounding_method='HALF-UP')
         picking = op.picking_id
         ref = product.default_code
         name = '[' + ref + ']' + ' ' + product.name if ref else product.name

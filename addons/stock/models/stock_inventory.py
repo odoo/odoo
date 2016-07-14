@@ -318,7 +318,7 @@ class InventoryLine(models.Model):
             return
         theoretical_qty = sum([x.qty for x in self._get_quants()])
         if theoretical_qty and self.product_uom_id and self.product_id.uom_id != self.product_uom_id:
-            theoretical_qty = self.env["product.uom"]._compute_qty_obj(self.product_id.uom_id, theoretical_qty, self.product_uom_id)
+            theoretical_qty = self.product_id.uom_id._compute_quantity(theoretical_qty, self.product_uom_id)
         self.theoretical_qty = theoretical_qty
 
     @api.onchange('product_id', 'product_uom_id')

@@ -284,7 +284,7 @@ class Holidays(models.Model):
                 uom_hour = resource.calendar_id.uom_id
                 uom_day = self.env.ref('product.product_uom_day')
                 if uom_hour and uom_day:
-                    return self.env['product.uom']._compute_qty_obj(uom_hour, hours, uom_day)
+                    return uom_hour._compute_quantity(hours, uom_day)
 
         time_delta = to_dt - from_dt
         return math.ceil(time_delta.days + float(time_delta.seconds) / 86400)
