@@ -34,7 +34,8 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, re
     else:
         rname_s = rname
     _test_logger.info("  - Trying %s.create(%r)", rname, ids)
-    res = openerp.report.render_report(cr, uid, ids, rname_s, data, context)
+
+    res = openerp.report.render_report(cr, uid, ids, rname_s, data, context=context)
     if not isinstance(res, tuple):
         raise RuntimeError("Result of %s.create() should be a (data,format) tuple, now it is a %s" % \
                                 (rname, type(res)))
