@@ -25,8 +25,8 @@ class WebsitePayment(http.Controller):
             'error_message': [],
         }
         for acquirer in acquirers:
-            acquirer.form = acquirer.sudo()._registration_render(request.env.user.partner_id.id, render_context)[0]
-        return request.website.render("website_payment.pay_methods", values)
+            acquirer.form = acquirer.sudo()._registration_render(request.env.user.partner_id.id, render_context)
+        return request.render("website_payment.pay_methods", values)
 
     @http.route(['/website_payment/delete/'], methods=['POST'], type='http', auth="user", website=True)
     def delete(self, delete_pm_id=None):
