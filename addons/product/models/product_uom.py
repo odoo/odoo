@@ -31,14 +31,14 @@ class product_uom(osv.osv):
     def _compute_factor_inv(self, factor):
         return factor and (1.0 / factor) or 0.0
 
-    def _factor_inv(self, cursor, user, ids, name, arg, context=None):
+    def _factor_inv(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for uom in self.browse(cursor, user, ids, context=context):
+        for uom in self.browse(cr, uid, ids, context=context):
             res[uom.id] = self._compute_factor_inv(uom.factor)
         return res
 
-    def _factor_inv_write(self, cursor, user, id, name, value, arg, context=None):
-        return self.write(cursor, user, id, {'factor': self._compute_factor_inv(value)}, context=context)
+    def _factor_inv_write(self, cr, uid, id, name, value, arg, context=None):
+        return self.write(cr, uid, id, {'factor': self._compute_factor_inv(value)}, context=context)
 
     def name_create(self, cr, uid, name, context=None):
         """ The UoM category and factor are required, so we'll have to add temporary values
@@ -139,7 +139,7 @@ class product_uom(osv.osv):
             amount = amount / to_unit.factor
         return amount
 
-    def onchange_type(self, cursor, user, ids, value):
+    def onchange_type(self, cr, uid, ids, value):
         if value == 'reference':
             return {'value': {'factor': 1, 'factor_inv': 1}}
         return {}

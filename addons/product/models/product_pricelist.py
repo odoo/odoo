@@ -78,17 +78,17 @@ class product_pricelist(osv.osv):
         return super(product_pricelist, self).name_search(
             cr, uid, name, args, operator=operator, context=context, limit=limit)
 
-    def _get_currency(self, cr, uid, ctx):
-        comp = self.pool.get('res.users').browse(cr, uid, uid).company_id
+    def _get_currency(self, cr, uid, context=None):
+        comp = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
         if not comp:
-            comp_id = self.pool.get('res.company').search(cr, uid, [])[0]
-            comp = self.pool.get('res.company').browse(cr, uid, comp_id)
+            comp_id = self.pool.get('res.company').search(cr, uid, [], context=context)[0]
+            comp = self.pool.get('res.company').browse(cr, uid, comp_id, context=context)
         return comp.currency_id.id
 
-    def _get_item_ids(self, cr, uid, ctx):
+    def _get_item_ids(self, cr, uid, context=None):
         ProductPricelistItem = self.pool.get('product.pricelist.item')
         fields_list = ProductPricelistItem._defaults.keys()
-        vals = ProductPricelistItem.default_get(cr, uid, fields_list, context=ctx)
+        vals = ProductPricelistItem.default_get(cr, uid, fields_list, context=context)
         vals['compute_price'] = 'formula'
         return [[0, False, vals]]
 
