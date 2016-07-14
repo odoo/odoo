@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-06-29 06:26+0000\n"
+"PO-Revision-Date: 2016-07-05 15:35+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Call for Tender Reference:</strong><br/>"
-msgstr ""
+msgstr "<strong>入札参照:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -46,7 +46,7 @@ msgstr "数量"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Reference </strong>"
-msgstr ""
+msgstr "<strong>参照 </strong>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -56,12 +56,12 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Scheduled Ordering Date:</strong><br/>"
-msgstr ""
+msgstr "<strong>発注予定日:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Selection Type:</strong><br/>"
-msgstr ""
+msgstr "<strong>選択タイプ:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -107,7 +107,7 @@ msgstr ""
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "Bid Selection"
-msgstr ""
+msgstr "応札選択"
 
 #. module: purchase_requisition
 #: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
@@ -123,17 +123,17 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_name
 msgid "Call for Tenders Reference"
-msgstr ""
+msgstr "入札参照"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Tenders in negotiation"
-msgstr ""
+msgstr "交渉中の入札"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Tenders where tenders are closed"
-msgstr ""
+msgstr "完了済の入札"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_bid_line_qty
@@ -144,7 +144,7 @@ msgstr "取消"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Cancel Call"
-msgstr "通話キャンセル"
+msgstr "入札取消"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
@@ -196,7 +196,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_partner
 msgid "Choose Vendor"
-msgstr ""
+msgstr "仕入先を選択"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -206,7 +206,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Click to start a new Call for Tenders process."
-msgstr ""
+msgstr "クリックして入札を新規作成してください。"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -216,7 +216,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Closed Tenders"
-msgstr ""
+msgstr "完了済入札"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_company_id
@@ -227,7 +227,7 @@ msgstr "会社"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm Call"
-msgstr ""
+msgstr "入札確認"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
@@ -248,12 +248,12 @@ msgstr "確認済"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_partner
 msgid "Create Request for Quotation"
-msgstr ""
+msgstr "見積依頼作成"
 
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
 msgid "Create a draft purchase order"
-msgstr ""
+msgstr "ドラフト発注作成"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_create_uid
@@ -407,12 +407,12 @@ msgstr "メッセージと通信履歴"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_multiple_rfq_per_supplier
 msgid "Multiple RFQ per vendor"
-msgstr ""
+msgstr "1仕入先に複数見積依頼許可"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Multiple Requisitions"
-msgstr "複数の要求書"
+msgstr "複数見積依頼を選択"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -422,7 +422,7 @@ msgstr "新規"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "New Call for Tenders"
-msgstr ""
+msgstr "新規の入札"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction_counter
@@ -447,12 +447,12 @@ msgstr "オーダー日"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Ordering Date"
-msgstr ""
+msgstr "オーダー日"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "PO Created"
-msgstr ""
+msgstr "発注作成済"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_picking_type_id
@@ -505,7 +505,7 @@ msgstr "発注する製品"
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
 msgid "Propose a call for tenders"
-msgstr ""
+msgstr "入札提案"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
@@ -563,7 +563,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Purchase Tenders"
-msgstr ""
+msgstr "購買入札"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -591,7 +591,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Bids"
-msgstr ""
+msgstr "見積依頼/応札"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -601,7 +601,7 @@ msgstr "参照"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Request a Quotation"
-msgstr "見積要求"
+msgstr "見積依頼"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -611,7 +611,7 @@ msgstr "見積依頼"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Requests for Quotation Details"
-msgstr ""
+msgstr "見積依頼詳細"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
@@ -638,7 +638,7 @@ msgstr "予定日"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_ordering_date
 msgid "Scheduled Ordering Date"
-msgstr ""
+msgstr "発注予定日"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -653,7 +653,7 @@ msgstr ""
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Select only one RFQ (exclusive)"
-msgstr ""
+msgstr "見積要求を1件のみ選択（排他）"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_exclusive
@@ -670,7 +670,7 @@ msgstr "見積依頼をEメールで送信"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Source"
-msgstr "ソース"
+msgstr "要求元"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_origin
@@ -693,7 +693,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_date_end
 msgid "Tender Closing Deadline"
-msgstr ""
+msgstr "入札締切"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.purchase_line_tree
@@ -703,7 +703,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_exclusive
 msgid "Tender Selection Type"
-msgstr ""
+msgstr "入札選択タイプ"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

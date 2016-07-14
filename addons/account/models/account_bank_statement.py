@@ -260,7 +260,7 @@ class AccountBankStatement(models.Model):
         return {
             'name': _('Journal Items'),
             'view_type': 'form',
-            'view_mode': 'tree',
+            'view_mode': 'tree,form',
             'res_model': 'account.move.line',
             'view_id': False,
             'type': 'ir.actions.act_window',
@@ -443,7 +443,7 @@ class AccountBankStatementLine(models.Model):
             moves_to_cancel.unlink()
 
         if payment_to_unreconcile:
-            payment_to_unreconcile.write({'state': 'posted'})
+            payment_to_unreconcile.unreconcile()
 
     ####################################################
     # Reconciliation interface methods
@@ -577,10 +577,11 @@ class AccountBankStatementLine(models.Model):
                     domain = [(f, '>', 0), (f, '<', amount)]
             elif comparator == '=':
                 if f == 'amount_residual':
+                    liquidity_field = amount > 0 and 'debit' or 'credit'
                     domain = [
                         '|', (f, '=', float_round(amount, precision_digits=p)),
                         '&', ('account_id.internal_type', '=', 'liquidity'),
-                        '|', ('debit', '=', amount), ('credit', '=', amount),
+                        (liquidity_field, '=', amount),
                     ]
                 else:
                     domain = [
@@ -796,6 +797,7 @@ class AccountBankStatementLine(models.Model):
             items, as well as a journal item for the bank statement line.
             Finally, mark the statement line as reconciled by putting the matched moves ids in the column journal_entry_ids.
 
+            :param self: browse collection of records that are supposed to have no accounting entries already linked.
             :param (list of dicts) counterpart_aml_dicts: move lines to create to reconcile with existing payables/receivables.
                 The expected keys are :
                 - 'name'
@@ -830,8 +832,6 @@ class AccountBankStatementLine(models.Model):
         counterpart_moves = self.env['account.move']
 
         # Check and prepare received data
-        if self.journal_entry_ids.ids:
-            raise UserError(_('The bank statement line was already reconciled.'))
         if any(rec.statement_id for rec in payment_aml_rec):
             raise UserError(_('A selected move line was already reconciled.'))
         for aml_dict in counterpart_aml_dicts:
