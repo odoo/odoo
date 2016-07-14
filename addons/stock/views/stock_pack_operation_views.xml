@@ -11,13 +11,17 @@
                         <field name="lots_visible" invisible="1"/>
                         <field name="picking_source_location_id" invisible="1"/>
                         <field name="picking_destination_location_id" invisible="1"/>
+                        <field name="ordered_qty" invisible="1"/>
+                        <field name="previous_product_uom_id" invisible="1"/>
+                        <field name="product_uom_categ_id" invisible="1"/>
                         <field name="product_id" attrs="{'required': [('package_id', '=', False)]}" readonly="1"/>
                         <label for="qty_done"/>
                         <div>
                             <field name="qty_done" nolabel="1" attrs="{'readonly': [('lots_visible','=',True)]}" class="oe_inline"/>
                             /
-                            <field name="product_qty" class="oe_inline" readonly="1"/>
-                            <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="product.group_uom" class="oe_inline"/>
+                            <field name="product_qty" class="oe_inline"/>
+                            <field name="product_uom_id" domain="[('category_id', '=', product_uom_categ_id)]" options="{'no_open': True, 'no_create': True}"
+                                   attrs="{'readonly': [('lots_visible','=',True)]}" groups="product.group_uom" class="oe_inline"/>
                         </div>
                     </group>
                     <group string="Locations" groups="stock.group_stock_multi_locations">
