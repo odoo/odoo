@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_account_invoice_report_salesteam" model="ir.actions.act_window">
+        <field name="name">Invoices Analysis</field>
+        <field name="res_model">account.invoice.report</field>
+        <field name="view_mode">graph</field>
+        <field name="domain">[('team_id', '=', active_id),('state', 'not in', ['draft', 'cancel'])]</field>
+        <field name="context">{'search_default_month':1}</field>
+        <field name="help">From this report, you can have an overview of the amount invoiced to your customer. The search tool can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
+    </record>
+</odoo>
