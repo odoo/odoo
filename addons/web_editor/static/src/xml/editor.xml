@@ -229,7 +229,15 @@
             </div>
         </div>
         <ul class="list-group">
-            <li class="list-group-item form-group clearfix active">
+            <li class="list-group-item form-group active">
+                <h4 class="list-group-item-heading">
+                    <label for="link-page" class="control-label">
+                        Page
+                    </label>
+                </h4>
+                <input class="page form-control url-source" id="link-page" type="hidden"/>
+            </li>
+            <li class="list-group-item form-group clearfix">
                 <div class="pull-right" style="display: none;">
                     <label>
                         <input class="window-new" type="checkbox"/>Open in new window</label>
@@ -238,7 +246,7 @@
                     <label class="control-label" for="link-external">URL or Email Address
                     </label>
                 </h4>
-                <input class="form-control url email-address url-source" id="link-external" placeholder="http://openerp.com" type="text"/>
+                <input class="form-control url email-address url-source" id="link-external" placeholder="https://www.odoo.com" type="text"/>
             </li>
         </ul>
         <div class="form-horizontal link-style">

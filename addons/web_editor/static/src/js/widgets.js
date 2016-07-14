@@ -1032,7 +1032,6 @@ var LinkDialog = Dialog.extend({
     },
     start: function () {
         this.bind_data();
-        this.$('input.url-source:eq(1)').closest('.list-group-item').addClass('active');
         return this._super.apply(this, arguments);
     },
     get_data: function (test) {
