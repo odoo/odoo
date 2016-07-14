@@ -14,13 +14,14 @@ class TestUom(TransactionCase):
         gram_id = self.imd.get_object_reference(cr, uid, 'product', 'product_uom_gram')[1]
         kg_id = self.imd.get_object_reference(cr, uid, 'product', 'product_uom_kgm')[1]
         tonne_id = self.imd.get_object_reference(cr, uid, 'product', 'product_uom_ton')[1]
+        tonne = self.registry['product.uom'].browse(cr, uid, [tonne_id])
         unit_id = self.imd.get_object_reference(cr, uid, 'product','product_uom_unit')[1]
         dozen_id = self.imd.get_object_reference(cr, uid, 'product','product_uom_dozen')[1]
 
         qty = self.uom._compute_qty(cr, uid, gram_id, 1020000, tonne_id)
         self.assertEquals(qty, 1.02, "Converted quantity does not correspond.")
 
-        price = self.uom._compute_price(cr, uid, gram_id, 2, tonne_id)
+        price = self.uom._compute_price(cr, uid, [gram_id], 2, tonne)
         self.assertEquals(price, 2000000.0, "Converted price does not correspond.")
 
         # If the conversion factor for Dozens (1/12) is not stored with sufficient precision,

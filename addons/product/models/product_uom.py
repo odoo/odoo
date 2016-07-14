@@ -127,15 +127,14 @@ class product_uom(osv.osv):
                 amount = float_round(amount, precision_rounding=to_unit.rounding, rounding_method=rounding_method)
         return amount
 
-    def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):
-        if (not from_uom_id or not price or not to_uom_id
-                or (to_uom_id == from_uom_id)):
+    def _compute_price(self, cr, uid, ids, price, to_unit, context=None):
+        from_unit = self.browse(cr, uid, ids[0], context=context)
+        if not from_unit or not price or not to_unit or from_unit == to_unit:
             return price
-        from_unit, to_unit = self.browse(cr, uid, [from_uom_id, to_uom_id])
         if from_unit.category_id.id != to_unit.category_id.id:
             return price
         amount = price * from_unit.factor
-        if to_uom_id:
+        if to_unit:
             amount = amount / to_unit.factor
         return amount
 

@@ -60,7 +60,7 @@ class product_template(osv.osv):
         if 'uom' in context:
             uom = product.uom_id
             value = product_uom_obj._compute_price(cr, uid,
-                    context['uom'], value, uom.id)
+                    [context['uom']], value, uom, context=context)
 
         return product.write({'list_price': value})
 
@@ -212,7 +212,7 @@ class product_template(osv.osv):
             prices[template.id] = template[price_type] or 0.0
 
             if uom:
-                prices[template.id] = template.uom_id._compute_price(template.uom_id.id, prices[template.id], uom.id)
+                prices[template.id] = template.uom_id._compute_price(prices[template.id], uom)
 
             # Convert from current user company currency to asked one
             # This is right cause a field cannot be in more than one currency

@@ -181,13 +181,15 @@ class product_product(osv.osv):
 
     def _product_lst_price(self, cr, uid, ids, name, arg, context=None):
         product_uom_obj = self.pool.get('product.uom')
+        if 'uom' in context:
+            to_uom = self.pool['product.uom'].browse(cr, uid, context['uom'], context=context)
         res = dict.fromkeys(ids, 0.0)
 
         for product in self.browse(cr, uid, ids, context=context):
             if 'uom' in context:
                 uom = product.uom_id
                 res[product.id] = product_uom_obj._compute_price(cr, uid,
-                        uom.id, product.list_price, context['uom'])
+                        [uom.id], product.list_price, to_uom)
             else:
                 res[product.id] = product.list_price
             res[product.id] =  res[product.id] + product.price_extra
@@ -201,7 +203,7 @@ class product_product(osv.osv):
         if 'uom' in context:
             uom = product.uom_id
             value = product_uom_obj._compute_price(cr, uid,
-                    context['uom'], value, uom.id)
+                    [context['uom']], value, uom)
         value =  value - product.price_extra
         
         return product.write({'list_price': value})
@@ -518,7 +520,7 @@ class product_product(osv.osv):
                 prices[product.id] += product.price_extra
 
             if uom:
-                prices[product.id] = product.uom_id._compute_price(product.uom_id.id, prices[product.id], uom.id)
+                prices[product.id] = product.uom_id._compute_price(prices[product.id], uom)
 
             # Convert from current user company currency to asked one
             # This is right cause a field cannot be in more than one currency

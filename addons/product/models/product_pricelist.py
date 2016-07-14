@@ -187,7 +187,7 @@ class product_pricelist(osv.osv):
             # TDE SURPRISE: product can actually be a template
             price = product.price_compute('list_price')[product.id]
 
-            price_uom_id = qty_uom_id
+            price_uom = self.pool['product.uom'].browse(cr, uid, [qty_uom_id], context=context)
             for rule in items:
                 if rule.min_quantity and qty_in_product_uom < rule.min_quantity:
                     continue
@@ -222,8 +222,8 @@ class product_pricelist(osv.osv):
                     price = product.price_compute(rule.base)[product.id]
 
                 convert_to_price_uom = (lambda price: product_uom_obj._compute_price(
-                                            cr, uid, product.uom_id.id,
-                                            price, price_uom_id))
+                                            cr, uid, [product.uom_id.id],
+                                            price, price_uom))
 
                 if price is not False:
                     if rule.compute_price == 'fixed':

@@ -75,7 +75,7 @@ class sale_quote_line(osv.osv):
         uom_obj = self.pool.get('product.uom')
         if vals['product_uom_id'] != product_obj.uom_id.id:
             selected_uom = uom_obj.browse(cr, uid, vals['product_uom_id'], context=context)
-            new_price = uom_obj._compute_price(cr, uid, product_obj.uom_id.id, vals['price_unit'], vals['product_uom_id'])
+            new_price = uom_obj._compute_price(cr, uid, [product_obj.uom_id.id], vals['price_unit'], selected_uom)
             vals['price_unit'] = new_price
         if not uom_id:
             domain = {'product_uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
@@ -362,7 +362,7 @@ class sale_quote_option(osv.osv):
             self.price_unit = 0.0
             return
         if self.uom_id.id != self.product_id.uom_id.id:
-            new_price = self.product_id.uom_id._compute_price(self.product_id.uom_id.id, self.price_unit, self.uom_id.id)
+            new_price = self.product_id.uom_id._compute_price(self.price_unit, self.uom_id)
             self.price_unit = new_price
 
     def on_change_product_id(self, cr, uid, ids, product, uom_id=None, context=None):
@@ -380,8 +380,8 @@ class sale_quote_option(osv.osv):
         uom_obj = self.pool.get('product.uom')
         if vals['uom_id'] != product_obj.uom_id.id:
             selected_uom = uom_obj.browse(cr, uid, vals['uom_id'], context=context)
-            new_price = uom_obj._compute_price(cr, uid, product_obj.uom_id.id,
-                                               vals['price_unit'], vals['uom_id'])
+            new_price = uom_obj._compute_price(cr, uid, [product_obj.uom_id.id],
+                                               vals['price_unit'], selected_uom)
             vals['price_unit'] = new_price
         if not uom_id:
             domain = {'uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
@@ -434,7 +434,7 @@ class sale_order_option(osv.osv):
         uom_obj = self.pool.get('product.uom')
         if vals['uom_id'] != product_obj.uom_id.id:
             selected_uom = uom_obj.browse(cr, uid, vals['uom_id'], context=context)
-            new_price = uom_obj._compute_price(cr, uid, product_obj.uom_id.id, vals['price_unit'], vals['uom_id'])
+            new_price = uom_obj._compute_price(cr, uid, [product_obj.uom_id.id], vals['price_unit'], selected_uom)
             vals['price_unit'] = new_price
         if not uom_id:
             domain = {'uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}

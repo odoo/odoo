@@ -202,8 +202,7 @@ class PurchaseOrder(models.Model):
                 ProductUOM = self.env['product.uom']
                 product_qty = ProductUOM._compute_qty_obj(
                     line.product_uom_id, line.product_qty, line.product_id.uom_po_id)
-                price_unit = ProductUOM._compute_price(
-                    line.product_uom_id.id, line.price_unit, to_uom_id=line.product_id.uom_po_id.id)
+                price_unit = line.product_uom_id._compute_price(line.price_unit, line.product_id.uom_po_id)
             else:
                 product_qty = line.product_qty
                 price_unit = line.price_unit
