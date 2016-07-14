@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import controllers
-import models
-import wizard
+from . import test_calendar
+from . import test_calendar_recurrent_event_case2

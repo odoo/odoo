@@ -1,12 +1,9 @@
 <?xml version="1.0"?>
-<openerp>
-    <data>
+<odoo>
 
-
-    <!-- Calendar Events Types Form View -->
-
+    <!-- Calendar Events Types : Views and Actions -->
     <record id="view_calendar_event_type_tree" model="ir.ui.view">
-        <field name="name">Meeting Types Tree</field>
+        <field name="name">calendar.event.type</field>
         <field name="model">calendar.event.type</field>
         <field name="arch" type="xml">
             <tree string="Meeting Types" editable="bottom">
@@ -22,16 +19,16 @@
         <field name="view_id" ref="view_calendar_event_type_tree"/>
     </record>
 
-    <!-- Calendar Alarm -->
+    <!-- Calendar Alarm : -->
     <record id="view_calendar_alarm_tree" model="ir.ui.view">
-        <field name="name">Calendar Alarm Tree</field>
+        <field name="name">calendar.alarm.tree</field>
         <field name="model">calendar.alarm</field>
         <field name="arch" type="xml">
             <tree string="Calendar Alarm" editable="bottom">
                 <field name="name"/>
                 <field name="type"/>
-                <field name="duration" on_change="onchange_duration_interval(duration, interval)"/>
-                <field name="interval" on_change="onchange_duration_interval(duration, interval)"/>
+                <field name="duration"/>
+                <field name="interval"/>
             </tree>
         </field>
     </record>
@@ -47,8 +44,8 @@
                         <field name="type" groups="base.group_no_one"/>
                     </group>
                     <group>
-                        <field name="interval" on_change="onchange_duration_interval(duration, interval)"/>
-                        <field name="duration" on_change="onchange_duration_interval(duration, interval)"/>
+                        <field name="interval"/>
+                        <field name="duration"/>
                     </group>
                 </group>
             </form>
@@ -62,10 +59,27 @@
         <field name="view_id" ref="view_calendar_alarm_tree"/>
     </record>
 
-    <!-- Calendar Events Form View -->
+    <!-- Calendar Events : Views and Actions  -->
+    <record id="view_calendar_event_tree" model="ir.ui.view">
+        <field name="name">calendar.event.tree</field>
+        <field name="model">calendar.event</field>
+        <field name="arch" type="xml">
+            <tree string="Meetings" decoration-bf="message_needaction==True">
+                <field name="name" string="Subject"/>
+                <field name="allday" invisible="True"/>
+                <field name="start" string="Start Date"/>
+                <field name="stop" string="End Date"/>
+                <field name="partner_ids"/>
+                <field name="location"/>
+                <field name="state" invisible="True"/>
+                <field name="duration"/>
+                <field name="message_needaction" invisible="1"/>
+            </tree>
+        </field>
+    </record>
 
-    <record model="ir.ui.view" id="view_calendar_event_form">
-        <field name="name">Calendar - Event Form</field>
+    <record id="view_calendar_event_form" model="ir.ui.view">
+        <field name="name">calendar.event.form</field>
         <field name="model">calendar.event</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
@@ -86,7 +100,6 @@
                             <field name="partner_ids" widget="many2manyattendee"
                                 placeholder="Select attendees..."
                                 context="{'force_email':True}"
-                                on_change="onchange_partner_ids(partner_ids)"
                                 class="oe_inline"/>
                         </h2>
                     </div>
@@ -94,7 +107,7 @@
                         <page string="Meeting Details">
                             <group attrs="{'invisible': [('recurrency','==',False)]}" class="oe_edit_only ">
                                 <p class='alert alert-warning'> This event is linked to a recurrence...<br/>
-                                    <button type="object" name="open_after_detach_event"  string="Update only this instance"  help="Click here to update only this instance and not all recurrences. " class="oe_link"/>
+                                    <button type="object" name="action_detach_recurring_event"  string="Update only this instance"  help="Click here to update only this instance and not all recurrences. " class="oe_link"/>
                                 </p>
                             </group>
                             <group>
@@ -103,17 +116,17 @@
                                     <field name="stop" attrs="{'invisible': True}"/>
                                     <field name="id" attrs="{'invisible': True}"/>
 
-                                    <field name="start_date" string="Starting at" on_change="onchange_dates('start', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
-                                    <field name="stop_date" string="Ending at" on_change="onchange_dates('stop', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="start_date" string="Starting at" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="stop_date" string="Ending at" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
 
-                                    <field name="start_datetime" string="Starting at" on_change="onchange_duration(start_datetime, duration)" attrs="{'invisible': [('allday','=',True)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="start_datetime" string="Starting at" attrs="{'invisible': [('allday','=',True)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                     <field name="stop_datetime" invisible="1"/>
                                     <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <div attrs="{'invisible': [('allday','=',True)]}">
-                                        <field name="duration" widget="float_time" string="Duration" on_change="onchange_duration(start_datetime, duration)" class="oe_inline" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                        <field name="duration" widget="float_time" string="Duration" class="oe_inline" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                         <span> hours</span>
                                     </div>
-                                    <field name="allday"  on_change="onchange_allday(start, stop, start_date, stop_date, start_datetime, stop_datetime, allday)" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="allday" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                 </group>
                                 <group>
                                     <field name="categ_ids" widget="many2many_tags" options="
@@ -182,7 +195,7 @@
                         </page>
 
                         <page string="Invitations" groups="base.group_no_one">
-                            <button name="do_sendmail" type="object" string="Send mail" icon="fa-envelope" class="oe_link"/>
+                            <button name="action_sendmail" type="object" string="Send mail" icon="fa-envelope" class="oe_link"/>
                             <field name="attendee_ids" widget="one2many" >
                                 <tree string="Invitation details" editable="top" create="false" delete="false">
                                     <field name="partner_id" />
@@ -211,8 +224,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_calendar_event_form_popup">
-        <field name="name">Meetings Dialog</field>
+    <record id="view_calendar_event_form_popup" model="ir.ui.view">
+        <field name="name">calendar.event.form</field>
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
@@ -242,29 +255,8 @@
         </field>
     </record>
 
-    <!-- CRM Meeting Tree View  -->
-
-    <record model="ir.ui.view" id="view_calendar_event_tree">
-        <field name="name">CRM - Meetings Tree</field>
-        <field name="model">calendar.event</field>
-        <field name="arch" type="xml">
-            <tree string="Meetings" decoration-bf="message_needaction==True">
-                <field name="name" string="Subject"/>
-                <field name="allday" invisible="True"/>
-                <field name="start" string="Start Date"/>
-                <field name="stop" string="End Date"/>
-                <field name="partner_ids"/>
-                <field name="location"/>
-                <field name="state" invisible="True"/>
-                <field name="duration"/>
-                <field name="message_needaction" invisible="1"/>
-            </tree>
-        </field>
-    </record>
-
-    <!-- CRM Meeting Calendar -->
-    <record model="ir.ui.view" id="view_calendar_event_calendar">
-        <field name="name">Meeting</field>
+    <record id="view_calendar_event_calendar" model="ir.ui.view">
+        <field name="name">calendar.event.calendar</field>
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
@@ -279,9 +271,8 @@
         </field>
     </record>
 
-    <!-- CRM Meeting Search View  -->
     <record id="view_calendar_event_search" model="ir.ui.view">
-        <field name="name">CRM - Meetings Search</field>
+        <field name="name">calendar.event.search</field>
         <field name="model">calendar.event</field>
         <field name="arch" type="xml">
             <search string="Search Meetings">
@@ -320,31 +311,54 @@
           </p>
         </field>
     </record>
-    <record model="ir.actions.act_window.view" id="action_view_calendar_event_calendar">
+
+    <record id="action_view_calendar_event_calendar" model="ir.actions.act_window.view">
         <field name="act_window_id" ref="action_calendar_event"/>
         <field name="sequence" eval="1"/>
         <field name="view_mode">calendar</field>
         <field name="view_id" ref="view_calendar_event_calendar"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_view_calendar_event_tree">
+
+    <record id="action_view_calendar_event_tree" model="ir.actions.act_window.view">
         <field name="act_window_id" ref="action_calendar_event"/>
         <field name="sequence" eval="2"/>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="view_calendar_event_tree"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_view_calendar_event_form">
+
+    <record id="action_view_calendar_event_form" model="ir.actions.act_window.view">
         <field name="act_window_id" ref="action_calendar_event"/>
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_calendar_event_form"/>
     </record>
 
+    <!-- Menus -->
+    <menuitem
+        id="mail_menu_calendar"
+        name="Calendar"
+        sequence="2"
+        action="action_calendar_event"
+        web_icon="calendar,static/description/icon.png"
+        groups="base.group_user"/>
 
+    <menuitem
+        id="menu_calendar_configuration"
+        name="Calendar"
+        parent="base.menu_custom"
+        groups="base.group_no_one"/>
 
-    <menuitem name="Calendar" id="mail_menu_calendar" sequence="2" action="action_calendar_event" web_icon="calendar,static/description/icon.png" groups="base.group_user"/>
-    <menuitem id="menu_calendar_configuration" name="Calendar" parent="base.menu_custom" groups="base.group_no_one"/>
-    <menuitem id="menu_calendar_event_type" parent="menu_calendar_configuration" action="action_calendar_event_type" groups="base.group_no_one"/>
-    <menuitem id="menu_calendar_alarm" parent="menu_calendar_configuration" action="action_calendar_alarm" groups="base.group_no_one"/>
+    <menuitem
+        id="menu_calendar_event_type"
+        parent="menu_calendar_configuration"
+        action="action_calendar_event_type"
+        groups="base.group_no_one"/>
+
+    <menuitem
+        id="menu_calendar_alarm"
+        parent="menu_calendar_configuration"
+        action="action_calendar_alarm"
+        groups="base.group_no_one"/>
 
     <!-- called in js from '/js/base_calendar.js' -->
     <record id="action_calendar_event_notify" model="ir.actions.act_window">
@@ -354,6 +368,4 @@
         <field name="view_id" ref="view_calendar_event_form"/>
     </record>
 
-
-    </data>
-</openerp>
+</odoo>

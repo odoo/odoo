@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data noupdate="1">
-    
+
          <!-- Expense-related subtypes for messaging / Chatter -->
         <record id="calendar.subtype_invitation" model="mail.message.subtype">
             <field name="name">Invitation</field>
@@ -9,66 +9,66 @@
             <field name="description" eval="False"/>
             <field name="default" eval="False"/>
         </record>
-        <record model="calendar.alarm" id="alarm_notif_1">
+        <record id="alarm_notif_1" model="calendar.alarm">
             <field name="name">15 Minute(s)</field>
             <field name="duration" eval="15" />
             <field name="interval">minutes</field>
-            <field name="type">notification</field>                       
-        </record>        
-        <record model="calendar.alarm" id="alarm_notif_2">
+            <field name="type">notification</field>
+        </record>
+        <record id="alarm_notif_2" model="calendar.alarm">
             <field name="name">30 Minute(s)</field>
             <field name="duration" eval="30" />
             <field name="interval">minutes</field>
-            <field name="type">notification</field>            
-        </record>        
-        <record model="calendar.alarm" id="alarm_notif_3">
+            <field name="type">notification</field>
+        </record>
+        <record id="alarm_notif_3" model="calendar.alarm">
             <field name="name">1 Hour(s)</field>
             <field name="duration" eval="1" />
             <field name="interval">hours</field>
-            <field name="type">notification</field>            
-        </record>        
-        <record model="calendar.alarm" id="alarm_notif_4">
+            <field name="type">notification</field>
+        </record>
+        <record id="alarm_notif_4" model="calendar.alarm">
             <field name="name">2 Hour(s)</field>
             <field name="duration" eval="2" />
             <field name="interval">hours</field>
-            <field name="type">notification</field>            
-        </record>        
-        <record model="calendar.alarm" id="alarm_notif_5">
+            <field name="type">notification</field>
+        </record>
+        <record id="alarm_notif_5" model="calendar.alarm">
             <field name="name">1 Day(s)</field>
             <field name="duration" eval="1" />
             <field name="interval">days</field>
-            <field name="type">notification</field>            
-        </record>        
-        <record model="calendar.alarm" id="alarm_mail_1">
+            <field name="type">notification</field>
+        </record>
+        <record id="alarm_mail_1" model="calendar.alarm">
             <field name="name">2~3 Hour(s) mail</field>
             <field name="duration" eval="3" />
             <field name="interval">hours</field>
-            <field name="type">email</field>            
-        </record>        
-        <record model="calendar.alarm" id="alarm_mail_2">
+            <field name="type">email</field>
+        </record>
+        <record id="alarm_mail_2" model="calendar.alarm">
             <field name="name">5~6 Hour(s) mail</field>
             <field name="duration" eval="6" />
             <field name="interval">hours</field>
-            <field name="type">email</field>            
-        </record>        
-                
-        <record model="calendar.event.type" id="categ_meet1">
+            <field name="type">email</field>
+        </record>
+
+        <record id="categ_meet1" model="calendar.event.type">
             <field name="name">Customer Meeting</field>
         </record>
 
-        <record model="calendar.event.type" id="categ_meet2">
+        <record id="categ_meet2" model="calendar.event.type">
             <field name="name">Internal Meeting</field>
         </record>
 
-        <record model="calendar.event.type" id="categ_meet3">
+        <record id="categ_meet3" model="calendar.event.type">
             <field name="name">Off-site Meeting</field>
         </record>
 
-        <record model="calendar.event.type" id="categ_meet4">
+        <record id="categ_meet4" model="calendar.event.type">
             <field name="name">Open Discussion</field>
         </record>
 
-        <record model="calendar.event.type" id="categ_meet5">
+        <record id="categ_meet5" model="calendar.event.type">
             <field name="name">Feedback Meeting</field>
         </record>
 
@@ -113,18 +113,18 @@
             <td style="padding:10px 10px 10px 5px;font-size: 14px;">
                 <p style="font-size: 20px; text-align: center;">Invitation to <strong>${object.event_id.name}</strong></p>
                 <p>
-                    <strong>Dear ${object.cn}</strong>,<br />
-                    ${object.event_id.user_id.partner_id.name} invited you for the ${object.event_id.name} meeting of ${object.event_id.user_id.company_id.name}.</p> 
+                    <strong>Dear ${object.common_name}</strong>,<br />
+                    ${object.event_id.user_id.partner_id.name} invited you for the ${object.event_id.name} meeting of ${object.event_id.user_id.company_id.name}.</p>
                 <table style="margin-top: 20px;"><tr>
                     <td>
                         <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#a24689;padding-top: 4px;">
-                            ${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}
+                            ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}
                         </div>
                         <div style="font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #F8F8F8;width: 130px;border:1px solid #a24689;">
-                            ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz if not object.event_id.allday else None)}
+                            ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}
                         </div>
-                        <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#a24689'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>
-                        <div style="border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid #a24689;border-bottom-left-radius:3px;">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>
+                        <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#a24689'>${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>
+                        <div style="border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid #a24689;border-bottom-left-radius:3px;">${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}</div>
                     </td>
                     <td width="20px;"/>
                     <td>
@@ -146,8 +146,8 @@
                         % for attendee in object.event_id.attendee_ids:
                             <li>
                                 <div style="display:inline-block; border-radius: 50%; width:10px; height:10px;background:${colors[attendee.state] or 'white'};"></div>
-                                % if attendee.cn != object.cn:
-                                <span style="margin-left:5px">${attendee.cn}</span>
+                                % if attendee.common_name != object.common_name:
+                                <span style="margin-left:5px">${attendee.common_name}</span>
                                 % else:
                                 <span style="margin-left:5px">You</span>
                                 % endif
@@ -162,7 +162,7 @@
     </table>
 </div>]]></field>
         </record>
-        
+
         <record id="calendar_template_meeting_changedate" model="mail.template">
             <field name="name">Calendar: Date updated</field>
             <field name="email_from">${object.event_id.user_id.email or ''}</field>
@@ -204,19 +204,19 @@
             <td style="padding:10px 10px 10px 5px;font-size: 14px;">
                 <p style="font-size: 20px; text-align: center;"><strong>${object.event_id.name} date updated</strong></p>
                 <p>
-                    <strong>Dear ${object.cn}</strong>,<br />
+                    <strong>Dear ${object.common_name}</strong>,<br />
                     The date of the meeting has been upated. The meeting  ${object.event_id.name} created by ${object.event_id.user_id.partner_id.name} is now scheduled for ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.
-                </p> 
+                </p>
                 <table style="margin-top: 20px;"><tr>
                     <td>
                         <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#a24689;padding-top: 4px;">
-                            ${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}
+                            ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}
                         </div>
                         <div style="font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #F8F8F8;width: 130px;border:1px solid #a24689;">
-                            ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz if not object.event_id.allday else None)}
+                            ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}
                         </div>
-                        <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#a24689'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>
-                        <div style="border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid #a24689;border-bottom-left-radius:3px;">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>
+                        <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#a24689'>${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>
+                        <div style="border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid #a24689;border-bottom-left-radius:3px;">${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}</div>
                     </td>
                     <td width="20px;"/>
                     <td>
@@ -238,8 +238,8 @@
                         % for attendee in object.event_id.attendee_ids:
                             <li>
                                 <div style="display:inline-block; border-radius: 50%; width:10px; height:10px;background:${colors[attendee.state] or 'white'};"></div>
-                                % if attendee.cn != object.cn:
-                                <span style="margin-left:5px">${attendee.cn}</span>
+                                % if attendee.common_name != object.common_name:
+                                <span style="margin-left:5px">${attendee.common_name}</span>
                                 % else:
                                 <span style="margin-left:5px">You</span>
                                 % endif
@@ -296,19 +296,19 @@
             <td style="padding:10px 10px 10px 5px;font-size: 14px;">
                 <p style="font-size: 20px; text-align: center;">Reminder for <strong>${object.event_id.name}</strong></p>
                 <p>
-                    <strong>Dear ${object.cn}</strong>,<br />
+                    <strong>Dear ${object.common_name}</strong>,<br />
                     This is a reminder for the below event :
-                </p> 
+                </p>
                 <table style="margin-top: 20px;"><tr>
                     <td>
                         <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#a24689;padding-top: 4px;">
-                            ${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}
+                            ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}
                         </div>
                         <div style="font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #F8F8F8;width: 130px;border:1px solid #a24689;">
-                            ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz if not object.event_id.allday else None)}
+                            ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}
                         </div>
-                        <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#a24689'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>
-                        <div style="border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid #a24689;border-bottom-left-radius:3px;">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>
+                        <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#a24689'>${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>
+                        <div style="border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid #a24689;border-bottom-left-radius:3px;">${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}</div>
                     </td>
                     <td width="20px;"/>
                     <td>
@@ -330,8 +330,8 @@
                         % for attendee in object.event_id.attendee_ids:
                             <li>
                                 <div style="display:inline-block; border-radius: 50%; width:10px; height:10px;background:${colors[attendee.state] or 'white'};"></div>
-                                % if attendee.cn != object.cn:
-                                <span style="margin-left:5px">${attendee.cn}</span>
+                                % if attendee.common_name != object.common_name:
+                                <span style="margin-left:5px">${attendee.common_name}</span>
                                 % else:
                                 <span style="margin-left:5px">You</span>
                                 % endif
@@ -347,4 +347,4 @@
 </div>]]></field>
         </record>
     </data>
-</openerp>
+</odoo>
