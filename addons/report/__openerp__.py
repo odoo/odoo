@@ -2,22 +2,20 @@
     'name': 'Report',
     'category': 'Base',
     'summary': 'Hidden',
-    'version': '1.0',
     'description': """
 Report
         """,
     'depends': ['base', 'web'],
     'data': [
-        'views/layouts.xml',
-        'views/views.xml',
-        'data/report_paperformat.xml',
+        'data/report_paperformat_data.xml',
         'security/ir.model.access.csv',
-        'views/report.xml',
-        'views/ir_actions.xml',
+        'views/layout_templates.xml',
+        'views/report_paperformat_views.xml',
+        'views/report_templates.xml',
+        'views/ir_actions_report_views.xml',
     ],
     'qweb' : [
         'static/src/xml/*.xml',
     ],
-    'installable': True,
     'auto_install': True,
 }
