@@ -30,7 +30,7 @@ class MailGroup(http.Controller):
         """ date is (of course) a datetime so start and end are datetime
         strings, but we just want date strings
         """
-        return (datetime.datetime
+        return (datetime
             .strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
             .date() # may be unnecessary?
             .strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
