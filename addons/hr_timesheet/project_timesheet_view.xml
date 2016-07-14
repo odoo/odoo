@@ -93,7 +93,7 @@
                     <field name="planned_hours" widget="float_time"/>
                 </field>
                 <field name="partner_id" position="after">
-                    <field name="parent_id" attrs="{'invisible' : [('parent_id', '=', False)]}" />
+                    <field name="parent_id" groups="base.group_no_one"/>
                     <field name="child_ids" invisible="1" />
                     <field name="subtask_project_id" invisible="1" />
                 </field>
