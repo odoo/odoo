@@ -4,10 +4,9 @@
 from datetime import datetime
 from dateutil import relativedelta
 
-from odoo import http, fields
+from odoo import http, fields, tools
 from odoo.http import request
 from odoo.addons.website.models.website import slug
-
 
 class MailGroup(http.Controller):
     _thread_per_page = 20
