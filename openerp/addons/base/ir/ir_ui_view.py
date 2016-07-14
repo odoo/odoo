@@ -386,7 +386,6 @@ actual arch.
            :rtype: list of tuples
            :return: [(view_arch,view_id), ...]
         """
-        views = self.browse()
         user_groups = self.env.user.groups_id
 
         conditions = [
@@ -397,16 +396,13 @@ actual arch.
         ]
         if self.pool._init and not self._context.get('load_all_views'):
             # Module init currently in progress, only consider views from
-            # modules whose code is already loaded and explicitly asked views
-            check_view_ids = self._context.get('check_view_ids')
-            if check_view_ids:
-                views = self.search(conditions + [('id', 'in', check_view_ids)])
-
+            # modules whose code is already loaded
             conditions.extend([
+                '|',
                 ('model_ids.module', 'in', tuple(self.pool._init_modules)),
+                ('id', 'in', self._context.get('check_view_ids') or (0,)),
             ])
-
-        views |= self.search(conditions)
+        views = self.search(conditions)
 
         return [(view.arch, view.id)
                 for view in views.sudo()
