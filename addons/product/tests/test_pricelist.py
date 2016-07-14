@@ -101,7 +101,7 @@ class TestPricelist(TransactionCase):
             unit_price = self.registry('product.pricelist').price_get(cr, uid, [pricelist_id],
                                                                       spam_id, qty,
                                                                       context={'uom': uom})[pricelist_id]
-            self.assertAlmostEqual(unit_price, expected_unit_price, msg='Computed unit price is wrong')
+            self.assertAlmostEqual(unit_price, expected_unit_price)
 
         # Test prices - they are *per unit*, the quantity is only here to match the pricelist rules!
         test_unit_price(2, kg, tonne_price / 1000.0)

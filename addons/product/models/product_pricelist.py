@@ -183,8 +183,9 @@ class product_pricelist(osv.osv):
                     # Ignored - incompatible UoM in context, use default product UoM
                     pass
 
-            # if Public user try to access standard price from website sale, need to call _price_get.
-            price = self.pool['product.template']._price_get(cr, uid, [product], 'list_price', context=context)[product.id]
+            # if Public user try to access standard price from website sale, need to call price_compute.
+            # TDE SURPRISE: product can actually be a template
+            price = product.price_compute('list_price')[product.id]
 
             price_uom_id = qty_uom_id
             for rule in items:
@@ -217,8 +218,8 @@ class product_pricelist(osv.osv):
                     price = self.pool['res.currency'].compute(cr, uid, ptype_src, pricelist.currency_id.id, price_tmp, round=False, context=context)
                 else:
                     # if base option is public price take sale price else cost price of product
-                    # price_get returns the price in the context UoM, i.e. qty_uom_id
-                    price = self.pool['product.template']._price_get(cr, uid, [product], rule.base, context=context)[product.id]
+                    # price_compute returns the price in the context UoM, i.e. qty_uom_id
+                    price = product.price_compute(rule.base)[product.id]
 
                 convert_to_price_uom = (lambda price: product_uom_obj._compute_price(
                                             cr, uid, product.uom_id.id,
