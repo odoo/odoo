@@ -162,6 +162,7 @@ class account_register_payments(models.TransientModel):
     def create_payment(self):
         payment = self.env['account.payment'].create(self.get_payment_vals())
         payment.post()
+        payment.invoice_ids.confirm_paid()
         return {'type': 'ir.actions.act_window_close'}
 
 

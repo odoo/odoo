@@ -522,7 +522,7 @@ class PosOrder(models.Model):
 
             if to_invoice:
                 pos_order.action_invoice()
-                pos_order.invoice_id.sudo().signal_workflow('invoice_open')
+                pos_order.invoice_id.sudo().invoice_open()
         return order_ids
 
     def test_paid(self):
