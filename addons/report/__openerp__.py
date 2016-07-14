@@ -12,6 +12,7 @@ Report
         'views/layout_templates.xml',
         'views/report_paperformat_views.xml',
         'views/report_templates.xml',
+        'views/res_company_views.xml',
         'views/ir_actions_report_views.xml',
     ],
     'qweb' : [
