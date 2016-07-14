@@ -145,8 +145,7 @@ class BaseGengoTranslations(models.TransientModel):
                     'gengo_order_ids': set(),
                     'ir_translation_ids': set(),
                 }
-                translation_terms = IrTranslation.browse(translation_ids)
-                for term in translation_terms:
+                for term in translation_ids:
                     terms_progress['gengo_order_ids'].add(term.order_id)
                     terms_progress['ir_translation_ids'].add(tools.ustr(term.id))
 
@@ -184,14 +183,11 @@ class BaseGengoTranslations(models.TransientModel):
         """
         Update the terms after their translation were requested to Gengo
         """
-        translation = self.env['ir.translation'].browse(term_ids)
-
         vals = {
             'order_id': response.get('order_id', ''),
             'state': 'inprogress'
         }
-
-        translation.write(vals)
+        term_ids.write(vals)
         jobs = response.get('jobs', [])
         if jobs:
             for t_id, job in jobs.items():
@@ -212,14 +208,14 @@ class BaseGengoTranslations(models.TransientModel):
         jobs = {}
         user = self.env.user
         auto_approve = 1 if user.company_id.gengo_auto_approve else 0
-        for term in IrTranslation.browse(term_ids):
+        for term in term_ids:
             if re.search(r"\w", term.src or ""):
                 comment = user.company_id.gengo_comment or ''
                 if term.gengo_comment:
                     comment += '\n' + term.gengo_comment
                 jobs[time.strftime('%Y%m%d%H%M%S') + '-' + str(term.id)] = {
                     'type': 'text',
-                    'slug': 'Single :: English to ' + term.lang.id,
+                    'slug': 'Single :: English to ' + term.lang,
                     'tier': tools.ustr(term.gengo_translation),
                     'custom_data': str(term.id),
                     'body_src': term.src,
