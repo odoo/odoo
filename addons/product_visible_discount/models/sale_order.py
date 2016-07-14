@@ -37,7 +37,7 @@ class SaleOrderLine(models.Model):
         product_uom = self.env.context.get('uom') or product.uom_id.id
         if uom and uom.id != product_uom:
             # the unit price is in a different uom
-            uom_factor = uom._compute_price(uom.id, 1.0, product.uom_id.id)
+            uom_factor = uom._compute_price(1.0, product.uom_id)
         else:
             uom_factor = 1.0
 

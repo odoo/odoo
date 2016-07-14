@@ -719,7 +719,7 @@ class PurchaseOrderLine(models.Model):
             price_unit = seller.currency_id.compute(price_unit, self.order_id.currency_id)
 
         if seller and self.product_uom and seller.product_uom != self.product_uom:
-            price_unit = self.env['product.uom']._compute_price(seller.product_uom.id, price_unit, to_uom_id=self.product_uom.id)
+            price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
 
         self.price_unit = price_unit
 
@@ -782,7 +782,7 @@ class ProcurementOrder(models.Model):
                         price_unit = seller.currency_id.compute(price_unit, procurement.purchase_line_id.order_id.currency_id)
 
                     if seller and seller.product_uom != procurement.purchase_line_id.product_uom:
-                        price_unit = self.env['product.uom']._compute_price(seller.product_uom.id, price_unit, to_uom_id=procurement.purchase_line_id.product_uom.id)
+                        price_unit = seller.product_uom._compute_price(price_unit, procurement.purchase_line_id.product_uom)
 
                     procurement.purchase_line_id.product_qty = product_qty
                     procurement.purchase_line_id.price_unit = price_unit

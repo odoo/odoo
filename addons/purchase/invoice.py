@@ -123,7 +123,7 @@ class AccountInvoice(models.Model):
             # calculate and write down the possible price difference between invoice price and product price
             for line in res:
                 if line.get('invl_id', 0) == i_line.id and reference_account_id == line['account_id']:
-                    valuation_price_unit = self.env['product.uom']._compute_price(i_line.product_id.uom_id.id, i_line.product_id.standard_price, i_line.uom_id.id)
+                    valuation_price_unit = i_line.product_id.uom_id._compute_price(i_line.product_id.standard_price, i_line.uom_id)
                     if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
                         #for average/fifo/lifo costing method, fetch real cost price from incomming moves
                         stock_move_obj = self.env['stock.move']
