@@ -198,7 +198,7 @@ class PurchaseOrder(models.Model):
         new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:
             seller = line.product_id._select_seller(
-                line.product_id, partner_id=line.partner_id, quantity=line.product_qty,
+                partner_id=line.partner_id, quantity=line.product_qty,
                 date=line.order_id.date_order and line.order_id.date_order[:10], uom_id=line.product_uom)
             line.date_planned = line._get_date_planned(seller)
         return new_po
@@ -703,7 +703,6 @@ class PurchaseOrderLine(models.Model):
             return
 
         seller = self.product_id._select_seller(
-            self.product_id,
             partner_id=self.partner_id,
             quantity=self.product_qty,
             date=self.order_id.date_order and self.order_id.date_order[:10],
@@ -773,7 +772,6 @@ class ProcurementOrder(models.Model):
                 precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
                 if not float_is_zero(product_qty, precision_digits=precision):
                     seller = procurement.product_id._select_seller(
-                        procurement.product_id,
                         partner_id=procurement.purchase_line_id.partner_id,
                         quantity=product_qty,
                         date=procurement.purchase_line_id.order_id.date_order and procurement.purchase_line_id.order_id.date_order[:10],
@@ -818,7 +816,7 @@ class ProcurementOrder(models.Model):
         """Return the datetime value to use as Order Date (``date_order``) for the
            Purchase Order created to satisfy the given procurement. """
         self.ensure_one()
-        seller_delay = int(self.product_id._select_seller(self.product_id).delay)
+        seller_delay = int(self.product_id._select_seller().delay)
         return schedule_date - relativedelta(days=seller_delay)
 
     @api.multi
@@ -827,7 +825,6 @@ class ProcurementOrder(models.Model):
 
         procurement_uom_po_qty = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_qty, self.product_id.uom_po_id)
         seller = self.product_id._select_seller(
-            self.product_id,
             partner_id=supplier.name,
             quantity=procurement_uom_po_qty,
             date=po.date_order and po.date_order[:10],
@@ -947,8 +944,7 @@ class ProcurementOrder(models.Model):
             for line in po.order_line:
                 if line.product_id == procurement.product_id and line.product_uom == procurement.product_id.uom_po_id:
                     procurement_uom_po_qty = self.env['product.uom']._compute_qty_obj(procurement.product_uom, procurement.product_qty, procurement.product_id.uom_po_id)
-                    seller = self.product_id._select_seller(
-                        procurement.product_id,
+                    seller = procurement.product_id._select_seller(
                         partner_id=partner,
                         quantity=line.product_qty + procurement_uom_po_qty,
                         date=po.date_order and po.date_order[:10],

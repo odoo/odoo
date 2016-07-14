@@ -171,16 +171,6 @@ class product_product(osv.osv):
             res.setdefault(id, 0.0)
         return res
 
-    def open_product_template(self, cr, uid, ids, context=None):
-        """ Utility method used to add an "Open Template" button in product views """
-        product_product = self.browse(cr, uid, ids[0], context=context)
-        return {'type': 'ir.actions.act_window',
-                'res_model': 'product.template',
-                'view_mode': 'form',
-                'res_id': product_product.product_tmpl_id.id,
-                'target': 'current',
-                'flags': {'form': {'action_buttons': True}}}
-
     def view_header_get(self, cr, uid, view_id, view_type, context=None):
         if context is None:
             context = {}
@@ -216,7 +206,8 @@ class product_product(osv.osv):
         
         return product.write({'list_price': value})
 
-    def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
+    def _get_partner_code_name(self, cr, uid, ids, partner_id, context=None):
+        product = self.browse(cr, uid, ids[0], context=context)
         for supinfo in product.seller_ids:
             if supinfo.name.id == partner_id:
                 return {'code': supinfo.product_code or product.default_code, 'name': supinfo.product_name or product.name}
@@ -228,7 +219,7 @@ class product_product(osv.osv):
         if context is None:
             context = {}
         for p in self.browse(cr, uid, ids, context=context):
-            res[p.id] = self._get_partner_code_name(cr, uid, [], p, context.get('partner_id', None), context=context)['code']
+            res[p.id] = self._get_partner_code_name(cr, uid, [p.id], context.get('partner_id', None), context=context)['code']
         return res
 
     def _product_partner_ref(self, cr, uid, ids, name, arg, context=None):
@@ -236,7 +227,7 @@ class product_product(osv.osv):
         if context is None:
             context = {}
         for p in self.browse(cr, uid, ids, context=context):
-            data = self._get_partner_code_name(cr, uid, [], p, context.get('partner_id', None), context=context)
+            data = self._get_partner_code_name(cr, uid, [p.id], context.get('partner_id', None), context=context)
             if not data['code']:
                 data['code'] = p.code
             if not data['name']:
@@ -278,11 +269,12 @@ class product_product(osv.osv):
             result[product.id] = price_extra
         return result
 
-    def _select_seller(self, cr, uid, product_id, partner_id=False, quantity=0.0, date=time.strftime(DEFAULT_SERVER_DATE_FORMAT), uom_id=False, context=None):
+    def _select_seller(self, cr, uid, ids, partner_id=False, quantity=0.0, date=time.strftime(DEFAULT_SERVER_DATE_FORMAT), uom_id=False, context=None):
         if context is None:
             context = {}
         res = self.pool.get('product.supplierinfo').browse(cr, uid, [])
-        for seller in product_id.seller_ids:
+        product = self.browse(cr, uid, ids[0], context=context)
+        for seller in product.seller_ids:
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
             if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
@@ -296,7 +288,7 @@ class product_product(osv.osv):
                 continue
             if quantity_uom_seller < seller.qty:
                 continue
-            if seller.product_id and seller.product_id != product_id:
+            if seller.product_id and seller.product_id != product:
                 continue
 
             res |= seller
@@ -391,19 +383,16 @@ class product_product(osv.osv):
     def onchange_type(self, cr, uid, ids, type, context=None):
         return {'value': {}}
 
-    def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
+    def onchange_uom(self, cr, uid, ids, uom_id, uom_po_id, context=None):
         if uom_id and uom_po_id:
-            uom_obj=self.pool.get('product.uom')
-            uom=uom_obj.browse(cursor,user,[uom_id])[0]
-            uom_po=uom_obj.browse(cursor,user,[uom_po_id])[0]
+            uom_obj = self.pool.get('product.uom')
+            uom = uom_obj.browse(cr, uid, [uom_id], context=context)[0]
+            uom_po = uom_obj.browse(cr, uid, [uom_po_id], context=context)[0]
             if uom.category_id.id != uom_po.category_id.id:
                 return {'value': {'uom_po_id': uom_id}}
         return False
 
-    def on_order(self, cr, uid, ids, orderline, quantity):
-        pass
-
-    def name_get(self, cr, user, ids, context=None):
+    def name_get(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         if isinstance(ids, (int, long)):
@@ -420,14 +409,14 @@ class product_product(osv.osv):
 
         partner_id = context.get('partner_id', False)
         if partner_id:
-            partner_ids = [partner_id, self.pool['res.partner'].browse(cr, user, partner_id, context=context).commercial_partner_id.id]
+            partner_ids = [partner_id, self.pool['res.partner'].browse(cr, uid, partner_id, context=context).commercial_partner_id.id]
         else:
             partner_ids = []
 
         # all user don't have access to seller and partner
         # check access and use superuser
-        self.check_access_rights(cr, user, "read")
-        self.check_access_rule(cr, user, ids, "read", context=context)
+        self.check_access_rights(cr, uid, "read")
+        self.check_access_rule(cr, uid, ids, "read", context=context)
 
         result = []
         for product in self.browse(cr, SUPERUSER_ID, ids, context=context):
@@ -461,7 +450,7 @@ class product_product(osv.osv):
                 result.append(_name_get(mydict))
         return result
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+    def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100):
         if context is None:
             context = {}
         if not args:
@@ -470,40 +459,40 @@ class product_product(osv.osv):
             positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
             ids = []
             if operator in positive_operators:
-                ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
+                ids = self.search(cr, uid, [('default_code','=',name)]+ args, limit=limit, context=context)
                 if not ids:
-                    ids = self.search(cr, user, [('barcode','=',name)]+ args, limit=limit, context=context)
+                    ids = self.search(cr, uid, [('barcode','=',name)]+ args, limit=limit, context=context)
             if not ids and operator not in expression.NEGATIVE_TERM_OPERATORS:
                 # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
                 # Performing a quick memory merge of ids in Python will give much better performance
-                ids = self.search(cr, user, args + [('default_code', operator, name)], limit=limit, context=context)
+                ids = self.search(cr, uid, args + [('default_code', operator, name)], limit=limit, context=context)
                 if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
                     limit2 = (limit - len(ids)) if limit else False
-                    ids += self.search(cr, user, args + [('name', operator, name), ('id', 'not in', ids)], limit=limit2, context=context)
+                    ids += self.search(cr, uid, args + [('name', operator, name), ('id', 'not in', ids)], limit=limit2, context=context)
             elif not ids and operator in expression.NEGATIVE_TERM_OPERATORS:
-                ids = self.search(cr, user, args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit, context=context)
+                ids = self.search(cr, uid, args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit, context=context)
             if not ids and operator in positive_operators:
                 ptrn = re.compile('(\[(.*?)\])')
                 res = ptrn.search(name)
                 if res:
-                    ids = self.search(cr, user, [('default_code','=', res.group(2))] + args, limit=limit, context=context)
+                    ids = self.search(cr, uid, [('default_code','=', res.group(2))] + args, limit=limit, context=context)
             # still no results, partner in context: search on supplier info as last hope to find something
             if not ids and context.get('partner_id'):
                 supplier_ids = self.pool['product.supplierinfo'].search(
-                    cr, user, [
+                    cr, uid, [
                         ('name', '=', context.get('partner_id')),
                         '|',
                         ('product_code', operator, name),
                         ('product_name', operator, name)
                     ], context=context)
                 if supplier_ids:
-                    ids = self.search(cr, user, [('product_tmpl_id.seller_ids', 'in', supplier_ids)], limit=limit, context=context)
+                    ids = self.search(cr, uid, [('product_tmpl_id.seller_ids', 'in', supplier_ids)], limit=limit, context=context)
         else:
-            ids = self.search(cr, user, args, limit=limit, context=context)
-        result = self.name_get(cr, user, ids, context=context)
+            ids = self.search(cr, uid, args, limit=limit, context=context)
+        result = self.name_get(cr, uid, ids, context=context)
         return result
 
     #
@@ -548,7 +537,7 @@ class product_product(osv.osv):
     def create(self, cr, uid, vals, context=None):
         ctx = dict(context or {}, create_product_product=True)
         product_id = super(product_product, self).create(cr, uid, vals, context=ctx)
-        self._set_standard_price(cr, uid, product_id, vals.get('standard_price', 0.0), context=context)
+        self._set_standard_price(cr, uid, [product_id], vals.get('standard_price', 0.0), context=context)
         return product_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -557,31 +546,30 @@ class product_product(osv.osv):
             ids = [ids]
         res = super(product_product, self).write(cr, uid, ids, vals, context=context)
         if 'standard_price' in vals:
-            for product_id in ids:
-                self._set_standard_price(cr, uid, product_id, vals['standard_price'], context=context)
+            self._set_standard_price(cr, uid, ids, vals['standard_price'], context=context)
         return res
 
-    def _set_standard_price(self, cr, uid, product_id, value, context=None):
+    def _set_standard_price(self, cr, uid, ids, value, context=None):
         ''' Store the standard price change in order to be able to retrieve the cost of a product for a given date'''
         if context is None:
             context = {}
         price_history_obj = self.pool['product.price.history']
         user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         company_id = context.get('force_company', user_company)
-        price_history_obj.create(cr, uid, {
-            'product_id': product_id,
-            'cost': value,
-            'company_id': company_id,
-        }, context=context)
+        for product_id in ids:
+            price_history_obj.create(cr, uid, {
+                'product_id': product_id,
+                'cost': value,
+                'company_id': company_id,
+            }, context=context)
 
-    @api.cr_uid_ids_context
-    def get_history_price(self, cr, uid, product_id, company_id, date=None, context=None):
+    def get_history_price(self, cr, uid, ids, company_id, date=None, context=None):
         if context is None:
             context = {}
         if date is None:
             date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         price_history_obj = self.pool.get('product.price.history')
-        history_ids = price_history_obj.search(cr, uid, [('company_id', '=', company_id), ('product_id', '=', product_id), ('datetime', '<=', date)], limit=1)
+        history_ids = price_history_obj.search(cr, uid, [('company_id', '=', company_id), ('product_id', 'in', ids), ('datetime', '<=', date)], limit=1)
         if history_ids:
             return price_history_obj.read(cr, uid, history_ids[0], ['cost'], context=context)['cost']
         return 0.0

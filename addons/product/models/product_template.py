@@ -240,7 +240,7 @@ class product_template(osv.osv):
     def onchange_type(self, cr, uid, ids, type, context=None):
         return {'value': {}}
 
-    def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
+    def onchange_uom(self, cr, uid, ids, uom_id, uom_po_id):
         if uom_id:
             return {'value': {'uom_po_id': uom_id}}
         return {}
@@ -374,8 +374,8 @@ class product_template(osv.osv):
         'sequence': 1,
     }
 
-    def _check_uom(self, cursor, user, ids, context=None):
-        for product in self.browse(cursor, user, ids, context=context):
+    def _check_uom(self, cr, uid, ids, context=None):
+        for product in self.browse(cr, uid, ids, context=context):
             if product.uom_id.category_id.id != product.uom_po_id.category_id.id:
                 return False
         return True
@@ -388,29 +388,29 @@ class product_template(osv.osv):
         return [(product.id, '%s%s' % (product.default_code and '[%s] ' % product.default_code or '', product.name))
                 for product in self.browse(cr, uid, ids, context=context)]
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+    def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100):
         # Only use the product.product heuristics if there is a search term and the domain
         # does not specify a match on `product.template` IDs.
         if not name or any(term[0] == 'id' for term in (args or [])):
             return super(product_template, self).name_search(
-                cr, user, name=name, args=args, operator=operator, context=context, limit=limit)
+                cr, uid, name=name, args=args, operator=operator, context=context, limit=limit)
         template_ids = set()
         product_product = self.pool['product.product']
-        results = product_product.name_search(cr, user, name, args, operator=operator, context=context, limit=limit)
+        results = product_product.name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
         product_ids = [p[0] for p in results]
-        for p in product_product.browse(cr, user, product_ids, context=context):
+        for p in product_product.browse(cr, uid, product_ids, context=context):
             template_ids.add(p.product_tmpl_id.id)
         while (results and len(template_ids) < limit):
             domain = [('product_tmpl_id', 'not in', list(template_ids))]
             args = args if args is not None else []
             results = product_product.name_search(
-                cr, user, name, args+domain, operator=operator, context=context, limit=limit)
+                cr, uid, name, args+domain, operator=operator, context=context, limit=limit)
             product_ids = [p[0] for p in results]
-            for p in product_product.browse(cr, user, product_ids, context=context):
+            for p in product_product.browse(cr, uid, product_ids, context=context):
                 template_ids.add(p.product_tmpl_id.id)
 
 
         # re-apply product.template order + name_get
         return super(product_template, self).name_search(
-            cr, user, '', args=[('id', 'in', list(template_ids))],
+            cr, uid, '', args=[('id', 'in', list(template_ids))],
             operator='ilike', context=context, limit=limit)
