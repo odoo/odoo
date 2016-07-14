@@ -1042,6 +1042,17 @@ class mrp_production(osv.osv):
                 if not float_is_zero(remaining_qty, precision_digits=precision):
                     # In case you need to make more than planned
                     #consumed more in wizard than previously planned
+
+                    product_uom = production.product_id.uom_id
+                    production_uom = production.product_uom
+
+                    if production_uom.category_id == product_uom.category_id and production_uom.id != product_uom.id:
+                        if production_uom.uom_type == "bigger":
+                            remaining_qty = uom_obj._compute_qty(cr, uid, product_uom.id, remaining_qty,
+                                                                 production_uom.id)
+                        elif production_uom.uom_type == "smaller":
+                            remaining_qty = uom_obj._compute_qty(cr, uid, production_uom.id, remaining_qty,
+                                                                 product_uom.id)
                     extra_move_id = stock_mov_obj.copy(cr, uid, produce_product.id, default={'product_uom_qty': remaining_qty,
                                                                                              'production_id': production_id}, context=context)
                     if is_main_product:
