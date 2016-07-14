@@ -17,11 +17,10 @@ class Production(models.Model):
         # TDE FIXME: was action_confirm ?? -> refactored
         Move = self.env['stock.move']
         res = super(Production, self)._generate_moves()
-        UoM = self.env['product.uom']
         for production in self.filtered(lambda production: production.bom_id):
             source = production.product_id.property_stock_production.id
             for sub_product in production.bom_id.sub_products:
-                product_uom_factor = UoM._compute_qty_obj(production.product_uom_id, production.product_qty, production.bom_id.product_uom_id)
+                product_uom_factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
                 qty1 = sub_product.product_qty
                 qty1 *= product_uom_factor / production.bom_id.product_qty
                 data = {

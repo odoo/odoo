@@ -13,12 +13,14 @@ class TestUom(TransactionCase):
         cr, uid = self.cr, self.uid
         gram_id = self.imd.get_object_reference(cr, uid, 'product', 'product_uom_gram')[1]
         kg_id = self.imd.get_object_reference(cr, uid, 'product', 'product_uom_kgm')[1]
+        kg = self.registry['product.uom'].browse(cr, uid, [kg_id])
         tonne_id = self.imd.get_object_reference(cr, uid, 'product', 'product_uom_ton')[1]
         tonne = self.registry['product.uom'].browse(cr, uid, [tonne_id])
         unit_id = self.imd.get_object_reference(cr, uid, 'product','product_uom_unit')[1]
+        unit = self.registry['product.uom'].browse(cr, uid, [unit_id])
         dozen_id = self.imd.get_object_reference(cr, uid, 'product','product_uom_dozen')[1]
 
-        qty = self.uom._compute_qty(cr, uid, gram_id, 1020000, tonne_id)
+        qty = self.uom._compute_quantity(cr, uid, [gram_id], 1020000, tonne)
         self.assertEquals(qty, 1.02, "Converted quantity does not correspond.")
 
         price = self.uom._compute_price(cr, uid, [gram_id], 2, tonne)
@@ -29,13 +31,13 @@ class TestUom(TransactionCase):
         # and the Unit rounding will round that up to 13.
         # This is a partial regression test for rev. 311c77bb, which is further improved
         # by rev. fa2f7b86.
-        qty = self.uom._compute_qty(cr, uid, dozen_id, 1, unit_id)
+        qty = self.uom._compute_quantity(cr, uid, [dozen_id], 1, unit)
         self.assertEquals(qty, 12.0, "Converted quantity does not correspond.")
 
         # Regression test for side-effect of commit 311c77bb - converting 1234 Grams
         # into Kilograms should work even if grams are rounded to 1.
         self.uom.write(cr, uid, gram_id, {'rounding': 1})
-        qty = self.uom._compute_qty(cr, uid, gram_id, 1234, kg_id)
+        qty = self.uom._compute_quantity(cr, uid, [gram_id], 1234, kg)
         self.assertEquals(qty, 1.234, "Converted quantity does not correspond.")
 
     def test_20_rounding(self):
@@ -50,6 +52,7 @@ class TestUom(TransactionCase):
             'rounding': 1.0,
             'category_id': categ_unit_id
         })
+        score = self.uom.browse(cr, uid, score_id)
 
-        qty = self.uom._compute_qty(cr, uid, unit_id, 2, score_id)
+        qty = self.uom._compute_quantity(cr, uid, [unit_id], 2, score)
         self.assertEquals(qty, 1, "Converted quantity should be rounded up.")

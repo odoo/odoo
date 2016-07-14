@@ -118,13 +118,12 @@ class PurchaseRequisitionLine(models.Model):
     @api.multi
     @api.depends('requisition_id.purchase_ids.state')
     def _compute_ordered_qty(self):
-        ProductUOM = self.env['product.uom']
         for line in self:
             total = 0.0
             for po in line.requisition_id.purchase_ids.filtered(lambda purchase_order: purchase_order.state in ['purchase', 'done']):
                 for po_line in po.order_line.filtered(lambda order_line: order_line.product_id == line.product_id):
                     if po_line.product_uom != line.product_uom_id:
-                        total += ProductUOM._compute_qty_obj(po_line.product_uom, po_line.product_qty, line.product_uom_id)
+                        total += po_line.product_uom._compute_quantity(po_line.product_qty, line.product_uom_id)
                     else:
                         total += po_line.product_qty
             line.qty_ordered = total
@@ -199,9 +198,7 @@ class PurchaseOrder(models.Model):
                 product_qty = 0
                 price_unit = line.price_unit
             elif line.product_uom_id != line.product_id.uom_po_id:
-                ProductUOM = self.env['product.uom']
-                product_qty = ProductUOM._compute_qty_obj(
-                    line.product_uom_id, line.product_qty, line.product_id.uom_po_id)
+                product_qty = line.product_uom_id._compute_quantity(line.product_qty, line.product_id.uom_po_id)
                 price_unit = line.product_uom_id._compute_price(line.price_unit, line.product_id.uom_po_id)
             else:
                 product_qty = line.product_qty

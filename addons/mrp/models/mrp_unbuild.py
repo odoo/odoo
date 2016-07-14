@@ -153,7 +153,7 @@ class MrpUnbuild(models.Model):
     def _generate_produce_moves(self):
         moves = self.env['stock.move']
         for unbuild in self:
-            factor = self.env['product.uom']._compute_qty(unbuild.product_uom_id.id, unbuild.product_qty, unbuild.bom_id.product_uom_id.id)
+            factor = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id)
             boms, lines = unbuild.bom_id.explode(unbuild.product_id, factor / unbuild.bom_id.product_qty, picking_type=unbuild.bom_id.picking_type_id)
             for line, line_data in lines:
                 moves += unbuild._generate_move_from_bom_line(line, line_data['qty'])

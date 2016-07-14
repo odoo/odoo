@@ -502,12 +502,11 @@ class PurchaseOrderLine(models.Model):
             qty = 0.0
             for inv_line in line.invoice_lines:
                 if inv_line.invoice_id.state not in ['cancel']:
-                    qty += inv_line.uom_id._compute_qty_obj(inv_line.uom_id, inv_line.quantity, line.product_uom)
+                    qty += inv_line.uom_id._compute_quantity(inv_line.quantity, line.product_uom)
             line.qty_invoiced = qty
 
     @api.depends('order_id.state', 'move_ids.state')
     def _compute_qty_received(self):
-        productuom = self.env['product.uom']
         for line in self:
             if line.order_id.state not in ['purchase', 'done']:
                 line.qty_received = 0.0
@@ -519,7 +518,7 @@ class PurchaseOrderLine(models.Model):
             for move in line.move_ids:
                 if move.state == 'done':
                     if move.product_uom != line.product_uom:
-                        total += productuom._compute_qty_obj(move.product_uom, move.product_uom_qty, line.product_uom)
+                        total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                     else:
                         total += move.product_uom_qty
             line.qty_received = total
@@ -601,7 +600,7 @@ class PurchaseOrderLine(models.Model):
             # Fullfill all related procurements with this po line
             diff_quantity = line.product_qty
             for procurement in line.procurement_ids:
-                procurement_qty = procurement.product_uom._compute_qty_obj(procurement.product_uom, procurement.product_qty, line.product_uom)
+                procurement_qty = procurement.product_uom._compute_quantity(procurement.product_qty, line.product_uom)
                 tmp = template.copy()
                 tmp.update({
                     'product_uom_qty': min(procurement_qty, diff_quantity),
@@ -767,7 +766,7 @@ class ProcurementOrder(models.Model):
                 others_procs = procurement.purchase_line_id.procurement_ids.filtered(lambda r: r != procurement)
                 for other_proc in others_procs:
                     if other_proc.state not in ['cancel', 'draft']:
-                        product_qty += other_proc.product_uom._compute_qty_obj(other_proc.product_uom, other_proc.product_qty, procurement.purchase_line_id.product_uom)
+                        product_qty += other_proc.product_uom._compute_quantity(other_proc.product_qty, procurement.purchase_line_id.product_uom)
 
                 precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
                 if not float_is_zero(product_qty, precision_digits=precision):
@@ -823,7 +822,7 @@ class ProcurementOrder(models.Model):
     def _prepare_purchase_order_line(self, po, supplier):
         self.ensure_one()
 
-        procurement_uom_po_qty = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_qty, self.product_id.uom_po_id)
+        procurement_uom_po_qty = self.product_uom._compute_quantity(self.product_qty, self.product_id.uom_po_id)
         seller = self.product_id._select_seller(
             partner_id=supplier.name,
             quantity=procurement_uom_po_qty,
@@ -943,7 +942,7 @@ class ProcurementOrder(models.Model):
             po_line = False
             for line in po.order_line:
                 if line.product_id == procurement.product_id and line.product_uom == procurement.product_id.uom_po_id:
-                    procurement_uom_po_qty = self.env['product.uom']._compute_qty_obj(procurement.product_uom, procurement.product_qty, procurement.product_id.uom_po_id)
+                    procurement_uom_po_qty = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_po_id)
                     seller = procurement.product_id._select_seller(
                         partner_id=partner,
                         quantity=line.product_qty + procurement_uom_po_qty,

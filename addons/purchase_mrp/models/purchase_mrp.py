@@ -27,12 +27,12 @@ class PurchaseOrderLine(models.Model):
         bom_delivered = {}
         if bom:
             bom_delivered[bom.id] = False
-            product_uom_qty_bom = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_qty, bom.product_uom_id)
+            product_uom_qty_bom = self.product_uom._compute_quantity(self.product_qty, bom.product_uom_id)
             boms, lines = bom.explode(self.product_id, product_uom_qty_bom)
             for bom_line, data in lines:
                 qty = 0.0
                 for move in self.move_ids.filtered(lambda x: x.state == 'done' and x.product_id == bom_line.product_id):
-                    qty += self.env['product.uom']._compute_qty(move.product_uom.id, move.product_uom_qty, bom_line.product_uom_id.id)
+                    qty += move.product_uom._compute_quantity(move.product_uom_qty, bom_line.product_uom_id)
                 if float_compare(qty, data['qty'], precision_digits=precision) < 0:
                     bom_delivered[bom.id] = False
                     break

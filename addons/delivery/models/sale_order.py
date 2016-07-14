@@ -110,4 +110,4 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id or not line.product_uom or not line.product_uom_qty:
                 return 0.0
-            line.product_qty = self.env['product.uom']._compute_qty_obj(line.product_uom, line.product_uom_qty, line.product_id.uom_id)
+            line.product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)

@@ -264,7 +264,6 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
         total = weight = volume = quantity = 0
         total_delivery = 0.0
-        ProductUom = self.env['product.uom']
         for line in order.order_line:
             if line.state == 'cancel':
                 continue
@@ -272,7 +271,7 @@ class DeliveryCarrier(models.Model):
                 total_delivery += line.price_total
             if not line.product_id or line.is_delivery:
                 continue
-            qty = ProductUom._compute_qty(line.product_uom.id, line.product_uom_qty, line.product_id.uom_id.id)
+            qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             weight += (line.product_id.weight or 0.0) * qty
             volume += (line.product_id.volume or 0.0) * qty
             quantity += qty

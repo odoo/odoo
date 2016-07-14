@@ -177,8 +177,8 @@ class product_pricelist(osv.osv):
             qty_in_product_uom = qty
             if qty_uom_id != product.uom_id.id:
                 try:
-                    qty_in_product_uom = product_uom_obj._compute_qty(
-                        cr, uid, context['uom'], qty, product.uom_id.id)
+                    qty_in_product_uom = product_uom_obj._compute_quantity(
+                        cr, uid, [context['uom']], qty, product.uom_id)
                 except UserError:
                     # Ignored - incompatible UoM in context, use default product UoM
                     pass

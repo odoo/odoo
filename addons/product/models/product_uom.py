@@ -101,26 +101,15 @@ class product_uom(osv.osv):
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!')
     ]
 
-    @api.cr_uid
-    def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False, round=True, rounding_method='UP'):
-        if not from_uom_id or not qty or not to_uom_id:
-            return qty
-        uoms = self.browse(cr, uid, [from_uom_id, to_uom_id])
-        if uoms[0].id == from_uom_id:
-            from_unit, to_unit = uoms[0], uoms[-1]
-        else:
-            from_unit, to_unit = uoms[-1], uoms[0]
-        return self._compute_qty_obj(cr, uid, from_unit, qty, to_unit, round=round, rounding_method=rounding_method)
-
-    def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, round=True, rounding_method='UP', context=None):
-        if context is None:
-            context = {}
+    def _compute_quantity(self, cr, uid, ids, qty, to_unit, round=True, rounding_method='UP', context=None):
+        context = context if context is not None else {}
+        from_unit = self.browse(cr, uid, ids[0], context=context)
         if from_unit.category_id.id != to_unit.category_id.id:
             if context.get('raise-exception', True):
                 raise UserError(_('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name))
             else:
                 return qty
-        amount = qty/from_unit.factor
+        amount = qty / from_unit.factor
         if to_unit:
             amount = amount * to_unit.factor
             if round:

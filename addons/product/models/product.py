@@ -280,7 +280,7 @@ class product_product(osv.osv):
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
             if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
-                quantity_uom_seller = uom_id._compute_qty_obj(uom_id, quantity_uom_seller, seller.product_uom)
+                quantity_uom_seller = uom_id._compute_quantity(quantity_uom_seller, seller.product_uom)
 
             if seller.date_start and seller.date_start > date:
                 continue
