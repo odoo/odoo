@@ -431,7 +431,9 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def confirm_paid(self):
-        return self.filtered(lambda inv: inv.reconciled and inv.state == 'open').write({'state': 'paid'})
+        if self.filtered(lambda inv: not inv.reconciled and inv.state != 'open'):
+            raise UserError(_('You cannot paid an invoice which is partially paid. You need to reconcile payment entries first.'))
+        return self.write({'state': 'paid'})
 
     @api.multi
     def unlink(self):
@@ -604,11 +606,6 @@ class AccountInvoice(models.Model):
         self.action_date_assign()
         self.action_move_create()
         self.invoice_validate()
-        return True
-
-    @api.multi
-    def invoice_cancel(self):
-        self.action_cancel()
         return True
 
     @api.multi
@@ -861,7 +858,9 @@ class AccountInvoice(models.Model):
             if invoice.type in ('in_invoice', 'in_refund') and invoice.reference:
                 if self.search([('type', '=', invoice.type), ('reference', '=', invoice.reference), ('company_id', '=', invoice.company_id.id), ('commercial_partner_id', '=', invoice.commercial_partner_id.id), ('id', '!=', invoice.id)]):
                     raise UserError(_("Duplicated vendor reference detected. You probably encoded twice the same vendor bill/refund."))
-        return self.filtered(lambda inv: not inv.reconciled).write({'state': 'open'})
+            if invoice.reconciled and invoice.state != 'paid':
+                raise UserError(_('You cannot re-open an invoice which is partially paid or paid. You need to unreconcile related payment entries first'))
+        return self.write({'state': 'open'})
 
     @api.model
     def line_get_convert(self, line, part):

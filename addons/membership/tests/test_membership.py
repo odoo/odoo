@@ -77,6 +77,6 @@ class TestMembership(TestMembershipCommon):
         invoice = self.env['account.invoice'].search([('partner_id', '=', self.partner_1.id)], limit=1)[0]
 
         # the invoice is canceled -> membership state of the customer goes to canceled
-        invoice.invoice_cancel()
+        invoice.action_cancel()
         self.assertEqual(invoice.state, 'cancel')
         self.assertEqual(self.partner_1.membership_state, 'canceled')

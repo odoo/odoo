@@ -40,5 +40,5 @@ class AccountInvoiceCancel(models.TransientModel):
         for record in self.env['account.invoice'].browse(active_ids):
             if record.state in ('cancel', 'paid'):
                 raise UserError(_("Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' or 'Done' state."))
-            record.invoice_cancel()
+            record.action_cancel()
         return {'type': 'ir.actions.act_window_close'}
