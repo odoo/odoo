@@ -191,35 +191,39 @@ class product_template(osv.osv):
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
 
-    def _price_get(self, cr, uid, products, ptype='list_price', context=None):
-        if context is None:
-            context = {}
+    @api.multi
+    def price_compute(self, price_type, uom=False, currency=False, company=False):
+        # TDE FIXME: delegate to template or not ? fields are reencoded here ...
+        # compatibility about context keys used a bit everywhere in the code
+        if not uom and self._context.get('uom'):
+            uom = self.env['product.uom'].browse(self._context['uom'])
+        if not currency and self._context.get('currency'):
+            currency = self.env['res.currency'].browse(self._context['currency'])
 
-        res = {}
-        product_uom_obj = self.pool.get('product.uom')
-        for product in products:
+        templates = self
+        if price_type == 'standard_price':
             # standard_price field can only be seen by users in base.group_user
             # Thus, in order to compute the sale price from the cost for users not in this group
             # We fetch the standard price as the superuser
-            if ptype != 'standard_price':
-                res[product.id] = product[ptype] or 0.0
-            else:
-                company_id = context.get('force_company') or product.env.user.company_id.id
-                product = product.with_context(force_company=company_id)
-                res[product.id] = res[product.id] = product.sudo()[ptype]
-            if ptype == 'list_price':
-                res[product.id] += product._name == "product.product" and product.price_extra or 0.0
-            if 'uom' in context:
-                uom = product.uom_id
-                res[product.id] = product_uom_obj._compute_price(cr, uid,
-                        uom.id, res[product.id], context['uom'])
+            templates = self.with_context(force_company=company and company.id or self._context.get('force_company', self.env.user.company_id.id)).sudo()
+
+        prices = dict.fromkeys(self.ids, 0.0)
+        for template in templates:
+            prices[template.id] = template[price_type] or 0.0
+
+            if uom:
+                prices[template.id] = template.uom_id._compute_price(template.uom_id.id, prices[template.id], uom.id)
+
             # Convert from current user company currency to asked one
-            if 'currency_id' in context:
-                # Take current user company currency.
-                # This is right cause a field cannot be in more than one currency
-                res[product.id] = self.pool.get('res.currency').compute(cr, uid, product.currency_id.id,
-                    context['currency_id'], res[product.id], context=context)
-        return res
+            # This is right cause a field cannot be in more than one currency
+            if currency:
+                prices[template.id] = template.currency_id.compute(prices[template.id], currency)
+
+        return prices
+
+    # compatibility to remove after v10 - DEPRECATED
+    def _price_get(self, cr, uid, products, ptype='list_price', context=None):
+        return products.price_compute(ptype)
 
     def _get_uom_id(self, cr, uid, *args):
         return self.pool["product.uom"].search(cr, uid, [], limit=1, order='id')[0]
