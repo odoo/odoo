@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2016-04-14 10:55+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
+"POT-Creation-Date: 2016-07-06 07:28+0000\n"
+"PO-Revision-Date: 2016-07-06 12:11+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -230,6 +230,11 @@ msgstr "Dit is de gemiddelde vertraging in dagen om dit product te produceren. D
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
 msgstr "Wachten op grondstoffen"
+
+#. module: mrp
+#: model:ir.actions.report.xml,name:mrp.action_report_bom_price
+msgid "BOM Cost"
+msgstr "BOM kost"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
@@ -560,6 +565,11 @@ msgid "Consumed for"
 msgstr "Verbruikt voor"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Cost Structure"
+msgstr "Kosten structuur"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
 msgid "Cost per cycle"
 msgstr "Kosten per cyclus"
@@ -661,7 +671,7 @@ msgstr "Omschrijving"
 msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
-msgstr "Omschrijving van de productiestap. Leg uit wat een cyclus is voor deze productiestap."
+msgstr "Omschrijving van de productieplaats. Leg uit wat een cyclus is voor deze productieplaats."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -683,6 +693,7 @@ msgstr "Bestemming loc."
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_display_name
@@ -794,7 +805,7 @@ msgstr "Geeft de volgorde weer, bij het weergeven van een materiaallijst."
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_sequence
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr "Geeft de volgorde weer bij het weergeven van een lijst van productiestappen in een productie route"
+msgstr "Geeft de volgorde weer bij het weergeven van een lijst van productieplaatsen in een productie route"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_sequence
@@ -840,6 +851,7 @@ msgstr "Kostenplaats uren"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_id
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_id
@@ -941,6 +953,7 @@ msgstr "Laatste bericht datum"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load___last_update
@@ -1179,7 +1192,7 @@ msgstr "Modus"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Mrp Workcenter"
-msgstr "Productiestap"
+msgstr "Productieplaats"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_name
@@ -1268,7 +1281,7 @@ msgstr "Aantal uren"
 msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
-msgstr "Aantal herhalingen die deze productiestap heeft te doen in de specifieke verwerking van de productie route."
+msgstr "Aantal herhalingen die deze productieplaats heeft te doen in de specifieke verwerking van de productie route."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_message_needaction_counter
@@ -1282,7 +1295,7 @@ msgstr "Aantal berichten die actie vereisen"
 msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
-msgstr "Het aantal bewerkingen dat deze productiestap parallel kan uitvoeren. Indien de productiestap een aantal van 5 werknemers vertegenwoordigd, dan is de capaciteit per cyclus 5."
+msgstr "Het aantal bewerkingen dat deze productieplaats parallel kan uitvoeren. Indien de productieplaats een aantal van 5 werknemers vertegenwoordigd, dan is de capaciteit per cyclus 5."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_message_unread_counter
@@ -1331,7 +1344,7 @@ msgstr "Bovenliggende materiaallijst"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
 msgid "Parent Routing"
-msgstr "Bovenliggende productiestap"
+msgstr "Bovenliggende productieplaats"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1496,7 +1509,7 @@ msgstr "Productie gestart"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Production Work Centers"
-msgstr "Productiestappen"
+msgstr "Productieplaatsen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_progress
@@ -1592,6 +1605,7 @@ msgstr "Eigenschap groepen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_qty
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
@@ -1602,6 +1616,11 @@ msgstr "Hoeveelheid"
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_qty
 msgid "Quantity (in default UoM)"
 msgstr "Hoeveelheid (in standaard maateenheid)"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Raw Materials"
+msgstr "Grondstoffen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1725,7 +1744,7 @@ msgid ""
 "                operations that should be followed within your work centers in\n"
 "                order to produce a product.  They are attached to bills of\n"
 "                materials that will define the required raw materials."
-msgstr "Productieroutes staan u toe om productie bewerkingen aan te maken\nen te beheren die moeten gevolgd worden in productiestappen om\neen product te produceren. Ze zijn gekoppeld aan materiaallijsten\ndie de rauwe materialen aangeven."
+msgstr "Productieroutes staan u toe om productie bewerkingen aan te maken\nen te beheren die moeten gevolgd worden in productieplaatsen om\neen product te produceren. Ze zijn gekoppeld aan materiaallijsten\ndie de rauwe materialen aangeven."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
@@ -1790,7 +1809,7 @@ msgstr "Zoek productie"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Search for mrp workcenter"
-msgstr "Zoek naar een productiestap"
+msgstr "Zoek naar een productieplaats"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_res_company_manufacturing_lead
@@ -1830,12 +1849,12 @@ msgstr "Bron document"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_cycle
 msgid "Specify Cost of Work Center per cycle."
-msgstr "Specificeer de kosten van de productiestap per cyclus."
+msgstr "Specificeer de kosten van de productieplaats per cyclus."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_hour
 msgid "Specify Cost of Work Center per hour."
-msgstr "Specificeer de kosten per productiestap per uur."
+msgstr "Specificeer de kosten per productieplaats per uur."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_start
@@ -1903,7 +1922,7 @@ msgid ""
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "plannification."
-msgstr "De lijst van de bewerkingen (lijst van de productiestappen) om het eindproduct te vervaardigen. De productie route wordt vooral gebruikt om de kosten van werkplekken te berekenen tijdens bewerkingen en de toekomstige belastingen op de productiestappen door middel van planningssystemen."
+msgstr "De lijst van de bewerkingen (lijst van de productieplaatsen) om het eindproduct te vervaardigen. De productie route wordt vooral gebruikt om de kosten van werkplekken te berekenen tijdens bewerkingen en de toekomstige belastingen op de productieplaatsen door middel van planningssystemen."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_routing_id
@@ -1913,14 +1932,14 @@ msgid ""
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "planning."
-msgstr "De lijst van bewerkingen (productiestap) om een gereed product te produceren. De productie route worden voornamelijk gebruikt om productiestap kosten gedurende de bewerkingen en toekomstige werkbelasting van de productiestappen te berekenen gebaseerd op de planning."
+msgstr "De lijst van bewerkingen (productieplaats) om een gereed product te produceren. De productie route worden voornamelijk gebruikt om productieplaatskosten gedurende de bewerkingen en toekomstige werkbelasting van de productieplaatsen te berekenen gebaseerd op de planning."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_module_mrp_operations
 msgid ""
 "This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
 "-This installs the module mrp_operations."
-msgstr "Dit geeft u de mogelijkheid om start, startdatum, stopdatum toe te voegen aan de productieorder regels (op het tabblad productiestappen).\n-Dit installeert de module mrp_operations."
+msgstr "Dit geeft u de mogelijkheid om start, startdatum, stopdatum toe te voegen aan de productieorder regels (op het tabblad productieplaatsen).\n-Dit installeert de module mrp_operations."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_efficiency
@@ -1966,12 +1985,22 @@ msgstr "Opzettijd in uren"
 msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified"
 " routing."
-msgstr "Tijd in uren voor deze productiestap om de bewerking uit te voeren in de gespecificeerde productie route."
+msgstr "Tijd in uren voor deze productieplaats om de bewerking uit te voeren in de gespecificeerde productie route."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
 msgstr "Te verbruiken"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Total Cost"
+msgstr "Totale kost"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Total Cost of Raw Materials"
+msgstr "Totale kost van grondstoffen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_cycle_total
@@ -1994,6 +2023,11 @@ msgstr "Totale hvh"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Type"
 msgstr "Soort"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Unit Cost"
+msgstr "Kostprijs per stuk"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2154,50 +2188,50 @@ msgstr "Wanneer het productieorder is aangemaakt wordt de status op 'Concept' ge
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_tree_view
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Work Center"
-msgstr "Productiestap"
+msgstr "Productieplaats"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_workcenter_load
 msgid "Work Center Load"
-msgstr "Productiestap belasting"
+msgstr "Belasting van de productieplaats"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_workcenter_load_tree
 msgid "Work Center Loads"
-msgstr "Productiestap belastingen"
+msgstr "Belastingen van de productieplaats"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 msgid "Work Center Operations"
-msgstr "Productiestap bewerkingen"
+msgstr "Productieplaats bewerkingen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_product_id
 msgid "Work Center Product"
-msgstr "Productiestap product"
+msgstr "Productieplaats product"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr "Productiestap gebruik"
+msgstr "Productieplaats gebruik"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_workcenter_load_graph
 #: model:ir.ui.view,arch_db:mrp.view_workcenter_load_search
 msgid "Work Center load"
-msgstr "Productiestap belasting"
+msgstr "Belasting van de productieplaats"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_lines
 #: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 msgid "Work Centers"
-msgstr "Productiestappen"
+msgstr "Productieplaats"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_lines
 msgid "Work Centers Utilisation"
-msgstr "Productiestap gebruik"
+msgstr "Productieplaats gebruik"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -2206,7 +2240,7 @@ msgid ""
 "                units. They consist of workers and/or machines, which are\n"
 "                considered as units for task assignation as well as capacity\n"
 "                and planning forecast."
-msgstr "Productiestappen staan u toe om productie eenheden\naan te maken. Deze bestaan uit mensen en/of machines, welke beschouwd\nworden als eenheden voor taaktoewijzing en ook als capaciteit\nen planning prognose."
+msgstr "Productieplaatsen staan u toe om productie eenheden\naan te maken. Deze bestaan uit mensen en/of machines, welke beschouwd\nworden als eenheden voor taaktoewijzing en ook als capaciteit\nen planning prognose."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
@@ -2221,7 +2255,7 @@ msgid ""
 "operations that should be followed within your work centers in order to "
 "produce a product. They are attached to bills of materials that will define "
 "the required raw materials."
-msgstr "Werkorder bewerkingen staan u toe om productie bewerkingen aan te maken en te beheren die gevolgd moeten worden in productiestappen om\nhet product te produceren. Ze zijn gekoppeld aan de materiaallijst die de vereiste ruwe materialen definieert."
+msgstr "Werkorder bewerkingen staan u toe om productie bewerkingen aan te maken en te beheren die gevolgd moeten worden in productieplaatsen om\nhet product te produceren. Ze zijn gekoppeld aan de materiaallijst die de vereiste ruwe materialen definieert."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_operations
