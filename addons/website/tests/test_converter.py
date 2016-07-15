@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
-from openerp.addons.website.models.website import slugify, unslug
+from odoo.addons.website.models.website import slugify, unslug
 
 class TestUnslug(unittest.TestCase):
     def test_unslug(self):
