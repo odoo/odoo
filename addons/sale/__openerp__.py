@@ -59,7 +59,7 @@ The Dashboard for the Sales Manager will include
         'data/mail_template_data.xml',
         'views/res_config_views.xml',
         'report/sale_report_templates.xml',
-        'views/sale.xml',
+        'views/sale_templates.xml',
         'report/invoice_report_templates.xml',
         'views/sale_layout_category_views.xml',
         'views/product_product_views.xml',
