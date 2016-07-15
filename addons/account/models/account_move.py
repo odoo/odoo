@@ -369,7 +369,7 @@ class AccountMoveLine(models.Model):
             counterpart = list(counterpart)[0:2] + ["..."]
         self.counterpart = ",".join(counterpart)
 
-    name = fields.Char(required=True, string="Label")
+    name = fields.Char(string="Label")
     quantity = fields.Float(digits=(16, 2),
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
     product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
