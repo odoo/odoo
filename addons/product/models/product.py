@@ -162,9 +162,10 @@ class product_product(osv.osv):
 
             if isinstance(pricelist, (int, long)):
                 products = self.browse(cr, uid, ids, context=context)
-                qtys = map(lambda x: (x, quantity, partner), products)
+                quantities = [quantity] * len(products)
+                partners = [partner] * len(products)
                 pl = plobj.browse(cr, uid, pricelist, context=context)
-                price = plobj._price_get_multi(cr,uid, pl, qtys, context=context)
+                price = plobj.get_products_price(cr, uid, [pl.id], products, quantities, partners, context=context)
                 for id in ids:
                     res[id] = price.get(id, 0.0)
         for id in ids:
