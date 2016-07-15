@@ -24,8 +24,9 @@
     <record id="view_sales_order_filter_ecommerce" model="ir.ui.view">
         <field name="name">sale.order.ecommerce.search.view</field>
         <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="arch" type="xml">
-            <search string="eCommerce">
+            <search>
                 <filter string="From Website" name="from_website" domain="[('team_id.website_ids', '!=', False)]"/>
             </search>
         </field>
