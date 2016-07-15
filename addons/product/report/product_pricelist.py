@@ -87,9 +87,10 @@ class product_pricelist(report_sxw.rml_parse):
     def _get_price(self, pricelist_id, product_id, qty):
         sale_price_digits = self.get_digits(dp='Product Price')
         pricelist = self.pool.get('product.pricelist').browse(self.cr, self.uid, [pricelist_id], context=self.localcontext)[0]
-        price_dict = self.pool.get('product.pricelist').price_get(self.cr, self.uid, [pricelist_id], product_id, qty, context=self.localcontext)
-        if price_dict[pricelist_id]:
-            price = float_round(price_dict[pricelist_id], precision_digits=sale_price_digits)
+        product = self.pool['product.product'].browse(self.cr, self.uid, product_id, context=self.localcontext)
+        price = self.pool.get('product.pricelist').get_product_price(self.cr, self.uid, [pricelist_id], product, qty, False, context=self.localcontext)
+        if price:
+            price = float_round(price, precision_digits=sale_price_digits)
         else:
             res = self.pool.get('product.product').read(self.cr, self.uid, [product_id], ['list_price'])
             price = float_round(res[0]['list_price'], precision_digits=sale_price_digits)

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import namedtuple, defaultdict
 from itertools import chain
 import time
 
@@ -98,32 +99,44 @@ class product_pricelist(osv.osv):
         'item_ids': _get_item_ids,
     }
 
-    def price_rule_get_multi(self, cr, uid, ids, products_by_qty_by_partner, context=None):
-        """multi products 'price_get'.
-           @param ids:
-           @param products_by_qty:
-           @param partner:
-           @param context: {
-             'date': Date of the pricelist (%Y-%m-%d),}
-           @return: a dict of dict with product_id as key and a dict 'price by pricelist' as value
-        """
+    def _compute_price_rule_multi(self, cr, uid, ids, products_qty_partner, date=False, uom_id=False, context=None):
+        """ Low-level method - Multi pricelist, multi products
+        Returns: dict{product_id: dict{pricelist_id: (price, suitable_rule)} }"""
         if not ids:
             ids = self.pool.get('product.pricelist').search(cr, uid, [], context=context)
         results = {}
         for pricelist in self.browse(cr, uid, ids, context=context):
-            subres = self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context)
+            subres = self._compute_price_rule(cr, uid, [pricelist.id], products_qty_partner, date=date, uom_id=uom_id, context=context)
             for product_id, price in subres.items():
                 results.setdefault(product_id, {})
                 results[product_id][pricelist.id] = price
         return results
 
-    def _price_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
-        return dict((key, price[0]) for key, price in self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context).items())
+    def _compute_price_rule(self, cr, uid, ids, products_qty_partner, date=False, uom_id=False, context=None):
+        """ Low-level method - Mono pricelist, multi products
+        Returns: dict{product_id: (price, suitable_rule) for the given pricelist}
 
-    def _price_rule_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
-        context = context or {}
-        date = context.get('date') and context['date'][0:10] or time.strftime(DEFAULT_SERVER_DATE_FORMAT)
-        products = map(lambda x: x[0], products_by_qty_by_partner)
+        If date in context: Date of the pricelist (%Y-%m-%d)
+
+            :param products_qty_partner: list of typles products, quantity, partner
+            :param datetime date: validity date
+            :param ID uom_id: intermediate unit of measure
+        """
+        context = context if context is not None else {}
+        if not date:
+            date = context.get('date', time.strftime(DEFAULT_SERVER_DATE_FORMAT))
+        if not uom_id and context.get('uom'):
+            uom_id = context['uom']
+        if uom_id:
+            # rebrowse with uom if given
+            product_ids = [item[0].id for item in products_qty_partner]
+            products = self.pool['product.product'].browse(cr, uid, product_ids, context=dict(context, uom=uom_id))
+            products_qty_partner = [(products[index], data_struct[1], data_struct[2]) for index, data_struct in enumerate(products_qty_partner)]
+        else:
+            products = [item[0] for item in products_qty_partner]
+
+        pricelist = self.browse(cr, uid, ids[0], context=context)
+        context = context if context is not None else {}
         product_uom_obj = self.pool.get('product.uom')
 
         if not products:
@@ -149,22 +162,23 @@ class product_pricelist(osv.osv):
 
         # Load all rules
         cr.execute(
-            'SELECT i.id '
-            'FROM product_pricelist_item AS i '
-            'LEFT JOIN product_category AS c '
-            'ON i.categ_id = c.id '
-            'WHERE (product_tmpl_id IS NULL OR product_tmpl_id = any(%s))'
-            'AND (product_id IS NULL OR product_id = any(%s))'
-            'AND (categ_id IS NULL OR categ_id = any(%s)) '
-            'AND (pricelist_id = %s) '
-            'AND ((i.date_start IS NULL OR i.date_start<=%s) AND (i.date_end IS NULL OR i.date_end>=%s))'
-            'ORDER BY applied_on, min_quantity desc, c.parent_left desc',
+            'SELECT item.id '
+            'FROM product_pricelist_item AS item '
+            'LEFT JOIN product_category AS categ '
+            'ON item.categ_id = categ.id '
+            'WHERE (item.product_tmpl_id IS NULL OR item.product_tmpl_id = any(%s))'
+            'AND (item.product_id IS NULL OR item.product_id = any(%s))'
+            'AND (item.categ_id IS NULL OR item.categ_id = any(%s)) '
+            'AND (item.pricelist_id = %s) '
+            'AND (item.date_start IS NULL OR item.date_start<=%s) '
+            'AND (item.date_end IS NULL OR item.date_end>=%s)'
+            'ORDER BY item.applied_on, item.min_quantity desc, categ.parent_left desc',
             (prod_tmpl_ids, prod_ids, categ_ids, pricelist.id, date, date))
 
         item_ids = [x[0] for x in cr.fetchall()]
         items = self.pool.get('product.pricelist.item').browse(cr, uid, item_ids, context=context)
         results = {}
-        for product, qty, partner in products_by_qty_by_partner:
+        for product, qty, partner in products_qty_partner:
             results[product.id] = 0.0
             suitable_rule = False
 
@@ -213,7 +227,7 @@ class product_pricelist(osv.osv):
                         continue
 
                 if rule.base == 'pricelist' and rule.base_pricelist_id:
-                    price_tmp = self._price_get_multi(cr, uid, rule.base_pricelist_id, [(product, qty, partner)], context=context)[product.id]
+                    price_tmp = self._compute_price_rule(cr, uid, [rule.base_pricelist_id.id], [(product, qty, partner)], context=context)[product.id][0]  # TDE: 0 = price, 1 = rule
                     ptype_src = rule.base_pricelist_id.currency_id.id
                     price = self.pool['res.currency'].compute(cr, uid, ptype_src, pricelist.currency_id.id, price_tmp, round=False, context=context)
                 else:
@@ -255,16 +269,48 @@ class product_pricelist(osv.osv):
                 price = self.pool['res.currency'].compute(cr, uid, product.currency_id.id, pricelist.currency_id.id, price, round=False, context=context)
 
             results[product.id] = (price, suitable_rule and suitable_rule.id or False)
+
         return results
 
+    # New methods: product based
+    def get_products_price(self, cr, uid, ids, products, quantities, partners, date=False, uom_id=False, context=None):
+        """ For a given pricelist, return price for products
+        Returns: dict{product_id: product price}, in the given pricelist """
+        pricelist = self.browse(cr, uid, ids[0], context=context)
+        return dict((product_id, res_tuple[0]) for product_id, res_tuple in pricelist._compute_price_rule(zip(products, quantities, partners), date=date, uom_id=uom_id).iteritems())
+
+    def get_product_price(self, cr, uid, ids, product, quantity, partner, date=False, uom_id=False, context=None):
+        """ For a given pricelist, return price for a given product """
+        pricelist = self.browse(cr, uid, ids[0], context=context)
+        return pricelist._compute_price_rule([(product, quantity, partner)], date=date, uom_id=uom_id)[product.id][0]
+
+    def get_product_price_rule(self, cr, uid, ids, product, quantity, partner, date=False, uom_id=False, context=None):
+        """ For a given pricelist, return price and rule for a given product """
+        pricelist = self.browse(cr, uid, ids[0], context=context)
+        return pricelist._compute_price_rule([(product, quantity, partner)], date=date, uom_id=uom_id)[product.id]
+
+    # Compatibility to remove after v10 - DEPRECATED
+    def _price_rule_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
+        """ Low level method computing the result tuple for a given pricelist and multi products - return tuple """
+        return self._compute_price_rule(cr, uid, [pricelist.id], products_by_qty_by_partner, context=context)
+
     def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
+        """ Multi pricelist, mono product - returns price per pricelist """
         return dict((key, price[0]) for key, price in self.price_rule_get(cr, uid, ids, prod_id, qty, partner=partner, context=context).items())
 
+    def price_rule_get_multi(self, cr, uid, ids, products_by_qty_by_partner, context=None):
+        """ Multi pricelist, multi product  - return tuple """
+        return self._compute_price_rule_multi(cr, uid, ids, products_by_qty_by_partner, context=context)
+
     def price_rule_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
+        """ Multi pricelist, mono product - return tuple """
         product = self.pool.get('product.product').browse(cr, uid, prod_id, context=context)
-        res_multi = self.price_rule_get_multi(cr, uid, ids, products_by_qty_by_partner=[(product, qty, partner)], context=context)
-        res = res_multi[prod_id]
-        return res
+        return self._compute_price_rule_multi(cr, uid, ids, [(product, qty, partner)], context=context)[prod_id]
+
+    def _price_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
+        """ Mono pricelist, multi product - return price per product """
+        return self.get_products_price(cr, uid, [pricelist.id], zip(**products_by_qty_by_partner), context=context)
+
 
 class product_pricelist_item(osv.osv):
     _name = "product.pricelist.item"

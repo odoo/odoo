@@ -7,17 +7,16 @@ from openerp import api, fields, models
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    def _get_real_price_currency(self, product, pricelist_dict, qty, uom, pricelist_id):
+    def _get_real_price_currency(self, product, rule_id, qty, uom, pricelist_id):
         """Retrieve the price before applying the pricelist
             :param obj product: object of current product record
             :parem float qty: total quentity of product
-            :param dict pricelist_dict: dict contain pricelist id and rule id
+            :param tuple price_and_rule: tuple(price, suitable_rule) coming from pricelist computation
             :param obj uom: unit of measure of current order line
             :param integer pricelist_id: pricelist id of sale order"""
         PricelistItem = self.env['product.pricelist.item']
         field_name = 'lst_price'
         currency_id = None
-        rule_id = pricelist_dict[pricelist_id][1] if pricelist_dict.get(pricelist_id) else False
         if rule_id:
             pricelist_item = PricelistItem.browse(rule_id)
             if pricelist_item.base == 'standard_price':
@@ -55,17 +54,16 @@ class SaleOrderLine(models.Model):
         context_partner = dict(self.env.context, partner_id=self.order_id.partner_id.id)
         pricelist_context = dict(context_partner, uom=self.product_uom.id, date=self.order_id.date_order)
 
-        list_price = self.order_id.pricelist_id.with_context(pricelist_context).price_rule_get(self.product_id.id, self.product_uom_qty or 1.0, self.order_id.partner_id)
-        new_list_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, list_price, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
+        price, rule_id = self.order_id.pricelist_id.with_context(pricelist_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
+        new_list_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
         new_list_price = self.env['account.tax']._fix_tax_included_price(new_list_price, self.product_id.taxes_id, self.tax_id)
-        list_price = list_price[self.order_id.pricelist_id.id][0]
 
-        if list_price != 0 and new_list_price != 0:
+        if price != 0 and new_list_price != 0:
             if self.product_id.company_id and self.order_id.pricelist_id.currency_id != self.product_id.company_id.currency_id:
                 # new_list_price is in company's currency while price in pricelist currency
                 ctx = dict(context_partner, date=self.order_id.date_order)
                 new_list_price = self.env['res.currency'].browse(currency_id).with_context(ctx).compute(new_list_price, self.order_id.pricelist_id.currency_id)
-            discount = (new_list_price - list_price) / new_list_price * 100
+            discount = (new_list_price - price) / new_list_price * 100
             if discount > 0:
                 self.discount = discount
 

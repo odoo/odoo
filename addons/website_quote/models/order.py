@@ -213,7 +213,7 @@ class sale_order(osv.osv):
             if pricelist_id:
                 uom_context = context.copy()
                 uom_context['uom'] = line.product_uom_id.id
-                price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, 1, context=uom_context)[pricelist_id]
+                price = pricelist_obj.get_product_price(cr, uid, [pricelist_id], line.product_id, 1, False, context=uom_context)
             else:
                 price = line.price_unit
 
@@ -241,7 +241,7 @@ class sale_order(osv.osv):
             if pricelist_id:
                 uom_context = context.copy()
                 uom_context['uom'] = option.uom_id.id
-                price = pricelist_obj.price_get(cr, uid, [pricelist_id], option.product_id.id, 1, context=uom_context)[pricelist_id]
+                price = pricelist_obj.get_product_price(cr, uid, [pricelist_id], option.product_id, 1, False, context=uom_context)
             else:
                 price = option.price_unit
             options.append((0, 0, {
@@ -461,7 +461,7 @@ class sale_order_option(osv.osv):
         pricelist = self.order_id.pricelist_id
         if pricelist and product:
             partner_id = self.order_id.partner_id.id
-            self.price_unit = pricelist.with_context(uom=self.uom_id.id).price_get(product.id, self.quantity, partner_id)[pricelist.id]
+            self.price_unit = pricelist.with_context(uom=self.uom_id.id).get_product_price(product, self.quantity, partner_id)
         domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         return {'domain': domain}
 

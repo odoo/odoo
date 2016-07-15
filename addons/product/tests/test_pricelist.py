@@ -86,6 +86,7 @@ class TestPricelist(TransactionCase):
                                               'list_price': tonne_price,
                                               'type': 'consu',
                                             })
+
         self.registry('product.pricelist.item').create(cr, uid, {
                                                        'pricelist_id': self.public_pricelist_id,
                                                        'sequence': 10,
@@ -98,9 +99,10 @@ class TestPricelist(TransactionCase):
         pricelist_id = self.public_pricelist_id
 
         def test_unit_price(qty, uom, expected_unit_price):
-            unit_price = self.registry('product.pricelist').price_get(cr, uid, [pricelist_id],
-                                                                      spam_id, qty,
-                                                                      context={'uom': uom})[pricelist_id]
+            spam = self.product_product.browse(cr, uid, spam_id, {'uom': uom})
+            unit_price = self.registry('product.pricelist').get_product_price(cr, uid, [pricelist_id],
+                                                                      spam, qty, False,
+                                                                      context={'uom': uom})
             self.assertAlmostEqual(unit_price, expected_unit_price)
 
         # Test prices - they are *per unit*, the quantity is only here to match the pricelist rules!
