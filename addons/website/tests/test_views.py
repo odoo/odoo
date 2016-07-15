@@ -208,17 +208,15 @@ class TestViewSaving(common.TransactionCase):
     def test_save_only_embedded(self):
         Company = self.registry('res.company')
         company_id = 1
-        Company.write(self.cr, self.uid, company_id, {'name': "Foo Corporation"})
+        company = Company.browse(company_id)
+        company.write({'name': "Foo Corporation"})
 
         node = html.tostring(h.SPAN(
             "Acme Corporation",
             attrs(model='res.company', id=company_id, field="name", expression='bob', type='char')))
         View = self.env['ir.ui.view']
         View.browse(company_id).save(value=node)
-
-        company = Company.browse(self.cr, self.uid, company_id)
         self.assertEqual(company.name, "Acme Corporation")
-
 
     def test_field_tail(self):
         View = self.env['ir.ui.view']
@@ -231,7 +229,7 @@ class TestViewSaving(common.TransactionCase):
         View.browse(self.view_id).save(value=replacement, xpath='/div/div[2]/ul/li[3]')
 
         self.eq(
-            ET.fromstring(View.browse(self.view_id).arch.encode('utf-8')),
+            ET.fromstring(self.view_id.arch.encode('utf-8')),
             h.DIV(
                 h.DIV(
                     h.H3("Column 1"),

@@ -1,18 +1,19 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import openerp
-from openerp.osv import osv, fields
+from odoo import api, models
 
 
-class res_company(osv.osv):
+class Company(models.Model):
 
     _inherit = "res.company"
 
-    def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
-        partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).partner_id
-        return partner and partner.google_map_img(zoom, width, height, context=context) or None
+    @api.multi
+    def google_map_img(self, zoom=8, width=298, height=298):
+        partner = self.sudo().partner_id
+        return partner and partner.google_map_img(zoom, width, height) or None
 
-    def google_map_link(self, cr, uid, ids, zoom=8, context=None):
-        partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).partner_id
-        return partner and partner.google_map_link(zoom, context=context) or None
+    @api.multi
+    def google_map_link(self, zoom=8):
+        partner = self.sudo().partner_id
+        return partner and partner.google_map_link(zoom) or None

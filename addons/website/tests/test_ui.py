@@ -1,7 +1,7 @@
-import openerp.tests
+import odoo.tests
 
 
-class TestUi(openerp.tests.HttpCase):
+class TestUi(odoo.tests.HttpCase):
     def test_01_public_homepage(self):
         self.phantom_js("/", "console.log('ok')", "'website.snippets.animation' in odoo.__DEBUG__.services")
 
