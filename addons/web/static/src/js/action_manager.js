@@ -839,7 +839,7 @@ var ActionManager = Widget.extend({
     ir_actions_act_url: function (action) {
         var url = action.url;
         if (session.debug && url && url.length && url[0] === '/') {
-            url = $.param.querystring(url, 'debug');
+            url = $.param.querystring(url, {debug: session.debug});
         }
 
         if (action.target === 'self') {

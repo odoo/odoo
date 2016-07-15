@@ -31,7 +31,7 @@ class Channel(models.Model):
 
     name = fields.Char('Name', translate=True, required=True)
     active = fields.Boolean(default=True)
-    description = fields.Html('Description', translate=True)
+    description = fields.Html('Description', translate=True, sanitize=False)
     sequence = fields.Integer(default=10, help='Display order')
     category_ids = fields.One2many('slide.category', 'channel_id', string="Categories")
     slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides")
@@ -99,7 +99,7 @@ class Channel(models.Model):
         string='Channel Groups', help="Groups allowed to see presentations in this channel")
     access_error_msg = fields.Html(
         'Error Message', help="Message to display when not accessible due to access rights",
-        default="<p>This channel is private and its content is restricted to some users.</p>", translate=True)
+        default="<p>This channel is private and its content is restricted to some users.</p>", translate=True, sanitize=False)
     upload_group_ids = fields.Many2many(
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id',
         string='Upload Groups', help="Groups allowed to upload presentations in this channel. If void, every user can upload.")
@@ -383,6 +383,9 @@ class Slide(models.Model):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.iteritems():
                 values.setdefault(key, value)
+        if values.get('channel_id'):
+            custom_channels = self.env['slide.channel'].search([('custom_slide_id', '=', self.id), ('id', '!=', values.get('channel_id'))])
+            custom_channels.write({'custom_slide_id': False})
         res = super(Slide, self).write(values)
         if values.get('website_published'):
             self.date_published = datetime.datetime.now()
