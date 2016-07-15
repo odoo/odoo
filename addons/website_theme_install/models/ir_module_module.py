@@ -46,6 +46,6 @@ class IrModuleModule(models.Model):
 
         next_action = self.button_immediate_install() # Then install the new chosen one
         if next_action.get('tag') == 'reload' and not next_action.get('params', {}).get('menu_id'):
-            next_action = self.env.ref('website.action_website_tutorial').read()[0]
+            next_action = self.env.ref('website.action_website').read()[0]
 
         return next_action

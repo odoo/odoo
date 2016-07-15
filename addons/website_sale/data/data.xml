@@ -11,7 +11,7 @@
         <record id="action_open_website" model="ir.actions.act_url">
             <field name="name">Website Shop</field>
             <field name="target">self</field>
-            <field name="url">/shop#tutorial.shop=true</field>
+            <field name="url">/shop</field>
         </record>
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_open_website"/>
@@ -47,7 +47,7 @@
         <record id="sale.model_sale_order" model="ir.model">
             <field name="website_form_access" eval="True"/>
             <field name="website_form_label">Sale Order</field>
-        </record> 
+        </record>
         <function model="ir.model.fields" name="formbuilder_whitelist">
             <value>sale.order</value>
             <value eval="[
@@ -62,7 +62,7 @@
         <function model="ir.model.fields" name="formbuilder_whitelist">
             <value>res.partner</value>
             <value eval="[
-                'name', 'phone', 'email', 
+                'name', 'phone', 'email',
                 'city', 'zip', 'street', 'state_id', 'country_id',
                 'vat', 'company_name'
             ]"/>
