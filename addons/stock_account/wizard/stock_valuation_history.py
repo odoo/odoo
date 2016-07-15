@@ -108,7 +108,7 @@ class stock_history(osv.osv):
         'product_categ_id': fields.many2one('product.category', 'Product Category', required=True),
         'quantity': fields.float('Product Quantity'),
         'date': fields.datetime('Operation Date'),
-        'price_unit_on_quant': fields.float('Value'),
+        'price_unit_on_quant': fields.float('Value', group_operator='avg'),
         'inventory_value': fields.function(_get_inventory_value, string="Inventory Value", type='float', readonly=True),
         'source': fields.char('Source'),
         'product_template_id': fields.many2one('product.template', 'Product Template', required=True),
@@ -128,7 +128,7 @@ class stock_history(osv.osv):
                 product_template_id,
                 SUM(quantity) as quantity,
                 date,
-                SUM(price_unit_on_quant * quantity) / SUM(quantity) as price_unit_on_quant,
+                COALESCE(SUM(price_unit_on_quant * quantity) / NULLIF(SUM(quantity), 0), 0) as price_unit_on_quant,
                 source,
                 string_agg(DISTINCT serial_number, ', ' ORDER BY serial_number) AS serial_number
                 FROM

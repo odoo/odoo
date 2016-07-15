@@ -1386,7 +1386,7 @@ ListView.Groups = Class.extend({
                 } else {
                     group_label = group.value;
                     var grouped_on_field = self.view.fields_get[group.grouped_on];
-                    if (grouped_on_field.type === 'selection') {
+                    if (grouped_on_field && grouped_on_field.type === 'selection') {
                         group_label = _.find(grouped_on_field.selection, function(selection) {
                             return selection[0] === group.value;
                         });

@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'Timesheets',
+    'name': 'Timesheets / Attendances',
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 80,
@@ -40,6 +40,5 @@ The validation can be configured in the company:
     'test':['../account/test/account_minimal_test.xml', 'test/test_hr_timesheet_sheet.yml'],
     'installable': True,
     'auto_install': False,
-    'application': True,
     'qweb': ['static/src/xml/timesheet.xml',],
 }
