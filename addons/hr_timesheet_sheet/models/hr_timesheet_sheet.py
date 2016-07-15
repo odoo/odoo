@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.tools.translate import _
+from odoo.tools.sql import drop_view_if_exists
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -184,7 +185,8 @@ class HrTimesheetSheetSheetAccount(models.Model):
 
     @api.model_cr
     def init(self):
-        self._cr.execute("""create or replace view hr_timesheet_sheet_sheet_account as (
+        drop_view_if_exists(self._cr, 'hr_timesheet_sheet_sheet_account')
+        self._cr.execute("""create view hr_timesheet_sheet_sheet_account as (
             select
                 min(l.id) as id,
                 l.account_id as name,

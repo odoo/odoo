@@ -11,6 +11,7 @@ class PosOrderReport(models.Model):
     _order = 'date desc'
 
     date = fields.Datetime(string='Date Order', readonly=True)
+    order_id = fields.Many2one('pos.order', string='Order', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', string='Product Template', readonly=True)
@@ -52,6 +53,7 @@ class PosOrderReport(models.Model):
                     SUM((l.qty * l.price_unit) * (l.discount / 100)) AS total_discount,
                     (SUM(l.qty*l.price_unit)/SUM(l.qty * u.factor))::decimal AS average_price,
                     SUM(cast(to_char(date_trunc('day',s.date_order) - date_trunc('day',s.create_date),'DD') AS INT)) AS delay_validation,
+                    s.id as order_id,
                     s.partner_id AS partner_id,
                     s.state AS state,
                     s.user_id AS user_id,
@@ -75,7 +77,7 @@ class PosOrderReport(models.Model):
                     LEFT JOIN pos_session ps ON (s.session_id=ps.id)
                     LEFT JOIN pos_config pc ON (ps.config_id=pc.id)
                 GROUP BY
-                    s.date_order, s.partner_id,s.state, pt.categ_id,
+                    s.id, s.date_order, s.partner_id,s.state, pt.categ_id,
                     s.user_id, s.location_id, s.company_id, s.sale_journal,
                     s.pricelist_id, s.invoice_id, s.create_date, s.session_id,
                     l.product_id,

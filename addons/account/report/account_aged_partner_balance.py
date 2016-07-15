@@ -148,7 +148,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 lines[partner_id].append({
                     'line': line,
                     'amount': line_amount,
-                    'period': i,
+                    'period': i + 1,
                     })
             history.append(partners_amount)
 

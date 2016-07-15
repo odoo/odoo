@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Manami Hashi <manami@roomsfor.hk>, 2016
-# Masa Taka <masakatsu.takagi@pro-spire.co.jp>, 2016
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
 # 髙木雄介 <yuusuke.takagi@pro-spire.co.jp>, 2016
 msgid ""
@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-06-29 06:26+0000\n"
-"Last-Translator: Manami Hashi <manami@roomsfor.hk>\n"
+"PO-Revision-Date: 2016-07-06 14:51+0000\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -471,7 +471,7 @@ msgstr "配送済数量"
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Delivered quantities"
-msgstr ""
+msgstr "配送済数量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_shipping_id
@@ -530,7 +530,7 @@ msgstr "明細の値引き"
 msgid ""
 "Display 3 fields on sales orders: customer, invoice address, delivery "
 "address"
-msgstr ""
+msgstr "受注に3フィールドを表示: 顧客、請求書住所、配送先"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_display_name
@@ -758,7 +758,7 @@ msgstr "請求書の状態"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced_target
 msgid "Invoice Target"
-msgstr ""
+msgstr "請求ターゲット"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_invoice_id
@@ -768,12 +768,12 @@ msgstr "現在の受注の請求先アドレス"
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
 msgid "Invoice based on costs (time and material, expenses)"
-msgstr "コストに基づいて請求(タイム・アンド・マテリアル、経費)"
+msgstr "コストに基づき請求(タイムアンドマテリアル、経費)"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Invoice based on time and material"
-msgstr ""
+msgstr "タイムアンドマテリアルで請求"
 
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
@@ -816,7 +816,7 @@ msgstr "請求済数量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced
 msgid "Invoiced This Month"
-msgstr ""
+msgstr "今月請求済"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -855,7 +855,7 @@ msgstr "請求"
 #: model:ir.model.fields,field_description:sale.field_product_product_invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_invoice_policy
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "請求方針"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -877,7 +877,7 @@ msgstr "請求先と配送先アドレスは常に同じ(例: サービス会社
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "Invoicing/Progression Ratio"
-msgstr ""
+msgstr "請求/進捗率"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_is_follower
@@ -1100,7 +1100,7 @@ msgstr "受注日"
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Ordered quantities"
-msgstr ""
+msgstr "受注数量"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
@@ -1407,12 +1407,12 @@ msgstr "販売分析"
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Sales Done"
-msgstr ""
+msgstr "販売完了"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
 msgid "Sales Funnel"
-msgstr ""
+msgstr "販売ファネル"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1490,7 +1490,7 @@ msgstr "受注統計"
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Team"
-msgstr "営業チーム"
+msgstr "販売チーム"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice
@@ -1512,7 +1512,7 @@ msgstr "販売員は見積時にマージンの表示を必要としない"
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Salesperson"
-msgstr "営業担当者"
+msgstr "販売担当者"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1551,7 +1551,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Done"
-msgstr ""
+msgstr "完了に設定"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form

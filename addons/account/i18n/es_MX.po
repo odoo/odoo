@@ -5,17 +5,19 @@
 # Translators:
 # David Hernandez <davidhernandez.ctam@gmail.com>, 2016
 # Jérémy Kersten <jke@openerp.com>, 2016
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
 # Jorge Villamil <jorge.villamil@serviciosit.com.mx>, 2015
 # Martin Trigaux, 2016
 # Néstor Gómez Muñoz <nestorgm@gmail.com>, 2015
+# Sarai Osorio <sarai.osorio@jarsa.com.mx>, 2016
 # Scott Acock <transifex@scottacock.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-03-03 07:54+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-07-08 16:46+0000\n"
+"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +81,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n    <p>Hola ${object.partner_id.name},</p>\n    <p>Una nueva factura está disponible:: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCIAS</strong><br />\n       &nbsp;&nbsp;Número de factura: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Total de la factura: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Fecha de la factura: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Número de referencia: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Su contacto: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>También es posible pagar directamente con Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Si tiene alguna pregunta, no dude en contactarnos.</p>\n    <p>Gracias por elegir ${object.company_id.name or 'nuestra compañía'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Teléfono:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -89,7 +91,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice, an invoice number is generated. Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr "* El estado de 'Proyecto' se utiliza cuando un usuario está codificando un nuevo y sin confirmar factura.\n* El estado de 'pro-forma' se utiliza la factura no tiene un numero de factura.\n* El estado de \"Abrir\" se utiliza cuando el usuario crea la factura, se genera un número de factura. Está en estado abierto hasta el usuario no paga factura.\n* El estado \"Pagado\" se ajusta automáticamente cuando se paga la factura. Sus entradas de diario relacionadas pueden o no ser conciliada.\n* El estado \"Cancelado\" se utiliza cuando el usuario cancela la factura."
+msgstr "* El estado 'Borrador' se utiliza cuando un usuario está codificando un nuevo y sin confirmar factura.\n* El estado de 'pro-forma' se utiliza la factura no tiene un numero de factura.\n* El estado de \"Abrir\" se utiliza cuando el usuario crea la factura, se genera un número de factura. Está en estado abierto hasta el usuario no paga factura.\n* El estado \"Pagado\" se ajusta automáticamente cuando se paga la factura. Sus entradas de diario relacionadas pueden o no ser conciliada.\n* El estado \"Cancelado\" se utiliza cuando el usuario cancela la factura."
 
 #. module: account
 #. openerp-web
@@ -209,7 +211,7 @@ msgid ""
 "                                        <strong>Import a file</strong><br/>\n"
 "                                        <span class=\"small\">Recommended if &gt;100 products</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n                                        <strong>Importa un archivo</strong><br/>\n                                        <span class=\"small\">Recomendado si &gt;100 productos</span>\n                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -470,7 +472,7 @@ msgstr "<strong> Crear un Depósito de Entrada </strong><br/> \nEsto le permite 
 msgid ""
 "<strong>Create the bill in Odoo</strong><br/> with a proper due date, and "
 "create the vendor if it doesnt' exist yet."
-msgstr "<strong>Crear la cuenta en Odoo</strong><br/> con una fecha de vencimiento adecuada, y crear el vendedor si no lo hace todavía 'existir."
+msgstr "<strong>Crear la factura en Odoo</strong><br/> con una fecha de vencimiento adecuada, y crear el proveedor si no existe."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -577,7 +579,7 @@ msgstr "<strong>Periodo Largo (días)</strong>"
 msgid ""
 "<strong>Print checks</strong><br/>\n"
 "                                        From the Vendor Payments list, select those you want to pay and click on Print Check (you may first need to activate the check feature in the"
-msgstr "<strong>Impresión de cheques</strong><br/>\nEn la lista de pagos a proveedores, seleccione los que desea pagar y haga clic en Imprimir Check (puede que necesite para activar la función de verificación en la"
+msgstr "<strong>Impresión de cheques</strong><br/>\nEn la lista de pagos a proveedores, seleccione los que desea pagar y haga clic en Imprimir Cheque (puede que necesite para activar la función de cheques en la"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1646,7 +1648,7 @@ msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr ""
+msgstr "Control de activos: Te permite controlar los activos que le pertenecen a una compañía o persona. Mantiene el registro de la depreciación de estos activos y crea los asientos contables de estas líneas de depreciación.\n\n-Esto instala el módulo account_asset. Si no marcas esta casilla, podrás hacer facturación y pagos, pero no contabilidad(Diarios, Catálogo de Cuentas, ...)"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1656,7 +1658,7 @@ msgstr "Activos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
 msgid "Assets management"
-msgstr ""
+msgstr "Control de activos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -1775,7 +1777,7 @@ msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Vendor Refund, otherwise a Partner "
 "bank account number."
-msgstr "Número de cuenta bancaria a la que se pagará la factura. Una cuenta bancaria de la empresa si se trata de una factura de cliente o proveedor de reembolso, de lo contrario un número de cuenta bancaria Socio."
+msgstr "Número de cuenta bancaria a la que se pagará la factura. Una cuenta bancaria de la empresa si se trata de una factura de cliente o proveedor de reembolso, de lo contrario un número de cuenta bancaria de un Socio."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_bank_journal_form
@@ -2386,7 +2388,7 @@ msgstr "Da clic para definir un nuevo tipo de cuenta."
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
 msgid "Click to record a new vendor bill."
-msgstr "Da clic para grabar una nueva cuenta de vendedor."
+msgstr "Da clic para crear una nueva factura de proveedor."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -2723,7 +2725,7 @@ msgstr "Crear Nota de Credito"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Create Vendors"
-msgstr "Crear Vendedores"
+msgstr "Crear Proveedores"
 
 #. module: account
 #. openerp-web
@@ -3501,7 +3503,7 @@ msgstr "Término de Fecha"
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
 "vendor bill/refund."
-msgstr "Referencia proveedor Duplicado detectado. Probablemente codificado doble de la factura de proveedor misma / reembolso."
+msgstr "Referencia proveedor Duplicado detectado. Probablemente registraste doble  la misma factura/nota de crédito de proveedor."
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_invoice_action_report_duplicate
@@ -3783,7 +3785,7 @@ msgstr "Reporte Financiero"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "First, register any outstanding customer invoices and vendor bills:"
-msgstr "En primer lugar, registrar cualquier pendiente facturas de clientes y facturas de proveedores:"
+msgstr "En primer lugar, registrar cualquier factura de cliente y proveedor pendiente:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
@@ -5798,7 +5800,7 @@ msgid ""
 "                document: invoice, refund, vendor payment, bank statements,\n"
 "                etc. So, you should record journal entries manually only/mainly\n"
 "                for miscellaneous operations."
-msgstr "Odoo crea automáticamente una entrada de diario por contabilidad del\ndocumento: factura, reembolso, pago a proveedores, estados de cuenta bancarios, \netc Por lo tanto, usted debe registrar entradas de diario manualmente sólo/principalmente\npara las operaciones de varios."
+msgstr "Odoo crea automáticamente una entrada de diario por contabilidad del\ndocumento: factura, nota de crédito, pago a proveedores, estados de cuenta bancarios, \netc Por lo tanto, usted debe registrar entradas de diario manualmente sólo/principalmente\npara las operaciones de miscelaneas."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5820,7 +5822,7 @@ msgid ""
 "Odoo should do most of the reconciliation work automatically, so you'll only"
 " need to review a few of them when a <strong>'Reconcile Items'</strong> "
 "button appears on your Vendor Bills dash."
-msgstr "Odoo debe hacer la mayor parte del trabajo de reconciliación de forma automática, por lo que sólo tendrás que revisar algunos de ellos cuando un <strong> 'Conciliar Artículos' </ strong> aparece en el tablero de cuentas de proveedores."
+msgstr "Odoo debe hacer la mayor parte del trabajo de reconciliación de forma automática, por lo que sólo tendrás que revisar algunos de ellos cuando un <strong> 'Conciliar Artículos' </ strong> aparece en el tablero de facturas de proveedores."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -7260,7 +7262,7 @@ msgid ""
 "customer or vendor payments. Select 'General' for miscellaneous operations "
 "journals. Select 'Opening/Closing Situation' for entries generated for new "
 "fiscal years."
-msgstr "Seleccione 'Venta' de facturas de clientes diarios. Seleccione 'Compra' de facturas de diario de proveedores. Seleccione \"Dinero\" o \"Banco\" para los diarios que se utilizan en los pagos de los clientes o proveedores. Seleccione \"General\" para diversos diarios de operaciones. Seleccione 'Abrir / Situación de Clausura' para las entradas generadas por nuevos ejercicios."
+msgstr "Seleccione 'Venta' para diarios de facturas a clientes. Seleccione 'Compra' para diario de factura de proveedores. Seleccione \"Dinero\" o \"Banco\" para los diarios que se utilizan en los pagos de los clientes o proveedores. Seleccione \"General\" para diversos diarios de operaciones. Seleccione 'Abrir / Situación de Clausura' para las entradas generadas por nuevos ejercicios."
 
 #. module: account
 #. openerp-web
@@ -7874,7 +7876,7 @@ msgid ""
 "The 'Internal Type' is used for features available on different types of "
 "accounts: liquidity type is for cash or bank accounts, payable/receivable is"
 " for vendor/customer accounts."
-msgstr "El 'Tipo Interna \"se utiliza para las funciones disponibles en los diferentes tipos de cuentas: Tipo de liquidez es por dinero en efectivo o cuentas bancarias, pagar / cobrar es para las cuentas de vendedor / cliente."
+msgstr "El 'Tipo Interna \"se utiliza para las funciones disponibles en los diferentes tipos de cuentas: El tipo liquidez es por cuentas de efectivo o bancos, a pagar / a cobrar es para las facturas de proveedor / cliente."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8566,7 +8568,7 @@ msgstr "La cantidad total que le corresponde pagar al cliente."
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_debit
 msgid "Total amount you have to pay to this vendor."
-msgstr "La cantidad total que tiene que pagar a este vendedor."
+msgstr "La cantidad total que tiene que pagar a este proveedor."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_total_entry_encoding
@@ -8894,7 +8896,7 @@ msgstr "Valor"
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
 msgid "Vendor"
-msgstr "Vendedor"
+msgstr "Proveedor"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -8903,7 +8905,7 @@ msgstr "Vendedor"
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Bill"
-msgstr "Cuenta del Proveedor"
+msgstr "Factura de Proveedor"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:156
@@ -8912,29 +8914,29 @@ msgstr "Cuenta del Proveedor"
 #: model:ir.ui.view,arch_db:account.account_planner
 #, python-format
 msgid "Vendor Bills"
-msgstr "Cuentas de Vendedor"
+msgstr "Facturas de Proveedor"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Vendor Flow"
-msgstr "Flujo de Vendedor"
+msgstr "Flujo del Proveedor"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:450
 #, python-format
 msgid "Vendor Payment"
-msgstr "Pago Vendedor"
+msgstr "Pago a Proveedor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_supplier_payment_term_id
 msgid "Vendor Payment Term"
-msgstr "Términos de Pago del Vendedor"
+msgstr "Términos de Pago del Proveedor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Vendor Reference"
-msgstr "Referencia de Vendedor"
+msgstr "Referencia de Proveedor"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -8943,12 +8945,12 @@ msgstr "Referencia de Vendedor"
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Refund"
-msgstr "Reembolso del Vendedor"
+msgstr "Nóta de crédito del Proveedor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_template_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr "Impuestos de Vendedor"
+msgstr "Impuestos de Proveedor"
 
 #. module: account
 #. openerp-web
@@ -8956,7 +8958,7 @@ msgstr "Impuestos de Vendedor"
 #: model:ir.ui.menu,name:account.menu_account_supplier
 #, python-format
 msgid "Vendors"
-msgstr "Vendedores"
+msgstr "Proveedores"
 
 #. module: account
 #: selection:account.financial.report,type:0
@@ -9232,7 +9234,7 @@ msgstr "No se puede hacer esta modificación en una entrada de conciliarse. Uste
 msgid ""
 "You cannot empty the account number once set.\n"
 "If you would like to delete the account number, you can do it from the Bank Accounts list."
-msgstr ""
+msgstr "No puedes dejar vacio el número de cuenta una vez definida.\nSi quieres borrar el número de cuenta, puedes hacerlo de la lista de Cuentas Bancarias."
 
 #. module: account
 #: code:addons/account/models/account.py:96
@@ -9246,7 +9248,7 @@ msgstr "No se puede tener una cuenta de cobro / pago que no es conciliable. (có
 #: code:addons/account/models/account_payment.py:126
 #, python-format
 msgid "You cannot mix customer invoices and vendor bills in a single payment."
-msgstr "No se puede mezclar facturas de clientes y facturas de proveedores en un solo pago."
+msgstr "No se puede mezclar facturas de clientes y proveedores en un solo pago."
 
 #. module: account
 #. openerp-web

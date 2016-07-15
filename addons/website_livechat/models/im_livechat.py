@@ -16,4 +16,4 @@ class ImLivechatChannel(models.Model):
             res[channel.id] = "/livechat/channel/%s" % (slug(channel),)
         return res
 
-    website_description = fields.Html("Website description", default=False, help="Description of the channel displayed on the website page")
+    website_description = fields.Html("Website description", default=False, help="Description of the channel displayed on the website page", sanitize=False)

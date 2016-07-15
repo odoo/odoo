@@ -2137,7 +2137,7 @@ class BaseModel(object):
         ]
 
         field_formatter = lambda f: (
-            self._fields[f].group_operator or 'sum',
+            self._fields[f].group_operator,
             self._inherits_join_calc(self._table, f, query),
             f,
         )

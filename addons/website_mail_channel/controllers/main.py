@@ -4,10 +4,9 @@
 from datetime import datetime
 from dateutil import relativedelta
 
-from odoo import http, fields
+from odoo import http, fields, tools
 from odoo.http import request
 from odoo.addons.website.models.website import slug
-
 
 class MailGroup(http.Controller):
     _thread_per_page = 20
@@ -30,7 +29,7 @@ class MailGroup(http.Controller):
         """ date is (of course) a datetime so start and end are datetime
         strings, but we just want date strings
         """
-        return (datetime.datetime
+        return (datetime
             .strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
             .date() # may be unnecessary?
             .strftime(tools.DEFAULT_SERVER_DATE_FORMAT))

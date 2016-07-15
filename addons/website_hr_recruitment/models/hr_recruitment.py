@@ -42,7 +42,7 @@ class Job(models.Model):
     _name = 'hr.job'
     _inherit = ['hr.job', 'website.seo.metadata', 'website.published.mixin']
 
-    website_description = fields.Html('Website description', translate=True)
+    website_description = fields.Html('Website description', translate=True, sanitize=False)
 
     @api.multi
     def _website_url(self, field_name, arg):

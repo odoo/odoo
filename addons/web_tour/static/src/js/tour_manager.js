@@ -95,10 +95,11 @@ return core.Class.extend({
      * Checks for tooltips to activate (only from the running tour if there is one, from all
      * active tours otherwise). Should be called each time the DOM changes.
      */
-    update: function() {
+    update: function (tour_name) {
         this.in_modal = this.$body.hasClass('modal-open');
-        if (this.running_tour) {
-            this._check_for_tooltip(this.active_tooltips[this.running_tour], this.running_tour);
+        tour_name = this.running_tour || tour_name;
+        if (tour_name) {
+            this._check_for_tooltip(this.active_tooltips[tour_name], tour_name);
         } else {
             _.each(this.active_tooltips, this._check_for_tooltip.bind(this));
         }
@@ -158,6 +159,7 @@ return core.Class.extend({
             if (this.running_tour === tour_name) {
                 this._set_running_tour_timeout(tour_name, this.active_tooltips[tour_name]);
             }
+            this.update(tour_name);
         } else {
             this._consume_tour(tour_name);
         }

@@ -20,9 +20,10 @@ class CrmLead(models.Model):
         string='Partner not interested')
     date_assign = fields.Date('Assignation Date', help="Last date this case was forwarded/assigned to a partner")
 
-    def _merge_data(self, oldest, fields):
+    @api.multi
+    def _merge_data(self, fields):
         fields += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_assign']
-        return super(CrmLead, self)._merge_data(oldest, fields)
+        return super(CrmLead, self)._merge_data(fields)
 
     @api.onchange("partner_assigned_id")
     def onchange_assign_id(self):
