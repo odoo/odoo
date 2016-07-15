@@ -209,7 +209,7 @@ class WebsiteEventController(http.Controller):
         if not events:
             events = Event.search([('date_begin', '>=', '%s 00:00:00' % fields.Date.today()), ('state', '=', 'confirm')], order="date_begin")
         for event in events:
-            if country_code and event.country.code == country_code:
+            if country_code and event.country_id.code == country_code:
                 result['country'] = country
             result['events'].append({
                 "date": self.get_formated_date(event),
