@@ -434,6 +434,23 @@ class AccountMoveLine(models.Model):
         ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry !'),
     ]
 
+    @api.model
+    def default_get(self, fields):
+        rec = super(AccountMoveLine, self).default_get(fields)
+        if 'line_ids' not in self._context:
+            return rec
+
+        balance = 0
+        for line in self._context['line_ids']:
+            balance += line[2]['debit'] - line[2]['credit']
+
+        if balance < 0:
+            rec.update({'debit': -balance})
+        if balance > 0:
+            rec.update({'credit': balance})
+
+        return rec
+
     @api.multi
     @api.constrains('currency_id', 'account_id')
     def _check_currency(self):
