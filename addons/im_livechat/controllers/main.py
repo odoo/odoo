@@ -87,6 +87,7 @@ class LivechatController(http.Controller):
             # limit the creation : only ONE rating per session
             values = {
                 'rating': rate,
+                'consumed': True
             }
             if not channel.rating_ids:
                 values.update({

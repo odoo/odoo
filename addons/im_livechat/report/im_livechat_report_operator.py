@@ -12,7 +12,7 @@ class ImLivechatReportOperator(models.Model):
 
     partner_id = fields.Many2one('res.partner', 'Operator', readonly=True)
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel', readonly=True)
-    nbr_channel = fields.Integer('# of channel', readonly=True, group_operator="sum", help="Number of conversation")
+    nbr_channel = fields.Integer('# of Sessions', readonly=True, group_operator="sum", help="Number of conversation")
     channel_id = fields.Many2one('mail.channel', 'Conversation', readonly=True)
     start_date = fields.Datetime('Start Date of session', readonly=True, help="Start date of the conversation")
     time_to_answer = fields.Float('Time to answer', digits=(16, 2), readonly=True, group_operator="avg", help="Average time to give the first answer to the visitor")

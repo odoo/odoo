@@ -221,17 +221,31 @@
             sequence="5"/>
 
         <menuitem
-            id="session_history"
-            name="History"
+            id="menu_reporting_livechat"
+            name="Report"
             parent="menu_livechat_root"
+            sequence="50"
+            groups="im_livechat_group_manager"/>
+
+
+        <menuitem
+            id="session_history"
+            name="Sessions History"
+            parent="menu_reporting_livechat"
             action="mail_channel_action"
             groups="im_livechat_group_user"
-            sequence="10"/>
+            sequence="1"/>
+
+        <menuitem
+            id="livechat_config"
+            name="Configuration"
+            parent="menu_livechat_root"
+            sequence="55"/>
 
         <menuitem
             id="canned_responses"
             name="Canned Responses"
-            parent="menu_livechat_root"
+            parent="livechat_config"
             action="im_livechat_canned_response_action"
             groups="im_livechat_group_user"
             sequence="15"/>
