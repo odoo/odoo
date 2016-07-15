@@ -205,7 +205,11 @@ class IrHttp(models.AbstractModel):
             if tools.config['test_enable']:
                 installed.add(odoo.modules.module.current_test)
             mods = [''] + odoo.conf.server_wide_modules + sorted(installed)
-            self._routing_map = http.routing_map(mods, False, converters=self._get_converters())
+            # Note : when routing map is generated, we put it on the class `type(self)`
+            # to make it available for all instance. Since `env` create an new instance
+            # of the model, each instance will regenared its own routing map and thus
+            # regenerate its EndPoint. The routing map should be static.
+            type(self)._routing_map = http.routing_map(mods, False, converters=self._get_converters())
 
         return self._routing_map
 
