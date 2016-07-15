@@ -29,7 +29,7 @@
             <field name="arch" type="xml">
                 <form string="Survey User inputs" create="false">
                     <header>
-                        <button name="action_survey_resent" string="Sent Invitation Again" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('type','=','manually'), ('state', '=', 'done')]}"/>
+                        <button name="action_survey_resend" string="Send Invitation Again" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('type','=','manually'), ('state', '=', 'done')]}"/>
                         <button name="action_view_answers" states="done" string="Print These Answers" type="object"  class="oe_highlight" />
                         <button name="action_survey_results" string="View Results" type="object" />
                         <field name="state" widget="statusbar"/>
@@ -401,7 +401,7 @@
                         </group>
                         <notebook>
                             <page string="Answers">
-                                <field name="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}" on_change="onchange_validation_email(validation_email)"/>
+                                <field name="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
                                 <label for="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
                                 <separator />
                                 <field name="labels_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
@@ -622,8 +622,7 @@
             <field name="state">code</field>
             <field name="code">
                 if context.get('active_ids'):
-                    test_answers = self.pool['survey.user_input'].search(cr, uid, [('survey_id', 'in', context['active_ids']), ('test_entry', '=', 'True')], context=context)
-                    self.pool['survey.user_input'].unlink(cr, uid, test_answers, context=context)
+                    test_answers = env['survey.user_input'].search([('survey_id', 'in', context['active_ids']), ('test_entry', '=', 'True')]).unlink()
             </field>
         </record>
 
