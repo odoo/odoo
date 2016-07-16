@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="sagawa_view_partner_form" model="ir.ui.view">
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='website']" position="after">
+                <field name="mom_company_id" />
+            </xpath>
+        </field>
+        </record>
+    </data>
+</openerp>

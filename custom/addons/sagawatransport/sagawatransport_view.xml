@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="sagawa_view_order_form" model="ir.ui.view">
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+
+        <xpath expr="//notebook" position="attributes" >
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+            <xpath expr="//field[@name='validity_date']" position="before">
+            <field name="paid_company_id" groups="base.group_sale_manager"/>
+          </xpath>
+
+
+            <xpath expr="//field[@name='partner_id']" position="after">
+            <field name="crm_lead_id" groups="base.group_sale_manager"/>
+          </xpath>
+
+
+            <xpath expr="//field[@name='partner_id']" position="after">
+            <field name="is_templete" groups="base.group_sale_manager"/>
+          </xpath>
+
+          <xpath expr="//field[@name='payment_term_id']" position="after">
+            <field name="total_confirm_sale"/>
+          </xpath>
+          <xpath expr="//field[@name='is_templete']" position="after">
+            <field name="templete_id"/>
+          </xpath>
+             <xpath expr="//field[@name='is_templete']" position="after">
+            <field name="is_copied" invisible="1"/>
+          </xpath>
+
+          <xpath expr="//sheet">
+            <field name="order_details"/>
+          </xpath>
+
+        </field>
+        </record>
+
+
+        <record id="sagawa_view_quotation_tree" model="ir.ui.view">
+        <field name="inherit_id" ref="sale.view_quotation_tree" />
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <field name="amount_total" position="attributes">
+                <attribute name = "invisible">1</attribute>
+            </field>
+            <xpath expr="//field[@name='user_id']" position="after">
+            <field name="total_confirm_sale" sum="Total:"/>
+          </xpath>
+        </field>
+        </record>
+
+        <record id="sagawa_view_oppor_form" model="ir.ui.view">
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor" />
+        <field name="model">crm.lead</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='team_id']" position="after">
+                <field name="co_users_ids"  widget="many2many_tags"/>
+            </xpath>
+        </field>
+        </record>
+
+    </data>
+</openerp>
