@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-06 07:28+0000\n"
-"PO-Revision-Date: 2016-07-06 14:52+0000\n"
+"PO-Revision-Date: 2016-07-14 11:36+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_product_product_mo_count
 #: model:ir.model.fields,field_description:mrp.field_product_template_mo_count
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "製造オーダ数"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:332
@@ -198,7 +198,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work orders"
-msgstr ""
+msgstr "作業オーダの詳細計画を行う"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_rounding_efficiency
@@ -320,7 +320,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
 msgid "Bills of materials may produce residual products (A + B --> C + D)"
-msgstr ""
+msgstr "BOMに副産品を設定する (A + B --> C + D)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_procurement_order_bom_id
@@ -356,7 +356,7 @@ msgstr "シリアル番号"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_byproduct
 msgid "By-Products"
-msgstr ""
+msgstr "副産品"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:227
@@ -703,7 +703,7 @@ msgstr "表示名"
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_operations:0
 msgid "Do not use a planning for the work orders "
-msgstr ""
+msgstr "作業オーダの詳細計画を行わない"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -809,7 +809,7 @@ msgstr "工順作業区のリスト表示順に使われます。"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_sequence
 msgid "Gives the sequence order when displaying a list of work orders."
-msgstr "作業オーダーリストの表示の際には並びの順序を与えます。"
+msgstr "作業オーダリストの表示の際には並びの順序を与えます。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_sequence
@@ -935,7 +935,7 @@ msgstr "完成した製品を必要とされる場所で製造する場合は空
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_message_last_post
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "最終メッセージ日"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty___last_update
@@ -1033,22 +1033,22 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.config.settings,group_mrp_routings:0
 msgid "Manage production by manufacturing orders"
-msgstr ""
+msgstr "製造オーダにて製造を管理"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_mrp_routings:0
 msgid "Manage production by work orders"
-msgstr ""
+msgstr "作業オーダにて製造を管理"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_rounding_efficiency
 msgid "Manage rounding and efficiency of BoM components"
-msgstr ""
+msgstr "丸めや歩留まりを部品表構成品に設定"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_rounding_efficiency:0
 msgid "Manage rounding and efficiency of bills of materials components"
-msgstr ""
+msgstr "丸めや歩留まりを部品表構成品に設定する"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -1088,7 +1088,7 @@ msgstr "製造"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_efficiency
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_efficiency
 msgid "Manufacturing Efficiency"
-msgstr "製造の効率化"
+msgstr "歩留まり"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product_produce_delay
@@ -1103,13 +1103,13 @@ msgstr "製造リードタイム"
 #: model:ir.model.fields,field_description:mrp.field_procurement_order_production_id
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Manufacturing Order"
-msgstr "製造オーダー"
+msgstr "製造オーダ"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:112
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
-msgstr ""
+msgstr "製造オーダ <em>%s</em> が作成されました。"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_mrp_production
@@ -1127,17 +1127,17 @@ msgstr "製造オーダ"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are currently in production."
-msgstr "現在製造中の製造オーダー"
+msgstr "現在製造中の製造オーダ"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are ready to start production."
-msgstr "製造開始準備ができた製造オーダーです。"
+msgstr "製造開始準備ができた製造オーダ。"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are waiting for raw materials."
-msgstr "原材料を待っている製造オーダーです。"
+msgstr "原材料を待っている製造オーダ。"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1222,12 +1222,12 @@ msgstr "追跡なし"
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
 msgid "No by-products in bills of materials (A + B --> C)"
-msgstr ""
+msgstr "BOMに副産品を設定しない (A + B --> C)"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_rounding_efficiency:0
 msgid "No rounding and efficiency on bills of materials"
-msgstr ""
+msgstr "丸めや歩留まりを部品表に設定しない"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
@@ -1323,7 +1323,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 msgid "Operation"
-msgstr "運用"
+msgstr "作業"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
@@ -1333,7 +1333,7 @@ msgstr "オーダ計画"
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
-msgstr "オーダー数量は負または0にはできません。"
+msgstr "オーダ数量は負または0にはできません。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_bom_id
@@ -1656,7 +1656,7 @@ msgstr "参照は会社ごとに固有でなければいけません。"
 #: model:ir.model.fields,help:mrp.field_mrp_production_origin
 msgid ""
 "Reference of the document that generated this production order request."
-msgstr "この製造オーダー要求を生成したドキュメントへの参照"
+msgstr "この製造オーダ要求を生成したドキュメントへの参照"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_position
@@ -1671,7 +1671,7 @@ msgstr "そのアクセスを管理するためのリソースに関連するユ
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Reserve"
-msgstr "準備金"
+msgstr "引当"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_id
@@ -1707,7 +1707,7 @@ msgstr "丸めは製品数量に適用されます。"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_rounding_efficiency
 msgid "Rounding efficiency"
-msgstr ""
+msgstr "丸めと歩留まり"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_routing_id
@@ -2259,7 +2259,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_operations
 msgid "Work Order Planning"
-msgstr ""
+msgstr "作業オーダ計画"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view

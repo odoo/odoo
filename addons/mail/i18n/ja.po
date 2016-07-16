@@ -4,12 +4,13 @@
 # 
 # Translators:
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 14:27+0000\n"
-"PO-Revision-Date: 2016-07-06 15:10+0000\n"
+"PO-Revision-Date: 2016-07-14 11:36+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -236,7 +237,7 @@ msgid ""
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">the current search filter</span>.\n"
 "                            </span>\n"
 "                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n<strong>Email mass mailing</strong> on\n<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">選択されたレコード</span>\n<span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">現在の検索フィルター</span>.\n</span>\n<span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">ドキュメントフォロワーおよび...</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -372,7 +373,7 @@ msgstr "署名を追加する"
 #: code:addons/mail/static/src/xml/client_action.xml:44
 #, python-format
 msgid "Add a channel"
-msgstr ""
+msgstr "チャネルを追加"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
@@ -588,7 +589,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_partner_opt_out_search
 msgid "Available for mass mailing"
-msgstr ""
+msgstr "一括メール送信可"
 
 #. module: mail
 #. openerp-web
@@ -662,7 +663,7 @@ msgstr "変更"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field
 msgid "Changed Field"
-msgstr ""
+msgstr "変更された項目"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_channel_id
@@ -709,17 +710,17 @@ msgstr ""
 #: model:ir.actions.client,name:mail.mail_channel_action_client_chat
 #, python-format
 msgid "Chat"
-msgstr ""
+msgstr "チャット"
 
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Chat Discussion"
-msgstr ""
+msgstr "チャットディスカッション"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
 msgid "Chat Shortcode"
-msgstr ""
+msgstr "チャットショートコード"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_child_ids
@@ -748,7 +749,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:324
 #, python-format
 msgid "Click here to add new %s"
-msgstr ""
+msgstr "クリックして新規に %s を追加してください。"
 
 #. module: mail
 #: model:ir.actions.act_window,help:mail.action_contacts
@@ -825,7 +826,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:24
 #, python-format
 msgid "Congratulations, your inbox is empty"
-msgstr ""
+msgstr "すばらしい！受信箱はカラです。"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_contacts
@@ -861,7 +862,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/systray.xml:14
 #, python-format
 msgid "Conversations"
-msgstr ""
+msgstr "会話"
 
 #. module: mail
 #. openerp-web
@@ -1014,12 +1015,12 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:42
 #, python-format
 msgid "Direct Messages"
-msgstr ""
+msgstr "ダイレクトメッセージ"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_channel_menu_root_chat
 msgid "Discuss"
-msgstr ""
+msgstr "ディスカス"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
@@ -1384,7 +1385,7 @@ msgstr "グループ"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Has attachments"
-msgstr ""
+msgstr "添付あり"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_headers
@@ -1634,7 +1635,7 @@ msgstr "言語"
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_last_post
 #: model:ir.model.fields,field_description:mail.field_res_users_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "最終メッセージ日"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview___last_update
@@ -1793,14 +1794,14 @@ msgstr "メールオプトアウト"
 #: code:addons/mail/static/src/xml/client_action.xml:125
 #, python-format
 msgid "Mark all as read"
-msgstr ""
+msgstr "全て既読にする"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:125
 #, python-format
 msgid "Mark all read"
-msgstr ""
+msgstr "全て既読にする"
 
 #. module: mail
 #. openerp-web
@@ -2016,7 +2017,7 @@ msgstr "作成した報告書ファイルの名称\n拡張子を省略すると�
 #: model:ir.model.fields,help:mail.field_mail_message_needaction
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Need Action"
-msgstr ""
+msgstr "要アクション"
 
 #. module: mail
 #: selection:res.partner,notify_email:0
@@ -2076,7 +2077,7 @@ msgstr "新規メッセージ"
 #: code:addons/mail/static/src/xml/thread.xml:25
 #, python-format
 msgid "New messages appear here."
-msgstr ""
+msgstr "新規メッセージはここに表示されます。"
 
 #. module: mail
 #. openerp-web
@@ -2191,7 +2192,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "Odoo needs your permission to"
-msgstr ""
+msgstr "許可しますか？"
 
 #. module: mail
 #. openerp-web
@@ -2271,7 +2272,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:46
 #, python-format
 msgid "Open chat"
-msgstr ""
+msgstr "チャットを開く"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner_opt_out
@@ -2517,7 +2518,7 @@ msgstr "プライバシー"
 #: code:addons/mail/static/src/xml/client_action.xml:44
 #, python-format
 msgid "Private Channels"
-msgstr ""
+msgstr "プライベートチャネル"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:176
@@ -2746,7 +2747,7 @@ msgstr "メッセージを送信"
 #: code:addons/mail/static/src/xml/client_action.xml:135
 #, python-format
 msgid "Send mail"
-msgstr ""
+msgstr "メール送信"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_email_send
@@ -3429,7 +3430,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "enable desktop notifications"
-msgstr ""
+msgstr "デスクトップ通知を有効化"
 
 #. module: mail
 #. openerp-web
