@@ -40,6 +40,9 @@ from ${object.company_id.name}.
 </p>
 <p>If you have any question, do not hesitate to contact us.</p>
 <p>Best regards,</p>
+% if object.user_id and object.user_id.signature:
+    ${object.user_id.signature | safe}
+% endif
 ]]></field>
         </record>
     </data>
