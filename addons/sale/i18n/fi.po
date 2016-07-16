@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-06-21 06:41+0000\n"
+"PO-Revision-Date: 2016-07-15 13:36+0000\n"
 "Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -246,7 +246,7 @@ msgstr "Salli analyyttisen tilin määrittelyn myyntitilaukselle."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_amount
 msgid "Amount of sales to invoice"
-msgstr ""
+msgstr "Laskutettavien myyntien määrä"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_project_id
@@ -303,7 +303,7 @@ msgstr "Peruttu"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_invoices
 msgid "Check this box to manage invoices in this sales team."
-msgstr ""
+msgstr "Valitse tämä hallitaksesi laskuja tässä myyntitiimissä."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_quotations
@@ -414,7 +414,7 @@ msgstr "Asiakasverot"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Customer portal"
-msgstr ""
+msgstr "Asiakasportaali"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_date
@@ -557,17 +557,17 @@ msgstr "Valmis"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:70
 #, python-format
 msgid "Down Payment"
-msgstr ""
+msgstr "Ennakkomaksu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
 msgid "Down Payment Amount"
-msgstr ""
+msgstr "Ennakkomaksun määrä"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
 msgid "Down Payment Product"
-msgstr ""
+msgstr "Ennakkomaksun tuote"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -583,7 +583,7 @@ msgstr "Ennakkomaksu (prosenttiosuus)"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:67
 #, python-format
 msgid "Down payment of %s%%"
-msgstr ""
+msgstr "Ennakkomaksu: %s%%"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -809,12 +809,12 @@ msgstr "Laskutettu"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoiced Quantity"
-msgstr ""
+msgstr "Laskutettu määrä"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced
 msgid "Invoiced This Month"
-msgstr ""
+msgstr "Laskutettu tässä kuussa"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -912,12 +912,12 @@ msgstr "Viimeksi päivitetty"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
 msgid "Manage subscriptions and recurring invoicing"
-msgstr ""
+msgstr "Hallitse tilauksia ja toistuvaa laskutusta"
 
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Manually set quantities on order"
-msgstr ""
+msgstr "Aseta manuaalisesti määrät tilaukselle"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
@@ -968,7 +968,7 @@ msgstr "Ei sallita alennuksia myyntitilausriveillä, vain asiakashinnastot ja -a
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "No incoterm on reports"
-msgstr ""
+msgstr "Ei incotermiä raporteille"
 
 #. module: sale
 #: selection:sale.config.settings,group_product_variant:0
@@ -1045,7 +1045,7 @@ msgstr "Tilaus"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order #"
-msgstr ""
+msgstr "Tilausnro"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_date_order
@@ -1104,7 +1104,7 @@ msgstr "Tilatut määrät"
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr ""
+msgstr "Lisämyytävät tilaukset"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1120,12 +1120,12 @@ msgstr "Kumppani"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_country_id
 msgid "Partner Country"
-msgstr ""
+msgstr "Kumppanin maa"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Partner's Country"
-msgstr ""
+msgstr "Kumppanin maa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
@@ -1327,7 +1327,7 @@ msgstr "Myyntitarjoukset"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Quotations & Sales"
-msgstr ""
+msgstr "Tarjoukset ja myyntitilaukset"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -1405,7 +1405,7 @@ msgstr "Myyntianalyysi"
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Sales Done"
-msgstr ""
+msgstr "Myynti valmis"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
@@ -1415,7 +1415,7 @@ msgstr "\"Myyntisuppilo\""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Sales Information"
-msgstr ""
+msgstr "Myyntitiedot"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -1554,7 +1554,7 @@ msgstr "Merkitse valmiiksi"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr ""
+msgstr "Aseta tarjoukseksi"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1574,7 +1574,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_pricelist_item
 msgid "Show pricelists to customers"
-msgstr ""
+msgstr "Näytä hinnastot asiakkaille"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
@@ -1597,7 +1597,7 @@ msgstr "Tila"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Subscriptions"
-msgstr ""
+msgstr "Tilaukset"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_subtotal
@@ -1640,7 +1640,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
 msgid "The amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "Ennakkoon laskutettava määrä ilman veroja."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_project_id
@@ -1689,7 +1689,7 @@ msgstr ""
 #: code:addons/sale/sale.py:316
 #, python-format
 msgid "There is no invoicable line."
-msgstr ""
+msgstr "Ei laskutettavaa riviä."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1827,13 +1827,13 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Upselling"
-msgstr ""
+msgstr "Lisämyynti"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
-msgstr ""
+msgstr "Lisämyynnin mahdollisuus"
 
 #. module: sale
 #: model:web.tip,description:sale.sale_tip_2
@@ -1887,13 +1887,13 @@ msgstr "Väärä arvo syötetty!"
 msgid ""
 "You can not remove a sale order line.\n"
 "Discard changes and try setting the quantity to 0."
-msgstr ""
+msgstr "Myyntitilausriviä ei voida poistaa.\nHylkää muutokset ja aseta määräksi 0."
 
 #. module: sale
 #: code:addons/sale/sale.py:153
 #, python-format
 msgid "You can only delete draft quotations!"
-msgstr ""
+msgstr "Voit poistaa ainoastaan luonnos-tilassa olevia tarjouksia!."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
