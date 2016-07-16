@@ -19,7 +19,6 @@
 % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
 % set access_name = is_online and object.template_id and 'Accept and pay %s online' % doc_name or 'View %s' % doc_name
 % set access_url = is_online and access_action['url'] or object.get_signup_url()
-
 <p>Dear
 % if object.partner_id.is_company and object.child_ids:
     ${object.partner_id.child_ids[0].name}
@@ -41,6 +40,9 @@ from ${object.company_id.name}.
 </p>
 <p>If you have any question, do not hesitate to contact us.</p>
 <p>Best regards,</p>
+% if object.user_id and object.user_id.signature:
+    ${object.user_id.signature | safe}
+% endif
 ]]></field>
         </record>
 
