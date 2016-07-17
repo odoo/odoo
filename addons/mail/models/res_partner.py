@@ -154,8 +154,8 @@ class Partner(models.Model):
 
         # existing custom notification email
         base_template = None
-        if message.model:
-            base_template = self.env.ref('mail.mail_template_data_notification_email_%s' % message.model.replace('.', '_'), raise_if_not_found=False)
+        if message.model and self._context.get('custom_layout', False):
+            base_template = self.env.ref(self._context['custom_layout'], raise_if_not_found=False)
         if not base_template:
             base_template = self.env.ref('mail.mail_template_data_notification_email_default')
 

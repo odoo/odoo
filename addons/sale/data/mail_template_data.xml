@@ -53,7 +53,7 @@ from ${object.company_id.name}.
         </record>
 
         <!--Default Notification Email template for invoices-->
-        <record id="mail.mail_template_data_notification_email_sale_order" model="mail.template">
+        <record id="sale.mail_template_data_notification_email_sale_order" model="mail.template">
             <field name="name">Sale Order Notification Email</field>
             <field name="subject">${object.subject}</field>
             <field name="model_id" ref="mail.model_mail_message"/>
@@ -61,7 +61,7 @@ from ${object.company_id.name}.
             <field name="body_html"><![CDATA[<html>
                 <head></head>
                 <body style="margin: 0; padding: 0;">
-                <table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed">
+                <table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed" class="o_mail_notification">
                     <tbody>
 
                       <!-- HEADER -->
