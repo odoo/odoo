@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-07-06 15:10+0000\n"
+"PO-Revision-Date: 2016-07-14 14:10+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -550,7 +550,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_discount
 msgid "Add a Global Discount"
-msgstr "全体割引を追加"
+msgstr "グローバル値引を追加"
 
 #. module: point_of_sale
 #. openerp-web
@@ -583,7 +583,7 @@ msgstr "レジでのレシート再発行を許可"
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_discount:0
 msgid "Allow discounts on order lines only"
-msgstr "注文明細行 上のみ割引を適用"
+msgstr "オーダ明細上のみ値引を適用"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_share
@@ -598,7 +598,7 @@ msgstr "外部ユーザの登録を許可"
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_discount:0
 msgid "Allow global discounts"
-msgstr "全注文に対して割引を適用"
+msgstr "グローバル値引を適用"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_google_calendar
@@ -658,7 +658,7 @@ msgstr "金額合計"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_name
 msgid "An internal identification of the point of sale"
-msgstr "販売時点の内部識別"
+msgstr "POSの内部識別"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
@@ -669,7 +669,7 @@ msgstr "適用"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_discount
 msgid "Apply Discount"
-msgstr "割引適用"
+msgstr "値引適用"
 
 #. module: point_of_sale
 #. openerp-web
@@ -713,7 +713,7 @@ msgstr "利用可能な支払方法"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_available_in_pos
 msgid "Available in the Point of Sale"
-msgstr "販売時点で利用可能"
+msgstr "POSで利用可能"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_average_price
@@ -938,7 +938,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_template_available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
-msgstr "この製品を販売時点で表示する場合はチェックします。"
+msgstr "この製品をPOSで表示する場合はチェックします。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_cash_control
@@ -1376,28 +1376,28 @@ msgstr "理論終了残高と実際終了残高の差異"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:139
 #, python-format
 msgid "Disc"
-msgstr "割引"
+msgstr "値引"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_disc
 msgid "Disc."
-msgstr "割引"
+msgstr "値引"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_pos_discount
 msgid "Discount"
-msgstr "割引"
+msgstr "値引"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_discount
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_discount
 msgid "Discount (%)"
-msgstr "割引（%）"
+msgstr "値引 (%)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_notice
 msgid "Discount Notice"
-msgstr "割引注記"
+msgstr "値引注記"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1405,7 +1405,7 @@ msgstr "割引注記"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1313
 #, python-format
 msgid "Discount:"
-msgstr "割引："
+msgstr "値引:"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1602
@@ -1418,7 +1418,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:791
 #, python-format
 msgid "Discounts"
-msgstr "割引"
+msgstr "値引"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_display_categ_images
@@ -1673,12 +1673,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_fiscal_position_id
 msgid "Fiscal Position"
-msgstr "顧客の財政状況"
+msgstr "会計ポジション"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_fiscal_position_ids
 msgid "Fiscal Positions"
-msgstr "顧客の財政状況"
+msgstr "会計ポジション"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
@@ -1720,7 +1720,7 @@ msgstr "仕訳の生成"
 msgid ""
 "Generate all sale journal entries for non invoiced orders linked to a closed"
 " cash register or statement."
-msgstr "閉じたキャッシュレジスタや取引明細書に関連する請求書なしのオーダーのための全ての仕訳を生成します。"
+msgstr "閉じたキャッシュレジスタや取引明細書に関連する請求書なしのオーダのための全ての仕訳を生成します。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_portal
@@ -2460,7 +2460,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_date_order
 #: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_month_date_order
 msgid "Order Date"
-msgstr "オーダー日"
+msgstr "オーダ日"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_sequence_id
@@ -2476,13 +2476,13 @@ msgstr "受注明細"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Order Month"
-msgstr ""
+msgstr "オーダ月"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_order_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_name
 msgid "Order Ref"
-msgstr "オーダー参照"
+msgstr "オーダ参照"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_sequence_number
@@ -2492,7 +2492,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Order lines"
-msgstr "オーダー行"
+msgstr "オーダ明細"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2507,7 +2507,7 @@ msgstr "オーダー行"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, python-format
 msgid "Orders"
-msgstr "オーダー"
+msgstr "オーダ"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all
@@ -2544,22 +2544,22 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
 msgid "POS Order line"
-msgstr "POSオーダー行"
+msgstr "POSオーダ明細"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "POS Order lines"
-msgstr "POSオーダー行"
+msgstr "POSオーダ明細"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
 msgid "POS Orders"
-msgstr "POSオーダー"
+msgstr "POSオーダ"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree_all_sales_lines
 msgid "POS Orders lines"
-msgstr "POSオーダー行"
+msgstr "POSオーダ明細"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_sales_by_user_pos_calendar
@@ -2572,7 +2572,7 @@ msgstr "POSレポート"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "POS ordered created during current year"
-msgstr "現在年中に作成されたPOSオーダー"
+msgstr "今年中に作成されたPOSオーダ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line_pos_statement_id
@@ -2749,7 +2749,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:stock.picking.type,name:point_of_sale.picking_type_posout
 msgid "PoS Orders"
-msgstr "POSオーダー"
+msgstr "POSオーダ"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
@@ -2779,7 +2779,7 @@ msgstr "POS分析"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_pos_categ_id
 msgid "Point of Sale Category"
-msgstr "販売時点カテゴリ"
+msgstr "POSカテゴリ"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
@@ -2800,18 +2800,18 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_name
 msgid "Point of Sale Name"
-msgstr "販売時点名"
+msgstr "POS名"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Point of Sale Orders"
-msgstr "POSオーダー"
+msgstr "POSオーダ"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Statistics"
-msgstr "POSオーダー統計"
+msgstr "POSオーダ統計"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
@@ -2924,7 +2924,7 @@ msgstr "プロキシ経由で印刷"
 #: code:addons/point_of_sale/static/src/js/chrome.js:376
 #, python-format
 msgid "Printer"
-msgstr ""
+msgstr "プリンタ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4066,7 +4066,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_total_discount
 msgid "Total Discount"
-msgstr "合計割引"
+msgstr "合計値引"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_price_total
@@ -4442,7 +4442,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:325
 #, python-format
 msgid "ZIP"
-msgstr ""
+msgstr "郵便番号"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.courgette
