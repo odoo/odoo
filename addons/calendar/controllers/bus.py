@@ -4,10 +4,7 @@ from openerp.http import request
 
 
 class CalendarBusController(openerp.addons.bus.controllers.main.BusController):
-    # --------------------------
-    # Extends BUS Controller Poll
-    # --------------------------
-    def _poll(self, dbname, channels, last, options):
+    def _get_channels(self, channels):
         if request.session.uid:
             channels.append((request.db, 'calendar.alarm', request.env.user.partner_id.id))
-        return super(CalendarBusController, self)._poll(dbname, channels, last, options)
+        return super(CalendarBusController, self)._get_channels(channels)

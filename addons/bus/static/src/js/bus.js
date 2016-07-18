@@ -18,11 +18,10 @@ bus.Bus = Widget.extend({
         var self = this;
         this._super();
         this.options = {};
-        this.activated = false;
         this.channels = [];
         this.last = 0;
-        this.stop = false;
         this.is_master = true;
+        this.source = null;
 
         // bus presence
         this.last_presence = new Date().getTime();
@@ -43,57 +42,45 @@ bus.Bus = Widget.extend({
         });
     },
     start_polling: function(){
-        if(!this.activated){
-            this.poll();
-            this.stop = false;
+        if (!this.source) {
+            // TODO: pass channels, options
+            // var data = {channels: self.channels, options: options};
+            var s = this.source = new EventSource('/longpolling/stream?channels=' + this.channels.join(','));
+            // TODO: do something on s.onerror?
+            s.onmessage = function (e) {
+                this.on_notification([JSON.parse(e.data)]);
+            }.bind(this);
         }
+    },
+    restart_polling: function () {
+        if (this.source) {
+            this.source.close();
+            this.source = null;
+        }
+        this.start_polling();
     },
     stop_polling: function(){
-        this.activated = false;
-        this.stop = true;
+        if (this.source) {
+            this.source.close();
+            this.source = null;
+        }
         this.channels = [];
     },
-    poll: function() {
-        var self = this;
-        self.activated = true;
-        var now = new Date().getTime();
-        var options = _.extend({}, this.options, {
-            bus_inactivity: now - this.get_last_presence(),
-        });
-        if (this.last_partners_presence_check + PARTNERS_PRESENCE_CHECK_PERIOD > now) {
-            options = _.omit(options, 'bus_presence_partner_ids');
-        } else {
-            this.last_partners_presence_check = now;
-        }
-        var data = {channels: self.channels, last: self.last, options: options};
-        session.rpc('/longpolling/poll', data, {shadow : true}).then(function(result) {
-            self.on_notification(result);
-            if(!self.stop){
-                self.poll();
-            }
-        }, function(unused, e) {
-            // no error popup if request is interrupted or fails for any reason
-            e.preventDefault();
-            // random delay to avoid massive longpolling
-            setTimeout(_.bind(self.poll, self), bus.ERROR_DELAY + (Math.floor((Math.random()*20)+1)*1000));
-        });
-    },
     on_notification: function(notifications) {
-        var self = this;
         var notifs = _.map(notifications, function (notif) {
-            if (notif.id > self.last) {
-                self.last = notif.id;
-            }
             return [notif.channel, notif.message];
         });
         this.trigger("notification", notifs);
     },
+    // reconnect with different channels
     add_channel: function(channel){
         this.channels.push(channel);
         this.channels = _.uniq(this.channels);
+        this.restart_polling();
     },
     delete_channel: function(channel){
         this.channels = _.without(this.channels, channel);
+        this.restart_polling();
     },
     // bus presence : window focus/unfocus
     focus_change: function(focus) {
