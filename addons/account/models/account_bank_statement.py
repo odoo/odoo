@@ -101,7 +101,7 @@ class AccountBankStatement(models.Model):
             journals = self.env['account.journal'].search([('type', '=', journal_type), ('company_id', '=', company_id)])
             if journals:
                 return journals[0]
-        return False
+        return self.env['account.journal']
 
     @api.multi
     def _get_opening_balance(self, journal_id):
