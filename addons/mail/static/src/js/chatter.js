@@ -5,6 +5,9 @@ var chat_manager = require('mail.chat_manager');
 var composer = require('mail.composer');
 var ChatThread = require('mail.ChatThread');
 var utils = require('mail.utils');
+var Widget = require('web.Widget');
+var Model = require("web.Model");
+var ActivityLog = require('mail.ActivityLog');
 
 var config = require('web.config');
 var core = require('web.core');
@@ -279,6 +282,9 @@ var Chatter = form_common.AbstractField.extend({
     events: {
         "click .o_chatter_button_new_message": "on_open_composer_new_message",
         "click .o_chatter_button_log_note": "on_open_composer_log_note",
+        "click .o_edit_activity": "on_open_schedule_activity",
+        "click .o_remove_activity": "on_remove_activity",
+        "click .o_mark_as_done": "on_mark_as_done",
     },
 
     init: function () {
@@ -314,6 +320,9 @@ var Chatter = form_common.AbstractField.extend({
             this.followers.on('followers_update', this, this.on_followers_update);
         }
 
+        self.activity = new ActivityLog(self.view.datarecord.id, self.view.model);
+        self.activity.replace(self.$('.o_mail_activity'));
+
         this.thread = new ChatThread(this, {
             display_order: ChatThread.ORDER.DESC,
             display_document_link: false,
@@ -337,6 +346,38 @@ var Chatter = form_common.AbstractField.extend({
             chat_manager.bus.on('update_message', self, self.on_update_message);
             self.ready.resolve();
         });
+    },
+
+    on_open_schedule_activity: function(event) {
+        var self = this,
+            activity_id = this.$(event.currentTarget).data('activity-id') || false,
+            action = this.activity.add_activity_action(activity_id);
+        this.do_action(action, {
+            on_close: function() {
+                self.activity.fetch_and_render_activity_log();
+            },
+        });
+    },
+
+    on_remove_activity: function (event) {
+        event.preventDefault();
+        var self = this,
+            activity_id =  this.$(event.currentTarget).data('activity-id') || false;
+        this.activity.remove_activity_log(activity_id)
+            .then(function (res) {
+                self.activity.fetch_and_render_activity_log();
+            })
+    },
+    on_mark_as_done: function (event) {
+        event.preventDefault();
+        var self = this,
+            activity_id =  this.$(event.currentTarget).data('activity-id') || false;
+        this.activity.mark_as_done(activity_id)
+            .then(function (msg_id) {
+                self.activity.fetch_and_render_activity_log();
+                self.msg_ids.unshift(msg_id);
+                self.fetch_and_render_thread(self.msg_ids);
+            });
     },
 
     check_visibility: function () {
@@ -471,6 +512,11 @@ var Chatter = form_common.AbstractField.extend({
             this.mute_new_message_button(false);
         }
 
+        // fetch and render activity of current document
+        if (this.activity){
+            this.activity.update_activity(this.model, this.res_id);
+        }
+
         // fetch and render messages of current document
         return this.fetch_and_render_thread(this.msg_ids);
     },
@@ -504,7 +550,7 @@ var Chatter = form_common.AbstractField.extend({
         this.composer.on('input_focused', this, function () {
             this.composer.mention_set_prefetched_partners(this.mention_suggestions || []);
         });
-        this.composer.insertBefore(this.$('.o_mail_thread')).then(function () {
+        this.composer.insertBefore(this.$('.o_mail_activity')).then(function () {
             // destroy existing composer
             if (old_composer) {
                 old_composer.destroy();
@@ -543,5 +589,4 @@ var Chatter = form_common.AbstractField.extend({
 core.form_widget_registry.add('mail_thread', Chatter);
 
 return Chatter;
-
 });

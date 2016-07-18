@@ -12,8 +12,10 @@
                 <group>
                     <group>
                         <field name="description"/>
+                    </group>
+                    <group>
+                        <field name="icon"/>
                         <field name="days"/>
-                        <field name="default"/>
                     </group>
                 </group>
             </form>
@@ -27,6 +29,7 @@
             <tree string="Activities">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
+                <field name="icon"/>
                 <field name="days"/>
             </tree>
         </field>
@@ -37,14 +40,89 @@
         <field name="res_model">mail.activity</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="oe_view_nocontent_create">Click to create a new activity.</p>
+    </record>
+
+    <!-- Mail Activity Log -->
+
+    <record id="mail_activity_log_view_form" model="ir.ui.view">
+        <field name="name">mail.activity.log.form.popup</field>
+        <field name="model">mail.activity.log</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form string="Log an Activity" create="false">
+                <sheet string="Activity">
+                    <div class="oe_button_box" name="button_box" invisible="not context.get('state_btn')">
+                        <button name="open_related_document" type="object" string="Document" class="oe_stat_button" icon="fa-file-text-o" />
+                    </div>
+                    <div class="oe_title" invisible="not context.get('state_btn')">
+                        <label for="record_name" class="oe_edit_only"/>
+                        <h1><field name="record_name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <field name="res_id" invisible="1"/>
+                        <field name="model" invisible="1"/>
+                        <group>
+                            <field name="next_activity_id" required="1" options="{'no_create': True, 'no_open': True}" />
+                            <field name="title_action" placeholder="e.g. Discuss proposal"/>
+                        </group>
+                        <group>
+                            <field name="date_action"/>
+                        </group>
+                    </group>
+                    <field name="note" placeholder="Log a note..."/>
+                    <footer invisible="context.get('state_btn')">
+                        <button string="Save"
+                            name="close_dialog" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
+                    </footer>
+                </sheet>
+            </form>
         </field>
     </record>
 
-    <!-- <menuitem
-        id="mail_activity_menu"
-        name="Activities"
-        action="mail_activity_action"
-        parent="sales_team.menu_mail_config_lead"/> -->
+    <record id="view_actvity_log_search" model="ir.ui.view">
+        <field name="name">mail.activity.log.search</field>
+        <field name="model">mail.activity.log</field>
+        <field name="arch" type="xml">
+            <search string="Activity">
+                <field name="model" string="Model"/>
+                <field name="title_action"/>
+                <field name="next_activity_id"/>
+                <separator/>
+                <filter string="My Activities" name="my_activity"
+                        domain="[('create_uid', '=', uid)]"/>
+                <filter string="Today Activities" name="today"
+                        domain="[('date_action', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="This Week Activities" name="this_week"
+                        domain="['&amp;', ('date_action', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                 ('date_action', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                        ]"/>
+                <filter string="Overdue Activities" name="overdue"
+                        domain="[('date_action', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Due Date" name="date_action" context="{'group_by':'date_action'}"/>
+                    <filter string="Created By" name="created_by" context="{'group_by':'create_uid'}"/>
+                    <filter string="Activity" name="activity" context="{'group_by':'next_activity_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="mail_activity_log_view" model="ir.ui.view">
+        <field name="name">mail.activity.log.tree</field>
+        <field name="model">mail.activity.log</field>
+        <field name="arch" type="xml">
+            <tree string="Next Activity"
+                decoration-danger="date_action &lt; current_date"
+                decoration-success="date_action == current_date"
+                default_order="date_action" create="false">
+                <field name="record_name" string="Name"/>
+                <field name="next_activity_id"/>
+                <field name="title_action"/>
+                <field name="date_action"/>
+            </tree>
+        </field>
+    </record>
 </odoo>

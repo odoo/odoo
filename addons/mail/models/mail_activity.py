@@ -4,6 +4,7 @@
 from datetime import date, datetime, timedelta
 
 from odoo import api, fields, models, _
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class MailActivity(models.Model):
@@ -29,6 +30,8 @@ class MailActivityLog(models.Model):
     _order = "create_date desc"
     _rec_name = 'title_action'
 
+    DUE_DAYS = 15
+
     res_id = fields.Integer('Related Document ID', index=True)
     record_name = fields.Char('Activity Record Name', help="Display name of the related document.")
     model = fields.Char('Related Document Model', index=True)
@@ -40,6 +43,7 @@ class MailActivityLog(models.Model):
     state = fields.Selection([('overdue', 'Overdue'), ('today', 'Today'), ('planned', 'Planned')],
                              compute="_compute_state", default="planned")
 
+    @api.depends('date_action')
     def _compute_state(self):
         today = date.today()
         for record in self:
@@ -54,50 +58,71 @@ class MailActivityLog(models.Model):
 
     @api.onchange('next_activity_id')
     def onchange_next_activity_id(self):
-        if not self.title_action:
-            self.title_action = self.next_activity_id.description
+        self.title_action = self.next_activity_id.description
         if self.next_activity_id.days:
             self.date_action = (datetime.now() + timedelta(days=self.next_activity_id.days))
 
+    @api.model
+    def create(self, vals):
+        res_id = vals.get('res_id')
+        model = vals.get('model')
+        vals['record_name'] = self.env[model].browse(res_id).display_name
+        return super(MailActivityLog, self).create(vals)
+
     @api.multi
-    def action_mark_as_done(self):
-        msg = None
+    def mark_as_done(self):
+        msg_id = None
         for log in self:
             body_html = """
                 <div>
-                    <p>%(title)s</p>
-                    <p><span class='fa %(icon)s' /> %(activity_name)s - <i>%(title_action)s</i></p>
-                    <p>%(note)s</p>
+                    <strong>%(name)s - <i>%(title_action)s</i></strong>
+                    <br />
+                    %(note)s
                 </div> """ % {
-                    'title': _('Activity Done'),
-                    'icon': log.icon,
-                    'activity_name': log.next_activity_id.name,
-                    'title_action': log.title_action or '',
+                    'name': log.next_activity_id.name,
+                    'title_action': log.title_action,
                     'note': log.note or '',
                 }
-            msg = self.env[log.model].browse(log.res_id).message_post(body_html, subject=log.title_action, subtype_id=log.next_activity_id.subtype_id.id)
+            msg_id = self.env[log.model].browse(log.res_id).message_post(body_html, subject=log.title_action, subtype_id=log.next_activity_id.subtype_id.id).id
         # Because activity already logged in chatter
         self.unlink()
-        return msg.id
+        return msg_id
 
     @api.multi
-    def action_remove_activity_log(self):
-        if not self:
-            return False
+    def remove_activity_log(self):
         return self.unlink()
+
+    @api.multi
+    def close_dialog(self):
+        return {'type': 'ir.actions.act_window_close'}
 
     @api.model
     def fetch_activity_logs(self, res_id, model, limit=None):
         activity_logs = self.search_read(domain=[('res_id', '=', res_id), ('model', '=', model)],
                                          fields=[], limit=limit, order="date_action")
+        lang_code = self.env.user.lang or 'en_US'
+        date_format = self.env['res.lang']._lang_get(lang_code).date_format
         today = fields.Date.from_string(fields.Date.today())
         for log in activity_logs:
             diff = (today - fields.Date.from_string(log['date_action'])).days
             if diff > 0:
                 day = _("Yesterday") if diff == 1 else _("%d days overdue") % abs(diff)
             elif diff < 0:
-                day = _("Tomorrow") if diff == -1 else _("Due in %d days") % abs(diff)
+                date_action_str = datetime.strptime(log['date_action'], DEFAULT_SERVER_DATE_FORMAT).strftime(date_format)
+                day = _("Tomorrow") if diff == -1 else _("Due in %d days") % abs(diff) if diff > -self.DUE_DAYS else date_action_str
             else:
                 day = _("Today")
             log.update({'day': day})
         return activity_logs
+
+    @api.multi
+    def open_related_document(self):
+        self.ensure_one()
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': self.model,
+            'type': 'ir.actions.act_window',
+            'res_id': self.res_id,
+            'context': self.env.context,
+        }
