@@ -112,6 +112,23 @@ class MailThread(models.AbstractModel):
     message_needaction_counter = fields.Integer(
         'Number of Actions', compute='_get_message_needaction',
         help="Number of messages which requires an action")
+    activity_log_ids = fields.One2many(
+        "mail.activity.log", "res_id", string="Activities",
+        domain=lambda self: [('model', '=', self._name)], auto_join=True)
+    activity_state = fields.Selection([('overdue', 'Overdue'), ('today', 'Today'), ('planned', 'Planned')],
+                                      compute="_compute_state", string="State", default="planned",
+                                      help="Overdue: Due date is already passed, Today: Activity date is today, Planned: Future activities.")
+
+    @api.depends('activity_log_ids')
+    def _compute_state(self):
+        for record in self:
+            states = record.activity_log_ids.mapped('state')
+            if 'overdue' in states:
+                record.activity_state = 'overdue'
+            elif 'today' in states:
+                record.activity_state = 'today'
+            elif 'planned' in states:
+                record.activity_state = 'planned'
 
     @api.one
     @api.depends('message_follower_ids')

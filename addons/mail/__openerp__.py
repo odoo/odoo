@@ -30,6 +30,7 @@ Main Features
         'wizard/invite_view.xml',
         'wizard/mail_compose_message_view.xml',
         'views/mail_message_subtype_views.xml',
+        'views/mail_activity_views.xml',
         'views/mail_tracking_views.xml',
         'views/mail_message_views.xml',
         'views/mail_mail_views.xml',
@@ -38,6 +39,7 @@ Main Features
         'views/mail_shortcode_views.xml',
         'views/res_config_views.xml',
         'data/mail_data.xml',
+        'data/mail_activity_data.xml',
         'data/mail_channel_data.xml',
         'data/mail_shortcode_data.xml',
         'security/mail_security.xml',
@@ -52,6 +54,7 @@ Main Features
     ],
     'demo': [
         'data/mail_demo.xml',
+        'data/mail_activity_demo.xml',
         'data/mail_channel_demo.xml',
     ],
     'installable': True,
