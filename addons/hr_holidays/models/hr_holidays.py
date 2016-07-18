@@ -296,9 +296,6 @@ class Holidays(models.Model):
         """
         date_from = self.date_from
         date_to = self.date_to
-        # date_to has to be greater than date_from
-        if (date_from and date_to) and (date_from > date_to):
-            raise UserError(_('The start date must be anterior to the end date.'))
 
         # No date_to set so far: automatically compute one 8 hours later
         if date_from and not date_to:
@@ -316,9 +313,6 @@ class Holidays(models.Model):
         """ Update the number_of_days. """
         date_from = self.date_from
         date_to = self.date_to
-        # date_to has to be greater than date_from
-        if (date_from and date_to) and (date_from > date_to):
-            raise UserError(_('The start date must be anterior to the end date.'))
 
         # Compute and update the number of days
         if (date_to and date_from) and (date_from <= date_to):
