@@ -393,7 +393,7 @@ class ResPartner(models.Model):
 
     @api.multi
     def mark_as_reconciled(self):
-        self.env['account_partial_reconcile'].check_access_right('write')
+        self.env['account.partial.reconcile'].check_access_rights('write')
         return self.sudo().write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
     @api.one

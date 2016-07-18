@@ -295,10 +295,9 @@ class ir_http(osv.AbstractModel):
                 filename = "%s-%s-%s" % (obj._model._name, obj.id, field)
 
         # mimetype
+        mimetype = 'mimetype' in obj and obj.mimetype or False
         if not mimetype:
-            if 'mimetype' in obj and obj.mimetype and obj.mimetype != 'application/octet-stream':
-                mimetype = obj.mimetype
-            elif filename:
+            if filename:
                 mimetype = mimetypes.guess_type(filename)[0]
             if not mimetype and getattr(env[model]._fields[field], 'attachment', False):
                 # for binary fields, fetch the ir_attachement for mimetype check
@@ -306,7 +305,7 @@ class ir_http(osv.AbstractModel):
                 mimetype = attach_mimetype and attach_mimetype[0]['mimetype']
             if not mimetype:
                 mimetype = default_mimetype
-        headers.append(('Content-Type', mimetype))
+        headers += [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
 
         # cache
         etag = hasattr(request, 'httprequest') and request.httprequest.headers.get('If-None-Match')
