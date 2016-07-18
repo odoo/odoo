@@ -155,13 +155,8 @@ odoo.define("website.tour.banner", function (require) {
             content: _t("Scroll to check rendering and then close the mobile preview."),
             position: "right",
         }, {
-            trigger: "#content-menu-button",
-            extra_trigger: "body:not(.modal-open)",
-            content: _t("The <b>Content</b> menu allows you to rename and delete pages or add them to the top menu."),
-            position: "bottom",
-        }, {
             trigger: "#oe_main_menu_navbar a[data-action=new_page]",
-            content: _t("Use this button to add pages"),
+            content: _t("<p><b>That's it.</b> Your homepage is live.</p><p>Continue adding more pages to your site or edit this page to make it even more awesome.</p>"),
             position: "bottom",
         }]);
     });
