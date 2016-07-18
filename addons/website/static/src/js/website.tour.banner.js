@@ -137,8 +137,8 @@ odoo.define("website.tour.banner", function (require) {
             content: _t("Customize any block through this menu. Try to change the background of the banner."),
             position: "bottom",
         }, {
-            trigger: "#snippet_structure .oe_snippet:eq(6) .oe_snippet_thumbnail",
-            content: _t("Drag the \"Features\" block and drop it below the banner."),
+            trigger: "#snippet_structure .oe_snippet:eq(3) .oe_snippet_thumbnail",
+            content: _t("Drag another block in your page, below the cover."),
             position: "bottom",
             run: "drag_and_drop",
         }, {
