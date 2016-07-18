@@ -9,11 +9,13 @@
         This module has the statutory details for the contacts/companies.
 
         Fields Included:
-            -
-            -
+            - ECC No. (Trading, Manufacturing)
+            - TIN No.
+            - Service Tax No.
+            - PAN No.
 
         Views Affected:
-            -
+            - Contacts
             -
     """,
 
@@ -27,7 +29,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','sale'],
+    'depends': ['base'],
 
     # always loaded
     'data': [

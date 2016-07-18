@@ -3,9 +3,14 @@
 from openerp import models, fields, api
 
 class statutory_details(models.Model):
-	_inherit = 'sale.order'
+	_inherit = 'res.partner'
 
-	mycustomfield1 = fields.Char('My custom field 1 Label', default = 'My custom field 1 default value')
+	ecc_trading = fields.Char('ECC No. (Trading)', default = '')
+	ecc_manufacturing = fields.Char('ECC No. (Manufacturing)', default = '')
+	tin_no = fields.Char('TIN No.', default = '')
+	service_tax_no = fields.Char('Service Tax No.', default = '')
+	pan_no = fields.Char('Pan No.', default = '')
+	
 
 
     # _inherit = 'res.partner'
