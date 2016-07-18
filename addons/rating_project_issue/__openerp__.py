@@ -19,5 +19,4 @@ This module allows a customer to give rating on Project Issue.
         'data/project_issue_demo.xml',
     ],
     'installable': True,
-    'auto_install' : True,
 }
