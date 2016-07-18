@@ -23,12 +23,6 @@ class product_template(osv.osv):
     _description = "Product Template"
     _order = "name"
 
-    def _is_product_variant(self, cr, uid, ids, name, arg, context=None):
-        return self._is_product_variant_impl(cr, uid, ids, name, arg, context=context)
-
-    def _is_product_variant_impl(self, cr, uid, ids, name, arg, context=None):
-        return dict.fromkeys(ids, False)
-
     def _product_template_price(self, cr, uid, ids, name, arg, context=None):
         plobj = self.pool.get('product.pricelist')
         res = {}
@@ -164,7 +158,6 @@ class product_template(osv.osv):
 
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'color': fields.integer('Color Index'),
-        'is_product_variant': fields.function(_is_product_variant, type='boolean', string='Is a product variant'),
 
         'attribute_line_ids': fields.one2many('product.attribute.line', 'product_tmpl_id', 'Product Attributes'),
         'product_variant_ids': fields.one2many('product.product', 'product_tmpl_id', 'Products', required=True),

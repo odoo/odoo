@@ -238,9 +238,6 @@ class product_product(osv.osv):
             res[p.id] = (data['code'] and ('['+data['code']+'] ') or '') + (data['name'] or '')
         return res
 
-    def _is_product_variant_impl(self, cr, uid, ids, name, arg, context=None):
-        return dict.fromkeys(ids, True)
-
     def _get_image_variant(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
@@ -317,7 +314,6 @@ class product_product(osv.osv):
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True, auto_join=True),
         'barcode': fields.char('Barcode', help="International Article Number used for product identification.", oldname='ean13', copy=False),
         'attribute_value_ids': fields.many2many('product.attribute.value', id1='prod_id', id2='att_id', string='Attributes', ondelete='restrict'),
-        'is_product_variant': fields.function( _is_product_variant_impl, type='boolean', string='Is a product variant'),
         # image: all image fields are base64 encoded and PIL-supported
         'image_variant': fields.binary("Variant Image", attachment=True,
             help="This field holds the image used as image for the product variant, limited to 1024x1024px."),
