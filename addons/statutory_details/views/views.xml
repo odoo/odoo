@@ -1,0 +1,59 @@
+<openerp>
+  <data>
+    <!-- explicit list view definition -->
+    <!--
+    <record model="ir.ui.view" id="statutory_details.list">
+      <field name="name">statutory_details list</field>
+      <field name="model">statutory_details.statutory_details</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+    -->
+
+    <!-- actions opening views on models -->
+    <!--
+    <record model="ir.actions.act_window" id="statutory_details.action_window">
+      <field name="name">statutory_details window</field>
+      <field name="res_model">statutory_details.statutory_details</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    -->
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="statutory_details.action_server">
+      <field name="name">statutory_details server</field>
+      <field name="model_id" ref="model_statutory_details_statutory_details"/>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <!--
+    <menuitem name="statutory_details" id="statutory_details.menu_root"/>
+    -->
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="statutory_details.menu_1" parent="statutory_details.menu_root"/>
+    <menuitem name="Menu 2" id="statutory_details.menu_2" parent="statutory_details.menu_root"/>
+    -->
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="statutory_details.menu_1_list" parent="statutory_details.menu_1"
+              action="statutory_details.action_window"/>
+    <menuitem name="Server to list" id="statutory_details" parent="statutory_details.menu_2"
+              action="statutory_details.action_server"/>
+    -->
+  </data>
+</openerp>
