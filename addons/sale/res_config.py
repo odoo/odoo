@@ -89,6 +89,10 @@ class sale_configuration(osv.TransientModel):
         'module_sale_contract': fields.boolean("Manage subscriptions and recurring invoicing"),
         'module_website_sale_digital': fields.boolean("Sell digital products - provide downloadable content on your customer portal"),
         'module_website_portal': fields.boolean("Enable customer portal to track orders, delivery and invoices"),
+        'module_sale_order_dates': fields.selection([
+            (0, 'Procurements and deliveries dates are based on the sale order dates'),
+            (1, 'Allow to modify the sale order dates to postpone deliveries and procurements')
+            ], "Date"),
     }
 
     _defaults = {
