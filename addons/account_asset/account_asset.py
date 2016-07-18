@@ -364,7 +364,8 @@ class AccountAssetAsset(models.Model):
     def write(self, vals):
         res = super(AccountAssetAsset, self).write(vals)
         if 'depreciation_line_ids' not in vals and 'state' not in vals:
-            self.compute_depreciation_board()
+            for rec in self:
+                rec.compute_depreciation_board()
         return res
 
     @api.multi
