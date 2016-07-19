@@ -282,6 +282,7 @@ class CompanyDependent(models.Model):
     foo = fields.Char(company_dependent=True)
 
 
+
 class Sparse(models.Model):
     _name = 'test_new_api.sparse'
 
@@ -292,3 +293,21 @@ class Sparse(models.Model):
     char = fields.Char(sparse='data')
     selection = fields.Selection([('one', 'One'), ('two', 'Two')], sparse='data')
     partner = fields.Many2one('res.partner', sparse='data')
+
+
+class ComputeCascade(models.Model):
+    _name = 'test_new_api.cascade'
+
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar')           # depends on foo
+    baz = fields.Char(compute='_compute_baz')           # depends on bar
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for record in self:
+            record.bar = "[%s]" % (record.foo or "")
+
+    @api.depends('bar')
+    def _compute_baz(self):
+        for record in self:
+            record.baz = "<%s>" % (record.bar or "")

@@ -658,20 +658,24 @@ class Field(object):
         """ Return the dependencies of ``self`` as tuples ``(model, field, path)``,
             where ``path`` is an optional list of field names.
         """
-        model0 = model
+        return self._resolve_deps(model, self, [])
+
+    def _resolve_deps(self, model0, field0, path0, seen=()):
+        """ Return the dependencies of ``self`` starting from ``field0`` via ``path0``. """
         result = []
 
-        # add self's own dependencies
-        for dotnames in self.depends:
+        # add field0's own dependencies
+        for dotnames in field0.depends:
             if dotnames == self.name:
                 _logger.warning("Field %s depends on itself; please fix its decorator @api.depends().", self)
-            model, path = model0, dotnames.split('.')
-            for i, fname in enumerate(path):
+            model, path = model0, path0
+            for fname in dotnames.split('.'):
                 field = model._fields[fname]
-                result.append((model, field, path[:i]))
+                result.append((model, field, path))
                 model = model0.env.get(field.comodel_name)
+                path = None if path is None else path + [fname]
 
-        # add self's model dependencies
+        # add field0's model dependencies
         for mname, fnames in model0._depends.iteritems():
             model = model0.env[mname]
             for fname in fnames:
@@ -679,11 +683,14 @@ class Field(object):
                 result.append((model, field, None))
 
         # add indirect dependencies from the dependencies found above
+        seen = seen + (field0,)
         for model, field, path in list(result):
             for inv_field in model._field_inverses[field]:
                 inv_model = model0.env[inv_field.model_name]
                 inv_path = None if path is None else path + [field.name]
                 result.append((inv_model, inv_field, inv_path))
+            if field not in seen:
+                result += self._resolve_deps(model, field, path, seen)
 
         return result
 
