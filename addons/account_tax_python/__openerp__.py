@@ -14,6 +14,6 @@
     'version': '1.0',
     'depends': ['account'],
     'data': [
-        'account_tax_python.xml',
+        'views/account_tax_views.xml',
     ],
 }
