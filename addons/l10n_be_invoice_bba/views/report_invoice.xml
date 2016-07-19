@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='total']" position="after">
+            <p t-if="o.reference_type=='bba' and o.reference">
+                Please use the following communication for your payment : <b><span t-field="o.reference"/></b>
+            </p>
+        </xpath>
+    </template>
+</odoo>
