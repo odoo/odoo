@@ -656,7 +656,7 @@ class Field(object):
 
     def resolve_deps(self, model):
         """ Return the dependencies of ``self`` as tuples ``(model, field, path)``,
-            where ``path`` is an optional list of field names.
+            where ``path`` is an optional list of fields.
         """
         return self._resolve_deps(model, self, [])
 
@@ -673,7 +673,7 @@ class Field(object):
                 field = model._fields[fname]
                 result.append((model, field, path))
                 model = model0.env.get(field.comodel_name)
-                path = None if path is None else path + [fname]
+                path = None if path is None else path + [field]
 
         # add field0's model dependencies
         for mname, fnames in model0._depends.iteritems():
@@ -687,7 +687,7 @@ class Field(object):
         for model, field, path in list(result):
             for inv_field in model._field_inverses[field]:
                 inv_model = model0.env[inv_field.model_name]
-                inv_path = None if path is None else path + [field.name]
+                inv_path = None if path is None else path + [field]
                 result.append((inv_model, inv_field, inv_path))
             if field not in seen:
                 result += self._resolve_deps(model, field, path, seen)
@@ -696,9 +696,23 @@ class Field(object):
 
     def setup_triggers(self, model):
         """ Add the necessary triggers to invalidate/recompute ``self``. """
+        if self.compute and self.store:
+            def check(field, path):
+                if path and not path[-1]._description_searchable:
+                    _logger.warning("Field %s's dependency %s path %r is non-searchable; "
+                                    "it will not trigger recomputation.",
+                                    self, field, '.'.join(f.name for f in path))
+                elif path is None:
+                    _logger.warning("Field %s's dependency %s is non-trackable; "
+                                    "it will not trigger recomputation.",
+                                    self, field)
+        else:
+            check = lambda field, path: None
+
         for model, field, path in self.resolve_deps(model):
+            check(field, path)
             if field is not self:
-                path_str = None if path is None else ('.'.join(path) or 'id')
+                path_str = None if path is None else ('.'.join(f.name for f in path) or 'id')
                 model._field_triggers.add(field, (self, path_str))
             elif path:
                 self.recursive = True
