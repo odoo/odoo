@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
-
+from odoo import api
 
 class product_price_list(osv.osv_memory):
     _name = 'product.price_list'
@@ -24,16 +24,15 @@ class product_price_list(osv.osv_memory):
         'qty5': 0,
     }
 
-    def print_report(self, cr, uid, ids, context=None):
+    @api.multi
+    def print_report(self):
         """
         To get the date and print the report
         @return : return report
         """
-        if context is None:
-            context = {}
-        datas = {'ids': context.get('active_ids', [])}
-        res = self.read(cr, uid, ids, ['price_list','qty1', 'qty2','qty3','qty4','qty5'], context=context)
+        datas = {'ids': self.env.context.get('active_ids', [])}
+        res = self.read(['price_list', 'qty1', 'qty2', 'qty3', 'qty4', 'qty5'])
         res = res and res[0] or {}
         res['price_list'] = res['price_list'][0]
         datas['form'] = res
-        return self.pool['report'].get_action(cr, uid, [], 'product.report_pricelist', data=datas, context=context)
+        return self.env['report'].get_action(self, 'product.report_pricelist', data=datas)
