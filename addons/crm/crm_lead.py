@@ -101,7 +101,7 @@ class crm_lead(FormatAddress, osv.osv):
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context and context.get('opportunity_id'):
-            action = self.get_formview_action(cr, user, context['opportunity_id'], context=context)
+            action = self.get_formview_action(cr, user, [context['opportunity_id']], context=context)
             if action.get('views') and any(view_id for view_id in action['views'] if view_id[1] == view_type):
                 view_id = next(view_id[0] for view_id in action['views'] if view_id[1] == view_type)
         res = super(crm_lead, self).fields_view_get(cr, user, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
@@ -927,12 +927,12 @@ Update your business card, phone book, social media,... Send an email right now 
         aliases = self.pool['crm.team'].message_get_reply_to(cr, uid, list(team_ids), default=default, context=context)
         return dict((lead.id, aliases.get(lead.team_id and lead.team_id.id or 0, False)) for lead in leads)
 
-    def get_formview_id(self, cr, uid, id, context=None):
-        obj = self.browse(cr, uid, id, context=context)
+    def get_formview_id(self, cr, uid, ids, context=None):
+        obj = self.browse(cr, uid, ids[0], context=context)
         if obj.type == 'opportunity':
             model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm', 'crm_case_form_view_oppor')
         else:
-            view_id = super(crm_lead, self).get_formview_id(cr, uid, id, context=context)
+            view_id = super(crm_lead, self).get_formview_id(cr, uid, ids, context=context)
         return view_id
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
