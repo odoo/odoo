@@ -31,7 +31,6 @@ This module manages:
     'data' : [
         'security/ir.model.access.csv',
         'views/account_voucher_views.xml',
-        'views/voucher_sales_purchase_view.xml',
         'security/account_voucher_security.xml',
         'data/account_voucher_data.xml',
     ],
