@@ -3,7 +3,6 @@
 
 {
     'name': 'Budgets Management',
-    'version': '1.0',
     'category': 'Accounting',
     'description': """
 This module allows accountants to manage analytic and crossovered budgets.
@@ -37,13 +36,5 @@ Three reports are available:
         'views/account_analytic_account_views.xml',
         'views/account_budget_views.xml',
     ],
-    'demo': ['data/account_budget_demo.xml', 'data/account_budget_demo.yml'],
-    'test': [
-        '../account/test/account_minimal_test.xml',
-        'test/account_budget.yml',
-        'test/account_budget_report.yml',
-        'test/account_budget_spread.yml',
-    ],
-    'installable': True,
-    'auto_install': False,
+    'demo': ['data/account_budget_demo.xml'],
 }
