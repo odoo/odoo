@@ -127,9 +127,9 @@ odoo.define("website.tour.banner", function (require) {
             run: "drag_and_drop",
         }, {
             trigger: "#wrapwrap .s_text_block_image_fw h2",
-            extra_trigger: ".oe_overlay_options .oe_options",
             content: _t("Click in the title text and start editing it."),
             position: "left",
+            width: 150,
             run: "text",
         }, {
             trigger: ".oe_overlay_options .oe_options",
