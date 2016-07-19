@@ -313,7 +313,7 @@ class account_payment(models.Model):
 
     @api.multi
     def unlink(self):
-        if any(rec.state != 'draft' for rec in self):
+        if any(bool(rec.move_line_ids) for rec in self):
             raise UserError(_("You can not delete a payment that is already posted"))
         return super(account_payment, self).unlink()
 
