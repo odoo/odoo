@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from openerp import fields, models, api, _
-import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
+from odoo import fields, models, api, _
+import odoo.addons.decimal_precision as dp
+from odoo.exceptions import UserError
 
 
 class AccountVoucher(models.Model):
@@ -307,7 +307,7 @@ class AccountVoucher(models.Model):
         return super(AccountVoucher, self)._track_subtype(init_values)
 
 
-class account_voucher_line(models.Model):
+class AccountVoucherLine(models.Model):
     _name = 'account.voucher.line'
     _description = 'Voucher Lines'
 
