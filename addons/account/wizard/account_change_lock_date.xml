@@ -9,7 +9,7 @@
                 <form string="Change the lock date">
                     <group col="4">
                         <field name="period_lock_date"/>
-                        <field name="fy_lock_date"/>
+                        <field name="fy_lock_date" groups="account.group_account_manager"/>
                     </group>
                     <footer>
                         <button string="Change" name="change_lock_date" type="object" class="btn-primary"/>
@@ -28,6 +28,6 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem action="action_view_account_change_lock_date" id="menu_action_change_lock_date" parent="account.menu_finance_entries" sequence="30"/>
+        <menuitem action="action_view_account_change_lock_date" id="menu_action_change_lock_date" parent="account.menu_finance_entries" sequence="30" groups="account.group_account_user"/>
     </data>
 </openerp>
