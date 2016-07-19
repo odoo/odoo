@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models
+from odoo import api, fields, models
 
 
-class account_analytic_tag(models.Model):
+class AccountAnalyticTag(models.Model):
     _name = 'account.analytic.tag'
     _description = 'Analytic Tags'
     name = fields.Char(string='Analytic Tag', index=True, required=True)
     color = fields.Integer('Color Index')
 
 
-class account_analytic_account(models.Model):
+class AccountAnalyticAccount(models.Model):
     _name = 'account.analytic.account'
     _inherit = ['mail.thread']
     _description = 'Analytic Account'
@@ -74,7 +74,7 @@ class account_analytic_account(models.Model):
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         if operator not in ('ilike', 'like', '=', '=like', '=ilike'):
-            return super(account_analytic_account, self).name_search(name, args, operator, limit)
+            return super(AccountAnalyticAccount, self).name_search(name, args, operator, limit)
         args = args or []
         domain = ['|', ('code', operator, name), ('name', operator, name)]
         partners = self.env['res.partner'].search([('name', operator, name)], limit=limit)
@@ -84,7 +84,7 @@ class account_analytic_account(models.Model):
         return recs.name_get()
 
 
-class account_analytic_line(models.Model):
+class AccountAnalyticLine(models.Model):
     _name = 'account.analytic.line'
     _description = 'Analytic Line'
     _order = 'date desc, id desc'
