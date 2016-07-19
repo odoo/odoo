@@ -617,7 +617,7 @@ action = model.activate_sample_project()
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="mail_template_id"/>
+                            <field name="mail_template_id" groups="base.group_no_one"/>
                         </group>
                         <group>
                             <field name="fold"/>
@@ -648,7 +648,7 @@ action = model.activate_sample_project()
                         </p>
                         <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
                     </group>
-                    <group string="Projects using this stage">
+                    <group string="Projects using this stage" groups="base.group_no_one">
                         <field name="project_ids" widget="many2many_tags"/>
                     </group>
                 </form>
