@@ -18,9 +18,10 @@ class PayslipLinesContributionRegister(models.TransientModel):
 
     @api.multi
     def print_report(self):
+        active_ids = self.env.context.get('active_ids', [])
         datas = {
-             'ids': self.env.context.get('active_ids', []),
+             'ids': active_ids,
              'model': 'hr.contribution.register',
              'form': self.read()[0]
         }
-        return self.env['report'].get_action(self.browse(), 'hr_payroll.report_contributionregister', data=datas)
+        return self.env['report'].get_action(self.browse(active_ids), 'hr_payroll.report_contributionregister', data=datas)
