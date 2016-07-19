@@ -72,11 +72,11 @@ var getMatchedCSSRules = function (a) {
     function specificity (selector) {
         // http://www.w3.org/TR/css3-selectors/#specificity
         var a = 0;
-        selector.replace(/#[a-z0-9_-]+/gi, function () { a++; return ""; });
+        selector = selector.replace(/#[a-z0-9_-]+/gi, function () { a++; return ""; });
         var b = 0;
-        selector.replace(/(\.[a-z0-9_-]+)|(\[.*?\])/gi, function () { b++; return ""; });
+        selector = selector.replace(/(\.[a-z0-9_-]+)|(\[.*?\])/gi, function () { b++; return ""; });
         var c = 0;
-        selector.replace(/(\s+|:+)[a-z0-9_-]+/gi, function (a) { if(a.indexOf(':not(')===-1) c++; return ""; });
+        selector = selector.replace(/(^|\s+|:+)[a-z0-9_-]+/gi, function (a) { if(a.indexOf(':not(')===-1) c++; return ""; });
         return a*100 + b*10 + c;
     }
     css.sort(function (a, b) { return specificity(a[0]) - specificity(b[0]); });
