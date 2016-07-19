@@ -25,20 +25,28 @@
     </div>
 
     <div data-js='content' class="hidden"
-        data-selector="[data-oe-field='body_html'] > div, .oe_snippet_body"
-        data-drop-near="[data-oe-field='body_html'] > *"
-        data-drop-in="[data-oe-field='body_html']">
+        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div, .oe_snippet_body"
+        data-drop-near="[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *"
+        data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure">
     </div>
 
     <div data-js='resize'
         data-selector="div.snippet_row"
-        data-drop-in=".oe_structure, [data-oe-type=html]">
+        data-drop-in=".oe_structure, [data-oe-type=html]:not(:has(.o_layout))">
     </div>
     
     <div data-js='background'
         data-selector="div.snippet_row">
         <li data-choose_image="choose_image" data-background=""><a>Choose a background image</a></li>
         <li data-background=""><a>No background image</a></li>
+    </div>
+
+    <div class="odoo o_theme_palette odoo">
+        <div class="odoo note-palette-title mt8"> Mail Theme Colors</div>
+        <div class="odoomail-colorpicker note-color-row">
+            <t t-set="colors" t-value="['#E56054', '#4D6BBB', '#1F1F1F', '#464646', '#808080', '#E5E5E5', '#f9f8f8', '#41C534']"/>
+            <t t-foreach="colors" t-as="c"><button type="button" class="odoonote-color-btn" t-attf-style="background-color:#{c};" t-attf-data-value="#{c}" t-attf-title="#{c}" data-toggle="button" tabindex="-1"></button></t>
+        </div>
     </div>
 
 </template>

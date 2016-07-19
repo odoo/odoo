@@ -18,6 +18,8 @@ class Web_Editor(Web_Editor):
     def mass_mailing_FieldTextHtmlEmailTemplate(self, model=None, res_id=None, field=None, callback=None, **kwargs):
         kwargs['snippets'] = '/mass_mailing/snippets'
         kwargs['template'] = 'mass_mailing.FieldTextHtmlInline'
+        if 'css' not in kwargs:
+            kwargs['css'] = '/mass_mailing/static/src/css/odoo_template.css'
         return self.FieldTextHtmlInline(model, res_id, field, callback, **kwargs)
 
     @http.route(['/mass_mailing/snippets'], type='json', auth="user", website=True)

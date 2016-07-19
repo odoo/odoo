@@ -3,6 +3,19 @@
 <template id="email_designer_snippets" inherit_id="web_editor.snippets" primary="True">
     <xpath expr="//div[@id='o_scroll']" position="replace">
         <div id="o_scroll">
+            <div id="email_designer_layout" class="o_panel">
+                <div class="o_panel_header">
+                    <span class="fa-stack">
+                        <i class="fa fa-list-alt fa-stack-1x"></i>
+                    </span> Choose a layout
+                </div>
+                <div class="o_panel_body">
+
+                    <div name="Default" class="odoo o_mail_block_header_center_logo">
+                        <div class="odoo o_layout"></div>
+                    </div>
+                </div>
+            </div>
             <div id="email_designer_default_headers" class="o_panel">
                 <div class="o_panel_header">
                     <span class="fa-stack">
@@ -11,115 +24,222 @@
                     </span> Headers
                 </div>
                 <div class="o_panel_body">
-                    <div name="Center Logo" class="basic_theme o_mail_block_header_center_logo">
-                        <div class="snippet_row bg-color" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-                            <table style="margin: 0 auto;border-collapse:collapse;background:inherit;width:600px;color:inherit" cellpadding="0" cellspacing="0">
-                                <tbody>
+
+                    <div name="Left Logo" class="odoo o_mail_block_header_center_logo">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" cellspacing="0" cellpadding="0" border="0" class="table-styles" width="600">
+                                    <tbody>
+                                      <tr>
+                                          <td width="100%" valign="top" class="horizontal-padding vertical-padding">
+                                                &amp;nbsp;
+                                                <a t-att-href="(company_id.website) or '#'">
+                                                    <img border="0" src="http://www.odoocdn.com/openerp_website/static/src/img/2016/logos/odoo_logo_small.png" style="height:auto;max-width:600px;width:100px;margin-left:-6px;" alt="Your Logo" />
+                                                </a>
+                                                &amp;nbsp;
+                                          </td>
+                                      </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div name="Banner" class="odoo o_mail_block_header_center_logo">
+                        <div class="odoo snippet_row">
+                            <div class="snippetbanner">
+                                <table align="center" cellspacing="0" cellpadding="0" border="0" class="table-styles" width="600">
+                                    <tbody>
+                                      <tr>
+                                          <td width="100%" valign="top">
+                                                <img src="http://www.odoocdn.com/openerp_website/static/src/img/2016/home/laptop_sale_desktop.jpg" style="height:auto;max-width:600px;width:600px;" alt="Your Logo" />
+                                          </td>
+                                      </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div name="Text Left" class="odoo o_mail_block_header_center_text">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" cellspacing="0" cellpadding="0" border="0" class="table-styles" width="600">
+                                    <tbody>
+                                        <tr>
+                                            <td width="100%" class="horizontal-padding vertical-padding">
+                                                &amp;nbsp;
+                                                <a t-att-href="(company_id.website) or '#'" class="display-1">
+                                                    My Company
+                                                </a>
+                                                &amp;nbsp;
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div name="Logo - Social" class="odoo o_mail_block_header_social">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+
+                                <!-- <table align="center" cellspacing="0" cellpadding="0" border="0" style="border-collapse:separate" width="600">
                                     <tr>
-                                        <td valign="center" style="text-align:center">
+                                        <td width="300" style="padding:20px 0;">
                                             &amp;nbsp;
-                                            <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;">
-                                                <img class="padding-medium" src="/logo.png" style="height:auto;max-width:600px;width:200px" alt="Your Logo" />
+                                            <a t-att-href="(company_id.website) or '#'" style="text-decoration:none">
+                                                 <img src="/logo.png" style="height:auto;max-width:600px;width:100px" alt="Your Logo" />
                                             </a>
                                             &amp;nbsp;
                                         </td>
+                                        <td width="300">
+                                            <table border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:separate">
+                                                <tr>
+                                                    <td align="right">
+                                                        <a>
+                                                            <span class="odoo fa fa-facebook-square fa-2x"></span>
+                                                        </a>
+                                                    </td>
+                                                    <td align="right" style="padding-left:5px">
+                                                        <a>
+                                                            <span class="odoo fa fa-google-plus-square fa-2x"></span>
+                                                        </a>
+                                                    </td>
+                                                    <td align="right" style="padding-left:5px">
+                                                        <a>
+                                                            <span class="odoo fa fa-linkedin-square fa-2x"></span>
+                                                        </a>
+                                                    </td>
+                                                    <td align="right" style="padding-left:5px">
+                                                        <a>
+                                                            <span class="odoo fa fa-twitter-square fa-2x"></span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
                                     </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                                </table> -->
 
-                    <div name="Center Text" class="basic_theme o_mail_block_header_center_text">
-                        <div class="snippet_row bg-color" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-                            <table style="margin: 0 auto;border-collapse:collapse;background:inherit;color:inherit;width:600px;color:inherit" cellpadding="0" cellspacing="0">
-                                <tbody>
+                                <table align="center" cellspacing="0" cellpadding="0" border="0" class="table-styles" width="600">
                                     <tr>
-                                        <td valign="center" style="text-align:center;font-size: 30px">
+                                        <td width="100%"  class="horizontal-padding vertical-padding">
                                             &amp;nbsp;
-                                            <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;color: inherit;">
-                                                <strong>My Company</strong>
+                                            <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;">
+                                                 <img border="0" src="http://www.odoocdn.com/openerp_website/static/src/img/2016/logos/odoo_logo_small.png" style="height:auto;max-width:600px;width:100px" alt="Your Logo" />
                                             </a>
                                             &amp;nbsp;
                                         </td>
+                                        <td width="300">
+                                            <table t-if="website" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:separate">
+                                                <tr>
+                                                    <t t-if="website.social_facebook">
+                                                        <td align="right">
+                                                            <a t-att-href="website.social_facebook">
+                                                              <span class="odoofa fa-facebook-square fa-2x"></span>
+                                                            </a>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="website.social_googleplus">
+                                                        <td align="right" style="padding-left:5px">
+                                                            <a t-att-href="website.social_googleplus">
+                                                              <span class="odoofa fa-google-plus-square fa-2x"></span>
+                                                              </a>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="website.social_linkedin">
+                                                        <td align="right" style="padding-left:5px">
+                                                            <a t-att-href="website.social_linkedin">
+                                                              <span class="odoofa fa-linkedin-square fa-2x"></span>
+                                                              </a>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="website.social_twitter">
+                                                        <td align="right" style="padding-left:5px">
+                                                            <a t-att-href="website.social_twitter">
+                                                              <span class="odoofa fa-twitter-square fa-2x"></span>
+                                                              </a>
+                                                        </td>
+                                                    </t>
+                                                </tr>
+                                            </table>
+                                        </td>
                                     </tr>
-                                </tbody>
-                            </table>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
-                    <div name="Logo - Social" class="basic_theme o_mail_block_header_social">
-                        <div class="snippet_row bg-color" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-                            <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
-                                <tr>
-                                    <td valign="center" width="270" style="padding:10px 10px 10px 5px;">
-                                        &amp;nbsp;
-                                        <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;">
-                                            <img src="/logo.png" style="padding:10px;height:auto;max-width:600px;width:200px" alt="Your Logo" />
-                                        </a>
-                                        &amp;nbsp;
-                                    </td>
-                                    <td valign="center" width="270" style="padding:10px 15px 10px 10px">
-                                        <table t-if="website" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse;background:inherit;color:inherit">
-                                            <tr>
-                                                <td align="right">
-                                                    <a t-att-href="(website.social_facebook) or '#'"><img src="/mass_mailing/static/src/img/theme_imgs/social_facebook.png" style="height:auto;max-width:70px" alt="social icon"/></a>
-                                                </td>
-                                                <td align="right" style="padding-left:5px">
-                                                    <a t-att-href="(website.social_twitter) or '#'"><img src="/mass_mailing/static/src/img/theme_imgs/social_twitter.png" style="height:auto;max-width:70px" alt="social icon" /></a>
-                                                </td>
-                                                <td align="right" style="padding-left:5px">
-                                                    <a t-att-href="(website.social_googleplus) or '#'"><img src="/mass_mailing/static/src/img/theme_imgs/social_googleplus.png" style="height:auto;max-width:70px" alt="social icon" /></a>
-                                                </td>
-                                                <td align="right" style="padding-left:5px">
-                                                    <a t-att-href="(website.social_linkedin) or '#'"><img src="/mass_mailing/static/src/img/theme_imgs/social_linkedin.png" style="height:auto;max-width:70px" alt="social icon" /></a>
-                                                </td>
-                                                <td align="right" style="padding-left:5px">
-                                                    <a href="#"><img src="/mass_mailing/static/src/img/theme_imgs/social_rss.png" style="height:auto;max-width:70px" alt="social icon" /></a>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
+                    <div name="Text - Social" class="odoo o_mail_block_header_text_social">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" width="600" cellspacing="0" cellpadding="0" border="0" class="table-styles">
+                                    <tr>
+                                        <td width="100%" class="horizontal-padding vertical-padding">
+                                            &amp;nbsp;
+                                            <a t-att-href="(company_id.website) or '#'" class="display-1">
+                                                My Company
+                                            </a>
+                                            &amp;nbsp;
+                                        </td>
+                                        <td valign="center" width="270">
+                                            <table t-if="website" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:separate">
+                                                <tr>
+                                                    <t t-if="website.social_facebook">
+                                                        <td align="right">
+                                                            <a t-att-href="website.social_facebook">
+                                                              <span class="odoofa fa-facebook-square fa-2x"></span>
+                                                            </a>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="website.social_googleplus">
+                                                        <td align="right" style="padding-left:5px">
+                                                            <a t-att-href="website.social_googleplus">
+                                                              <span class="odoofa fa-google-plus-square fa-2x"></span>
+                                                              </a>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="website.social_linkedin">
+                                                        <td align="right" style="padding-left:5px">
+                                                            <a t-att-href="website.social_linkedin">
+                                                              <span class="odoofa fa-linkedin-square fa-2x"></span>
+                                                              </a>
+                                                        </td>
+                                                    </t>
+                                                    <t t-if="website.social_twitter">
+                                                        <td align="right" style="padding-left:5px">
+                                                            <a t-att-href="website.social_twitter">
+                                                              <span class="odoofa fa-twitter-square fa-2x"></span>
+                                                              </a>
+                                                        </td>
+                                                    </t>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
-                    <div name="Text - Social" class="basic_theme o_mail_block_header_text_social">
-                        <div class="snippet_row bg-color" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-                            <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
-                                <tr>
-                                    <td valign="center" width="270" style="padding:10px 10px 10px 5px;font-size: 30px">
-                                        &amp;nbsp;
-                                        <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;color: inherit">
-                                            <strong>My Company</strong>
-                                        </a>
-                                        &amp;nbsp;
-                                    </td>
-                                    <td valign="center" width="270" style="padding:10px 15px 10px 10px">
-                                        <table t-if="website" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse;background:inherit;color:inherit">
-                                            <tr>
-                                                <td align="right">
-                                                    <a t-att-href="(website.social_facebook) or '#'"><img src="/mass_mailing/static/src/img/theme_imgs/social_facebook.png" style="height:auto;max-width:70px" alt="social icon" /></a>
-                                                </td>
-                                                <td align="right" style="padding-left:5px">
-                                                    <a t-att-href="(website.social_twitter) or '#'"><img src="/mass_mailing/static/src/img/theme_imgs/social_twitter.png" style="height:auto;max-width:70px" alt="social icon" /></a>
-                                                </td>
-                                                <td align="right" style="padding-left:5px">
-                                                    <a t-att-href="(website.social_googleplus) or '#'"><img src="/mass_mailing/static/src/img/theme_imgs/social_googleplus.png" style="height:auto;max-width:70px" alt="social icon" /></a>
-                                                </td>
-                                                <td align="right" style="padding-left:5px">
-                                                    <a t-att-href="(website.social_linkedin) or '#'"><img src="/mass_mailing/static/src/img/theme_imgs/social_linkedin.png" style="height:auto;max-width:70px" alt="social icon" /></a>
-                                                </td>
-                                                <td align="right" style="padding-left:5px">
-                                                    <a href="#"><img src="/mass_mailing/static/src/img/theme_imgs/social_rss.png" style="height:auto;max-width:70px" alt="social icon" /></a>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
+                    <div name="Button" class="odoo o_mail_block_button">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" style="text-align:center;" class="table-styles" width="600">
+                                    <tr>
+                                        <td class="horizontal-padding vertical-padding" style="padding:10px;">
+                                            &amp;nbsp;
+                                            <a href="#" class="newsletter-btn" style="padding:10px;">My Account</a>
+                                            &amp;nbsp;
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
             <div id="email_designer_default_body" class="o_panel">
@@ -129,192 +249,449 @@
                     </span> Body
                     </div>
                 <div class="o_panel_body">
-                    <div name="Title - Subtitle" class="basic_theme o_mail_block_title_sub">
-                        <div class="snippet_row bg-color" style="padding:0px;width:600px;margin:auto;background: #fff repeat top /100%;color:#777777">
-                            <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:inherit;color:inherit">
-                                <tbody>
-                                    <tr>
-                                        <td style="text-align:center;padding-bottom:10px">
-                                            <p style="margin:0;font-size:36px">Check this out!</p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-size:20px; text-align:center; padding: 0 5px">
-                                            <p style="margin:0">Come check out my stuff!</p>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+
+                    <div name="Title Content" class="odoo o_mail_block_title_text">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" cellspacing="0" cellpadding="0" border="0" class="table-styles" width="600">
+                                    <tbody>
+                                        <tr>
+                                            <td width="100%" class="horizontal-padding vertical-padding">
+                                                <p class="display-1">Your order has been shipped!</p>
+                                                <div>
+                                                    <p>Hello Bob,</p>
+                                                    <p>We would like you to know that your order has shipped! To view your order or make any changes please click the "my order" button below.</p>
+                                                    <div class="vertical-padding">
+                                                        <a href="#" class="newsletter-btn">Track shipping</a>
+                                                        &amp;nbsp;
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
-                    <div name="Text-Image" class="basic_theme o_mail_block_text_image">
-                        <div style="padding:0px; margin:auto;width:600px;background-color:#fff;color:#777777">
-                            <table cellpadding="0" cellspacing="0" width="600" style="margin:auto;border-collapse:collapse;background:inherit;color:inherit">
-                                <tbody>
+                    <div name="Title - Subtitle" class="odoo o_mail_block_title_sub">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" width="600" cellspacing="0" cellpadding="0" class="table-styles">
+                                    <tbody>
+                                        <tr>
+                                            <td class="horizontal-padding vertical-padding">
+                                                <p class="display-1" style="margin:0;">Check this out!</p>
+                                                <p class="no-margin">Apps That Help You Grow Your Business!</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div name="Discount Coupon" class="odoo o_mail_block_discount2">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" cellspacing="0" cellpadding="0" class="table-styles" width="600">
+                                    <tbody>
+                                        <tr>
+                                            <td class="horizontal-padding vertical-padding">
+                                                <p class="display-1" style="margin:0;">
+                                                    Upgrade to Premium Account!
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="background-color:#875a7b;" bgcolor="#875a7b">
+                                                <p class="horizontal-padding vertical-padding no-margin" style="margin:10px 0;text-align:center;color:#ffffff;"> Code: <strong>45A9E77DGW8455</strong></p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div name="Discount Offer" class="odoo o_mail_block_discount1">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" cellpadding="0" cellspacing="0" width="600" class="table-styles">
+                                    <tbody>
+                                        <tr>
+                                            <td class="horizontal-padding vertical-padding">
+                                                <p style="margin:0" class="display-1">20% off for EVERY PRODUCT today!</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="horizontal-padding text-center">
+                                                <p style="margin:0" class="display-2">Hurry Up!</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="horizontal-padding vertical-padding"><br/>
+                                                <p style="margin:0">We are continuing to grow and we miss seeing you be a part of it! We've increased store hours and have lot's of new brands available. To welcome you back please accept this 20% discount on you next purchase by clicking the button below.</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="horizontal-padding vertical-padding text-center">
+                                                &amp;nbsp;
+                                                <a href="#" class="newsletter-btn">Redeem Discount!</a>
+                                                &amp;nbsp;
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div name="Event" class="odoo o_mail_block_event">
+                        <div class="odoo snippet_row" style="padding:0px;width:600px;margin:auto;color:#fff">
+                            <div class="snippet-general">
+                                <table align="center" cellpadding="0" cellspacing="0" width="600">
                                     <tr>
-                                        <td align="left" style="padding:20px;font-size:14px" class="col_mv bg-color">
-                                            <p style="margin:0;font-size:30px">Your order has shipped!</p>
-                                            <p style="margin:0">Dear Bob,</p>
-                                            <p style="margin:0">
-                                                We would like you to know that your order has shipped! To track your order or make any changes please click the "my order" button below.
-                                            </p>
-                                            <a href="#" style="-webkit-user-select: none; padding: 6px 12px; font-size: 14px; line-height: 20px; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; color: rgb(255, 255, 255); border: 1px solid rgb(228, 55, 37); text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: rgb(231, 76, 60);">Your Order</a>
-                                            &amp;nbsp;
+                                        <td style="width: 150px;height: 150px;padding: 0;margin: 0;background-color: rgb(77,107,187);text-align:center;vertical-align:middle;color:#FFFFFF">
+                                            <span style="display: block;font-size: 50px;line-height: 1;padding-top: 10px">21</span> <span style="display: block;font-size: 30px;line-height: 1">Jul</span> <span style="display: block;font-size: 16px;line-height: 1;color: #fff;font-weight: 600">ALL DAY</span>
                                         </td>
-                                        <td style="padding-top:20px;padding-bottom:0;vertical-align:middle;width:200px;" class="bg-color col_mv">
-                                            <table cellspacing="0" cellpadding="0" width="100%" style="border-collapse:collapse;background:inherit">
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="vertical-align:middle;text-align:center">
-                                                            &amp;nbsp;
-                                                            <span class="fa fa-10x fa-music"></span>
-                                                            &amp;nbsp;
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
+                                        <td style="width: 150px;height: 150px;padding: 0px;margin: 0px;text-align: center;background-color: rgb(229,96,84)">
+                                            <div style="margin:27px auto">
+                                                &amp;nbsp;
+                                                <span class="odoo fa fa-calendar fa-5x"></span>
+                                                &amp;nbsp;
+                                            </div>
+                                        </td>
+                                        <td style="position: relative;text-align: left;background-color:#f5f5f5;color:#464646;vertical-align:top;width:298px;height:150px;min-width:255px" class="odoocol_mv bg-color">
+                                            <table style="width:100%;border-collapse:separate;background:inherit;color:inherit">
+                                                <tr>
+                                                    <td style="padding-top:20px;padding-left:20px;float:left" width="90%">
+                                                        <div style="min-height:100px;text-align:left">
+                                                            <p style="margin:0;font-size:18px">Your Event Name</p>
+                                                            <p style="margin:0;font-size:14px">Description</p>
+                                                        </div>
+                                                        <ul style="padding-left:0">
+                                                            <li style="display: table-cell;cursor: pointer;color: #1e1e1e;font-size: 11px;font-weight: 300;padding: 3px 30px;text-align: center"><a href="#" style="color:#1e1e1e">Link </a></li>
+                                                            <li style="display: table-cell;cursor: pointer;color: #1e1e1e;font-size: 11px;font-weight: 300;padding: 3px 30px;text-align: center"><a href="#" style="color:#1e1e1e">Info</a></li>
+                                                        </ul>
+                                                    </td>
+                                                    <td style="width: 60px;vertical-align:middle;display: table-cell">
+                                                        <ul t-if="website" style="border-left:1px solid #e6e6e6;list-style-type:none;padding-left:16px">
+                                                            <t t-if="website.social_facebook">
+                                                                <li style="width:33%;margin-left:0">
+                                                                    <a t-att-href="website.social_facebook">
+                                                                      <span style="color: rgb(75,110,168);" class="odoo fa fa-facebook-square fa-2x"></span>
+                                                                    </a>
+                                                                </li>
+                                                            </t>
+                                                            <t t-if="website.social_twitter">
+                                                                <li style="width:34%;margin-left:0">
+                                                                    <a t-att-href="website.social_twitter">
+                                                                      <span style="color: rgb(75,110,168);" class="odoo fa fa-twitter-square fa-2x"></span>
+                                                                    </a>
+                                                                </li>
+                                                            </t>
+                                                            <t t-if="website.social_googleplus">
+                                                                <li style="width:33%;margin-left:0">
+                                                                    <a t-att-href="website.social_googleplus">
+                                                                      <span style="color: rgb(221,75,57);" class="odoo fa fa-google-plus-square fa-2x"></span>
+                                                                    </a>
+                                                                </li>
+                                                            </t>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
                                             </table>
                                         </td>
                                     </tr>
-                                </tbody>
-                            </table>
+                                </table>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <div name="User Profile" class="odoo o_mail_block_profile">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" cellpadding="0" cellspacing="0" width="600" class="table-styles">
+                                    <tr>
+                                        <td class="horizontal-padding vertical-padding" style="text-align:center;width:30%">
+                                            &amp;nbsp;
+                                            <span class="odoo fa fa-user fa-5x" style="margin: 5px 20px;"></span>
+                                            &amp;nbsp;
+                                            <p>User: John Doe</p>
+                                        </td>
+                                        <td class="horizontal-padding vertical-padding">
+                                            <p style="margin:0">Hey Bob,</p>
+                                            <p style="margin:0">I set up an Odoo profile where I can do tons of really awesome stuff. I want you to follow me so we can keep in touch!</p>
+                                            <p style="margin:0">See you soon!</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="horizontal-padding vertical-padding" colspan="2">
+                                            <p style="margin:0">Because I've invited you, you can also use the below coupon code to receive a 50% discount on you first months subscription!</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
-                    <div name="Image Title" class="basic_theme o_mail_block_title_text">
-                        <div class="snippet_row bg-color" style="padding:0px; margin:auto;width:600px;background: #fff repeat top /100%;color:#777777">
-                            <table cellpadding="0" cellspacing="0" style="margin:auto;border-collapse:collapse;background:inherit;color:inherit;width:600px">
+                    <div name="Content Table" class="odoo o_mail_block_table_content">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" cellspacing="0" cellpadding="0" class="table-styles" width="600">
+                                    <tbody>
+                                        <tr>
+                                            <td class="horizontal-padding vertical-padding">
+                                                <table width="560" cellspacing="0" cellpadding="0" class="table-styles vertical-padding" style="margin-bottom:10px;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td valign="top" width="300">
+                                                                <p style="margin:0"><strong>Bob Erlicious</strong></p>
+                                                                <p style="margin:0">
+                                                                    123 Flower Drive<br/>
+                                                                    Victoria, BC<br/>
+                                                                    V9P 2E8<br/>
+                                                                    1(250)222-2232
+                                                                </p>
+                                                            </td>
+                                                            <td valign="top" width="300">
+                                                                <p style="margin:0"><strong>Invoice: 00234</strong></p>
+                                                                <p style="margin:0">April 3, 2014</p>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <table width="560" cellspacing="0" cellpadding="0" class="table-styles">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <table width="560" cellspacing="0" cellpadding="0" class="table-styles" data-max-width="560px">
+                                                                    <thead>
+                                                                        <tr style="background-color:#875a7b;" bgcolor="#875a7b" class="odoo row col">
+                                                                            <th style="padding: 10px 0px 10px 10px;color: #ffffff;color: #ffffff;" class="odoo mv">Plan</th>
+                                                                            <th style="padding: 10px 0px;color: #ffffff;" class="odoo mv">Period</th>
+                                                                            <th style="padding: 10px 10px 10px 0;color: #ffffff;text-align:right;" class="odoo mv">Amount</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr style="color:#464646" class="odoo row bg-color">
+                                                                            <td style="padding: 10px 0px 10px 10px;">Silver Plan</td>
+                                                                            <td style="padding:10px 0px;">August</td>
+                                                                            <td style="padding:10px 10px 10px 0;text-align:right;">$50.00</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="horizontal-padding vertical-padding">
+                                                <p>
+                                                    The amount of $50.00 CAD has been charged on the credit card ending with 0123.
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div name="Two Columns" class="odoo o_mail_block_two_cols">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" cellspacing="0" cellpadding="0" class="table-styles" width="600">
+                                    <tbody>
+                                        <tr>
+                                            <td style="vertical-align:top;width:270;padding:20px 10px 20px 20px;" class="odoo col_mv">
+                                                <img src="http://www.odoocdn.com/openerp_website/static/src/img/2016/crm/case_study_eolides.jpg" style="height:auto;max-width:270px;width:270px;" alt="Your Logo" />
+                                                <p class="display-2 text-center">Step 1</p>
+                                                <p style="margin:0;" class="text-center">
+                                                    We need you to update your account information. If there is ever a problem with your account, this information will make it easier for you to log back in.
+                                                </p>
+                                            </td>
+                                            <td style="vertical-align:top;width:270;padding:20px 20px 20px 10px;" class="odoo col_mv">
+                                                <img src="http://www.odoocdn.com/openerp_website/static/src/img/2016/crm/case_study_progenda.jpg" style="height:auto;max-width:270px;width:270px;" alt="Your Logo" />
+                                                <p class="display-2 text-center">Step 2</p>
+                                                <p style="margin:0;" class="text-center">
+                                                    We need you to update your account information. If there is ever a problem with your account, this information will make it easier for you to log back in.
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div name="Image - Text" class="odoo o_mail_block_image_text">
+                        <div class="odoo snippet_row mv">
+                            <div class="snippet-general">
+                                <table align="center" cellspacing="0" cellpadding="0" class="table-styles" width="600">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width:270px;text-align:center;vertical-align:middle" class="odoo col_mv horizontal-padding vertical-padding">
+                                                <img src="http://www.odoocdn.com/openerp_website/static/src/img/2016/crm/case_study_eolides.jpg" style="height:auto;width:100%;" alt="Your Logo" />
+                                            </td>
+                                            <td style="width:270px;vertical-align:middle;text-align:justify;" class="odoo col_mv bg-color horizontal-padding vertical-padding">
+                                                <p style="margin:0">We need you to update your account information. If there is ever a problem with your account, this information will make it easier for you to log back in.</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div name="Text - Image" class="odoo o_mail_block_image_text">
+                        <div class="odoo snippet_row mv">
+                            <div class="snippet-general">
+                                <table align="center" cellspacing="0" cellpadding="0" class="table-styles" width="600">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width:270px;vertical-align:middle;text-align:justify;" class="odoo col_mv bg-color horizontal-padding vertical-padding mobile-col">
+                                                <p style="margin:0">We need you to update your account information. If there is ever a problem with your account, this information will make it easier for you to log back in.</p>
+                                            </td>
+                                            <td style="width:270px;text-align:center;vertical-align:middle" class="odoo col_mv horizontal-padding vertical-padding">
+                                                <img src="http://www.odoocdn.com/openerp_website/static/src/img/2016/crm/case_study_eolides.jpg" style="height:auto;width:100%;" alt="Your Logo" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div name="Image" class="odoo o_mail_block_image">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" cellspacing="0" cellpadding="0" class="table-styles" width="600">
+                                    <tbody>
+                                        <tr>
+                                            <td width="100%" align="center" style="text-align:center" class="horizontal-padding vertical-padding">
+                                                &amp;nbsp;
+                                                <span class="odoo fa fa-camera fa-10x"></span>
+                                                &amp;nbsp;
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="100%" class="horizontal-padding vertical-padding">
+                                                <p style="margin:0"><strong>We need you to update your account information. If there is ever a problem with your account, this information will make it easier for you to log back in.</strong></p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div name="Text Block" class="odoo o_mail_block_simple_text">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
                                 <tbody>
-                                    <tr>
-                                        <td align="left" style="padding:20px">
-                                            <p style="margin:0;font-size:30px">Your order has shipped!</p>
-                                            <p style="margin:0;font-size:14px">
-                                                Dear Bob,<br/>
-                                                We would like you to know that your order has shipped! To track your order or make any changes please click the "my order" button below.
-                                            </p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align:center;width:200px;">
-                                            &amp;nbsp;
-                                            <span class="fa fa-10x fa-music"></span>
-                                            &amp;nbsp;
-                                        </td>
-                                    </tr>
+                                    <table align="center" cellspacing="0" cellpadding="0" class="table-styles" width="600">
+                                        <tbody>
+                                            <tr>
+                                                <td class="horizontal-padding vertical-padding">
+                                                    <p><strong>Dear ${object.name}</strong></p>
+                                                    <p style="margin:0">Great stories have personality. Consider telling a great story that provides personality. Writing a story with personality for potential clients will assist with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.<br/></p>
+                                                    <p>Great stories are for everyone even when only written for just one person. If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p>
+                                                    <p>Kind Regards,</p>
+                                                    <p style="margin:0">Michael Fletcher</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </tbody>
-                            </table>
+                            </div>
                         </div>
                     </div>
 
-                    <div name="Content Image" class="basic_theme o_mail_block_text_image">
-                        <div style="padding:0px; margin:auto;width:600px;background-color:#fff;color:#777777">
-                            <table cellpadding="0" cellspacing="0" width="600" style="margin:auto;border-collapse:collapse;background:inherit;color:inherit">
-                                <tbody>
-                                    <tr>
-                                        <td align="left" style="padding:20px" class="col_mv bg-color">
-                                            <p style="margin:0;font-size:14px">
-                                                We would like you to know that your order has shipped! To track your order or make any changes please click the "my order" button below.
-                                            </p>
-                                        </td>
-                                        <td style="text-align:center;vertical-align:middle;width:200px;" class="col_mv bg-color">
-                                            &amp;nbsp;
-                                            <span class="fa fa-10x fa-music"></span>
-                                            &amp;nbsp;
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div name="Background Image" class="odoo o_mail_block_text_on_img">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" cellspacing="0" cellpadding="0" class="table-styles" style="background-image:url('/mass_mailing_themes/static/src/img/skyline_bg.gif')" width="600">
+                                    <tbody>
+                                        <tr>
+                                            <td class="horizontal-padding vertical-padding text-center" style="vertical-align:middle">
+                                                <p class="display-1">
+                                                    YOUR ORDER HAS SHIPPED
+                                                </p>
+                                                <p class="display-2">
+                                                    To track your order or make any changes please click the button below.
+                                                </p>
+                                                <a href="#" class="newsletter-btn">My Account</a>
+                                                &amp;nbsp;
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
-                    <div name="Image Content" class="basic_theme o_mail_block_image_text">
-                        <div style="padding:0px; margin:auto;width:600px;background-color:#fff;color:#777777">
-                            <table cellpadding="0" cellspacing="0" width="600" style="margin:auto;border-collapse:collapse;background:inherit;color:inherit">
-                                <tbody>
-                                    <tr>
-                                        <td style="text-align:center;vertical-align:middle;width:200px;" class="col_mv bg-color">
-                                            &amp;nbsp;
-                                            <span class="fa fa-10x fa-music"></span>
-                                            &amp;nbsp;
-                                        </td>
-                                        <td style="padding:20px" class="col_mv bg-color">
-                                            <p style="margin:0;font-size:14px">
-                                                We would like you to know that your order has shipped! To track your order or make any changes please click the "my order" button below.
-                                            </p>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div name="Steps" class="odoo o_mail_block_steps">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" cellspacing="0" cellpadding="0" class="table-styles" width="600">
+                                    <tbody>
+                                        <tr>
+                                            <td style="background-color:#34c9a4;" class="odoo col_mv bg-color horizontal-padding vertical-padding">
+                                                <table class="table-styles">
+                                                    <tr>
+                                                        <td rowspan="2">
+                                                            &amp;nbsp;
+                                                            <span class="fa fa-check fa-3x" style="color:#fff;"></span>
+                                                            &amp;nbsp;
+                                                        </td>
+                                                        <td style="padding-left:10px;">
+                                                            <p style="font-weight:bold;margin:0 0 3px 0;color:#fff;" class="display-3">Step 1:</p>
+                                                            <p style="margin:0;color:#fff;">Place Order</p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="background-color:#F9F8F8;" class="odoo col_mv bg-color horizontal-padding vertical-padding">
+                                                <table class="table-styles">
+                                                    <tr>
+                                                        <td rowspan="2">
+                                                            &amp;nbsp;
+                                                            <span class="fa fa-truck fa-3x"></span>
+                                                            &amp;nbsp;
+                                                        </td>
+                                                        <td style="padding-left:10px;">
+                                                            <p style="font-weight:bold;margin:0 0 3px 0" class="display-3">Step 2:</p>
+                                                            <p style="margin:0">Shipping</p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="background-color:#F9F8F8;" class="odoo col_mv bg-color horizontal-padding vertical-padding">
+                                                <table class="table-styles">
+                                                    <tr>
+                                                        <td rowspan="2">
+                                                            &amp;nbsp;
+                                                            <span class="fa fa-usd fa-3x"></span>
+                                                            &amp;nbsp;
+                                                        </td>
+                                                        <td style="padding-left:10px;">
+                                                            <p style="font-weight:bold;margin:0 0 3px 0" class="display-3">Step 3:</p>
+                                                            <p style="margin:0">Payment</p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
-                    <div name="Button" class="basic_theme o_mail_block_button">
-                        <div class="snippet_row bg-color" style="padding:0;width:600px;max-width:600px;margin:0 auto;background: #fff repeat top /100%;color:#777777">
-                            <table style="width:600px;text-align:center;margin:0 auto;border-collapse:collapse;background:inherit;color:inherit">
-                                <tr>
-                                    <td class="row" style="padding:10px 0;text-align:center">
-                                        &amp;nbsp;
-                                        <a href="#" style="-webkit-user-select: none; padding: 6px 12px; font-size: 14px; line-height: 20px; color: rgb(255,255,255); border: none; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: rgb(101,101,101);border-radius:4px">My Account</a>
-                                        &amp;nbsp;
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div name="Three Columns" class="basic_theme o_mail_block_three_cols">
-                        <div style="padding:0px;width:600px;margin:auto;background-color:#fff;color:#000;color:#777777">
-                            <table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;background:inherit;color:inherit">
-                                <tbody>
-                                    <tr>
-                                        <td style="padding:30px 15px;width:33%;text-align:center;background-color:#fff;color:#777777;font-size:14px" class="col_mv bg-color">
-                                            &amp;nbsp;
-                                            <span class="fa fa-check fa-3x"></span>
-                                            &amp;nbsp;
-                                            <p style="margin:0;font-size:24px;font-weight:bold">Step 1</p>
-                                            <p style="margin:0">
-                                                We need you to update your account information. If there is ever a problem with your account, this information will make it easier for you to log back in.
-                                            </p>
-                                        </td>
-                                        <td style="vertical-align:top; padding: 30px 15px; width:34%;text-align:center;background-color:#fff;color:#777777;font-size:14px" class="col_mv bg-color">
-                                            &amp;nbsp;
-                                            <span class="fa fa-truck fa-3x"></span>
-                                            &amp;nbsp;
-                                            <p style="margin:0;font-size:24px;font-weight:bold">Step 2</p>
-                                            <p style="margin:0">
-                                                We need you to update your account information. If there is ever a problem with your account, this information will make it easier for you to log back in.
-                                            </p>
-                                        </td>
-                                        <td style="vertical-align:top; padding: 30px 15px; width:33%;text-align:center;background-color:#fff;color:#777777;font-size:14px" class="col_mv bg-color">
-                                            &amp;nbsp;
-                                            <span class="fa fa-usd fa-3x"></span>
-                                            &amp;nbsp;
-                                            <p style="margin:0;font-size:24px;font-weight:bold">Step 3</p>
-                                            <p style="margin:0">
-                                                We need you to update your account information. If there is ever a problem with your account, this information will make it easier for you to log back in.
-                                            </p>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div name="Text Block" class="basic_theme o_mail_block_simple_text">
-                        <div class="snippet_row bg-color" style="padding:0;width:600px;max-width:600px;margin:0 auto;background: #fff repeat top /100%;color:#777777">
-                            <table style="width:100%;text-align:justify;margin:0 auto;background:inherit;color:inherit;border-collapse:collapse;color:inherit">
-                                <tr>
-                                    <td style="padding:10px 30px;font-size:14px">
-                                        <p style="margin:0">Dear ${object.name}</p>
-                                        <p style="margin:0">Great stories have personality. Consider telling a great story that provides personality. Writing a story with personality for potential clients will assists with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.<br/></p>
-                                        <p style="margin:0">Great stories are for everyone even when only written for just one person. If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p>
-                                        <p style="margin:0">Kind Regards,</p>
-                                        <p style="margin:0">Michael Fletcher</p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div id="email_designer_default_extra" class="o_panel">
@@ -324,35 +701,40 @@
                     </span> Extra
                 </div>
                 <div class="o_panel_body">
-                    <div name="Separator" class="basic_theme o_mail_block_footer_seprator">
-                        <div style="padding:0px;width:600px;margin:auto;color:#777777;background-color:#FFFFFF">
-                            <table cellspacing="0" cellpadding="0" style="vertical-align:top;padding:0px;font-family:arial;font-size:12px;border-collapse:collapse;background:inherit;color:inherit">
-                                <tbody>
-                                    <tr>
-                                        <td valign="top" style="width:600px">
-                                            <div>
-                                                <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0"/>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+
+                    <div name="Separator" class="odoo o_mail_block_footer_seprator">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" cellspacing="0" cellpadding="0" class="table-styles" width="600">
+                                    <tbody>
+                                        <tr>
+                                            <td valign="top" style="width:600px">
+                                                <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;min-height:1px;line-height:0;margin:15px auto;"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                            </div>
                         </div>
                     </div>
 
-                    <div name="Tag Line" class="basic_theme o_mail_block_footer_tag_line">
-                        <div class="bg-color" style="padding:0px;width:600px;margin:auto;background:#fff;color:#777777">
-                            <table style="margin: 0 auto;border-collapse:collapse;background:inherit;color:inherit;width:600px" cellpadding="0" cellspacing="0">
-                                <tbody>
-                                    <tr>
-                                        <td valign="center" style="text-align:center;padding:5px">
-                                            <p style="margin:0;color:inherit;font-size:18px">Apps That Help You Grow Your Business</p>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div name="Tag Line" class="odoo o_mail_block_footer_tag_line">
+                        <div class="odoo snippet_row bg-color">
+                            <div class="snippet-general" bgcolor="#875a7b" style="background-color:#875a7b;width:600px;">
+                                <table class="table-styles" width="600" align="center" cellpadding="0" cellspacing="0">
+                                    <tbody>
+                                        <tr>
+                                            <td width="600" class="text-center horizontal-padding vertical-padding" bgcolor="#875a7b" style="background-color:#875a7b;">
+                                                <p class="display-2" style="color:#ffffff;margin:10px 0;">Apps That Help You Grow Your Business</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
             <div id="email_designer_default_footer" class="o_panel">
@@ -363,102 +745,102 @@
                     </span> Footers
                 </div>
                 <div class="o_panel_body">
-                    <div t-if="website" name="Social + Text" class="basic_theme o_mail_block_footer_social">
-                        <div class="snippet_row bg-color" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-                            <table style="margin: 0 auto;border-collapse:collapse;background:inherit;color:inherit;width:600px" cellpadding="0" cellspacing="0">
-                                <tbody>
-                                    <tr>
-                                        <td valign="center" style="padding:10px 15px 10px 10px">
-                                            <table border="0" cellpadding="0" cellspacing="0" align="center" style="border-collapse:collapse;color:inherit">
-                                                <tr>
-                                                    <td align="right">
-                                                        &amp;nbsp;
-                                                        <a t-att-href="(website.social_facebook) or '#'">
-                                                            <img src="/mass_mailing/static/src/img/theme_imgs/social_facebook.png" style="height:auto;max-width:70px" alt="social icon" />
-                                                        </a>
-                                                    </td>
-                                                    <td align="right" style="padding-left:5px">
-                                                        <a t-att-href="(website.social_twitter) or '#'">
-                                                            <img src="/mass_mailing/static/src/img/theme_imgs/social_twitter.png" style="height:auto;max-width:70px" alt="social icon" />
-                                                        </a>
-                                                    </td>
-                                                    <td align="right" style="padding-left:5px">
-                                                        <a t-att-href="(website.social_googleplus) or '#'">
-                                                            <img src="/mass_mailing/static/src/img/theme_imgs/social_googleplus.png" style="height:auto;max-width:70px" alt="social icon" />
-                                                        </a>
-                                                    </td>
-                                                    <td align="right" style="padding-left:5px">
-                                                        <a t-att-href="(website.social_linkedin) or '#'">
-                                                            <img src="/mass_mailing/static/src/img/theme_imgs/social_linkedin.png" style="height:auto;max-width:70px" alt="social icon" />
-                                                        </a>
-                                                    </td>
-                                                    <td align="right" style="padding-left:5px">
-                                                        <a href="#">
-                                                            <img src="/mass_mailing/static/src/img/theme_imgs/social_rss.png" style="height:auto;max-width:70px" alt="social icon" />
-                                                        </a>
-                                                        &amp;nbsp;
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-size:12px;text-align:center;padding:10px">
-                                            &amp;nbsp;
-                                            <a style="color:inherit" href="/unsubscribe_from_list">Unsubscribe</a> | <a style="color:inherit" href="/page/contactus">Contact</a>
-                                            &amp;nbsp;
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
 
-                    <div name="Text + Copyright" class="basic_theme o_mail_block_footer_copyright">
-                        <div class="snippet_row bg-color" style="padding:0px;width:600px;margin:auto;background: #fff repeat top /100%;color:#777777">
-                            <table cellspacing="0" cellpadding="0" style="margin:auto;width:600px;border-collapse:collapse;background:inherit;color:inherit">
-                                <tbody>
-                                    <tr>
-                                        <td style="font-size:12px;text-align:center;padding:10px">
-                                            &amp;nbsp;
-                                            <a style="color:inherit" href="/unsubscribe_from_list">Unsubscribe</a>
-                                            <t t-if="website"> | <a style="color:inherit" href="/page/contactus">Contact</a> </t>
-                                            &amp;nbsp;
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-size:12px;text-align:center;padding-bottom:10px">
-                                            <p style="margin:0">© 2014 All Rights Reserved</p>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div name="Text Only" class="basic_theme o_mail_block_footer_text">
-                        <div class="snippet_row bg-color" style="padding:0px;width:600px;margin:auto;background: #fff repeat top /100%;color:#777777">
-                            <center>
-                                <table width="600" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto; width:600px; border-collapse:collapse;background:inherit;color:inherit">
+                    <!-- <div t-if="website" name="Social + Text" class="odoo o_mail_block_footer_social">
+                        <div class="odoo snippet_row bg-color">
+                            <div class="snippet-general">
+                                <table align="center" cellspacing="0" cellpadding="0" class="table-styles" width="600">
                                     <tbody>
                                         <tr>
-                                            <td valign="middle" align="right" style="font-size:12px;padding:20px;text-align:center">
+                                            <td style="text-align:center">
                                                 &amp;nbsp;
-                                                <t t-if="website">
-                                                    <a style="color:inherit" href="/page/contactus">Contact Us</a> |
-                                                    <a style="color:inherit" t-att-href="(website.social_facebook) or '#'">Facebook</a> |
-                                                    <a style="color:inherit" t-att-href="(website.social_twitter) or '#'">Twitter</a> |
-                                                    <a style="color:inherit" href="#">Support</a> |
+                                                <t t-if="website.social_facebook">
+                                                    <a t-att-href="website.social_facebook">
+                                                      <span class="odoofa fa-facebook-square fa-2x"></span>
+                                                    </a>
                                                 </t>
-                                                <a href="/unsubscribe_from_list" style="color:inherit">Unsubscribe</a>
+                                                <t t-if="website.social_googleplus">
+                                                    <a t-att-href="website.social_googleplus">
+                                                      <span class="odoofa fa-google-plus-square fa-2x"></span>
+                                                      </a>
+                                                </t>
+                                                <t t-if="website.social_linkedin">
+                                                    <a t-att-href="website.social_linkedin">
+                                                      <span class="odoofa fa-linkedin-square fa-2x"></span>
+                                                      </a>
+                                                </t>
+                                                <t t-if="website.social_twitter">
+                                                    <a t-att-href="website.social_twitter">
+                                                      <span class="odoofa fa-twitter-square fa-2x"></span>
+                                                      </a>
+                                                </t>
+                                                &amp;nbsp;
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-size:12px;text-align:center;padding:10px">
+                                                &amp;nbsp;
+                                                <a href="/unsubscribe_from_list" style="color:#464646">Unsubscribe</a> | <a href="/page/contactus" style="color:#464646">Contact</a>
                                                 &amp;nbsp;
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
-                            </center>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <div name="Text + Copyright" class="odoo o_mail_block_footer_copyright">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table align="center" cellspacing="0" cellpadding="0" class="table-styles" width="600">
+                                    <tbody>
+                                        <tr>
+                                            <td class="horizontal-padding text-center" style="padding-top:10px;">
+                                                &amp;nbsp;
+                                                <a href="https://apps.odoo.com/unsubscribe_from_list" style="color:#34c9a4;text-align:center;">Unsubscribe</a>
+                                                <t t-if="website"> | <a href="/page/contactus" style="color:#34c9a4;text-align:center;">Contact</a> </t>
+                                                &amp;nbsp;
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="horizontal-padding vertical-padding">
+                                                <p style="margin:0;font-size:12px;text-align:center;">© 2014 All Rights Reserved</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
+
+                    <div name="Text Only" class="odoo o_mail_block_footer_text">
+                        <div class="odoo snippet_row">
+                            <div class="snippet-general">
+                                <table width="600" cellspacing="0" cellpadding="0" class="table-styles">
+                                    <tbody>
+                                        <tr>
+                                            <td valign="middle" align="right" style="font-size:12px;padding:10px;text-align:center">
+                                                &amp;nbsp;
+                                                <t t-if="website">
+                                                    <a href="/page/contactus" style="padding-right:3px;color:#464646">Contact Us</a> | 
+                                                    <t t-if="website.social_facebook">
+                                                        <a t-att-href="website.social_facebook" style="padding-right:3px;color:#464646">Facebook</a> | 
+                                                    </t>
+                                                    <t t-if="website.social_twitter">
+                                                        <a t-att-href="website.social_twitter" style="padding-right:3px;color:#464646">Twitter</a> | 
+                                                    </t>
+                                                </t>
+                                                <a href="https://apps.odoo.com/unsubscribe_from_list" style="color:#464646">Unsubscribe</a>
+                                                &amp;nbsp;
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
