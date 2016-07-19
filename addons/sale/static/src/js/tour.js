@@ -26,8 +26,9 @@ tour.register('sale_tour', [{
     content: _t("Use the breadcrumbs to <b>go back to preceeding screens</b>."),
     position: "bottom"
 }, {
-    trigger: 'li a[data-menu-xmlid="base.menu_sales"], .oe_secondary_menu_section[data-menu-xmlid="base.menu_sales"]',
+    trigger: 'li a[data-menu-xmlid="sales_team.menu_sales"], .oe_secondary_menu_section[data-menu-xmlid="sales_team.menu_sales"]',
     content: _t("Use this menu to access quotations, sales orders and customers."),
+    edition: "enterprise",
     position: "bottom"
 }, {
     trigger: ".o_main_navbar .o_menu_toggle",
