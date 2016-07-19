@@ -1696,21 +1696,27 @@ class BaseModel(object):
             }
         return result
 
-    def get_formview_id(self, cr, uid, id, context=None):
+    def get_formview_id(self, cr, uid, ids, context=None):
         """ Return an view id to open the document with. This method is meant to be
             overridden in addons that want to give specific view ids for example.
 
             :param int id: id of the document to open
         """
+        # TDE CLEANME: temporary workaround for saas-11, to remove in saas-12
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         return False
 
-    def get_formview_action(self, cr, uid, id, context=None):
+    def get_formview_action(self, cr, uid, ids, context=None):
         """ Return an action to open the document. This method is meant to be
             overridden in addons that want to give specific view ids for example.
 
             :param int id: id of the document to open
         """
-        view_id = self.get_formview_id(cr, uid, id, context=context)
+        # TDE CLEANME: temporary workaround for saas-11, to remove in saas-12
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        view_id = self.get_formview_id(cr, uid, ids, context=context)
         return {
             'type': 'ir.actions.act_window',
             'res_model': self._name,
@@ -1718,7 +1724,7 @@ class BaseModel(object):
             'view_mode': 'form',
             'views': [(view_id, 'form')],
             'target': 'current',
-            'res_id': id,
+            'res_id': ids[0],
             'context': context,
         }
 
