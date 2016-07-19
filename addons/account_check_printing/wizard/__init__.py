@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-import print_pre_numbered_checks
+import print_prenumbered_checks
