@@ -13,7 +13,6 @@ The check settings are located in the accounting journals configuration page.
     'depends': ['account'],
     'data': [
         'data/account_check_printing_data.xml',
-        'views/account_journal_dashboard_views.xml',
         'views/account_journal_views.xml',
         'views/account_payment_views.xml',
         'wizard/print_prenumbered_checks_views.xml'
