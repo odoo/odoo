@@ -18,7 +18,7 @@ that have no counterpart in the general financial accounts.
     'data': [
         'security/analytic_security.xml',
         'security/ir.model.access.csv',
-        'views/analytic_view.xml',
+        'views/analytic_account_views.xml',
     ],
     'demo': [
         'data/analytic_demo.xml',
