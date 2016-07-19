@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api
-from openerp.tools.safe_eval import safe_eval
+from odoo import models, fields, api
+from odoo.tools.safe_eval import safe_eval
+
 
 class AccountTaxPython(models.Model):
     _inherit = "account.tax"
@@ -24,7 +26,6 @@ class AccountTaxPython(models.Model):
             ":param product: product.product recordset singleton or None\n"
             ":param partner: res.partner recordset singleton or None")
 
-
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
         self.ensure_one()
         if self.amount_type == 'code':
@@ -39,7 +40,7 @@ class AccountTaxPython(models.Model):
         taxes = self.env['account.tax']
         company = self.env.user.company_id
         for tax in self:
-            localdict = {'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
+            localdict = {'price_unit': price_unit, 'quantity': quantity, 'product': product, 'partner': partner, 'company': company}
             safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
             if localdict.get('result', False):
                 taxes += tax
@@ -53,6 +54,7 @@ class AccountTaxPython(models.Model):
         ids = isinstance(ids, (int, long)) and [ids] or ids
         recs = self.browse(cr, uid, ids, context=context)
         return AccountTaxPython.compute_all(recs, price_unit, currency, quantity, product, partner)
+
 
 class AccountTaxTemplatePython(models.Model):
     _inherit = 'account.tax.template'
