@@ -231,7 +231,7 @@ class IrActionsReportXml(models.Model):
             else:
                 return self.env['report'].get_pdf(res_ids, report, data=data), 'pdf'
         else:
-            return report.create(data)
+            return report.create(self._cr, self._uid, res_ids, data, context=self._context)
 
 
 class IrActionsActWindow(models.Model):
