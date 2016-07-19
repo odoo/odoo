@@ -1,26 +1,24 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api
-from openerp import SUPERUSER_ID
-from openerp.exceptions import AccessError
-from openerp.osv import osv, fields
-from openerp.sql_db import TestCursor
-from openerp.tools import config
-from openerp.tools.misc import find_in_path
-from openerp.tools.translate import _
-from openerp.addons.web.http import request
-from openerp.tools.safe_eval import safe_eval as eval
-from openerp.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import AccessError
+from odoo.sql_db import TestCursor
+from odoo.tools import config
+from odoo.tools.misc import find_in_path
+from odoo.addons.web.http import request
+from odoo.tools.safe_eval import safe_eval as eval
+from odoo.exceptions import UserError
 
-import re
-import time
 import base64
 import logging
-import tempfile
 import lxml.html
 import os
+import re
 import subprocess
+import tempfile
+import time
+
 from contextlib import closing
 from distutils.version import LooseVersion
 from functools import partial
@@ -73,7 +71,7 @@ else:
         wkhtmltopdf_state = 'workers'
 
 
-class Report(osv.Model):
+class Report(models.Model):
     _name = "report"
     _description = "Report"
 
@@ -83,7 +81,8 @@ class Report(osv.Model):
     # Extension of ir_ui_view.render with arguments frequently used in reports
     #--------------------------------------------------------------------------
 
-    def render(self, cr, uid, ids, template, values=None, context=None):
+    @api.multi
+    def render(self, template, values=None):
         """Allow to render a QWeb template python-side. This function returns the 'ir.ui.view'
         render but embellish it with some variables/methods used in reports.
 
@@ -93,14 +92,11 @@ class Report(osv.Model):
         if values is None:
             values = {}
 
-        if context is None:
-            context = {}
+        context = dict(self.env.context, inherit_branding=True)  # Tell QWeb to brand the generated html
 
-        context = dict(context, inherit_branding=True)  # Tell QWeb to brand the generated html
-
-        view_obj = self.pool['ir.ui.view']
-
-        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        view_obj = self.env['ir.ui.view']
+        # Browse the user instead of using the sudo self.env.user
+        user = self.env['res.users'].browse(self.env.uid)
         website = None
         if request and hasattr(request, 'website'):
             if request.website is not None:
@@ -109,51 +105,42 @@ class Report(osv.Model):
 
         values.update(
             time=time,
-            context_timestamp=lambda t: fields.datetime.context_timestamp(cr, uid, t, context),
+            context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),
             editable=True,
             user=user,
             res_company=user.company_id,
             website=website,
-            web_base_url=self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'web.base.url', default='')
+            web_base_url=self.env['ir.config_parameter'].get_param('web.base.url', default='')
         )
-        return view_obj.render_template(cr, uid, template, values, context=context)
+        return view_obj.render_template(template, values)
 
     #--------------------------------------------------------------------------
     # Main report methods
     #--------------------------------------------------------------------------
-    @api.v7
-    def get_html(self, cr, uid, ids, report_name, data=None, context=None):
+    @api.model
+    def get_html(self, docids, report_name, data=None):
         """This method generates and returns html version of a report.
         """
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
         report_model_name = 'report.%s' % report_name
-        particularreport_obj = self.pool.get(report_model_name)
-        if particularreport_obj is not None:
-            return particularreport_obj.render_html(cr, uid, ids, data=data, context=context)
+        report_model = self.env.get(report_model_name)
+        if report_model is not None:
+            return report_model.render_html(data=data)
         else:
-            report = self._get_report_from_name(cr, uid, report_name)
-            report_obj = self.pool[report.model]
-            docs = report_obj.browse(cr, uid, ids, context=context)
+            report = self._get_report_from_name(report_name)
+            docs = self.env[report.model].browse(docids)
             docargs = {
-                'doc_ids': ids,
+                'doc_ids': docids,
                 'doc_model': report.model,
                 'docs': docs,
             }
-            return self.render(cr, uid, [], report.report_name, docargs, context=context).encode('utf-8')
+            return self.render(report.report_name, docargs).encode('utf-8')
 
-    @api.v8
-    def get_html(self, records, report_name, data=None):
-        return Report.get_html(self._model, self._cr, self._uid, records.ids,
-                               report_name, data=data, context=self._context)
-
-    @api.v7
-    def get_pdf(self, cr, uid, ids, report_name, html=None, data=None, context=None):
+    @api.model
+    def get_pdf(self, docids, report_name, html=None, data=None):
         """This method generates and returns pdf version of a report.
         """
-        if context is None:
-            context = {}
-
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
         # you make a request to read the assets while the transaction creating them is not done.
@@ -162,8 +149,9 @@ class Report(osv.Model):
         # This scenario happens when you want to print a PDF report for the first time, as the
         # assets are not in cache and must be generated. To workaround this issue, we manually
         # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
+        context = dict(self.env.context)
         if not config['test_enable']:
-            context = dict(context, commit_assetsbundle=True)
+            context['commit_assetsbundle'] = True
 
         # Disable the debug mode in the PDF rendering in order to not split the assets bundle
         # into separated files to load. This is done because of an issue in wkhtmltopdf
@@ -171,25 +159,25 @@ class Report(osv.Model):
         # Without this, the header/footer of the reports randomly disapear
         # because the resources files are not loaded in time.
         # https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2083
-        context = dict(context, debug=False)
+        context['debug'] = False
 
         if html is None:
-            html = self.get_html(cr, uid, ids, report_name, data=data, context=context)
+            html = self.get_html(docids, report_name, data=data)
 
         # The test cursor prevents the use of another environnment while the current
         # transaction is not finished, leading to a deadlock when the report requests
         # an asset bundle during the execution of test scenarios. In this case, return
         # the html version.
-        if isinstance(cr, TestCursor):
+        if isinstance(self.env.cr, TestCursor):
             return html
 
         # Get the ir.actions.report.xml record we are working on.
-        report = self._get_report_from_name(cr, uid, report_name)
+        report = self._get_report_from_name(report_name)
         # Check if we have to save the report or if we have to get one from the db.
-        save_in_attachment = self._check_attachment_use(cr, uid, ids, report)
+        save_in_attachment = self._check_attachment_use(docids, report)
         # Get the paperformat associated to the report, otherwise fallback on the company one.
         if not report.paperformat_id:
-            user = self.pool['res.users'].browse(cr, uid, uid)
+            user = self.env['res.users'].browse(self.env.uid)  # Rebrowse to avoid sudo user from self.env.user
             paperformat = user.company_id.paperformat_id
         else:
             paperformat = report.paperformat_id
@@ -198,12 +186,12 @@ class Report(osv.Model):
         headerhtml = []
         contenthtml = []
         footerhtml = []
-        irconfig_obj = self.pool['ir.config_parameter']
-        base_url = irconfig_obj.get_param(cr, SUPERUSER_ID, 'report.url') or irconfig_obj.get_param(cr, SUPERUSER_ID, 'web.base.url')
+        irconfig_obj = self.env['ir.config_parameter'].sudo()
+        base_url = irconfig_obj.get_param('report.url') or irconfig_obj.get_param('web.base.url')
 
         # Minimal page renderer
-        view_obj = self.pool['ir.ui.view']
-        render_minimal = partial(view_obj.render_template, cr, uid, 'report.minimal_layout', context=context)
+        view_obj = self.env['ir.ui.view']
+        render_minimal = partial(view_obj.render_template, 'report.minimal_layout')
 
         # The received html report must be simplified. We convert it in a xml tree
         # in order to extract headers, bodies and footers.
@@ -226,8 +214,8 @@ class Report(osv.Model):
                 # must set a relation between report ids and report's content. We use the QWeb
                 # branding in order to do so: searching after a node having a data-oe-model
                 # attribute with the value of the current report model and read its oe-id attribute
-                if ids and len(ids) == 1:
-                    reportid = ids[0]
+                if docids and len(docids) == 1:
+                    reportid = docids[0]
                 else:
                     oemodelnode = node.find(".//*[@data-oe-model='%s']" % report.model)
                     if oemodelnode is not None:
@@ -257,33 +245,26 @@ class Report(osv.Model):
 
         # Run wkhtmltopdf process
         return self._run_wkhtmltopdf(
-            cr, uid, headerhtml, footerhtml, contenthtml, context.get('landscape'),
+            headerhtml, footerhtml, contenthtml, context.get('landscape'),
             paperformat, specific_paperformat_args, save_in_attachment,
             context.get('set_viewport_size')
         )
 
-    @api.v8
-    def get_pdf(self, records, report_name, html=None, data=None):
-        return Report.get_pdf(self._model, self._cr, self._uid, records.ids,
-                              report_name, html=html, data=data, context=self._context)
-
-    @api.v7
-    def get_action(self, cr, uid, ids, report_name, data=None, context=None):
+    @api.model
+    def get_action(self, docids, report_name, data=None):
         """Return an action of type ir.actions.report.xml.
 
         :param ids: Ids of the records to print (if not used, pass an empty list)
         :param report_name: Name of the template to generate an action for
         """
-        if ids:
-            if not isinstance(ids, list):
-                ids = [ids]
-            context = dict(context or {}, active_ids=ids)
+        if isinstance(docids, list):
+            active_ids = docids
+        else:
+            active_ids = docids.ids
 
-        report_obj = self.pool['ir.actions.report.xml']
-        idreport = report_obj.search(cr, uid, [('report_name', '=', report_name)], context=context)
-        try:
-            report = report_obj.browse(cr, uid, idreport[0], context=context)
-        except IndexError:
+        context = dict(self.env.context, active_ids=active_ids)
+        report = self.env['ir.actions.report.xml'].with_context(context).search([('report_name', '=', report_name)])
+        if not report:
             raise UserError(_("Bad Report Reference") + _("This report is not loaded into the database: %s.") % report_name)
 
         return {
@@ -296,16 +277,11 @@ class Report(osv.Model):
             'context': context,
         }
 
-    @api.v8
-    def get_action(self, records, report_name, data=None):
-        return Report.get_action(self._model, self._cr, self._uid, records.ids,
-                                 report_name, data=data, context=self._context)
-
     #--------------------------------------------------------------------------
     # Report generation helpers
     #--------------------------------------------------------------------------
-    @api.v7
-    def _check_attachment_use(self, cr, uid, ids, report):
+    @api.model
+    def _check_attachment_use(self, docids, report):
         """ Check attachment_use field. If set to true and an existing pdf is already saved, load
         this one now. Else, mark save it.
         """
@@ -314,12 +290,12 @@ class Report(osv.Model):
         save_in_attachment['loaded_documents'] = {}
 
         if report.attachment:
-            records = self.pool[report.model].browse(cr, uid, ids)
-            filenames = self._attachment_filename(cr, uid, records, report)
+            records = self.env[report.model].browse(docids)
+            filenames = self._attachment_filename(records, report)
             attachments = None
             if report.attachment_use:
-                attachments = self._attachment_stored(cr, uid, records, report, filenames=filenames)
-            for record_id in ids:
+                attachments = self._attachment_stored(records, report, filenames=filenames)
+            for record_id in docids:
                 filename = filenames[record_id]
 
                 # If the user has checked 'Reload from Attachment'
@@ -344,11 +320,6 @@ class Report(osv.Model):
 
         return save_in_attachment
 
-    @api.v8
-    def _check_attachment_use(self, records, report):
-        return Report._check_attachment_use(
-            self._model, self._cr, self._uid, records.ids, report, context=self._context)
-
     @api.model
     def _attachment_filename(self, records, report):
         return dict((record.id, eval(report.attachment, {'object': record, 'time': time})) for record in records)
@@ -366,7 +337,8 @@ class Report(osv.Model):
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
 
-    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None, set_viewport_size=False):
+    @api.model
+    def _run_wkhtmltopdf(self, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None, set_viewport_size=False):
         """Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 
@@ -469,7 +441,7 @@ class Report(osv.Model):
                             'res_id': reporthtml[0],
                         }
                         try:
-                            self.pool['ir.attachment'].create(cr, uid, attachment)
+                            self.env['ir.attachment'].create(attachment)
                         except AccessError:
                             _logger.info("Cannot save PDF report %r as attachment", attachment['name'])
                         else:
@@ -499,16 +471,16 @@ class Report(osv.Model):
 
         return content
 
-    def _get_report_from_name(self, cr, uid, report_name):
+    @api.model
+    def _get_report_from_name(self, report_name):
         """Get the first record of ir.actions.report.xml having the ``report_name`` as value for
         the field report_name.
         """
-        report_obj = self.pool['ir.actions.report.xml']
+        report_obj = self.env['ir.actions.report.xml']
         qwebtypes = ['qweb-pdf', 'qweb-html']
         conditions = [('report_type', 'in', qwebtypes), ('report_name', '=', report_name)]
-        context = self.pool['res.users'].context_get(cr, uid)
-        idreport = report_obj.search(cr, uid, conditions, context=context)[0]
-        return report_obj.browse(cr, uid, idreport, context=context)
+        context = self.env['res.users'].context_get()
+        return report_obj.with_context(context).search(conditions, limit=1)
 
     def _build_wkhtmltopdf_args(self, paperformat, specific_paperformat_args=None):
         """Build arguments understandable by wkhtmltopdf from a report.paperformat record.
