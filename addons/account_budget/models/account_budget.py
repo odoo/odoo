@@ -203,9 +203,3 @@ class crossovered_budget_lines(osv.osv):
     }
 
 
-class account_analytic_account(osv.osv):
-    _inherit = "account.analytic.account"
-
-    _columns = {
-        'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'analytic_account_id', 'Budget Lines'),
-    }
