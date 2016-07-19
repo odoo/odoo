@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models
+from odoo import api, fields, models
 
-class print_pre_numbered_checks(models.TransientModel):
+
+class PrintPreNumberedChecks(models.TransientModel):
     _name = 'print.prenumbered.checks'
     _description = 'Print Pre-numbered Checks'
 
