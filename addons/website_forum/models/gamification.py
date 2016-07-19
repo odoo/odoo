@@ -3,15 +3,10 @@
 from openerp import models, fields, api
 
 
-class gamification_challenge(models.Model):
+class Challenge(models.Model):
     _inherit = 'gamification.challenge'
 
-    @api.model
-    def _get_categories(self):
-        res = super(gamification_challenge, self)._get_categories()
-        res.append(('forum', 'Website / Forum'))
-        return res
-
+    category = fields.Selection(selection_add=[('forum', 'Website / Forum')])
 
 class Badge(models.Model):
     _inherit = 'gamification.badge'
