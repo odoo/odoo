@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-08 15:14+0000\n"
-"PO-Revision-Date: 2016-07-09 16:18+0000\n"
+"PO-Revision-Date: 2016-07-14 19:14+0000\n"
 "Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgid ""
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
 "            "
-msgstr "\n            \n<p>Ola,</p>\n\n\n<p>Temos sido contactados por essas perspectivas que estão em sua região. Assim, oss seguintes prospectos têm sido atribuídos a ${ctx['partner_id'].name}:</p>\n\n<ol>\n% for lead in ctx['partner_leads']:\n     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'E-mail Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n% endfor\n</ol>\n\n% if ctx.get('partner_in_portal'):\n<p>Por favor, conectar ao <a href=\"${object.get_portal_url()}\">Parceiro de Portal </a> para saber os detalhes. Em cada prospecto são dois botões no canto superior esquerdo que você deve pressionar depois de ter contactado a frente do marcador. \"Eu estou interessado\" e \"Eu não estou interessado\".</p>\n% else:\n<p>\n    Você ainda não tem cadastro em nosso banco de dados para acessar o porta. Por favor contacte\n    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.e-mail and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.e-mail) or 'us'}.\n</p>\n% endif\n<p>O prospecto será enviado para outro parceiro, se você não entrar em contato com a liderança antes de 20 dias.</p>\n\n<p>Thanks,</p>\n\n<pre>\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n</pre>\n% if not ctx['partner_id'].user_id:\nObs: Parece que você não tem um gerente de conta atribuída a você, entre em contato conosco\n% endif\n            "
+msgstr "\n            \n<p>Ola,</p>\n\n\n<p>Temos sido contactados por estes prospectos que estão em sua região. Assim, os seguintes prospectos têm sido atribuídos a ${ctx['partner_id'].name}:</p>\n\n<ol>\n% for lead in ctx['partner_leads']:\n     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'E-mail Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n% endfor\n</ol>\n\n% if ctx.get('partner_in_portal'):\n<p>Por favor, conecte-se ao <a href=\"${object.get_portal_url()}\">Portal do Parceiro </a> para saber os detalhes. Em cada prospecto são existem botões no canto superior esquerdo que você deve pressionar depois de ter contactado o prospecto: \"Eu estou interessado\" e \"Eu não estou interessado\".</p>\n% else:\n<p>\n    Você ainda não tem cadastro em nosso banco de dados para acessar o portal. Por favor contacte\n    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.e-mail and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.e-mail) or 'us'}.\n</p>\n% endif\n<p>O prospecto será enviado para outro parceiro, se você não entrar em contato com o prospecto antes de 20 dias.</p>\n\n<p>Obrigado,</p>\n\n<pre>\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n</pre>\n% if not ctx['partner_id'].user_id:\nObs: Parece que você não tem um gerente de conta atribuída a você, entre em contato conosco.\n% endif\n            "
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,nbr:0
@@ -536,7 +536,7 @@ msgstr "Prospectos e Oportunidades"
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Leads Analysis"
-msgstr "Analisar Prospecções"
+msgstr "Analisar Prospectos"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
