@@ -38,6 +38,7 @@ Three reports are available:
         'report/crossovered_budget_report_templates.xml',
         'security/ir.model.access.csv',
         'security/account_budget_security.xml',
+        'views/account_analytic_account_views.xml',
         'views/account_budget_views.xml',
         'wizard/account_budget_analytic_views.xml',
         'wizard/account_budget_report_views.xml',
