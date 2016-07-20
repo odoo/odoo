@@ -14,6 +14,7 @@ import subprocess
 import logging
 import os
 import passlib.utils
+import re
 import socket
 import sys
 import threading
@@ -321,6 +322,26 @@ def topological_sort(elems):
     map(visit, elems)
 
     return result
+
+
+try:
+    import xlwt
+
+    # add some sanitizations to respect the excel sheet name restrictions
+    # as the sheet name is often translatable, can not control the input
+    class PatchedWorkbook(xlwt.Workbook):
+        def add_sheet(self, name):
+            # invalid Excel character: []:*?/\
+            name = re.sub(r'[\[\]:*?/\\]', '', name)
+
+            # maximum size is 31 characters
+            name = name[:31]
+            return super(PatchedWorkbook, self).add_sheet(name)
+
+    xlwt.Workbook = PatchedWorkbook
+
+except ImportError:
+    xlwt = None
 
 
 class UpdateableStr(local):
