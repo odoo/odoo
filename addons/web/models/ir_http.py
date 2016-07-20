@@ -21,7 +21,8 @@ class Http(models.AbstractModel):
         return {
             "session_id": request.session_id,
             "uid": request.session.uid,
-            "is_admin": request.env.uid == openerp.SUPERUSER_ID,
+            "is_admin": request.env.user.has_group('base.group_system'),
+            "is_superuser": request.env.user._is_superuser(),
             "user_context": request.session.get_context() if request.session.uid else {},
             "db": request.session.db,
             "server_version": version_info.get('server_version'),
