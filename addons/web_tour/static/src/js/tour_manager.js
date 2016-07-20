@@ -96,7 +96,7 @@ return core.Class.extend({
      * active tours otherwise). Should be called each time the DOM changes.
      */
     update: function (tour_name) {
-        this.in_modal = this.$body.hasClass('modal-open');
+        this.$modal_displayed = $('.modal:visible').last();
         tour_name = this.running_tour || tour_name;
         if (tour_name) {
             this._check_for_tooltip(this.active_tooltips[tour_name], tour_name);
@@ -105,7 +105,13 @@ return core.Class.extend({
         }
     },
     _check_for_tooltip: function (tip, tour_name) {
-        var $trigger = $((this.in_modal ? '.modal ' : '') + tip.trigger).filter(':visible').first();
+        var $trigger;
+        if (this.$modal_displayed.length) {
+            $trigger = this.$modal_displayed.find(tip.trigger);
+        } else {
+            $trigger = $(tip.trigger);
+        }
+        $trigger = $trigger.filter(':visible').first();
         var extra_trigger = tip.extra_trigger ? $(tip.extra_trigger).filter(':visible').length : true;
         var triggered = $trigger.length && extra_trigger;
         if (triggered) {
