@@ -11,7 +11,7 @@ Product extension. This module adds:
 """,
     "init_xml" : [],
     "demo_xml" : [],
-    "data": ["product_extended_view.xml"],
+    "data": ["views/product_views.xml"],
     "active": False,
     "installable": True
 }
