@@ -82,12 +82,14 @@
 
         <record model="ir.actions.act_window.view" id="act_hr_timesheet_line_view_tree">
             <field name="view_mode">tree</field>
+            <field name="sequence">1</field>
             <field name="view_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="act_window_id" ref="act_hr_timesheet_line"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="act_hr_timesheet_line_view_form">
             <field name="view_mode">form</field>
+            <field name="sequence">2</field>
             <field name="view_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="act_window_id" ref="act_hr_timesheet_line"/>
         </record>
