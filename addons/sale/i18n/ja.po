@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-07-06 14:51+0000\n"
+"PO-Revision-Date: 2016-07-14 14:10+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -225,7 +225,7 @@ msgstr "受注明細での値引を許可"
 msgid ""
 "Allow to edit sales order from the 'Sales Order' menu (not from the "
 "Quotation menu)"
-msgstr "'受注'メニューから受注オーダーの編集を許可('見積'メニューからでなく)"
+msgstr "「受注」メニューから受注の編集を許可 (「見積」メニューからでなく)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
@@ -320,7 +320,7 @@ msgstr "チーム目標設定"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_commercial_partner_id
 msgid "Commercial Entity"
-msgstr ""
+msgstr "取引先"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -421,7 +421,7 @@ msgstr "顧客ポータル"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_date
 msgid "Date Order"
-msgstr "日付順"
+msgstr "オーダ日"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -492,12 +492,12 @@ msgstr "この受注の配送先"
 #: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr ""
+msgstr "デポジット"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
-msgstr ""
+msgstr "デポジット製品"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
@@ -513,12 +513,12 @@ msgstr "顧客ごとに異なる販売価格"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
 msgid "Discount"
-msgstr "割引"
+msgstr "値引"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_discount
 msgid "Discount (%)"
-msgstr "割引（%）"
+msgstr "値引 (%)"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
@@ -600,7 +600,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
 msgid "Enable customer portal to track orders, delivery and invoices"
-msgstr "オーダー、配送、請求を追跡する顧客ポータルを可能にする"
+msgstr "オーダ、配送、請求を追跡する顧客ポータルを有効化する"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_property_account_expense_id
@@ -768,7 +768,7 @@ msgstr "現在の受注の請求先アドレス"
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
 msgid "Invoice based on costs (time and material, expenses)"
-msgstr "コストに基づき請求(タイムアンドマテリアル、経費)"
+msgstr "コストに基づき請求 (タイムアンドマテリアル、経費)"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
@@ -872,7 +872,7 @@ msgstr ""
 msgid ""
 "Invoicing and shipping addresses are always the same (Example: services "
 "companies)"
-msgstr "請求先と配送先アドレスは常に同じ(例: サービス会社)"
+msgstr "請求先と配送先アドレスは常に同じ (例: サービス会社)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
@@ -887,7 +887,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "最終メッセージ日"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
@@ -914,7 +914,7 @@ msgstr "最終更新日"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
 msgid "Manage subscriptions and recurring invoicing"
-msgstr ""
+msgstr "サブスクリプションと繰返請求を管理"
 
 #. module: sale
 #: selection:product.template,track_service:0
@@ -924,7 +924,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
 msgid "Margins"
-msgstr "利鞘"
+msgstr "マージン"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_ids
@@ -939,7 +939,7 @@ msgstr "メッセージと通信履歴"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Orders"
-msgstr ""
+msgstr "自分のオーダ"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -960,12 +960,12 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr ""
+msgstr "新規見積"
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "No discount on sales order lines, global discount only"
-msgstr "受注明細での値引はなし（グローバルの値引のみ）"
+msgstr "受注明細での値引はなし、グローバルの値引のみ"
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
@@ -1042,7 +1042,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Order"
-msgstr "オーダー"
+msgstr "オーダ"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1052,7 +1052,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_date_order
 msgid "Order Date"
-msgstr "オーダー日"
+msgstr "オーダ日"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_order_line
@@ -1064,7 +1064,7 @@ msgstr "受注明細"
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Order Month"
-msgstr ""
+msgstr "オーダ月"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_tree
@@ -1075,7 +1075,7 @@ msgstr "オーダ番号"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_order_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_name
 msgid "Order Reference"
-msgstr "オーダー参照"
+msgstr "オーダ参照"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_state
@@ -1106,7 +1106,7 @@ msgstr "受注数量"
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr "アップセル見積もり"
+msgstr "アップセル対象受注"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1230,12 +1230,12 @@ msgstr "製品"
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr "製品の特性（サイズ・色等）に基づきバリアントを生成"
+msgstr "製品の特性 (サイズ・色等) に基づきバリアントを生成"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
 msgid "Products have only one unit of measure (easier)"
-msgstr "全製品につき単位は1つのみ（簡易）"
+msgstr "全製品につき単位は1つのみ (簡易)"
 
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
@@ -1283,7 +1283,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr "見積 / オーダー"
+msgstr "見積 / オーダ"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1303,7 +1303,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Quotation Sent"
-msgstr "提出済見積"
+msgstr "見積提出済"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -1329,7 +1329,7 @@ msgstr "見積"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Quotations & Sales"
-msgstr "見積りと販売"
+msgstr "見積と販売"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -1371,7 +1371,7 @@ msgstr "受注明細"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
 msgid "Sale Order Modification"
-msgstr "受注オーダーの修正"
+msgstr "受注修正"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1497,12 +1497,12 @@ msgstr "販売チーム"
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Sales to Invoice"
-msgstr "請求書管理"
+msgstr "請求対象受注"
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Salespeople do not need to view margins when quoting"
-msgstr "販売員は見積時にマージンの表示を必要としない"
+msgstr "見積時にマージンを表示しない"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_salesman_id
@@ -1534,7 +1534,7 @@ msgstr "Eメールで送信"
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Send online quotations based on templates (advanced)"
-msgstr "テンプレートに基づきオンライン見積を送信(高度)"
+msgstr "テンプレートに基づきオンライン見積を送信 (高度)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_sequence
@@ -1561,12 +1561,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Setup default terms and conditions in your company settings."
-msgstr ""
+msgstr "会社設定にて、デフォルトの取引条件を定義してください。"
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "Show incoterms on sale orders and invoices"
-msgstr "受注オーダーと請求書にインコタームズを表示"
+msgstr "受注と請求書にインコタームズを表示"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_pricelist
@@ -1582,7 +1582,7 @@ msgstr ""
 #: selection:sale.config.settings,group_uom:0
 msgid ""
 "Some products may be sold/purchased in different unit of measures (advanced)"
-msgstr "複数の単位を使用（高度）"
+msgstr "複数の単位を使用 (高度)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1599,7 +1599,7 @@ msgstr "ステータス"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Subscriptions"
-msgstr ""
+msgstr "サブスクリプション"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_subtotal
@@ -1727,7 +1727,7 @@ msgid ""
 " partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
-msgstr "このレポートは見積と受注オーダー上の分析を実行します。分析は受注高をチェックし別のグループ基準（販売員、パートナ、製品など）により並べ替えます。まだ請求されていない受注の分析を実行するためにこのレポートを使います。総売上高を分析したい場合は、会計アプリケーションの中の請求書分析レポートを使用する必要があります。"
+msgstr "このレポートは見積と受注上の分析を実行します。分析は受注高をチェックし別のグループ基準（販売員、パートナ、製品など）により並べ替えます。まだ請求されていない受注の分析を実行するためにこのレポートを使います。総売上高を分析したい場合は、会計アプリケーションの中の請求書分析レポートを使用する必要があります。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -1829,7 +1829,7 @@ msgstr "税抜合計"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Upselling"
-msgstr ""
+msgstr "アップセル対象"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0

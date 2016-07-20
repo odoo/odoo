@@ -8,12 +8,13 @@
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2016
 # ook rio <riokoko5@gmail.com>, 2016
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-07-07 08:56+0000\n"
+"PO-Revision-Date: 2016-07-14 14:10+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -1463,7 +1464,7 @@ msgstr "金額"
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_signed
 msgid "Amount Due"
-msgstr ""
+msgstr "支払額"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
@@ -1713,7 +1714,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:156
 #, python-format
 msgid "BILL"
-msgstr ""
+msgstr "支払い"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -1858,7 +1859,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Bank account(s)"
-msgstr ""
+msgstr "銀行口座"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_company_footer
@@ -2453,7 +2454,7 @@ msgstr "コメント"
 #: model:ir.model.fields,field_description:account.field_account_invoice_commercial_partner_id
 #: model:ir.model.fields,help:account.field_account_invoice_report_commercial_partner_id
 msgid "Commercial Entity"
-msgstr ""
+msgstr "取引先"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
@@ -3277,12 +3278,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Disc.(%)"
-msgstr "割引（%）"
+msgstr "値引 (%)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_discount
 msgid "Discount (%)"
-msgstr "割引（%）"
+msgstr "値引 (%)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_balance_report_display_account
@@ -3385,7 +3386,7 @@ msgstr ""
 msgid ""
 "Display this bank account on the footer of printed documents like invoices "
 "and sales orders."
-msgstr "請求書や受注オーダーのような印刷されるドキュメントのフッターに現れる銀行口座が表示されます。"
+msgstr "請求書や受注のような印刷されるドキュメントのフッターに現れる銀行口座が表示されます。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -4991,7 +4992,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_last_post
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "最終メッセージ日"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment___last_update
@@ -5555,7 +5556,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_group_name
 #: model:ir.ui.view,arch_db:account.report_financial
 msgid "Name"
-msgstr ""
+msgstr "名称"
 
 #. module: account
 #. openerp-web
@@ -6329,7 +6330,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payments"
-msgstr ""
+msgstr "支払"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6738,7 +6739,7 @@ msgstr "Pythonコード"
 #: model:ir.model.fields,field_description:account.field_account_move_line_quantity
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Quantity"
-msgstr ""
+msgstr "数量"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_currency_exchange_journal_id
@@ -6976,12 +6977,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
 #: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Register Payment"
-msgstr ""
+msgstr "支払情報を登録"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Register Payments"
-msgstr ""
+msgstr "支払情報を登録"
 
 #. module: account
 #: model:ir.model,name:account.model_account_register_payments
@@ -7496,7 +7497,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "States"
-msgstr ""
+msgstr "州"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_states_count
@@ -7592,7 +7593,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template_account_id
 msgid "Tax Account"
-msgstr ""
+msgstr "税勘定"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_refund_account_id
@@ -7619,7 +7620,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_name
 msgid "Tax Description"
-msgstr ""
+msgstr "税詳細"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_group_id
@@ -8498,7 +8499,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
 #, python-format
 msgid "Total"
-msgstr ""
+msgstr "合計"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_tree
@@ -8748,7 +8749,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "税抜金額"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
