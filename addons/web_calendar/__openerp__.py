@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Web Calendar',
     'category': 'Hidden',
@@ -10,7 +13,7 @@ Odoo Web Calendar view.
     'version': '2.0',
     'depends': ['web'],
     'data' : [
-        'views/web_calendar.xml',
+        'views/web_calendar_templates.xml',
     ],
     'qweb': [
         'static/src/xml/*.xml',
