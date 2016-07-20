@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, models
 
 
-class product_template(models.Model):
+class ProductTemplate(models.Model):
     _name = 'product.template'
     _inherit = 'product.template'
 
@@ -13,7 +14,8 @@ class product_template(models.Model):
             if template.product_variant_count == 1:
                 return template.product_variant_ids[0].compute_price()
 
-class product_product(models.Model):
+
+class ProductProduct(models.Model):
     _name = 'product.product'
     _inherit = 'product.product'
 
