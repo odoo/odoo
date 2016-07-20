@@ -173,7 +173,9 @@ return core.Class.extend({
             this.running_tour = undefined;
             clearTimeout(this.running_tour_timeout);
         } else {
-            this.TourModel.call('consume', [tour_name]);
+            this.TourModel.call('consume', [[tour_name]]).then((function () {
+                this.consumed_tours.push(tour_name);
+            }).bind(this));
         }
     },
     _set_running_tour_timeout: function(tour_name, step) {
