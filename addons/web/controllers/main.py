@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import csv
@@ -23,23 +24,22 @@ from cStringIO import StringIO
 import babel.messages.pofile
 import werkzeug.utils
 import werkzeug.wrappers
-from openerp.api import Environment
 
 try:
     import xlwt
 except ImportError:
     xlwt = None
 
-import openerp
-import openerp.modules.registry
-from openerp.modules import get_resource_path
-from openerp.tools import topological_sort
-from openerp.tools.translate import _
-from openerp.tools import ustr
-from openerp.tools.misc import str2bool
-from openerp import http
-from openerp.http import request, serialize_exception as _serialize_exception
-from openerp.exceptions import AccessError
+import odoo
+import odoo.modules.registry
+from odoo.api import Environment
+from odoo.modules import get_resource_path
+from odoo.tools import topological_sort
+from odoo.tools.translate import _
+from odoo.tools.misc import str2bool
+from odoo import http
+from odoo.http import request, serialize_exception as _serialize_exception
+from odoo.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
 
@@ -48,7 +48,7 @@ if hasattr(sys, 'frozen'):
     path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
     loader = jinja2.FileSystemLoader(path)
 else:
-    loader = jinja2.PackageLoader('openerp.addons.web', "views")
+    loader = jinja2.PackageLoader('odoo.addons.web', "views")
 
 env = jinja2.Environment(loader=loader, autoescape=True)
 env.filters["json"] = json.dumps
@@ -57,7 +57,7 @@ env.filters["json"] = json.dumps
 BUNDLE_MAXAGE = 60 * 60 * 24 * 7
 
 #----------------------------------------------------------
-# OpenERP Web helpers
+# Odoo Web helpers
 #----------------------------------------------------------
 
 db_list = http.db_list
@@ -163,16 +163,16 @@ def module_installed(environment):
 
 def module_installed_bypass_session(dbname):
     try:
-        registry = openerp.modules.registry.RegistryManager.get(dbname)
+        registry = odoo.modules.registry.RegistryManager.get(dbname)
         with registry.cursor() as cr:
             return module_installed(
-                environment=Environment(cr, openerp.SUPERUSER_ID, {}))
+                environment=Environment(cr, odoo.SUPERUSER_ID, {}))
     except Exception:
         pass
     return {}
 
 def module_boot(db=None):
-    server_wide_modules = openerp.conf.server_wide_modules or ['web']
+    server_wide_modules = odoo.conf.server_wide_modules or ['web']
     serverside = []
     dbside = []
     for i in server_wide_modules:
@@ -245,7 +245,7 @@ def manifest_list(extension, mods=None, db=None, debug=None):
     db: a database name (return all installed modules in that database)
     """
     if debug is not None:
-        _logger.warning("openerp.addons.web.main.manifest_list(): debug parameter is deprecated")
+        _logger.warning("odoo.addons.web.main.manifest_list(): debug parameter is deprecated")
     files = manifest_glob(extension, addons=mods, db=db, include_remotes=True)
     return [wp for _fp, wp in files]
 
@@ -345,7 +345,7 @@ def generate_views(action):
     action['views'] = [(view_id, view_modes[0])]
 
 def fix_view_modes(action):
-    """ For historical reasons, OpenERP has weird dealings in relation to
+    """ For historical reasons, Odoo has weird dealings in relation to
     view_mode and the view_type attribute (on window actions):
 
     * one of the view modes is ``tree``, which stands for both list views
@@ -427,7 +427,7 @@ def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', un
         download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
 
 #----------------------------------------------------------
-# OpenERP Web web Controllers
+# Odoo Web web Controllers
 #----------------------------------------------------------
 class Home(http.Controller):
 
@@ -462,12 +462,12 @@ class Home(http.Controller):
             return http.redirect_with_hash(redirect)
 
         if not request.uid:
-            request.uid = openerp.SUPERUSER_ID
+            request.uid = odoo.SUPERUSER_ID
 
         values = request.params.copy()
         try:
             values['databases'] = http.db_list()
-        except openerp.exceptions.AccessDenied:
+        except odoo.exceptions.AccessDenied:
             values['databases'] = None
 
         if request.httprequest.method == 'POST':
@@ -551,7 +551,7 @@ class WebClient(http.Controller):
     @http.route('/web/webclient/translations', type='json', auth="none")
     def translations(self, mods=None, lang=None):
         request.disable_db = False
-        uid = openerp.SUPERUSER_ID
+        uid = odoo.SUPERUSER_ID
         if mods is None:
             m = request.registry.get('ir.module.module')
             mods = [x['name'] for x in m.search_read(request.cr, uid,
@@ -586,7 +586,7 @@ class WebClient(http.Controller):
 
     @http.route('/web/webclient/version_info', type='json', auth="none")
     def version_info(self):
-        return openerp.service.common.exp_version()
+        return odoo.service.common.exp_version()
 
     @http.route('/web/tests', type='http', auth="none")
     def index(self, mod=None, **kwargs):
@@ -613,15 +613,15 @@ class Database(http.Controller):
 
     def _render_template(self, **d):
         d.setdefault('manage',True)
-        d['insecure'] = openerp.tools.config['admin_passwd'] == 'admin'
-        d['list_db'] = openerp.tools.config['list_db']
-        d['langs'] = openerp.service.db.exp_list_lang()
-        d['countries'] = openerp.service.db.exp_list_countries()
+        d['insecure'] = odoo.tools.config['admin_passwd'] == 'admin'
+        d['list_db'] = odoo.tools.config['list_db']
+        d['langs'] = odoo.service.db.exp_list_lang()
+        d['countries'] = odoo.service.db.exp_list_countries()
         # databases list
         d['databases'] = []
         try:
             d['databases'] = http.db_list()
-        except openerp.exceptions.AccessDenied:
+        except odoo.exceptions.AccessDenied:
             monodb = db_monodb()
             if monodb:
                 d['databases'] = [monodb]
@@ -668,14 +668,14 @@ class Database(http.Controller):
     @http.route('/web/database/backup', type='http', auth="none", methods=['POST'], csrf=False)
     def backup(self, master_pwd, name, backup_format = 'zip'):
         try:
-            openerp.service.db.check_super(master_pwd)
+            odoo.service.db.check_super(master_pwd)
             ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
             filename = "%s_%s.%s" % (name, ts, backup_format)
             headers = [
                 ('Content-Type', 'application/octet-stream; charset=binary'),
                 ('Content-Disposition', content_disposition(filename)),
             ]
-            dump_stream = openerp.service.db.dump_db(name, None, backup_format)
+            dump_stream = odoo.service.db.dump_db(name, None, backup_format)
             response = werkzeug.wrappers.Response(dump_stream, headers=headers, direct_passthrough=True)
             return response
         except Exception, e:
@@ -742,7 +742,7 @@ class Session(http.Controller):
     @http.route('/web/session/modules', type='json', auth="user")
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
-        return module_installed(environment=request.env(user=openerp.SUPERUSER_ID))
+        return module_installed(environment=request.env(user=odoo.SUPERUSER_ID))
 
     @http.route('/web/session/save_session_action', type='json', auth="user")
     def save_session_action(self, the_action):
@@ -977,7 +977,7 @@ class Binary(http.Controller):
                 width = 500
             if height > 500:
                 height = 500
-            content = openerp.tools.image_resize_image(base64_source=content, size=(width or None, height or None), encoding='base64', filetype='PNG')
+            content = odoo.tools.image_resize_image(base64_source=content, size=(width or None, height or None), encoding='base64', filetype='PNG')
 
         image_base64 = content and base64.b64decode(content) or self.placeholder()
         headers.append(('Content-Length', len(image_base64)))
@@ -1054,14 +1054,14 @@ class Binary(http.Controller):
             dbname = db_monodb()
 
         if not uid:
-            uid = openerp.SUPERUSER_ID
+            uid = odoo.SUPERUSER_ID
 
         if not dbname:
             response = http.send_file(placeholder(imgname + imgext))
         else:
             try:
                 # create an empty registry
-                registry = openerp.modules.registry.Registry(dbname)
+                registry = odoo.modules.registry.Registry(dbname)
                 with registry.cursor() as cr:
                     cr.execute("""SELECT c.logo_web, c.write_date
                                     FROM res_users u
@@ -1155,7 +1155,7 @@ class Export(http.Controller):
             fields['.id'] = fields.pop('id', {'string': 'ID'})
 
         fields_sequence = sorted(fields.iteritems(),
-            key=lambda field: openerp.tools.ustr(field[1].get('string', '')))
+            key=lambda field: odoo.tools.ustr(field[1].get('string', '')))
 
         records = []
         for field_name, field in fields_sequence:
@@ -1275,7 +1275,7 @@ class ExportFormat(object):
         raise NotImplementedError()
 
     def from_data(self, fields, rows):
-        """ Conversion method from OpenERP's export data to whatever the
+        """ Conversion method from Odoo's export data to whatever the
         current export class outputs
 
         :params list fields: a list of fields to export
