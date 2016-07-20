@@ -196,6 +196,18 @@
                 <field name="user_id"/>
                 <field name="stage_id" domain="[]"/>
                 <separator/>
+                <filter string="My Activities" name="my_activity"
+                        domain="[('activity_log_ids.create_uid', '=', uid)]"/>
+                <filter string="Today Activities" name="today"
+                        domain="[('activity_log_ids.date_action', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="This Week Activities" name="this_week"
+                        domain="['&amp;', ('activity_log_ids.date_action', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                 ('activity_log_ids.date_action', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                        ]"/>
+                <filter string="Overdue Activities" name="overdue"
+                        domain="[('activity_log_ids.date_action', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                <separator/>
                 <field name="categ_ids"/>
                 <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]" string="Attachments"/>
                 <separator/>
@@ -246,6 +258,8 @@
                 <field name="message_needaction_counter"/>
                 <field name="attachment_number"/>
                 <field name="active"/>
+                <field name="activity_log_ids" />
+                <field name="activity_state" />
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -278,6 +292,9 @@
                                         <t t-if="record.date_action.raw_value"> : </t>
                                         <field name="title_action"/>
                                 <div class="oe_kanban_bottom_right">
+                                    <div class="pull-right ml4">
+                                        <field name="activity_log_ids" widget="kanban_activity" />
+                                    </div>
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     <div class="pull-left" groups="base.group_user">
                                         <field name="priority" widget="priority"/>

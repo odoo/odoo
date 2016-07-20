@@ -125,4 +125,18 @@
             </tree>
         </field>
     </record>
+
+    <record id="mail_activity_log_calendar_view" model="ir.ui.view">
+        <field name="name">mail.activity.log.calendar.view</field>
+        <field name="model">mail.activity.log</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <calendar string="Activity"
+                date_start="date_action" color="next_activity_id">
+                <field name="record_name"/>
+                <field name="create_uid"/>
+                <field name="title_action"/>
+            </calendar>
+        </field>
+    </record>
 </odoo>

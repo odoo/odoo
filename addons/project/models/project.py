@@ -386,6 +386,11 @@ class Task(models.Model):
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation')
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation')
 
+    # Next activity
+    next_activity_id = fields.Many2one(related="activity_log_ids.next_activity_id", string="Next Activity")
+    date_action = fields.Date(related="activity_log_ids.date_action", string='Next Activity Date')
+    title_action = fields.Char(related="activity_log_ids.title_action", string='Next Activity Summary')
+
     @api.onchange('project_id')
     def _onchange_project(self):
         if self.project_id:

@@ -34,6 +34,18 @@
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator/>
+                    <filter string="My Activities" name="my_activity"
+                            domain="[('activity_log_ids.create_uid', '=', uid)]"/>
+                    <filter string="Today Activities" name="today"
+                            domain="[('activity_log_ids.date_action', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="This Week Activities" name="this_week"
+                            domain="['&amp;', ('activity_log_ids.date_action', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                     ('activity_log_ids.date_action', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                            ]"/>
+                    <filter string="Overdue Activities" name="overdue"
+                            domain="[('activity_log_ids.date_action', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                            help="Show all records which has next action date is before today"/>
                     <group expand="0" string="Group By">
                         <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
                         <filter string="Task" context="{'group_by':'name'}"/>
@@ -425,6 +437,8 @@ action = model.activate_sample_project()
                     <field name="legend_blocked"/>
                     <field name="legend_normal"/>
                     <field name="legend_done"/>
+                    <field name="activity_log_ids"/>
+                    <field name="activity_state"/>
                     <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
@@ -459,6 +473,9 @@ action = model.activate_sample_project()
                                     </t>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
+                                    <div class="pull-right ml4">
+                                        <field name="activity_log_ids" widget="kanban_activity"/>
+                                    </div>
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     <div class="pull-left" groups="base.group_user">
                                         <field name="kanban_state" widget="kanban_state_selection"/>

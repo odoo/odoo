@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_issue_activity_view_tree" model="ir.ui.view">
+        <field name="name">project.issue.activity.tree.view</field>
+        <field name="model">project.issue</field>
+        <field name="arch" type="xml">
+            <tree string="Next Activity" decoration-danger="date_action &lt; current_date" default_order="date_action">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="date_action"/>
+                <field name="next_activity_id"/>
+                <field name="title_action"/>
+                <field name="stage_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_project_issue_activity_log" model="ir.actions.act_window">
+        <field name="name">Activity</field>
+        <field name="res_model">project.issue</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="view_id" ref="project_issue_activity_view_tree"/>
+        <field name="context">{
+            'search_default_my_activity':1
+        }
+        </field>
+        <field name="help" type="html">
+            <p>
+                Currently there are not any activity scheduled.
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="My Issues Next Activities"
+        id="menu_project_task_next_activity"
+        parent="project.menu_project_management"
+        action="action_project_issue_activity_log"
+        sequence="25"/>
+</odoo>

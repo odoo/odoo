@@ -176,6 +176,8 @@
                     <field name="seats_used"/>
                     <field name="seats_expected"/>
                     <field name="color"/>
+                    <field name="activity_log_ids" />
+                    <field name="activity_state" />
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
@@ -215,6 +217,9 @@
                                         <a name="action_event_registration_report" type="object" >&#40;stats&#41;</a>
                                         </t>
                                     </h4>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="activity_log_ids" widget="kanban_activity" />
+                                    </div>
                                 </div>
                             </div>
                         </t>
@@ -247,6 +252,18 @@
                     <filter string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                     <separator/>
                     <filter string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
+                    <separator/>
+                    <filter string="My Activities" name="my_activity"
+                            domain="[('activity_log_ids.create_uid', '=', uid)]"/>
+                    <filter string="Today Activities" name="today"
+                            domain="[('activity_log_ids.date_action', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="This Week Activities" name="this_week"
+                            domain="['&amp;', ('activity_log_ids.date_action', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                     ('activity_log_ids.date_action', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                            ]"/>
+                    <filter string="Overdue Activities" name="overdue"
+                            domain="[('activity_log_ids.date_action', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                            help="Show all records which has next action date is before today"/>
                     <separator/>
                     <filter string="Upcoming" name="upcoming"
                         domain="['&amp;', ('state', '!=', 'cancel'), ('date_begin','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
@@ -392,6 +409,18 @@
                     <separator/>
                     <field name="event_id"/>
                     <field name="partner_id"/>
+                    <separator/>
+                    <filter string="My Activities" name="my_activity"
+                        domain="[('activity_log_ids.create_uid', '=', uid)]"/>
+                    <filter string="Today Activities" name="today"
+                        domain="[('activity_log_ids.date_action', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="This Week Activities" name="this_week"
+                        domain="['&amp;', ('activity_log_ids.date_action', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                 ('activity_log_ids.date_action', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                        ]"/>
+                    <filter string="Overdue Activities" name="overdue"
+                        domain="[('activity_log_ids.date_action', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>
