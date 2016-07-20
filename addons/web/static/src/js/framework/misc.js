@@ -155,6 +155,7 @@ core.action_registry.add("login", login);
 
 function logout() {
     redirect('/web/session/logout');
+    return $.Deferred();
 }
 core.action_registry.add("logout", logout);
 
