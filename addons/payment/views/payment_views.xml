@@ -138,7 +138,7 @@
                                     <img type="open" t-att-src="kanban_image('payment.acquirer', 'image_small', record.id.value)"/>
                                 </div>
                                 <div class="o_payment_acquirer_desc">
-                                    <h4><t t-esc="record.name.value"/></h4>
+                                    <h3 class="mt4"><t t-esc="record.name.value"/></h3>
                                     <t t-if="record.description.raw_value" t-raw="record.description.raw_value"/>
                                 </div>
                                 <div class="o_payment_acquirer_bottom">
