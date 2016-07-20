@@ -131,8 +131,11 @@ class wizard_user(osv.osv_memory):
         return id
 
     def action_apply(self, cr, uid, ids, context=None):
+        self.pool['res.partner'].check_access_rights(cr, uid, 'write')
         for wizard_user in self.browse(cr, SUPERUSER_ID, ids, context):
             portal = wizard_user.wizard_id.portal_id
+            if not portal.is_portal:
+                raise osv.except_osv("Error", "Not a portal: " + portal.name)
             user = self._retrieve_user(cr, SUPERUSER_ID, wizard_user, context)
             if wizard_user.in_portal:
                 # create a user if necessary, and make sure it is in the portal group
