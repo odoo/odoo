@@ -19,7 +19,7 @@ It is completely integrated with the cost accounting module. It allows you to se
 up a management by affair.
     """,
     'website': 'https://www.odoo.com/page/employees',
-    'depends': ['account', 'hr', 'project'],
+    'depends': ['hr', 'project'],
     'data': [
         'security/hr_timesheet_security.xml',
         'security/ir.model.access.csv',
@@ -31,12 +31,7 @@ up a management by affair.
         'hr_dashboard.xml',
     ],
     'demo': [
-        'hr_timesheet_demo.yml',
-    ],
-    'test': [
-        '../account/test/account_minimal_test.xml',
-        'test/hr_timesheet_users.yml',
-        'test/worktask_entry_to_timesheetline_entry.yml',
+        'demo/hr_timesheet_demo.xml',
     ],
     'installable': True,
     'application': True,
