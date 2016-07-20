@@ -22,7 +22,7 @@ Dialog = Dialog.extend({
         options = options || {};
         this._super(parent, _.extend({}, {
             buttons: [
-                {text: options.save_text || _t("Save"), classes: "btn-primary o_save_button", close: true, click: this.save},
+                {text: options.save_text || _t("Save"), classes: "btn-primary o_save_button", click: this.save},
                 {text: _t("Discard"), close: true}
             ]
         }, options));
