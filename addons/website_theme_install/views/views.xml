@@ -47,7 +47,7 @@
     </record>
 
     <!-- Actions to list themes with custom kanban (launched on module installation) -->
-    <record id="theme_install_kanban_action" model="ir.actions.act_window"> 
+    <record id="theme_install_kanban_action" model="ir.actions.act_window">
         <field name="name">Choose Your Theme</field>
         <field name="res_model">ir.module.module</field>
         <field name="view_mode">kanban</field>
@@ -74,4 +74,11 @@ action = {
         <field name="action_id" ref="theme_install_todo_action"/>
         <field name="type">automatic</field>
     </record>
+
+    <!-- Add link to theme install in default customize modal -->
+    <template id="customize_modal" inherit_id="website.theme_customize" priority="1">
+        <xpath expr="//div[hasclass('modal-header')]" position="inside">
+            <a href="/web#action=website_theme_install.theme_install_kanban_action">See themes here</a>
+        </xpath>
+    </template>
 </odoo>
