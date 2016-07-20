@@ -10,7 +10,7 @@ class ResPartnerGrade(models.Model):
     website_published = fields.Boolean(default=True)
     sequence = fields.Integer('Sequence')
     active = fields.Boolean('Active', default=lambda *args: 1)
-    name = fields.Char('Level Name')
+    name = fields.Char('Level Name', translate=True)
     partner_weight = fields.Integer('Level Weight', default=1,
         help="Gives the probability to assign a lead to this partner. (0 means no assignation.)")
 
