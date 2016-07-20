@@ -270,12 +270,9 @@ class Goal(models.Model):
                 for goal in goals:
                     # execute the chosen method
                     cxt = {
-                        'self': self.pool['gamification.goal'],
                         'object': goal,
-                        'pool': self.pool,
-                        'cr': self.env.cr,
-                        'context': dict(self.env.context), # copy context to prevent side-effects of eval
-                        'uid': self.env.uid,
+                        'env': self.env,
+
                         'date': date,
                         'datetime': datetime,
                         'timedelta': timedelta,
