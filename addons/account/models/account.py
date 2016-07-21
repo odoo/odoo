@@ -592,11 +592,11 @@ class AccountJournal(models.Model):
     @api.multi
     def _search_company_journals(self, operator, value):
         if value:
-            recs = self.search([('company_id', operator, self.env.user.company_id.id)])
+            recs = self.with_context(active_test=False).search([('company_id', operator, self.env.user.company_id.id)])
         elif operator == '=':
-            recs = self.search([('company_id', '!=', self.env.user.company_id.id)])
+            recs = self.with_context(active_test=False).search([('company_id', '!=', self.env.user.company_id.id)])
         else:
-            recs = self.search([('company_id', operator, self.env.user.company_id.id)])
+            recs = self.with_context(active_test=False).search([('company_id', operator, self.env.user.company_id.id)])
         return [('id', 'in', [x.id for x in recs])]
 
     @api.multi
