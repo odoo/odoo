@@ -24,6 +24,19 @@ class StockMove(osv.osv):
         if move.raw_material_production_id and move.product_id.tracking!='none' and move.location_dest_id.usage == 'production' and move.raw_material_production_id.product_id.tracking != 'none' and not move.consumed_for:
             raise UserError(_("Because the product %s requires it, you must assign a serial number to your raw material %s to proceed further in your production. Please use the 'Produce' button to do so.") % (move.raw_material_production_id.product_id.name, move.product_id.name))
 
+    def _prepare_explode_move(self, cr, uid, move, line, product, context=None):
+        return {
+            'picking_id': move.picking_id.id if move.picking_id else False,
+            'product_id': line['product_id'],
+            'product_uom': line['product_uom'],
+            'product_uom_qty': line['product_qty'],
+            'state': 'draft',  #will be confirmed below
+            'name': line['name'],
+            'procurement_id': move.procurement_id.id,
+            'split_from': move.id, #Needed in order to keep sale connection, but will be removed by unlink
+            'price_unit': product.standard_price,
+        }
+
     def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
         @param move: Stock moves
@@ -48,17 +61,8 @@ class StockMove(osv.osv):
             for line in res[0]:
                 product = prod_obj.browse(cr, uid, line['product_id'], context=context)
                 if product.type in ['product', 'consu']:
-                    valdef = {
-                        'picking_id': move.picking_id.id if move.picking_id else False,
-                        'product_id': line['product_id'],
-                        'product_uom': line['product_uom'],
-                        'product_uom_qty': line['product_qty'],
-                        'state': 'draft',  #will be confirmed below
-                        'name': line['name'],
-                        'procurement_id': move.procurement_id.id,
-                        'split_from': move.id, #Needed in order to keep sale connection, but will be removed by unlink
-                        'price_unit': product.standard_price,
-                    }
+                    valdef = self._prepare_explode_move(
+                        cr, uid, move, line, product, context=context)
                     mid = move_obj.copy(cr, uid, move.id, default=valdef, context=context)
                     to_explode_again_ids.append(mid)
                 else:
