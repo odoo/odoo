@@ -43,8 +43,8 @@ class AcquirerBuckaroo(osv.Model):
         return providers
 
     _columns = {
-        'brq_websitekey': fields.char('WebsiteKey', required_if_provider='buckaroo'),
-        'brq_secretkey': fields.char('SecretKey', required_if_provider='buckaroo'),
+        'brq_websitekey': fields.char('WebsiteKey', required_if_provider='buckaroo', groups='base.group_user'),
+        'brq_secretkey': fields.char('SecretKey', required_if_provider='buckaroo', groups='base.group_user'),
     }
 
     def _buckaroo_generate_digital_sign(self, acquirer, inout, values):
