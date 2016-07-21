@@ -1052,8 +1052,8 @@ var LinkDialog = Dialog.extend({
 
         if (!test && (!val || !$e[0].checkValidity())) {
             // FIXME: error message
-            $e.closest('.form-group').addClass('has-error');
             $e.focus();
+            this.$('.o-link-error').removeClass('o_hidden');
             def.reject();
         }
 
@@ -1121,6 +1121,7 @@ var LinkDialog = Dialog.extend({
             .addClass('active')
             .siblings().removeClass('active')
             .addBack().removeClass('has-error');
+        this.$('.o-link-error').addClass('o_hidden');
         this.preview();
     },
     onkeyup: function (e) {
