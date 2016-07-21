@@ -656,6 +656,12 @@ class QuantPackage(models.Model):
         self.unlink()
         return self.env['ir.actions.act_window'].for_xml_id('stock', 'action_package_view')
 
+    def action_view_picking(self):
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        pickings = self.env['stock.pack.operation'].search([('result_package_id', 'in', self.ids)]).mapped('picking_id')
+        action['domain'] = [('id', 'in', pickings.ids)]
+        return action
+
     @api.multi
     def view_content_package(self):
         action = self.env['ir.actions.act_window'].for_xml_id('stock', 'quantsact')
