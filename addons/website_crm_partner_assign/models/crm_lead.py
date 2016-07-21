@@ -218,29 +218,25 @@ class CrmLead(models.Model):
 
     @api.multi
     def update_lead_portal(self, values):
-        # YTI FIXME : Use the standard workflow defined in crm_activity
-        self.check_access_rights('write')
+        if values['date_action'] == '':
+            values['date_action'] = fields.Date.today()
         for lead in self:
-            if values['date_action'] == '':
-                values['date_action'] = False
-            if lead.next_activity_id.id != values['activity_id'] or lead.title_action != values['title_action']\
-               or lead.date_action != values['date_action']:
-                activity = lead.sudo().next_activity_id
-                body_html = "<div><b>%(title)s</b>: %(next_activity)s</div>%(description)s" % {
-                    'title': _('Activity Done'),
-                    'next_activity': activity.name,
-                    'description': lead.title_action and '<p><em>%s</em></p>' % lead.title_action or '',
-                }
-                lead.message_post(
-                    body=body_html,
-                    subject=lead.title_action,
-                    subtype="mail.mt_note")
-            lead.write({
+            lead_values = {
                 'planned_revenue': values['planned_revenue'],
                 'probability': values['probability'],
-                'next_activity_id': values['activity_id'],
-                'title_action': values['title_action'],
-                'date_action': values['date_action'] if values['date_action'] else False,
                 'priority': values['priority'],
                 'date_deadline': values['date_deadline'] if values['date_deadline'] else False,
-            })
+            }
+            if values['activity_id'] not in lead.activity_log_ids.mapped('next_activity_id.id')\
+                or values['title_action'] not in lead.activity_log_ids.mapped('title_action')\
+                    or values['date_action'] not in lead.activity_log_ids.mapped('date_action'):
+                # Add new activity, if any one of these changed.
+                lead_values.update({
+                    'activity_log_ids': [(0, 0, {
+                        'model': 'crm.lead',
+                        'next_activity_id': values['activity_id'],
+                        'title_action': values['title_action'],
+                        'date_action': values['date_action'],
+                    })]
+                })
+            lead.write(lead_values)
