@@ -69,9 +69,6 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _default_currency(self):
-        if 'default_purchase_id' in self.env.context:
-            purchase_id = self.env.context['default_purchase_id']
-            return self.env['purchase.order'].browse(purchase_id).currency_id
         journal = self._default_journal()
         return journal.currency_id or journal.company_id.currency_id
 
@@ -396,6 +393,7 @@ class AccountInvoice(models.Model):
             default_template_id=template.id,
             default_composition_mode='comment',
             mark_invoice_as_sent=True,
+            custom_layout="account.mail_template_data_notification_email_account_invoice"
         )
         return {
             'name': _('Compose Email'),

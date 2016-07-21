@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'Time Tracking',
+    'name': 'Timesheets',
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 23,
@@ -38,5 +38,6 @@ up a management by affair.
         'test/worktask_entry_to_timesheetline_entry.yml',
     ],
     'installable': True,
+    'application': True,
     'auto_install': False,
 }

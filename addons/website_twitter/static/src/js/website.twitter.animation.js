@@ -3,9 +3,8 @@ odoo.define('website_twitter.animation', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
-var base = require('web_editor.base');
+require('web_editor.base');
 var animation = require('web_editor.snippets.animation');
-var website = require('website.website');
 
 var qweb = core.qweb;
 
@@ -72,6 +71,9 @@ animation.registry.twitter = animation.Class.extend({
     },
     setupMouseEvents: function() {
         var self = this;
+        if (!this.$scroller) {
+            return;
+        }
         this.$scroller.mouseenter(function() {
             $(this).find('.scrollWrapper').each(function(index, el){
                 self.stop_scrolling($(el));
