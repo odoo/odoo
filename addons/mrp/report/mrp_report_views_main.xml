@@ -9,6 +9,9 @@
             file="mrp.report.mrp_bom_templates" 
             report_type="qweb-pdf"
         />
+        <record id="action_report_bom_structure" model="ir.actions.report.xml">
+            <field name="print_report_name">'BOM'+'-'+(object.product_id.name or object.product_tmpl_id.name)</field>
+        </record>
 
         <report 
             string="Production Order" 
@@ -18,6 +21,9 @@
             file="mrp.report.mrp_production_templates" 
             report_type="qweb-pdf"
         />
+        <record id="action_report_production_order" model="ir.actions.report.xml">
+            <field name="print_report_name">'Production Order'+'-'+(object.name)</field>
+        </record>
 
         <report
             string="BOM Cost"
@@ -27,5 +33,8 @@
             file="mrp_bom_cost"
             report_type="qweb-html"
         />
+        <record id="action_report_bom_price" model="ir.actions.report.xml">
+            <field name="print_report_name">'BOM Cost'+'-'+(object.product_id.name or object.product_tmpl_id.name)</field>
+        </record>
     </data>
 </odoo>
