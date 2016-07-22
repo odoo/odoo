@@ -930,8 +930,8 @@ var FormViewDialog = ViewDialog.extend({
             var fragment = document.createDocumentFragment();
             self.view_form.appendTo(fragment).then(function () {
                 self.view_form.do_show().then(function() {
-                    self.view_form.autofocus();
                     _super().$el.append(fragment);
+                    self.view_form.autofocus();
                 });
             });
         });
