@@ -13,7 +13,7 @@ import werkzeug.wrappers
 
 import openerp
 from openerp.addons.web.controllers.main import WebClient, Binary
-from openerp.addons.web import http
+from openerp import http
 from openerp.http import request
 from openerp.osv.orm import browse_record
 from openerp.addons.website.models.website import slug
