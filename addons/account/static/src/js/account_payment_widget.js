@@ -51,6 +51,7 @@ var ShowPaymentLineWidget = form_common.AbstractField.extend({
                     'placement': 'left',
                     'title': 'Payment Information',
                     'trigger': 'focus',
+                    'delay': { "show": 0, "hide": 100 },
                 };
                 $(k).popover(options);
                 $(k).on('shown.bs.popover', function(event){
