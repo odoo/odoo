@@ -1,5 +1,5 @@
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
+import openerp.http as http
+from openerp.http import request
 
 
 class google_calendar_controller(http.Controller):

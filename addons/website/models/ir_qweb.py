@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from openerp.addons.web.http import request
+from openerp.http import request
 from openerp.osv import orm
 import ast
 

@@ -10,9 +10,9 @@ import base64
 
 import openerp
 from openerp import tools, _
-from openerp.addons.web import http
+from openerp import http
 from openerp.addons.web.controllers.main import binary_content
-from openerp.addons.web.http import request
+from openerp.http import request
 from openerp.addons.website.models.website import slug
 
 

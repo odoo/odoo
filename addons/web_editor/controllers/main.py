@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp.http import request, STATIC_CACHE
-from openerp.addons.web import http
+from openerp import http
 import json
 import io
 from PIL import Image, ImageFont, ImageDraw

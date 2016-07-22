@@ -10,7 +10,7 @@ from collections import OrderedDict
 
 from openerp import api, models, tools
 from openerp.tools import safe_eval
-from openerp.addons.web.http import request
+from openerp.http import request
 from odoo.modules.module import get_resource_path
 import json
 from time import time

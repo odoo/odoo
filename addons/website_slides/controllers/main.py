@@ -3,7 +3,7 @@ import base64
 import logging
 import werkzeug
 
-from openerp.addons.web import http
+from openerp import http
 from openerp.exceptions import AccessError, UserError
 from openerp.http import request
 from openerp.tools.translate import _

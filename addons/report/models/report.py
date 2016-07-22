@@ -6,7 +6,7 @@ from odoo.exceptions import AccessError
 from odoo.sql_db import TestCursor
 from odoo.tools import config
 from odoo.tools.misc import find_in_path
-from odoo.addons.web.http import request
+from odoo.http import request
 from odoo.tools.safe_eval import safe_eval as eval
 from odoo.exceptions import UserError
 

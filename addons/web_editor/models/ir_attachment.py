@@ -4,7 +4,7 @@ from openerp.osv import osv, fields
 
 import contextlib
 from sys import maxint
-from openerp.addons.web.http import request
+from openerp.http import request
 import datetime
 import hashlib
 import time
