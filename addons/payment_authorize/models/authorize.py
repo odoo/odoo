@@ -30,8 +30,8 @@ class PaymentAcquirerAuthorize(models.Model):
         providers.append(['authorize', 'Authorize.Net'])
         return providers
 
-    authorize_login = fields.Char(string='API Login Id', required_if_provider='authorize')
-    authorize_transaction_key = fields.Char(string='API Transaction Key', required_if_provider='authorize')
+    authorize_login = fields.Char(string='API Login Id', required_if_provider='authorize', groups='base.group_user')
+    authorize_transaction_key = fields.Char(string='API Transaction Key', required_if_provider='authorize', groups='base.group_user')
 
     def _authorize_generate_hashing(self, values):
         data = '^'.join([

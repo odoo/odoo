@@ -34,14 +34,14 @@ class OgoneController(http.Controller):
         data = kwargs
         acquirer_id = int(data.get('acquirer_id'))
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
-        new_id = acquirer.s2s_process(data)
+        new_id = acquirer.sudo().s2s_process(data)
         return new_id
 
     @http.route(['/payment/ogone/s2s/create'], type='http', auth='public', methods=["POST"], csrf=False)
     def ogone_s2s_create(self, **post):
         acquirer_id = int(post.get('acquirer_id'))
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
-        acquirer.s2s_process(post)
+        acquirer.sudo().s2s_process(post)
         return werkzeug.utils.redirect(post.get('return_url', '/'))
 
     @http.route(['/payment/ogone/s2s/feedback'], auth='none', csrf=False)
