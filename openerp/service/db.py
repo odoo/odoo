@@ -75,7 +75,7 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
         _logger.exception('CREATE DATABASE failed:')
 
 def _create_empty_database(name):
-    db = openerp.sql_db.db_connect('postgres')
+    db = openerp.sql_db.db_connect(openerp.tools.config['maintenance_db'])
     with closing(db.cursor()) as cr:
         chosen_template = openerp.tools.config['db_template']
         cr.execute("SELECT datname FROM pg_database WHERE datname = %s",
@@ -96,7 +96,7 @@ def exp_create_database(db_name, demo, lang, user_password='admin', login='admin
 def exp_duplicate_database(db_original_name, db_name):
     _logger.info('Duplicate database `%s` to `%s`.', db_original_name, db_name)
     openerp.sql_db.close_db(db_original_name)
-    db = openerp.sql_db.db_connect('postgres')
+    db = openerp.sql_db.db_connect(openerp.tools.config['maintenance_db'])
     with closing(db.cursor()) as cr:
         cr.autocommit(True)     # avoid transaction block
         _drop_conn(cr, db_original_name)
@@ -135,7 +135,7 @@ def exp_drop(db_name):
     openerp.modules.registry.RegistryManager.delete(db_name)
     openerp.sql_db.close_db(db_name)
 
-    db = openerp.sql_db.db_connect('postgres')
+    db = openerp.sql_db.db_connect(openerp.tools.config['maintenance_db'])
     with closing(db.cursor()) as cr:
         cr.autocommit(True) # avoid transaction block
         _drop_conn(cr, db_name)
@@ -276,7 +276,7 @@ def exp_rename(old_name, new_name):
     openerp.modules.registry.RegistryManager.delete(old_name)
     openerp.sql_db.close_db(old_name)
 
-    db = openerp.sql_db.db_connect('postgres')
+    db = openerp.sql_db.db_connect(openerp.tools.config['maintenance_db'])
     with closing(db.cursor()) as cr:
         cr.autocommit(True)     # avoid transaction block
         _drop_conn(cr, old_name)
@@ -319,7 +319,7 @@ def list_dbs(force=False):
         raise openerp.exceptions.AccessDenied()
     chosen_template = openerp.tools.config['db_template']
     templates_list = tuple(set(['postgres', chosen_template]))
-    db = openerp.sql_db.db_connect('postgres')
+    db = openerp.sql_db.db_connect(openerp.tools.config['maintenance_db'])
     with closing(db.cursor()) as cr:
         try:
             db_user = openerp.tools.config["db_user"]

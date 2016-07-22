@@ -9,6 +9,7 @@ import time
 
 import openerp
 from openerp import api, fields, models
+import openerp.tools
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
@@ -31,6 +32,7 @@ def hashable(key):
 class ImBus(models.Model):
 
     _name = 'bus.bus'
+    _bus_db = openerp.tools.config['bus_db']
 
     create_date = fields.Datetime('Create date')
     channel = fields.Char('Channel')
@@ -61,7 +63,7 @@ class ImBus(models.Model):
             # transaction is not commited yet, there will be nothing to fetch,
             # and the longpolling will return no notification.
             def notify():
-                with openerp.sql_db.db_connect('postgres').cursor() as cr:
+                with openerp.sql_db.db_connect(self._bus_db).cursor() as cr:
                     cr.execute("notify imbus, %s", (json_dump(list(channels)),))
             self._cr.after('commit', notify)
 
@@ -108,6 +110,7 @@ class ImBus(models.Model):
 class ImDispatch(object):
     def __init__(self):
         self.channels = {}
+        self._bus_db = openerp.tools.config['bus_db']
 
     def poll(self, dbname, channels, last, options=None, timeout=TIMEOUT):
         if options is None:
@@ -142,8 +145,8 @@ class ImDispatch(object):
 
     def loop(self):
         """ Dispatch postgres notifications to the relevant polling threads/greenlets """
-        _logger.info("Bus.loop listen imbus on db postgres")
-        with openerp.sql_db.db_connect('postgres').cursor() as cr:
+        _logger.info("Bus.loop listen imbus on db %s", self._bus_db)
+        with openerp.sql_db.db_connect(self._bus_db).cursor() as cr:
             conn = cr._cnx
             cr.execute("listen imbus")
             cr.commit();
