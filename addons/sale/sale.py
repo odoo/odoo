@@ -103,13 +103,12 @@ class SaleOrder(models.Model):
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
 
     state = fields.Selection([
-        ('draft', 'Draft'),
-        ('approve', 'Approve'),
+        ('draft', 'Quotation'),
         ('sent', 'Quotation Sent'),
         ('sale', 'Sale Order'),
         ('done', 'Done'),
         ('cancel', 'Cancelled'),
-    ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
+        ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
     date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now)
     validity_date = fields.Date(string='Expiration Date', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
@@ -358,10 +357,6 @@ class SaleOrder(models.Model):
     @api.multi
     def action_cancel(self):
         self.write({'state': 'cancel'})
-
-    @api.multi
-    def action_quotation_approve(self):
-        self.write({'state': 'approve'})
 
     @api.multi
     def action_quotation_send(self):

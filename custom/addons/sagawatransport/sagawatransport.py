@@ -12,6 +12,19 @@ class sale_order(models.Model):
     templete_id = fields.Many2one('sale.order', 'Chose Templete', domain="[('is_templete', '=', True)]")
     state = fields.Selection(selection_add=[('early_payment', 'Early payment: Discount early payment')])
     paid_company_id = fields.Char(string='Mother Company',store=True, related='partner_id.mom_company_id.name', readonly=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('approve', 'Approve'),
+        ('sent', 'Quotation Sent'),
+        ('sale', 'Sale Order'),
+        ('done', 'Done'),
+        ('cancel', 'Cancelled'),
+    ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
+
+    @api.multi
+    def action_quotation_approve(self):
+        self.write({'state': 'approve'})
+
     @api.onchange('templete_id')
     def _onchange_is_templete(self):
         if self.templete_id:
