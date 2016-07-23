@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-07-12 01:00+0000\n"
+"PO-Revision-Date: 2016-07-22 05:53+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -269,12 +269,12 @@ msgstr "高级招标流程"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_advance_purchase_requisition
 msgid "Advanced Calls for Tenders"
-msgstr "高级要求出价"
+msgstr "高级招标"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_advance_purchase_requisition:0
 msgid "Advanced call for tender (choose products from different RFQ)"
-msgstr "高级要求出价（从不同的报价单中选择产品）"
+msgstr "高级招标（从不同的报价单中选择产品）"
 
 #. module: purchase
 #: selection:purchase.config.settings,module_stock_dropshipping:0
@@ -291,7 +291,7 @@ msgstr "允许使用和导入供应商价格表"
 msgid ""
 "Allow using call for tenders to get quotes from multiple suppliers "
 "(advanced)"
-msgstr "允许从多家供应商用招标（高级）"
+msgstr "允许使用招标从多家供应商得到报价（高级）"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_costing_method
@@ -350,7 +350,7 @@ msgstr "批准订单"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_procurement_ids
 msgid "Associated Procurements"
-msgstr "相关采购"
+msgstr "关联的补货"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_line_purchase_id
@@ -394,7 +394,7 @@ msgstr "日历视图"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_module_purchase_requisition
 msgid "Calls for Tenders"
-msgstr "要求投标"
+msgstr "招标"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_purchase_requisition
@@ -402,7 +402,7 @@ msgid ""
 "Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products.\n"
 "                    You can configure per product if you directly do a Request for Quotation\n"
 "                    to one vendor or if you want a Call for Tenders to compare offers from several vendors."
-msgstr "当你向从几家供应商处得到报价的时候，就可以使用投标功能当你想从一家供应商或者几家供应商得到报价并比对报价的时候你就可以通过在产品上配置来实现"
+msgstr "当你向从几家供应商处得到报价的时候，就可以使用招标功能当你想从一家供应商或者几家供应商得到报价并比对报价的时候你就可以通过在产品上配置来实现"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_ok
@@ -417,7 +417,7 @@ msgstr "采购"
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
 "purchase order first."
-msgstr "不能取消已经有关联采购订单的需求单，请先取消采购订单"
+msgstr "不能取消已经有关联采购订单的补货单，请先取消采购订单"
 
 #. module: purchase
 #: code:addons/purchase/stock.py:59
@@ -729,7 +729,7 @@ msgstr "ID"
 msgid ""
 "If a product has been broken or damaged during the transport, you can scrap "
 "it with this button."
-msgstr "如果产品在运输过程中被碰碎或损坏，您可以用此按钮将之报废。"
+msgstr "如果产品在运输过程中被破损或损坏，您可以用此按钮将之报废。"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
