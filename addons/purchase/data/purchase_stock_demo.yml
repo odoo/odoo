@@ -1,12 +1,8 @@
 -
-  !python {model: stock.warehouse}: |
-    pull_obj = self.pool.get('procurement.rule')
+  !python {model: stock.warehouse, id: False}: |
+    pull_obj = self.env['procurement.rule']
     wh_to_assign = ['stock_warehouse_shop0']
     for wh_ref in wh_to_assign:
-      warehouse = self.browse(cr, uid, ref('stock.' + wh_ref), context=context)
+      warehouse = self.browse(ref('stock.' + wh_ref))
       #Force the rewriting of route and rule
-      self.write(cr, uid, warehouse.id, {'buy_to_resupply': True}, context=context)
-
-
-
-
+      warehouse.write({'buy_to_resupply': True})

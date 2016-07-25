@@ -11,8 +11,8 @@
 -
   Add Buy route
 - 
-  !python {model: product.product}: |
-    self.write(cr, uid, [ref("scheduler_product")], {"route_ids": [(4, ref("purchase.route_warehouse0_buy"))]})
+  !python {model: product.product, id: scheduler_product}: |
+    self.write({"route_ids": [(4, ref("purchase.route_warehouse0_buy"))]})
 -
   I create a procurement order.
 -
@@ -24,19 +24,17 @@
 -
   I run the scheduler.
 -
-  !python {model: procurement.order}: |
-    self.run_scheduler(cr, uid)
+  !python {model: procurement.order, id: False}: |
+    self.run_scheduler()
 -
   I check Generated RFQ.
 -
-  !python {model: procurement.order}: |
-    procurement = self.browse(cr, uid, ref('procurement_order_testcase0'))
-    assert procurement.purchase_line_id, 'RFQ should be generated!'
+  !python {model: procurement.order, id: procurement_order_testcase0}: |
+    assert self.purchase_line_id, 'RFQ should be generated!'
 -
   I delete the line from the purchase order and check that the move and the procurement are cancelled
 -
-  !python {model: procurement.order}: |
-    procurement = self.browse(cr, uid, ref('procurement_order_testcase0'))
-    procurement.purchase_line_id.unlink()
-    procurement.refresh()
-    assert procurement.state == 'exception', 'Procurement should be in exception'
+  !python {model: procurement.order, id: procurement_order_testcase0}: |
+    self.purchase_line_id.unlink()
+    self.refresh()
+    assert self.state == 'exception', 'Procurement should be in exception'

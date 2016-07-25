@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
     'name': 'Purchase Management',
     'version': '1.2',
@@ -51,7 +50,6 @@ Dashboard / Reports for Purchase Management will include:
         'test/process/run_scheduler.yml',
         'test/fifo_price.yml',
         'test/fifo_returns.yml',
-        # 'test/costmethodchange.yml',
         'test/process/cancel_order.yml',
         'test/ui/duplicate_order.yml',
         'test/ui/delete_order.yml',

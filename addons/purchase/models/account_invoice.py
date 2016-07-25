@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models, _
-from openerp.tools.float_utils import float_compare
+from odoo import api, fields, models, _
+from odoo.tools.float_utils import float_compare
 
 
 class AccountInvoice(models.Model):
