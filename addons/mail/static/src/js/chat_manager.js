@@ -925,7 +925,7 @@ var chat_manager = {
                 }
             });
         } else {
-            new Model(res_model).call('get_formview_id', [res_id, session.context]).then(function (view_id) {
+            new Model(res_model).call('get_formview_id', [[res_id], session.context]).then(function (view_id) {
                 redirect_to_document(res_model, res_id, view_id);
             });
         }

@@ -423,32 +423,37 @@ class AccountBankStatementLine(models.Model):
         moves_to_unbind = self.env['account.move']
         moves_to_cancel = self.env['account.move']
         payment_to_unreconcile = self.env['account.payment']
+        payment_to_cancel = self.env['account.payment']
         for st_line in self:
             moves_to_unbind |= st_line.journal_entry_ids
             for move in st_line.journal_entry_ids:
-                if any(line.payment_id for line in move.line_ids):
-                    for line in move.line_ids:
-                        payment_to_unreconcile |= line.payment_id
-                    continue
-                moves_to_cancel |= st_line.journal_entry_ids
+                for line in move.line_ids:
+                    payment_to_unreconcile |= line.payment_id
+                    if st_line.statement_id.name == line.payment_id.name:
+                        #there can be several moves linked to a statement line but maximum one created by the line itself
+                        moves_to_cancel |= st_line.journal_entry_ids
+                        payment_to_cancel |= line.payment_id
+        moves_to_unbind = moves_to_unbind - moves_to_cancel
+        payment_to_unreconcile = payment_to_unreconcile - payment_to_cancel
+
         if moves_to_unbind:
             moves_to_unbind.write({'statement_line_id': False})
             for move in moves_to_unbind:
                 move.line_ids.filtered(lambda x:x.statement_id == st_line.statement_id).write({'statement_id': False})
+        if payment_to_unreconcile:
+            payment_to_unreconcile.unreconcile()
 
         if moves_to_cancel:
             for move in moves_to_cancel:
                 move.line_ids.remove_move_reconcile()
             moves_to_cancel.button_cancel()
             moves_to_cancel.unlink()
-
-        if payment_to_unreconcile:
-            payment_to_unreconcile.unreconcile()
+        if payment_to_cancel:
+            payment_to_cancel.unlink()
 
     ####################################################
     # Reconciliation interface methods
     ####################################################
-
     @api.multi
     def get_data_for_reconciliation_widget(self, excluded_ids=None):
         """ Returns the data required to display a reconciliation widget, for each statement line in self """
@@ -919,7 +924,6 @@ class AccountBankStatementLine(models.Model):
                     prorata_factor = (aml_dict['debit'] - aml_dict['credit']) / self.amount_currency
                     aml_dict['amount_currency'] = prorata_factor * self.amount
                     aml_dict['currency_id'] = statement_currency.id
-
 
             # Create write-offs
             for aml_dict in new_aml_dicts:

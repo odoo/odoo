@@ -3,13 +3,14 @@
 # * portal
 # 
 # Translators:
+# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-04-11 07:39+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-07-12 01:17+0000\n"
+"Last-Translator: Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +55,7 @@ msgid ""
 "                </p>\n"
 "            \n"
 "            "
-msgstr ""
+msgstr "\n⇥<p>\nKära ${object.user_id.name or ''},\n</p>\n<p>\nDu har getts tillgång till ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n</p>\n<p>\nDitt kontos inloggningsdata är:\n</p>\n<ul>\n<li>Användarnamn: ${object.user_id.login or ''}</li>\n</ul>\n<ul>\n<li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n</ul>\n<ul>\n⇥<li>Databas: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n</ul>\n<p>\n⇥Du kan ställa in eller ändra ditt lösenord via den webbadressen:\n</p>\n<ul>\n<li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n</ul>\n<p>\n⇥${object.wizard_id.welcome_message or ''}\n</p>\n<p>---<br />\nOdoo - Affärssystem byggd med öppen källkod<br />\nhttp://www.odoo.com<br />\n</p>"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups

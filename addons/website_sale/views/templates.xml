@@ -501,14 +501,6 @@
               <span itemprop="price" style="display:none;" t-esc="product.price"/>
               <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
           </h4>
-          <h4 class="css_non_editable_mode_hidden">
-            <!-- keep field for editor -->
-            <span t-field="product.lst_price"
-                t-options='{
-                   "widget": "monetary",
-                   "display_currency": product.currency_id
-               }'/>
-          </h4>
           <h4 class="hidden oe_not_available bg-warning">Product not available</h4>
       </div>
     </template>
