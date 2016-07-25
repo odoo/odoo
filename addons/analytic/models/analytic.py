@@ -19,23 +19,16 @@ class account_analytic_account(models.Model):
 
     @api.multi
     def _compute_debit_credit_balance(self):
-        sql_query = """
-            SELECT account_id, SUM(amount)
-            FROM account_analytic_line
-            WHERE account_id IN %s
-            AND company_id = %s
-        """
-        sql_params = [tuple(self.ids),
-                      self.env.user.company_id.id]
+        domain = [('account_id', 'in', self.ids),
+                  ('company_id', '=', self.env.user.company_id.id)]
         if self._context.get('from_date', False):
-            sql_query += " AND date >= %s"
-            sql_params.append(self._context['from_date'])
+            domain += [('date', '>=', self._context['from_date'])]
         if self._context.get('to_date', False):
-            sql_query += " AND date <= %s"
-            sql_params.append(self._context['to_date'])
-        sql_query += " GROUP BY account_id"
-        self.env.cr.execute(sql_query, sql_params)
-        amounts = dict(self.env.cr.fetchall())
+            domain += [('date', '<=', self._context['to_date'])]
+        amounts = self.env['account.analytic.line'].read_group(
+            domain, ['account_id', 'amount'], ['account_id'])
+        amounts = dict([(amount['account_id'][0], amount['amount'])
+                       for amount in amounts])
 
         for account in self:
             amount = amounts.get(account.id, 0.0)
