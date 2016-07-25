@@ -7,6 +7,7 @@ import uuid
 from openerp import _, api, fields, models, modules, tools
 from openerp.exceptions import UserError
 from openerp.osv import expression
+from openerp.tools.safe_eval import safe_eval as eval
 
 
 
