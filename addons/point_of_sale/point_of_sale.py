@@ -1345,6 +1345,7 @@ class pos_order(osv.osv):
                     'analytic_account_id': self._prepare_analytic_account(cr, uid, line, context=context),
                     'credit': ((amount>0) and amount) or 0.0,
                     'debit': ((amount<0) and -amount) or 0.0,
+                    'tax_ids': [(6, 0, line.tax_ids.ids)],
                     'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
                 })
 
@@ -1383,7 +1384,7 @@ class pos_order(osv.osv):
             for value in group_data:
                 all_lines.append((0, 0, value),)
         if move_id: #In case no order was changed
-            self.pool.get("account.move").write(cr, SUPERUSER_ID, [move_id], {'line_ids':all_lines}, context=context)
+            self.pool.get("account.move").write(cr, SUPERUSER_ID, [move_id], {'line_ids':all_lines}, context=dict(context or {}, dont_create_taxes=True))
             self.pool.get("account.move").post(cr, SUPERUSER_ID, [move_id], context=context)
 
         return True
