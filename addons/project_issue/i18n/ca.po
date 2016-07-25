@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2016-06-09 06:37+0000\n"
+"PO-Revision-Date: 2016-07-19 07:04+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -60,7 +60,7 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
 " * Ready for next stage indicates the issue is ready to be pulled to the next stage"
-msgstr ""
+msgstr "Un estat de kanban de les incidències indica situacions especials que les afecten:\n* 'Normal' és la situació per defecte.\n* 'Bloquejada' indica que alguna cosa impedeix el progrés de la incidència.\n* 'Llesta per la següent etapa' indica que la incidència està llesta per ser portada a la següent etapa."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction
@@ -160,7 +160,7 @@ msgstr "Índex de color"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_channel
 msgid "Communication Channel."
-msgstr ""
+msgstr "Canal de comunicació."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_channel
@@ -192,7 +192,7 @@ msgstr "Data de creació"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Create Day"
-msgstr ""
+msgstr "Crear dia"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_uid
@@ -244,12 +244,12 @@ msgstr "Data de l'últim missatge enviat al registre."
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_days_since_creation
 msgid "Days since creation date"
-msgstr ""
+msgstr "Dies des de la data de creació"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_inactivity_days
 msgid "Days since last action"
-msgstr ""
+msgstr "Dies des de l'última acció"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_day_open
@@ -284,12 +284,12 @@ msgstr "Descripció"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_days_since_creation
 msgid "Difference in days between creation date and current date"
-msgstr ""
+msgstr "Diferencia en dies des de la data de creació a la data actual"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_inactivity_days
 msgid "Difference in days between last action and current date"
-msgstr ""
+msgstr "Diferencia en dies des de l'última acció a la data actual"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
@@ -392,7 +392,7 @@ msgstr "Incidència"
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr ""
+msgstr "Incidència bloquejada"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
@@ -409,7 +409,7 @@ msgstr ""
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
 msgid "Issue Stage Changed"
-msgstr ""
+msgstr "Etapa d'incidència canviada"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
@@ -429,7 +429,7 @@ msgstr "Arbre del gestor d'incidències"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr ""
+msgstr "Incidència bloquejada"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
@@ -581,7 +581,7 @@ msgstr "Número de dies per tancar la incidència de projecte"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_open
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "Nombre de dies per obrir les incidències de projecte."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction_counter
@@ -619,7 +619,7 @@ msgstr "Prioritat (0=Molt urgent)"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_description
 msgid "Private Note"
-msgstr ""
+msgstr "Nota privada"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
@@ -641,7 +641,7 @@ msgstr "Incidència projecte"
 #: model:ir.ui.view,arch_db:project_issue.project_issue_graph_view
 #: model:ir.ui.view,arch_db:project_issue.project_issue_pivot_view
 msgid "Project Issues"
-msgstr ""
+msgstr "Incidències del projecte"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
@@ -797,12 +797,12 @@ msgstr "Historial de comunicacions de la pàgina web"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_open
 msgid "Working Hours to assign the Issue"
-msgstr ""
+msgstr "Hores laborals per assignar l'incidència"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_close
 msgid "Working Hours to close the Issue"
-msgstr ""
+msgstr "Hores laborals per tancar l'incidència"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_task_id
@@ -822,7 +822,7 @@ msgstr ""
 #: code:addons/project_issue/project_issue.py:260
 #, python-format
 msgid "issues"
-msgstr ""
+msgstr "incidències"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
