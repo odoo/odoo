@@ -188,12 +188,11 @@ class IrAttachment(models.Model):
 
     def _check_contents(self, values):
         mimetype = values['mimetype'] = self._compute_mimetype(values)
-        needs_escape = 'htm' in mimetype or '/ht' in mimetype # hta, html, xhtml, etc.
-        if needs_escape and not self.env.user._is_admin():
-            if 'datas' in values:
-                values['datas'] = html_escape(values['datas'].decode('base64')).encode('base64')
-            else:
-                values['mimetype'] = 'text/plain'
+        xml_like = 'ht' in mimetype or 'xml' in mimetype # hta, html, xhtml, etc.
+        force_text = (xml_like and (not self.env.user._is_admin() or
+            self.env.context.get('attachments_mime_plainxml')))
+        if force_text:
+            values['mimetype'] = 'text/plain'
         return values
 
     @api.model

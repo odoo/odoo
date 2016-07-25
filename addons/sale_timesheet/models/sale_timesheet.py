@@ -124,7 +124,6 @@ class SaleOrder(models.Model):
             if order.project_id:
                 order.timesheet_ids = self.env['account.analytic.line'].search(
                     [('so_line', 'in', order.order_line.ids),
-                     '|',
                         ('amount', '<=', 0.0),
                         ('project_id', '!=', False)])
             else:

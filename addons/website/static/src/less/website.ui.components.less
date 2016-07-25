@@ -95,19 +95,20 @@ body .modal {
                     @mobile-preview-width: 320px;
                     @mobile-preview-height: 530px;
 
-                    > iframe {
-                        display: block;
-                        width: @mobile-preview-width + 15;
-                        height: @mobile-preview-height;
-                        max-height: 100%;
-                        border: none;
+                    .o-flex-display();
+                    width: @mobile-preview-width + 15;
+                    height: @mobile-preview-height;
+                    .o-transition(all, 400ms);
 
-                        .o-transition(all, 400ms);
-                    }
-
-                    &.o_invert_orientation > iframe {
+                    &.o_invert_orientation {
                         width: @mobile-preview-height + 15;
                         height: @mobile-preview-width;
+                    }
+
+                    > iframe {
+                        display: block;
+                        width: 100%;
+                        border: none;
                     }
                 }
 

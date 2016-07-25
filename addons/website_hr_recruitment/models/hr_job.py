@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp.osv import osv, fields
-
+from openerp.tools.translate import html_translate
 
 class hr_job(osv.osv):
     _name = 'hr.job'
@@ -18,5 +18,5 @@ class hr_job(osv.osv):
         return super(hr_job, self).set_open(cr, uid, ids, context)
 
     _columns = {
-        'website_description': fields.html('Website description', translate=True, sanitize=False),
+        'website_description': fields.html('Website description', translate=html_translate, sanitize=False),
     }

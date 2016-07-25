@@ -407,6 +407,7 @@ class task(osv.osv):
         'stage_id': _read_group_stage_ids,
     }
 
+    @api.cr_uid_ids_context
     def onchange_project(self, cr, uid, id, project_id, context=None):
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
