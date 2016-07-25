@@ -121,7 +121,7 @@ class SaleOrder(models.Model):
         for order in self:
             accessory_products = order.website_order_line.mapped('product_id.accessory_product_ids').filtered(lambda product: product.website_published)
             accessory_products -= order.website_order_line.mapped('product_id')
-            return random.sample(accessory_products, min(len(accessory_products), 3))
+            return random.sample(accessory_products, len(accessory_products))
 
 
 class Website(models.Model):

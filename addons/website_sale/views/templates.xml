@@ -415,7 +415,7 @@
     <template id="recommended_products" inherit_id="website_sale.product" customize_show="True" name="Suggested Products">
         <xpath expr="//div[@id='product_full_description']" position="after">
             <div class="container mt32" t-if="product.alternative_product_ids">
-                <h3>Suggested alternatives:</h3>
+                <h3>Suggested Products:</h3>
                 <div class="row mt16" style="">
                     <t t-foreach="product.alternative_product_ids" t-as="alt_product">
                         <div class="col-md-2 thumbnail" style="width: 170px; height:130px; float:left; display:inline; margin-right: 10px; overflow:hidden;">
@@ -878,7 +878,7 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th colspan="4">Suggested products:</th>
+                        <th colspan="4">Suggested Accessories:</th>
                     </tr>
                 </thead>
                 <tbody>
