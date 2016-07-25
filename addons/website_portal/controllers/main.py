@@ -69,7 +69,7 @@ class website_account(http.Controller):
             values.update(post)
             if not error:
                 values = {key: post[key] for key in self.MANDATORY_BILLING_FIELDS + self.OPTIONAL_BILLING_FIELDS}
-                values.update({'zip': post.pop('zipcode', '')})
+                values.update({'zip': values.pop('zipcode', '')})
                 partner.sudo().write(values)
                 if redirect:
                     return request.redirect(redirect)
