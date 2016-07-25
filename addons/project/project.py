@@ -394,6 +394,7 @@ class task(osv.osv):
     def onchange_planned(self, cr, uid, ids, planned=0.0, effective=0.0):
         return {'value': {'remaining_hours': planned - effective}}
 
+    @api.cr_uid_ids_context
     def onchange_project(self, cr, uid, id, project_id, context=None):
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
