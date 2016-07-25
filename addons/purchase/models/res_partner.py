@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models
-from openerp.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
+from odoo import api, fields, models
+from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
+
 
 class res_partner(models.Model):
     _name = 'res.partner'

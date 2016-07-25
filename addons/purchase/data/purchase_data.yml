@@ -1,6 +1,5 @@
 -
-  !python {model: stock.warehouse}: |
+  !python {model: stock.warehouse, id: stock.warehouse0}: |
     #enable purchase on main warehouse
-    main_warehouse = self.browse(cr, uid, ref('stock.warehouse0'), context=context)
-    self.write(cr, uid, main_warehouse.id, {'buy_to_resupply': True}, context=context)
+    self.write({'buy_to_resupply': True})
 

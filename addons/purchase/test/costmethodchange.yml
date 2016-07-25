@@ -39,13 +39,13 @@
 - 
   I confirm the first purchase order
 -
-  !python {model: purchase.order}: |
-    self.button_confirm(cr, uid, [ref("purchase_order_variable1")])
+  !python {model: purchase.order, id: purchase_order_variable1}: |
+    self.button_confirm()
 - 
   I confirm the second purchase order
 - 
-  !python {model: purchase.order}: |
-    self.button_confirm(cr, uid, [ref("purchase_order_variable2")])
+  !python {model: purchase.order, id: purchase_order_variable2}: |
+    self.button_confirm()
 -
   I check the "Approved" status of purchase order 1
 -
@@ -54,30 +54,29 @@
 - 
   Process the reception of purchase order 1
 -
-  !python {model: stock.partial.picking}: |
-    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_variable1")).picking_ids
-    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
-    self.do_transfer(cr, uid, [partial_id])
+  !python {model: stock.partial.picking, id: False}: |
+    pickings = self.env['purchase.order'].browse(ref("purchase_order_variable1")).picking_ids
+    partial = self.with_context({'active_model': 'stock.picking','active_ids': [pickings[0].id]}).create({})
+    partial.do_transfer()
 - 
   Check the standard price of the product (variable icecream). 
 - 
-  !python {model: product.product}: |
-    product = self.browse(cr, uid, ref("product_variable_icecream"))
-    assert product.qty_available == 10.0, 'Wrong quantity in stock after first reception'
-    assert product.standard_price == 60.0, 'Standard price should be the price of the first reception!'
+  !python {model: product.product, id: product_variable_icecream}: |
+    assert self.qty_available == 10.0, 'Wrong quantity in stock after first reception'
+    assert self.standard_price == 60.0, 'Standard price should be the price of the first reception!'
 - 
   Process the reception of purchase order 2
 - 
-  !python {model: stock.partial.picking}: |
-    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_variable2")).picking_ids
-    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
-    self.do_transfer(cr, uid, [partial_id])
+  !python {model: stock.partial.picking, id: False}: |
+    pickings = self.env['purchase.order'].browse(ref("purchase_order_variable2")).picking_ids
+    partial = self.with_context({'active_model': 'stock.picking','active_ids': [pickings[0].id]}).create({})
+    partial.do_transfer()
 - 
   Check the standard price and change the product's cost method towards fifo
 - 
-  !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_variable_icecream")).standard_price == 75.0, 'After second reception, we should have an average price of 75.0 on the product'
-    self.write(cr, uid, [ref("product_variable_icecream")], {'cost_method': 'real'}, context=context)
+  !python {model: product.product, id: product_variable_icecream}: |
+    assert self.standard_price == 75.0, 'After second reception, we should have an average price of 75.0 on the product'
+    self.write({'cost_method': 'real'})
 - 
   Create picking to send some goods
 - 
@@ -99,15 +98,15 @@
 - 
   Process the delivery of the outgoing shipment
 - 
-  !python {model: stock.partial.picking}: |
-    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_variable_shipment")], 'default_type':'out'})
-    self.do_transfer(cr, uid, [partial_id])
+  !python {model: stock.partial.picking, id: False}: |
+    partial = self.with_context({'active_model': 'stock.picking','active_ids': [ref("outgoing_variable_shipment")], 'default_type':'out'}).create({})
+    partial.do_transfer()
 - 
   Check the standard price (60 * 10 + 30 * 80) / 40 = 75.0 did not change
 - 
-  !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_variable_icecream")).standard_price == 75.0, 'Standard price should not have changed with outgoing picking!'
-    assert self.browse(cr, uid, ref("product_variable_icecream")).qty_available == 20.0, 'Pieces were not picked correctly as the quantity on hand is wrong'
+  !python {model: product.product, id: product_variable_icecream}: |
+    assert self.standard_price == 75.0, 'Standard price should not have changed with outgoing picking!'
+    assert self.qty_available == 20.0, 'Pieces were not picked correctly as the quantity on hand is wrong'
 - 
   I create a draft Purchase Order for third incoming shipment for 20 pieces at 60 euro
 - 
@@ -122,18 +121,18 @@
 - 
   I confirm this third purchase order
 -
-  !python {model: purchase.order}: |
-    self.button_confirm(cr, uid, [ref("purchase_order_variable3")])
+  !python {model: purchase.order, id: purchase_order_variable3}: |
+    self.button_confirm()
 - 
   Process the reception of purchase order 3
 - 
-  !python {model: stock.partial.picking}: |
-    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_variable3")).picking_ids
-    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
-    self.do_transfer(cr, uid, [partial_id])
+  !python {model: stock.partial.picking, id: False}: |
+    pickings = self.env['purchase.order'].browse(ref("purchase_order_variable3")).picking_ids
+    partial = self.with_context({'active_model': 'stock.picking','active_ids': [pickings[0].id]}).create({})
+    partial.do_transfer()
 - 
   Change the cost method back to average and check price on product changed back to 70.0 = (20*60 + 10*60 + 30*80) / 60
 - 
-  !python {model: product.product}: |
-    self.write(cr, uid, [ref("product_variable_icecream")], {'cost_method': 'average'}, context=context)
-    assert self.browse(cr, uid, ref("product_variable_icecream")).standard_price == 70.0, 'After third reception and changing to average again, we should have an average price of 70.0 on the product'
+  !python {model: product.product, id: product_variable_icecream}: |
+    self.write({'cost_method': 'average'})
+    assert self.standard_price == 70.0, 'After third reception and changing to average again, we should have an average price of 70.0 on the product'

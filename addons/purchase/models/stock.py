@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
-class stock_picking(osv.osv):
+
+class StockPicking(models.Model):
     _inherit = 'stock.picking'
-    _columns = {
-        'purchase_id': fields.related('move_lines', 'purchase_line_id', 'order_id', string="Purchase Orders",
-            readonly=True, type="many2one", relation="purchase.order"),
-    }
 
-    def _prepare_values_extra_move(self, cr, uid, op, product, remaining_qty, context=None):
-        res = super(stock_picking, self)._prepare_values_extra_move(cr, uid, op, product, remaining_qty, context=context)
+    purchase_id = fields.Many2one('purchase.order', related='move_lines.purchase_line_id.order_id',
+        string="Purchase Orders", readonly=True)
+
+    @api.model
+    def _prepare_values_extra_move(self, op, product, remaining_qty):
+        res = super(StockPicking, self)._prepare_values_extra_move(op, product, remaining_qty)
         for m in op.linked_move_operation_ids:
             if m.move_id.purchase_line_id and m.move_id.product_id == product:
                 res['purchase_line_id'] = m.move_id.purchase_line_id.id
@@ -23,7 +22,7 @@ class stock_picking(osv.osv):
 
     @api.model
     def _create_backorder(self, backorder_moves=[]):
-        res = super(stock_picking, self)._create_backorder(backorder_moves)
+        res = super(StockPicking, self)._create_backorder(backorder_moves)
         for picking in self:
             if picking.picking_type_id.code == 'incoming':
                 backorder = self.search([('backorder_id', '=', picking.id)])
@@ -32,13 +31,12 @@ class stock_picking(osv.osv):
                     subtype_id=self.env.ref('mail.mt_note').id)
         return res
 
-class stock_move(osv.osv):
+
+class StockMove(models.Model):
     _inherit = 'stock.move'
-    _columns = {
-        'purchase_line_id': fields.many2one('purchase.order.line',
-            'Purchase Order Line', ondelete='set null', select=True,
-            readonly=True),
-    }
+
+    purchase_line_id = fields.Many2one('purchase.order.line',
+        'Purchase Order Line', ondelete='set null', index=True, readonly=True)
 
     @api.multi
     def get_price_unit(self):
@@ -56,95 +54,88 @@ class stock_move(osv.osv):
                 self.write({'price_unit': price_unit})
                 return price_unit
             return self.price_unit
-        return super(stock_move, self).get_price_unit()
+        return super(StockMove, self).get_price_unit()
 
-    def copy(self, cr, uid, id, default=None, context=None):
+    @api.multi
+    def copy(self, default=None):
+        self.ensure_one()
         default = default or {}
-        context = context or {}
         if not default.get('split_from'):
             #we don't want to propagate the link to the purchase order line except in case of move split
             default['purchase_line_id'] = False
-        return super(stock_move, self).copy(cr, uid, id, default, context)
+        return super(StockMove, self).copy(default)
 
 
-class stock_warehouse(osv.osv):
+class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
-    _columns = {
-        'buy_to_resupply': fields.boolean('Purchase to resupply this warehouse',
-                                          help="When products are bought, they can be delivered to this warehouse"),
-        'buy_pull_id': fields.many2one('procurement.rule', 'Buy rule'),
-    }
-    _defaults = {
-        'buy_to_resupply': True,
-    }
 
-    def _get_buy_pull_rule(self, cr, uid, warehouse, context=None):
-        route_obj = self.pool.get('stock.location.route')
-        data_obj = self.pool.get('ir.model.data')
+    buy_to_resupply = fields.Boolean('Purchase to resupply this warehouse', default=True,
+                                     help="When products are bought, they can be delivered to this warehouse")
+    buy_pull_id = fields.Many2one('procurement.rule', 'Buy rule')
+
+    @api.multi
+    def _get_buy_pull_rule(self):
         try:
-            buy_route_id = data_obj.get_object_reference(cr, uid, 'purchase', 'route_warehouse0_buy')[1]
+            buy_route_id = self.env['ir.model.data'].get_object_reference('purchase', 'route_warehouse0_buy')[1]
         except:
-            buy_route_id = route_obj.search(cr, uid, [('name', 'like', _('Buy'))], context=context)
-            buy_route_id = buy_route_id and buy_route_id[0] or False
+            buy_route_id = self.env['stock.location.route'].search([('name', 'like', _('Buy'))])
+            buy_route_id = buy_route_id[0].id if buy_route_id else False
         if not buy_route_id:
-            raise UserError(_('Can\'t find any generic Buy route.'))
+            raise UserError(_("Can't find any generic Buy route."))
 
         return {
-            'name': warehouse._format_routename(_(' Buy')),
-            'location_id': warehouse.in_type_id.default_location_dest_id.id,
+            'name': self._format_routename(_(' Buy')),
+            'location_id': self.in_type_id.default_location_dest_id.id,
             'route_id': buy_route_id,
             'action': 'buy',
-            'picking_type_id': warehouse.in_type_id.id,
-            'warehouse_id': warehouse.id,
+            'picking_type_id': self.in_type_id.id,
+            'warehouse_id': self.id,
             'group_propagation_option': 'none',
         }
 
-    def create_routes(self, cr, uid, ids, context=None):
-        pull_obj = self.pool.get('procurement.rule')
-        res = super(stock_warehouse, self).create_routes(cr, uid, ids, context=context)
-        warehouse = self.browse(cr, uid, ids, context=context)[0]
-        if warehouse.buy_to_resupply:
-            buy_pull_vals = self._get_buy_pull_rule(cr, uid, warehouse, context=context)
-            buy_pull_id = pull_obj.create(cr, uid, buy_pull_vals, context=context)
-            res['buy_pull_id'] = buy_pull_id
+    @api.multi
+    def create_routes(self):
+        res = super(StockWarehouse, self).create_routes() # super applies ensure_one()
+        if self.buy_to_resupply:
+            buy_pull_vals = self._get_buy_pull_rule()
+            buy_pull = self.env['procurement.rule'].create(buy_pull_vals)
+            res['buy_pull_id'] = buy_pull.id
         return res
 
-    def write(self, cr, uid, ids, vals, context=None):
-        pull_obj = self.pool.get('procurement.rule')
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-
+    @api.multi
+    def write(self, vals):
         if 'buy_to_resupply' in vals:
             if vals.get("buy_to_resupply"):
-                for warehouse in self.browse(cr, uid, ids, context=context):
+                for warehouse in self:
                     if not warehouse.buy_pull_id:
-                        buy_pull_vals = self._get_buy_pull_rule(cr, uid, warehouse, context=context)
-                        buy_pull_id = pull_obj.create(cr, uid, buy_pull_vals, context=context)
-                        vals['buy_pull_id'] = buy_pull_id
+                        buy_pull_vals = self._get_buy_pull_rule()
+                        buy_pull = self.env['procurement.rule'].create(buy_pull_vals)
+                        vals['buy_pull_id'] = buy_pull.id
             else:
-                for warehouse in self.browse(cr, uid, ids, context=context):
+                for warehouse in self:
                     if warehouse.buy_pull_id:
-                        buy_pull_id = pull_obj.unlink(cr, uid, warehouse.buy_pull_id.id, context=context)
-        return super(stock_warehouse, self).write(cr, uid, ids, vals, context=None)
+                        warehouse.buy_pull_id.unlink()
+        return super(StockWarehouse, self).write(vals)
 
     @api.multi
     def _get_all_routes(self):
-        routes = super(stock_warehouse, self).get_all_routes_for_wh()
+        routes = super(StockWarehouse, self).get_all_routes_for_wh()
         routes |= self.filtered(lambda self: self.buy_to_resupply and self.buy_pull_id and self.buy_pull_id.route_id).mapped('buy_pull_id').mapped('route_id')
         return routes
 
-    def _handle_renaming(self, cr, uid, ids, name, code, context=None):
-        res = super(stock_warehouse, self)._handle_renaming(cr, uid, ids, name, code, context=context)
-        warehouse = self.browse(cr, uid, ids[0], context=context)
-        pull_obj = self.pool.get('procurement.rule')
+    @api.multi
+    def _handle_renaming(self, name, code):
+        res = super(StockWarehouse, self)._handle_renaming(name, code)
+        warehouse = self[0]
         #change the buy procurement rule name
         if warehouse.buy_pull_id:
-            pull_obj.write(cr, uid, warehouse.buy_pull_id.id, {'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
+            warehouse.buy_pull_id.write({'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)})
         return res
 
-    def change_route(self, cr, uid, ids, context=None):
-        res = super(stock_warehouse, self).change_route(cr, uid, ids, context=context)
-        for warehouse in self.browse(cr, uid, ids[0], context=context):
+    @api.multi
+    def change_route(self):
+        res = super(StockWarehouse, self).change_route()
+        for warehouse in self:
             if warehouse.in_type_id.default_location_dest_id != warehouse.buy_pull_id.location_id:
-                self.pool.get('procurement.rule').write(cr, uid, warehouse.buy_pull_id.id, {'location_id': warehouse.in_type_id.default_location_dest_id.id}, context=context)
+                warehouse.buy_pull_id.write({'location_id': warehouse.in_type_id.default_location_dest_id.id})
         return res
