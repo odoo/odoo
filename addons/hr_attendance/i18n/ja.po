@@ -1,26 +1,26 @@
-# Japanese translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_attendance
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Japanese <ja@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2016-07-20 08:35+0000\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
+"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:08+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_attendance
 #: view:website:hr_attendance.report_attendanceerrors
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
+msgid "(*) A negative delay means that the employee worked more than encoded."
 msgstr "(*) 遅れがマイナスであることは，従業員は記録した以上の時間を働いたことになります。"
 
 #. module: hr_attendance
@@ -35,8 +35,7 @@ msgid "Absent"
 msgstr "欠勤"
 
 #. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
+#: field:hr.attendance,action:0 selection:hr.attendance,action:0
 msgid "Action"
 msgstr "活動"
 
@@ -78,7 +77,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_graph
 msgid "Attendance Analysis"
-msgstr ""
+msgstr "勤怠分析"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
@@ -124,21 +123,19 @@ msgstr "キャンセル"
 #: code:addons/hr_attendance/static/src/js/attendance.js:35
 #, python-format
 msgid "Click to Sign In at %s."
-msgstr ""
+msgstr "クリックしてサインイン: %s"
 
 #. module: hr_attendance
-#: field:hr.action.reason,create_uid:0
-#: field:hr.attendance,create_uid:0
+#: field:hr.action.reason,create_uid:0 field:hr.attendance,create_uid:0
 #: field:hr.attendance.error,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "作成者"
 
 #. module: hr_attendance
-#: field:hr.action.reason,create_date:0
-#: field:hr.attendance,create_date:0
+#: field:hr.action.reason,create_date:0 field:hr.attendance,create_date:0
 #: field:hr.attendance.error,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "作成日"
 
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
@@ -197,7 +194,7 @@ msgstr ""
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
 msgid "Group By"
-msgstr ""
+msgstr "グループ化"
 
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
@@ -205,12 +202,11 @@ msgid "Hr Attendance Search"
 msgstr "勤怠の検索"
 
 #. module: hr_attendance
-#: field:hr.action.reason,id:0
-#: field:hr.attendance,id:0
+#: field:hr.action.reason,id:0 field:hr.attendance,id:0
 #: field:hr.attendance.error,id:0
 #: field:report.hr_attendance.report_attendanceerrors,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_attendance
 #: field:hr.employee,last_sign:0
@@ -218,25 +214,23 @@ msgid "Last Sign"
 msgstr ""
 
 #. module: hr_attendance
-#: field:hr.action.reason,write_uid:0
-#: field:hr.attendance,write_uid:0
+#: field:hr.action.reason,write_uid:0 field:hr.attendance,write_uid:0
 #: field:hr.attendance.error,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "最終更新者"
 
 #. module: hr_attendance
-#: field:hr.action.reason,write_date:0
-#: field:hr.attendance,write_date:0
+#: field:hr.action.reason,write_date:0 field:hr.attendance,write_date:0
 #: field:hr.attendance.error,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "最終更新日"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/attendance.js:33
 #, python-format
 msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr ""
+msgstr "最終サインイン: %s,<br />%s.<br />クリックしてサインアウト。"
 
 #. module: hr_attendance
 #: field:hr.attendance.error,max_delay:0
@@ -348,7 +342,7 @@ msgid ""
 "The Time Tracking functionality aims to manage employee attendances from "
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using Odoo's web service features."
-msgstr ""
+msgstr "時間記録機能は、従業員のサインアウト/サインインを元に勤怠を管理するためのものです。\nOdoo 機能と各デバイスを連携することが可能です。"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -388,3 +382,8 @@ msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the HR Manager to correct attendances."
 msgstr ""
+
+#. module: hr_attendance
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "or"
+msgstr "または"
