@@ -632,28 +632,19 @@ class calendar_alarm(osv.Model):
 class ir_values(osv.Model):
     _inherit = 'ir.values'
 
-    def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=False, preserve_user=False, company=False):
-        new_model = []
-        for data in models:
-            if type(data) in (list, tuple):
-                new_model.append((data[0], calendar_id2real_id(data[1])))
-            else:
-                new_model.append(data)
-        return super(ir_values, self).set(cr, uid, key, key2, name, new_model,
-                                          value, replace, isobject, meta, preserve_user, company)
+    @api.model
+    @api.returns('self', lambda value: value.id)
+    def set_action(self, name, action_slot, model, action, res_id=False):
+        if res_id:
+            res_id = calendar_id2real_id(res_id)
+        return super(ir_values, self).set_action(name, action_slot, model, action, res_id=res_id)
 
-    def get(self, cr, uid, key, key2, models, meta=False, context=None, res_id_req=False, without_user=True, key2_req=True):
-        if context is None:
-            context = {}
-        new_model = []
-        for data in models:
-            if type(data) in (list, tuple):
-                new_model.append((data[0], calendar_id2real_id(data[1])))
-            else:
-                new_model.append(data)
-        return super(ir_values, self).get(cr, uid, key, key2, new_model,
-                                          meta, context, res_id_req, without_user, key2_req)
-
+    @api.model
+    @tools.ormcache_context('self._uid', 'action_slot', 'model', 'res_id', keys=('lang',))
+    def get_actions(self, action_slot, model, res_id=False):
+        if res_id:
+           res_id = calendar_id2real_id(res_id)
+        return super(ir_values, self).get_actions(action_slot, model, res_id=res_id)
 
 class calendar_event_type(osv.Model):
     _name = 'calendar.event.type'

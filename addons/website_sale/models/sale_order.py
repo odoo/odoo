@@ -139,6 +139,7 @@ class Website(models.Model):
         for website in self:
             website.pricelist_id = website.with_context(website_id=website.id).get_current_pricelist()
 
+    # This method is cached, must not return records! See also #8795
     @tools.ormcache('self.env.uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl', 'partner_pl', 'order_pl')
     def _get_pl_partner_order(self, country_code, show_visible, website_pl, current_pl, all_pl, partner_pl=False, order_pl=False):
         """ Return the list of pricelists that can be used on website for the current user.
@@ -166,11 +167,12 @@ class Website(models.Model):
         if not pricelists or (partner_pl or partner.property_product_pricelist.id) != website_pl:
             pricelists |= partner.property_product_pricelist
 
-        return pricelists.sorted(lambda pl: pl.name)
+        # This method is cached, must not return records! See also #8795
+        return pricelists.sorted(lambda pl: pl.name).ids
 
-    @tools.ormcache('self.env.uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl')
     def _get_pl(self, country_code, show_visible, website_pl, current_pl, all_pl):
-        return self._get_pl_partner_order(country_code, show_visible, website_pl, current_pl, all_pl)
+        pl_ids = self._get_pl_partner_order(country_code, show_visible, website_pl, current_pl, all_pl)
+        return self.env['product.pricelist'].browse(pl_ids)
 
     def get_pricelist_available(self, show_visible=False):
 
@@ -195,7 +197,7 @@ class Website(models.Model):
                                                    website.website_pricelist_ids,
                                                    partner_pl=partner_pl and partner_pl.id or None,
                                                    order_pl=order_pl and order_pl.id or None)
-        return pricelists
+        return self.env['product.pricelist'].browse(pricelists)
 
     def is_pricelist_available(self, pl_id):
         """ Return a boolean to specify if a specific pricelist can be manually set on the website.
@@ -399,7 +401,6 @@ class WebsitePricelist(models.Model):
         # list of available pricelists. So, we need to invalidate the cache when
         # we change the config of website price list to force to recompute.
         website = self.env['website']
-        website._get_pl.clear_cache(website)
         website._get_pl_partner_order.clear_cache(website)
 
     @api.multi

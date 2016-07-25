@@ -100,7 +100,8 @@ class ProductTemplate(models.Model):
     availability_warning = fields.Text("Availability Warning", translate=True)
 
     def _default_website_sequence(self):
-        min_sequence = self.sudo().search([], order='website_sequence', limit=1).website_sequence
+        self._cr.execute("SELECT MIN(website_sequence) FROM %s" % self._table)
+        min_sequence = self._cr.fetchone()[0]
         return min_sequence and min_sequence - 1 or 10
 
     def set_sequence_top(self):

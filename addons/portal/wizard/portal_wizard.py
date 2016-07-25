@@ -116,6 +116,7 @@ class PortalWizardUser(models.TransientModel):
 
     @api.multi
     def action_apply(self):
+        self.env['res.partner'].check_access_rights('write')
         """ From selected partners, add corresponding users to chosen portal group. It either granted
             existing user, or create new one (and add it to the group).
         """
@@ -126,6 +127,8 @@ class PortalWizardUser(models.TransientModel):
 
         for wizard_user in self.sudo().with_context(active_test=False):
             group_portal = wizard_user.wizard_id.portal_id
+            if not group_portal.is_portal:
+                raise UserError('Not a portal: ' + group_portal.name)
             user = wizard_user.partner_id.user_ids[0] if wizard_user.partner_id.user_ids else None
             # update partner email, if a new one was introduced
             if wizard_user.partner_id.email != wizard_user.email:
