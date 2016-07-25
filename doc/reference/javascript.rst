@@ -784,15 +784,15 @@ Here is a description of the current file structure:
 * the ``framework/`` folder contains all basic low level modules.  The
   modules here are supposed to be generic.  Some of them are:
 
-    * ``web.ajax`` implements rpc calls
-    * ``web.core`` is a generic modules.  It exports various useful
-      objects and functions, such as ``qweb``, ``_t`` or the main bus.
-    * ``web.Widget`` contains the widget class
-    * ``web.Model`` is an abstraction over ``web.ajax`` to make
-      calls to the server model methods
-    * ``web.session`` is the former ``openerp.session``
-    * ``web.utils`` for useful code snippets
-    * ``web.time`` for every time-related generic functions
+  * ``web.ajax`` implements rpc calls
+  * ``web.core`` is a generic modules.  It exports various useful
+    objects and functions, such as ``qweb``, ``_t`` or the main bus.
+  * ``web.Widget`` contains the widget class
+  * ``web.Model`` is an abstraction over ``web.ajax`` to make
+    calls to the server model methods
+  * ``web.session`` is the former ``openerp.session``
+  * ``web.utils`` for useful code snippets
+  * ``web.time`` for every time-related generic functions
 * the ``views/`` folder contains all view definitions
 * ``widgets/`` is for standalone widgets
 
