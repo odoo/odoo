@@ -11,6 +11,9 @@ from odoo.fields import Date
 
 class website_account(http.Controller):
 
+    MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street2", "city", "country_id"]
+    OPTIONAL_BILLING_FIELDS = ["zipcode", "state_id", "vat", "street"]
+
     _items_per_page = 10
 
     def _prepare_portal_layout_values(self):
@@ -65,8 +68,9 @@ class website_account(http.Controller):
             values.update({'error': error, 'error_message': error_message})
             values.update(post)
             if not error:
-                post.update({'zip': post.pop('zipcode', '')})
-                partner.sudo().write(post)
+                values = {key: post[key] for key in self.MANDATORY_BILLING_FIELDS + self.OPTIONAL_BILLING_FIELDS}
+                values.update({'zip': post.pop('zipcode', '')})
+                partner.sudo().write(values)
                 if redirect:
                     return request.redirect(redirect)
                 return request.redirect('/my/home')
@@ -88,11 +92,8 @@ class website_account(http.Controller):
         error = dict()
         error_message = []
 
-        mandatory_billing_fields = ["name", "phone", "email", "street2", "city", "country_id"]
-        optional_billing_fields = ["zipcode", "state_id", "vat", "street"]
-
         # Validation
-        for field_name in mandatory_billing_fields:
+        for field_name in self.MANDATORY_BILLING_FIELDS:
             if not data.get(field_name):
                 error[field_name] = 'missing'
 
@@ -112,11 +113,12 @@ class website_account(http.Controller):
             vat_country, vat_number = request.env["res.partner"]._split_vat(data.get("vat"))
             if not check_func(vat_country, vat_number):  # simple_vat_check
                 error["vat"] = 'error'
+
         # error message for empty required fields
         if [err for err in error.values() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
 
-        unknown = [k for k in data.iterkeys() if k not in mandatory_billing_fields + optional_billing_fields]
+        unknown = [k for k in data.iterkeys() if k not in self.MANDATORY_BILLING_FIELDS + self.OPTIONAL_BILLING_FIELDS]
         if unknown:
             error['common'] = 'Unknown field'
             error_message.append("Unknown field '%s'" % ','.join(unknown))
