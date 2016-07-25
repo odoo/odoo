@@ -428,9 +428,9 @@ High-level API: calling into Odoo models
 -------------------------------------------
 
 Access to Odoo object methods (made available through XML-RPC from the server)
-is done via :class:`Model` (exported in ``web.Model``). It maps onto the Odoo server objects via
-two primary methods, :func:`~Model.call` and
-:func:`~Model.query`.
+is done via :class:`Model`. It maps onto the Odoo server objects via two primary
+methods, :func:`~Model.call` (exported in ``web.Model``) and :func:`~Model.query`
+(exported in ``web.DataModel``, only available in the backend client).
 
 :func:`~Model.call` is a direct mapping to the corresponding method of
 the Odoo server object. Its usage is similar to that of the Odoo Model API,
