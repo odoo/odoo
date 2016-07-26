@@ -139,7 +139,8 @@ class wizard_user(osv.osv_memory):
                 user_id = False
                 # create a user if necessary, and make sure it is in the portal group
                 if not user:
-                    user_id = self._create_user(cr, SUPERUSER_ID, wizard_user.id, context)
+                    company_id = wizard_user.partner_id.company_id.id
+                    user_id = self._create_user(cr, SUPERUSER_ID, wizard_user.id, dict(context, company_id=company_id))
                 else:
                     user_id = user.id
                 wizard_user.write({'user_id': user_id})
@@ -167,6 +168,8 @@ class wizard_user(osv.osv_memory):
         res_users = self.pool.get('res.users')
         create_context = dict(context or {}, noshortcut=True, no_reset_password=True)       # to prevent shortcut creation
         values = {
+            'company_id': context.get('company_id'),
+            'company_ids': [(6, 0, [context.get('company_id')])],
             'email': extract_email(wizard_user.email),
             'login': extract_email(wizard_user.email),
             'partner_id': wizard_user.partner_id.id,
