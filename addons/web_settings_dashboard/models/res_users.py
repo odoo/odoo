@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, api
+from odoo import models, api
 
 
-class Users(models.Model):
+class ResUsers(models.Model):
     _inherit = 'res.users'
 
     @api.model
