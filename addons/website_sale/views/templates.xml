@@ -226,7 +226,7 @@
         <xpath expr="//div[@id='products_grid_before']" position="inside">
             <ul class="nav nav-pills nav-stacked mt16">
                 <li t-att-class=" '' if category else 'active' ">
-                    <a t-att-href="keep('/shop',category=0)">All Products</a>
+                    <a t-att-href="keep('/shop',category=0)" class="o_not_editable">All Products</a>
                 </li>
                 <t t-foreach="categories" t-as="c">
                     <t t-call="website_sale.categories_recursive" />
@@ -257,7 +257,7 @@
         <xpath expr="//div[@id='products_grid_before']/ul" position="replace">
             <ul class="nav nav-pills nav-stacked mt16" id="o_shop_collapse_category">
                 <li t-att-class=" '' if category else 'active' ">
-                    <a t-att-href="keep('/shop',category=0)">All Products</a>
+                    <a t-att-href="keep('/shop',category=0)" class="o_not_editable">All Products</a>
                 </li>
                 <t t-foreach="categories" t-as="categ">
                     <t t-call="website_sale.option_collapse_categories_recursive" />
