@@ -431,6 +431,8 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                     anonymized_value = 'xxx'+sid
                 elif field_type == 'text':
                     anonymized_value = 'xxx'+sid
+                elif field_type == 'html':
+                    anonymized_value = 'xxx'+sid
                 elif field_type == 'boolean':
                     anonymized_value = random.choice([True, False])
                 elif field_type == 'date':

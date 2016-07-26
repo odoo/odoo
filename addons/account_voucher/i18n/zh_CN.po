@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-05-13 12:34+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2016-06-22 02:43+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +32,7 @@ msgid ""
 "* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have an voucher number.                         \n"
 "* The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account                         \n"
 "* The 'Cancelled' status is used when user cancel voucher."
-msgstr "* '草稿'状态用于新建的和未确认凭单.                         \\n\n* '形式发票'状态下凭单，没有凭单编号.                         \\n\n* '已登账'状态指用户创建了凭单，凭单号已经生成，凭单中的项目已经进入账户                         \\n\n* '取消' 状态用于用户将凭单取消. "
+msgstr "* '草稿'状态用于新建的和未确认凭单.                         \\n\n* '形式发票'状态下凭单，没有凭单编号.                         \\n\n* '已过账'状态指用户创建了凭单，凭单号已经生成，凭单中的项目已经进入账户                         \\n\n* '取消' 状态用于用户将凭单取消. "
 
 #. module: account_voucher
 #: field:sale.receipt.report,nbr:0
@@ -59,7 +59,7 @@ msgid ""
 "                Odoo helps you easily track payments you make and the remaining balances you need to pay your suppliers.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\\\"oe_view_nocontent_create\\\">\n单击新建一个供应商付款。\n</p><p>\nOdoo帮助你跟踪你的实际付款和需要支付给供应商的付款余额。\n</p>"
+msgstr "<p class=\\\"oe_view_nocontent_create\\\">\n单击创建新供应商付款。\n</p><p>\nOdoo帮助你跟踪你的实际付款和需要支付给供应商的付款余额。\n</p>"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -291,7 +291,7 @@ msgstr "贷方"
 #: model:ir.model,name:account_voucher.model_res_currency
 #: field:sale.receipt.report,currency_id:0
 msgid "Currency"
-msgstr "币别"
+msgstr "货币"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
@@ -447,7 +447,7 @@ msgstr "跳转到指定的控制面板"
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Group By"
-msgstr "分组"
+msgstr "分组于"
 
 #. module: account_voucher
 #: field:account.voucher,currency_help_label:0
@@ -574,7 +574,7 @@ msgstr "消息和通信历史"
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
 msgid "Multi Currency Voucher"
-msgstr "多币种凭单"
+msgstr "多种货币凭单"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1243
@@ -630,13 +630,13 @@ msgstr "其他信息"
 #. module: account_voucher
 #: field:account.voucher,paid:0
 msgid "Paid"
-msgstr "已付款"
+msgstr "已支付"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Paid Amount"
-msgstr "已付金额"
+msgstr "已支付金额"
 
 #. module: account_voucher
 #: field:account.voucher,paid_amount_in_company_currency:0
@@ -737,7 +737,7 @@ msgstr "期间"
 #: code:addons/account_voucher/account_voucher.py:1058
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr "请激活选中分类账的 序列（ sequence  ）。"
+msgstr "请激活选中分类账的 序号（ sequence  ）。"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1064
@@ -766,7 +766,7 @@ msgstr "登帐"
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: selection:sale.receipt.report,state:0
 msgid "Posted"
-msgstr "已登账"
+msgstr "已过账"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -1060,7 +1060,7 @@ msgstr "反调节"
 #. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
 msgid "Untax Amount"
-msgstr "未税总额"
+msgstr "不含税金额"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form

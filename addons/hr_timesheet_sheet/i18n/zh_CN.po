@@ -4,7 +4,8 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# jeffery chen fan <jeffery9@gmail.com>, 2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
 # mrshelly <mrshelly@hotmail.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2015
@@ -13,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-01-21 01:16+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2016-06-23 14:23+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,7 +65,7 @@ msgid ""
 "                configuration of each project's related contract.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n待审批的新计工单。\n</p><p>\n您需要每天记录计工单并在周末前确认。\n当计工单被确认后，它会被管理者审批。\n</p><p>\n计工单可以开票给客户，取决于每个相关项目的合同设置。\n</p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n待审批的新计工单。\n</p><p>\n您需要每天记录计工单并在周末前确认。\n当计工单被确认后，它会被管理者审批。\n</p><p>\n计工单可以开票给客户，取决于每个相关项目的合同配置。\n</p>\n            "
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -97,7 +98,7 @@ msgstr "允许计工单与出勤时间有差异（小时）"
 msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
-msgstr "签入/签出和在一个计工单里的容许的差异小时。如果您不想这样控制设为0."
+msgstr "登录/注销和在一个计工单里的容许的差异小时。如果您不想这样控制设为0."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_account
@@ -165,7 +166,7 @@ msgstr "公司"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:91
 #, python-format
 msgid "Configuration Error!"
-msgstr "设置错误!"
+msgstr "配置错误!"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
@@ -274,7 +275,7 @@ msgstr "员工"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:100
 #, python-format
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr "错误！签入（或签出）动作必须在签出（或签入）动作之后。"
+msgstr "错误！登录（或注销）动作必须在注销（或登录）动作之后。"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
@@ -304,7 +305,7 @@ msgstr "关注者"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
-msgstr "分组"
+msgstr "分组于"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_summary:0
@@ -450,7 +451,7 @@ msgid ""
 "the end of the period defined in the company, the timesheet is confirmed by "
 "the user and can be validated by his manager. If required, as defined on the"
 " project, you can generate the invoices based on the timesheet."
-msgstr "用\"我的计工单\"菜单开启您的计工单所以您能在系统预定你的活动。用相同方式，您能记录您的考勤（签入/签出）同时记录在不同项目的工作时间。在公司定义的期末，确认用户的计工单和经由经理使其生效。如果需要，可以定义为一个项目，你能给这计工单开发票。"
+msgstr "用\"我的计工单\"菜单开启您的计工单所以您能在系统预定你的活动。用相同方式，您能记录您的考勤（登录/注销）同时记录在不同项目的工作时间。在公司定义的期末，确认用户的计工单和经由经理使其生效。如果需要，可以定义为一个项目，你能给这计工单开发票。"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,state:0
@@ -519,7 +520,7 @@ msgstr "拒绝"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_filter
 msgid "Search Account"
-msgstr "查找辅助核算项"
+msgstr "搜索账户"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -541,7 +542,7 @@ msgstr "表"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Sign In"
-msgstr "签入"
+msgstr "登录"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -571,7 +572,7 @@ msgstr "总计"
 msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
 "sign ins and sign outs."
-msgstr "不包含签入和签出数值的计工单无法被核实。"
+msgstr "不包含登录及注销数值的计工单无法被核实。"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -605,13 +606,13 @@ msgstr "计工单允许的差异（小时）"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
 msgid "Timesheet by Account"
-msgstr "辅助核算项的计工单"
+msgstr "计工单 按账户"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_form
 #: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_tree
 msgid "Timesheet by Accounts"
-msgstr "辅助核算项计工单"
+msgstr "计工单 按账户"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
@@ -696,7 +697,7 @@ msgstr "总计工单"
 #: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
 #: field:hr.timesheet.report,to_invoice:0
 msgid "Type of Invoicing"
-msgstr "发票类型"
+msgstr "开票的类型"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_unread:0

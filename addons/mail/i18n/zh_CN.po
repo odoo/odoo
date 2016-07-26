@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-05-13 12:34+0000\n"
+"PO-Revision-Date: 2016-06-23 14:26+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -171,7 +171,7 @@ msgstr "有效"
 #. module: mail
 #: field:mail.compose.message,active_domain:0
 msgid "Active domain"
-msgstr "活动域"
+msgstr "活动领域"
 
 #. module: mail
 #: view:mail.wizard.invite:mail.mail_wizard_invite_form
@@ -228,7 +228,7 @@ msgstr "别名联系安全"
 #. module: mail
 #: field:base.config.settings,alias_domain:0
 msgid "Alias Domain"
-msgstr "别名域"
+msgstr "别名网域"
 
 #. module: mail
 #: field:mail.alias,alias_name:0
@@ -238,7 +238,7 @@ msgstr "别名"
 #. module: mail
 #: field:mail.alias,alias_domain:0
 msgid "Alias domain"
-msgstr "别名域"
+msgstr "别名网域"
 
 #. module: mail
 #: field:mail.alias,alias_model_id:0
@@ -406,7 +406,7 @@ msgstr "抄送"
 #. module: mail
 #: field:mail.compose.message,child_ids:0 field:mail.message,child_ids:0
 msgid "Child Messages"
-msgstr "子信息"
+msgstr "下级信息"
 
 #. module: mail
 #: selection:mail.compose.message,type:0 view:mail.mail:mail.view_mail_search
@@ -776,7 +776,7 @@ msgstr "群组"
 #: view:mail.mail:mail.view_mail_search
 #: view:mail.message:mail.view_message_search
 msgid "Group By"
-msgstr "分组"
+msgstr "分组于"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -824,7 +824,7 @@ msgstr "隐藏关注者选项的子类型"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "保留复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
+msgstr "持有Chatter摘要(消息数量，……等)。摘要直接以HTML格式插入到看板视图。"
 
 #. module: mail
 #: field:mail.alias,id:0 field:mail.compose.message,id:0
@@ -840,7 +840,7 @@ msgstr "ID"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr "父记录ID支持别名(例如:项目支持任务创建别名)"
+msgstr "上级记录ID支持别名(例如:项目支持任务创建别名)"
 
 #. module: mail
 #: help:mail.followers,res_id:0 help:mail.wizard.invite,res_id:0
@@ -1028,7 +1028,7 @@ msgid ""
 "Medium-sized photo of the group. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
-msgstr "群组的中等尺寸照片。它们被缩放为128x128px，纵横比保留。表单视图或者一些看板视图使用这个字段。"
+msgstr "群组的中等尺寸照片。它们自动被缩放为128x128px，保持纵横比。表单视图或者一些看板视图使用这个字段。"
 
 #. module: mail
 #: help:mail.group,group_ids:0
@@ -1148,7 +1148,7 @@ msgstr "关注资源的模型"
 #: help:mail.message.subtype,res_model:0
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
-msgstr "子类型适用的模型：如果 假，子类型适用于所有模块"
+msgstr "子类型适用的模型：如果 假，子类型适用于所有模型"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -1288,7 +1288,7 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "所有的来邮都将附上一条线索（记录）选配的ID，即使它们不曾回复过它。如果设置了，这个将完全阻止新记录的创建。"
+msgstr "所有的进来的邮件都将附上一条线索（记录）选配的ID，即使它们不曾回复过它。如果设置了，这个将完全阻止新记录的创建。"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_my_stuff
@@ -1303,13 +1303,13 @@ msgstr "出局"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "出局邮件"
+msgstr "出去的邮件"
 
 #. module: mail
 #: field:mail.compose.message,mail_server_id:0
 #: field:mail.message,mail_server_id:0
 msgid "Outgoing mail server"
-msgstr "出局邮件服务器"
+msgstr "发信邮件服务器"
 
 #. module: mail
 #: field:mail.alias,alias_user_id:0
@@ -1334,7 +1334,7 @@ msgstr "上级模型"
 #. module: mail
 #: field:mail.alias,alias_parent_thread_id:0
 msgid "Parent Record Thread ID"
-msgstr "父记录线程ID"
+msgstr "上级记录线程ID"
 
 #. module: mail
 #: help:mail.alias,alias_parent_model_id:0
@@ -1342,7 +1342,7 @@ msgid ""
 "Parent model holding the alias. The model holding the alias reference\n"
 "is not necessarily the model given by alias_model_id\n"
 "(example: project (parent_model) and task (model))"
-msgstr "父模型支持别名。模型支持别名参考不需要给出alias_model_id\n(例如:project(parent_model) 和 task(model))"
+msgstr "上级模型支持别名。模型支持别名参考不需要给出alias_model_id\n(例如:project(parent_model) 和 task(model))"
 
 #. module: mail
 #: help:mail.message.subtype,parent_id:0
@@ -1405,7 +1405,7 @@ msgid ""
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document\n"
-msgstr "文档信息发送使用邮件服务器规则。\n- 所有人：所有人都允许\n- 业务伙伴：仅认证的业务伙伴\n- 关注者：仅关注相关文档者\n"
+msgstr "使用mailgateway在单据上张贴消息的政策。\n- 所有人：所有人\n- 业务伙伴：仅验证过的业务伙伴\n- 关注者：仅相关单据的关注者\n"
 
 #. module: mail
 #: help:res.partner,notify_email:0
@@ -1519,7 +1519,7 @@ msgstr "回复"
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
-msgstr "回复邮件地址。设置回复到【 reply_to】旁路自动线程创建。"
+msgstr "回复邮件地址。设置回复到reply_to旁路自动线程创建。"
 
 #. module: mail
 #: field:mail.compose.message,reply_to:0 field:mail.message,reply_to:0
@@ -1607,7 +1607,7 @@ msgstr "使用 %(odoo)s 发自 %(company)s "
 #. module: mail
 #: field:mail.message.subtype,sequence:0
 msgid "Sequence"
-msgstr "序列"
+msgstr "序号"
 
 #. module: mail
 #. openerp-web
@@ -1816,7 +1816,7 @@ msgstr "To:"
 #: model:ir.actions.client,name:mail.action_mail_to_me_feeds
 #: model:ir.ui.menu,name:mail.mail_tomefeeds
 msgid "To: me"
-msgstr "To: me"
+msgstr "发给我的"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -1866,7 +1866,7 @@ msgstr "上传错误"
 #. module: mail
 #: field:mail.compose.message,use_active_domain:0
 msgid "Use active domain"
-msgstr "使用有效域"
+msgstr "使用活动领域"
 
 #. module: mail
 #: help:mail.message.subtype,sequence:0
@@ -1929,7 +1929,7 @@ msgstr "警告！\n您将被该单据的邮件或者公告提醒。你确信要�
 #. module: mail
 #: help:mail.compose.message,is_log:0
 msgid "Whether the message is an internal note (comment mode only)"
-msgstr "该消息是否是一个内部笔记(注释模式)"
+msgstr "该消息是否是一个内部备注(注释模式)"
 
 #. module: mail
 #: model:mail.group,name:mail.group_all_employees
@@ -1952,7 +1952,7 @@ msgstr "你当前正在编辑一条消息，这个消息将被放弃。\n\n你�
 msgid ""
 "You cannot create a new user from here.\n"
 " To create new user please go to configuration panel."
-msgstr "你不能在这里创建一个新的用户。\n 要创建一个新用户，请转到设置面板。"
+msgstr "你不能在这里创建一个新的用户。\n 要创建一个新用户，请转到配置面板。"
 
 #. module: mail
 #: code:addons/mail/mail_group.py:174
@@ -2138,7 +2138,7 @@ msgstr "不喜欢"
 #: code:addons/mail/static/src/xml/mail.xml:286
 #, python-format
 msgid "updated document"
-msgstr "更新的单据"
+msgstr "更新单据"
 
 #. module: mail
 #. openerp-web

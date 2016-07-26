@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-05-05 11:53+0000\n"
+"PO-Revision-Date: 2016-07-22 05:35+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -91,7 +91,7 @@ msgstr "默认选项"
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
-msgstr "当所有商品可用后一次性送货"
+msgstr "当所有商品可用后一次性交货"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -127,7 +127,7 @@ msgstr "开启销售订单行上的路线"
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr "基于交货单开票"
+msgstr "交货后基于交货单开票"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
@@ -154,7 +154,7 @@ msgstr "库存路线"
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on deliveries"
-msgstr "基于交货单的发票"
+msgstr "基于交货单开票"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
@@ -196,7 +196,7 @@ msgstr "只有管理员可以改变该设置"
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
 msgid "Packaging"
-msgstr "包装形式"
+msgstr "包装"
 
 #. module: sale_stock
 #: help:sale.order,picking_policy:0
@@ -316,12 +316,12 @@ msgstr "送货策略"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr "库存调拨"
+msgstr "库存移动"
 
 #. module: sale_stock
 #: field:sale.config.settings,default_order_policy:0
 msgid "The default invoicing method is"
-msgstr "默认的开票方法"
+msgstr "默认开票方法"
 
 #. module: sale_stock
 #: view:stock.picking:sale_stock.view_picking_internal_search_inherit
@@ -348,7 +348,7 @@ msgstr "仓库"
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
 msgid "You can generate invoices based on sales orders or based on shippings."
-msgstr "你可以根据销售订单或送货生成发票。"
+msgstr "你可以基于销售订单，或基于送货生成发票。"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:161
@@ -373,7 +373,7 @@ msgid ""
 "But it's not compatible with the selected packaging.\n"
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
-msgstr "你选择了 %d 单位的数量。但它不兼容选定的包装。\n这是对应该包装的建议数量：EAN: %s ，  数量: %s， 单位类型: %s"
+msgstr "你选择了 %d 单位的数量。\n它与选择的包装不兼容。\n对应于该包装数量是：EAN: %s ，  数量: %s， 物流单元类型: %s"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit

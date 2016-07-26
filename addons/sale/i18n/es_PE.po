@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-02-11 23:13+0000\n"
+"PO-Revision-Date: 2016-06-20 21:14+0000\n"
 "Last-Translator: Edgard Pimentel <pimentelrojas@gmail.com>\n"
 "Language-Team: Spanish (Peru) (http://www.transifex.com/odoo/odoo-8/language/es_PE/)\n"
 "MIME-Version: 1.0\n"
@@ -101,7 +101,7 @@ msgstr ""
 #. module: sale
 #: field:product.product,sales_count:0 field:product.template,sales_count:0
 msgid "# Sales"
-msgstr ""
+msgstr "# Ventas"
 
 #. module: sale
 #: field:sale.report,nbr:0
@@ -111,26 +111,26 @@ msgstr "# de Líneas"
 #. module: sale
 #: field:sale.report,product_uom_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "# de Cantidad"
 
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr ""
+msgstr "# de Pedidos de Ventas"
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -228,7 +228,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr ""
+msgstr "Direcciones en Pedidos de Venta"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -748,7 +748,7 @@ msgstr "Realizado"
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Borrador"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -902,7 +902,7 @@ msgstr "ID"
 #. module: sale
 #: help:sale.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Si está marcado nuevos mensajes requieren su atención."
 
 #. module: sale
 #: code:addons/sale/sale.py:305
@@ -957,7 +957,7 @@ msgstr ""
 #. module: sale
 #: field:sale.make.invoice,invoice_date:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Fecha de Factura"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
@@ -1117,7 +1117,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Historial de mensajes y comunicación"
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -1288,7 +1288,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Percentage"
-msgstr ""
+msgstr "Porcentaje"
 
 #. module: sale
 #: code:addons/sale/sale.py:935
@@ -1336,12 +1336,12 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Print"
-msgstr ""
+msgstr "Imprimir"
 
 #. module: sale
 #: model:ir.model,name:sale.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "Requerimiento"
 
 #. module: sale
 #: field:sale.order,procurement_group_id:0
@@ -1380,7 +1380,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,module_project:0
 msgid "Project"
-msgstr ""
+msgstr "Proyecto"
 
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
@@ -1408,7 +1408,7 @@ msgstr ""
 #: view:sale.order:sale.view_order_form
 #: view:sale.order:sale.view_quotation_tree selection:sale.report,state:0
 msgid "Quotation"
-msgstr ""
+msgstr "Cotización"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
@@ -1546,7 +1546,7 @@ msgstr ""
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Sales"
-msgstr ""
+msgstr "Ventas"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -1591,7 +1591,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Línea de Pedido de Venta"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
@@ -1657,7 +1657,7 @@ msgstr "Pedidos de Ventas"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr ""
+msgstr "Estadísticas de Pedidos de Venta"
 
 #. module: sale
 #: view:account.invoice:sale.account_invoice_groupby_inherit
@@ -1669,12 +1669,12 @@ msgstr ""
 #: view:sale.report:sale.view_order_product_search
 #: field:sale.report,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Equipo de Ventas"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_case_section
 msgid "Sales Teams"
-msgstr ""
+msgstr "Equipos de Ventas"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_exception
@@ -1728,7 +1728,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Send by Email"
-msgstr ""
+msgstr "Enviar por Email"
 
 #. module: sale
 #: field:sale.order.line,sequence:0
@@ -1782,7 +1782,7 @@ msgstr "Subtotal"
 #. module: sale
 #: field:sale.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Resumen"
 
 #. module: sale
 #: help:crm.case.section,invoiced_target:0
@@ -1800,7 +1800,7 @@ msgstr "Impuestos"
 #. module: sale
 #: field:sale.order,note:0
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Términos y Condiciones"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1996,12 +1996,12 @@ msgstr "Precio unitario"
 #: view:sale.order.line:sale.view_order_line_tree
 #: field:sale.report,product_uom:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unidad de Medida"
 
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Unit of Measure "
-msgstr ""
+msgstr "Unidad de Medida"
 
 #. module: sale
 #: field:sale.order,message_unread:0
@@ -2058,7 +2058,7 @@ msgstr "RUC:"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "View Invoice"
-msgstr ""
+msgstr "Ver Factura"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
@@ -2081,12 +2081,12 @@ msgstr ""
 #. module: sale
 #: field:sale.order,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Mensajes del Sitio Web"
 
 #. module: sale
 #: help:sale.order,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Historial de comunicación del sitio web"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0

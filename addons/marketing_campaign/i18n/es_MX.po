@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-01-15 23:27+0000\n"
+"PO-Revision-Date: 2016-06-01 02:26+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-8/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
@@ -193,7 +193,7 @@ msgstr "Cancelar Segmento"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
 msgid "Cancel Workitem"
-msgstr ""
+msgstr "Cancelar Elemento de Trabajo"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
@@ -319,7 +319,7 @@ msgstr "Directorio"
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,keep_if_condition_not_met:0
 msgid "Don't Delete Workitems"
-msgstr ""
+msgstr "No Borrar Elementos de Trabajo"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -447,20 +447,20 @@ msgstr "Agrupar por"
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_1
 msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr ""
+msgstr "Hola, recibirás tu paquete de bienvenida via email en unos momentos."
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_3
 msgid ""
 "Hi, we are delighted to let you know that you have entered the select circle"
 " of our Gold Partners"
-msgstr ""
+msgstr "Hola, es un placer darte la noticia que ahora perteneces al círculo selecto de 'Gold Partners' "
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_2
 msgid ""
 "Hi, we are delighted to welcome you among our Silver Partners as of today!"
-msgstr ""
+msgstr "Hola, deseamos darte la bienvenida a nuestro club de 'Silver Partners'!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -497,7 +497,7 @@ msgid ""
 "segments will only avoid selecting the same record again if it entered the "
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
-msgstr ""
+msgstr "Si se usa, este campo ayudará segmentos que trabajan en modo de \"sin duplicados\" para prevenir seleccionar archivos dos veces. Archivos similares son archivos que tienen el mismo valor en este campo único. Por ejemplo, al escoger el campo \"email_form\" para Casos CRM prevendrías mandar la misma campaña a la misma dirección de email. Si no se usa, los segmentos de \"sin duplicados\" solo previenen seleccionar el mismo archivo otra vez si ya se metido en la campaña anteriormente. Solo campos que son fácilmente comparados como 'textfields', números, selecciones o relaciones singulares podrán usarse."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_form
@@ -565,7 +565,7 @@ msgstr "Fecha de lanzamiento"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Launch Month"
-msgstr ""
+msgstr "Mes de Inauguración "
 
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
@@ -593,17 +593,17 @@ msgstr "Actividades campaña de marketing"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Marketing Campaign Activity"
-msgstr ""
+msgstr "Campaña de Actividad de Marketing"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
 msgid "Marketing Campaign Segment"
-msgstr ""
+msgstr "Semento de Campaña de Marketing"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
 msgid "Marketing Campaign Statistics"
-msgstr ""
+msgstr "Estadísticas de Campaña de Marketing"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_tree
@@ -721,7 +721,7 @@ msgstr "Solo registros actualizados después de la útlima sincronización (sin 
 #. module: marketing_campaign
 #: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
 msgid "Open Marketing Menu"
-msgstr ""
+msgstr "Abrir el Menu de Marketing"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:189
@@ -915,17 +915,17 @@ msgstr "Estado"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: all records"
-msgstr ""
+msgstr "Modo de sincronización: todos los archivos"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records created after last sync"
-msgstr ""
+msgstr "Modo de sincronización: solo archivos creados después de la última sincronización"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records updated after last sync"
-msgstr ""
+msgstr "Modo de sincronización: solo archivos actualizados después de la última sincronización"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_mode:0
@@ -975,7 +975,7 @@ msgstr "La acción a realizar cuando la actividad es activada"
 #: code:addons/marketing_campaign/marketing_campaign.py:133
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
-msgstr ""
+msgstr "La campaña no puede ser marcada como completada antes de cerrar todos los segmentos."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:123
@@ -983,13 +983,13 @@ msgstr ""
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
-msgstr ""
+msgstr "La campaña no puede comenzarse. No tiene actividad. Modifica las actividades de campañ para marcar una como tu punto de comienzo."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:111
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
-msgstr ""
+msgstr "La campaña no puede comenzarse. No tiene actividades."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:800
@@ -1000,7 +1000,7 @@ msgstr "La etapa actual para este elemento no tiene email o informe para previsu
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
 msgid "The email to send when this activity is activated"
-msgstr ""
+msgstr "El email para mandar cuando comienze esta actividad"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,partner_field_id:0
@@ -1009,7 +1009,7 @@ msgid ""
 " If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
-msgstr ""
+msgstr "Los objetos de trabajo serán adheridos a la pareja relacionada con el archivo. Si el archivo es la pareja, deja este campo en blanco. Esto será útil para reportar objetivos, via el 'Campaign Analysis\" o las vistas del \"Campaign Follow-up\"."
 
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
@@ -1067,7 +1067,7 @@ msgstr "Tipo"
 #. module: marketing_campaign
 #: field:marketing.campaign,unique_field_id:0
 msgid "Unique Field"
-msgstr ""
+msgstr "Campo Único"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,variable_cost:0
@@ -1077,7 +1077,7 @@ msgstr "Coste variable"
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_1
 msgid "Welcome to the Odoo Partner Channel!"
-msgstr ""
+msgstr "Bienvenido al Canal Hermano de Odoo!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0

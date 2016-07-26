@@ -6,13 +6,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
 # 开阖—gilbert <gilbert@osbzr.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-05-13 12:34+0000\n"
+"PO-Revision-Date: 2016-07-08 12:39+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -160,7 +161,7 @@ msgid ""
 "                    quotation, sales order, delivery, invoicing and payment.\n"
 "                </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                   单击此处创建报价单，并能在之后转换成为销售订单。\n                </p><p>系统将帮助你高效地处理完整销售流程：报价、销售、发运、开票及付款。</p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                   单击此处创建报价单，创建之后自动转换成为销售订单。\n                </p><p>此功能非常管用：odoo系统将帮助你高效地跑完整个销售流程：报价单、销售、交货、开票及付款等。</p>\n            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -418,12 +419,12 @@ msgstr "产品"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr "按销售员"
+msgstr "销售员"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr "按销售团队"
+msgstr "销售团队"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -445,7 +446,7 @@ msgstr "取消订单"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Cancel Quotation"
-msgstr "取消报价"
+msgstr "取消报价单"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.order.line,state:0
@@ -527,7 +528,7 @@ msgstr "公司"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:99
 #, python-format
 msgid "Configuration Error!"
-msgstr "设置错误!"
+msgstr "配置错误!"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -617,7 +618,7 @@ msgstr "创建日期"
 #. module: sale
 #: field:sale.order,currency_id:0
 msgid "Currency"
-msgstr "币种"
+msgstr "货币"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter field:sale.order,partner_id:0
@@ -685,7 +686,7 @@ msgstr "默认条款和条件..."
 #. module: sale
 #: help:res.company,sale_note:0
 msgid "Default terms and conditions for quotations."
-msgstr "默认条款报价单"
+msgstr "报价单默认条款和条件..."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -874,7 +875,7 @@ msgstr "产生报价单或者销售订单的状态。\n当发票核准时（开�
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Group By"
-msgstr "分组"
+msgstr "分组于"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
@@ -1004,7 +1005,7 @@ msgstr "发票寄送地址:"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice and shipping address:"
-msgstr "发票和收货地址:"
+msgstr "发票和送货地址:"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -1025,7 +1026,7 @@ msgstr "开票日期。"
 #: code:addons/sale/sale.py:1224
 #, python-format
 msgid "Invoice paid"
-msgstr "发票已付清"
+msgstr "发票已支付"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1063,7 +1064,7 @@ msgstr "发票统计"
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Invoicing Process"
-msgstr "开发票过程"
+msgstr "开票过程"
 
 #. module: sale
 #: field:sale.order,message_is_follower:0
@@ -1265,7 +1266,7 @@ msgstr "其它信息"
 #. module: sale
 #: field:sale.order,invoiced:0
 msgid "Paid"
-msgstr "支付"
+msgstr "已支付"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner field:sale.report,partner_id:0
@@ -1280,7 +1281,7 @@ msgstr "付款条款"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Payment Term:"
-msgstr "支付条款："
+msgstr "付款条款："
 
 #. module: sale
 #: field:sale.order,paypal_url:0
@@ -1410,54 +1411,54 @@ msgstr "数量(销售单位)"
 #: view:sale.order:sale.view_order_form
 #: view:sale.order:sale.view_quotation_tree selection:sale.report,state:0
 msgid "Quotation"
-msgstr "报价"
+msgstr "报价单"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr "报价/订单"
+msgstr "报价单/订单"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr "报价日期："
+msgstr "报价单日期："
 
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr "报价号码"
+msgstr "报价单号码"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation N°"
-msgstr "报价号"
+msgstr "报价单号"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr "报价发送"
+msgstr "报价单发送"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr "报价送出"
+msgstr "报价单送出"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr "报价已确认"
+msgstr "报价单已确认"
 
 #. module: sale
 #: code:addons/sale/sale.py:362
 #, python-format
 msgid "Quotation created"
-msgstr "报价已创建"
+msgstr "报价单已创建"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation sent"
-msgstr "报价送出"
+msgstr "报价单送出"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1467,22 +1468,22 @@ msgstr "报价送出"
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: view:sale.order:sale.view_sales_order_filter
 msgid "Quotations"
-msgstr "报价"
+msgstr "报价单"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr "报价分析"
+msgstr "报价单分析"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr "报价和销售"
+msgstr "报价单和销售"
 
 #. module: sale
 #: field:crm.case.section,monthly_quoted:0
 msgid "Rate of created quotation per duration"
-msgstr "创建报价时间率"
+msgstr "每时间段创建报价单的比率"
 
 #. module: sale
 #: field:crm.case.section,monthly_invoiced:0
@@ -1517,7 +1518,7 @@ msgstr "每月确认的销售订单收入。"
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of created quotations per month."
-msgstr "每月创建报价收入。"
+msgstr "每月创建报价单的收入。"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1562,7 +1563,7 @@ msgstr "销售预收付款发票"
 #: view:sale.report:sale.view_order_product_graph
 #: view:sale.report:sale.view_order_product_search
 msgid "Sales Analysis"
-msgstr "销售分析表"
+msgstr "销售分析"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
@@ -1735,7 +1736,7 @@ msgstr "以邮件发送"
 #. module: sale
 #: field:sale.order.line,sequence:0
 msgid "Sequence"
-msgstr "序列"
+msgstr "序号"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -1827,7 +1828,7 @@ msgstr "销售订单相关的分析账户。"
 #. module: sale
 #: field:sale.config.settings,time_unit:0
 msgid "The default working time unit for services is"
-msgstr "默认的服务工作时间单位是"
+msgstr "默认服务工作时间单位是"
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -1857,7 +1858,7 @@ msgstr "产品类别的属性中，没有定义财务结构或者 收益类科�
 #: code:addons/sale/sale.py:154
 #, python-format
 msgid "There is no default company for the current user!"
-msgstr "当前用户没有设置默认的公司！"
+msgstr "当前用户没有设置默认公司！"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:96
@@ -1887,7 +1888,7 @@ msgstr "在销售订单中增加“利润”。\n通过单价和成本价计算�
 #. module: sale
 #: help:sale.config.settings,module_website_quote:0
 msgid "This adds the online quotation"
-msgstr "增加在线报价"
+msgstr "增加在线报价单"
 
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
@@ -1986,7 +1987,7 @@ msgstr "未开票"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
 msgid "Uninvoiced and Delivered Lines"
-msgstr "未开票已送货明细"
+msgstr "未开票及已交货明细行"
 
 #. module: sale
 #: field:sale.order.line,price_unit:0
@@ -2123,7 +2124,7 @@ msgstr "当销售订单未经确认时， 您不能创建发票。"
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
-msgstr "你不能对有不同货币结算的同一个业务伙伴的销售订单进行分组。"
+msgstr "你不能对同一个业务伙伴的不同币种的销售订单进行分组。"
 
 #. module: sale
 #: code:addons/sale/sale.py:1130

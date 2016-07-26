@@ -6,13 +6,14 @@
 # Equip de suport <suport@spinvilanova.com>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Gemma Bochaca <gemma.bochaca@gmail.com>, 2015
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2016-05-02 14:46+0000\n"
-"Last-Translator: Equip de suport <suport@spinvilanova.com>\n"
+"PO-Revision-Date: 2016-06-15 10:45+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +59,7 @@ msgid ""
 "                  projects or invite customers to share your activities.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nClic per iniciar un nou projecte.\n</p><p>\nEls projectes s'utilitzen per organitzar les seves activitats: planificar tasques, seguir incidències, facturar parts d'hores, etc. Pot definir projectes interns (I+D, millorar processos de vendes, etc.), projectes provats (la meva llista de tasques a realitzar) o projectes de clients.\n</p><p>\nPot colaborar al projecte amb els usuaris interns o invitar a clients a compartir les seves activitats.\n</p>\n            "
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_category_action
@@ -67,7 +68,7 @@ msgid ""
 "                Click to add a new tag.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nClic per afegir una nova etiqueta.\n</p>\n            "
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -81,7 +82,7 @@ msgid ""
 "                solving a task or an issue.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nClic per afegir una etapa al flux de treball a les tasques.\n</p><p>\nDefineix els passos que s'utilitzarà al projecte per la creació de la tasca, fins al tancament de la tasca o la incidència. S'utilitzaran aquestes tasques per seguir el progrés en la resolució de la tasca o la incidència.\n</p>\n            "
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -93,7 +94,7 @@ msgid ""
 "                    track progress, discuss on tasks, attach documents, etc.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nLa gestió de projecte d'Odoo li permet gestionar el flux de treball de les tasques per gestionar-les eficientment. Pot gestionar el seu progrés, discussions en les tasques, adjuntar documents, etc.\n</p>\n            "
 
 #. module: project
 #: help:project.task,kanban_state:0
@@ -102,7 +103,7 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this task\n"
 " * Ready for next stage indicates the task is ready to be pulled to the next stage"
-msgstr ""
+msgstr "Un estat de kanban en una tasca indica situacions especials que l'afecten:\n* 'Normal' és la situació per defecte.\n* 'Bloquejat' indica que alguna cosa està impedint el progrés de la tasca.\n* 'Llesta per la següent etapa' indica que la tasca pot ser portada a la següent etapa."
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -611,7 +612,7 @@ msgstr "Plegat a la vista de Kanban"
 msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
-msgstr ""
+msgstr "Seguiu aquest projecte per rastrejar automàticament els esdeveniments associats a les tasques i a les incidències del mateix."
 
 #. module: project
 #: field:project.project,message_follower_ids:0
@@ -622,7 +623,7 @@ msgstr "Seguidors"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
 msgid "GTD"
-msgstr ""
+msgstr "GTD"
 
 #. module: project
 #: view:project.task:project.view_task_form2
@@ -642,7 +643,7 @@ msgstr "Indica l'ordre de seqüència quan es mostra una llista de projectes."
 #. module: project
 #: help:project.task,sequence:0
 msgid "Gives the sequence order when displaying a list of tasks."
-msgstr ""
+msgstr "Indica l'ordre quan es mostra la llista de tasques."
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
@@ -655,7 +656,7 @@ msgstr "Agrupa per"
 #. module: project
 #: view:project.config.settings:project.view_config_settings
 msgid "Helpdesk & Support"
-msgstr ""
+msgstr "Taula d'ajuda (Helpdesk) i suport"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -689,7 +690,7 @@ msgid ""
 "- Employees Only: employees see all tasks or issues\n"
 "- Followers Only: employees see only the followed tasks or issues; if portal\n"
 "   is activated, portal users see the followed tasks or issues."
-msgstr ""
+msgstr "Manté la visibilitat de les tasques o incidències que pertanyen al projecte actual:\n- Públic: tothom ho pot veure tot; si el portal s'activa, els usuaris del portal veuran totes les tasques i incidències; si el portal anònim està activat, els visitants veuran les tasques o incidències\n- Portal (només disponible si el portal està instal·lat): els treballadors ho veuen tot; si el portal està activat, els usuaris del portal veuen les tasques o incidències seguides per ells o algú de la seva companyia.\n- Només treballadors: els treballadors veuen totes les tasques o incidències\n- Només seguidors: els treballadors veuen només les tasques o incidències seguides; si el portal està activat, els usuaris del portal veuen les tasques o incidències seguides."
 
 #. module: project
 #: field:project.task,effective_hours:0
@@ -720,7 +721,7 @@ msgstr "Si està marcat hi ha missatges nous pendents."
 msgid ""
 "If checked, this contract will be available in the project menu and you will"
 " be able to manage tasks or track issues"
-msgstr ""
+msgstr "Si es marca, aquest contracte estarà disponible al menú de projecte i és podrà gestionar les tasques o seguir les incidències."
 
 #. module: project
 #: help:project.project,active:0
@@ -741,7 +742,7 @@ msgstr "Si la tasca te un progrés del 99.99% heu de tancar la tasca si està fi
 msgid ""
 "If you check this field, this stage will be proposed by default on each new "
 "project. It will not assign this stage to existing projects."
-msgstr ""
+msgstr "Si marca aquest camp, aquesta etapa serà proposada per defecte en cada projecte nou. No s'assignarà aquesta etapa a projectes ja existents."
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
@@ -752,7 +753,7 @@ msgstr "En progrés"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Incoming Emails create"
-msgstr ""
+msgstr "Crear correus electrònics d'entrada"
 
 #. module: project
 #: field:project.task,planned_hours:0
@@ -765,7 +766,7 @@ msgid ""
 "Internal email associated with this project. Incoming emails are "
 "automatically synchronizedwith Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
-msgstr ""
+msgstr "Correu electrònic intern associat amb el projecte. Els correus entrants seran sincronitzats automàticament amb les tasques (o opcionalment les incidències si el mòdul, rastreja incidències, està instal·lat)."
 
 #. module: project
 #: code:addons/project/project.py:201
@@ -799,7 +800,7 @@ msgstr "Versió incidència"
 #: field:project.task,kanban_state:0 field:project.task.history,kanban_state:0
 #: field:project.task.history.cumulative,kanban_state:0
 msgid "Kanban State"
-msgstr ""
+msgstr "Estat kanban"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
@@ -844,7 +845,7 @@ msgstr "Actualitzat per última vegada el dia"
 msgid ""
 "Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
 "-This installs the module pad."
-msgstr ""
+msgstr "Permet personalitzar a escala de companyia quina instal·lació de Pad ha d'utilitzar per gestionar els nous pads (per exemple: http://ietherpad.com/).\n- Això instal·la el mòdul pad."
 
 #. module: project
 #: help:project.project,analytic_account_id:0
@@ -868,7 +869,7 @@ msgstr "Baixa"
 #. module: project
 #: field:project.config.settings,group_time_work_estimation_tasks:0
 msgid "Manage time estimation on tasks"
-msgstr ""
+msgstr "Gestionar estimació de temps de tasques"
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
@@ -1005,7 +1006,7 @@ msgstr "Obert"
 #. module: project
 #: model:ir.actions.client,name:project.action_client_project_menu
 msgid "Open Project Menu"
-msgstr ""
+msgstr "Obrir menú de projecte"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1073,7 +1074,7 @@ msgstr "Planificació"
 #: code:addons/project/project.py:1228
 #, python-format
 msgid "Please delete the project linked with this account first."
-msgstr ""
+msgstr "Si us plau, elimini primer el projecte relacionat amb aquest compte."
 
 #. module: project
 #: field:project.task,priority:0 field:report.project.task.user,priority:0
@@ -1202,14 +1203,14 @@ msgstr "Projectes"
 msgid ""
 "Provides management of issues/bugs in projects.\n"
 "-This installs the module project_issue."
-msgstr ""
+msgstr "Proveir de gestió d'incidències/errors als projectes.\n- Això instal·la el mòdul project_issue."
 
 #. module: project
 #: help:project.config.settings,module_project_issue_sheet:0
 msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
-msgstr ""
+msgstr "Proveir de suport de parts d'hores per la gestió d'incidències/errors als projectes.\n- Això instal·la el mòdul project_issue_sheet."
 
 #. module: project
 #: code:addons/project/project.py:200
@@ -1450,7 +1451,7 @@ msgstr "Delegar tasca"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
 msgid "Task Pipe"
-msgstr ""
+msgstr "Canonada de tasques"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -1574,21 +1575,21 @@ msgstr "En proves"
 msgid ""
 "The kind of document created when an email is received on this project's "
 "email alias"
-msgstr ""
+msgstr "El tipus de document creat quan es rep un correu electrònica en l'àlies de correu de projecte"
 
 #. module: project
 #: help:project.config.settings,module_project_timesheet:0
 msgid ""
 "This allows you to transfer the entries under tasks defined for Project Management to the timesheet line entries for particular date and user, with the effect of creating, editing and deleting either ways.\n"
 "-This installs the module project_timesheet."
-msgstr ""
+msgstr "Això permet transferir les entrades de les tasques de la gestió de projectes a les entrades del part d'hores per una data i usuari en concret, amb l'efecte de crear, editar i esborrar en els dos sentits.\n- Això instal·la el mòdul project_timesheet."
 
 #. module: project
 #: help:project.config.settings,module_sale_service:0
 msgid ""
 "This feature automatically creates project tasks from service products in sale orders. More precisely, tasks are created for procurement lines with product of type 'Service', procurement method 'Make to Order', and supply method 'Manufacture'.\n"
 "-This installs the module sale_service."
-msgstr ""
+msgstr "Aquesta característica crea automàticament tasques de projecte des dels productes de serveis a les comandes de venda. De forma més precisa, les tasques es creen des de les línies d'abastiment de productes de tipus \"Servei\", mètode d'abastiment \"Sota comanda\", i mètode de subministrament \"Fabricar\".\n- Això instal·la el módul sale_service."
 
 #. module: project
 #: help:project.task,active:0
@@ -1611,14 +1612,14 @@ msgstr "Aquest informe li permet analitzar el rendiment dels seus projectes i us
 msgid ""
 "This stage is folded in the kanban view whenthere are no records in that "
 "stage to display."
-msgstr ""
+msgstr "Aquesta estapa es replega al kanban quan no té registres per mostrar."
 
 #. module: project
 #: help:project.config.settings,time_unit:0
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "Changing the unit will only impact new entries."
-msgstr ""
+msgstr "Això estableix la unitat de mesura utilitzada als projectes i les tasques. Els canvis només afecten les entrades noves."
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
@@ -1710,7 +1711,7 @@ msgstr "Utilitzar tasques"
 #. module: project
 #: field:project.config.settings,module_pad:0
 msgid "Use integrated collaborative note pads on task"
-msgstr ""
+msgstr "Utilitzar el pad integrat de notes col·laboratives per les tasques"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -1787,7 +1788,7 @@ msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
 "project's tasks and then delete the project or simply deactivate the "
 "project."
-msgstr ""
+msgstr "No pot esborrar un projecte que conté tasques. Pot esborrar totes les tasques del projecte i llavors esborrar el projecte, o simplement desactivar el projecte."
 
 #. module: project
 #: code:addons/project/project.py:435
@@ -1808,7 +1809,7 @@ msgstr "_Delega"
 #. module: project
 #: view:project.task:project.view_task_kanban
 msgid "oe_kanban_text_red"
-msgstr ""
+msgstr "oe_kanban_text_red"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings

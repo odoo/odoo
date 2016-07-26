@@ -4,19 +4,21 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
-# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
-# 珠海-老天 <liangjia@qq.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2016
 # Luyang Xing <leon.luyangxing@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
 # THL <wt39181819@gmail.com>, 2015
-# 珠海-老天 <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-03-12 02:25+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2016-06-23 14:23+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,7 +133,7 @@ msgid ""
 "                interface.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                单击来加入一个新的产品。\n              </p><p>\n                你必须定义你要通过POS销售的\n                每一个产品。\n              </p><p>\n                不要忘了设置价格和所属的\n                分类。 如果一个产品没有POS分类\n                ，你就不能通过POS来\n               销售它。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击来加入一个新的产品。\n              </p><p>\n                你必须定义你要通过POS销售的\n                每一个产品。\n              </p><p>\n                不要忘了设置价格和所属的\n                类别。 如果一个产品没有POS分类\n                ，你就不能通过POS来\n               销售它。\n              </p>\n            "
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_account_journal_form
@@ -145,7 +147,7 @@ msgid ""
 "                on the <i>Point of Sale</i> configuration.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                单击来创建一个新的付款方式.\n              </p><p>\n                定义付款方式，需要先在会计分类账定义中 选中  <i>PoS付款方式</i> 选项。\n                为了能在触摸屏界面上使用付款方式 , 你必须先在  <i> PoS</i> 上设置付款方式。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击来创建一个新的付款方式.\n              </p><p>\n                定义付款方式，需要先在会计分类账定义中 选中  <i>PoS付款方式</i> 选项。\n                为了能在触摸屏界面上使用付款方式 , 你必须先在  <i> PoS</i> 配置上付款方式。\n              </p>\n            "
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
@@ -191,12 +193,12 @@ msgid ""
 "                to quickly open a new session.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                单击来开始一次新的工作\n              </p><p>\n                一次工作指一个时间段，一般为一天，在这期间\n                你可以通过POS销售产品。 你必须在\n                在开始工作和结束工作前\n                检查收银机中的现金。\n              </p><p>\n                注意你最好使用菜单 <i>你的工作</i>\n                来快速开始一次新的工作。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击来开始一次新的工作\n              </p><p>\n                会话指一个时间段，通常为一天，在这期间\n                你可以通过POS销售产品。 用户在\n                在每一个会话的开始和结束前\n                检查收银机中的币种。\n              </p><p>\n                注意你最好使用菜单 <i>你的会话</i>\n                来快速开启一个新会话。\n              </p>\n            "
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "= Theoretical Closing Balance"
-msgstr "=理论的关账余额"
+msgstr "=理论的期末余额"
 
 #. module: point_of_sale
 #. openerp-web
@@ -288,7 +290,7 @@ msgstr "地址"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:840
 #, python-format
 msgid "Admin Badge"
-msgstr "管理员勋章"
+msgstr "管理员徽章"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session
@@ -636,7 +638,7 @@ msgstr "如果这个分类账可以作为POS上的一个付款方式，勾选这
 msgid ""
 "Check this if this point of sale should open by default in a self checkout "
 "mode. If unchecked, Odoo uses the normal cashier mode by default."
-msgstr "如果这个POS采用自身结账模式，则选择此项，如果不选择，Odoo将使用默认的出纳员方式。"
+msgstr "如果这个POS采用自身结账模式，则选择此项，如果不选择，Odoo默认将使用一般收银员员模式。"
 
 #. module: point_of_sale
 #: help:pos.config,group_by:0
@@ -655,7 +657,7 @@ msgstr "请检查你的网络连接然后重试。"
 #. module: point_of_sale
 #: field:pos.category,child_id:0
 msgid "Children Categories"
-msgstr "儿童分类"
+msgstr "儿童类"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_bleu_33cl_product_template
@@ -700,7 +702,7 @@ msgstr "单击开始会话"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:841
 #, python-format
 msgid "Client Badge"
-msgstr "客户勋章"
+msgstr "客户徽章"
 
 #. module: point_of_sale
 #. openerp-web
@@ -726,7 +728,7 @@ msgstr "已关闭"
 #: selection:pos.session,state:0 selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Closed & Posted"
-msgstr "关闭 & 登账"
+msgstr "关闭与过账"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
@@ -1037,7 +1039,7 @@ msgstr "调试窗口"
 #. module: point_of_sale
 #: field:res.users,pos_config:0
 msgid "Default Point of Sale"
-msgstr "默认的POS"
+msgstr "默认POS"
 
 #. module: point_of_sale
 #: field:report.pos.order,delay_validation:0
@@ -1348,7 +1350,7 @@ msgstr "错误"
 #. module: point_of_sale
 #: constraint:pos.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr "错误！您不能创建循环分类。"
+msgstr "错误！您不能创建循环类别。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:383
@@ -1482,7 +1484,7 @@ msgstr "果酒"
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_pos_form
 msgid "General Information"
-msgstr "通用信息"
+msgstr "一般信息"
 
 #. module: point_of_sale
 #: view:pos.confirm:point_of_sale.view_pos_confirm
@@ -1545,7 +1547,7 @@ msgstr "Grisette樱桃25cl"
 #: view:pos.session:point_of_sale.view_pos_session_search
 #: view:report.pos.order:point_of_sale.view_report_pos_order_search
 msgid "Group By"
-msgstr "分组"
+msgstr "分组于"
 
 #. module: point_of_sale
 #: field:pos.config,group_by:0
@@ -1870,7 +1872,7 @@ msgstr "地点"
 #. module: point_of_sale
 #: field:pos.session,login_number:0
 msgid "Login Sequence Number"
-msgstr "登陆序号"
+msgstr "登录序列号码"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.maes_33cl_product_template
@@ -1890,7 +1892,7 @@ msgstr "付款"
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
 msgid "Manager"
-msgstr "经理"
+msgstr "管理者"
 
 #. module: point_of_sale
 #: field:pos.category,image_medium:0
@@ -1903,7 +1905,7 @@ msgid ""
 "Medium-sized image of the category. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "分类里的中等大小的图片。它被在保持比率不变的情况下自动更改为128x128px，。在一些看板视图中的窗体视图中使用此字段。"
+msgstr "类别里的中等大小的图片。它被在保持比率不变的情况下自动更改为128x128px，。在一些看板视图中的窗体视图中使用此字段。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:799
@@ -1911,7 +1913,7 @@ msgstr "分类里的中等大小的图片。它被在保持比率不变的情况
 msgid ""
 "Missing source or destination location for picking type %s. Please configure"
 " those fields and try again."
-msgstr "分拣类型 %s的目标库位丢失，请设置这个字段然后重试。"
+msgstr "拣货类型 %s的目标库位丢失，请设置这个字段然后重试。"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
@@ -2338,14 +2340,14 @@ msgstr "当前年度创建的POS订单"
 #. module: point_of_sale
 #: field:pos.order,amount_paid:0 selection:pos.order,state:0
 msgid "Paid"
-msgstr "已付"
+msgstr "已支付"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:475
 #, python-format
 msgid "Paid:"
-msgstr "已付："
+msgstr "已支付："
 
 #. module: point_of_sale
 #: field:pos.category,parent_id:0
@@ -2503,7 +2505,7 @@ msgstr "分拣"
 #. module: point_of_sale
 #: field:pos.config,picking_type_id:0 field:pos.order,picking_type_id:0
 msgid "Picking Type"
-msgstr "分拣类型"
+msgstr "拣货类型"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pils
@@ -2779,7 +2781,7 @@ msgstr "产品号"
 #. module: point_of_sale
 #: view:pos.category:point_of_sale.product_pos_category_tree_view
 msgid "Product Product Categories"
-msgstr "产品类别"
+msgstr "产品产品类别"
 
 #. module: point_of_sale
 #: field:report.pos.order,product_qty:0
@@ -2802,7 +2804,7 @@ msgstr "产品"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_category
 msgid "Public Category"
-msgstr "公用分类"
+msgstr "公开类别"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
@@ -3110,7 +3112,7 @@ msgstr "自助付款模式"
 #. module: point_of_sale
 #: field:pos.category,sequence:0
 msgid "Sequence"
-msgstr "序列"
+msgstr "序号"
 
 #. module: point_of_sale
 #: field:pos.order,sequence_number:0
@@ -3237,7 +3239,7 @@ msgid ""
 "Small-sized image of the category. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "分类里的小尺寸图片。自动转化为64x64px图片，保持原来的相对比例。当需要小尺寸图片时使用此字段。"
+msgstr "类别里的小尺寸图片。自动转化为64x64px图片，保持原来的相对比例。当需要小尺寸图片时使用此字段。"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.soda
@@ -3316,12 +3318,12 @@ msgstr "开始POS"
 #: view:website:point_of_sale.report_sessionsummary
 #: view:website:point_of_sale.report_statement
 msgid "Starting Balance"
-msgstr "期初余额"
+msgstr "起始余额"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_usersproduct
 msgid "Starting Date"
-msgstr "开始日期"
+msgstr "起始日期"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.action_report_account_statement
@@ -3709,7 +3711,7 @@ msgstr "这个序列号是由Odoo自动产生的，不过你可以自己定义�
 #. module: point_of_sale
 #: help:product.template,pos_categ_id:0
 msgid "Those categories are used to group similar products for point of sale."
-msgstr "这些分类用于为POS的类似产品分组。"
+msgstr "这些类别用于为POS的类似产品分组。"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_faro_37,5cl_product_template
@@ -3737,7 +3739,7 @@ msgstr "称重"
 msgid ""
 "To return product(s), you need to open a session that will be used to "
 "register the refund."
-msgstr "为了退回货物，你需要打开一个POS交易，然后登记退货。"
+msgstr "为了退回货物，你需要打开一个会话，用来登记退款。"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_search
@@ -4028,7 +4030,7 @@ msgstr "通过触摸屏幕的“开始销售”或者关闭钱箱之后您就可
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "You can define another list of available currencies on the"
-msgstr "可以定义其它有效的货币，在"
+msgstr "可以定义另外一个可用币种清单，在"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:640
@@ -4097,7 +4099,7 @@ msgid ""
 "Method\" from the \"Point of Sale\" tab. You can also create new payment "
 "methods directly from menu \"PoS Backend / Configuration / Payment "
 "Methods\"."
-msgstr "使用菜单\"科目/设置/分类账/分类账\"，通过再次使用银行和现金，你必须定义哪个付款方法必须在PoS中有效。选择一个分类账并在 \"PoS\"选项卡中点选\"PoS付款方式\"。你也可以直接通过菜单 \"PoS后台 / 设置 /付款方式\"来新建一个付款方式。"
+msgstr "使用菜单\"科目/配置/分类账/分类账\"，通过再次使用银行和现金，你必须定义哪个付款方法必须在PoS中有效。选择一个分类账并在 \"PoS\"选项卡中点选\"PoS付款方式\"。你也可以直接通过菜单 \"PoS后台 / 配置 /付款方式\"来新建一个付款方式。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:887

@@ -141,8 +141,11 @@ def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=3
     url = path
     if not query:
         query = {}
-    if forward_debug and request and request.debug:
-        query['debug'] = None
+    if request and request.debug:
+        if forward_debug:
+            query['debug'] = ''
+        else:
+            query['debug'] = None
     if query:
         url += '?' + werkzeug.url_encode(query)
     if keep_hash:
@@ -157,6 +160,7 @@ def redirect_with_hash(url, code=303):
     # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
     if request.httprequest.user_agent.browser in ('firefox',):
         return werkzeug.utils.redirect(url, code)
+    url = url.replace("'", "%27").replace("<", "%3C")
     return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
 class WebRequest(object):
