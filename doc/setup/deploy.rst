@@ -332,7 +332,7 @@ LiveChat
 --------
 
 The second problematic subsystem for WSGI deployments is the LiveChat: where
-ost HTTP connections are relatively short and quickly free up their worker
+most HTTP connections are relatively short and quickly free up their worker
 process for the next request, LiveChat require a long-lived connection for
 each client in order to implement near-real-time notifications.
 
