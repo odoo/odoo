@@ -30,11 +30,6 @@ class PurchaseOrder(models.Model):
                 'amount_total': amount_untaxed + amount_tax,
             })
 
-    @api.multi
-    def _inverse_date_planned(self):
-        for order in self:
-            order.order_line.write({'date_planned': self.date_planned})
-
     @api.depends('order_line.date_planned')
     def _compute_date_planned(self):
         for order in self:
@@ -140,7 +135,8 @@ class PurchaseOrder(models.Model):
     picking_count = fields.Integer(compute='_compute_picking', string='Receptions', default=0)
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking', string='Receptions', copy=False)
 
-    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', inverse='_inverse_date_planned', store=True, select=True, oldname='minimum_planned_date')
+    # There is no inverse function on purpose since the date may be different on each line
+    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', store=True, select=True, oldname='minimum_planned_date')
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
