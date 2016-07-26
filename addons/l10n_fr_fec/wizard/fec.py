@@ -197,7 +197,7 @@ class AccountFrFec(models.TransientModel):
             if unaffected_earnings_account:
                 unaffected_earnings_results[4] = unaffected_earnings_account.code
                 unaffected_earnings_results[5] = unaffected_earnings_account.name
-            w.writerow([s.encode("utf-8") for s in unaffected_earnings_results])
+            w.writerow([(s if s else '0,00').encode("utf-8") for s in unaffected_earnings_results])
 
         # LINES
         sql_query = '''

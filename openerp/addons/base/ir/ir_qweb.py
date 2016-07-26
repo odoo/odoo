@@ -942,7 +942,12 @@ class DurationConverter(osv.AbstractModel):
         factor = units[options['unit']]
 
         sections = []
+
         r = value * factor
+        if options.get('round') in units:
+            round_to = units[options['round']]
+            r = round(r / round_to) * round_to
+
         for unit, secs_per_unit in TIMEDELTA_UNITS:
             v, r = divmod(r, secs_per_unit)
             if not v: continue
