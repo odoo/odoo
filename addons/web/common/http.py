@@ -220,8 +220,8 @@ class JsonRequest(WebRequest):
             body = "%s(%s);" % (jsonp, simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder),)
         else:
             mime = 'application/json'
-            body = simplejson.dumps(response, encoding='latin1')
-            #body = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
+            #body = simplejson.dumps(response, encoding='latin1')
+            body = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
 
         r = werkzeug.wrappers.Response(body, headers=[('Content-Type', mime), ('Content-Length', len(body))])
         return r
