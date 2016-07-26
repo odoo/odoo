@@ -10,10 +10,13 @@ class PriceRule(models.Model):
     _description = "Delivery Price Rules"
     _order = 'sequence, list_price'
 
-    @api.depends('variable', 'operator', 'max_value', 'list_base_price', 'list_price', 'variable_factor')
+    @api.depends('variable', 'operator', 'category_id', 'max_value', 'list_base_price', 'list_price', 'variable_factor')
     def _get_name(self):
         for rule in self:
             name = 'if %s %s %s then' % (rule.variable, rule.operator, rule.max_value)
+            if rule.variable == 'category':
+                rule.operator = '=='
+                name = 'if %s %s %s then' % (rule.variable, rule.operator, rule.category_id.name)
             if rule.list_base_price and not rule.list_price:
                 name = '%s fixed price %s' % (name, rule.list_base_price)
             elif rule.list_price and not rule.list_base_price:
@@ -25,10 +28,11 @@ class PriceRule(models.Model):
     name = fields.Char(compute='_get_name')
     sequence = fields.Integer(required=True, help="Gives the sequence order when calculating delivery carrier.", default=10)
     carrier_id = fields.Many2one('delivery.carrier', 'Carrier', required=True, ondelete='cascade')
-    variable = fields.Selection([('weight', 'Weight'), ('volume', 'Volume'), ('wv', 'Weight * Volume'), ('price', 'Price'), ('quantity', 'Quantity')], 'Variable', required=True, default='weight')
+    variable = fields.Selection([('weight', 'Weight'), ('volume', 'Volume'), ('wv', 'Weight * Volume'), ('price', 'Price'), ('quantity', 'Quantity'), ('category', 'Product Category')], 'Variable', required=True, default='weight')
     operator = fields.Selection([('==', '='), ('<=', '<='), ('<', '<'), ('>=', '>='), ('>', '>')], 'Operator', required=True, default='<=')
     max_value = fields.Float('Maximum Value', required=True)
     variable_factor = fields.Selection([('weight', 'Weight'), ('volume', 'Volume'), ('wv', 'Weight * Volume'), ('price', 'Price'), ('quantity', 'Quantity')], 'Variable Factor', required=True, default='weight')
     list_base_price = fields.Float(string='Sale Base Price', digits=dp.get_precision('Product Price'), required=True, default=0.0)
     list_price = fields.Float('Sale Price', digits=dp.get_precision('Product Price'), required=True, default=0.0)
     standard_price = fields.Float('Cost Price', digits=dp.get_precision('Product Price'), required=True, default=0.0)
+    category_id = fields.Many2one('product.category', 'Product Category', required=True, default=lambda self: self.env['product.template']._default_category())
