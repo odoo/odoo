@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import itertools
 import psycopg2
 
 import odoo.addons.decimal_precision as dp
@@ -342,53 +343,38 @@ class ProductTemplate(models.Model):
     @api.multi
     def create_variant_ids(self):
         Product = self.env["product.product"]
-        if self._context.get("create_product_variant"):
-            return None
 
-        for tmpl_id in self.with_context(active_test=False, create_product_variant=True):
-
+        for tmpl_id in self.with_context(active_test=False):
             # list of values combination
-            variant_alone = []
-            all_variants = [[]]
-            for variant_id in tmpl_id.attribute_line_ids:
-                if len(variant_id.value_ids) == 1:
-                    variant_alone.append(variant_id.value_ids[0])
-                temp_variants = []
-                for variant in all_variants:
-                    for value_id in variant_id.value_ids:
-                        temp_variants.append(sorted(variant + [int(value_id)]))
-                if temp_variants:
-                    all_variants = temp_variants
+            existing_variants = [set(variant.attribute_value_ids.ids) for variant in tmpl_id.product_variant_ids]
+            variant_matrix = itertools.product(*(line.value_ids for line in tmpl_id.attribute_line_ids))
+            variant_matrix = map(lambda record_list: reduce(lambda x, y: x+y, record_list, self.env['product.attribute.value']), variant_matrix)
+            to_create_variants = filter(lambda rec_set: set(rec_set.ids) not in existing_variants, variant_matrix)
 
             # adding an attribute with only one value should not recreate product
             # write this attribute on every product to make sure we don't lose them
+            variant_alone = tmpl_id.attribute_line_ids.filtered(lambda line: len(line.value_ids) == 1).mapped('value_ids')
             for value_id in variant_alone:
                 updated_products = tmpl_id.product_variant_ids.filtered(lambda product: value_id.attribute_id not in product.mapped('attribute_value_ids.attribute_id'))
                 updated_products.write({'attribute_value_ids': [(4, value_id.id)]})
 
             # check product
             variants_to_activate = self.env['product.product']
-            variants_active = self.env['product.product']
             variants_to_unlink = self.env['product.product']
             for product_id in tmpl_id.product_variant_ids:
-                variants = sorted(map(int, product_id.attribute_value_ids))
-                if variants in all_variants:
-                    variants_active |= product_id
-                    all_variants.pop(all_variants.index(variants))
-                    if not product_id.active:
-                        variants_to_activate |= product_id
-                else:
+                if not product_id.active and product_id.attribute_value_ids in variant_matrix:
+                    variants_to_activate |= product_id
+                elif product_id.attribute_value_ids not in variant_matrix:
                     variants_to_unlink |= product_id
             if variants_to_activate:
                 variants_to_activate.write({'active': True})
 
             # create new product
-            for variant_ids in all_variants:
+            for variant_ids in to_create_variants:
                 new_variant = Product.create({
                     'product_tmpl_id': tmpl_id.id,
-                    'attribute_value_ids': [(6, 0, variant_ids)]
+                    'attribute_value_ids': [(6, 0, variant_ids.ids)]
                 })
-                variants_active |= new_variant
 
             # unlink or inactive product
             for variant in variants_to_activate:

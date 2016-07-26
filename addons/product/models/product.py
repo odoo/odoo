@@ -2,9 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-import time
-
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
@@ -22,7 +19,6 @@ class ProductCategory(models.Model):
     _order = 'parent_left'
 
     name = fields.Char('Name', index=True, required=True, translate=True)
-    complete_name = fields.Char('Name', compute='_name_get_fnc')
     parent_id = fields.Many2one('product.category', 'Parent Category', index=True, ondelete='cascade')
     child_id = fields.One2many('product.category', 'parent_id', 'Child Categories')
     type = fields.Selection([
@@ -34,13 +30,6 @@ class ProductCategory(models.Model):
     product_count = fields.Integer(
         '# Products', compute='_compute_product_count',
         help="The number of products under this category (Does not consider the children categories)")
-
-    @api.depends('parent_id', 'parent_id.complete_name')
-    def _name_get_fnc(self):
-        # TDE FIXME: cannot use display name ?
-        res = dict(self.name_get())
-        for category in self:
-            category.complete_name = res[category.id]
 
     def _compute_product_count(self):
         read_group_res = self.env['product.template'].read_group([('categ_id', 'in', self.ids)], ['categ_id'], ['categ_id'])
@@ -475,9 +464,10 @@ class ProductProduct(models.Model):
                 'target': 'new'}
 
     @api.multi
-    def _select_seller(self, partner_id=False, quantity=0.0, date=time.strftime(DEFAULT_SERVER_DATE_FORMAT), uom_id=False):
-        # TDE FIXME: date parameter
+    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False):
         self.ensure_one()
+        if date is None:
+            date = fields.Date.today()
         res = self.env['product.supplierinfo']
         for seller in self.seller_ids:
             # Set quantity in UoM of seller
@@ -491,7 +481,7 @@ class ProductProduct(models.Model):
                 continue
             if partner_id and seller.name not in [partner_id, partner_id.parent_id]:
                 continue
-            if quantity_uom_seller < seller.qty:
+            if quantity_uom_seller < seller.min_qty:
                 continue
             if seller.product_id and seller.product_id != self:
                 continue
@@ -598,9 +588,6 @@ class SuppliferInfo(models.Model):
     min_qty = fields.Float(
         'Minimal Quantity', default=0.0, required=True,
         help="The minimal quantity to purchase from this vendor, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise.")
-    qty = fields.Float(
-        'Quantity', compute='_compute_qty', store=True,
-        help="This is a quantity which is converted into Default Unit of Measure.")
     price = fields.Float(
         'Price', default=0.0, digits_compute=dp.get_precision('Product Price'),
         required=True, help="The price to purchase a product")
@@ -622,9 +609,3 @@ class SuppliferInfo(models.Model):
     delay = fields.Integer(
         'Delivery Lead Time', default=1, required=True,
         help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning.")
-
-    @api.one
-    @api.depends('min_qty')
-    def _compute_qty(self):
-        # TDE FIXME: whaaaat ?
-        self.qty = self.min_qty
