@@ -361,9 +361,10 @@ class google_calendar(osv.AbstractModel):
         url = "/calendar/v3/calendars/%s/events/%s" % ('primary', google_id)
         try:
             status, content, ask_time = self.pool['google.service']._do_request(cr, uid, url, params, headers, type='GET', context=context)
-        except:
+        except Exception, e:
             _logger.info("Calendar Synchro - In except of get_one_event_synchro")
-            pass
+            _logger.info(exception_to_unicode(e))
+            return False
 
         return status_response(status) and content or False
 
