@@ -10,7 +10,7 @@
                     <button name="action_invoice" string="Invoice" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
                     <button name="refund" string="Return Products" type="object"
                         attrs="{'invisible':[('state','=','draft')]}"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" />
                 </header>
                 <sheet>
                 <div class="oe_button_box" name="button_box">

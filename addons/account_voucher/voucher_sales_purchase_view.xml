@@ -53,7 +53,7 @@
                     <button name="cancel_voucher" string="Cancel Receipt" type="object" states="draft,proforma"/>
                     <button name="cancel_voucher" string="Cancel Receipt" type="object" states="posted" confirm="Are you sure you want to cancel this receipt?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                 </header>
                 <sheet string="Sales Receipt">
                     <label for="number" string="Sales Receipt"/>
@@ -166,7 +166,7 @@
                     <button name="cancel_voucher" string="Cancel" type="object" states="draft,proforma" />
                     <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure you want to cancel this receipt?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                 </header>
                 <sheet string="Vendor Voucher">
                     <label for="number" string="Purchase Receipt"/>

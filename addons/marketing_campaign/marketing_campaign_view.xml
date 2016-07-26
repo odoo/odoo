@@ -387,7 +387,7 @@
                 <button string="Process" states="todo" name="process" type="object"/>
                 <button string="Reset" states="exception,cancelled" name="button_draft" type="object"/>
                 <button string="Cancel Workitem" states="todo,exception" name="button_cancel" type="object"/>
-                <field name="state" readonly="True" widget="statusbar" statusbar_visible="todo,done" statusbar_colors='{"exception":"red"}'/>
+                <field name="state" readonly="True" widget="statusbar" statusbar_visible="todo,done"/>
                 <button string="Preview" states="todo" name="preview" icon="fa-search-plus fa-lg text-primary" type="object"/>
             </header>
             <sheet>
