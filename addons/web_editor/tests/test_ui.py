@@ -1,7 +1,10 @@
-import openerp.tests
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import odoo.tests
 
 
-class TestUi(openerp.tests.HttpCase):
+class TestUi(odoo.tests.HttpCase):
 
     post_install = True
     at_install = False
