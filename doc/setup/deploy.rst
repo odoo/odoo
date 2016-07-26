@@ -177,7 +177,7 @@ memory size calculation
 
 * We consider 20% of the requests are heavy requests, while 80% are simpler ones
 * A heavy worker, when all computed field are well designed, SQL requests are well designed, ... is estimated to consume around 1Go of RAM
-* A lighter worker, in the same scenario, is estimated to consume around 150Mo of RAM
+* A lighter worker, in the same scenario, is estimated to consume around 150MB of RAM
 
 Needed RAM = #worker * ( (light_worker_ratio * light_worker_ram_estimation) + (heavy_worker_ratio * heavy_worker_ram_estimation) )
 
@@ -332,7 +332,7 @@ LiveChat
 --------
 
 The second problematic subsystem for WSGI deployments is the LiveChat: where
-most HTTP connections are relatively short and quickly free up their worker
+ost HTTP connections are relatively short and quickly free up their worker
 process for the next request, LiveChat require a long-lived connection for
 each client in order to implement near-real-time notifications.
 
