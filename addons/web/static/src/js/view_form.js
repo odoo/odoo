@@ -6073,13 +6073,20 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             'value_folded': _.find(self.selection.folded, function(i){return i[0] === self.get('value');})
         });
         self.$el.html(content);
-        var statusbar_colors = JSON.parse((self.node.attrs || {}).statusbar_colors || "{}");
-        var color = statusbar_colors[self.get('value')];
-        if (color) {
-            var $color = $.Color(color);
-            var fr = $color.lightness(0.7);
-            var to = $color.lightness(0.4);
-            self.$(".oe_active, .oe_active > .arrow span").css("background-image", 'linear-gradient(to bottom, ' + fr.toHexString() + ', ' + to.toHexString() + ')');
+        if ('statusbar_colors' in self.node.attrs) {
+            var statusbar_colors = instance.web.py_eval(
+                    self.node.attrs.statusbar_colors
+                );
+            var color = statusbar_colors[self.get('value')];
+            if (color) {
+                var $color = $.Color(color);
+                var fr = $color.lightness(0.7);
+                var to = $color.lightness(0.4);
+                self.$(".oe_active, .oe_active > .arrow span").css(
+                    "background-image",
+                    'linear-gradient(to bottom, ' + fr.toHexString() + ', ' + to.toHexString() + ')'
+                );
+            }
         }
     },
     calc_domain: function() {
