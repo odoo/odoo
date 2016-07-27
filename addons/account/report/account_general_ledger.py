@@ -45,7 +45,6 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
         self.init_balance = data['form'].get('initial_balance', True)
         if self.init_balance:
             ctx2.update({'initial_bal': True})
-        self.init_query = obj_move._query_get(self.cr, self.uid, obj='l', context=ctx2)
         self.display_account = data['form']['display_account']
         self.target_move = data['form'].get('target_move', 'all')
         ctx = self.context.copy()
@@ -54,11 +53,14 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
             period_from_id = data['form']['period_from']
             period_to_id = data['form']['period_to']
             ctx['periods'] = self.pool["account.period"].build_ctx_periods(self.cr, self.uid, period_from_id, period_to_id)
+            # Do not let "_query_get" calculate the periods itself
+            ctx2.update({'periods': ctx['periods']})
         elif data['form']['filter'] == 'filter_date':
             ctx['date_from'] = data['form']['date_from']
             ctx['date_to'] =  data['form']['date_to']
         ctx['state'] = data['form']['target_move']
         self.context.update(ctx)
+        self.init_query = obj_move._query_get(self.cr, self.uid, obj='l', context=ctx2)
         if (data['model'] == 'ir.ui.menu'):
             new_ids = [data['form']['chart_account_id']]
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
