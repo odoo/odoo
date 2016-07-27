@@ -25,6 +25,7 @@ from openerp import http
 from openerp.http import request, STATIC_CACHE
 from openerp.modules.module import get_resource_path, get_module_path
 from openerp.osv import osv, orm
+from openerp.tools.mimetypes import guess_mimetype
 
 _logger = logging.getLogger(__name__)
 
@@ -304,7 +305,9 @@ class ir_http(osv.AbstractModel):
                 attach_mimetype = env['ir.attachment'].search_read(domain=[('res_model', '=', model), ('res_id', '=', id), ('res_field', '=', field)], fields=['mimetype'], limit=1)
                 mimetype = attach_mimetype and attach_mimetype[0]['mimetype']
             if not mimetype:
-                mimetype = default_mimetype
+                mimetype = guess_mimetype(base64.decodestring(content))
+                if mimetype == "application/octet-stream":
+                    mimetype = default_mimetype
         headers += [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
 
         # cache
