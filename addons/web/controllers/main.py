@@ -1,29 +1,29 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import babel.messages.pofile
 import base64
 import csv
+import datetime
 import functools
 import glob
+import hashlib
 import imghdr
 import itertools
 import jinja2
+import json
 import logging
 import operator
-import datetime
-import hashlib
 import os
 import re
-import json
 import sys
 import time
+import werkzeug.utils
+import werkzeug.wrappers
 import zlib
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
-import babel.messages.pofile
-import werkzeug.utils
-import werkzeug.wrappers
 
 try:
     import xlwt
@@ -482,6 +482,7 @@ class Home(http.Controller):
             values['error'] = _("Wrong login/password")
         return request.render('web.login', values)
 
+
 class WebClient(http.Controller):
 
     @http.route('/web/webclient/csslist', type='json', auth="none")
@@ -494,21 +495,20 @@ class WebClient(http.Controller):
 
     @http.route('/web/webclient/locale/<string:lang>', type='http', auth="none")
     def load_locale(self, lang):
-        magic_file_finding = [lang.replace("_",'-').lower(), lang.split('_')[0]]
+        magic_file_finding = [lang.replace("_", '-').lower(), lang.split('_')[0]]
         addons_path = http.addons_manifest['web']['addons_path']
-        #load momentjs locale
-        momentjs_locale_file = False
+        # load momentjs locale
         momentjs_locale = ""
         for code in magic_file_finding:
             try:
                 with open(os.path.join(addons_path, 'web', 'static', 'lib', 'moment', 'locale', code + '.js'), 'r') as f:
                     momentjs_locale = f.read()
-                #we found a locale matching so we can exit
+                # we found a locale matching so we can exit
                 break
             except IOError:
                 continue
 
-        #return the content of the locale
+        # return the content of the locale
         headers = [('Content-Type', 'application/javascript'), ('Cache-Control', 'max-age=%s' % (36000))]
         return request.make_response(momentjs_locale, headers)
 
@@ -551,37 +551,36 @@ class WebClient(http.Controller):
     @http.route('/web/webclient/translations', type='json', auth="none")
     def translations(self, mods=None, lang=None):
         request.disable_db = False
-        uid = odoo.SUPERUSER_ID
         if mods is None:
-            m = request.registry.get('ir.module.module')
-            mods = [x['name'] for x in m.search_read(request.cr, uid,
-                [('state','=','installed')], ['name'])]
+            mods = [x['name'] for x in request.env['ir.module.module'].sudo().search_read(
+                [('state', '=', 'installed')], ['name'])]
         if lang is None:
             lang = request.context["lang"]
-        res_lang = request.registry.get('res.lang')
-        ids = res_lang.search(request.cr, uid, [("code", "=", lang)])
+        langs = request.env['res.lang'].sudo().search([("code", "=", lang)])
         lang_params = None
-        if ids:
-            lang_params = res_lang.read(request.cr, uid, ids[0],
-                ["name", "direction", "date_format", "time_format", "grouping", "decimal_point", "thousands_sep"])
+        if langs:
+            lang_params = langs.read([
+                "name", "direction", "date_format", "time_format",
+                "grouping", "decimal_point", "thousands_sep"])[0]
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.
-        ir_translation = request.registry.get('ir.translation')
         translations_per_module = {}
-        messages = ir_translation.search_read(request.cr, uid, [('module','in',mods),('lang','=',lang),
-                                               ('comments','like','openerp-web'),('value','!=',False),
-                                               ('value','!=','')],
-                                              ['module','src','value','lang'], order='module')
+        messages = request.env['ir.translation'].sudo().search_read([
+            ('module', 'in', mods), ('lang', '=', lang),
+            ('comments', 'like', 'openerp-web'), ('value', '!=', False),
+            ('value', '!=', '')],
+            ['module', 'src', 'value', 'lang'], order='module')
         for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
-            translations_per_module.setdefault(mod,{'messages':[]})
-            translations_per_module[mod]['messages'].extend({'id': m['src'],
-                                                             'string': m['value']} \
-                                                                for m in msg_group)
+            translations_per_module.setdefault(mod, {'messages': []})
+            translations_per_module[mod]['messages'].extend({
+                'id': m['src'],
+                'string': m['value']}
+                for m in msg_group)
         return {
             'lang_parameters': lang_params,
             'modules': translations_per_module,
-            'multi_lang': len(res_lang.get_installed(request.cr, uid)) > 1,
+            'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
         }
 
     @http.route('/web/webclient/version_info', type='json', auth="none")
@@ -591,6 +590,7 @@ class WebClient(http.Controller):
     @http.route('/web/tests', type='http', auth="none")
     def index(self, mod=None, **kwargs):
         return request.render('web.qunit_suite')
+
 
 class Proxy(http.Controller):
 
