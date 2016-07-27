@@ -3,10 +3,10 @@
 
         <!-- Top menu item -->
         <!--
-            This menu item's purpose is to rename it into 'Sales' in the 
-            case that CRM was installed after Sales
+            Make sure only "Sales" top menu is visible
         -->
-        <menuitem name="Sales" id="sales_team.menu_base_partner"/>
+        <menuitem id="sales_team.menu_base_partner" active="True" />
+        <menuitem id="crm.menu_base_crm" active="False" />
 
         <record id="crm_case_form_view_oppor" model="ir.ui.view">
             <field name="name">crm.lead.oppor.inherited.crm</field>
