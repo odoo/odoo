@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import api, fields, models
 from odoo.addons.website.models.website import slug
 
@@ -21,12 +23,14 @@ class ResPartnerGrade(models.Model):
             res[grade.id] = "/partners/grade/%s" % (slug(grade))
         return res
 
+
 class ResPartnerActivation(models.Model):
     _name = 'res.partner.activation'
     _order = 'sequence'
 
     sequence = fields.Integer('Sequence')
     name = fields.Char('Name', required=True)
+
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
