@@ -109,7 +109,7 @@ class product_pricelist(report_sxw.rml_parse):
         if price_dict[pricelist_id]:
             price = float_round(price_dict[pricelist_id], precision_digits=sale_price_digits)
         else:
-            res = self.pool.get('product.product').read(self.cr, self.uid, [product_id])
+            res = self.pool.get('product.product').read(self.cr, self.uid, [product_id], ['list_price'])
             price = float_round(res[0]['list_price'], precision_digits=sale_price_digits)
         price = self.formatLang(price, digits=sale_price_digits, currency_obj=pricelist.currency_id)
         return price
