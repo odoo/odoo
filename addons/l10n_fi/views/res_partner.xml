@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+      <record id="res_partner_finnish" model="ir.ui.view">
+          <field name="name">res.partner.form.finnish</field>
+          <field name="model">res.partner</field>
+          <field name="inherit_id" ref="base.view_partner_form"/>
+          <field name="arch" type="xml">
+              <data>
+
+                  <field name="title" position="after">
+                      <field name="business_id"
+                             placeholder="e.g. 1234567-8"
+                             attrs="{'invisible':[('is_company', '=', False)]}"/>
+                      <field name="edi_code"
+                             placeholder="e.g. 003712345678"
+                             attrs="{'invisible': [('type', '!=', 'invoice'), ('is_company', '=', False)]}"/>
+                  </field>
+
+              </data>
+          </field>
+      </record>
+
+    </data>
+</odoo>
