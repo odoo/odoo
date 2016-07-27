@@ -1,12 +1,45 @@
 :banner: banners/installing_odoo.jpg
 
+.. A note of TODOs:
+   - Fix spelling errors.
+   - Add improved layout for TOC.
+   - Strike repetitive descriptions of offerings.
+   - Add to new layout
+   - Add introduction describing intention of DOC.
+   - Remove contractions for ease of translation: you're to you are; m'appelle to me apelle
+   - Remove idioms and colloquialisms, if present
+   - Separate the overviews, describing the various offerings, from the
+     actual installation procedures.
+   - Provide note on dependencies so that they can be gotten out of the way
+     and not repeated repetitively.
+   - Separate the installation procedures from configuration procedures.
+
+.. A note on headings within reST:
+   ============
+   A Title <h1>
+   ============
+        ###########
+        A Part <h2>
+        ###########
+            ***************
+            A Chapter <h3>
+            ***************
+                 A Section <h4>
+                 ==============
+                     A Sub-section <h5>
+                     -------------------
+                         A sub-section's sub-section <h6>
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                             A Paragraph
+                             """""""""""
+
 .. _setup/install:
 
 ===============
 Installing Odoo
 ===============
 
-There are mutliple ways to install Odoo, or not install it at all, depending
+There are multiple ways to install Odoo, or not install it at all, depending
 on the intended use case.
 
 This documents attempts to describe most of the installation options.
@@ -107,7 +140,7 @@ These packages automatically set up all dependencies (for the Community version)
 but may be difficult to keep up-to-date.
 
 Official Community packages with all relevant dependency requirements are
-available on our nightly_ server. Both Communtiy and Enterprise packages can
+available on our nightly_ server. Both Community and Enterprise packages can
 be downloaded from our Download_ page (you must to be logged in as a paying
 customer or partner to download the Enterprise packages).
 
@@ -133,7 +166,7 @@ Configuration
 The :ref:`configuration file <reference/cmdline/config>` can be found at
 :file:`{%PROGRAMFILES%}\\Odoo 9.0-{id}\\server\\openerp-server.conf`.
 
-The configuration file can be edited to connect to a remote Postgresql, edit
+The configuration file can be edited to connect to a remote PostgreSQL, edit
 file locations or set a dbfilter.
 
 To reload the configuration file, restart the Odoo service via
@@ -336,7 +369,7 @@ For example:
 .. warning:: The Enterprise git repository **does not contain the full Odoo
     source code**. You need to clone both the Community and Enterprise repository to
     have a working Odoo installation. The Download_ page contains the entire
-    source code but is not updateable as easily.
+    source code, but it is less convenient in terms of keeping things up-to-date.
 
 
 Installing dependencies
@@ -382,7 +415,7 @@ Source installation requires manually installing dependencies:
     - create a postgres user with a password using the pg admin gui: open
       pgAdminIII, double-click the server to create a connection, select
       :menuselection:`Edit --> New Object --> New Login Role`, enter the
-      usename in the :guilabel:`Role Name` field (e.g. ``odoo``), then open
+      username in the :guilabel:`Role Name` field (e.g. ``odoo``), then open
       the :guilabel:`Definition` tab and enter the password (e.g. ``odoo``),
       then click :guilabel:`OK`.
 
@@ -400,7 +433,7 @@ Source installation requires manually installing dependencies:
     dependencies before pip is able to install the dependencies themselves.
     These are available in ``-dev`` or ``-devel`` packages for Python,
     Postgres, libxml2, libxslt, libevent, libsasl2 and libldap2. Then the Python
-    dependecies can themselves be installed:
+    dependencies can themselves be installed:
 
     .. code-block:: console
 
@@ -416,7 +449,7 @@ Source installation requires manually installing dependencies:
         $ pip install -r requirements.txt
 
   - on Windows you need to install some of the dependencies manually, tweak the
-    requirements.txt file, then run pip to install the remaning ones.
+    requirements.txt file, then run pip to install the remaining ones.
 
     Install ``psycopg`` using the installer here
     http://www.stickpeople.com/projects/python/win-psycopg/
@@ -514,7 +547,7 @@ Under Windows a typical way to execute odoo would be:
 
     C:\YourOdooPath> python odoo.py -w odoo -r odoo --addons-path=addons,../mymodules --db-filter=mydb$
 
-Where ``odoo``, ``odoo`` are the postgresql login and password,
+Where ``odoo``, ``odoo`` are the PostgreSQL login and password,
 ``../mymodules`` a directory with additional addons and ``mydb`` the default
 db to serve on localhost:8069
 
