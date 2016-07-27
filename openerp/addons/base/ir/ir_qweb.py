@@ -467,7 +467,7 @@ class QWeb(models.AbstractModel):
         css = self.get_attr_bool(template_attributes.get('css'), default=True)
         js = self.get_attr_bool(template_attributes.get('js'), default=True)
         async = self.get_attr_bool(template_attributes.get('async'), default=False)
-        debug = bool(qwebcontext.context['debug'] if 'debug' in qwebcontext.context else qwebcontext.get('debug'))
+        debug = qwebcontext.context['debug'] if 'debug' in qwebcontext.context else qwebcontext.get('debug')
         return bundle.to_html(css=css, js=js, debug=debug, async=async, qwebcontext=qwebcontext)
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
