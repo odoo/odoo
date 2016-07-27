@@ -319,9 +319,10 @@ var Chatter = form_common.AbstractField.extend({
             this.followers.on('redirect', this, this.on_redirect);
             this.followers.on('followers_update', this, this.on_followers_update);
         }
-
-        self.activity = new ActivityLog(self.view.datarecord.id, self.view.model);
-        self.activity.replace(self.$('.o_mail_activity'));
+        if(! this.options.no_activity) {
+            self.activity = new ActivityLog(self.view.datarecord.id, self.view.model);
+            self.activity.replace(self.$('.o_mail_activity'));
+        }
 
         this.thread = new ChatThread(this, {
             display_order: ChatThread.ORDER.DESC,
