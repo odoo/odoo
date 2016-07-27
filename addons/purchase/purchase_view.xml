@@ -249,7 +249,15 @@
                         <page string="Deliveries &amp; Invoices">
                             <group>
                                 <group>
-                                    <field name="date_planned"/>
+                                    <label for="date_planned"/>
+                                    <div>
+                                        <field name="date_planned" required="1" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
+                                        <button name="action_set_date_planned" type="object"
+                                            states="draft,sent"
+                                            string="Set date to all order lines"
+                                            help="This changes the scheduled date of all order lines to the given date"
+                                            class="fa fa-calendar o_icon_button oe_edit_only"/>
+                                    </div>
                                     <field name="picking_type_id" domain="[('code','=','incoming')]" options="{'no_create': True}" groups="stock.group_locations"/>
                                     <field name="dest_address_id" groups="stock.group_locations" attrs="{'invisible': [('default_location_dest_id_usage', '!=', 'customer')], 'required': [('default_location_dest_id_usage', '=', 'customer')]}"/>
                                     <field name="default_location_dest_id_usage" invisible="1"/>
