@@ -44,7 +44,7 @@ class res_currency(osv.osv):
             context = {}
         res = {}
 
-        date = context.get('date') or time.strftime('%Y-%m-%d')
+        date = context.get('date') or fields2.Datetime.now()
         for id in ids:
             cr.execute('SELECT rate FROM res_currency_rate '
                        'WHERE currency_id = %s '

@@ -786,7 +786,7 @@ class purchase_order(osv.osv):
             price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
         res = []
         if order.location_id.usage == 'customer':
-            name = order_line.product_id.with_context(dict(context or {}, lang=order.dest_address_id.lang)).name
+            name = order_line.product_id.with_context(dict(context or {}, lang=order.dest_address_id.lang)).display_name
         else:
             name = order_line.name or ''
         move_template = {

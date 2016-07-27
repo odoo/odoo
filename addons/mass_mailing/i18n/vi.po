@@ -1,10 +1,11 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* mass_mailing
-#
+# * mass_mailing
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-03-30 12:53+0000\n"
 "PO-Revision-Date: 2015-03-30 12:53+0000\n"
@@ -13,7 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mass_mailing.py:473
@@ -22,8 +24,61 @@ msgid "%s (copy)"
 msgstr "%s (bản sao)"
 
 #. module: mass_mailing
+#: model:email.template,body_html:mass_mailing.newsletter_template
+msgid ""
+"<div data-snippet-id=\"big-picture\" style=\"padding:0px; margin:0px\">\n"
+"<table cellpadding=\"0\" cellspacing=\"0\" style=\"margin:10px 0px 0px;vertical-align:top;padding:0px;font-family:arial;font-size:12px;color:rgb(51,51,51)\">\n"
+"    <tbody>\n"
+"        <tr>\n"
+"            <td style=\"width:600px\" valign=\"top\">\n"
+"            <h2 style=\"text-align: center; padding:0px 5px\">A Punchy Headline</h2>\n"
+"            </td>\n"
+"        </tr>\n"
+"        <tr>\n"
+"            <td style=\"width:600px\" valign=\"top\"><img src=\"/website/static/src/img/big_picture.png\" style=\"display:block;border:none;min-height:250px;margin:0 auto;\" width=\"500\"></td>\n"
+"        </tr>\n"
+"        <tr>\n"
+"            <td style=\"width:600px\" valign=\"top\">\n"
+"            <p style=\"text-align: center; overflow:hidden\"></p>\n"
+"\n"
+"            <h3 style=\"text-align: center; padding:0px 5px\">A Small Subtitle for ${object.name}</h3>\n"
+"\n"
+"            <p></p>\n"
+"\n"
+"            <p style=\"text-align: center; overflow:hidden\">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </tbody>\n"
+"</table>\n"
+"</div>\n"
+"<div data-snippet-id=\"three-columns\" style=\"padding:0px; margin:0px\">\n"
+"<table cellpadding=\"0\" cellspacing=\"0\" style=\"margin:10px 0px 0px;vertical-align:top;padding:0px;font-family:arial;font-size:12px;color:rgb(51,51,51)\">\n"
+"    <tbody>\n"
+"        <tr>\n"
+"            <td style=\"width:300px\" valign=\"top\"><img src=\"/website/static/src/img/desert_thumb.jpg\" style=\"display:block;border:none;min-height:50px\" width=\"275\"></td>\n"
+"            <td style=\"width:300px\" valign=\"top\"><img src=\"/website/static/src/img/deers_thumb.jpg\" style=\"display:block;border:none;min-height:50px\" width=\"275\"></td>\n"
+"        </tr>\n"
+"        <tr>\n"
+"            <td style=\"width:300px\" valign=\"top\">\n"
+"            <h3 style=\"text-align: center; padding:0px 5px\">Feature One</h3>\n"
+"\n"
+"            <p style=\"overflow:hidden\">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>\n"
+"            </td>\n"
+"            <td style=\"width:300px\" valign=\"top\">\n"
+"            <h3 style=\"text-align: center; padding:0px 5px\">Feature Two</h3>\n"
+"\n"
+"            <p style=\"overflow:hidden\">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </tbody>\n"
+"</table>\n"
+"</div>"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts_from_list
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a recipient.\n"
 "              </p>\n"
 "            "
@@ -34,7 +89,8 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Click to define a new mass mailing campaign.\n"
 "              </p><p>\n"
 "                Create a campaign to structure mass mailing and get analysis from email status.\n"
@@ -49,7 +105,8 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "    Click here to create a new mailing list.\n"
 "</p><p>\n"
 "    Mailing lists allows you to to manage customers and\n"
@@ -65,7 +122,8 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
-msgid "<p class=\"oe_view_nocontent_create\">\n"
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
 "    Click here to create a new mailing.\n"
 "</p><p>\n"
 "    Mass mailing allows you to to easily design and send mass mailings to your contacts, customers or leads using mailing lists.\n"
@@ -79,7 +137,7 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n"
 #. module: mass_mailing
 #: field:mail.mass_mailing.campaign,unique_ab_testing:0
 msgid "AB Testing"
-msgstr "AB Testing"
+msgstr "Kiểm thử AB"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,contact_ab_pc:0

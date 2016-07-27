@@ -276,6 +276,7 @@ class res_partner(osv.osv):
                          AND cr.currency_id = %%s
                          AND (COALESCE(account_invoice_report.date, NOW()) >= cr.date_start)
                          AND (COALESCE(account_invoice_report.date, NOW()) < cr.date_end OR cr.date_end IS NULL)
+                         AND account_invoice_report.type in ('out_invoice', 'out_refund')
                     """ % where_clause
 
             # price_total is in the currency with rate = 1
