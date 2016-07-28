@@ -6,11 +6,11 @@ import time
 
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 
-import odoo.addons.decimal_precision as dp
-
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
+
+import odoo.addons.decimal_precision as dp
 
 
 class ProductCategory(models.Model):
@@ -309,11 +309,11 @@ class ProductProduct(models.Model):
         if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
             self.uom_po_id = self.uom_id
 
-    def create(self, cr, uid, vals, context=None):
-        ctx = dict(context or {}, create_product_product=True)
-        product_id = super(ProductProduct, self).create(cr, uid, vals, context=ctx)
-        self._set_standard_price(cr, uid, [product_id], vals.get('standard_price', 0.0), context=context)
-        return product_id
+    @api.model
+    def create(self, vals):
+        product = super(ProductProduct, self.with_context(create_product_product=True)).create(vals)
+        product._set_standard_price(vals.get('standard_price', 0.0))
+        return product
 
     @api.multi
     def write(self, values):
@@ -534,8 +534,9 @@ class ProductProduct(models.Model):
 
 
     # compatibility to remove after v10 - DEPRECATED
-    def price_get(self, cr, uid, ids, ptype='list_price', context=None):
-        return self.browse(cr, uid, ids, context=context).price_compute(ptype)
+    @api.multi
+    def price_get(self, ptype='list_price'):
+        return self.price_compute(ptype)
 
     @api.multi
     def _set_standard_price(self, value):
