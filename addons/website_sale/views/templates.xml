@@ -763,7 +763,7 @@
                                 </a>
                             </div>
                             <div class="text-muted" t-esc="'\n'.join(line.name.splitlines()[1:])" />
-                            <a class='js_delete_product'> <small><i class='fa fa-trash-o'></i> Remove</small></a>
+                            <a href='#' class='js_delete_product no-decoration'> <small><i class='fa fa-trash-o'></i> Remove</small></a>
                         </td>
                         <td class="text-center" id="td-qty">
                             <div class="input-group oe_website_spinner">
@@ -946,12 +946,11 @@
                     <t t-call="website_sale.wizard_checkout">
                         <t t-set="step" t-value="20" />
                     </t>
-                    <!-- <h1>Your Address</h1> -->
                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
                     <div class="row">
                         <div class="col-md-8 oe_cart">
                             <div class="row">
-                                <div class="col-md-9">
+                                <div class="col-md-12">
                                     <h3 class="page-header mt16">Billing Address</h3>
                                 </div>
                                 <div class="col-md-6 one_kanban">
@@ -964,7 +963,7 @@
                             </div>
                             <t t-if="not only_services">
                                 <div class="row">
-                                    <div class="col-md-9">
+                                    <div class="col-md-12">
                                         <h3 class="page-header mt16">Shipping Address
                                         </h3>
                                     </div>
@@ -986,6 +985,7 @@
                                                         <t t-set='contact' t-value="ship"/>
                                                         <t t-set='selected' t-value="order.partner_shipping_id==ship"/>
                                                         <t t-set='readonly' t-value="bool(len(shippings)==1)"/>
+                                                        <t t-set='edit_billing' t-value="bool(ship==order.partner_id)"/>
                                                     </t>
                                                 </div>
                                             </t>
@@ -1015,6 +1015,9 @@
             <form action="/shop/checkout" method="POST" class='hide'>
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                 <input type="hidden" name="partner_id" t-att-value="contact.id" />
+                <t t-if='edit_billing'>
+                    <input type="hidden" name="callback" value="/shop/checkout?use_billing" />
+                </t>
                 <input type='submit'/>
             </form>
             <a class='btn btn-link pull-right fa fa-edit js_edit_address no-decoration' title="Edit this address"></a>
@@ -1095,14 +1098,23 @@
                                         <input type="text" name="street" class="form-control" t-att-value="'street' in checkout and checkout['street']" />
                                     </div>
                                     <div class="clearfix" />
+                                    <t t-set='zip_city' t-value='country and [x for x in country.get_address_fields() if x in ["zip", "city"]] or ["city", "zip"]'/>
+                                    <t t-if="'zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')">
+                                        <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-sm-4 div_zip">
+                                            <label class="control-label" for="zip">Zip Code</label>
+                                            <input type="text" name="zip" class="form-control" t-att-value="'zip' in checkout and checkout['zip']" />
+                                        </div>
+                                    </t>
                                     <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''} col-sm-8 div_city">
                                         <label class="control-label" for="city">City</label>
                                         <input type="text" name="city" class="form-control" t-att-value="'city' in checkout and checkout['city']" />
                                     </div>
-                                    <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-sm-4 div_zip">
-                                        <label class="control-label" for="zip">Zip Code</label>
-                                        <input type="text" name="zip" class="form-control" t-att-value="'zip' in checkout and checkout['zip']" />
-                                    </div>
+                                    <t t-if="'zip' in zip_city and zip_city.index('zip') &gt; zip_city.index('city')">
+                                        <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-sm-4 div_zip">
+                                            <label class="control-label" for="zip">Zip Code</label>
+                                            <input type="text" name="zip" class="form-control" t-att-value="'zip' in checkout and checkout['zip']" />
+                                        </div>
+                                    </t>
                                     <div class="clearfix" />
                                     <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} col-md-6 div_country">
                                         <label class="control-label" for="country_id">Country</label>
