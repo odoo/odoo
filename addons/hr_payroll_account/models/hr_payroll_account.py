@@ -64,13 +64,6 @@ class hr_payslip(osv.osv):
             vals.update({'journal_id': context.get('journal_id')})
         return super(hr_payslip, self).create(cr, uid, vals, context=context)
 
-    def onchange_contract_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
-        contract_obj = self.pool.get('hr.contract')
-        res = super(hr_payslip, self).onchange_contract_id(cr, uid, ids, date_from=date_from, date_to=date_to, employee_id=employee_id, contract_id=contract_id, context=context)
-        journal_id = contract_id and contract_obj.browse(cr, uid, contract_id, context=context).journal_id.id or (not contract_id and self._get_default_journal(cr, uid, context=None))
-        res['value'].update({'journal_id': journal_id})
-        return res
-
     @api.onchange('contract_id')
     def onchange_contract(self):
         super(hr_payslip, self).onchange_contract()
