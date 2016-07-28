@@ -10,8 +10,8 @@
     </div>
 
     <div data-js='table_row'
-        data-selector=".row"
-        data-drop-near=".row">
+        data-selector="tr:has(>.row), tr:has(>.col_mv)"
+        data-drop-near="tr:has(>.row), tr:has(>.col_mv)">
     </div>
 
     <div data-js='table_column'
@@ -35,10 +35,93 @@
         data-drop-in=".oe_structure, [data-oe-type=html]:not(:has(.o_layout))">
     </div>
     
-    <div data-js='background'
+    <!-- <div data-js='background'
         data-selector="div.snippet_row">
         <li data-choose_image="choose_image" data-background=""><a>Choose a background image</a></li>
         <li data-background=""><a>No background image</a></li>
+    </div> -->
+
+    <div data-js='colorpicker'
+        data-selector="div.snippet_row td">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Colors</a>
+            <ul class="dropdown-menu">
+                <li class="dropdown-submenu">
+                    <a href="#">Theme Colors</a>
+                    <ul class="dropdown-menu">
+                        <table class="colorpicker">
+                            <tr>
+                                <td>
+                                    <button title="" data-original-title="" class="bg-alpha" data-value="bg-alpha" data-event="backColor" data-color="alpha">Alpha</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button title="" data-original-title="" class="bg-beta" data-value="bg-beta" data-event="backColor" data-color="beta">Beta</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button title="" data-original-title="" class="bg-gamma" data-value="bg-gamma" data-event="backColor" data-color="gamma">Gamma</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button title="" data-original-title="" class="bg-delta" data-value="bg-delta" data-event="backColor" data-color="delta">Delta</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button title="" data-original-title="" class="bg-epsilon" data-value="bg-epsilon" data-event="backColor" data-color="epsilon">Epsilon</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </ul>
+                </li>
+                <li class="dropdown-submenu">
+                    <a href="#">Black and White</a>
+                    <ul class="dropdown-menu">
+                        <table class="colorpicker">
+                            <tr>
+                                <td>
+                                    <button data-color="white" data-event="backColor" data-value="bg-white" class="bg-white" data-original-title="" title="">White</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button data-color="gray-lighter" data-event="backColor" data-value="bg-gray-lighter" class="bg-gray-lighter" data-original-title="" title="">Gray Lighter</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button data-color="gray-light" data-event="backColor" data-value="bg-gray-light" class="bg-gray-light" data-original-title="" title="">Gray Light</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button data-color="gray" data-event="backColor" data-value="bg-gray" class="bg-gray" data-original-title="" title="">Gray</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button data-color="gray-dark" data-event="backColor" data-value="bg-gray-dark" class="bg-gray-dark" data-original-title="" title="">Gray Dark</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button data-color="gray-darker" data-event="backColor" data-value="bg-gray-darker" class="bg-gray-darker" data-original-title="" title="">Gray Darker</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button data-color="black" data-event="backColor" data-value="bg-black" class="bg-black" data-original-title="" title="">Black</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </ul>
+                </li>
+            </ul>
+        </li>
     </div>
 
     <div class="odoo o_theme_palette odoo">
