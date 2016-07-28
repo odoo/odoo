@@ -43,6 +43,7 @@ class IrUiMenu(models.Model):
                                          ('ir.actions.client', 'ir.actions.client')])
 
     web_icon_data = fields.Binary(string='Web Icon Image', compute="_compute_web_icon", store=True, attachment=True)
+    active = fields.Boolean(default=True)
 
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):
