@@ -18,12 +18,7 @@ class Pricelist(models.Model):
         return self.env.user.company_id.currency_id.id
 
     def _get_default_item_ids(self):
-        vals = {}
-        # ProductPricelistItem = self.pool.get('product.pricelist.item')
-        # fields_list = ProductPricelistItem._defaults.keys()
-        # vals = ProductPricelistItem.default_get(cr, uid, fields_list, context=context)
-        vals['compute_price'] = 'formula'
-        return [[0, False, vals]]
+        return [[0, False, {'compute_price': 'formula'}]]
 
     name = fields.Char('Pricelist Name', required=True, translate=True)
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the pricelist without removing it.")
@@ -373,7 +368,7 @@ class PricelistItem(models.Model):
         return True
 
     @api.constrains('price_min_margin', 'price_max_margin')
-    def _check_margin(self, cr, uid, ids, context=None):
+    def _check_margin(self):
         if any(item.price_min_margin > item.price_max_margin for item in self):
             raise ValidationError(_('Error! The minimum margin should be lower than the maximum margin.'))
         return True
