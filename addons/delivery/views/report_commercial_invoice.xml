@@ -1,0 +1,13 @@
+<odoo>
+    <template id="report_delivery_commercial_invoice" inherit_id="sale_stock.report_commercial_invoice">
+        <xpath expr="//td/span[@name='transport']" position="replace">
+            <span name="transport" t-field="o.carrier_id"/>
+        </xpath>
+        <xpath expr="//td/span[@name='freight_cost']" position="replace">
+            <span t-esc="o.sale_id.delivery_price" t-options='{"widget": "monetary", "display_currency": o.sale_id.currency_id}'/>
+        </xpath>
+        <xpath expr="//td/span[@name='total_value']" position="replace">
+            <span name="total_value" t-esc="sum_of_amount_total + o.sale_id.delivery_price" t-options='{"widget": "monetary", "display_currency": o.sale_id.currency_id}'/>
+        </xpath>
+    </template>
+</odoo>
