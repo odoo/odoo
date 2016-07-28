@@ -2546,7 +2546,7 @@ class BaseModel(object):
 
                 elif isinstance(column, fields.many2many):
                     res = self._m2m_raise_or_create_relation(column)
-                    if res and self._fields[name].depends:
+                    if res and self._fields[name].compute:
                         stored_fields.append(self._fields[name])
 
                 else:
@@ -2707,7 +2707,7 @@ class BaseModel(object):
                             todo_end.append((order, self._update_store, (column, name)))
 
                         # remember new-style stored fields with compute method
-                        if self._fields[name].depends:
+                        if self._fields[name].compute:
                             stored_fields.append(self._fields[name])
 
                         # and add constraints if needed
@@ -3147,16 +3147,7 @@ class BaseModel(object):
                 # dependencies of custom fields may not exist; ignore that case
                 exceptions = (Exception,) if field.manual else ()
                 with tools.ignore(*exceptions):
-                    field.setup_triggers(self.env)
-
-            # add invalidation triggers on model dependencies
-            if cls._depends:
-                for model_name, field_names in cls._depends.iteritems():
-                    model = self.env[model_name]
-                    for field_name in field_names:
-                        field = model._fields[field_name]
-                        for dependent in cls._fields.itervalues():
-                            model._field_triggers.add(field, (dependent, None))
+                    field.setup_triggers(self)
 
         # determine old-api structures about inherited fields
         cls._inherits_reload()
