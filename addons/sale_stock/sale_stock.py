@@ -264,11 +264,12 @@ class sale_order_line(osv.osv):
                 qty_pack = pack.qty
                 type_ul = pack.ul
                 if not warning_msgs:
-                    warn_msg = _("You selected a quantity of %d Units.\n"
+                    uom_obj = product_uom_obj.browse(cr, uid, uom, context=context)
+                    warn_msg = _("You selected a quantity of %s %s.\n"
                                 "But it's not compatible with the selected packaging.\n"
                                 "Here is a proposition of quantities according to the packaging:\n"
                                 "EAN: %s Quantity: %s Type of ul: %s") % \
-                                    (qty, ean, qty_pack, type_ul.name)
+                                    (qty, uom_obj.name, ean, qty_pack, type_ul.name)
                     warning_msgs += _("Picking Information ! : ") + warn_msg + "\n\n"
                 warning = {
                        'title': _('Configuration Error!'),
