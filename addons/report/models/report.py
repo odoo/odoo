@@ -250,19 +250,23 @@ class Report(models.Model):
             context.get('set_viewport_size')
         )
 
-    @api.model
+    @api.noguess
     def get_action(self, docids, report_name, data=None):
         """Return an action of type ir.actions.report.xml.
 
-        :param ids: Ids of the records to print (if not used, pass an empty list)
+        :param docids: id/ids/browserecord of the records to print (if not used, pass an empty list)
         :param report_name: Name of the template to generate an action for
         """
-        if isinstance(docids, list):
-            active_ids = docids
-        else:
-            active_ids = docids.ids
+        context = self.env.context
+        if docids:
+            if isinstance(docids, models.Model):
+                active_ids = docids.ids
+            elif isinstance(docids, int):
+                active_ids = [docids]
+            elif isinstance(docids, list):
+                active_ids = docids
+            context = dict(self.env.context, active_ids=active_ids)
 
-        context = dict(self.env.context, active_ids=active_ids)
         report = self.env['ir.actions.report.xml'].with_context(context).search([('report_name', '=', report_name)])
         if not report:
             raise UserError(_("Bad Report Reference") + _("This report is not loaded into the database: %s.") % report_name)
