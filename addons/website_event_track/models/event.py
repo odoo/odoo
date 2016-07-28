@@ -46,7 +46,7 @@ class event_track(models.Model):
         'Status', default='draft', required=True, copy=False, track_visibility='onchange')
     description = fields.Html('Track Description', translate=html_translate, sanitize=False)
     date = fields.Datetime('Track Date')
-    duration = fields.Float('Duration', digits=(16, 2), default=1.5)
+    duration = fields.Float('Duration', default=1.5)
     location_id = fields.Many2one('event.track.location', 'Room')
     event_id = fields.Many2one('event.event', 'Event', required=True)
     color = fields.Integer('Color Index')

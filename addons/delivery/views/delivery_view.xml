@@ -179,11 +179,11 @@
                 <separator string="Delivery Information"/>
                 <group>
                     <group name='carrier_data'>
-                        <field name="carrier_id"/>
+                        <field name="carrier_id" attrs="{'readonly': [('state', '=', 'done')]}"/>
                         <field name="delivery_type" attrs="{'invisible':True}"/>
                         <label for="carrier_tracking_ref"/>
                         <div name="tracking">
-                            <field name="carrier_tracking_ref" class="oe_inline"/>
+                            <field name="carrier_tracking_ref" class="oe_inline" attrs="{'readonly': [('state', '=', 'done')]}"/>
                             <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
                         </div>
                     </group>
@@ -194,7 +194,7 @@
                             <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
                         </div>
                         <field name="shipping_weight"/>
-                        <field name="number_of_packages"/>
+                        <field name="number_of_packages" attrs="{'readonly': [('state', '=', 'done')]}"/>
                     </group>
                 </group>
                 </xpath>
