@@ -76,7 +76,6 @@
     }
     vals['worked_days_line_ids'] = [(0,0,i) for i in res['value']['worked_days_line_ids']]
     vals['input_line_ids'] = [(0,0,i) for i in res['value']['input_line_ids']]
-    res_contract = self.onchange_contract_id(cr, uid, [ref('hr_payslip_0')], date_from, date_to, ref('hr_employee_john'), ref('hr_contract_john'), None)
     vals.update({'contract_id': ref('hr_contract_john')})
     self.write(cr, uid, ref("hr_payslip_0"), vals)
 -
