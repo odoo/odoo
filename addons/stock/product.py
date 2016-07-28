@@ -437,7 +437,7 @@ class product_template(osv.osv):
             fnct_search=_search_product_quantity, type='float', string='Outgoing'),
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
         'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
-        'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]",
+        'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain=[('product_selectable', '=', True)],
                                     help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,..."),
         'nbr_reordering_rules': fields.function(_compute_nbr_reordering_rules, string='Reordering Rules', type='integer', multi=True),
         'reordering_min_qty': fields.function(_compute_nbr_reordering_rules, type='float', multi=True),

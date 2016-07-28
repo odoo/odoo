@@ -133,8 +133,11 @@ widgets.SidebarFilter.include({
             },
         });
         this.ir_model_m2o.appendTo(this.$el);
-        this.ir_model_m2o.on('change:value', self, function() { 
-            self.add_filter();
+        this.ir_model_m2o.on('change:value', self, function() {
+            // once selected, we reset the value to false.
+            if (self.ir_model_m2o.get_value()) {
+                self.add_filter();
+            }
         });
     },
     add_filter: function() {
