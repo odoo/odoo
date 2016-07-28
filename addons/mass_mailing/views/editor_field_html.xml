@@ -4,7 +4,11 @@
 <template id="FieldTextHtmlInline" name="Editor layout">
     <t t-set="head">
         <t t-if="enable_editor">
-            <link t-if="css" rel="stylesheet" type="text/css" t-att-href="css"/>
+            <link rel="stylesheet" href="/mass_mailing/static/src/css/snippet_styles.css" type="text/css"/>
+            <!-- <link rel="stylesheet" href="/mass_mailing/static/src/css/odoo_template.css" type="text/css"/>
+            <link rel="stylesheet" href="/mass_mailing/static/src/css/airmail_template.css" type="text/css"/>
+            <link rel="stylesheet" href="/mass_mailing/static/src/css/lemon_template.css" type="text/css"/>
+            <link rel="stylesheet" href="/mass_mailing/static/src/css/tech_template.css" type="text/css"/> -->
             <link rel="stylesheet" href="/mass_mailing/static/src/css/mass_mailing_editor_thumb.css" type="text/css"/>
             <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_editor.js"></script>
         </t>

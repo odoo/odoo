@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Odoo Template -->
+        <template name="Odoo Template" id="odoo_email_template">
+            <div class="o_mail_block_odoo_template">
+                <table class="o_layout odoo_template table-styles" align="center" width="100%" cellspacing="0" cellpadding="0">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <!-- Logo -->
+                                <table style="margin:0 auto 20px;" align="center" width="600" cellspacing="0" cellpadding="0" class="table-styles">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="snippet_row">
+                                                    <table align="center" cellspacing="0" cellpadding="0" border="0" class="table-styles" width="600">
+                                                        <tbody>
+                                                          <tr>
+                                                              <td width="100%" valign="top" class="vertical-padding">
+                                                                    &amp;nbsp;
+                                                                    <a t-att-href="(company_id.website) or '#'">
+                                                                        <img border="0" src="http://www.odoocdn.com/openerp_website/static/src/img/2016/logos/odoo_logo_small.png" style="height:auto;max-width:600px;width:100px;margin-left:-6px;" alt="Your Logo" />
+                                                                    </a>
+                                                                    &amp;nbsp;
+                                                              </td>
+                                                          </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!-- Banner & Template Body -->
+                                <table style="margin:20px auto;" align="center" width="600" cellspacing="0" cellpadding="0" class="table-styles odoo_template_container">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="snippet_row">
+                                                    <div class="snippetbanner">
+                                                        <table align="center" cellspacing="0" cellpadding="0" border="0" class="table-styles" width="600">
+                                                            <tbody>
+                                                              <tr>
+                                                                  <td width="100%" valign="top">
+                                                                        <img src="http://www.odoocdn.com/openerp_website/static/src/img/2016/home/laptop_sale_desktop.jpg" style="height:auto;max-width:600px;width:600px;" alt="Your Logo" />
+                                                                  </td>
+                                                              </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="oe_structure"></div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!-- Footer -->
+                                <table style="margin:20px auto 0;" align="center" width="600" cellspacing="0" cellpadding="0" class="table-styles">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="snippet_row">
+                                                    <table align="center" cellspacing="0" cellpadding="0" class="table-styles" width="600">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="horizontal-padding text-center" style="padding-top:10px;">
+                                                                    &amp;nbsp;
+                                                                    <a href="https://apps.odoo.com/unsubscribe_from_list" class="link-color text-center">Unsubscribe</a>
+                                                                    <t t-if="website"> | <a href="/page/contactus" class="link-color text-center">Contact</a> </t>
+                                                                    &amp;nbsp;
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="horizontal-padding vertical-padding">
+                                                                    <p style="margin:0;font-size:12px;text-align:center;">© 2014 All Rights Reserved</p>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <!-- Template Body -->
+                </table>
+            </div>
+        </template>
+    </data>
+</odoo>

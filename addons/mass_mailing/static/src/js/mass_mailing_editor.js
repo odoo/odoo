@@ -144,7 +144,7 @@ snippets_editor.Class.include({
             var $editable = $('#editable_area');
             var $o_layout = $editable.find('.o_layout');
             var $html = ($o_layout.length ? $o_layout.find('.oe_structure').first() : $editable).contents();
-            var $layout = $(".o_layout", this).clone();
+            var $layout = $(".o_layout", this).clone().removeClass('oe_snippet_body');
 
             if ($o_layout.length) {
                 $('body').removeClass($o_layout.attr('class'));

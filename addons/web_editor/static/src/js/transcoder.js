@@ -58,6 +58,9 @@ var getMatchedCSSRules = function (a) {
             if (style.parentRule) {
                 var style_obj = {};
                 for (var k=0, len=style.length; k<len; k++) {
+                    if (style[k].indexOf('animation') !== -1) {
+                        continue;
+                    }
                     style_obj[style[k]] = style[style[k].replace(/-(.)/g, function (a, b) { return b.toUpperCase(); })];
                     if (new RegExp(style[k] + '\s*:[^:;]+!important' ).test(style.cssText)) {
                         style_obj[style[k]] += ' !important';
