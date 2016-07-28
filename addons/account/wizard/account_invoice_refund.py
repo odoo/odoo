@@ -202,7 +202,8 @@ class account_invoice_refund(osv.osv_memory):
                             'invoice_line': invoice_lines,
                             'tax_line': tax_lines,
                             'period_id': period,
-                            'name': description
+                            'name': description,
+                            'fiscal_position': inv.fiscal_position.id
                         })
                         for field in ('partner_id', 'account_id', 'currency_id',
                                          'payment_term', 'journal_id'):
