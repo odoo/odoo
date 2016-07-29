@@ -579,21 +579,6 @@ class HrPayslip(models.Model):
         })
         return res
 
-    # YTO TODO: employee_id and contract_id could be browse records
-    @api.multi
-    def onchange_contract_id(self, date_from, date_to, employee_id=False, contract_id=False):
-        # TODO it seems to be the mess in the onchanges
-        # we should have onchange_employee => onchange_contract => doing all the things
-        res = {
-            'value': {
-                'line_ids': [],
-                'name': '',
-            }
-        }
-        if not contract_id:
-            res['value'].update({'struct_id': False})
-        return self.with_context(contract=True).onchange_employee_id(date_from=date_from, date_to=date_to, employee_id=employee_id, contract_id=contract_id)
-
     @api.onchange('employee_id', 'date_from')
     def onchange_employee(self):
 
