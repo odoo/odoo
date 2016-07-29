@@ -183,7 +183,7 @@ class AssetsBundle(object):
         multiple time the same bundle in our `to_html` function, we group our ir.attachment records
         by file name and only return the one with the max id for each group.
         """
-        url_pattern = '/web/content/%-{0}/{1}{2}.{3}'.format(self.version, self.xmlid, '.%' if type == 'css' else '', type)
+        url_pattern = '/web/content/%-{0}/{1}{2}.{3}'.format(self.version, self.name, '.%' if type == 'css' else '', type)
         self.env.cr.execute("""
              SELECT max(id)
                FROM ir_attachment
