@@ -1,7 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <!-- Marketing Campaign -->
     
     <record id="act_marketing_campaing_segment_opened" model="ir.actions.act_window">
@@ -113,7 +111,7 @@
             <diagram string="Campaign Editor">
                 <node object="marketing.campaign.activity" shape="rectangle:type=='subcampaign'" bgcolor="gray:start==True">
                     <field name="name"/>
-                    <field name="type"/>
+                    <field name="action_type"/>
                     <field name="start" invisible="1"/>
                     <field name="condition" widget="char"/>
                 </node>
@@ -203,7 +201,7 @@
                        <label for="sync_last_date"/>
                        <div>
                            <field name="sync_last_date" class="oe_inline"/>
-                           <button string="Synchronize Manually" states="running" name="synchroniz" type="object"/>
+                           <button string="Synchronize Manually" states="running" name="process_segment" type="object"/>
                        </div>
                        <field name="date_next_sync"/>
                     </group>
@@ -297,11 +295,11 @@
                         <field name="keep_if_condition_not_met"/>
                     </group>
                     <group>
-                        <field name="type"/>
-                        <field name="email_template_id" attrs="{'required':[('type','=','email')], 'invisible':[('type','!=','email')]}"
+                        <field name="action_type"/>
+                        <field name="email_template_id" attrs="{'required':[('action_type','=','email')], 'invisible':[('action_type','!=','email')]}"
                            context="{'default_model_id':object_id}"/>
-                        <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]"/>
-                        <field name="report_id" attrs="{'required':[('type','=','report')],'invisible':[('type','!=','report')]}" context="{'object_id':object_id}"/>
+                        <field name="server_action_id" attrs="{'required':[('action_type','=','action')],'invisible':[('action_type','!=','action')]}" domain="[('model_id','=',object_id)]"/>
+                        <field name="report_id" attrs="{'required':[('action_type','=','report')],'invisible':[('action_type','!=','report')]}" context="{'object_id':object_id}"/>
                     </group>
                 </group>
                 <separator string="Previous Activities"/>
@@ -349,7 +347,7 @@
             <tree string="Activities">
                 <field name="name"/>
                 <field name="condition"/>
-                <field name="type"/>
+                <field name="action_type"/>
                 <field name="start"/>
             </tree>
         </field>
@@ -453,5 +451,4 @@
 
     <menuitem id="menu_action_marketing_campaign_workitem" parent="report_marketing_campaign" action="action_marketing_campaign_workitem" sequence="3"/>
 
-    </data>
-</openerp>
+</odoo>
