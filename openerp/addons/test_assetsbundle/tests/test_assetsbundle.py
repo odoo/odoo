@@ -287,6 +287,24 @@ class TestJavascriptAssetsBundle(TransactionCase):
         self.assertTrue(stylesheets[1].url.endswith('.1.css'))
         self.assertTrue(stylesheets[2].url.endswith('.2.css'))
 
+    def test_14_duplicated_css_assets(self):
+        """ Checks that if the bundle's ir.attachment record is duplicated, the bundle is only sourced once. This could
+        happen if multiple transactions try to render the bundle simultaneously.
+        """
+        bundle0 = AssetsBundle(self.cssbundle_xmlid, env=self.env)
+        bundle0.css()
+        self.assertEquals(len(self._any_ira_for_bundle('css')), 1)
+
+        # duplicate the asset bundle
+        ira0 = self.registry['ir.attachment'].browse(self.cr, self.uid, self._any_ira_for_bundle('css')[0])
+        ira1 = ira0.copy()
+        self.assertEquals(len(self._any_ira_for_bundle('css')), 2)
+        self.assertEquals(ira0.store_fname, ira1.store_fname)
+
+        # the ir.attachment records should be deduplicated in the bundle's content
+        content = bundle0.to_html()
+        self.assertEqual(content.count('test_assetsbundle.bundle2.0.css'), 1)
+
 
 class TestAssetsBundleInBrowser(HttpCase):
     def test_01_js_interpretation(self):
