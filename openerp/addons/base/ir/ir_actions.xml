@@ -54,47 +54,54 @@
             <field name="arch" type="xml">
                 <form string="Report">
                     <field name="ir_values_id" invisible="1"/>
-                    <button name="create_action" string="Add in the 'Print' menu" type="object"
-                            attrs="{'invisible':[('ir_values_id','!=',False)]}"
-                            help="Display an option on related documents to print this report"/>
-                    <button name="unlink_action" string="Remove from the 'Print' menu" type="object"
-                            attrs="{'invisible':[('ir_values_id','=',False)]}"
-                            help="Remove the contextual action related this report"/>
-
-                    <group>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="create_action" string="Add in the 'Print' menu" type="object"
+                                    attrs="{'invisible':[('ir_values_id','!=',False)]}" icon="fa-plus-square"
+                                    help="Display an option on related documents to print this report" class="oe_stat_button"/>
+                            <button name="unlink_action" string="Remove from the 'Print' menu" type="object"
+                                    attrs="{'invisible':[('ir_values_id','=',False)]}" icon="fa-minus-square"
+                                    help="Remove the contextual action related this report" class="oe_stat_button"/>
+                        </div>
                         <group>
-                            <field name="name"/>
-                            <field name="model"/>
-                            <field name="report_type"/>
-                            <field name="report_name" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
-                            <field name="report_rml" attrs="{'invisible':[('report_type','!=', 'controller')]}"/>
-                        </group>
-                        <group>
-                            <field name="multi"/>
-                            <field name="attachment_use" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
-                            <field name="attachment" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page name="security" string="Security">
-                            <field name="groups_id"/>
-                        </page>
-                        <page string="RML Configuration" attrs="{'invisible':[('report_type','not in',['pdf','sxw'])]}">
                             <group>
-                                <group string="RML Report">
-                                    <field name="header"/>
-                                    <field name="report_file"/>
-                                    <field name="auto"/>
-                                    <field name="parser"/>
-                                    <field name="usage"/>
-                                </group>
-                                <group string="XML Report">
-                                    <field name="report_xsl"/>
-                                    <field name="report_xml"/>
-                                </group>
+                                <field name="name"/>
+                                <field name="report_type"/>
                             </group>
-                        </page>
-                    </notebook>
+                            <group>
+                                <field name="model"/>
+                                <field name="report_name" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
+                                <field name="report_rml" attrs="{'invisible':[('report_type','!=', 'controller')]}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="security" string="Security">
+                                <field name="groups_id"/>
+                            </page>
+                            <page name='rml' string="RML Configuration" attrs="{'invisible':[('report_type','not in',['pdf','sxw'])]}">
+                                <group>
+                                    <group string="RML Report">
+                                        <field name="header"/>
+                                        <field name="report_file"/>
+                                        <field name="auto"/>
+                                        <field name="parser"/>
+                                        <field name="usage"/>
+                                    </group>
+                                    <group string="XML Report">
+                                        <field name="report_xsl"/>
+                                        <field name="report_xml"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page name='advanced' string="Advanced Properties">
+                                <group>
+                                    <field name="multi"/>
+                                    <field name="attachment_use" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
+                                    <field name="attachment" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
