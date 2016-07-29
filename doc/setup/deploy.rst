@@ -170,7 +170,7 @@ Worker number calculation
 
 * Rule of thumb : (#CPU * 2) + 1
 * Cron workers need CPU
-* 1 worker ~= 6 concurent users
+* 1 worker ~= 6 concurrent users
 
 memory size calculation
 -----------------------
@@ -196,7 +196,7 @@ Configuration sample
 --------------------
 
 * Server with 4 CPU, 8 Thread
-* 60 concurent users
+* 60 concurrent users
 
 * 60 users / 6 = 10 <- theorical number of worker needed
 * (4 * 2) + 1 = 9 <- theorical maximal number of worker
@@ -208,8 +208,8 @@ in ``/etc/odoo.conf``:
 .. code-block:: apacheconf
 
   [options]
-  limit_memory_hard = 629145600
-  limit_memory_soft = 1677721600
+  limit_memory_hard = 1677721600
+  limit_memory_soft = 629145600
   limit_request = 8192
   limit_time_cpu = 600
   limit_time_real = 1200
