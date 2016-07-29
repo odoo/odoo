@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv
+from odoo import api, models
 
-class report_xml(osv.osv):
+
+class IrActionsReportXml(models.Model):
     _inherit = 'ir.actions.report.xml'
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        if context is None:
-            context = {}
-        object_id = context.get('object_id')
-        if object_id:
-            model = self.pool.get('ir.model').browse(cr, uid, object_id, context=context).model
+
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        model_id = self.env.context.get('object_id')
+        if model_id:
+            model = self.env['ir.model'].browse(model_id).model
             args.append(('model', '=', model))
-        return super(report_xml, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
+        return super(IrActionsReportXml, self).search(args, offset=offset, limit=limit, order=order, count=count)
