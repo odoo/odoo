@@ -409,7 +409,7 @@ class PaymentTransaction(models.Model):
 
     callback_eval = fields.Char('S2S Callback', help="""\
         Will be safe_eval with `self` being the current transaction. i.e.:
-            self.env['my.model'].payment_validated(self)""", oldname="s2s_cb_eval", groups="base.group_system"),
+            self.env['my.model'].payment_validated(self)""", oldname="s2s_cb_eval", groups="base.group_system")
     payment_token_id = fields.Many2one('payment.token', 'Payment Token', domain="[('acquirer_id', '=', acquirer_id)]")
 
     @api.onchange('partner_id')
