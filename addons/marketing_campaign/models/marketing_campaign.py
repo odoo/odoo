@@ -777,23 +777,3 @@ class marketing_campaign_workitem(osv.osv):
             raise UserError(_('The current step for this item has no email or report to preview.'))
         return res
 
-
-class mail_template(osv.osv):
-    _inherit = "mail.template"
-    _defaults = {
-        'model_id': lambda obj, cr, uid, context: context.get('object_id',False),
-    }
-
-    # TODO: add constraint to prevent disabling / disapproving an email account used in a running campaign
-
-
-class report_xml(osv.osv):
-    _inherit = 'ir.actions.report.xml'
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        if context is None:
-            context = {}
-        object_id = context.get('object_id')
-        if object_id:
-            model = self.pool.get('ir.model').browse(cr, uid, object_id, context=context).model
-            args.append(('model', '=', model))
-        return super(report_xml, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
