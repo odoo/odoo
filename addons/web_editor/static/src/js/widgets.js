@@ -22,7 +22,7 @@ Dialog = Dialog.extend({
         options = options || {};
         this._super(parent, _.extend({}, {
             buttons: [
-                {text: options.save_text || _t("Save"), classes: "btn-primary o_save_button", close: true, click: this.save},
+                {text: options.save_text || _t("Save"), classes: "btn-primary o_save_button", click: this.save},
                 {text: _t("Discard"), close: true}
             ]
         }, options));
@@ -1032,7 +1032,6 @@ var LinkDialog = Dialog.extend({
     },
     start: function () {
         this.bind_data();
-        this.$('input.url-source:eq(1)').closest('.list-group-item').addClass('active');
         return this._super.apply(this, arguments);
     },
     get_data: function (test) {
@@ -1053,8 +1052,8 @@ var LinkDialog = Dialog.extend({
 
         if (!test && (!val || !$e[0].checkValidity())) {
             // FIXME: error message
-            $e.closest('.form-group').addClass('has-error');
             $e.focus();
+            this.$('.o-link-error').removeClass('o_hidden');
             def.reject();
         }
 
@@ -1122,6 +1121,7 @@ var LinkDialog = Dialog.extend({
             .addClass('active')
             .siblings().removeClass('active')
             .addBack().removeClass('has-error');
+        this.$('.o-link-error').addClass('o_hidden');
         this.preview();
     },
     onkeyup: function (e) {
