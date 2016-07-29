@@ -73,4 +73,4 @@ class SaleOrderLine(models.Model):
     def _get_display_price(self, product):
         if self.order_id.pricelist_id.discount_policy == 'without_discount':
             return product.lst_price
-        return super(sale_order_line, self)._get_display_price(product)
+        return super(SaleOrderLine, self)._get_display_price(product)
