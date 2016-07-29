@@ -204,6 +204,15 @@
     }
 }
 
+// Workaround a bug in safari mobile where the inputs are not displayed correctly.
+.modal {
+    .o_list_editable {
+        .o_form_view.o_list_editable_form {
+            -webkit-overflow-scrolling: auto;
+        }
+    }
+}
+
 // Buttons in ControlPanel
 .o_list_buttons {
     .o_list_button_save, .o_list_button_discard {

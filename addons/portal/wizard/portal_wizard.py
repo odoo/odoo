@@ -138,7 +138,8 @@ class PortalWizardUser(models.TransientModel):
                 user_portal = None
                 # create a user if necessary, and make sure it is in the portal group
                 if not user:
-                    user_portal = self.sudo()._create_user()
+                    company_id = wizard_user.partner_id.company_id.id
+                    user_portal = self.sudo().with_context(company_id=company_id)._create_user()
                 else:
                     user_portal = user
                 wizard_user.write({'user_id': user_portal.id})
@@ -162,10 +163,13 @@ class PortalWizardUser(models.TransientModel):
         """ create a new user for wizard_user.partner_id
             :returns record of res.users
         """
+        company_id = self.env.context.get('company_id')
         return self.env['res.users'].with_context(no_reset_password=True).create({
             'email': extract_email(self.email),
             'login': extract_email(self.email),
             'partner_id': self.partner_id.id,
+            'company_id': company_id,
+            'company_ids': [(6, 0, [company_id])],
             'groups_id': [(6, 0, [])],
         })
 

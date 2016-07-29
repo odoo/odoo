@@ -47,8 +47,13 @@ class GoogleMap(http.Controller):
                 'latitude': escape(str(partner.partner_latitude)),
                 'longitude': escape(str(partner.partner_longitude)),
             })
+        if 'customers' in post.get('partner_url', ''):
+            partner_url = '/customers/'
+        else:
+            partner_url = '/partners/'
+
         values = {
-            'partner_url': post.get('partner_url'),
+            'partner_url': partner_url,
             'partner_data': json.dumps(partner_data)
         }
         return request.website.render("website_google_map.google_map", values)

@@ -334,7 +334,7 @@ odoo.define('web_editor.snippets.options', function (require) {
         },
         select_class: function (type, value, $li) {
             this.background(type, '', $li);
-            this._super.apply(this, arguments);
+            this._super(type, value ? (value + " oe_img_bg") : value, $li);
         },
         choose_image: function (type, value, $li) {
             if(type !== "click") {
