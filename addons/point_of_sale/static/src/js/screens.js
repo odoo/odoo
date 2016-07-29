@@ -284,6 +284,15 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             var product = this.get_product();
             return (product ? product.price : 0) || 0;
         },
+        get_product_uom: function(){
+            var product = this.get_product();
+
+            if(product){
+                return this.pos.units_by_id[product.uom_id[0]].name;
+            }else{
+                return '';
+            }
+        },
         set_weight: function(weight){
             this.weight = weight;
             this.$('.weight').text(this.get_product_weight_string());
@@ -302,7 +311,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             var unit = this.pos.units_by_id[unit_id[0]];
             var weight = round_pr(this.weight || 0, unit.rounding);
             var weightstr = weight.toFixed(Math.ceil(Math.log(1.0/unit.rounding) / Math.log(10) ));
-                weightstr += ' Kg';
+                weightstr += ' ' + unit.name;
             return weightstr;
         },
         get_computed_price_string: function(){
