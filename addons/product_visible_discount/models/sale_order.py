@@ -58,12 +58,19 @@ class SaleOrderLine(models.Model):
         list_price = self.order_id.pricelist_id.with_context(pricelist_context).price_rule_get(self.product_id.id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         new_list_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, list_price, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
         new_list_price = self.env['account.tax']._fix_tax_included_price(new_list_price, self.product_id.taxes_id, self.tax_id)
+        list_price = list_price[self.order_id.pricelist_id.id][0]
 
-        if list_price[self.order_id.pricelist_id.id][0] != 0 and new_list_price != 0:
+        if list_price != 0 and new_list_price != 0:
             if self.product_id.company_id and self.order_id.pricelist_id.currency_id != self.product_id.company_id.currency_id:
                 # new_list_price is in company's currency while price in pricelist currency
                 ctx = dict(context_partner, date=self.order_id.date_order)
                 new_list_price = self.env['res.currency'].browse(currency_id).with_context(ctx).compute(new_list_price, self.order_id.pricelist_id.currency_id)
-            discount = (new_list_price - self.price_unit) / new_list_price * 100
+            discount = (new_list_price - list_price) / new_list_price * 100
             if discount > 0:
                 self.discount = discount
+
+    @api.multi
+    def _get_display_price(self, product):
+        if self.order_id.pricelist_id.discount_policy == 'without_discount':
+            return product.lst_price
+        return super(sale_order_line, self)._get_display_price(product)
