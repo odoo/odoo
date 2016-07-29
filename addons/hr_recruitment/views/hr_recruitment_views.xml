@@ -36,8 +36,6 @@
                 <field name="partner_phone"/>
                 <field name="job_id"/>
                 <field name="stage_id"/>
-                <field name="title_action" invisible="context.get('invisible_next_action', True)"/>
-                <field name="date_action" invisible="context.get('invisible_next_date', True)"/>
                 <field name="medium_id"/>
                 <field name="source_id"/>
                 <field name="priority"/>
@@ -113,11 +111,6 @@
                     </group>
                     <group>
                         <field name="user_id"/>
-                        <label for="title_action"/>
-                        <div>
-                            <field name="date_action"/>
-                            <field name="title_action" class="oe_inline" placeholder="e.g. Call for interview"/>
-                        </div>
                         <field name="priority" widget="priority"/>
                         <field name="medium_id" groups="base.group_no_one" />
                         <field name="source_id"/>
@@ -183,12 +176,8 @@
         <field name="arch" type="xml">
             <search string="Search Applicants">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
-                <filter string="My" domain="[('user_id', '=', uid)]"/>
+                <filter string="My Applications" domain="[('user_id', '=', uid)]"/>
                 <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
-                <separator/>
-                <filter string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
-                    domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
-                <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <field name="job_id"/>
@@ -240,7 +229,6 @@
                 <field name="partner_name"/>
                 <field name="type_id"/>
                 <field name="job_id"/>
-                <field name="title_action"/>
                 <field name="department_id"/>
                 <field name="categ_ids"/>
                 <field name="message_needaction_counter"/>
@@ -273,10 +261,6 @@
                                     <i><field name="name"/></i><br/>
                                     <field name="job_id"/><br/>
                                     <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
-                                    <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
-                                    <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
-                                        <t t-if="record.date_action.raw_value"> : </t>
-                                        <field name="title_action"/>
                                 <div class="oe_kanban_bottom_right">
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     <div class="pull-left" groups="base.group_user">
@@ -526,7 +510,7 @@
         <field name="act_window_id" ref="crm_case_categ0_act_job"/>
     </record>
 
-    <record model="ir.actions.act_window.view" id="action_hr_sec_graph_view_act_job">
+    <record id="action_hr_sec_graph_view_act_job" model="ir.actions.act_window.view">
         <field name="sequence" eval="4"/>
         <field name="view_mode">graph</field>
         <field name="view_id" ref="crm_case_graph_view_job"/>
@@ -549,7 +533,12 @@
     <menuitem
         name="Applications"
         parent="menu_hr_recruitment_root"
-        id="menu_crm_case_categ0_act_job" action="crm_case_categ0_act_job" sequence="2" groups="base.group_no_one"/>
+        id="menu_crm_case_categ0_act_job" sequence="2"/>
+
+    <menuitem
+        name="All Applications"
+        parent="menu_crm_case_categ0_act_job"
+        id="menu_crm_case_categ_all_app" action="crm_case_categ0_act_job" sequence="2"/>
 
     <!-- Resume and Letters -->
     <record id="ir_attachment_view_search_inherit_hr_recruitment" model="ir.ui.view">
