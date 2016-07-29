@@ -308,7 +308,6 @@ var EditMenuDialog = widget.Dialog.extend({
 });
 
 var MenuEntryDialog = widget.LinkDialog.extend({
-    template: 'website.contentMenu.dialog.add',
     init: function (parent, options, editor, data) {
         data.text = data.name || '';
         data.isNewWindow = data.new_window;
@@ -317,10 +316,11 @@ var MenuEntryDialog = widget.LinkDialog.extend({
     },
     start: function () {
         var self = this;
-        var result = $.when(this._super.apply(this, arguments)).then(function () {
-            if (self.data) {
-                self.bind_data();
-            }
+
+        this.$(".link-style").remove();
+        this.$("label[for=link-new]").text("Menu Label");
+
+        return $.when(this._super.apply(this, arguments)).then(function () {
             var $link_text = self.$('#link-text').focus();
             self.$('#link-page').change(function (e) {
                 if ($link_text.val()) { return; }
@@ -329,7 +329,6 @@ var MenuEntryDialog = widget.LinkDialog.extend({
                 $link_text.focus();
             });
         });
-        return result;
     },
     save: function () {
         var $e = this.$('#link-text');

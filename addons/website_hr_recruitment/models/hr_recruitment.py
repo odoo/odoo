@@ -6,6 +6,7 @@ from werkzeug import url_encode
 
 from odoo import api, fields, models
 from odoo.addons.website.models.website import slug
+from odoo.tools.translate import html_translate
 
 
 class RecruitmentSource(models.Model):
@@ -42,7 +43,7 @@ class Job(models.Model):
     _name = 'hr.job'
     _inherit = ['hr.job', 'website.seo.metadata', 'website.published.mixin']
 
-    website_description = fields.Html('Website description', translate=True, sanitize=False)
+    website_description = fields.Html('Website description', translate=html_translate, sanitize=False)
 
     @api.multi
     def _website_url(self, field_name, arg):

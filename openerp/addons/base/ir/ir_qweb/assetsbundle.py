@@ -175,10 +175,24 @@ class AssetsBundle(object):
         ]
         return ira.sudo().search(domain).unlink()
 
-    def get_attachments(self, type, inc=None):
-        ira = self.env['ir.attachment']
-        domain = [('url', '=like', '/web/content/%%-%s/%s%s.%s' % (self.version, self.name, ('%%' if inc is None else '.%s' % inc), type))]
-        return ira.sudo().search(domain, order='name asc')
+    def get_attachments(self, type):
+        """ Return the ir.attachment records for a given bundle. This method takes care of mitigating
+        an issue happening when parallel transactions generate the same bundle: while the file is not
+        duplicated on the filestore (as it is stored according to its hash), there are multiple
+        ir.attachment records referencing the same version of a bundle. As we don't want to source
+        multiple time the same bundle in our `to_html` function, we group our ir.attachment records
+        by file name and only return the one with the max id for each group.
+        """
+        url_pattern = '/web/content/%-{0}/{1}{2}.{3}'.format(self.version, self.name, '.%' if type == 'css' else '', type)
+        self.env.cr.execute("""
+             SELECT max(id)
+               FROM ir_attachment
+              WHERE url like %s
+           GROUP BY datas_fname
+           ORDER BY datas_fname
+         """, [url_pattern])
+        attachment_ids = [r[0] for r in self.env.cr.fetchall()]
+        return self.env['ir.attachment'].sudo().browse(attachment_ids)
 
     def save_attachment(self, type, content, inc=None):
         ira = self.env['ir.attachment']

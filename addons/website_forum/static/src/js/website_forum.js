@@ -18,9 +18,13 @@ if(!$('.website_forum').length) {
         var karma = $(ev.currentTarget).data('karma');
         if (karma) {
             ev.preventDefault();
+            var msg = karma + ' ' + _t(' karma is required to perform this action. You can earn karma by having your answers upvoted by the community.')
+            if ($('a[href*="/login"]').length) {
+                msg = _t('Sorry you must be logged in to perform this action');
+            };
             var $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="karma_alert">'+
                 '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                karma + ' ' + _t(' karma is required to perform this action. You can earn karma by having your answers upvoted by the community.') + '</div>');
+                msg + '</div>');
             var vote_alert = $(ev.currentTarget).parent().find("#vote_alert");
             if (vote_alert.length == 0) {
                 $(ev.currentTarget).parent().append($warning);

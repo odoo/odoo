@@ -25,7 +25,7 @@ return session.is_bound.then(function () {
     // Load the list of consumed tours and the tip template only if we are admin, in the frontend,
     // tours being only available for the admin. For the backend, the list of consumed is directly
     // in the page source.
-    if (session.is_frontend && session.is_admin) {
+    if (session.is_frontend && session.is_superuser) {
         defs.push(new Model('web_tour.tour').call('get_consumed_tours'));
         defs.push(ajax.loadXML('/web_tour/static/src/xml/tip.xml', QWeb));
     }
@@ -63,11 +63,11 @@ return session.is_bound.then(function () {
         };
 
         // Enable the MutationObserver for the admin or if a tour is running, when the DOM is ready
-        if (session.is_admin || tour.running_tour) {
+        if (session.is_superuser || tour.running_tour) {
             observe();
         }
         // Override the TourManager so that it enables/disables the observer when necessary
-        if (!session.is_admin) {
+        if (!session.is_superuser) {
             var run = tour.run;
             tour.run = function () {
                 run.apply(this, arguments);
