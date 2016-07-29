@@ -145,16 +145,18 @@
     </record>
 
     <record id="payment_acquirer_payu" model="payment.acquirer">
-        <field name="name">PayU</field>
+        <field name="name">PayUmoney</field>
         <field name="image" type="base64" file="payment_payumoney/static/description/icon.png"/>
         <field name="view_template_id" ref="default_acquirer_button"/>
         <field name="module_id" ref="base.module_payment_payumoney"/>
         <field name="description" type="html">
             <p>
-                A payment gateway to accept online payments in India.
+                PayU India is an online payments solutions company serving the Indian market.
             </p>
-            <ul>
+            <ul class="list-inline">
                 <li><i class="fa fa-check"/>eCommerce</li>
+                <li><i class="fa fa-check"/>Subscription</li>
+                <li><i class="fa fa-check"/>Pay button in emails</li>
             </ul>
         </field>
     </record>

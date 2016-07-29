@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="payment_acquirer_payumoney" model="payment.acquirer">
+        <record id="payment.payment_acquirer_payu" model="payment.acquirer">
             <field name="name">PayUmoney</field>
             <field name="image" type="base64" file="payment_payumoney/static/description/icon.png"/>
             <field name="provider">payumoney</field>
@@ -13,16 +13,6 @@
             </field>
             <field name="payumoney_merchant_key">dummy</field>
             <field name="payumoney_merchant_salt">dummy</field>
-            <field name="description" type="html">
-                <p>
-                    PayU India is an online payments solutions company serving the Indian market.
-                </p>
-                <ul>
-                    <li><i class="fa fa-check"/>eCommerce</li>
-                    <li><i class="fa fa-check"/>Subscription</li>
-                    <li><i class="fa fa-check"/>Pay button in emails</li>
-                </ul>
-            </field>
         </record>
     </data>
 </odoo>
