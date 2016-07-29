@@ -120,43 +120,6 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         self.write(cr, uid, ids, {'state': 'cancelled'})
         return True
 
-    # dead code
-    def signal(self, cr, uid, model, res_id, signal, run_existing=True, context=None):
-        record = self.pool[model].browse(cr, uid, res_id, context)
-        return self._signal(cr, uid, record, signal, run_existing, context)
-
-    #dead code
-    def _signal(self, cr, uid, record, signal, run_existing=True, context=None):
-        if not signal:
-            raise ValueError('Signal cannot be False.')
-
-        Workitems = self.pool.get('marketing.campaign.workitem')
-        domain = [('object_id.model', '=', record._name),
-                  ('state', '=', 'running')]
-        campaign_ids = self.search(cr, uid, domain, context=context)
-        for campaign in self.browse(cr, uid, campaign_ids, context=context):
-            for activity in campaign.activity_ids:
-                if activity.signal != signal:
-                    continue
-
-                data = dict(activity_id=activity.id,
-                            res_id=record.id,
-                            state='todo')
-                wi_domain = [(k, '=', v) for k, v in data.items()]
-
-                wi_ids = Workitems.search(cr, uid, wi_domain, context=context)
-                if wi_ids:
-                    if not run_existing:
-                        continue
-                else:
-                    partner = self._get_partner_for(campaign, record)
-                    if partner:
-                        data['partner_id'] = partner.id
-                    wi_id = Workitems.create(cr, uid, data, context=context)
-                    wi_ids = [wi_id]
-                Workitems.process(cr, uid, wi_ids, context=context)
-        return True
-
     def _get_partner_for(self, campaign, record):
         partner_field = campaign.partner_field_id.name
         if partner_field:
@@ -415,39 +378,6 @@ class marketing_campaign_activity(osv.osv):
             return act_ids
         return super(marketing_campaign_activity, self).search(cr, uid, args,
                                            offset, limit, order, context, count)
-
-    #dead code
-    def _process_wi_report(self, cr, uid, activity, workitem, context=None):
-        report_data, format = render_report(cr, uid, [], activity.report_id.report_name, {}, context=context)
-        attach_vals = {
-            'name': '%s_%s_%s'%(activity.report_id.report_name,
-                                activity.name,workitem.partner_id.name),
-            'datas_fname': '%s.%s'%(activity.report_id.report_name,
-                                        activity.report_id.report_type),
-            'datas': base64.encodestring(report_data),
-        }
-        self.pool.get('ir.attachment').create(cr, uid, attach_vals)
-        return True
-
-    def _process_wi_email(self, cr, uid, activity, workitem, context=None):
-        return self.pool.get('mail.template').send_mail(cr, uid,
-                                            activity.email_template_id.id,
-                                            workitem.res_id, context=context)
-
-    #dead code
-    def _process_wi_action(self, cr, uid, activity, workitem, context=None):
-        if context is None:
-            context = {}
-        server_obj = self.pool.get('ir.actions.server')
-
-        action_context = dict(context,
-                              active_id=workitem.res_id,
-                              active_ids=[workitem.res_id],
-                              active_model=workitem.object_id.model,
-                              workitem=workitem)
-        server_obj.run(cr, uid, [activity.server_action_id.id],
-                             context=action_context)
-        return True
 
     def process(self, cr, uid, act_id, wi_id, context=None):
         activity = self.browse(cr, uid, act_id, context=context)
