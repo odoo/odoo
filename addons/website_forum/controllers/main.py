@@ -317,8 +317,11 @@ class WebsiteForum(http.Controller):
                  '/forum/<model("forum.forum"):forum>/<model("forum.post"):post_parent>/reply'],
                 type='http', auth="user", methods=['POST'], website=True)
     def post_create(self, forum, post_parent=None, post_type=None, **post):
-        if post_type == 'question' and not post.get('post_name', '').strip():
+        if post_type == 'question' and not post.get('post_name', ''):
             return request.website.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
+        if post.get('content', '') == '<p><br></p>':
+            return werkzeug.utils.redirect("/forum/%s/question/%s?nocontent=1" % (slug(forum), post_parent and slug(post_parent)))
+
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
         new_question = request.env['forum.post'].create({
             'forum_id': forum.id,
