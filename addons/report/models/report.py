@@ -162,7 +162,7 @@ class Report(models.Model):
         context['debug'] = False
 
         if html is None:
-            html = self.get_html(docids, report_name, data=data)
+            html = self.with_context(context).get_html(docids, report_name, data=data)
 
         # The test cursor prevents the use of another environnment while the current
         # transaction is not finished, leading to a deadlock when the report requests
@@ -191,7 +191,7 @@ class Report(models.Model):
 
         # Minimal page renderer
         view_obj = self.env['ir.ui.view']
-        render_minimal = partial(view_obj.render_template, 'report.minimal_layout')
+        render_minimal = partial(view_obj.with_context(context).render_template, 'report.minimal_layout')
 
         # The received html report must be simplified. We convert it in a xml tree
         # in order to extract headers, bodies and footers.
