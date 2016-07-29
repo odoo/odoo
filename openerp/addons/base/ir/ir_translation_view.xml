@@ -10,10 +10,11 @@
                     <filter name="openerp-web"
                         string="Web-only translations"
                         domain="[('comments', 'like', 'openerp-web')]"/>
-                    <field name="name" operator="="/>
                     <field name="lang"/>
                     <field name="source"/>
                     <field name="value"/>
+                    <field name="name" filter_domain="('|', ('name', '=', self), ('name', 'ilike', self + ','))" string="Model"/>
+                    <field name="res_id" filter_domain="('&amp;', ('name', '=', 'ir.ui.view,arch_db'), ('res_id', '=', self))" string="View ID"/>
                 </search>
             </field>
         </record>
