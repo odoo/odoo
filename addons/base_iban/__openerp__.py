@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'IBAN Bank Accounts',
-    'version': '1.0',
     'category': 'Extra Tools',
     'description': """
 This module installs the base for IBAN (International Bank Account Number) bank accounts and checks for it's validity.
@@ -13,6 +12,4 @@ with a single statement.
     """,
     'depends': ['account'],
     'demo': ['data/res_partner_bank_demo.xml'],
-    'installable': True,
-    'auto_install': False,
 }
