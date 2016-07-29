@@ -291,7 +291,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
         """ Checks that if the bundle's ir.attachment record is duplicated, the bundle is only sourced once. This could
         happen if multiple transactions try to render the bundle simultaneously.
         """
-        bundle0 = AssetsBundle(self.cssbundle_xmlid, env=self.env)
+        bundle0 = self._get_asset(self.cssbundle_xmlid)
         bundle0.css()
         self.assertEquals(len(self._any_ira_for_bundle('css')), 1)
 
