@@ -3006,9 +3006,22 @@ body {
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   .oe-view-manager-content > div {
     position: absolute !important;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
   }
   .oe-view-manager-content .oe-view-manager-content > div {
     position: relative !important;
+  }
+
+  .modal .oe-view-manager-content > div {
+    position: static !important;
+    max-height: 450px;
+  }
+
+  .modal > .modal-dialog > .modal-content {
+    max-height: 450px;
   }
 }
 .o_progressbar > div {
