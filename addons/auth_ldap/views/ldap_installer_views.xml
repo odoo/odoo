@@ -1,9 +1,9 @@
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
 
         <!-- ldap installer Form View -->
-        <record model="ir.ui.view" id="view_ldap_installer_form">
-            <field name="name">ldap.installer.form</field>
+        <record id="view_ldap_installer_form" model="ir.ui.view">
+            <field name="name">res.company.ldap.form</field>
             <field name="model">res.company.ldap</field>
             <field name="arch" type="xml">
                 <form string="LDAP Configuration">
@@ -43,5 +43,4 @@
              <field name="view_id" ref="view_ldap_installer_form"/>
         </record>
 
-    </data>
-</openerp>
+</odoo>
