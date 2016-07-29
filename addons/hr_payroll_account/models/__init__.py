@@ -1,4 +1,6 @@
 #-*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import hr_payslips_employees
+import hr_contract
+import hr_payroll_account
+import hr_salary_rule
