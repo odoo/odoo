@@ -1,8 +1,7 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-        <record model="ir.ui.view" id="company_form_view">
-            <field name="name">res.company.form.inherit.users_ldap</field>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="company_form_view" model="ir.ui.view">
+            <field name="name">res.company.form.inherit</field>
             <field name="model">res.company</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
@@ -35,5 +34,4 @@
                 </xpath>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>
