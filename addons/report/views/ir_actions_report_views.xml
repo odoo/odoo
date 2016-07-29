@@ -21,15 +21,11 @@
             <field name="model">ir.actions.report.xml</field>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='attachment']" position="after">
+                    <xpath expr="//field[@name='report_type']" position="after">
                         <field name="paperformat_id" attrs="{'invisible':[('report_type','not in',['qweb-pdf'])]}"/>
-                        <button
-                            type="object"
-                            class="oe_link"
-                            string="Search associated QWeb views"
-                            name="associated_view"
-                            attrs="{'invisible':[('report_type', 'not in', ['qweb-pdf', 'qweb-html'])]}"
-                        />
+                    </xpath>
+                    <xpath expr="//div[@class='oe_button_box']" position="inside">
+                        <button type="object" class="oe_stat_button" string="QWeb views" name="associated_view" attrs="{'invisible':[('report_type', 'not in', ['qweb-pdf', 'qweb-html'])]}" icon='fa-code' />
                     </xpath>
                 </data>
             </field>
