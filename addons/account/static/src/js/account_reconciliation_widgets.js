@@ -974,7 +974,6 @@ var abstractReconciliationLine = Widget.extend({
         else
             self.set("mv_lines", []);
     },
-
     updateMatchesGetMvLines: function(excluded_ids, offset, limit, callback) {},
 
     // Generic function for updating the line_created_being_edited
@@ -2599,6 +2598,8 @@ core.action_registry.add('manual_reconciliation_view', manualReconciliation);
 */
 
 return {
+    abstractReconciliation: abstractReconciliation,
+    abstractReconciliationLine: abstractReconciliationLine,
     bankStatementReconciliation: bankStatementReconciliation,
     manualReconciliation: manualReconciliation,
     bankStatementReconciliationLine: bankStatementReconciliationLine,

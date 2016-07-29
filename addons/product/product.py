@@ -239,7 +239,7 @@ class produce_price_history(osv.osv):
         'company_id': fields.many2one('res.company', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade'),
         'datetime': fields.datetime('Date'),
-        'cost': fields.float('Cost'),
+        'cost': fields.float('Cost', digits_compute=dp.get_precision('Product Price')),
     }
 
     def _get_default_company(self, cr, uid, context=None):
