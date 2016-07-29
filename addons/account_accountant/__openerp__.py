@@ -16,12 +16,12 @@ It assigns manager and user access rights to the Administrator for the accountin
     'website': 'https://www.odoo.com/page/accounting',
     'depends': ['account', 'web_tour'],
     'data': [
-        'security/account_security.xml',
-        'account_accountant_data.xml',
-        'views/account_accountant.xml',
-        'views/tour_views.xml'
+        'data/account_accountant_data.xml',
+        'data/account_accountant_tour.xml',
+        'security/account_accountant_security.xml',
+        'views/account_accountant_templates.xml',
     ],
-    'demo': ['account_accountant_demo.xml'],
+    'demo': ['data/account_accountant_demo.xml'],
     'test': [],
     'installable': True,
     'auto_install': False,
