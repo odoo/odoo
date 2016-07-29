@@ -128,7 +128,7 @@ class AccountAccount(models.Model):
         if name:
             domain = ['|', ('code', '=ilike', name + '%'), ('name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
-                domain = ['&'] + domain
+                domain = ['&', '!'] + domain[1:]
         accounts = self.search(domain + args, limit=limit)
         return accounts.name_get()
 
@@ -632,7 +632,9 @@ class AccountTax(models.Model):
         """
         self.ensure_one()
         if self.amount_type == 'fixed':
-            return math.copysign(self.amount, base_amount) * quantity
+            # Use copysign to take into account the sign of the base amount which includes the sign
+            # of the quantity and the sign of the price_unit
+            return math.copysign(quantity, base_amount) * self.amount
         if (self.amount_type == 'percent' and not self.price_include) or (self.amount_type == 'division' and self.price_include):
             return base_amount * self.amount / 100
         if self.amount_type == 'percent' and self.price_include:

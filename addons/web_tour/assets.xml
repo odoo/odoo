@@ -10,5 +10,11 @@
                 <script type="text/javascript" src="/web_tour/static/src/js/tour_service.js"></script>
             </xpath>
         </template>
+
+        <template id="assets_backend" name="tours backend assets" inherit_id="web.assets_backend">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/web_tour/static/src/js/debug_manager.js"></script>
+            </xpath>
+        </template>
     </data>
 </openerp>

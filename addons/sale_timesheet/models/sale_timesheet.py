@@ -74,7 +74,7 @@ class AccountAnalyticLine(models.Model):
             if result.get('amount'):
                 return result
             unit_amount = result.get('unit_amount', 0.0) or self.unit_amount
-            user_id = result.get('user_id') or self.user_id.id
+            user_id = result.get('user_id') or self.user_id.id or self._default_user()
             user = self.env['res.users'].browse([user_id])
             emp = self.env['hr.employee'].search([('user_id', '=', user_id)], limit=1)
             cost = emp and emp.timesheet_cost or 0.0
@@ -125,7 +125,6 @@ class SaleOrder(models.Model):
             if order.project_id:
                 order.timesheet_ids = self.env['account.analytic.line'].search(
                     [('so_line', 'in', order.order_line.ids),
-                     '|',
                         ('amount', '<=', 0.0),
                         ('project_id', '!=', False)])
             else:

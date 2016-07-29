@@ -441,10 +441,14 @@ form: module.record_id""" % (xml_id,)
 
         if src_model:
             #keyword = 'client_action_relate'
+            res_id = False
+            model = src_model
+            if isinstance(model, (list, tuple)):
+                model, res_id = model
             keyword = rec.get('key2','').encode('utf-8') or 'client_action_relate'
             value = 'ir.actions.act_window,'+str(id)
             replace = rec.get('replace','') or True
-            self.env['ir.model.data'].ir_set('action', keyword, xml_id, [src_model], value, replace=replace, isobject=True, xml_id=xml_id)
+            self.env['ir.values'].set_action(xml_id, action_slot=keyword, model=model, action=value, res_id=res_id)
         # TODO add remove ir.model.data
 
     def _tag_ir_set(self, rec, data_node=None, mode=None):
@@ -460,7 +464,15 @@ form: module.record_id""" % (xml_id,)
             f_name = field.get("name",'').encode('utf-8')
             f_val = _eval_xml(self, field, self.env)
             res[f_name] = f_val
-        self.env['ir.model.data'].ir_set(res['key'], res['key2'], res['name'], res['models'], res['value'], replace=res.get('replace',True), isobject=res.get('isobject', False), meta=res.get('meta',None))
+        ir_values = self.env['ir.values']
+        for model in res['models']:
+            res_id = False
+            if isinstance(model, (list, tuple)):
+                model, res_id = model
+            if res['key'] == 'default':
+                ir_values.set_default(model, field_name=res['name'], value=res['value'], condition=res['key2'])
+            elif res['key'] == 'action':
+                ir_values.set_action(res['name'], action_slot=res['key2'], model=model, action=res['value'], res_id=res_id)
 
     def _tag_workflow(self, rec, data_node=None, mode=None):
         if self.isnoupdate(data_node) and self.mode != 'init':

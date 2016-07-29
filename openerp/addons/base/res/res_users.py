@@ -569,7 +569,12 @@ class Users(models.Model):
     @api.multi
     def _is_admin(self):
         self.ensure_one()
-        return self.id == SUPERUSER_ID or self.has_group('base.group_erp_manager')
+        return self._is_superuser() or self.has_group('base.group_erp_manager')
+
+    @api.multi
+    def _is_superuser(self):
+        self.ensure_one()
+        return self.id == SUPERUSER_ID
 
     @api.model
     def get_company_currency_id(self):

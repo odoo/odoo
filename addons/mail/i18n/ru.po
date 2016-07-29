@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-13 14:27+0000\n"
-"PO-Revision-Date: 2016-04-17 23:15+0000\n"
-"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
+"POT-Creation-Date: 2016-07-22 13:00+0000\n"
+"PO-Revision-Date: 2016-07-23 09:04+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,8 +30,10 @@ msgid ""
 "\n"
 "<div itemscope itemtype=\"http://schema.org/EmailMessage\">\n"
 "    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\">\n"
+"        % if ctx.get('button_access'):\n"
 "        <link itemprop=\"target\" href=\"${ctx['button_access']['url']}\"/>\n"
 "        <link itemprop=\"url\" href=\"${ctx['button_access']['url']}\"/>\n"
+"        % endif\n"
 "        <meta itemprop=\"name\" content=\"View ${ctx['model_name']}\"/>\n"
 "    </div>\n"
 "</div>\n"
@@ -127,13 +129,6 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:53
-#, python-format
-msgid " from "
-msgstr "от"
-
-#. module: mail
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
 msgid ""
 "${object.subject or (object.record_name and 'Re: %s' % object.record_name) "
@@ -144,19 +139,19 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:59
+#: code:addons/mail/static/src/js/chat_manager.js:83
 #, python-format
 msgid "%d Messages"
 msgstr "%d Сообщения"
 
 #. module: mail
-#: code:addons/mail/models/mail_template.py:216
+#: code:addons/mail/models/mail_template.py:230
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:234
+#: code:addons/mail/models/mail_thread.py:238
 #, python-format
 msgid "%s created"
 msgstr "%s создан"
@@ -278,20 +273,6 @@ msgid ""
 "<strong>Moreover, if you want to send a lot of emails, we recommend you to use the mass mailing module</strong>. <br/>\n"
 "                                Confirming this wizard will probably take a few minutes blocking your browser."
 msgstr "<strong>Кроме того, если вы хотите отправлять много писем, мы рекомендуем использовать модуль массовой рассылки</strong>. <br/>\nИспользование этого визарда может на несколько минут затормозить Ваш браузер."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:13
-#, python-format
-msgid "@ Inbox"
-msgstr "@ Входящие"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/systray.xml:20
-#, python-format
-msgid "@Inbox"
-msgstr "@Входящие"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_defaults
@@ -816,10 +797,10 @@ msgstr "Написать письмо"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/systray.xml:4
+#: code:addons/mail/static/src/xml/client_action.xml:135
 #, python-format
-msgid "Compose new Message"
-msgstr "Написать новое сообщение"
+msgid "Compose a new message"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_composition_mode
@@ -1000,20 +981,6 @@ msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
 msgstr "Описание, которое будет добавлено в сообщение для этого подтипа. Если не заполнено, вместо него будет использоваться название."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:124
-#, python-format
-msgid "Detach"
-msgstr "Отсоединить"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:124
-#, python-format
-msgid "Detach the conversation"
-msgstr "Беседа"
 
 #. module: mail
 #. openerp-web
@@ -1497,11 +1464,6 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_message_search
-msgid "Important messages"
-msgstr "Важные сообщения"
-
-#. module: mail
 #: code:addons/mail/models/mail_alias.py:141
 #, python-format
 msgid "Inactive Alias"
@@ -1509,7 +1471,9 @@ msgstr "Неактивный Псевдоним"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:426
+#: code:addons/mail/static/src/js/chat_manager.js:1033
+#: code:addons/mail/static/src/xml/client_action.xml:22
+#: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
 msgid "Inbox"
 msgstr "Входящие"
@@ -1573,17 +1537,17 @@ msgstr "Пригласить подписчика"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:30
-#: code:addons/mail/static/src/xml/client_action.xml:123
+#: code:addons/mail/static/src/xml/client_action.xml:132
 #, python-format
 msgid "Invite people"
 msgstr "Пригласить людей"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:454
+#: code:addons/mail/static/src/js/client_action.js:626
 #, python-format
-msgid "Invite people to %s"
-msgstr "Пригласить людей в %s"
+msgid "Invite people to #%s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -1732,6 +1696,11 @@ msgstr "Слушатель"
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_partner_ids
 msgid "Listeners"
 msgstr "Слушатели"
+
+#. module: mail
+#: selection:mail.channel,channel_type:0
+msgid "Livechat Conversation"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -1936,8 +1905,6 @@ msgid "Message-Id"
 msgstr "ID сообщения"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/systray.xml:6
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_ids
@@ -1945,7 +1912,6 @@ msgstr "ID сообщения"
 #: model:ir.model.fields,field_description:mail.field_res_users_message_ids
 #: model:ir.ui.menu,name:mail.menu_mail_message
 #: model:ir.ui.view,arch_db:mail.view_message_tree
-#, python-format
 msgid "Messages"
 msgstr "Сообщения"
 
@@ -2142,13 +2108,6 @@ msgstr "Примечание"
 #: model:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Notification"
 msgstr "Уведомление"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/systray.xml:12
-#, python-format
-msgid "Notifications"
-msgstr "Уведомления"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_notify

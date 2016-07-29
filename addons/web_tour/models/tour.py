@@ -14,10 +14,11 @@ class Tour(models.Model):
     user_id = fields.Many2one('res.users', string='Consumed by')
 
     @api.model
-    def consume(self, name):
-        """ Sets tour 'name' as consumed for the current user, meaning that
-            this tour won't be active anymore for that user """
-        self.create({'name': name, 'user_id': self.env.uid})
+    def consume(self, tour_names):
+        """ Sets given tours as consumed, meaning that
+            these tours won't be active anymore for that user """
+        for name in tour_names:
+            self.create({'name': name, 'user_id': self.env.uid})
 
     @api.model
     def get_consumed_tours(self):

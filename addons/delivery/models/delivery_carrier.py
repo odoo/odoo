@@ -4,6 +4,7 @@
 import logging
 from openerp import api, fields, models, _
 from openerp.exceptions import UserError, ValidationError
+from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 

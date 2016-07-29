@@ -20,6 +20,10 @@ class MrpConfigSettings(models.TransientModel):
              'Without this module: A + B + C -> D.\n'
              'With this module: A + B + C -> D + E.\n'
              '-This installs the module mrp_byproduct.')
+    module_mrp_mps = fields.Selection([
+        (0, "No need for Master Production Schedule as products have short lead times"), 
+        (1, "Use Master Production Schedule in order to create procurements based on forecasts"),
+        ], string="Master Production Schedule")
     module_mrp_plm = fields.Selection([
         (0, "No product lifecycle management"),
         (1, "Manage engineering changes, versions and documents")

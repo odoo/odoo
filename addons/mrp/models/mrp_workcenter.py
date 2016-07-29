@@ -46,7 +46,7 @@ class MrpWorkcenter(models.Model):
     productive_time = fields.Float(
         'Productive Time', compute='_compute_productive_time',
         help='Productive hours over the last month')
-    oee = fields.Float(compute='_compute_oee', help='Overall Equipment Efficiency, based on the last month')
+    oee = fields.Float(compute='_compute_oee', help='Overall Equipment Effectiveness, based on the last month')
     oee_target = fields.Float(string='OEE Target', help="OEE Target in percentage", default=90)
     performance = fields.Integer('Performance', compute='_compute_performance', help='Performance over the last month')
 
@@ -72,7 +72,7 @@ class MrpWorkcenter(models.Model):
             workcenter.workorder_late_count = count_data.get(workcenter.id, 0)
 
     @api.multi
-    @api.depends('time_ids.date_end', 'time_ids.loss_type')
+    @api.depends('time_ids', 'time_ids.date_end', 'time_ids.loss_type')
     def _compute_working_state(self):
         for workcenter in self:
             time_log = self.env['mrp.workcenter.productivity'].search([('workcenter_id', '=', workcenter.id)], limit=1)

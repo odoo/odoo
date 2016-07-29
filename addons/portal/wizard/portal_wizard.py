@@ -116,6 +116,7 @@ class PortalWizardUser(models.TransientModel):
 
     @api.multi
     def action_apply(self):
+        self.env['res.partner'].check_access_rights('write')
         """ From selected partners, add corresponding users to chosen portal group. It either granted
             existing user, or create new one (and add it to the group).
         """
@@ -126,6 +127,8 @@ class PortalWizardUser(models.TransientModel):
 
         for wizard_user in self.sudo().with_context(active_test=False):
             group_portal = wizard_user.wizard_id.portal_id
+            if not group_portal.is_portal:
+                raise UserError('Not a portal: ' + group_portal.name)
             user = wizard_user.partner_id.user_ids[0] if wizard_user.partner_id.user_ids else None
             # update partner email, if a new one was introduced
             if wizard_user.partner_id.email != wizard_user.email:
@@ -135,7 +138,8 @@ class PortalWizardUser(models.TransientModel):
                 user_portal = None
                 # create a user if necessary, and make sure it is in the portal group
                 if not user:
-                    user_portal = self.sudo()._create_user()
+                    company_id = wizard_user.partner_id.company_id.id
+                    user_portal = self.sudo().with_context(company_id=company_id)._create_user()
                 else:
                     user_portal = user
                 wizard_user.write({'user_id': user_portal.id})
@@ -159,10 +163,13 @@ class PortalWizardUser(models.TransientModel):
         """ create a new user for wizard_user.partner_id
             :returns record of res.users
         """
+        company_id = self.env.context.get('company_id')
         return self.env['res.users'].with_context(no_reset_password=True).create({
             'email': extract_email(self.email),
             'login': extract_email(self.email),
             'partner_id': self.partner_id.id,
+            'company_id': company_id,
+            'company_ids': [(6, 0, [company_id])],
             'groups_id': [(6, 0, [])],
         })
 

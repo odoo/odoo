@@ -432,6 +432,11 @@ ListView.include(/** @lends instance.web.ListView# */{
             field.$el.addClass('o_row_handle');
         }
 
+        // Workaround a bug in safari mobile where the inputs are not displayed correctly.
+        if (window.getComputedStyle(field.el.parentElement).webkitOverflowScrolling) {
+            field.el.style.zIndex = 1;
+        }
+
         function position_element($el, pos) {
             $el.addClass('o_temp_visible').css({top: 0, left: 0}).position({
                 my: pos,

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp import api, models, fields
 from openerp.addons.website.models.website import slug
+from openerp.tools.translate import html_translate
 
 
 class ImLivechatChannel(models.Model):
@@ -16,4 +17,4 @@ class ImLivechatChannel(models.Model):
             res[channel.id] = "/livechat/channel/%s" % (slug(channel),)
         return res
 
-    website_description = fields.Html("Website description", default=False, help="Description of the channel displayed on the website page", sanitize=False)
+    website_description = fields.Html("Website description", default=False, help="Description of the channel displayed on the website page", sanitize=False, translate=html_translate)

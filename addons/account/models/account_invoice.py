@@ -205,7 +205,7 @@ class AccountInvoice(models.Model):
 
     refund_invoice_id = fields.Many2one('account.invoice', string="Invoice for which this invoice is the refund")
     number = fields.Char(related='move_id.name', store=True, readonly=True, copy=False)
-    move_name = fields.Char(string='Journal Entry Name', readonly=True,
+    move_name = fields.Char(string='Journal Entry Name', readonly=False,
         default=False, copy=False,
         help="Technical field holding the number given to the invoice, automatically set when the invoice is validated then stored to set the same number again if the invoice is cancelled, set to draft and re-validated.")
     reference = fields.Char(string='Vendor Reference',
