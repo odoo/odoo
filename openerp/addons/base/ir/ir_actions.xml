@@ -127,6 +127,7 @@
                     <field name="name"
                         filter_domain="['|', '|', '|', '|', ('name','ilike',self), ('model','ilike',self), ('type','ilike',self), ('report_name','ilike',self), ('report_type','ilike',self)]"
                         string="Report"/>
+                    <field name="model" filter_domain="[('model','=', self)]" string="Model"/>
                     <group expand="0" string="Group By" colspan="4">
                         <filter string="Report Type" domain="[]" context="{'group_by':'report_type'}"/>
                         <filter string="Report Model" domain="[]" context="{'group_by':'model'}"/>
