@@ -38,8 +38,12 @@ You can define the different phases of interviews and easily rate the applicant 
         'views/hr_department_views.xml',
         'views/hr_job_views.xml',
         'views/tour_views.xml',
+        'views/mail_activity_view.xml',
     ],
-    'demo': ['data/hr_recruitment_demo.xml'],
+    'demo': [
+        'data/hr_recruitment_demo.xml',
+        'data/mail_activity_demo.xml',
+    ],
     'test': ['test/recruitment_process.yml'],
     'installable': True,
     'auto_install': False,
