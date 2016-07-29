@@ -194,6 +194,7 @@
             <field name="arch" type="xml">
                 <search string="Model Description">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]" string="Model"/>
+                    <field name="model" filter_domain="[('model','ilike',self)]" string="Technical Name"/>
                     <filter string="Transient" domain="[('transient', '=', True)]"/>
                     <separator/>
                     <filter string="Custom" domain="[('state', '=', 'manual')]"/>
