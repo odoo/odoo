@@ -424,7 +424,8 @@ class Picking(models.Model):
 
     @api.multi
     def unlink(self):
-        self.mapped('move_lines').action_cancel().unlink()
+        self.mapped('move_lines').action_cancel()
+        self.mapped('move_lines').unlink() # Checks if moves are not done
         return super(Picking, self).unlink()
 
     # Actions
