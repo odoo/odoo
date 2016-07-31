@@ -85,7 +85,7 @@ msgstr "\n"
 "\n"
 "    <p>Xin chào ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Đính kèm là ${object.state in ('draft', 'sent') and 'Yêu cầu chào giá' or 'Xác nhận đơn hàng'} từ ${object.company_id.name}: </p>\n"
+"    <p>Đính kèm là ${object.state in ('draft', 'sent') and 'Yêu cầu báo giá' or 'Xác nhận đơn hàng'} từ ${object.company_id.name}: </p>\n"
 "    \n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>THAM KHẢO</strong><br />\n"
@@ -210,7 +210,7 @@ msgstr "\n"
 "\n"
 "    <p>Xin chào ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Đính kèm là ${object.state in ('draft', 'sent') and 'Yêu cầu chào giá' or 'Xác nhận đơn hàng'} từ ${object.company_id.name}: </p>\n"
+"    <p>Đính kèm là ${object.state in ('draft', 'sent') and 'Yêu cầu báo giá' or 'Xác nhận đơn hàng'} từ ${object.company_id.name}: </p>\n"
 "    \n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>THAM KHẢO</strong><br />\n"
@@ -357,7 +357,7 @@ msgid ""
 "                    of the products and the supplier invoice.\n"
 "                </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\nNCC này chưa có đơn hàng. Nhấn để tạo một RFQ mới.\n</p><p>\nYêu cầu chào giá (RFQ) là bước đầu tiên của quy trình mua\nhàng. Khi nó được chuyển thành một đơn hàng, bạn có thể\nkiểm soát việc nhận hàng và hoá đơn NCC.\n</p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nNCC này chưa có đơn hàng. Nhấn để tạo một RFQ mới.\n</p><p>\nYêu cầu báo giá (RFQ) là bước đầu tiên của quy trình mua\nhàng. Khi nó được chuyển thành một đơn hàng, bạn có thể\nkiểm soát việc nhận hàng và hoá đơn NCC.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
@@ -434,10 +434,10 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "              </p>\n"
 "            "
 msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Bấm để tạo một yêu cầu chào giá.\n"
+"                Bấm để tạo một yêu cầu báo giá.\n"
 "              </p><p>\n"
 "                Báo giá lưu trữ lịch sử các trao đổi/đàm phán mà bạn có với\n"
-"                nhà cung cấp của bạn. Khi xác nhận thì yêu cầu chào giá\n"
+"                nhà cung cấp của bạn. Khi xác nhận thì yêu cầu báo giá\n"
 "                được chuyển đổi thành một đơn hàng mua (purchase order).\n"
 "              </p><p>\n"
 "                Hầu hết các đề xuất mua sắm sẽ được tạo tự động bởi Odoo dựa trên\n"
@@ -688,8 +688,8 @@ msgstr "Giao diện kiểu Lịch biểu"
 msgid "Calls for bids are used when you want to generate requests for quotations to several suppliers for a given set of products.\n"
 "            You can configure per product if you directly do a Request for Quotation\n"
 "            to one supplier or if you want a Call for Bids to compare offers from several suppliers."
-msgstr "Đấu thầu được sử dụng khi bạn muốn tạo yêu cầu chào giá tới một vài nhà cung cấp cho một bộ các sản phẩm.\n"
-"            Bạn có thể cấu hình mỗi sản phẩm nếu bạn trực tiếp làm một Yêu cầu chào giá \n"
+msgstr "Đấu thầu được sử dụng khi bạn muốn tạo yêu cầu báo giá tới một vài nhà cung cấp cho một bộ các sản phẩm.\n"
+"            Bạn có thể cấu hình mỗi sản phẩm nếu bạn trực tiếp làm một Yêu cầu báo giá \n"
 "            tới một nhà cung cấp hoặc nếu bạn muốn Đấu thầu để so sánh giữa các nhà cung cấp."
 
 #. module: purchase
@@ -1664,7 +1664,7 @@ msgstr "Đơn hàng"
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Purchase Order Confirmation N°"
-msgstr "Mã số Xác nhận đặt mua hàng"
+msgstr "Đơn đặt hàng Số "
 
 #. module: purchase
 #: field:account.invoice.line,purchase_line_id:0
@@ -1674,7 +1674,7 @@ msgstr "Mã số Xác nhận đặt mua hàng"
 #: view:purchase.order.line:purchase.purchase_order_line_form2
 #: field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
-msgstr "Chi tiết đơn hàng"
+msgstr "Chi tiết đơn hàng mua"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
@@ -1782,7 +1782,7 @@ msgstr "Số lượng được thêm vào trong hạng mục đã tồn tại c�
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 #: view:purchase.report:purchase.view_purchase_order_search
 msgid "Quotations"
-msgstr "Chào giá"
+msgstr "Báo giá"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -1894,18 +1894,18 @@ msgstr "Vị trí liên quan"
 #: selection:purchase.report,state:0
 #: view:website:purchase.report_purchasequotation_document
 msgid "Request for Quotation"
-msgstr "Yêu cầu chào giá"
+msgstr "Yêu cầu báo giá"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Request for Quotation N°"
-msgstr "Số Yêu cầu chào giá"
+msgstr "Số Yêu cầu báo giá"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr "Yêu cầu chào giá"
+msgstr "Yêu cầu báo giá"
 
 #. module: purchase
 #: field:purchase.order.line,move_ids:0
@@ -2095,7 +2095,7 @@ msgstr "Nhà cung cấp bạn chọn chỉ bán sản phẩm này theo %s"
 #. module: purchase
 #: help:purchase.order,state:0
 msgid "The status of the purchase order or the quotation request. A request for quotation is a purchase order in a 'Draft' status. Then the order has to be confirmed by the user, the status switch to 'Confirmed'. Then the supplier must confirm the order to change the status to 'Approved'. When the purchase order is paid and received, the status becomes 'Done'. If a cancel action occurs in the invoice or in the receipt of goods, the status becomes in exception."
-msgstr "Tình trạng của đơn hàng bán hoặc yêu cầu chào giá. Một yêu cầu chào giá (RFQ) cũng chính là một đơn hàng mua (PO) ở tình trạng 'Dự thảo'. Khi một đơn hàng được xác nhận bởi người dùng, trạng thái của nó sẽ chuyển thành 'Đã xác nhận'. Lúc đó, nhà cung cấp phải xác nhận đơn hàng để chuyển tình trạng sang 'Đã duyệt'. Khi đơn hàng được thanh toán đầy đủ và hàng hoá/dịch vụ được nhận đủ, tình trạng của đơn hàng sẽ tự động chuyển thành 'Hoàn thành'. Nếu có hành động huỷ xảy ra đối với hoá đơn hoặc phiếu nhận hàng, trạng thái của đơn hàng sẽ chuyển sang 'Ngoại lệ'."
+msgstr "Tình trạng của đơn hàng bán hoặc yêu cầu báo giá. Một yêu cầu báo giá (RFQ) cũng chính là một đơn hàng mua (PO) ở tình trạng 'Dự thảo'. Khi một đơn hàng được xác nhận bởi người dùng, trạng thái của nó sẽ chuyển thành 'Đã xác nhận'. Lúc đó, nhà cung cấp phải xác nhận đơn hàng để chuyển tình trạng sang 'Đã duyệt'. Khi đơn hàng được thanh toán đầy đủ và hàng hoá/dịch vụ được nhận đủ, tình trạng của đơn hàng sẽ tự động chuyển thành 'Hoàn thành'. Nếu có hành động huỷ xảy ra đối với hoá đơn hoặc phiếu nhận hàng, trạng thái của đơn hàng sẽ chuyển sang 'Ngoại lệ'."
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
