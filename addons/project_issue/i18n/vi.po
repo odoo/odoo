@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-07-13 16:17+0000\n"
+"PO-Revision-Date: 2016-07-20 03:01+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-7/language/vi/)\n"
 "MIME-Version: 1.0\n"
@@ -27,12 +27,12 @@ msgstr ""
 msgid ""
 "Allows you to configure your incoming mail server, and create issues from "
 "incoming emails."
-msgstr ""
+msgstr "Cho phép bạn cấu hình máy chủ nhận email và tạo phát sinh từ đó."
 
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
 msgid "Avg. Delay to Open"
-msgstr ""
+msgstr "Avg. Delay to Open"
 
 #. module: project_issue
 #: view:project.issue:0 view:project.issue.report:0
@@ -57,7 +57,7 @@ msgstr "Đã mở"
 #. module: project_issue
 #: field:project.issue.report,opening_date:0
 msgid "Date of Opening"
-msgstr ""
+msgstr "Date of Opening"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -83,7 +83,7 @@ msgstr "Công ty"
 #. module: project_issue
 #: field:project.issue,email_cc:0
 msgid "Watchers Emails"
-msgstr ""
+msgstr "Watchers Emails"
 
 #. module: project_issue
 #: help:project.issue,kanban_state:0
@@ -92,17 +92,17 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
 " * Ready for next stage indicates the issue is ready to be pulled to the next stage"
-msgstr ""
+msgstr "A Issue's kanban state indicates special situations affecting it:\n * Normal is the default situation\n * Blocked indicates something is preventing the progress of this issue\n * Ready for next stage indicates the issue is ready to be pulled to the next stage"
 
 #. module: project_issue
 #: help:project.issue,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "If checked new messages require your attention."
 
 #. module: project_issue
 #: help:account.analytic.account,use_issues:0
 msgid "Check this field if this project manages issues"
-msgstr ""
+msgstr "Đánh dấu trường này nếu dự án này có quản lý phát sinh"
 
 #. module: project_issue
 #: field:project.issue,day_open:0
@@ -115,12 +115,12 @@ msgstr ""
 msgid ""
 "You cannot escalate this issue.\n"
 "The relevant Project has not configured the Escalation Project!"
-msgstr ""
+msgstr "Bạn không thể leo thang phát sinh này.\nMột dự án liên quan không được cấu hình leo tháng!"
 
 #. module: project_issue
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
-msgstr ""
+msgstr "Lỗi! Bạn không thể leo thang cho cùng một dự án!"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -131,7 +131,7 @@ msgstr "Cao nhất"
 #. module: project_issue
 #: help:project.issue,inactivity_days:0
 msgid "Difference in days between last action and current date"
-msgstr ""
+msgstr "Chênh lệch về ngày giữa hành động cuối cùng và ngày hiện tại"
 
 #. module: project_issue
 #: view:project.issue.report:0 field:project.issue.report,day:0
@@ -141,7 +141,7 @@ msgstr "Ngày"
 #. module: project_issue
 #: field:project.issue,days_since_creation:0
 msgid "Days since creation date"
-msgstr ""
+msgstr "Số ngày kể từ ngày tạo"
 
 #. module: project_issue
 #: field:project.issue,task_id:0 view:project.issue.report:0
@@ -152,7 +152,7 @@ msgstr "Nhiệm vụ"
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
 msgid "Issue Stage Changed"
-msgstr ""
+msgstr "Giai đoạn phát sinh được thay đổi"
 
 #. module: project_issue
 #: field:project.issue,message_ids:0
@@ -162,7 +162,7 @@ msgstr "Các thông điệp"
 #. module: project_issue
 #: field:project.issue,inactivity_days:0
 msgid "Days since last action"
-msgstr ""
+msgstr "Số ngày kể từ hành động cuối cùng"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
@@ -192,27 +192,27 @@ msgstr "Đã hủy bỏ"
 #. module: project_issue
 #: field:project.issue,description:0
 msgid "Private Note"
-msgstr ""
+msgstr "Ghi chú riêng"
 
 #. module: project_issue
 #: field:project.issue.report,date_closed:0
 msgid "Date of Closing"
-msgstr ""
+msgstr "Date of Closing"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Issue Tracker Search"
-msgstr ""
+msgstr "Issue Tracker Search"
 
 #. module: project_issue
 #: field:project.issue,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Color Index"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_open:0
 msgid "Avg. Working Hours to Open"
-msgstr ""
+msgstr "Avg. Working Hours to Open"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -224,14 +224,14 @@ msgstr "Tài khoản Phân tích"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
 
 #. module: project_issue
 #: help:project.project,project_escalation_id:0
 msgid ""
 "If any issue is escalated from the current Project, it will be listed under "
 "the project selected here."
-msgstr ""
+msgstr "Nếu có bất kỳ phát sinh nào được leo thang từ dự án hiện tại, nó sẽ được liệt kê dưới dưới dự án được lựa chọn tại đây."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -247,7 +247,7 @@ msgstr "Cảnh báo!"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Edit..."
-msgstr ""
+msgstr "Sửa..."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -258,7 +258,7 @@ msgstr "Chịu trách nhiệm"
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr ""
+msgstr "Phát sinh bị phong tỏa"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -268,7 +268,7 @@ msgstr "Thống kê"
 #. module: project_issue
 #: field:project.issue,kanban_state:0
 msgid "Kanban State"
-msgstr ""
+msgstr "Kanban State"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:378
@@ -302,7 +302,7 @@ msgstr "Mới"
 #. module: project_issue
 #: view:project.project:0
 msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
-msgstr ""
+msgstr "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
 
 #. module: project_issue
 #: field:project.issue,email_from:0
@@ -341,7 +341,7 @@ msgstr "Ngày tạo"
 #: model:ir.actions.act_window,name:project_issue.project_issue_version_action
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_version_act
 msgid "Versions"
-msgstr ""
+msgstr "Phiên bản"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -356,7 +356,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.config.settings,fetchmail_issue:0
 msgid "Create issues from an incoming email account "
-msgstr ""
+msgstr "Tạo phát sinh từ một tài khoản thư gửi đến"
 
 #. module: project_issue
 #: view:project.issue:0 selection:project.issue,state:0
@@ -376,7 +376,7 @@ msgid ""
 "support or after-sales services. You can track the issues per age. You can "
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
-msgstr ""
+msgstr "Báo cáo này cho phép bạn phân tích chất lương dịch vụ hỗ trợ sau bán hàng. Bạn có thể theo dõi phát sinh theo độ tuổi. Bạn có thể phân tích thời gian yêu cầu để mở hoặc đống một phát sinh, số lượng email trao đổi và thời gian sử dụng trung bình."
 
 #. module: project_issue
 #: view:project.issue:0 field:project.issue,stage_id:0
@@ -389,7 +389,7 @@ msgstr "Giai đoạn"
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
 #: view:project.issue.report:0
 msgid "Issues Analysis"
-msgstr ""
+msgstr "Phân tích phát sinh"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:532
@@ -422,7 +422,7 @@ msgstr "Các nhiệm vụ"
 #. module: project_issue
 #: field:project.issue.report,nbr:0
 msgid "# of Issues"
-msgstr ""
+msgstr "Số lượng phát sinh"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -442,7 +442,7 @@ msgstr "Các từ khóa"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Issue Tracker Tree"
-msgstr ""
+msgstr "Issue Tracker Tree"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_01
@@ -462,7 +462,7 @@ msgstr "Ngày cập nhật"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Project:"
-msgstr ""
+msgstr "Dự án:"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -482,7 +482,7 @@ msgstr "Bị phong toả"
 #. module: project_issue
 #: field:project.issue,user_email:0
 msgid "User Email"
-msgstr ""
+msgstr "Email Người dùng"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -492,7 +492,7 @@ msgstr ""
 #. module: project_issue
 #: help:project.issue,channel_id:0
 msgid "Communication channel."
-msgstr ""
+msgstr "Kênh liên lạc."
 
 #. module: project_issue
 #: help:project.issue,email_cc:0
@@ -500,7 +500,7 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr ""
+msgstr "These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 
 #. module: project_issue
 #: selection:project.issue.report,state:0
@@ -521,7 +521,7 @@ msgstr "Đã đóng"
 #. module: project_issue
 #: field:project.issue.report,delay_close:0
 msgid "Avg. Delay to Close"
-msgstr ""
+msgstr "Avg. Delay to Close"
 
 #. module: project_issue
 #: selection:project.issue,state:0 view:project.issue.report:0
@@ -554,7 +554,7 @@ msgstr "Bình thường"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Category:"
-msgstr ""
+msgstr "Phân loại:"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -564,7 +564,7 @@ msgstr "Tháng Sáu"
 #. module: project_issue
 #: help:project.issue,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Lịch sử thông điệp và liên lạc"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -574,12 +574,12 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,day_close:0
 msgid "Days to Close"
-msgstr ""
+msgstr "Days to Close"
 
 #. module: project_issue
 #: field:project.issue,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Là một Người dõi theo"
 
 #. module: project_issue
 #: help:project.issue,state:0
@@ -615,12 +615,12 @@ msgstr "Tìm kiếm"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Creation Month"
-msgstr ""
+msgstr "Tháng tạo"
 
 #. module: project_issue
 #: help:project.issue,days_since_creation:0
 msgid "Difference in days between creation date and current date"
-msgstr ""
+msgstr "Chênh lệch về ngày giữa ngày tạo và ngày hiện tại"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -630,12 +630,12 @@ msgstr "Tháng Một"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Feature Tracker Tree"
-msgstr ""
+msgstr "Feature Tracker Tree"
 
 #. module: project_issue
 #: help:project.issue,email_from:0
 msgid "These people will receive email."
-msgstr ""
+msgstr "Những người sẽ nhận email."
 
 #. module: project_issue
 #: field:project.issue,message_summary:0
@@ -651,7 +651,7 @@ msgstr "Ngày"
 #: field:project.issue,user_id:0 view:project.issue.report:0
 #: field:project.issue.report,user_id:0
 msgid "Assigned to"
-msgstr ""
+msgstr "Được phân công cho"
 
 #. module: project_issue
 #: view:project.config.settings:0
@@ -676,7 +676,7 @@ msgstr "Phiên bản"
 #. module: project_issue
 #: field:project.issue.version,name:0
 msgid "Version Number"
-msgstr ""
+msgstr "Số phiên bản"
 
 #. module: project_issue
 #: selection:project.issue.report,state:0
@@ -691,7 +691,7 @@ msgstr "Mở"
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
 #: view:project.issue:0 view:project.project:0
 msgid "Issues"
-msgstr ""
+msgstr "Phát sinh"
 
 #. module: project_issue
 #: view:project.issue:0 selection:project.issue,state:0
@@ -707,12 +707,12 @@ msgstr "Cần thực hiện"
 #: model:ir.model,name:project_issue.model_project_issue
 #: view:project.issue.report:0
 msgid "Project Issue"
-msgstr ""
+msgstr "Phát sinh"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Add an internal note..."
-msgstr ""
+msgstr "Thêm một ghi chú nội bộ..."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -722,7 +722,7 @@ msgstr ""
 #. module: project_issue
 #: help:project.issue,progress:0
 msgid "Computed as: Time Spent / Total Time."
-msgstr ""
+msgstr "Được tính bằng: Thời gian đã sử dụng / Tổng số thời gian."
 
 #. module: project_issue
 #: field:project.project,issue_count:0
@@ -732,7 +732,7 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:0 selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Sẵn sàng cho trạng thái kế tiếp"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -742,7 +742,7 @@ msgstr "Tháng Mười"
 #. module: project_issue
 #: view:project.issue.report:0 field:project.issue.report,section_id:0
 msgid "Sale Team"
-msgstr ""
+msgstr "Đội ngũ bán hàng"
 
 #. module: project_issue
 #: view:project.issue:0 view:project.issue.report:0
@@ -753,7 +753,7 @@ msgstr "Tháng"
 #. module: project_issue
 #: view:project.issue:0 field:project.issue,name:0 view:project.project:0
 msgid "Issue"
-msgstr ""
+msgstr "Phát sinh"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_02
@@ -794,13 +794,13 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue.report:0 field:project.issue.report,email:0
 msgid "# Emails"
-msgstr ""
+msgstr "Số lượng email"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Created"
-msgstr ""
+msgstr "Phát sinh được tạo"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:511
@@ -817,17 +817,17 @@ msgstr "Tháng Hai"
 #: model:mail.message.subtype,description:project_issue.mt_issue_stage
 #: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Trạng thái được thay đổi"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Feature description"
-msgstr ""
+msgstr "Miêu tả tính năng"
 
 #. module: project_issue
 #: field:project.project,project_escalation_id:0
 msgid "Project Escalation"
-msgstr ""
+msgstr "Project Escalation"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_version_action
@@ -839,24 +839,24 @@ msgid ""
 "                you can work on issues.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Nhấp chuột để thêm mới một phiên bản.\n              </p><p>\n                Định nghĩa các phiên bản khác nhau của sản phẩm mà\n                bạn có thể làm việc với các phát sinh tương ứng.\n              </p>\n            "
 
 #. module: project_issue
 #: help:project.issue,section_id:0
 msgid ""
 "Sales team to which Case belongs to.                             Define "
 "Responsible user and Email account for mail gateway."
-msgstr ""
+msgstr "Sales team to which Case belongs to.                             Define Responsible user and Email account for mail gateway."
 
 #. module: project_issue
 #: view:board.board:0
 msgid "My Issues"
-msgstr ""
+msgstr "Phát sinh của tôi"
 
 #. module: project_issue
 #: help:project.issue.report,delay_open:0
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "Số ngày để mở một phát sinh"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -866,12 +866,12 @@ msgstr "Tháng Tư"
 #. module: project_issue
 #: view:project.issue:0
 msgid "⇒ Escalate"
-msgstr ""
+msgstr "⇒ Leo thang"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue created"
-msgstr ""
+msgstr "Phát sinh được tạo"
 
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
@@ -886,7 +886,7 @@ msgstr "ID"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr ""
+msgstr "Phát sinh bị phong tỏa"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
@@ -896,17 +896,17 @@ msgstr ""
 #. module: project_issue
 #: help:project.issue.report,delay_close:0
 msgid "Number of Days to close the project issue"
-msgstr ""
+msgstr "Số ngày để đóng một phát sinh"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_close:0
 msgid "Avg. Working Hours to Close"
-msgstr ""
+msgstr "Avg. Working Hours to Close"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Trạng thái được thay đổi"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
