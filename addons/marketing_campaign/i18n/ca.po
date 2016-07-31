@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-12-17 19:16+0000\n"
+"PO-Revision-Date: 2016-07-18 09:56+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-7/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -95,7 +95,7 @@ msgstr "Executant"
 msgid ""
 "Hi, we are delighted to let you know that you have entered the select circle"
 " of our Gold Partners"
-msgstr ""
+msgstr "Hola, estem encantats d'anunciar-li que ha entrat al selecte cercle dels nostres socis d'or!"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -110,7 +110,7 @@ msgstr "Objecte"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: only records created after last sync"
-msgstr ""
+msgstr "Mode de sincronització: només els registres creats després de l'ultima sincronització"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,condition:0
@@ -140,12 +140,12 @@ msgstr "Activitat següent"
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
-msgstr ""
+msgstr "La campanya no es pot iniciar. No té cap activitat inicial. Modifiqui les activitats de la campanya per marcar una com a punt d'inici."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
 msgid "The email to send when this activity is activated"
-msgstr ""
+msgstr "El correu a enviar quan es crea l'activitat"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -176,7 +176,7 @@ msgstr "Escolliu el recurs sobre el qual desitgeu llançar aquesta campanya"
 #. module: marketing_campaign
 #: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
 msgid "Open Marketing Menu"
-msgstr ""
+msgstr "Obrir el menú de màrqueting"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
@@ -244,7 +244,7 @@ msgstr "Campanya"
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_1
 msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr ""
+msgstr "Hola, rebrà el seu lot de benvinguda per correu electrònic en breus."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0 field:campaign.analysis,segment_id:0
@@ -257,7 +257,7 @@ msgstr "Segment"
 #: code:addons/marketing_campaign/marketing_campaign.py:214
 #, python-format
 msgid "You cannot duplicate a campaign, Not supported yet."
-msgstr ""
+msgstr "No podeu duplicar una campanya, encara no esta soportat"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,type:0
@@ -492,7 +492,7 @@ msgid ""
 " If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
-msgstr ""
+msgstr "Els elements de treball generats estan enllaçats a l'empresa relacionada amb el registre. Si el registre es l'empresa en si, deixi aquest camp en blanc. Això és útil per la elaboració d'informes, via les vistes d'anàlisis de campanyes o seguiment de campanya."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0 field:campaign.analysis,month:0
@@ -558,7 +558,7 @@ msgid ""
 "has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
 "records which have the same value for the unique field as other records that"
 " already entered the campaign."
-msgstr ""
+msgstr "Determina un criteri addicional per afegir al filtre quan seleccioni nous registres per afegir a la campanya. \"Sense duplicats\" preveu seleccionar registres que ja han estat incorporats a la campanya prèviament. Si la campanya té marcat \"Camp únic\", \"Sense duplicats\" preveu també seleccionar registres amb el mateix valor pel camp únic que altres ja introduïts a la campanya."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -641,7 +641,7 @@ msgstr "Plantilles de correu electrònic"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: all records"
-msgstr ""
+msgstr "Mode de sincronització: tots els registres"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -676,7 +676,7 @@ msgstr "L'informe a generar quan l'activitat és activada"
 #. module: marketing_campaign
 #: field:marketing.campaign,unique_field_id:0
 msgid "Unique Field"
-msgstr ""
+msgstr "Camp únic"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0 view:marketing.campaign.workitem:0
@@ -819,7 +819,7 @@ msgstr "Transició de la campanya"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Marketing Campaign Segment"
-msgstr ""
+msgstr "Segment de la campanya de màrqueting"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
@@ -832,7 +832,7 @@ msgstr "Segments"
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,keep_if_condition_not_met:0
 msgid "Don't Delete Workitems"
-msgstr ""
+msgstr "No esborrar els elements de treball"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
@@ -881,7 +881,7 @@ msgid ""
 "segments will only avoid selecting the same record again if it entered the "
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
-msgstr ""
+msgstr "Si està establert, aquest camp ajuda a segmentar aquest treball al mètode sense duplicats per evitar seleccionar registres similars dos cops. Els registres similars són registres que tenen el mateix valor per al seu camp únic. P. ex. escollint el camp 'E-mail' per iniciatives de CRM, evita enviar-li la mateixa campanya a la mateixa direcció de correus més d'una vegada. Si no s'estableix, els segments \"sense duplicats\" només previndran seleccionar el mateix registre un altre cop si ja està incorporat a la campanya. Només es poden utilitzar els camps fàcilment comparables amb texts, sencers, seleccions o relacions simples."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:527
@@ -925,7 +925,7 @@ msgstr "Cost fix per al funcionament d'aquesta campanya. També podeu especifica
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: only records updated after last sync"
-msgstr ""
+msgstr "Mode de sincronització: només els registres actualitzats despres de l'ultima sincronització"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:791
@@ -952,7 +952,7 @@ msgstr "Abril"
 #: code:addons/marketing_campaign/marketing_campaign.py:158
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
-msgstr ""
+msgstr "La campanya pot ser marcada com realitzada abans que tots els segments estiguin tancats."
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0 field:marketing.campaign,mode:0
@@ -979,7 +979,7 @@ msgstr "Filtre per seleccionar els registres de recursos que pertanyen a aquest 
 #: code:addons/marketing_campaign/marketing_campaign.py:136
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
-msgstr ""
+msgstr "La campanya no es pot iniciar. No hi ha activitats en ella."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_next_sync:0
@@ -990,7 +990,7 @@ msgstr "Següent sincronització"
 #: model:email.template,body_html:marketing_campaign.email_template_2
 msgid ""
 "Hi, we are delighted to welcome you among our Silver Partners as of today!"
-msgstr ""
+msgstr "Hola, estem encantats de donar-li la benvinguda com a soci de plata!"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,ir_filter_id:0

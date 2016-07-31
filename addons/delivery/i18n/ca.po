@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-05-29 13:00+0000\n"
+"PO-Revision-Date: 2016-07-06 09:35+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-7/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -76,7 +76,7 @@ msgstr "Volum"
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier!"
-msgstr ""
+msgstr "No hi ha coincidències de taula d'enviament per aquest transportista!"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -86,7 +86,7 @@ msgstr "Línia de la quadrícula"
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr ""
+msgstr "Empresa que realitza el servei d'entrega."
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
@@ -107,7 +107,7 @@ msgstr "Albarà per ser facturat"
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr ""
+msgstr "Preu avançat"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
@@ -132,7 +132,7 @@ msgid ""
 "                country defined by a postal code range.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per crear una llista de preus d'entrega per una regió específica\n</p><p>\nLa llista de preus d'entrega li permetrà calcular el cost i el preu de venda de l'entrega d'acord amb el pes i altres característiques d'aquell producte. Pot definir diferents llistes de preu per a cada mètode d'entrega: per país o per una zona especifica del país segons el codi postal.\n</p>\n            "
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -152,7 +152,7 @@ msgstr "Import"
 #. module: delivery
 #: view:sale.order:0
 msgid "Add in Quote"
-msgstr ""
+msgstr "Afegir al pressupost"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -230,12 +230,12 @@ msgstr "Ordres de lliurament"
 msgid ""
 "If you don't 'Add in Quote', the exact price will be computed when invoicing"
 " based on delivery order(s)."
-msgstr ""
+msgstr "Si no \"S'afegeix a pressupostos\", el preu exacte es calcularà quan facturi a partir de l'albarà(ns)."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr ""
+msgstr "Companyia de transport"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -262,19 +262,19 @@ msgstr "Nom"
 msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
-msgstr ""
+msgstr "Si la comanda és superior a cert import, el client pot ser beneficiat amb enviament gratuït."
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr ""
+msgstr "Import de la comanda que és beneficiaria d'una entrega gratuïta, expressada en la moneda de la companyia."
 
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr ""
+msgstr "Gratis si el total de la comanda és més gran que"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -297,12 +297,12 @@ msgstr "C.Postal final"
 #: code:addons/delivery/delivery.py:147
 #, python-format
 msgid "Default price"
-msgstr ""
+msgstr "Preus per defecte"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
 msgid "Normal Price"
-msgstr ""
+msgstr "Preu normal"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -335,13 +335,13 @@ msgstr "Pes"
 msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
-msgstr ""
+msgstr "Marqui aquesta casella si desitja administrar preus d'entrega que depenen del destí, el pes, el total de la comanda, etc."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
-msgstr ""
+msgstr "Deixar buit si el preu depèn d'un preu anticipat per destí."
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -382,7 +382,7 @@ msgstr "Preu cost"
 #: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in Draft State!"
-msgstr ""
+msgstr "La comanda no està a l'esborrany!"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0 field:delivery.grid.line,type:0
@@ -436,13 +436,13 @@ msgstr "Completeu aquest camp si teniu previst facturar l'enviament segons l'alb
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No Grid Available!"
-msgstr ""
+msgstr "Sense dades de despeses disponibles!"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
-msgstr ""
+msgstr "Gratis si es supera a %.2f"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
@@ -458,7 +458,7 @@ msgstr "<="
 #: help:stock.picking,weight_uom_id:0 help:stock.picking.in,weight_uom_id:0
 #: help:stock.picking.out,weight_uom_id:0
 msgid "Unit of measurement for Weight"
-msgstr ""
+msgstr "Unitat de mesura per al pes"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -504,12 +504,12 @@ msgstr "El transportista %s (id: %d) no disposa de quadrícula d'enviament!"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Pricing Information"
-msgstr ""
+msgstr "Informació de preus"
 
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr ""
+msgstr "Preu avançat per destí"
 
 #. module: delivery
 #: view:delivery.carrier:0 field:delivery.grid,carrier_id:0
@@ -523,7 +523,7 @@ msgstr "Transportista"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Mètodes lliurament"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:57
@@ -560,7 +560,7 @@ msgstr "Estats"
 #: help:stock.move,weight_uom_id:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr ""
+msgstr "Unitat de mesura (UdM) és la unitat de mesura de pes"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
