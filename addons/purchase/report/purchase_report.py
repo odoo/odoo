@@ -5,8 +5,7 @@
 # Please note that these reports are not multi-currency !!!
 #
 
-from odoo import fields, models
-from odoo import tools
+from odoo import api, fields, models
 
 
 class PurchaseReport(models.Model):
@@ -49,9 +48,9 @@ class PurchaseReport(models.Model):
     weight = fields.Float('Gross Weight', readonly=True)
     volume = fields.Float('Volume', readonly=True)
 
-    def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, 'purchase_report') # to remove, 2 lines below : create or replace.
-        cr.execute("""
+    @api.model_cr
+    def init(self):
+        self._cr.execute("""
             create or replace view purchase_report as (
                 WITH currency_rate as (%s)
                 select
