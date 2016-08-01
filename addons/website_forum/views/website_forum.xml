@@ -562,7 +562,7 @@
             Please wait for a moderator to validate your previous post before continuing.
         </div>
       </t>
-      <t t-else="1">
+      <t t-if='not request.env.user.forum_waiting_posts_count'>
         <ul>
             <li>Set a clear, explicit and concise question title
                 (check
