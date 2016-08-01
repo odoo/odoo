@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Assets Management',
-    'version': '1.0',
     'depends': ['account_accountant'],
     'description': """
 Assets management
@@ -17,10 +17,6 @@ Keeps track of depreciations, and creates corresponding journal entries.
     'demo': [
         'data/account_asset_demo.yml',
     ],
-    # 'test': [
-    #     '../account/test/account_minimal_test.xml',
-    #     'test/account_asset_demo_test.xml',
-    # ],
     'data': [
         'security/account_asset_security.xml',
         'security/ir.model.access.csv',
@@ -36,6 +32,4 @@ Keeps track of depreciations, and creates corresponding journal entries.
     'qweb': [
         "static/src/xml/account_asset_template.xml",
     ],
-    'installable': True,
-    'application': False,
 }
