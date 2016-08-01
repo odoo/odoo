@@ -321,6 +321,10 @@ class WebsiteForum(http.Controller):
         if post_type == 'question' and not post.get('post_name', '').strip():
             return request.website.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
+
+        if request.env.user.forum_waiting_posts_count:
+            return werkzeug.utils.redirect("/forum/%s/ask" % slug(forum))
+
         new_question = request.env['forum.post'].create({
             'forum_id': forum.id,
             'name': post.get('post_name') or (post_parent and 'Re: %s' % (post_parent.name or '')) or '',
