@@ -18,9 +18,9 @@
             </xpath>
         </template>
         <template id="loader" inherit_id="website.layout" name="Livechat : include loader on Website">
-            <xpath expr="//body" position="inside">
+            <xpath expr="//div[@id='wrapwrap']" position="after">
                 <t t-if="website and website.channel_id">
-                     <script>
+                    <script>
                         <t t-call="im_livechat.loader">
                             <t t-set="channel" t-value="website.channel_id.id"/>
                         </t>
