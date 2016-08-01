@@ -26,7 +26,6 @@ Odoo Blog
         'data/website_blog_demo.xml'
     ],
     'test': [
-        'tests/test_website_blog.yml'
     ],
     'qweb': [
         'static/src/xml/*.xml'
