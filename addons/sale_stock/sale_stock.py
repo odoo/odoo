@@ -354,10 +354,7 @@ class sale_order_line(osv.osv):
                     uom_record = product_obj.uom_id
                 compare_qty = float_compare(product_obj.virtual_available, qty, precision_rounding=uom_record.rounding)
                 if compare_qty == -1:
-                    warn_msg = _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') % \
-                        (qty, uom_record.name,
-                         max(0,product_obj.virtual_available), uom_record.name,
-                         max(0,product_obj.qty_available), uom_record.name)
+                    warn_msg = self._stock_warning_info(cr, uid, qty, uom_record, product_obj, context=context)
                     warning_msgs += _("Not enough stock ! : ") + warn_msg + "\n\n"
 
         #update of warning messages
@@ -368,6 +365,15 @@ class sale_order_line(osv.osv):
                     }
         res.update({'warning': warning})
         return res
+   
+    def _stock_warning_info(self, cr, uid, requested_quantity, uom_record, product_obj, context=None):
+        """Return the extra information for the out of stock warning.
+        """
+        return _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') % \
+                    (requested_quantity, uom_record.name,
+                     max(0,product_obj.virtual_available), uom_record.name,
+                     max(0,product_obj.qty_available), uom_record.name)
+
 
     def button_cancel(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
