@@ -275,7 +275,6 @@ class sale_order_line(osv.osv):
         uom_obj: The unit of measure browse object asked for
         pack: The packaging browse object
         """
-        _logger.info('in _packaging_compatibility_warning')
         return _("You selected a quantity of %s %s.\n"
                  "But it's not compatible with the selected packaging.\n"
                  "Here is a proposition of quantities according to the packaging:\n"
@@ -376,6 +375,13 @@ class sale_order_line(osv.osv):
                     }
         res.update({'warning': warning})
         return res
+   
+    def _stock_warning(self):
+        return _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') % \
+                    (qty, uom_record.name,
+                     max(0,product_obj.virtual_available), uom_record.name,
+                     max(0,product_obj.qty_available), uom_record.name)
+
 
     def button_cancel(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
