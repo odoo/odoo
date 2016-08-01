@@ -555,10 +555,14 @@
 <!-- Edition: ask your question -->
 <template id="new_question">
     <t t-call="website_forum.header">
-        <h1 class="mt0">Ask Your Question</h1>
-        <p>
-            To improve your chance getting an answer:
-        </p>
+      <h1 class="mt0">Ask Your Question</h1>
+      <t t-if='request.env.user.forum_waiting_posts_count'>
+        <div class="alert alert-warning" role="alert">
+            You already have one pending post.<br/>
+            Please wait for a moderator to validate your previous post before continuing.
+        </div>
+      </t>
+      <t t-else="1">
         <ul>
             <li>Set a clear, explicit and concise question title
                 (check
@@ -589,6 +593,7 @@
                 t-att-data-karma="forum.karma_ask"
                 data-hashtags="#question" data-social-target-type="question">Post Your Question</button>
         </form>
+      </t>
     </t>
 </template>
 
