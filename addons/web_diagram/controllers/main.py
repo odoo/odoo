@@ -54,7 +54,7 @@ class DiagramView(openerp.http.Controller):
                 'd_id': transitions[tr][1]
             })
         connector_tr = req.session.model(connector)
-        connector_ids = connector_tr.search([('id', 'in', list_tr)], 0, 0, 0, req.session.context)
+        connector_ids = connector_tr.search([('id', 'in', list_tr)], context=req.session.context)
 
         data_connectors =connector_tr.read(connector_ids, connector_fields, req.session.context)
 
@@ -73,10 +73,10 @@ class DiagramView(openerp.http.Controller):
                 t['options'][connector_fields_string[i]] = tr[fld]
 
         fields = req.session.model('ir.model.fields')
-        field_ids = fields.search([('model', '=', model), ('relation', '=', node)], 0, 0, 0, req.session.context)
+        field_ids = fields.search([('model', '=', model), ('relation', '=', node)], context=req.session.context)
         field_data = fields.read(field_ids, ['relation_field'], req.session.context)
         node_act = req.session.model(node)
-        search_acts = node_act.search([(field_data[0]['relation_field'], '=', id)], 0, 0, 0, req.session.context)
+        search_acts = node_act.search([(field_data[0]['relation_field'], '=', id)], context=req.session.context)
         data_acts = node_act.read(search_acts, invisible_node_fields + visible_node_fields, req.session.context)
 
         for act in data_acts:
