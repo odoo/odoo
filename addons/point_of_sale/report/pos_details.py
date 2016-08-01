@@ -68,9 +68,9 @@ class pos_details(report_sxw.rml_parse):
                     'uom': pol.product_id.uom_id.name
                 }
                 data.append(result)
-                self.total += result['total']
                 self.qty += result['qty']
                 self.discount += result['discount']
+            self.total += pos.amount_total
         if data:
             return data
         else:
