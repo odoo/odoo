@@ -107,7 +107,7 @@ class PackOperation(models.Model):
         else:
             qty = self.product_qty
             if self.product_uom_id:
-                qty = self.env['product.uom']._compute_qty_obj(self.product_uom_id, self.product_qty, self.product_id.uom_id)
+                qty = self.product_uom_id._compute_quantity(self.product_qty, self.product_id.uom_id)
             for record in self.linked_move_operation_ids:
                 qty -= record.qty
             self.remaining_qty = float_round(qty, precision_rounding=self.product_id.uom_id.rounding)

@@ -262,7 +262,7 @@ class MrpProduction(models.Model):
     def _generate_moves(self):
         for production in self:
             production._generate_finished_moves()
-            factor = self.env['product.uom']._compute_qty(production.product_uom_id.id, production.product_qty, production.bom_id.product_uom_id.id)
+            factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             production._generate_raw_moves(lines)
             # Check for all draft moves whether they are mto or not
@@ -306,7 +306,7 @@ class MrpProduction(models.Model):
             source_location = self.bom_id.routing_id.location_id
         else:
             source_location = self.location_src_id
-        original_quantity = self.env['product.uom']._compute_qty(self.product_uom_id.id, self.product_qty, self.bom_id.product_uom_id.id)
+        original_quantity = self.product_uom_id._compute_quantity(self.product_qty, self.bom_id.product_uom_id)
 
         data = {
             'name': self.name,
@@ -369,9 +369,8 @@ class MrpProduction(models.Model):
     def button_plan(self):
         """ Create work orders. And probably do stuff, like things. """
         orders_to_plan = self.filtered(lambda order: order.routing_id and order.state == 'confirmed')
-        UoM = self.env['product.uom']
         for order in orders_to_plan:
-            quantity = UoM._compute_qty_obj(order.product_uom_id, order.product_qty, order.bom_id.product_uom_id)
+            quantity = order.product_uom_id._compute_quantity(order.product_qty, order.bom_id.product_uom_id)
             boms, lines = order.bom_id.explode(order.product_id, quantity, picking_type=order.bom_id.picking_type_id)
             order._generate_workorders(boms)
         orders_to_plan.write({'state': 'planned'})

@@ -492,7 +492,7 @@ class RepairLine(models.Model):
                 'message':
                     _('You have to select a pricelist in the Repair form !\n Please set one before choosing a product.')}
         else:
-            price = pricelist.price_get(self.product_id.id, self.product_uom_qty, partner.id)[pricelist.id]
+            price = pricelist.get_product_price(self.product_id, self.product_uom_qty, partner)
             if price is False:
                 warning = {
                     'title': _('No valid pricelist line found !'),
@@ -554,7 +554,7 @@ class RepairFee(models.Model):
                 'message':
                     _('You have to select a pricelist in the Repair form !\n Please set one before choosing a product.')}
         else:
-            price = pricelist.price_get(self.product_id.id, self.product_uom_qty, partner.id)[pricelist.id]
+            price = pricelist.get_product_price(self.product_id, self.product_uom_qty, partner)
             if price is False:
                 warning = {
                     'title': _('No valid pricelist line found !'),

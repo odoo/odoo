@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
     'name': 'Products & Pricelists',
     'version': '1.2',
     'category': 'Sales',
     'depends': ['base', 'decimal_precision', 'mail', 'report'],
-    'demo': [
-        'product_demo.xml',
-        'product_image_demo.xml',
-    ],
     'description': """
 This is the base module for managing products and pricelists in Odoo.
 ========================================================================
@@ -32,22 +27,25 @@ Pricelists preferences by product and/or partners.
 Print product labels with barcode.
     """,
     'data': [
+        'data/product_data.xml',
         'security/product_security.xml',
         'security/ir.model.access.csv',
-        'wizard/product_price_view.xml',
-        'res_config_view.xml',
-        'product_data.xml',
-        'product_report.xml',
-        'product_view.xml',
-        'pricelist_view.xml',
-        'partner_view.xml',
-        'views/report_pricelist.xml',
-        'views/report_productlabel.xml',
-        'views/report_producttemplatelabel.xml',
+        'wizard/product_price_list_views.xml',
+        'views/base_config_settings_views.xml',
+        'views/product_attribute_views.xml',
+        'views/product_uom_views.xml',
+        'views/product_views.xml',
+        'views/product_template_views.xml',
+        'views/product_pricelist_views.xml',
+        'views/res_partner_views.xml',
+        'report/product_reports.xml',
+        'report/product_pricelist_templates.xml',
+        'report/product_product_templates.xml',
+        'report/product_template_templates.xml',
     ],
-    'test': [
-        'product_pricelist_demo.yml',
-        'test/product_pricelist.yml',
+    'demo': [
+        'data/product_demo.xml',
+        'data/product_image_demo.xml',
     ],
     'installable': True,
     'auto_install': False,
