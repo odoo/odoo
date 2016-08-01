@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from openerp import api, fields, models
-from openerp.exceptions import Warning
-from openerp.tools.translate import _
-import openerp.addons.decimal_precision as dp
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo import api, fields, models
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+
+import odoo.addons.decimal_precision as dp
 
 
 class AccountInvoice(models.Model):
@@ -84,7 +84,6 @@ class AccountInvoiceLine(models.Model):
         result = super(AccountInvoiceLine, self)._onchange_uom_id()
         self.onchange_asset_category_id()
         return result
-
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from lxml import etree
 
-from openerp import api, fields, models
-from openerp.osv.orm import setup_modifiers
-from openerp.tools.translate import _
+from odoo import api, fields, models, _
+from odoo.osv.orm import setup_modifiers
+
 
 class AssetModify(models.TransientModel):
     _name = 'asset.modify'
