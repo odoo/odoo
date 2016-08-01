@@ -5,39 +5,35 @@ import lxml
 import random
 
 from datetime import datetime
-
-from odoo import api, tools, SUPERUSER_ID
+from odoo import api, models, fields, _
 from odoo.addons.website.models.website import slug
-from odoo.osv import osv, fields
-from odoo.tools.translate import _, html_translate
+from odoo.tools.translate import html_translate
 
 
-class Blog(osv.Model):
+class Blog(models.Model):
     _name = 'blog.blog'
     _description = 'Blogs'
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = 'name'
-    _columns = {
-        'name': fields.char('Blog Name', required=True, translate=True),
-        'subtitle': fields.char('Blog Subtitle', translate=True),
-        'active': fields.boolean('Active'),
-    }
 
-    _defaults = {
-        'active': True,
-    }
+    name = fields.Char('Blog Name', required=True, translate=True)
+    subtitle = fields.Char('Blog Subtitle', translate=True)
+    active = fields.Boolean('Active', default=True)
 
-    def write(self, cr, uid, ids, vals, context=None):
-        res = super(Blog, self).write(cr, uid, ids, vals, context=context)
+    @api.multi
+    def write(self, vals):
+        res = super(Blog, self).write(vals)
         if 'active' in vals:
             # archiving/unarchiving a blog does it on its posts, too
-            BlogPost = self.pool['blog.post']
-            ctx = dict(context or {}, active_test=False)
-            post_ids = BlogPost.search(cr, uid, [('blog_id', 'in', ids)], context=ctx)
-            BlogPost.write(cr, uid, post_ids, {'active': vals['active']}, context=context)
+            post_ids = self.env['blog.post'].with_context(active_test=False).search([
+                ('blog_id', 'in', self)
+            ])
+            post_ids.write({'active': vals['active']})
         return res
 
-    def all_tags(self, cr, uid, ids, min_limit=1, context=None):
+    @api.model_cr
+    @api.multi
+    def all_tags(self, min_limit=1):
         req = """
             SELECT
                 p.blog_id, count(*), r.blog_tag_id
@@ -52,35 +48,33 @@ class Blog(osv.Model):
             ORDER BY
                 count(*) DESC
         """
-        cr.execute(req, [tuple(ids)])
-        tag_by_blog = {i: [] for i in ids}
-        for blog_id, freq, tag_id in cr.fetchall():
+        self._cr.execute(req, [tuple(self.ids)])
+        tag_by_blog = {i.id: [] for i in self}
+        for blog_id, freq, tag_id in self._cr.fetchall():
             if freq >= min_limit:
                 tag_by_blog[blog_id].append(tag_id)
 
-        tag_obj = self.pool['blog.tag']
+        BlogTag = self.env['blog.tag']
         for blog_id in tag_by_blog:
-            tag_by_blog[blog_id] = tag_obj.browse(cr, uid, tag_by_blog[blog_id], context=context)
+            tag_by_blog[blog_id] = BlogTag.browse(tag_by_blog[blog_id])
         return tag_by_blog
 
 
-class BlogTag(osv.Model):
+class BlogTag(models.Model):
     _name = 'blog.tag'
     _description = 'Blog Tag'
     _inherit = ['website.seo.metadata']
     _order = 'name'
-    _columns = {
-        'name': fields.char('Name', required=True),
-        'post_ids': fields.many2many(
-            'blog.post', string='Posts',
-        ),
-    }
+
+    name = fields.Char('Name', required=True)
+    post_ids = fields.Many2many('blog.post', string='Posts')
+
     _sql_constraints = [
-            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+        ('name_uniq', 'unique (name)', "Tag name already exists !"),
     ]
 
 
-class BlogPost(osv.Model):
+class BlogPost(models.Model):
     _name = "blog.post"
     _description = "Blog Post"
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
@@ -93,76 +87,50 @@ class BlogPost(osv.Model):
         for blog_post in self:
             blog_post.website_url = "/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post))
 
-    def _compute_ranking(self, cr, uid, ids, name, arg, context=None):
+    @api.multi
+    def _compute_ranking(self):
         res = {}
-        for blog_post in self.browse(cr, uid, ids, context=context):
-            age = datetime.now() - datetime.strptime(blog_post.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            res[blog_post.id] = blog_post.visits * (0.5+random.random()) / max(3, age.days)
+        for blog_post in self:
+            age = datetime.now() - fields.Datetime.from_string(blog_post.create_date)
+            res[blog_post.id] = blog_post.visits * (0.5 + random.random()) / max(3, age.days)
         return res
 
-    def _default_content(self, cr, uid, context=None):
+    def _default_content(self):
         return '''  <div class="container">
                         <section class="mt16 mb16">
                             <p class="o_default_snippet_text">''' + _("Start writing here...") + '''</p>
                         </section>
                     </div> '''
 
-    _columns = {
-        'name': fields.char('Title', required=True, translate=True),
-        'subtitle': fields.char('Sub Title', translate=True),
-        'author_id': fields.many2one('res.partner', 'Author'),
-        'active': fields.boolean('Active'),
-        'cover_properties': fields.text('Cover Properties'),
-        'blog_id': fields.many2one(
-            'blog.blog', 'Blog',
-            required=True, ondelete='cascade',
-        ),
-        'tag_ids': fields.many2many(
-            'blog.tag', string='Tags',
-        ),
-        'content': fields.html('Content', translate=html_translate, sanitize=False),
-        'website_message_ids': fields.one2many(
-            'mail.message', 'res_id',
-            domain=lambda self: [
-                '&', '&', ('model', '=', self._name), ('message_type', '=', 'comment'), ('path', '=', False)
-            ],
-            string='Website Messages',
-            help="Website communication history",
-        ),
-        # creation / update stuff
-        'create_date': fields.datetime(
-            'Created on',
-            select=True, readonly=True,
-        ),
-        'create_uid': fields.many2one(
-            'res.users', 'Created by',
-            select=True, readonly=True,
-        ),
-        'write_date': fields.datetime(
-            'Last Modified on',
-            select=True, readonly=True,
-        ),
-        'write_uid': fields.many2one(
-            'res.users', 'Last Contributor',
-            select=True, readonly=True,
-        ),
-        'published_date': fields.datetime('Published Date'),
-        'author_avatar': fields.related(
-            'author_id', 'image_small',
-            string="Avatar", type="binary"),
-        'visits': fields.integer('No of Views'),
-        'ranking': fields.function(_compute_ranking, string='Ranking', type='float'),
-    }
+    name = fields.Char('Title', required=True, translate=True, default='')
+    subtitle = fields.Char('Sub Title', translate=True)
+    author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id)
+    active = fields.Boolean('Active', default=True)
+    cover_properties = fields.Text(
+        'Cover Properties',
+        default='{"background-image": "none", "background-color": "oe_none", "opacity": "0.6", "resize_class": ""}')
+    blog_id = fields.Many2one('blog.blog', 'Blog', required=True, ondelete='cascade')
+    tag_ids = fields.Many2many('blog.tag', string='Tags')
+    content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
+    website_message_ids = fields.One2many(
+        'mail.message', 'res_id',
+        domain=lambda self: [
+            '&', '&', ('model', '=', self._name), ('message_type', '=', 'comment'), ('path', '=', False)
+        ],
+        string='Website Messages',
+        help="Website communication history",
+    )
+    # creation / update stuff
+    create_date = fields.Datetime('Created on', index=True, readonly=True)
+    create_uid = fields.Many2one('res.users', 'Created by', index=True, readonly=True)
+    write_date = fields.Datetime('Last Modified on', index=True, readonly=True)
+    write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
+    published_date = fields.Datetime('Published Date')
+    author_avatar = fields.Binary(related='author_id.image_small', string="Avatar")
+    visits = fields.Integer('No of Views')
+    ranking = fields.Float(compute='_compute_ranking', string='Ranking')
 
-    _defaults = {
-        'name': '',
-        'active': True,
-        'content': _default_content,
-        'cover_properties': '{"background-image": "none", "background-color": "oe_none", "opacity": "0.6", "resize_class": ""}',
-        'author_id': lambda self, cr, uid, ctx=None: self.pool['res.users'].browse(cr, uid, uid, context=ctx).partner_id.id,
-    }
-
-    def html_tag_nodes(self, html, attribute=None, tags=None, context=None):
+    def html_tag_nodes(self, html, attribute=None, tags=None):
         """ Processing of html content to tag paragraphs and set them an unique
         ID.
         :return result: (html, mappin), where html is the updated html with ID
@@ -210,74 +178,76 @@ class BlogPost(osv.Model):
             html = html[5:-6]
         return html, mapping
 
-    def _postproces_content(self, cr, uid, id, content=None, context=None):
+    # noguess used to be able to call the method with record = None in the create method
+    @api.noguess
+    def _postproces_content(self, record, content=None):
         if content is None:
-            content = self.browse(cr, uid, id, context=context).content
+            content = self.content
         if content is False:
             return content
 
-        content, mapping = self.html_tag_nodes(content, attribute='data-chatter-id', tags=['p'], context=context)
-        if id:  # not creating
+        content, mapping = self.html_tag_nodes(content, attribute='data-chatter-id', tags=['p'])
+        if record:  # not creating
             existing = [x[0] for x in mapping if x[0]]
-            msg_ids = self.pool['mail.message'].search(cr, SUPERUSER_ID, [
-                ('res_id', '=', id),
+            self.env['mail.message'].sudo().search([
+                ('res_id', '=', record.id),
                 ('model', '=', self._name),
                 ('path', 'not in', existing),
                 ('path', '!=', False)
-            ], context=context)
-            self.pool['mail.message'].unlink(cr, SUPERUSER_ID, msg_ids, context=context)
+            ]).sudo().unlink()
 
         return content
 
-    def _check_for_publication(self, cr, uid, ids, vals, context=None):
+    @api.multi
+    def _check_for_publication(self, vals):
         if vals.get('website_published'):
-            for post in self.browse(cr, uid, ids, context=context):
+            for post in self:
                 post.blog_id.message_post_with_view(
                     'website_blog.blog_post_template_new_post',
                     subject=post.name,
                     values={'post': post},
-                    subtype_id=self.pool['ir.model.data'].xmlid_to_res_id(cr, SUPERUSER_ID, 'website_blog.mt_blog_blog_published'))
+                    subtype_id=self.env['ir.model.data'].sudo().xmlid_to_res_id('website_blog.mt_blog_blog_published'))
             return True
         return False
 
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
+    @api.model
+    def create(self, vals):
         if 'content' in vals:
-            vals['content'] = self._postproces_content(cr, uid, None, vals['content'], context=context)
-        create_context = dict(context, mail_create_nolog=True)
-        post_id = super(BlogPost, self).create(cr, uid, vals, context=create_context)
-        self._check_for_publication(cr, uid, [post_id], vals, context=context)
+            vals['content'] = self._postproces_content(None, vals['content'])
+        post_id = super(BlogPost, self.with_context(mail_create_nolog=True)).create(vals)
+        post_id._check_for_publication(vals)
         return post_id
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
+    @api.multi
+    def write(self, vals):
+        self.ensure_one()
         if 'content' in vals:
-            vals['content'] = self._postproces_content(cr, uid, ids[0], vals['content'], context=context)
+            vals['content'] = self._postproces_content(self, vals['content'])
         if 'website_published' in vals:
-            vals['published_date'] = fields.datetime.now() if vals['website_published'] else False
-        result = super(BlogPost, self).write(cr, uid, ids, vals, context)
-        self._check_for_publication(cr, uid, ids, vals, context=context)
+            vals['published_date'] = fields.Datetime.now() if vals['website_published'] else False
+        result = super(BlogPost, self).write(vals)
+        self._check_for_publication(vals)
         return result
 
-    def get_access_action(self, cr, uid, ids, context=None):
+    @api.multi
+    def get_access_action(self):
         """ Override method that generated the link to access the document. Instead
         of the classic form view, redirect to the post on the website directly """
-        post = self.browse(cr, uid, ids[0], context=context)
+        self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
-            'url': '/blog/%s/post/%s' % (post.blog_id.id, post.id),
+            'url': '/blog/%s/post/%s' % (self.blog_id.id, self.id),
             'target': 'self',
             'res_id': self.id,
         }
 
-    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+    @api.multi
+    def _notification_get_recipient_groups(self, message, recipients):
         """ Override to set the access button: everyone can see an access button
         on their notification email. It will lead on the website view of the
         post. """
-        res = super(BlogPost, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
-        access_action = self._notification_link_helper(cr, uid, ids, 'view', model=message.model, res_id=message.res_id)
+        res = super(BlogPost, self)._notification_get_recipient_groups(message, recipients)
+        access_action = self._notification_link_helper('view', model=message.model, res_id=message.res_id)
         for category, data in res.iteritems():
             res[category]['button_access'] = {'url': access_action, 'title': _('View Blog Post')}
         return res
