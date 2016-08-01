@@ -1,3 +1,6 @@
+# -*- encoding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Bootswatch Theme',
     'summary': 'Support for Bootswatch themes in master',
@@ -7,7 +10,7 @@
     'version': '1.0',
     'depends': ['website'],
     'data': [
-        'views/theme.xml',
+        'views/theme_bootswatch_templates.xml',
     ],
     'images': ['static/description/bootswatch.png'],
     'application': False,
