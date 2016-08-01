@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
 <odoo>
-    <data>
         <menuitem name="Blog" id="menu_website_blog_root" sequence="20" parent="website.menu_website_configuration"/>
 
         <!-- Blog views -->
-        <record model="ir.ui.view" id="view_blog_blog_list">
+        <record id="view_blog_blog_list" model="ir.ui.view">
             <field name="name">blog.blog.list</field>
             <field name="model">blog.blog</field>
             <field name="arch" type="xml">
@@ -14,7 +13,7 @@
                 </tree>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_blog_blog_form">
+        <record id="view_blog_blog_form" model="ir.ui.view">
             <field name="name">blog.blog.form</field>
             <field name="model">blog.blog</field>
             <field name="arch" type="xml">
@@ -38,7 +37,7 @@
         </record>
 
         <!-- page list view  -->
-        <record model="ir.ui.view" id="view_blog_post_list">
+        <record id="view_blog_post_list" model="ir.ui.view">
             <field name="name">blog.post.list</field>
             <field name="model">blog.post</field>
             <field name="arch" type="xml">
@@ -54,7 +53,7 @@
             </field>
         </record>
         <!-- page form view  -->
-        <record model="ir.ui.view" id="view_blog_post_form">
+        <record id="view_blog_post_form" model="ir.ui.view">
             <field name="name">blog.post.form</field>
             <field name="model">blog.post</field>
             <field name="arch" type="xml">
@@ -94,7 +93,7 @@
             </field>
         </record>
         <!-- page search view  -->
-        <record model="ir.ui.view" id="view_blog_post_search">
+        <record id="view_blog_post_search" model="ir.ui.view">
             <field name="name">blog.post.search</field>
             <field name="model">blog.post</field>
             <field name="arch" type="xml">
@@ -112,7 +111,7 @@
             </field>
         </record>
         <!-- page action -->
-        <record model="ir.actions.act_window" id="action_blog_post">
+        <record id="action_blog_post" model="ir.actions.act_window">
             <field name="name">Blog Posts</field>
             <field name="res_model">blog.post</field>
             <field name="view_type">form</field>
@@ -137,7 +136,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_blog_blog">
+        <record id="action_blog_blog" model="ir.actions.act_window">
             <field name="name">Blogs</field>
             <field name="res_model">blog.blog</field>
             <field name="view_type">form</field>
@@ -145,7 +144,7 @@
         </record>
         <menuitem id="menu_blog" parent="menu_website_blog_root" name="Blogs" action="action_blog_blog" sequence="20"/>
 
-        <record model="ir.ui.view" id="blog_tag_tree">
+        <record id="blog_tag_tree" model="ir.ui.view">
             <field name="name">blog_tag_tree</field>
             <field name="model">blog.tag</field>
             <field name="arch" type="xml">
@@ -156,7 +155,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="blog_tag_form">
+        <record id="blog_tag_form" model="ir.ui.view">
             <field name="name">blog_tag_form</field>
             <field name="model">blog.tag</field>
             <field name="arch" type="xml">
@@ -172,7 +171,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_tags">
+        <record id="action_tags" model="ir.actions.act_window">
             <field name="name">Blog Tags</field>
             <field name="res_model">blog.tag</field>
             <field name="view_type">form</field>
@@ -181,5 +180,4 @@
         </record>
 
         <menuitem id="menu_blog_tag" parent="menu_website_blog_root" name="Blog Tags" action="action_tags" sequence="40" />
-    </data>
 </odoo>
