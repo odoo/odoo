@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class MrpBom(models.Model):
@@ -60,6 +60,12 @@ class MrpBom(models.Model):
         default=lambda self: self.env['res.company']._company_default_get('mrp.bom'),
         required=True)
 
+    @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids')
+    def _check_product_recursion(self):
+        for bom in self:
+            if bom.bom_line_ids.filtered(lambda x: x.product_id.product_tmpl_id == bom.product_tmpl_id):
+                raise ValidationError(_('BoM line product %s should not be same as BoM product.') % bom.display_name)
+
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
         res = {}
@@ -107,7 +113,7 @@ class MrpBom(models.Model):
     def explode(self, product, quantity, picking_type=False):
         boms_done = [(self, {'qty': quantity, 'product': product, 'original_qty': quantity})]
         lines_done = []
-        templates_done = self.env['product.template']
+        templates_done = product.product_tmpl_id
 
         bom_lines = [(bom_line, product, quantity) for bom_line in self.bom_line_ids]
         while bom_lines:
@@ -117,7 +123,7 @@ class MrpBom(models.Model):
             if current_line._skip_bom_line(current_product):
                 continue
             if current_line.product_id.product_tmpl_id in templates_done:
-                raise UserError(_('Recursion error !'))
+                raise UserError(_('Recursion error!  A product with a Bill of Material should not have itself in its BoM or child BoMs!'))
 
             line_quantity = current_qty * current_line.product_qty / current_line.bom_id.product_qty
 
