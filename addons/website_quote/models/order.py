@@ -75,7 +75,7 @@ class sale_quote_line(osv.osv):
         uom_obj = self.pool.get('product.uom')
         if vals['product_uom_id'] != product_obj.uom_id.id:
             selected_uom = uom_obj.browse(cr, uid, vals['product_uom_id'], context=context)
-            new_price = uom_obj._compute_price(cr, uid, product_obj.uom_id.id, vals['price_unit'], vals['product_uom_id'])
+            new_price = uom_obj._compute_price(cr, uid, [product_obj.uom_id.id], vals['price_unit'], selected_uom)
             vals['price_unit'] = new_price
         if not uom_id:
             domain = {'product_uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
@@ -213,7 +213,7 @@ class sale_order(osv.osv):
             if pricelist_id:
                 uom_context = context.copy()
                 uom_context['uom'] = line.product_uom_id.id
-                price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, 1, context=uom_context)[pricelist_id]
+                price = pricelist_obj.get_product_price(cr, uid, [pricelist_id], line.product_id, 1, False, context=uom_context)
             else:
                 price = line.price_unit
 
@@ -241,7 +241,7 @@ class sale_order(osv.osv):
             if pricelist_id:
                 uom_context = context.copy()
                 uom_context['uom'] = option.uom_id.id
-                price = pricelist_obj.price_get(cr, uid, [pricelist_id], option.product_id.id, 1, context=uom_context)[pricelist_id]
+                price = pricelist_obj.get_product_price(cr, uid, [pricelist_id], option.product_id, 1, False, context=uom_context)
             else:
                 price = option.price_unit
             options.append((0, 0, {
@@ -362,7 +362,7 @@ class sale_quote_option(osv.osv):
             self.price_unit = 0.0
             return
         if self.uom_id.id != self.product_id.uom_id.id:
-            new_price = self.product_id.uom_id._compute_price(self.product_id.uom_id.id, self.price_unit, self.uom_id.id)
+            new_price = self.product_id.uom_id._compute_price(self.price_unit, self.uom_id)
             self.price_unit = new_price
 
     def on_change_product_id(self, cr, uid, ids, product, uom_id=None, context=None):
@@ -380,8 +380,8 @@ class sale_quote_option(osv.osv):
         uom_obj = self.pool.get('product.uom')
         if vals['uom_id'] != product_obj.uom_id.id:
             selected_uom = uom_obj.browse(cr, uid, vals['uom_id'], context=context)
-            new_price = uom_obj._compute_price(cr, uid, product_obj.uom_id.id,
-                                               vals['price_unit'], vals['uom_id'])
+            new_price = uom_obj._compute_price(cr, uid, [product_obj.uom_id.id],
+                                               vals['price_unit'], selected_uom)
             vals['price_unit'] = new_price
         if not uom_id:
             domain = {'uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
@@ -434,7 +434,7 @@ class sale_order_option(osv.osv):
         uom_obj = self.pool.get('product.uom')
         if vals['uom_id'] != product_obj.uom_id.id:
             selected_uom = uom_obj.browse(cr, uid, vals['uom_id'], context=context)
-            new_price = uom_obj._compute_price(cr, uid, product_obj.uom_id.id, vals['price_unit'], vals['uom_id'])
+            new_price = uom_obj._compute_price(cr, uid, [product_obj.uom_id.id], vals['price_unit'], selected_uom)
             vals['price_unit'] = new_price
         if not uom_id:
             domain = {'uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
@@ -461,7 +461,7 @@ class sale_order_option(osv.osv):
         pricelist = self.order_id.pricelist_id
         if pricelist and product:
             partner_id = self.order_id.partner_id.id
-            self.price_unit = pricelist.with_context(uom=self.uom_id.id).price_get(product.id, self.quantity, partner_id)[pricelist.id]
+            self.price_unit = pricelist.with_context(uom=self.uom_id.id).get_product_price(product, self.quantity, partner_id)
         domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         return {'domain': domain}
 

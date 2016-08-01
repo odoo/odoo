@@ -18,7 +18,7 @@ class membership_invoice(osv.osv_memory):
         """
         if not product_id:
             return {'value': {'member_price': False}}
-        return {'value': {'member_price': self.pool.get('product.product').price_get(cr, uid, [product_id])[product_id]}}
+        return {'value': {'member_price': self.pool.get('product.product').price_compute(cr, uid, [product_id], 'list_price')[product_id]}}
 
     def membership_invoice(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')

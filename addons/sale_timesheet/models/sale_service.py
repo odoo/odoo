@@ -37,7 +37,7 @@ class procurement_order(osv.osv):
         product_uom = self.pool.get('product.uom')
         company_time_uom_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id
         if procurement.product_uom.id != company_time_uom_id.id and procurement.product_uom.category_id.id == company_time_uom_id.category_id.id:
-            planned_hours = product_uom._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, company_time_uom_id.id)
+            planned_hours = product_uom._compute_quantity(cr, uid, [procurement.product_uom.id], procurement.product_qty, company_time_uom_id)
         else:
             planned_hours = procurement.product_qty
         return planned_hours

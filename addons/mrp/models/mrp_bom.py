@@ -123,7 +123,7 @@ class MrpBom(models.Model):
 
             bom = self._bom_find(product=current_line.product_id, picking_type=picking_type or self.picking_type_id, company_id=self.company_id.id)
             if bom.type == 'phantom':
-                converted_line_quantity = self.env['product.uom']._compute_qty_obj(current_line.product_uom_id, line_quantity, bom.product_uom_id)
+                converted_line_quantity = current_line.product_uom_id._compute_quantity(line_quantity, bom.product_uom_id)
                 bom_lines = [(line, current_line.product_id, line_quantity) for line in bom.bom_line_ids] + bom_lines
                 templates_done |= current_line.product_id.product_tmpl_id
                 boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity}))
