@@ -76,6 +76,12 @@
                                             <address t-field="issue.partner_id" t-field-options='{"widget": "contact", "fields": ["name", "email"], "no_marker": true}'/>
                                         </div>
                                     </div>
+                                    <t t-if="issue.description">
+                                        <div class="col-md-12">
+                                            <strong>Description</strong>
+                                            <div t-field="issue.description"/>
+                                        </div>
+                                    </t>
                                 </div>
                             </div>
                         </div>
