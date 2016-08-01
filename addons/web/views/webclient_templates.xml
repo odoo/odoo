@@ -189,12 +189,21 @@
     </template>
 
     <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
-        <html style="height: 100%">
+        <html t-att="html_data or {}">
             <head>
+                <meta charset="utf-8"/>
                 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-                <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-                <title>Odoo</title>
-                <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+                <title t-esc="title or 'Odoo'"/>
+                <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/src/img/favicon.ico'"/>
+
+                <script type="text/javascript">
+                    var odoo = {
+                        csrf_token: "<t t-esc="request.csrf_token(None)"/>",
+                    };
+                </script>
+
                 <t t-raw="head or ''"/>
             </head>
             <body t-att-class="body_classname">
@@ -205,6 +214,7 @@
 
     <template id="web.login_layout" name="Login Layout">
         <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
             <t t-set="head">
                 <t t-call-assets="web.assets_common" t-js="false"/>
                 <t t-call-assets="web.assets_frontend" t-js="false"/>
@@ -212,6 +222,7 @@
                 <t t-call-assets="web.assets_frontend" t-css="false"/>
             </t>
             <t t-set="body_classname" t-value="'container'"/>
+
             <div class="row">
                 <div class="col-md-6 col-md-offset-3 o_database_list">
                     <div class="text-center">
@@ -327,37 +338,33 @@
         </a>
     </template>
 
-    <template id="web.qunit_suite">
-        &lt;!DOCTYPE html&gt;
-        <html style="height: 100%">
-            <head>
-                <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-                <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-                <title>Odoo Web Tests</title>
+    <template id="web.webclient_script">
+        <script type="text/javascript">
+            odoo.define('web.web_client', function (require) {
+                var WebClient = require('web.WebClient');
+                var web_client = new WebClient();
+                $(function() {
+                    web_client.setElement($(document.body));
+                    web_client.start();
+                });
+                return web_client;
+            });
+        </script>
+    </template>
 
-                <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-                <link rel="stylesheet" href="/web/static/lib/qunit/qunit-1.17.1.css"/>
-                <script src="/web/static/lib/qunit/qunit-1.17.1.js"></script>
+    <template id="web.qunit_suite">
+        <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+            <t t-set="title">Odoo Web Tests</t>
+            <t t-set="head">
+                <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-1.17.1.css"/>
+                <script type="text/javascript" src="/web/static/lib/qunit/qunit-1.17.1.js"></script>
 
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
-                <script type="text/javascript">
-                    $(function() {
-                        odoo.define('web.web_client', function (require) {
-                            var WebClient = require('web.WebClient');
-                            var web_client = new WebClient();
-                            web_client.setElement($(document.body));
-                            web_client.start();
-                            return web_client;
-                        });
-                    });
-                </script>
+                <t t-call="web.webclient_script"/>
 
-                <style>
-                    body { overflow: auto !important; }
-                </style>
                 <script type="text/javascript" src="/web/static/test/testing.js"></script>
-
                 <script type="text/javascript" src="/web/static/test/registry.js"></script>
                 <script type="text/javascript" src="/web/static/test/rpc-misordered.js"></script>
                 <script type="text/javascript" src="/web/static/test/mutex.js"></script>
@@ -370,31 +377,18 @@
                 <script type="text/javascript" src="/web/static/test/list-utils.js"></script>
                 <script type="text/javascript" src="/web/static/test/list-editable.js"></script>
                 <script type="text/javascript" src="/web/static/test/search.js"></script>
-            </head>
+            </t>
 
-            <body id="oe" class="openerp">
-                <div id="qunit"></div>
-                <div id="qunit-fixture"></div>
-            </body>
-        </html>
+            <div id="qunit"/>
+            <div id="qunit-fixture"/>
+        </t>
     </template>
 
     <template id="web.webclient_bootstrap">
-        &lt;!DOCTYPE html&gt;
-        <html>
-            <head>
-                <meta charset="utf-8"/>
-                <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-                <meta name="viewport" content="width=device-width, initial-scale=1"/>
-
-                <title>Odoo</title>
-
-                <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+        <t t-call="web.layout">
+            <t t-set="head_web">
                 <script type="text/javascript">
-                    var odoo = {
-                        session_info: <t t-raw="session_info"/>,
-                        csrf_token: "<t t-esc="request.csrf_token(None)"/>",
-                    };
+                    odoo.session_info = <t t-raw="session_info"/>;
                 </script>
 
                 <t t-call-assets="web.assets_common" t-js="false"/>
@@ -408,43 +402,29 @@
                     <![endif]-->
                 ]]>
 
-                <script type="text/javascript">
-                    $(function() {
-                        <t t-if="init">
-                            <t t-raw="init"/>
-                        </t>
-                        <t t-if="not init">
-                            odoo.define('web.web_client', function (require) {
-                                var WebClient = require('web.WebClient');
-                                var web_client = new WebClient();
-                                web_client.setElement($(document.body));
-                                web_client.start();
-                                return web_client;
-                            });
-                        </t>
-                    });
-                </script>
-            </head>
-            <body class="o_web_client">
-                <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" groups="base.group_user,base.group_portal">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                    </div>
-                    <div class="navbar-collapse collapse">
-                        <t t-call="web.menu"/>
-                    </div>
-                </nav>
-                <div class="o_main">
-                    <div class="o_sub_menu" groups="base.group_user,base.group_portal">
-                        <t t-call="web.menu_secondary"/>
-                    </div>
-                    <div class="o_main_content"/>
+                <t t-call="web.webclient_script"/>
+            </t>
+            <t t-set="head" t-value="head_web + (head or '')"/>
+            <t t-set="body_classname" t-value="'o_web_client'"/>
+
+            <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" groups="base.group_user,base.group_portal">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
                 </div>
-            </body>
-        </html>
+                <div class="navbar-collapse collapse">
+                    <t t-call="web.menu"/>
+                </div>
+            </nav>
+            <div class="o_main">
+                <div class="o_sub_menu" groups="base.group_user,base.group_portal">
+                    <t t-call="web.menu_secondary"/>
+                </div>
+                <div class="o_main_content"/>
+            </div>
+        </t>
     </template>
 </odoo>
