@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from openerp import api, fields, models, _
 from openerp.exceptions import UserError
 
@@ -7,33 +5,40 @@ class ProductCategory(models.Model):
     _inherit = "product.category"
 
     property_account_sales_discount_categ_id = fields.Many2one('account.account', company_dependent=True,
-        string="Sales Discount Account", 
+        string="Sales Discount",
         domain=[('deprecated', '=', False)],
         help="This account will be used for invoices to value sales discount.")
     property_account_sales_return_categ_id = fields.Many2one('account.account', company_dependent=True,
-        string="Sales Return Account", 
+        string="Sales Return", 
         domain=[('deprecated', '=', False)],
         help="This account will be used for invoices to value sales return.")
 
-#----------------------------------------------------------
-# Products
-#----------------------------------------------------------
+
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     property_account_sales_discount_id = fields.Many2one('account.account', company_dependent=True,
-        string="Sales Discount Account", 
+        string="Sales Discount",
         domain=[('deprecated', '=', False)],
-        help="This account will be used for invoices to value sales discount.")
+        help="This account will be used for invoices instead of the default one to value sales discount for the current product.")
     property_account_sales_return_id = fields.Many2one('account.account', company_dependent=True,
-        string="Sales Return Account", 
+        string="Sales Return", 
         domain=[('deprecated', '=', False)],
-        help="This account will be used for invoices to value sales return.")
-    
+        help="This account will be used for invoices instead of the default one to value sales return for the current product.")
+    property_brand = fields.Char(string="Brand", help="Brand of product",required=True)
 
     @api.multi
     def _get_product_accounts(self):
-        return {
-            'sales_discount': self.property_account_sales_discount_id or self.categ_id.property_account_sales_discount_categ_id,
-            'sales_return': self.property_account_sales_return_id or self.categ_id.property_account_sales_return_categ_id
-        }
+        """ Add the stock accounts, sales discount, sales return related to product to the result of super()
+        @return: dictionary which contains information regarding stock accounts and super (income+expense accounts)
+        """
+        accounts = super(product_template, self)._get_product_accounts()
+        res = self._get_asset_accounts()
+        accounts.update({
+            'stock_input': res['stock_input'] or self.property_stock_account_input or self.categ_id.property_stock_account_input_categ_id,
+            'stock_output': res['stock_output'] or self.property_stock_account_output or self.categ_id.property_stock_account_output_categ_id,
+            'stock_valuation': self.categ_id.property_stock_valuation_account_id or False,
+            'sales_discount': res['sales_discount'] or self.property_account_sales_discount_id or self.categ_id.property_account_sales_discount_categ_id,
+            'sales_return': res['sales_return'] or self.property_account_sales_return_id or self.categ_id.property_account_sales_return_categ_id,
+        })
+        return accounts
