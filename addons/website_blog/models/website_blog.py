@@ -281,31 +281,3 @@ class BlogPost(osv.Model):
         for category, data in res.iteritems():
             res[category]['button_access'] = {'url': access_action, 'title': _('View Blog Post')}
         return res
-
-
-class Website(osv.Model):
-    _inherit = "website"
-
-    def page_search_dependencies(self, cr, uid, view_id, context=None):
-        dep = super(Website, self).page_search_dependencies(cr, uid, view_id, context=context)
-
-        post_obj = self.pool.get('blog.post')
-
-        view = self.pool.get('ir.ui.view').browse(cr, uid, view_id, context=context)
-        name = view.key.replace("website.", "")
-        fullname = "website.%s" % name
-
-        dom = [
-            '|', ('content', 'ilike', '/page/%s' % name), ('content', 'ilike', '/page/%s' % fullname)
-        ]
-        posts = post_obj.search(cr, uid, dom, context=context)
-        if posts:
-            page_key = _('Blog Post')
-            dep[page_key] = []
-        for p in post_obj.browse(cr, uid, posts, context=context):
-            dep[page_key].append({
-                'text': _('Blog Post <b>%s</b> seems to have a link to this page !') % p.name,
-                'link': p.website_url
-            })
-
-        return dep
