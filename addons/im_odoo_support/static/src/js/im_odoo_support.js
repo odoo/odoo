@@ -44,6 +44,9 @@
             }
         },
         start_support: function(){
+            // The free livechat service doesn't exist anymore
+            window.open('https://www.odoo.com/help', '_blank');
+            return;
             var self = this;
             if(!this.assets_loaded){
                 this.load_assets().then(function(){
