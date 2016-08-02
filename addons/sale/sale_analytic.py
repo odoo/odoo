@@ -43,7 +43,7 @@ class AccountAnalyticLine(models.Model):
         if self.unit_amount == 0.0:
             return 0.0
         price_unit = abs(self.amount / self.unit_amount)
-        currency_id = self.currency_id or self.account_id.currency_id
+        currency_id = self.company_id.currency_id
         if currency_id and currency_id != order.currency_id:
             price_unit = currency_id.compute(price_unit, order.currency_id)
         return price_unit
