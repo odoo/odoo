@@ -1141,7 +1141,7 @@ class IrActionsActClient(models.Model):
                                 "the view tag")
     params_store = fields.Binary(string='Params storage', readonly=True)
 
-    @api.depends('params')
+    @api.depends('params_store')
     def _compute_params(self):
         self_bin = self.with_context(bin_size=False, bin_size_params_store=False)
         for record, record_bin in zip(self, self_bin):

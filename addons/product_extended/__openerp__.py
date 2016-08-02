@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     "name" : "Product extension to track sales and purchases",
     "version" : "1.0",
@@ -11,7 +13,7 @@ Product extension. This module adds:
 """,
     "init_xml" : [],
     "demo_xml" : [],
-    "data": ["product_extended_view.xml"],
+    "data": ["views/product_views.xml"],
     "active": False,
     "installable": True
 }

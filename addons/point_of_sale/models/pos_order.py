@@ -287,6 +287,7 @@ class PosOrder(models.Model):
                     'analytic_account_id': self._prepare_analytic_account(line),
                     'credit': ((amount > 0) and amount) or 0.0,
                     'debit': ((amount < 0) and -amount) or 0.0,
+                    'tax_ids': [(6, 0, line.tax_ids.ids)],
                     'partner_id': partner_id
                 })
 
@@ -322,7 +323,7 @@ class PosOrder(models.Model):
             for value in group_data:
                 all_lines.append((0, 0, value),)
         if move:  # In case no order was changed
-            move.sudo().write({'line_ids': all_lines})
+            move.sudo().with_context(dont_create_taxes=True).write({'line_ids': all_lines})
             move.sudo().post()
         return True
 
@@ -754,8 +755,8 @@ class PosOrderLine(models.Model):
                 raise UserError(
                     _('You have to select a pricelist in the sale form !\n'
                       'Please set one before choosing a product.'))
-            price = self.order_id.pricelist_id.price_get(
-                self.product_id.id, self.qty or 1.0, self.order_id.partner_id.id)[self.order_id.pricelist_id.id]
+            price = self.order_id.pricelist_id.get_product_price(
+                self.product_id, self.qty or 1.0, self.order_id.partner_id)
             self._onchange_qty()
             self.price_unit = price
             self.tax_ids = self.product_id.taxes_id

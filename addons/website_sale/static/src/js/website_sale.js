@@ -316,6 +316,7 @@ odoo.define('website_sale.website_sale', function (require) {
         });
 
         $('.oe_cart').on('click', '.js_change_shipping', function() {
+          if (!$('body.editor_enable').length) { //allow to edit button text with editor
             var $old = $('.all_shipping').find('.panel.border_primary');
             $old.find('.btn-ship').toggle();
             $old.addClass('js_change_shipping');
@@ -328,11 +329,13 @@ odoo.define('website_sale.website_sale', function (require) {
 
             var $form = $(this).parent('div.one_kanban').find('form.hide');
             $.post($form.attr('action'), $form.serialize()+'&xhr=1');
+          }
         });
         $('.oe_cart').on('click', '.js_edit_address', function() {
             $(this).parent('div.one_kanban').find('form.hide').attr('action', '/shop/address').submit();
         });
         $('.oe_cart').on('click', '.js_delete_product', function(e) {
+            e.preventDefault();
             $(this).closest('tr').find('.js_quantity').val(0).trigger('change');
         });
 

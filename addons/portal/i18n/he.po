@@ -3,13 +3,14 @@
 # * portal
 # 
 # Translators:
+# fishfurbanter <fishfurbanter@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-07-07 22:54+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-07-23 17:06+0000\n"
+"Last-Translator: fishfurbanter <fishfurbanter@gmail.com>\n"
 "Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +55,7 @@ msgid ""
 "                </p>\n"
 "            \n"
 "            "
-msgstr ""
+msgstr "\n            \t<p>\n                    Dear ${object.user_id.name or ''},\n                </p>\n                <p>\n                    קיבלת גישה ל ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n                </p>\n                <p>\n                    פרטי ההתחברות של המשתמש שלך הם:\n                </p>\n                <ul>\n                    <li>שם משתמש: ${object.user_id.login or ''}</li>\n                </ul>\n                <ul>\n                    <li>פורטל: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n                </ul>\n                <ul>\n                \t<li>מסד נתונים: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n                </ul>\n                <p>\n                \tתוכל לקבוע או לשנות את הסיסמא שלך בURL:\n                </p>\n                <ul>\n                    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n                </ul>\n                <p>\n                \t${object.wizard_id.welcome_message or ''}\n                </p>\n                <p>---<br />\n                    Odoo - Open Source Business Applications<br />\n                    http://www.odoo.com<br />\n                </p>\n            \n            "
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
@@ -107,7 +108,7 @@ msgstr "נוצר ב-"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "השם המוצג"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
@@ -123,7 +124,7 @@ msgstr "מזהה"
 #. module: portal
 #: model:ir.model.fields,help:portal.field_res_groups_is_portal
 msgid "If checked, this group is usable as a portal."
-msgstr ""
+msgstr "אם סומן, ניתן להשתמש בקבוצה זו כפורטל."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
@@ -198,40 +199,40 @@ msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
-msgstr ""
+msgstr "בחר אילו אנשי קשר צריכים להיות שייכים לפורטל מהרשימה למטה.\nכתובת הדוא\"ל של כל איש קשר שנבחר צריכה להיות תקנית ושונה.\nבמקרה הצורך תוכל לתקן ישירות מתוך הרשימה את הדוא\"ל של כל אחד מהאנשי קשר. "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:114
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "למספר אנשי קשר יש דוא\"ל זהה: "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:111
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "לחלק מאנשי הקשר אין דוא\"ל תקני:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:117
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr ""
+msgstr "לחלק מאנשי הקשר יש דוא\"ל הזהה לזה של משתמשים קיימים:"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
 msgid "The portal that users can be added in or removed from."
-msgstr ""
+msgstr "הפורטל שממנו ניתן להוסף ולהסיר משתמשים."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
-msgstr ""
+msgstr "טקסט זה כלול בדוא\"ל שישלח למשתמשים חדשים בפורטל."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
 msgid "This text is included in the email sent to new users of the portal."
-msgstr ""
+msgstr "טקסט זה כלול בדוא\"ל שישלח למשתמשים חדשים של הפורטל."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:120

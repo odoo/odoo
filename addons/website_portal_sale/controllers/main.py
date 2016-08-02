@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
-
-from odoo import http
+from odoo import http, _
 from odoo.exceptions import AccessError
 from odoo.http import request
 
@@ -171,3 +169,17 @@ class website_account(website_account):
             'default_url': '/my/invoices',
         })
         return request.website.render("website_portal_sale.portal_my_invoices", values)
+
+    def details_form_validate(self, data):
+        error, error_message = super(website_account, self).details_form_validate(data)
+        # prevent VAT/name change if invoices exist
+        partner = request.env['res.users'].browse(request.uid).partner_id
+        invoices = request.env['account.invoice'].sudo().search_count([('partner_id', '=', partner.id), ('state', 'not in', ['draft', 'cancel'])])
+        if invoices:
+            if data.get('vat', partner.vat) != partner.vat:
+                error['vat'] = 'error'
+                error_message.append(_('Changing VAT number is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
+            if data.get('name', partner.name) != partner.name:
+                error['name'] = 'error'
+                error_message.append(_('Changing your name is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
+        return error, error_message

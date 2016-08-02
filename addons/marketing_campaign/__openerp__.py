@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
     'name': 'Marketing Campaigns',
     'version': '1.1',
-    'depends': ['document',
-                 'mail',
-                 'decimal_precision'
-    ],
+    'depends': ['document', 'mail', 'decimal_precision'],
     'category': 'Marketing',
     'description': """
 This module provides leads automation through marketing campaigns (campaigns can in fact be defined on any resource, not just CRM Leads).
@@ -38,13 +34,10 @@ input segments, workflow.
     'data': [
         'security/marketing_campaign_security.xml',
         'security/ir.model.access.csv',
-        'marketing_campaign_view.xml',
-        'marketing_campaign_data.xml',
-        'marketing_campaign_workflow.xml',
+        'views/marketing_campaign_views.xml',
+        'data/marketing_campaign_data.xml',
+        'data/marketing_campaign_workflow.xml',
         'report/campaign_analysis_view.xml',
     ],
-    'demo': ['marketing_campaign_demo.xml'],
-    'test': ['test/marketing_campaign.yml'],
-    'installable': True,
-    'auto_install': False,
+    'demo': ['data/marketing_campaign_demo.xml'],
 }

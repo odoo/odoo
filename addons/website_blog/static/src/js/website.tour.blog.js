@@ -64,13 +64,14 @@ odoo.define("website_blog.tour", function (require) {
             position: "right",
         }, {
             trigger: "button.btn-danger.js_publish_btn",
+            extra_trigger: "body:not(.editor_enable)",
             position: "top",
-            content: _t(" Click on this button to send your blog post online."),
+            content: _t("Publish your blog post to make it visible to your visitors."),
         }, {
-            trigger: "#wrap h1",
-            extra_trigger: ".js_publish_management button.js_publish_btn.btn-success:visible",
-            content: _t("This tutorial is over. To discover more features and improve the content of this page, go to the upper left customize menu. You can also add some cool content with your text in the edit mode with the upper right button."),
-            position: "top",
+            trigger: "#customize-menu-button",
+            extra_trigger: "body:not(.editor_enable) .js_publish_management button.js_publish_btn.btn-success:visible",
+            content: _t("<p><b>This tutorial is over.</b> Use this button to discover more features and improve the content of this page.</p><p>You can also add some cool content with your text in edit mode or keep adding pages with the upper right buttons.</p>"),
+            position: "bottom",
             width: 500,
         }]);
     });

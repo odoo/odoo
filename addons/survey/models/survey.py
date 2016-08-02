@@ -1004,7 +1004,7 @@ class SurveyUserInputLine(models.Model):
         ])
         old_uil.sudo().unlink()
 
-        ca_dict = dict_keys_startswith(post, answer_tag)
+        ca_dict = dict_keys_startswith(post, answer_tag + '_')
         comment_answer = ca_dict.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if len(ca_dict) > 0:
             for key in ca_dict:
@@ -1036,7 +1036,7 @@ class SurveyUserInputLine(models.Model):
         old_uil.sudo().unlink()
 
         no_answers = True
-        ca_dict = dict_keys_startswith(post, answer_tag)
+        ca_dict = dict_keys_startswith(post, answer_tag + '_')
 
         comment_answer = ca_dict.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if comment_answer:

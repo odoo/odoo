@@ -770,9 +770,11 @@ class YamlInterpreter(object):
         if node.src_model:
             keyword = 'client_action_relate'
             value = 'ir.actions.act_window,%s' % id
-            replace = node.replace or True
-            self.sudo_env['ir.model.data'].ir_set('action', keyword, node.id, [node.src_model], value, \
-                replace=replace, noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
+            res_id = False
+            model = node.src_model
+            if isinstance(model, (list, tuple)):
+                model, res_id = model
+            self.env['ir.values'].sudo().set_action(node.id, action_slot=keyword, model=model, action=value, res_id=res_id)
         # TODO add remove ir.model.data
 
     def process_delete(self, node):
@@ -798,10 +800,7 @@ class YamlInterpreter(object):
         if (not node.menu or eval(node.menu)) and id:
             keyword = node.keyword or 'client_action_multi'
             value = 'ir.actions.act_url,%s' % id
-            replace = node.replace or True
-            self.sudo_env['ir.model.data'].ir_set('action', keyword, node.url, \
-                    ["ir.actions.act_url"], value, replace=replace, \
-                    noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
+            self.env['ir.values'].sudo().set_action(node.url, action_slot=keyword, model="ir.actions.act_url", action=value, res_id=False)
 
     def process_ir_set(self, node):
         if not self.mode == 'init':
@@ -814,9 +813,15 @@ class YamlInterpreter(object):
             else:
                 value = expression
             res[fieldname] = value
-        self.sudo_env['ir.model.data'].ir_set(res['key'], res['key2'], \
-                res['name'], res['models'], res['value'], replace=res.get('replace',True), \
-                isobject=res.get('isobject', False), meta=res.get('meta',None))
+        ir_values = self.env['ir.values']
+        for model in res['models']:
+            res_id = False
+            if isinstance(model, (list, tuple)):
+                model, res_id = model
+            if res['key'] == 'default':
+                ir_values.sudo().set_default(model, field_name=res['name'], value=res['value'], condition=res['key2'])
+            elif res['key'] == 'action':
+                ir_values.sudo().set_action(res['name'], action_slot=res['key2'], model=model, action=res['value'], res_id=res_id)
 
     def process_report(self, node):
         values = {}
@@ -850,9 +855,12 @@ class YamlInterpreter(object):
         if not node.menu or eval(node.menu):
             keyword = node.keyword or 'client_print_multi'
             value = 'ir.actions.report.xml,%s' % id
-            replace = node.replace or True
-            self.sudo_env['ir.model.data'].ir_set('action', \
-                    keyword, values['name'], [values['model']], value, replace=replace, isobject=True, xml_id=xml_id)
+            ir_values = self.env['ir.values']
+            res_id = False
+            model = values['model']
+            if isinstance(model, (list, tuple)):
+                model, res_id = model
+            ir_values.sudo().set_action(values['name'], action_slot=keyword, model=model, action=value, res_id=res_id)
 
     def process_none(self):
         """

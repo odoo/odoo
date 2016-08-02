@@ -80,7 +80,7 @@ class HrExpense(models.Model):
         if self.product_id:
             if not self.name:
                 self.name = self.product_id.display_name or ''
-            self.unit_amount = self.env['product.template']._price_get(self.product_id, 'standard_price')[self.product_id.id]
+            self.unit_amount = self.product_id.price_compute('standard_price')[self.product_id.id]
             self.product_uom_id = self.product_id.uom_id
             self.tax_ids = self.product_id.supplier_taxes_id
             account = self.product_id.product_tmpl_id._get_product_accounts()['expense']

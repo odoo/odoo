@@ -129,7 +129,6 @@ class StockMove(models.Model):
     @api.multi
     def create_lots(self):
         lots = self.env['stock.move.lots']
-        uom_obj = self.env['product.uom']
         for move in self:
             unlink_move_lots = move.move_lot_ids.filtered(lambda x : (x.quantity_done == 0) and not x.workorder_id)
             unlink_move_lots.unlink()
@@ -140,7 +139,7 @@ class StockMove(models.Model):
                 old_move_lot.setdefault(key, []).append(movelot)
             for quant in move.reserved_quant_ids:
                 key = (quant.lot_id.id or False)
-                quantity = uom_obj._compute_qty(move.product_id.uom_id.id, quant.qty, move.product_uom.id)
+                quantity = move.product_id.uom_id._compute_quantity(quant.qty, move.product_uom)
                 if group_new_quant.get(key):
                     group_new_quant[key] += quantity
                 else:
@@ -170,7 +169,6 @@ class StockMove(models.Model):
         moves = self._filter_closed_moves()
         quant_obj = self.env['stock.quant']
         moves_todo = self.env['stock.move']
-        uom_obj = self.env['product.uom']
         for move in moves:
             rounding = move.product_uom.rounding
             if float_compare(move.quantity_done, 0.0, precision_rounding=rounding) <= 0:
@@ -186,7 +184,7 @@ class StockMove(models.Model):
         for move in moves_todo:
             if float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=rounding):
                 # Need to do some kind of conversion here
-                qty_split = uom_obj._compute_qty(move.product_uom.id, move.product_uom_qty - move.quantity_done, move.product_id.uom_id.id)
+                qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity_done, move.product_id.uom_id)
                 new_move = move.split(qty_split)
                 self.browse(new_move).quantity_done = 0.0
             main_domain = [('qty', '>', 0)]
@@ -200,7 +198,7 @@ class StockMove(models.Model):
             else:
                 for movelot in move.move_lot_ids:
                     if float_compare(movelot.quantity_done, 0, precision_rounding=rounding) > 0:
-                        qty = uom_obj._compute_qty(move.product_uom.id, movelot.quantity_done, move.product_id.uom_id.id)
+                        qty = move.product_uom._compute_quantity(movelot.quantity_done, move.product_id.uom_id)
                         quants = quant_obj.quants_get_preferred_domain(qty, move, lot_id=movelot.lot_id.id, domain=main_domain, preferred_domain_list=preferred_domain_list)
                         self.env['stock.quant'].quants_move(quants, move, move.location_dest_id, lot_id = movelot.lot_id.id)
             move.quants_unreserve()
@@ -273,7 +271,7 @@ class StockMove(models.Model):
             return self
         phantom_moves = self.env['stock.move']
         processed_moves = self.env['stock.move']
-        factor = self.env['product.uom']._compute_qty(self.product_uom.id, self.product_uom_qty, bom.product_uom_id.id) / bom.product_qty
+        factor = self.product_uom._compute_quantity(self.product_uom_qty, bom.product_uom_id) / bom.product_qty
         boms, lines = bom.sudo().explode(self.product_id, factor, picking_type=bom.picking_type_id)
         for bom_line, line_data in lines:
             phantom_moves += self._generate_move_phantom(bom_line, line_data['qty'])

@@ -294,12 +294,10 @@ def set_cookie_and_redirect(redirect_url):
     redirect.autocorrect_location_header = False
     return redirect
 
-def load_actions_from_ir_values(key, key2, models, meta):
-    Values = request.session.model('ir.values')
-    actions = Values.get(key, key2, models, meta, request.context)
-
-    return [(id, name, clean_action(action))
-            for id, name, action in actions]
+def load_actions_from_ir_values(action_slot, model, res_id):
+    ir_values = request.session.model('ir.values')
+    actions = ir_values.get_actions(action_slot=action_slot, model=model, res_id=res_id, context=request.context)
+    return [(id, name, clean_action(action)) for id, name, action in actions]
 
 def clean_action(action):
     action.setdefault('flags', {})
@@ -914,9 +912,7 @@ class TreeView(View):
 
     @http.route('/web/treeview/action', type='json', auth="user")
     def action(self, model, id):
-        return load_actions_from_ir_values(
-            'action', 'tree_but_open',[(model, id)],
-            False)
+        return load_actions_from_ir_values('tree_but_open', model, id)
 
 class Binary(http.Controller):
 
@@ -1298,7 +1294,7 @@ class ExportFormat(object):
 
         Model = request.session.model(model)
         context = dict(request.context or {}, **params.get('context', {}))
-        ids = ids or Model.search(domain, 0, False, False, context=context)
+        ids = ids or Model.search(domain, offset=0, limit=False, order=False, context=context)
 
         if not request.env[model]._is_an_ordinary_table():
             fields = [field for field in fields if field['name'] != 'id']

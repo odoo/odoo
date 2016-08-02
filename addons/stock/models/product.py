@@ -343,6 +343,7 @@ class Product(models.Model):
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
+    type = fields.Selection(selection_add=[('product', 'Stockable Product')])
     property_stock_procurement = fields.Many2one(
         'stock.location', "Procurement Location",
         company_dependent=True, domain=[('usage', 'like', 'procurement')],
@@ -379,7 +380,7 @@ class ProductTemplate(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
     route_ids = fields.Many2many(
         'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
-        domain="[('product_selectable', '=', True)]",
+        domain=[('product_selectable', '=', True)],
         help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,...")
     nbr_reordering_rules = fields.Integer('Reordering Rules', compute='_compute_nbr_reordering_rules')
     # TDE FIXME: really used ?
@@ -443,13 +444,6 @@ class ProductTemplate(models.Model):
             template.reordering_min_qty = res[template.id]['reordering_min_qty']
             template.reordering_max_qty = res[template.id]['reordering_max_qty']
 
-    @api.model
-    def _get_product_template_type(self):
-        res = super(ProductTemplate, self)._get_product_template_type()
-        if 'product' not in [item[0] for item in res]:
-            res.append(('product', _('Stockable Product')))
-        return res
-
     @api.onchange('tracking')
     def onchange_tracking(self):
         return self.mapped('product_variant_ids').onchange_tracking()
@@ -505,7 +499,7 @@ class ProductCategory(models.Model):
 
     route_ids = fields.Many2many(
         'stock.location.route', 'stock_location_route_categ', 'categ_id', 'route_id', 'Routes',
-        domain="[('product_categ_selectable', '=', True)]")
+        domain=[('product_categ_selectable', '=', True)])
     removal_strategy_id = fields.Many2one(
         'product.removal', 'Force Removal Strategy',
         help="Set a specific removal strategy that will be used regardless of the source location for this product category")

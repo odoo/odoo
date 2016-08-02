@@ -21,9 +21,9 @@ odoo.define("website.tour.banner", function (require) {
             run: "drag_and_drop",
         }, {
             trigger: "#wrapwrap .s_text_block_image_fw h2",
-            extra_trigger: ".oe_overlay_options .oe_options",
             content: _t("Click in the title text and start editing it."),
             position: "left",
+            width: 150,
             run: "text",
         }, {
             trigger: ".oe_overlay_options .oe_options",
@@ -31,8 +31,8 @@ odoo.define("website.tour.banner", function (require) {
             content: _t("Customize any block through this menu. Try to change the background of the banner."),
             position: "bottom",
         }, {
-            trigger: "#snippet_structure .oe_snippet:eq(6) .oe_snippet_thumbnail",
-            content: _t("Drag the \"Features\" block and drop it below the banner."),
+            trigger: "#snippet_structure .oe_snippet:eq(3) .oe_snippet_thumbnail",
+            content: _t("Drag another block in your page, below the cover."),
             position: "bottom",
             run: "drag_and_drop",
         }, {
@@ -49,13 +49,8 @@ odoo.define("website.tour.banner", function (require) {
             content: _t("Scroll to check rendering and then close the mobile preview."),
             position: "right",
         }, {
-            trigger: "#content-menu-button",
-            extra_trigger: "body:not(.modal-open)",
-            content: _t("The <b>Content</b> menu allows you to rename and delete pages or add them to the top menu."),
-            position: "bottom",
-        }, {
             trigger: "#oe_main_menu_navbar a[data-action=new_page]",
-            content: _t("Use this button to add pages"),
+            content: _t("<p><b>That's it.</b> Your homepage is live.</p><p>Continue adding more pages to your site or edit this page to make it even more awesome.</p>"),
             position: "bottom",
         }]);
     });

@@ -26,7 +26,7 @@ var MobilePreviewDialog = Dialog.extend({
         });
         this.$iframe = this.$('iframe');
         this.$iframe.on('load', function (e) {
-            self.$iframe.contents().find('body').removeAttr('user');
+            self.$iframe.contents().find('body').removeClass('o_connected_user');
             self.$iframe.contents().find('#oe_main_menu_navbar, #o_website_add_page_modal').remove();
         });
 

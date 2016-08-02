@@ -18,7 +18,7 @@
                         <div t-if="!has_screenshot" t-attf-style="background-image: url(#{record.icon.value});"/>
                         <div class="o_button_area">
                             <button type="object" name="button_choose_theme" states="uninstalled" class="btn btn-primary btn-sm">Install</button>
-                            <button type="action" name="website.action_website_tutorial" states="installed" class="btn btn-primary btn-sm">Install</button>
+                            <button type="action" name="website.action_website" states="installed" class="btn btn-primary btn-sm">Install</button>
                             <a t-if="record.url.value" class="btn btn-sm btn-primary" t-att-href="record.url.value" target="_blank">Live Preview</a>
                         </div>
                     </div>

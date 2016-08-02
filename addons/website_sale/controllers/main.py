@@ -95,7 +95,7 @@ class WebsiteSaleForm(WebsiteForm):
     def website_form_saleorder(self, **kwargs):
         model_record = request.env.ref('sale.model_sale_order')
         try:
-            data = self.extract_data(model_record, **kwargs)
+            data = self.extract_data(model_record, kwargs)
         except ValidationError, e:
             return json.dumps({'error_fields': e.args[0]})
 
@@ -410,13 +410,16 @@ class WebsiteSale(http.Controller):
                 '|', ("type", "=", "delivery"), ("id", "=", order.partner_id.commercial_partner_id.id)
             ], order='id desc')
             if shippings:
-                if kw.get('partner_id'):
-                    partner_id = int(kw.get('partner_id'))
+                if kw.get('partner_id') or 'use_billing' in kw:
+                    if 'use_billing' in kw:
+                        partner_id = order.partner_id.id
+                    else:
+                        partner_id = int(kw.get('partner_id'))
                     if partner_id in shippings.mapped('id'):
-                        order.partner_shipping_id = int(kw.get('partner_id'))
+                        order.partner_shipping_id = partner_id
                 elif not order.partner_shipping_id:
                     last_order = request.env['sale.order'].sudo().search([("partner_id", "=", order.partner_id.id)], order='id desc', limit=1)
-                    order.partner_shipping_id = last_order and last_order.id
+                    order.partner_shipping_id.id = last_order and last_order.id
 
         values = {
             'order': order,

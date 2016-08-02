@@ -623,34 +623,53 @@ class Field(object):
     #
     # Setup of field triggers
     #
-    # The triggers is a collection of pairs (field, path) of computed fields
-    # that depend on ``self``. When ``self`` is modified, it invalidates the cache
-    # of each ``field``, and registers the records to recompute based on ``path``.
-    # See method ``modified`` below for details.
+    # The triggers of ``self`` are a collection of pairs ``(field, path)`` of
+    # fields that depend on ``self``. When ``self`` is modified, it invalidates
+    # the cache of each ``field``, and determines the records to recompute based
+    # on ``path``. See method ``modified`` below for details.
     #
 
-    def _add_trigger(self, env, path_str, field=None):
-        path = path_str.split('.')
-        # traverse path and add triggers on fields along the way
-        for i, name in enumerate(path):
-            model = env[field.comodel_name if field else self.model_name]
-            field = model._fields[name]
-            # env[self.model_name] --- path[:i] --> model with field
+    def resolve_deps(self, model):
+        """ Return the dependencies of ``self`` as tuples ``(model, field, path)``,
+            where ``path`` is an optional list of field names.
+        """
+        model0 = model
+        result = []
 
-            if field is self:
-                self.recursive = True
-                continue
+        # add self's own dependencies
+        for dotnames in self.depends:
+            if dotnames == self.name:
+                _logger.warning("Field %s depends on itself; please fix its decorator @api.depends().", self)
+            model, path = model0, dotnames.split('.')
+            for i, fname in enumerate(path):
+                field = model._fields[fname]
+                result.append((model, field, path[:i]))
+                model = model0.env.get(field.comodel_name)
 
-            # add trigger on field and its inverses to recompute self
-            model._field_triggers.add(field, (self, '.'.join(path[:i] or ['id'])))
-            for invf in model._field_inverses[field]:
-                invm = env[invf.model_name]
-                invm._field_triggers.add(invf, (self, '.'.join(path[:i+1])))
+        # add self's model dependencies
+        for mname, fnames in model0._depends.iteritems():
+            model = model0.env[mname]
+            for fname in fnames:
+                field = model._fields[fname]
+                result.append((model, field, None))
 
-    def setup_triggers(self, env):
+        # add indirect dependencies from the dependencies found above
+        for model, field, path in list(result):
+            for inv_field in model._field_inverses[field]:
+                inv_model = model0.env[inv_field.model_name]
+                inv_path = None if path is None else path + [field.name]
+                result.append((inv_model, inv_field, inv_path))
+
+        return result
+
+    def setup_triggers(self, model):
         """ Add the necessary triggers to invalidate/recompute ``self``. """
-        for path_str in self.depends:
-            self._add_trigger(env, path_str)
+        for model, field, path in self.resolve_deps(model):
+            if field is not self:
+                path_str = None if path is None else ('.'.join(path) or 'id')
+                model._field_triggers.add(field, (self, path_str))
+            elif path:
+                self.recursive = True
 
     ############################################################################
     #
@@ -911,9 +930,9 @@ class Field(object):
         """ Determine the value of ``self`` for ``record``. """
         env = record.env
 
-        if self.column and not (self.depends and env.in_onchange):
+        if self.column and not (self.compute and env.in_onchange):
             # this is a stored field or an old-style function field
-            if self.depends:
+            if self.compute:
                 # this is a stored computed field, check for recomputation
                 recs = record._recompute_check(self)
                 if recs:
@@ -1877,13 +1896,14 @@ class _RelationalMulti(_Relational):
             for record in records:
                 record[self.name] = record[self.name].filtered(accessible)
 
-    def setup_triggers(self, env):
-        super(_RelationalMulti, self).setup_triggers(env)
-        # also invalidate self when fields appearing in the domain are modified
+    def _setup_regular_base(self, model):
+        super(_RelationalMulti, self)._setup_regular_base(model)
         if isinstance(self.domain, list):
-            for arg in self.domain:
-                if isinstance(arg, (tuple, list)) and isinstance(arg[0], basestring):
-                    self._add_trigger(env, arg[0], self)
+            self.depends += tuple(
+                self.name + '.' + arg[0]
+                for arg in self.domain
+                if isinstance(arg, (tuple, list)) and isinstance(arg[0], basestring)
+            )
 
 
 class One2many(_RelationalMulti):

@@ -14,7 +14,7 @@ It installs the profile for associations to manage events, registrations, member
 membership products (schemes).
     """,
     'depends': ['base_setup', 'membership', 'event'],
-    'data': ['profile_association.xml'],
+    'data': ['views/association_views.xml'],
     'demo': [],
     'installable': True,
     'auto_install': False,

@@ -34,7 +34,7 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for so in self:
-            self.invoice_shipping_on_delivery = all([not line.is_delivery for line in so.order_line])
+            so.invoice_shipping_on_delivery = all([not line.is_delivery for line in so.order_line])
         return res
 
     @api.multi
@@ -110,4 +110,4 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id or not line.product_uom or not line.product_uom_qty:
                 return 0.0
-            line.product_qty = self.env['product.uom']._compute_qty_obj(line.product_uom, line.product_uom_qty, line.product_id.uom_id)
+            line.product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)

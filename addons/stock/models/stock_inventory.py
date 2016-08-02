@@ -175,11 +175,11 @@ class Inventory(models.Model):
 
     @api.multi
     def action_start(self):
-        for inventory in self.filtered(lambda inventory: not inventory.line_ids and inventory.filter != 'partial'):
-            self.write({
-                'line_ids': [(0, 0, line_values) for line_values in inventory._get_inventory_lines_values()],
-                'state': 'confirm', 'date': fields.Datetime.now()
-            })
+        for inventory in self.filtered(lambda x: not x.line_ids):
+            vals = {'state': 'confirm', 'date': fields.Datetime.now()}
+            if inventory.filter != 'partial':
+                vals.update({'line_ids': [(0, 0, line_values) for line_values in inventory._get_inventory_lines_values()]})
+            inventory.write(vals)
         return True
     prepare_inventory = action_start
 
@@ -318,7 +318,7 @@ class InventoryLine(models.Model):
             return
         theoretical_qty = sum([x.qty for x in self._get_quants()])
         if theoretical_qty and self.product_uom_id and self.product_id.uom_id != self.product_uom_id:
-            theoretical_qty = self.env["product.uom"]._compute_qty_obj(self.product_id.uom_id, theoretical_qty, self.product_uom_id)
+            theoretical_qty = self.product_id.uom_id._compute_quantity(theoretical_qty, self.product_uom_id)
         self.theoretical_qty = theoretical_qty
 
     @api.onchange('product_id', 'product_uom_id')

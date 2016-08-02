@@ -35,14 +35,8 @@ class AccountAnalyticLine(models.Model):
         if not unit or self.product_id.uom_po_id.category_id.id != unit.category_id.id:
             unit = self.product_id.uom_po_id
 
-        ctx = dict(self._context or {})
-        if unit:
-            # price_get() will respect a 'uom' in its context, in order
-            # to return a default price for those units
-            ctx['uom'] = unit.id
-
         # Compute based on pricetype
-        amount_unit = self.product_id.with_context(ctx).price_get('standard_price')[self.product_id.id]
+        amount_unit = self.product_id.price_compute('standard_price', uom=unit)[self.product_id.id]
         amount = amount_unit * self.unit_amount or 0.0
         result = round(amount, self.currency_id.decimal_places) * -1
         self.amount = result

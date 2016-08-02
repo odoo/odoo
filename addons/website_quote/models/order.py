@@ -10,7 +10,7 @@ import datetime
 import openerp.addons.decimal_precision as dp
 from openerp import SUPERUSER_ID
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-from openerp.tools.translate import _
+from openerp.tools.translate import _, html_translate
 
 
 class sale_quote_template(osv.osv):
@@ -18,7 +18,7 @@ class sale_quote_template(osv.osv):
     _description = "Sale Quotation Template"
     _columns = {
         'name': fields.char('Quotation Template', required=True),
-        'website_description': fields.html('Description', translate=True, sanitize=False),
+        'website_description': fields.html('Description', translate=html_translate, sanitize=False),
         'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quotation Template Lines', copy=True),
         'note': fields.text('Terms and conditions'),
         'options': fields.one2many('sale.quote.option', 'template_id', 'Optional Products Lines', copy=True),
@@ -75,7 +75,7 @@ class sale_quote_line(osv.osv):
         uom_obj = self.pool.get('product.uom')
         if vals['product_uom_id'] != product_obj.uom_id.id:
             selected_uom = uom_obj.browse(cr, uid, vals['product_uom_id'], context=context)
-            new_price = uom_obj._compute_price(cr, uid, product_obj.uom_id.id, vals['price_unit'], vals['product_uom_id'])
+            new_price = uom_obj._compute_price(cr, uid, [product_obj.uom_id.id], vals['price_unit'], selected_uom)
             vals['price_unit'] = new_price
         if not uom_id:
             domain = {'product_uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
@@ -111,7 +111,7 @@ class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
     _description = "Sales Order Line"
     _columns = {
-        'website_description': fields.html('Line Description', sanitize=False),
+        'website_description': fields.html('Line Description', sanitize=False, translate=html_translate),
         'option_line_id': fields.one2many('sale.order.option', 'line_id', 'Optional Products Lines'),
     }
 
@@ -160,7 +160,7 @@ class sale_order(osv.osv):
     _columns = {
         'access_token': fields.char('Security Token', required=True, copy=False),
         'template_id': fields.many2one('sale.quote.template', 'Quotation Template', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
-        'website_description': fields.html('Description', translate=True, sanitize=False),
+        'website_description': fields.html('Description', translate=html_translate, sanitize=False),
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True),
         'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float", digits=0),
         'quote_viewed': fields.boolean('Quotation Viewed'),
@@ -213,7 +213,7 @@ class sale_order(osv.osv):
             if pricelist_id:
                 uom_context = context.copy()
                 uom_context['uom'] = line.product_uom_id.id
-                price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, 1, context=uom_context)[pricelist_id]
+                price = pricelist_obj.get_product_price(cr, uid, [pricelist_id], line.product_id, 1, False, context=uom_context)
             else:
                 price = line.price_unit
 
@@ -241,7 +241,7 @@ class sale_order(osv.osv):
             if pricelist_id:
                 uom_context = context.copy()
                 uom_context['uom'] = option.uom_id.id
-                price = pricelist_obj.price_get(cr, uid, [pricelist_id], option.product_id.id, 1, context=uom_context)[pricelist_id]
+                price = pricelist_obj.get_product_price(cr, uid, [pricelist_id], option.product_id, 1, False, context=uom_context)
             else:
                 price = option.price_unit
             options.append((0, 0, {
@@ -332,7 +332,7 @@ class sale_quote_option(osv.osv):
         'name': fields.text('Description', required=True, translate=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True),
         'layout_category_id': fields.many2one('sale.layout_category', string='Section'),
-        'website_description': fields.html('Option Description', translate=True, sanitize=False),
+        'website_description': fields.html('Option Description', translate=html_translate, sanitize=False),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
@@ -362,7 +362,7 @@ class sale_quote_option(osv.osv):
             self.price_unit = 0.0
             return
         if self.uom_id.id != self.product_id.uom_id.id:
-            new_price = self.product_id.uom_id._compute_price(self.product_id.uom_id.id, self.price_unit, self.uom_id.id)
+            new_price = self.product_id.uom_id._compute_price(self.price_unit, self.uom_id)
             self.price_unit = new_price
 
     def on_change_product_id(self, cr, uid, ids, product, uom_id=None, context=None):
@@ -380,8 +380,8 @@ class sale_quote_option(osv.osv):
         uom_obj = self.pool.get('product.uom')
         if vals['uom_id'] != product_obj.uom_id.id:
             selected_uom = uom_obj.browse(cr, uid, vals['uom_id'], context=context)
-            new_price = uom_obj._compute_price(cr, uid, product_obj.uom_id.id,
-                                               vals['price_unit'], vals['uom_id'])
+            new_price = uom_obj._compute_price(cr, uid, [product_obj.uom_id.id],
+                                               vals['price_unit'], selected_uom)
             vals['price_unit'] = new_price
         if not uom_id:
             domain = {'uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
@@ -403,7 +403,7 @@ class sale_order_option(osv.osv):
         'name': fields.text('Description', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)]),
         'layout_category_id': fields.many2one('sale.layout_category', string='Section'),
-        'website_description': fields.html('Line Description', sanitize=False),
+        'website_description': fields.html('Line Description', sanitize=False, translate=html_translate),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
@@ -434,7 +434,7 @@ class sale_order_option(osv.osv):
         uom_obj = self.pool.get('product.uom')
         if vals['uom_id'] != product_obj.uom_id.id:
             selected_uom = uom_obj.browse(cr, uid, vals['uom_id'], context=context)
-            new_price = uom_obj._compute_price(cr, uid, product_obj.uom_id.id, vals['price_unit'], vals['uom_id'])
+            new_price = uom_obj._compute_price(cr, uid, [product_obj.uom_id.id], vals['price_unit'], selected_uom)
             vals['price_unit'] = new_price
         if not uom_id:
             domain = {'uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
@@ -461,7 +461,7 @@ class sale_order_option(osv.osv):
         pricelist = self.order_id.pricelist_id
         if pricelist and product:
             partner_id = self.order_id.partner_id.id
-            self.price_unit = pricelist.with_context(uom=self.uom_id.id).price_get(product.id, self.quantity, partner_id)[pricelist.id]
+            self.price_unit = pricelist.with_context(uom=self.uom_id.id).get_product_price(product, self.quantity, partner_id)
         domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         return {'domain': domain}
 
@@ -501,6 +501,6 @@ class product_template(osv.Model):
     _inherit = "product.template"
 
     _columns = {
-        'website_description': fields.html('Description for the website', sanitize=False), # hack, if website_sale is not installed
-        'quote_description': fields.html('Description for the quote', sanitize=False),
+        'website_description': fields.html('Description for the website', sanitize=False, translate=html_translate), # hack, if website_sale is not installed
+        'quote_description': fields.html('Description for the quote', sanitize=False, translate=html_translate),
     }
