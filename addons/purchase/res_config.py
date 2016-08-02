@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -49,7 +50,17 @@ class purchase_config_settings(osv.osv_memory):
             (1, 'Allow using and importing vendor pricelists')
             ], "Vendor Price", 
             implied_group="purchase.group_manage_vendor_price"),
+        'auto_done_setting': fields.selection([
+            (0, 'Allow to edit purchase orders'),
+            (1, 'Never allow to modify a confirmed purchase order')
+            ], "Purchase Order Modification",
+            help='Purchase Order Modification used when you want to purchase order editable after confirm'),
     }
+
+    def set_auto_done_defaults(self, cr, uid, ids, context=None):
+        auto_done = self.browse(cr, uid, ids[0], context=context).auto_done_setting
+        res = self.pool.get('ir.values').set_default(cr, SUPERUSER_ID, 'purchase.config.settings', 'auto_done_setting', auto_done)
+        return res
 
 
 class account_config_settings(osv.osv_memory):

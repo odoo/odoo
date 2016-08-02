@@ -45,7 +45,7 @@ class PurchaseOrder(models.Model):
     def _get_invoiced(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for order in self:
-            if order.state != 'purchase':
+            if order.state not in ('purchase', 'to approve'):
                 order.invoice_status = 'no'
                 continue
 
@@ -100,7 +100,7 @@ class PurchaseOrder(models.Model):
     origin = fields.Char('Source Document', copy=False,\
         help="Reference of the document that generated this purchase order "
              "request (e.g. a sale order or an internal procurement request)")
-    partner_ref = fields.Char('Vendor Reference', copy=False,\
+    partner_ref = fields.Char('Vendor Reference', copy=False, states={'done': [('readonly', True)]},\
         help="Reference of the sales order or bid sent by the vendor. "
              "It's used to do the matching when you receive the "
              "products as this reference is usually written on the "
@@ -122,13 +122,13 @@ class PurchaseOrder(models.Model):
         ('done', 'Locked'),
         ('cancel', 'Cancelled')
         ], string='Status', readonly=True, select=True, copy=False, default='draft', track_visibility='onchange')
-    order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines', states=READONLY_STATES, copy=True)
+    order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True)
     notes = fields.Text('Terms and Conditions')
 
     invoice_count = fields.Integer(compute="_compute_invoice", string='# of Invoices', copy=False, default=0)
     invoice_ids = fields.Many2many('account.invoice', compute="_compute_invoice", string='Invoices', copy=False)
     invoice_status = fields.Selection([
-        ('no', 'Not purchased'),
+        ('no', 'Nothing to Invoice'),
         ('to invoice', 'Waiting Invoices'),
         ('invoiced', 'Invoice Received'),
         ], string='Invoice Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
@@ -145,7 +145,7 @@ class PurchaseOrder(models.Model):
 
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position')
     payment_term_id = fields.Many2one('account.payment.term', 'Payment Term')
-    incoterm_id = fields.Many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
+    incoterm_id = fields.Many2one('stock.incoterms', 'Incoterm', states={'done': [('readonly', True)]}, help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     create_uid = fields.Many2one('res.users', 'Responsible')
@@ -157,6 +157,7 @@ class PurchaseOrder(models.Model):
         help="Technical field used to display the Drop Ship Address", readonly=True)
     group_id = fields.Many2one('procurement.group', string="Procurement Group")
     is_shipped = fields.Boolean(compute="_compute_is_shipped")
+    is_editable = fields.Boolean()
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
@@ -321,12 +322,14 @@ class PurchaseOrder(models.Model):
             # Deal with double validation process
             if order.company_id.po_double_validation == 'one_step'\
                     or (order.company_id.po_double_validation == 'two_step'\
-                        and order.amount_total < self.env.user.company_id.currency_id.compute(order.company_id.po_double_validation_amount, order.currency_id))\
+                        and order.amount_untaxed < self.env.user.company_id.currency_id.compute(order.company_id.po_double_validation_amount, order.currency_id))\
                     or order.user_has_groups('purchase.group_purchase_manager'):
                 order.button_approve()
             else:
                 order.write({'state': 'to approve'})
-        return {}
+        if self.env['ir.values'].get_default('purchase.config.settings', 'auto_done_setting'):
+            order.is_editable = True
+        return True
 
     @api.multi
     def button_cancel(self):
@@ -381,16 +384,22 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def _create_picking(self):
+        StockPicking = self.env['stock.picking']
         for order in self:
             if any([ptype in ['product', 'consu'] for ptype in order.order_line.mapped('product_id.type')]):
-                res = order._prepare_picking()
-                picking = self.env['stock.picking'].create(res)
-                moves = order.order_line.filtered(lambda r: r.product_id.type in ['product', 'consu'])._create_stock_moves(picking)
-                moves.action_confirm()
-                order.order_line.mapped('move_ids').force_assign()
-                picking.message_post_with_view('mail.message_origin_link',
-                    values={'self': picking, 'origin': order},
-                    subtype_id=self.env.ref('mail.mt_note').id)
+                pickings = order.picking_ids.filtered(lambda x: x.state not in ('done','cancel'))
+                if not pickings:
+                    res = order._prepare_picking()
+                    picking = StockPicking.create(res)
+                    moves = order.order_line.filtered(lambda r: r.product_id.type in ['product', 'consu'])._create_stock_moves(picking)
+                    moves = moves.action_confirm()
+                    moves.force_assign()
+                    picking.message_post_with_view('mail.message_origin_link',
+                        values={'self': picking, 'origin': order},
+                        subtype_id=self.env.ref('mail.mt_note').id)
+                else:
+                    moves = order.order_line._create_stock_moves(pickings)
+                    moves.force_assign()
         return True
 
     @api.multi
@@ -523,7 +532,45 @@ class PurchaseOrderLine(models.Model):
                         total += move.product_uom_qty
             line.qty_received = total
 
+    @api.model
+    def create(self, values):
+        line = super(PurchaseOrderLine, self).create(values)
+        if line.order_id.state == 'purchase':
+            if line.order_id.company_id.po_double_validation == 'two_step'\
+                and line.order_id.amount_untaxed >= line.order_id.env.user.company_id.currency_id.compute(line.order_id.company_id.po_double_validation_amount, line.order_id.currency_id)\
+                and line.order_id.user_has_groups('purchase.group_purchase_user'):
+                line.order_id.write({'state': 'to approve'})
+        if line.state == 'purchase':
+            line.order_id._create_picking()
+        return line
+
+    @api.multi
+    def write(self, values):
+        lines = self.env['purchase.order.line']
+        if 'product_qty' in values:
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            lines = self.filtered(
+                lambda r: r.state == 'purchase' and float_compare(r.product_qty, values['product_qty'], precision_digits=precision) == -1)
+        result = super(PurchaseOrderLine, self).write(values)
+        for line in self:
+            if line.state == 'purchase':
+                if line.order_id.company_id.po_double_validation == 'two_step'\
+                    and line.order_id.amount_untaxed >= self.env.user.company_id.currency_id.compute(line.order_id.company_id.po_double_validation_amount, line.order_id.currency_id)\
+                    and not line.order_id.user_has_groups('purchase.group_purchase_manager'):
+                    line.order_id.write({'state': 'to approve', 'invoice_status': 'to invoice'})
+
+            if line.state == 'to approve':
+                if line.order_id.company_id.po_double_validation == 'two_step'\
+                    and line.order_id.amount_untaxed < self.env.user.company_id.currency_id.compute(line.order_id.company_id.po_double_validation_amount, line.order_id.currency_id)\
+                    and not line.order_id.user_has_groups('purchase.group_purchase_manager'):
+                    line.order_id.write({'state': 'purchase'})
+                    line.order_id._create_picking()
+        if lines:
+            lines.order_id._create_picking()
+        return result
+
     name = fields.Text(string='Description', required=True)
+    sequence = fields.Integer(string='Sequence', default=10)
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
     date_planned = fields.Datetime(string='Scheduled Date', required=True, select=True)
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
@@ -572,8 +619,10 @@ class PurchaseOrderLine(models.Model):
         moves = self.env['stock.move']
         done = self.env['stock.move'].browse()
         for line in self:
+            qty = 0.0
             price_unit = line._get_stock_move_price_unit()
-
+            for move in line.move_ids.filtered(lambda x: x.state != 'cancel'):
+                qty += move.product_qty
             template = {
                 'name': line.name or '',
                 'product_id': line.product_id.id,
@@ -596,9 +645,8 @@ class PurchaseOrderLine(models.Model):
                 'route_ids': line.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in line.order_id.picking_type_id.warehouse_id.route_ids])] or [],
                 'warehouse_id':line.order_id.picking_type_id.warehouse_id.id,
             }
-
             # Fullfill all related procurements with this po line
-            diff_quantity = line.product_qty
+            diff_quantity = line.product_qty - qty
             for procurement in line.procurement_ids:
                 procurement_qty = procurement.product_uom._compute_quantity(procurement.product_qty, line.product_uom)
                 tmp = template.copy()
@@ -618,12 +666,25 @@ class PurchaseOrderLine(models.Model):
     @api.multi
     def unlink(self):
         for line in self:
+            if line.filtered(lambda x: x.state in ('purchase', 'done')):
+                raise UserError(_('You can not remove a purchase order line.\nDiscard changes and try setting the quantity to 0.'))
+            if line.filtered(lambda x: x.state in ('to approve')):
+                product_ids = line.order_id.picking_ids.move_lines.mapped('product_id')
+                if line.product_id in product_ids:
+                    raise UserError(_('You can not remove a purchase order line.\nDiscard changes and try setting the quantity to 0.'))
             if line.order_id.state in ['approved', 'done']:
                 raise UserError(_('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
             for proc in line.procurement_ids:
                 proc.message_post(body=_('Purchase order line deleted.'))
             line.procurement_ids.filtered(lambda r: r.state != 'cancel').write({'state': 'exception'})
-        return super(PurchaseOrderLine, self).unlink()
+        order = self.mapped('order_id')
+        result = super(PurchaseOrderLine, self).unlink()
+        if order.state == 'to approve':
+            if order.company_id.po_double_validation == 'two_step'\
+                and order.amount_untaxed < self.env.user.company_id.currency_id.compute(order.company_id.po_double_validation_amount, order.currency_id)\
+                and order.user_has_groups('purchase.group_purchase_user'):
+                order.write({'state': 'purchase'})
+        return result
 
     @api.model
     def _get_date_planned(self, seller, po=False):
@@ -721,6 +782,15 @@ class PurchaseOrderLine(models.Model):
             price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
 
         self.price_unit = price_unit
+
+    @api.onchange('product_qty')
+    def _onchange_product_qty(self):
+        if (self.state == 'purchase' or self.state == 'to approve') and self.product_id.type in ['product', 'consu'] and self.product_qty < self._origin.product_qty:
+            warning_mess = {
+                'title': _('Ordered quantity decreased!'),
+                'message' : _('You are decreasing the ordered quantity! \nYou must update the quantities on the reception.'),
+            }
+            return {'warning': warning_mess}
 
     def _suggest_quantity(self):
         '''
