@@ -286,7 +286,7 @@
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                     <field name="lst_price"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
-                    <field name="uom_id" options="{'no_open': True, 'no_create': True}"/>
+                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
                     <field name="barcode"/>
                     <field name="product_tmpl_id" invisible="1"/>
                     <field name="active" invisible="1"/>
