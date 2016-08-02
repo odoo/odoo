@@ -526,7 +526,7 @@ class Holidays(models.Model):
         for recipient in recipients:
             if recipient.id in done_ids:
                 continue
-            if recipient.user_ids and group_hr_user in recipient.user_ids[0].groups_id.ids:
+            if recipient.user_ids and group_hr_user in recipient.user_ids[0].groups_id:
                 group_data['group_hr_user'] |= recipient
                 done_ids.add(recipient.id)
         return super(Holidays, self)._notification_group_recipients(message, recipients, done_ids, group_data)
