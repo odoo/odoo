@@ -9,7 +9,8 @@
                 <xpath expr="//field[@name='currency_id']" position="after">
                     <field name='oldest_cache_time'/>
                     <button name='delete_cache' type="object"
-                        string="Recompute cache"/>
+                        string="Invalidate cache"
+                        attrs="{'invisible': [('oldest_cache_time', '=', False)]}"/>
                 </xpath>
             </field>
         </record>
