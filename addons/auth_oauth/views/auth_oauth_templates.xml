@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <template id="auth_oauth.providers" name="OAuth Providers">
             <div t-foreach="providers" t-as="p">
                 <a t-att-href="p['auth_link']" class="btn btn-link">
@@ -33,5 +32,4 @@
                 </div>
             </xpath>
         </template>
-    </data>
-</openerp>
+</odoo>

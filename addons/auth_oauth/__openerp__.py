@@ -1,26 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
     'name': 'OAuth2 Authentication',
-    'version': '1.0',
-    'category': 'Extra Tools',
+    'category': 'Tools',
     'description': """
 Allow users to login through OAuth2 Provider.
 =============================================
 """,
-    'maintainer': 'OpenERP s.a.',
+    'maintainer': 'Odoo S.A.',
     'depends': ['base', 'web', 'base_setup', 'auth_signup'],
     'data': [
-        'res_users.xml',
-        'auth_oauth_data.xml',
-        'auth_oauth_data.yml',
-        'auth_oauth_view.xml',
+        'data/auth_oauth_data.xml',
+        'data/auth_oauth_data.yml',
+        'views/auth_oauth_views.xml',
+        'views/res_users_views.xml',
+        'views/res_config_views.xml',
+        'views/auth_oauth_templates.xml',
         'security/ir.model.access.csv',
-        'res_config.xml',
-        'views/auth_oauth_login.xml',
     ],
-    'installable': True,
-    'auto_install': False,
 }
