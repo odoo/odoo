@@ -20,7 +20,7 @@ Odoo Blog
         'views/website_blog_templates.xml',
         'views/snippets.xml',
         'security/ir.model.access.csv',
-        'security/website_blog.xml',
+        'security/website_blog_security.xml',
     ],
     'demo': [
         'data/website_blog_demo.xml'
