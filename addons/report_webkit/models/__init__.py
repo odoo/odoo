@@ -4,6 +4,9 @@
 # Copyright (c) 2010 Camptocamp SA (http://www.camptocamp.com)
 # Author : Nicolas Bessi (Camptocamp)
 
-import models
-import report
-import wizard
+import company
+import convert
+import header
+import ir_report
+import report_helper
+import webkit_report

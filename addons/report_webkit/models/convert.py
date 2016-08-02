@@ -4,7 +4,7 @@
 # Copyright (c) 2010 Camptocamp SA (http://www.camptocamp.com)
 # Author : Nicolas Bessi (Camptocamp)
 
-from openerp.tools import convert
+from odoo.tools import convert
 
 original_xml_import = convert.xml_import
 
@@ -25,8 +25,7 @@ class WebkitXMLImport(original_xml_import):
                     webkit_header_id = False
                 else:
                     webkit_header_id = self.id_get(cr, header)
-                self.pool.get('ir.actions.report.xml').write(cr, self.uid,
-                    report_id, {'webkit_header': webkit_header_id})
+                self.env['ir.actions.report.xml'].write(report_id, {'webkit_header': webkit_header_id})
         return report_id
 
 convert.xml_import = WebkitXMLImport
