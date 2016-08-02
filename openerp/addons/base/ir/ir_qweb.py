@@ -259,8 +259,8 @@ class QWeb(models.AbstractModel):
         for (attribute_name, attribute_value) in element.attrib.iteritems():
             attribute_name = unicode(attribute_name)
             if attribute_name == "groups":
-                can_see = (qwebcontext.cr and qwebcontext.uid and
-                           qwebcontext.env['ir.qweb'].user_has_groups(attribute_value))
+                env = qwebcontext.get('request') and qwebcontext['request'].env
+                can_see = (env and env.cr and env.uid and env['ir.qweb'].user_has_groups(attribute_value))
                 if not can_see:
                     return element.tail and self.render_tail(element.tail, element, qwebcontext) or ''
 
