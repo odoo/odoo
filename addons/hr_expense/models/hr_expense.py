@@ -130,7 +130,15 @@ class HrExpense(models.Model):
 
     @api.multi
     def reset_expenses(self):
-        return self.write({'state': 'draft'})
+        moves = self.env['account.move']
+        for inv in self:
+            if inv.account_move_id:
+                moves += inv.account_move_id
+
+        # First, set the expense as draft and detach the move ids
+        if moves:
+            moves.reverse_moves()
+        return self.write({'state': 'draft', 'account_move_id': False})
 
     @api.multi
     def _track_subtype(self, init_values):
@@ -159,6 +167,7 @@ class HrExpense(models.Model):
             'amount_currency': line['price'] > 0 and abs(line.get('amount_currency')) or -abs(line.get('amount_currency')),
             'currency_id': line.get('currency_id'),
             'tax_line_id': line.get('tax_line_id'),
+            'tax_ids': line.get('tax_ids', False),
             'ref': line.get('ref'),
             'quantity': line.get('quantity',1.00),
             'product_id': line.get('product_id'),
@@ -253,7 +262,7 @@ class HrExpense(models.Model):
 
                 #convert eml into an osv-valid format
                 lines = map(lambda x:(0, 0, expense._prepare_move_line(x)), move_lines)
-                move.write({'line_ids': lines})
+                move.with_context(dont_create_taxes=True).write({'line_ids': lines})
                 expense.write({'account_move_id': move.id, 'state': 'post'})
                 if expense.payment_mode == 'company_account':
                     expense.paid_expenses()
@@ -272,9 +281,17 @@ class HrExpense(models.Model):
                 account = self.env['ir.property'].with_context(force_company=expense.company_id.id).get('property_account_expense_categ_id', 'product.category')
                 if not account:
                     raise UserError(_('Please configure Default Expense account for Product expense: `property_account_expense_categ_id`.'))
+            
+            tax_ids = []
+            for tax in expense.tax_ids:
+                tax_ids.append((4, tax.id, None))
+                for child in tax.children_tax_ids:
+                    if child.type_tax_use != 'none':
+                        tax_ids.append((4, child.id, None))
+            
             move_line = {
                     'type': 'src',
-                    'name': expense.name.split('\n')[0][:64],
+                    'name': expense.name.split('\n')[0][:64], 
                     'price_unit': expense.unit_amount,
                     'quantity': expense.quantity,
                     'price': expense.total_amount,
@@ -282,13 +299,13 @@ class HrExpense(models.Model):
                     'product_id': expense.product_id.id,
                     'uom_id': expense.product_uom_id.id,
                     'analytic_account_id': expense.analytic_account_id.id,
+                    'tax_ids': tax_ids,
                 }
             account_move.append(move_line)
 
             # Calculate tax lines and adjust base line
             taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id)
             account_move[-1]['price'] = taxes['total_excluded']
-            account_move[-1]['tax_ids'] = expense.tax_ids.id
             for tax in taxes['taxes']:
                 account_move.append({
                     'type': 'tax',
