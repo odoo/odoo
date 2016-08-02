@@ -32,27 +32,24 @@ class CrmTeam(models.Model):
 
     @api.multi
     def _compute_sales_to_invoice_amount(self):
-        domain = [
-            ('team_id', '=', self.ids),
+        amounts = self.env['sale.order'].read_group([
+            ('team_id', 'in', self.ids),
             ('invoice_status', '=', 'to invoice'),
-        ]
-        amounts = self.env['sale.order'].read_group(domain, ['amount_total', 'team_id'], ['team_id'])
+        ], ['amount_total', 'team_id'], ['team_id'])
         for rec in amounts:
             self.browse(rec['team_id'][0]).sales_to_invoice_amount = rec['amount_total']
 
     @api.multi
     def _compute_invoiced(self):
         for team in self:
-            domain = [
+            invoices = self.env['account.invoice'].search([
                 ('state', 'in', ['open', 'paid']),
                 ('team_id', '=', team.id),
                 ('date', '<=', date.today()),
                 ('date', '>=', date.today().replace(day=1))
-            ]
-            invoices = self.env['account.invoice'].search(domain)
-            team.invoiced = sum([inv['amount_untaxed_signed'] for inv in invoices])
+            ])
+            team.invoiced = sum(invoices.mapped('amount_untaxed_signed'))
 
     @api.multi
     def update_invoiced_target(self, value):
-        self.ensure_one()
         return self.write({'invoiced_target': round(float(value or 0))})

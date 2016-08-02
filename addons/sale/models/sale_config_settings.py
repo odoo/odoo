@@ -161,12 +161,3 @@ class SaleConfiguration(models.TransientModel):
                 'group_show_price_total': True,
                 'group_show_price_subtotal': False,
             })
-
-
-class AccountConfigSettings(models.TransientModel):
-    _inherit = 'account.config.settings'
-
-    group_analytic_account_for_sales = fields.Boolean(
-        'Analytic accounting for sales',
-        implied_group='sale.group_analytic_accounting',
-        help="Allows you to specify an analytic account on sales orders.")
