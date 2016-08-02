@@ -556,6 +556,13 @@ class account_bank_statement_line(osv.osv):
                     self.write(cr, uid, st_line.id, {'partner_id': mv_line['partner_id']}, context=context)
                     mv_line['has_no_partner'] = False
                 return [mv_line]
+            elif len(match_id) == 0:
+                move = self.pool['account.move'].search(cr, uid, [('name', '=', st_line.ref)], limit=1, context=context)
+                if move:
+                    domain = [('move_id', '=', move[0])]
+                    match_recs = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=domain)
+                    if match_recs and len(match_recs) == 1:
+                        return match_recs
 
         # How to compare statement line amount and move lines amount
         precision_digits = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
