@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-    
+<odoo>
         <record model="ir.ui.view" id="view_report_webkit_actions">
-            <field name="name">Report Webkit actions wizard</field>
+            <field name="name">report.webkit.actions.form</field>
             <field name="model">report.webkit.actions</field>
             <field name="arch" type="xml">
                 <form string="Add Print Buttons" col="4">
@@ -27,6 +25,4 @@
             key2="client_print_multi"   
             target="new"
             id="wizard_ofdo_report_actions"/>
-        
-    </data>
-</openerp>
+</odoo>

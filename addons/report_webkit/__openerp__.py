@@ -54,20 +54,20 @@ TODO:
     * Web client WYSIWYG
 """,
     'version': '0.9',
-    'depends': ['base','report'],
+    'depends': ['base', 'report'],
     'author': 'Camptocamp',
-    'category': 'Hidden', # i.e a technical module, not shown in Application install menu
+    'category': 'Hidden',  # i.e a technical module, not shown in Application install menu
     'url': 'http://http://www.camptocamp.com/',
-    'data': [ 'security/ir.model.access.csv',
-              'data.xml',
-              'wizard/report_webkit_actions_view.xml',
-              'company_view.xml',
-              'header_view.xml',
-              'ir_report_view.xml',
+    'data': [
+        'security/ir.model.access.csv',
+        'data/report_webkit_data.xml',
+        'wizard/report_webkit_actions_views.xml',
+        'views/company_views.xml',
+        'views/header_views.xml',
+        'views/ir_report_views.xml',
     ],
     'demo': [
         "report/webkit_report_demo.xml",
     ],
-    'installable': True,
     'auto_install': False,
 }
