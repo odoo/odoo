@@ -925,7 +925,7 @@ class Meeting(models.Model):
 
             attendees_to_remove = self.env["calendar.attendee"]
             if partners_to_remove:
-                attendees_to_remove = self.env["calendar.attendee"].search([('partner_id', 'in', partners_to_remove.ids), ('event_id', '=', meeting.id)]).ids
+                attendees_to_remove = self.env["calendar.attendee"].search([('partner_id', 'in', partners_to_remove.ids), ('event_id', '=', meeting.id)])
                 attendees_to_remove.unlink()
 
             result[meeting.id] = {
