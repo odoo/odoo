@@ -3,7 +3,7 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import mute_logger, test_reports
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
@@ -81,11 +81,12 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         self.assertEqual(hol1_user_group.state, 'confirm', 'hr_holidays: newly created leave request should be in confirm state')
 
         # Employee validates its leave request -> should not work
-        hol1_employee_group.signal_workflow('validate')
+        with self.assertRaises(UserError):
+            hol1_employee_group.action_approve()
         self.assertEqual(hol1_user_group.state, 'confirm', 'hr_holidays: employee should not be able to validate its own leave request')
 
         # HrUser validates the employee leave request
-        hol1_user_group.signal_workflow('validate')
+        hol1_user_group.action_approve()
         self.assertEqual(hol1_user_group.state, 'validate', 'hr_holidays: validates leave request should be in validate state')
 
         # --------------------------------------------------
@@ -125,9 +126,10 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'type': 'add',
             'number_of_days_temp': 2,
         })
-        # HrUser validates the allocation request
-        aloc1_user_group.signal_workflow('validate')
-        aloc1_user_group.signal_workflow('second_validate')
+        # HrUser validates the first step
+        aloc1_user_group.action_approve()
+        # HrManager validates the second step
+        aloc1_user_group.sudo(self.user_hrmanager_id).action_validate()
         # Checks Employee has effectively some days left
         hol_status_2_employee_group = self.holidays_status_2.sudo(self.user_employee_id)
         _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 2.0)
@@ -146,32 +148,33 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 1.0)
 
         # HrUser validates the first step
-        hol2_user_group.signal_workflow('validate')
+        hol2_user_group.action_approve()
         self.assertEqual(hol2.state, 'validate1',
                          'hr_holidays: first validation should lead to validate1 state')
 
-        # HrUser validates the second step
-        hol2_user_group.signal_workflow('second_validate')
+        # HrManager validates the second step
+        hol2_user_group.sudo(self.user_hrmanager_id).action_validate()
         self.assertEqual(hol2.state, 'validate',
                          'hr_holidays: second validation should lead to validate state')
         # Check left days: - 1 day taken
         _check_holidays_status(hol_status_2_employee_group, 2.0, 1.0, 1.0, 1.0)
 
         # HrManager finds an error: he refuses the leave request
-        hol2.sudo(self.user_hrmanager_id).signal_workflow('refuse')
+        hol2.sudo(self.user_hrmanager_id).action_refuse()
         self.assertEqual(hol2.state, 'refuse',
                          'hr_holidays: refuse should lead to refuse state')
         # Check left days: 2 days left again
         _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 2.0)
 
         # Annoyed, HrUser tries to fix its error and tries to reset the leave request -> does not work, only HrManager
-        hol2_user_group.signal_workflow('reset')
+        with self.assertRaises(UserError):
+            hol2_user_group.action_draft()
         self.assertEqual(hol2.state, 'refuse',
                          'hr_holidays: hr_user should not be able to reset a refused leave request')
 
         # HrManager resets the request
         hol2_manager_group = hol2.sudo(self.user_hrmanager_id)
-        hol2_manager_group.signal_workflow('reset')
+        hol2_manager_group.action_draft()
         self.assertEqual(hol2.state, 'draft',
                          'hr_holidays: resetting should lead to draft state')
 
@@ -182,7 +185,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'number_of_days_temp': 4,
         })
         with self.assertRaises(ValidationError):
-            hol2_manager_group.signal_workflow('confirm')
+            hol2_manager_group.action_confirm()
 
         employee_id = self.ref('hr.employee_root')
         # cl can be of maximum 20 days for employee_root
@@ -198,15 +201,15 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'number_of_days_temp': 1
         })
         # I find a small mistake on my leave request to I click on "Refuse" button to correct a mistake.
-        hol3.signal_workflow('refuse')
+        hol3.action_refuse()
         self.assertEqual(hol3.state, 'refuse', 'hr_holidays: refuse should lead to refuse state')
         # I again set to draft and then confirm.
-        hol3.signal_workflow('reset')
+        hol3.action_draft()
         self.assertEqual(hol3.state, 'draft', 'hr_holidays: resetting should lead to draft state')
-        hol3.signal_workflow('confirm')
+        hol3.action_confirm()
         self.assertEqual(hol3.state, 'confirm', 'hr_holidays: confirming should lead to confirm state')
         # I validate the holiday request by clicking on "To Approve" button.
-        hol3.signal_workflow('validate')
+        hol3.action_approve()
         self.assertEqual(hol3.state, 'validate', 'hr_holidays: validation should lead to validate state')
         # Check left days for casual leave: 19 days left
         _check_holidays_status(hol3_status, 20.0, 1.0, 19.0, 19.0)

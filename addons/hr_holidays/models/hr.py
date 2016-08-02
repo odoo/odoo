@@ -133,8 +133,9 @@ class Employee(models.Model):
                     'holiday_type': 'employee',
                     'number_of_days_temp': difference
                 })
-                for signal in ('confirm', 'validate', 'second_validate'):
-                    leave.signal_workflow(signal)
+                leave.action_approve()
+                if leave.double_validation:
+                    leave.action_validate()
             elif difference < 0:
                 raise UserError(_('You cannot reduce validated allocation requests'))
 
