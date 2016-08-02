@@ -349,6 +349,8 @@ class Holidays(models.Model):
         if not self._check_state_access_right(values):
             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
         holiday = super(Holidays, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
+        if values.get('state') == 'confirm':
+            self.subscribe_followers()
         holiday.add_follower(employee_id)
         return holiday
 
@@ -358,6 +360,8 @@ class Holidays(models.Model):
         if not self._check_state_access_right(values):
             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
         result = super(Holidays, self).write(values)
+        if values.get('state') == 'confirm':
+            self.subscribe_followers()
         self.add_follower(employee_id)
         return result
 
@@ -370,6 +374,20 @@ class Holidays(models.Model):
     ####################################################
     # Business methods
     ####################################################
+
+    @api.multi
+    def subscribe_followers(self):
+        for holiday in self:
+            if holiday.department_id:
+                # Subscribe the followers of the department following the `confirmed` subtype
+                # It's done manually because `message_auto_subscribe` only works on fields for which
+                # the value is passed to the `create` or `write` methods,
+                # it doesn't work for related/computed fields
+                # This can be removed as soon as `department_id` on `hr.holidays` becomes a regular
+                # fields or as soon as `message_auto_subscribe` works with related/computed fields.
+                confirmed_subtype = self.env.ref('hr_holidays.mt_department_holidays_confirmed')
+                partner_ids = [follower.partner_id.id for follower in holiday.department_id.message_follower_ids if confirmed_subtype in follower.subtype_ids]
+                holiday.message_subscribe(partner_ids)
 
     @api.multi
     def _create_resource_leave(self):
@@ -391,29 +409,59 @@ class Holidays(models.Model):
         return self.env['resource.calendar.leaves'].search([('holiday_id', 'in', self.ids)]).unlink()
 
     @api.multi
-    def holidays_reset(self):
-        self.write({
-            'state': 'draft',
-            'manager_id': False,
-            'manager_id2': False,
-        })
-        linked_requests = self.mapped('linked_request_ids')
-        for linked_request in linked_requests:
-            linked_request.holidays_reset()
-        linked_requests.unlink()
+    def action_draft(self):
+        for holiday in self:
+            if not holiday.can_reset:
+                raise UserError(_('Only an HR Manager or the concerned employee can reset to draft.'))
+            if holiday.state not in ['confirm', 'refuse']:
+                raise UserError(_('Leave request state must be "Refused" or "To Approve" in order to reset to Draft.'))
+            holiday.write({
+                'state': 'draft',
+                'manager_id': False,
+                'manager_id2': False,
+            })
+            linked_requests = holiday.mapped('linked_request_ids')
+            for linked_request in linked_requests:
+                linked_request.action_draft()
+            linked_requests.unlink()
         return True
 
     @api.multi
-    def holidays_first_validate(self):
-        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-        return self.write({'state': 'validate1', 'manager_id': manager.id if manager else False})
+    def action_confirm(self):
+        if self.filtered(lambda holiday: holiday.state != 'draft'):
+            raise UserError(_('Leave request must be in Draft state ("To Submit") in order to confirm it.'))
+        return self.write({'state': 'confirm'})
 
     @api.multi
-    def holidays_validate(self):
-        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-        self.write({'state': 'validate'})
+    def action_approve(self):
+        # if double_validation: this method is the first approval approval
+        # if not double_validation: this method calls action_validate() below
+        if not self.env.user.has_group('base.group_hr_user'):
+            raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
+        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
+            if holiday.state != 'confirm':
+                raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
+
+            if holiday.double_validation:
+                return holiday.write({'state': 'validate1', 'manager_id': manager.id if manager else False})
+            else:
+                holiday.action_validate()
+
+    @api.multi
+    def action_validate(self):
+        if not self.env.user.has_group('base.group_hr_user'):
+            raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
+
+        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        for holiday in self:
+            if holiday.state not in ['confirm', 'validate1']:
+                raise UserError(_('Leave request must be confirmed in order to approve it.'))
+            if holiday.state == 'validate1' and not holiday.env.user.has_group('base.group_hr_manager'):
+                raise UserError(_('Only an HR Manager can apply the second approval on leave requests.'))
+
+            holiday.write({'state': 'validate'})
             if holiday.double_validation:
                 holiday.write({'manager_id2': manager.id})
             else:
@@ -455,44 +503,30 @@ class Holidays(models.Model):
                     }
                     leaves += self.with_context(mail_notify_force_send=False).create(values)
                 # TODO is it necessary to interleave the calls?
-                for signal in ('confirm', 'validate', 'second_validate'):
-                    leaves.signal_workflow(signal)
+                leaves.action_approve()
+                if leaves[0].double_validation:
+                    leaves.action_validate()
         return True
 
     @api.multi
-    def holidays_confirm(self):
-        for holiday in self:
-            if holiday.department_id:
-                # Subscribe the followers of the department following the `confirmed` subtype
-                # It's done manually because `message_auto_subscribe` only works on fields for which
-                # the value is passed to the `create` or `write` methods,
-                # it doesn't work for related/computed fields
-                # This can be removed as soon as `department_id` on `hr.holidays` becomes a regular
-                # fields or as soon as `message_auto_subscribe` works with related/computed fields.
-                confirmed_subtype = self.env.ref('hr_holidays.mt_department_holidays_confirmed')
-                partner_ids = [follower.partner_id.id for follower in holiday.department_id.message_follower_ids if confirmed_subtype in follower.subtype_ids]
-                holiday.message_subscribe(partner_ids)
-        return self.write({'state': 'confirm'})
+    def action_refuse(self):
+        if not self.env.user.has_group('base.group_hr_user'):
+            raise UserError(_('Only an HR Officer or Manager can refuse leave requests.'))
 
-    @api.multi
-    def holidays_refuse(self):
         manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
+            if self.state not in ['confirm', 'validate', 'validate1']:
+                raise UserError(_('Leave request must be confirmed or validated in order to refuse it.'))
+
             if holiday.state == 'validate1':
                 holiday.write({'state': 'refuse', 'manager_id': manager.id})
             else:
                 holiday.write({'state': 'refuse', 'manager_id2': manager.id})
-        self.holidays_cancel()
-        return True
-
-    @api.multi
-    def holidays_cancel(self):
-        for holiday in self:
             # Delete the meeting
             if holiday.meeting_id:
                 holiday.meeting_id.unlink()
             # If a category that created several holidays, cancel all related
-            holiday.linked_request_ids.signal_workflow('refuse')
+            holiday.linked_request_ids.action_refuse()
         self._remove_resource_leave()
         return True
 
@@ -535,8 +569,8 @@ class Holidays(models.Model):
     def _notification_get_recipient_groups(self, message, recipients):
         result = super(Holidays, self)._notification_get_recipient_groups(message, recipients)
 
-        app_action = '/mail/workflow?%s' % url_encode({'model': self._name, 'res_id': self.id, 'signal': 'validate'})
-        ref_action = '/mail/workflow?%s' % url_encode({'model': self._name, 'res_id': self.id, 'signal': 'refuse'})
+        app_action = '/mail/method?%s' % url_encode({'model': self._name, 'res_id': self.id, 'method': 'action_validate'})
+        ref_action = '/mail/method?%s' % url_encode({'model': self._name, 'res_id': self.id, 'method': 'action_refuse'})
 
         actions = []
         if self.state == 'confirm':

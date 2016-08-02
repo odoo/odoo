@@ -82,11 +82,11 @@
                 <field name="can_reset" invisible="1"/>
                 <field name="type" invisible="1"/>
                 <header>
-                    <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
-                    <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_manager" class="oe_highlight"/>
-                    <button string="Refuse" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Reset to Draft" name="reset" type="workflow"
+                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
+                    <button string="Approve" name="action_approve" states="confirm" type="object" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Validate" name="action_validate" states="validate1" type="object" groups="base.group_hr_manager" class="oe_highlight"/>
+                    <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object" groups="base.group_hr_user"/>
+                    <button string="Reset to Draft" name="action_draft" type="object"
                             attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
                 </header>
