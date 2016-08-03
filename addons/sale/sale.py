@@ -61,7 +61,8 @@ class SaleOrder(models.Model):
             # Search for refunds as well
             refund_ids = self.env['account.invoice'].browse()
             if invoice_ids:
-                refund_ids = refund_ids.search([('type', '=', 'out_refund'), ('origin', 'in', invoice_ids.mapped('number')), ('origin', '!=', False)])
+                for inv in invoice_ids:
+                    refund_ids += refund_ids.search([('type', '=', 'out_refund'), ('origin', '=', inv.number), ('origin', '!=', False), ('journal_id', '=', inv.journal_id.id)])
 
             line_invoice_status = [line.invoice_status for line in order.order_line]
 

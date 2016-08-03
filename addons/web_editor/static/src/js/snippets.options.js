@@ -33,7 +33,7 @@ odoo.define('web_editor.snippets.options', function (require) {
 
         // helper for this.$target.find
         $: function (selector) {
-            return this.$target(selector);
+            return this.$target.find(selector);
         },
 
         _bind_li_menu: function () {
