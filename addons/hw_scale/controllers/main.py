@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 import os
 import time
 from os import listdir
-from os.path import join
 from threading import Thread, Lock
-from select import select
-from Queue import Queue, Empty
 
-import openerp
-import openerp.addons.hw_proxy.controllers.main as hw_proxy
-from openerp import http
-from openerp.http import request
-from openerp.tools.translate import _
+from odoo import http
+
+import odoo.addons.hw_proxy.controllers.main as hw_proxy
 
 _logger = logging.getLogger(__name__)
 
@@ -224,9 +221,7 @@ if serial:
 class ScaleDriver(hw_proxy.Proxy):
     @http.route('/hw_proxy/scale_read/', type='json', auth='none', cors='*')
     def scale_read(self):
-        if scale_thread:
-            return {'weight': scale_thread.get_weight(), 'unit':'kg', 'info': scale_thread.get_weight_info()}
-        return None
+        return {'weight': scale_thread.get_weight(), 'unit':'kg', 'info': scale_thread.get_weight_info()} if scale_thread else None
 
     @http.route('/hw_proxy/scale_zero/', type='json', auth='none', cors='*')
     def scale_zero(self):
@@ -245,5 +240,3 @@ class ScaleDriver(hw_proxy.Proxy):
         if scale_thread:
             scale_thread.clear_tare()
         return True
-        
-        
