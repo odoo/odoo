@@ -978,6 +978,14 @@ class IrActionsServer(models.Model):
                     res = func(action, eval_context=eval_context)
         return res
 
+    @api.model
+    def _run_actions(self, ids):
+        """
+            Run server actions with given ids.
+            Allow crons to run specific server actions
+        """
+        return self.browse(ids).run()
+
 
 class IrServerObjectLines(models.Model):
     _name = 'ir.server.object.lines'
