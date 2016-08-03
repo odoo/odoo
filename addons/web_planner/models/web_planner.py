@@ -13,8 +13,8 @@ class Planner(models.Model):
     Each Planner has link to ir.ui.menu record that is a top menu used to display the
     planner launcher(progressbar)
 
-    Method _prepare_<planner_application>_data(self, cr, uid, context) that
-    generate the values used to display in specific planner pages
+    Method _prepare_<planner_application>_data(self) (model method) that
+    generates the values used to display in specific planner pages
     """
 
     _name = 'web.planner'
