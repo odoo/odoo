@@ -1523,7 +1523,7 @@ class stock_picking(models.Model):
             'product_uom_qty': qty,
             'name': _('Extra Move: ') + name,
             'state': 'draft',
-            'restrict_partner_id': op.owner_id,
+            'restrict_partner_id': op.owner_id.id,
             'group_id': picking.group_id.id,
             }
         return res
