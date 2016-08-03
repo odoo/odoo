@@ -43,23 +43,23 @@ class CrossoveredBudget(models.Model):
         default=lambda self: self.env['res.company']._company_default_get('account.budget.post'))
 
     @api.multi
-    def budget_confirm(self):
+    def action_budget_confirm(self):
         self.write({'state': 'confirm'})
 
     @api.multi
-    def budget_draft(self):
+    def action_budget_draft(self):
         self.write({'state': 'draft'})
 
     @api.multi
-    def budget_validate(self):
+    def action_budget_validate(self):
         self.write({'state': 'validate'})
 
     @api.multi
-    def budget_cancel(self):
+    def action_budget_cancel(self):
         self.write({'state': 'cancel'})
 
     @api.multi
-    def budget_done(self):
+    def action_budget_done(self):
         self.write({'state': 'done'})
 
 
