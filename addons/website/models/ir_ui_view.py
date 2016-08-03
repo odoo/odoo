@@ -198,7 +198,7 @@ class view(osv.osv):
         """
         imd = self.pool['ir.model.data']
         theme_view_id = imd.xmlid_to_res_id(cr, uid, 'website.theme')
-        user = self.pool['res.users'].browse(cr, uid, context=context)
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         user_groups = set(user.groups_id)
         views = self._views_get(
             cr, uid, key, bundles=bundles,
