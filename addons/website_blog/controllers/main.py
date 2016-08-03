@@ -28,10 +28,10 @@ class WebsiteBlog(http.Controller):
             (r, label) = group['create_date']
             start, end = r.split('/')
             group['create_date'] = label
-            group['date_begin'] = self._to_date(start)
-            group['date_end'] = self._to_date(end)
-            group['month'] = group['date_begin'].strftime("%B")
-            group['year'] = group['date_begin'].strftime("%Y")
+            group['date_begin'] = fields.Date.to_string(self._to_date(start))
+            group['date_end'] = fields.Date.to_string(self._to_date(end))
+            group['month'] = self._to_date(start).strftime("%B")
+            group['year'] = self._to_date(start).strftime("%Y")
         return {year: [m for m in months] for year, months in itertools.groupby(groups, lambda g: g['year'])}
 
     def _to_date(self, dt):
@@ -138,7 +138,6 @@ class WebsiteBlog(http.Controller):
                 tag_ids.append(current_tag)
             tag_ids = request.env['blog.tag'].browse(tag_ids).exists()
             return ','.join(map(slug, tag_ids))
-
         values = {
             'blog': blog,
             'blogs': blogs,
