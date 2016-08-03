@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 import os
-import time
-import werkzeug
 import subprocess
-from os import listdir
+import werkzeug
 
-import openerp
-from openerp import http
-from openerp.http import request
-from openerp.tools.translate import _
+import odoo
+from odoo import http
 
 _logger = logging.getLogger(__name__)
 
@@ -67,7 +65,7 @@ index_template = """
 """
 
 
-class PosboxHomepage(openerp.addons.web.controllers.main.Home):
+class PosboxHomepage(odoo.addons.web.controllers.main.Home):
     @http.route('/', type='http', auth='none', website=True)
     def index(self):
         #return request.render('hw_posbox_homepage.index',mimetype='text/html')
