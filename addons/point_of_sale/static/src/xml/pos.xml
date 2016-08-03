@@ -274,7 +274,7 @@
                         <t t-esc="widget.get_product_weight_string()" />
                     </div>
                     <div class='product-price'>
-                        <t t-esc="widget.format_currency(widget.get_product_price()) + '/Kg'" />
+                        <t t-esc="widget.format_currency(widget.get_product_price()) + '/' + widget.get_product_uom()" />
                     </div>
                     <div class='computed-price'>
                         123.14 €

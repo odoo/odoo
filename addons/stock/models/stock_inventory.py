@@ -175,9 +175,9 @@ class Inventory(models.Model):
 
     @api.multi
     def action_start(self):
-        for inventory in self.filtered(lambda x: not x.line_ids):
+        for inventory in self:
             vals = {'state': 'confirm', 'date': fields.Datetime.now()}
-            if inventory.filter != 'partial':
+            if (inventory.filter != 'partial') and not inventory.line_ids:
                 vals.update({'line_ids': [(0, 0, line_values) for line_values in inventory._get_inventory_lines_values()]})
             inventory.write(vals)
         return True

@@ -33,7 +33,8 @@
     > .o_main {
         .o-flex(1, 1, auto);
         .o-flex-display();
-        
+        min-height: 0; // Allow flex to shrink this element as much as it wants
+
         .o_sub_menu {
             .o-flex(0, 0, @odoo-submenu-width);
             .o-flex-display();

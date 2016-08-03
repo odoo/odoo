@@ -560,7 +560,14 @@ class Post(models.Model):
             if post.closed_reason_id in (reason_offensive, reason_spam):
                 _logger.info('Upvoting user <%s>, reopening spam/offensive question',
                              post.create_uid)
-                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_flagged * -1)
+
+                karma = post.forum_id.karma_gen_answer_flagged
+                if post.closed_reason_id == reason_spam:
+                    # If first post, increase the karma to add
+                    count_post = post.search_count([('parent_id', '=', False), ('forum_id', '=', post.forum_id.id), ('create_uid', '=', post.create_uid.id)])
+                    if count_post == 1:
+                        karma *= 10
+                post.create_uid.sudo().add_karma(karma * -1)
 
         self.sudo().write({'state': 'active'})
 
@@ -575,7 +582,13 @@ class Post(models.Model):
             for post in self:
                 _logger.info('Downvoting user <%s> for posting spam/offensive contents',
                              post.create_uid)
-                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_flagged)
+                karma = post.forum_id.karma_gen_answer_flagged
+                if reason_id == reason_spam:
+                    # If first post, increase the karma to remove
+                    count_post = post.search_count([('parent_id', '=', False), ('forum_id', '=', post.forum_id.id), ('create_uid', '=', post.create_uid.id)])
+                    if count_post == 1:
+                        karma *= 10
+                post.create_uid.sudo().add_karma(karma)
 
         self.write({
             'state': 'close',
