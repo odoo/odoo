@@ -1,20 +1,13 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import commands
 import logging
-import json
+import math
 import os
 import os.path
-import io
-import base64
-import openerp
-import time
-import random
-import math
-import md5
-import openerp.addons.hw_proxy.controllers.main as hw_proxy
-import pickle
-import re
 import subprocess
+import time
 import traceback
 
 try: 
@@ -24,19 +17,17 @@ try:
 except ImportError:
     escpos = printer = None
 
+from Queue import Queue
 from threading import Thread, Lock
-from Queue import Queue, Empty
 
 try:
     import usb.core
 except ImportError:
     usb = None
 
-from PIL import Image
+from odoo import http, _
 
-from openerp import http
-from openerp.http import request
-from openerp.tools.translate import _
+import odoo.addons.hw_proxy.controllers.main as hw_proxy
 
 _logger = logging.getLogger(__name__)
 
@@ -371,4 +362,3 @@ class EscposProxy(hw_proxy.Proxy):
     def print_xml_receipt(self, receipt):
         _logger.info('ESC/POS: PRINT XML RECEIPT') 
         driver.push_task('xml_receipt',receipt)
-
