@@ -154,6 +154,7 @@
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
                 <form string="Purchase Order">
+                    <field name="_barcode_scanned" widget="barcode_handler"/>
                 <header>
                     <button name="action_rfq_send" states="draft" string="Send RFQ by Email" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
                     <button name="action_rfq_send" states="sent" string="Re-Send RFQ by Email" type="object" context="{'send_rfq':True}"/>

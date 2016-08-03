@@ -15,7 +15,7 @@ import odoo.addons.decimal_precision as dp
 
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread', 'ir.needaction_mixin', 'barcodes.barcode_events_mixin']
     _description = "Purchase Order"
     _order = 'date_order desc, id desc'
 
@@ -183,6 +183,21 @@ class PurchaseOrder(models.Model):
                 name += ': ' + formatLang(self.env, po.amount_total, currency_obj=po.currency_id)
             result.append((po.id, name))
         return result
+
+    def on_barcode_scanned(self, barcode):
+        product = self.env['product.product'].search([('barcode', '=', barcode), ('purchase_ok', '=', True)], limit=1)
+        if product:
+            order_line = self.order_line.filtered(lambda line: line.product_id == product)
+            if order_line:
+                order_line[0].product_qty += 1
+                order_line[0]._onchange_quantity()
+            else:
+                order_line = self.order_line.new({
+                    'product_id': product.id,
+                    'product_qty': 1.0,
+                })
+                self.order_line += order_line
+                order_line.onchange_product_id()
 
     @api.model
     def create(self, vals):
