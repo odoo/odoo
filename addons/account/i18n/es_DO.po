@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-07-21 00:18+0000\n"
+"PO-Revision-Date: 2016-07-24 19:59+0000\n"
 "Last-Translator: Gustavo Valverde\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
 "MIME-Version: 1.0\n"
@@ -572,7 +572,7 @@ msgstr "<strong>O generar órdenes de pago</strong><br/>\nCree una Orden de Pago
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Partner's:</strong>"
-msgstr "<strong>Asociado:</strong>"
+msgstr "<strong>Del Contacto:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -873,7 +873,7 @@ msgstr "Informe Contable de Cuenta Común "
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
 msgid "Account Common Partner Report"
-msgstr "Informe de Cuenta Común de Asociado"
+msgstr "Informe de Cuenta Común de Contacto"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -1285,7 +1285,7 @@ msgstr "Afectar Impuestos Subsiguientes"
 #: model:ir.ui.menu,name:account.menu_aged_trial_balance
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
 msgid "Aged Partner Balance"
-msgstr "Balance Vencido de Asociado"
+msgstr "Balance Vencido de Contacto"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -1296,7 +1296,7 @@ msgid ""
 "then calculates a table of credit balance by start Date. So if you request "
 "an interval of 30 days Odoo generates an analysis of creditors for the past "
 "month, past two months, and so on."
-msgstr "El Balance Vencido de Asociado es un informe detallado de sus cuentas por cobrar por intervalos. Al abrir el informe Odoo solicita el nombre de la compañía, la Fecha de Inicio y el tamaño del intervalo a analizar (en días). Posteriormente Odoo calcula una tabla de balance en crédito a partir de la Fecha de inicio. Si solicita un intervalo de 30 días, Odoo genera un análisis de los deudores del pasado mes, de los pasados dos meses, y así sucesivamente."
+msgstr "El Balance Vencido de Contacto es un informe detallado de sus cuentas por cobrar por intervalos. Al abrir el informe Odoo solicita el nombre de la compañía, la Fecha de Inicio y el tamaño del intervalo a analizar (en días). Posteriormente Odoo calcula una tabla de balance en crédito a partir de la Fecha de inicio. Si solicita un intervalo de 30 días, Odoo genera un análisis de los deudores del pasado mes, de los pasados dos meses, y así sucesivamente."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -1635,7 +1635,7 @@ msgstr "Aplicar solo si el país de envío o facturación coincide."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_vat_required
 msgid "Apply only if partner has a VAT number."
-msgstr "Aplicar solo si el asociado tiene un NCF."
+msgstr "Aplicar solo si el contacto tiene un NCF."
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -2481,7 +2481,7 @@ msgstr "Compañías"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_ref_company_ids
 msgid "Companies that refers to partner"
-msgstr "Compañías que se refieren a un asociado"
+msgstr "Compañías que se refieren a un contacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_company_id
@@ -4425,7 +4425,7 @@ msgstr "Para poder eliminar un estado de cuenta de banco, primero debe cancelarl
 msgid ""
 "In order to pay multiple invoices at once, they must belong to the same "
 "commercial partner."
-msgstr "Para pagar múltiples facturas a la vez tienen que pertenecer al mismo asociado comercial."
+msgstr "Para pagar múltiples facturas a la vez tienen que pertenecer al mismo contacto comercial."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:128
@@ -4839,7 +4839,7 @@ msgstr "Diario"
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
 msgid "Journal & Partner"
-msgstr "Diario y Asociado"
+msgstr "Diario y Contacto"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_journal_line
@@ -4921,7 +4921,7 @@ msgstr "Nombre del Diario"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "Journal and Partner"
-msgstr "Diario y Asociado"
+msgstr "Diario y Contacto"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -5202,7 +5202,7 @@ msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
-msgstr "Última vez que se conciliaron facturas y pagos de este asociado. Se establece incluso si hay al menos un débito o crédito por conciliar, o si pulsa el botón \"Hecho\"."
+msgstr "Última vez que se conciliaron facturas y pagos de este contacto. Se establece incluso si hay al menos un débito o crédito por conciliar, o si pulsa el botón \"Hecho\"."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_last_time_entries_checked
@@ -6128,7 +6128,7 @@ msgstr "Conciliación parcial"
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #, python-format
 msgid "Partner"
-msgstr "Asociado"
+msgstr "Contacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_commercial_partner_id
@@ -6138,30 +6138,30 @@ msgstr "Empresa Asociada"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_ref
 msgid "Partner Reference"
-msgstr "Referencia del Asociado"
+msgstr "Referencia del Contacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_name
 msgid "Partner name"
-msgstr "Nombre del asociado"
+msgstr "Nombre del contacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_partner_type
 #: model:ir.model.fields,field_description:account.field_account_payment_partner_type
 #: model:ir.model.fields,field_description:account.field_account_register_payments_partner_type
 msgid "Partner type"
-msgstr "Tipo de asociado"
+msgstr "Tipo de contacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_result_selection
 #: model:ir.model.fields,field_description:account.field_account_common_partner_report_result_selection
 msgid "Partner's"
-msgstr "De Asociados"
+msgstr "Del Contacto"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "Partners"
-msgstr "Asociados"
+msgstr "Contactos"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:96
@@ -7274,14 +7274,14 @@ msgstr "Seleccione 'Ventas' para diarios de facturas de cliente. \nSeleccione 'C
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1756
 #, python-format
 msgid "Select Partner"
-msgstr "Seleccionar Asociado"
+msgstr "Seleccionar Contacto"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:234
 #, python-format
 msgid "Select a partner or choose a counterpart"
-msgstr "Seleccione un asociado o elija una contraparte"
+msgstr "Seleccione un contacto o elija una contraparte"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line_value
@@ -8014,7 +8014,7 @@ msgstr "El primer paso es introducir la información sobre su compañía. Se uti
 #: model:ir.model.fields,help:account.field_res_partner_property_account_position_id
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr "La posición fiscal determinará los impuestos y cuentas utilizados para el asociado."
+msgstr "La posición fiscal determinará los impuestos y cuentas utilizados para el contacto."
 
 #. module: account
 #: code:addons/account/models/account.py:272
@@ -8079,14 +8079,14 @@ msgstr "La cantidad opcional expresada en el apunte, por ejemplo: número de pro
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_account_id
 msgid "The partner account used for this invoice."
-msgstr "La cuenta de asociado utilizada para esta factura."
+msgstr "La cuenta de contacto utilizada para esta factura."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_has_unreconciled_entries
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr "El asociado tiene al menos un débito o crédito no conciliado desde la última vez que se realizó la conciliación de facturas y pagos."
+msgstr "El contacto tiene al menos un débito o crédito no conciliado desde la última vez que se realizó la conciliación de facturas y pagos."
 
 #. module: account
 #: code:addons/account/models/account_move.py:782
@@ -8094,12 +8094,12 @@ msgstr "El asociado tiene al menos un débito o crédito no conciliado desde la 
 msgid ""
 "The partner has to be the same on all lines for receivable and payable "
 "accounts!"
-msgstr "¡El asociado debe ser el mismo en todos los apuntes de cuentas por cobrar y por pagar!"
+msgstr "¡El contacto debe ser el mismo en todos los apuntes de cuentas por cobrar y por pagar!"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_reference
 msgid "The partner reference of this invoice."
-msgstr "La referencia del asociado para esta factura."
+msgstr "La referencia del contacto para esta factura."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:314
@@ -8232,14 +8232,14 @@ msgstr "Esta cuenta se utilizará en facturas para valorar ventas."
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr "Esta cuenta se utilizará en lugar de la cuenta por defecto como la cuenta por pagar del asociado actual."
+msgstr "Esta cuenta se utilizará en lugar de la cuenta por defecto como la cuenta por pagar del contacto actual."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_receivable_id
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr "Esta cuenta se utilizará en lugar de la cuenta por defecto como la cuenta por cobrar del asociado actual."
+msgstr "Esta cuenta se utilizará en lugar de la cuenta por defecto como la cuenta por cobrar del contacto actual."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_budget
@@ -8325,7 +8325,7 @@ msgid ""
 "This field is used to record the third party name when importing bank "
 "statement in electronic format, when the partner doesn't exist yet in the "
 "database (or cannot be found)."
-msgstr "Este campo se usa para guardar el nombre de un tercero cuando se importan estados de cuenta de banco en formato electrónico, cuando el asociado aún no existe en la base de datos (o no puede ser encontrado)."
+msgstr "Este campo se usa para guardar el nombre de un tercero cuando se importan estados de cuenta de banco en formato electrónico, cuando el contacto aún no existe en la base de datos (o no puede ser encontrado)."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9111,7 +9111,7 @@ msgstr "¡Está intentado conciliar asientos que ya están conciliados!"
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
-msgstr "Puede marcar esta casilla para indicar que el apunte contable corresponde a un litigio con el asociado."
+msgstr "Puede marcar esta casilla para indicar que el apunte contable corresponde a un litigio con el contacto."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -9315,7 +9315,7 @@ msgstr "Tiene que definir una Fecha de inicio"
 #: code:addons/account/models/account_invoice.py:1097
 #, python-format
 msgid "You must first select a partner!"
-msgstr "¡Antes ha de seleccionar un asociado!"
+msgstr "¡Antes debe seleccionar un contacto!"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:26

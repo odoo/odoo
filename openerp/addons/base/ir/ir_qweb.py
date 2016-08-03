@@ -886,7 +886,7 @@ class MonetaryConverter(models.AbstractModel):
         return HTMLSafe(u'{pre}<span class="oe_currency_value">{0}</span>{post}'.format(
             formatted_amount, pre=pre, post=post,
         ).format(
-            symbol=display_currency.symbol,
+            symbol=display_currency.symbol or '',
         ))
 
     @api.model
