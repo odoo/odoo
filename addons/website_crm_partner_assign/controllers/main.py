@@ -7,8 +7,8 @@ import werkzeug
 from collections import OrderedDict
 
 from odoo import fields
-from odoo.addons.web import http
-from odoo.addons.web.http import request
+from odoo import http
+from odoo.http import request
 from odoo.addons.website.models.website import slug, unslug
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
 from odoo.tools.translate import _

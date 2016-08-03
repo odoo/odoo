@@ -3,7 +3,7 @@
 import urlparse
 
 from odoo import http
-from odoo.addons.web.http import request
+from odoo.http import request
 
 from odoo.addons.website_mail.controllers.main import WebsiteMail
 

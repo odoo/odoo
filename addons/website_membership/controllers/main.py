@@ -5,8 +5,8 @@ import werkzeug.urls
 
 from odoo import fields
 
-from odoo.addons.web import http
-from odoo.addons.web.http import request
+from odoo import http
+from odoo.http import request
 from odoo.addons.website.models.website import unslug
 from odoo.tools.translate import _
 

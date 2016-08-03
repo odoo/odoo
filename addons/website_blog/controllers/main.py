@@ -5,8 +5,8 @@ import json
 import werkzeug
 
 from openerp import tools
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp import http
+from openerp.http import request
 from openerp.addons.website.models.website import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
 from openerp.exceptions import UserError

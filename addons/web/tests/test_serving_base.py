@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
 import unittest
 
-from openerp.tools import topological_sort
+from odoo.tools import topological_sort
+
 
 def sample(population):
     return random.sample(
         population,
             random.randint(0, min(len(population), 5)))
 
+
 class TestModulesLoading(unittest.TestCase):
     def setUp(self):
         self.mods = map(str, range(1000))
+
     def test_topological_sort(self):
         random.shuffle(self.mods)
         modules = [

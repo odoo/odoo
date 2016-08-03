@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 
-from odoo.addons.web import http
-from odoo.addons.web.http import request
+from odoo import http
+from odoo.http import request
 from odoo.tools import html_escape as escape
 
 
