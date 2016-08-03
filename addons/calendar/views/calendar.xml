@@ -8,37 +8,31 @@
     </template>
 
     <!-- Template rendered in route auth=None, for anonymous user. This allow them to see meeting details -->
-    <template id="invitation_page_anonymous" name="Calendar InvitationPAge for anonymous users">
+    <template id="invitation_page_anonymous" name="Calendar Invitation Page for anonymous users">
         <t t-call="web.layout">
-
             <t t-set="head">
                 <t t-call-assets="web.assets_common" t-js="false"/>
                 <t t-call-assets="web.assets_frontend" t-js="false"/>
             </t>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="o_logo">
-                        <img class="img img-responsive center-block" src="/web/binary/company_logo"/>
-                    </div>
+            <div class="container">
+                <div class="o_logo">
+                    <img class="img img-responsive center-block" src="/web/binary/company_logo"/>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h2>Calendar Invitation <small><t t-esc="event.name"/></small></h2>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2>Calendar Invitation <small><t t-esc="event.name"/></small></h2>
+                    </div>
+                    <div class="panel-body">
+                        <div class="clearfix mb16" t-if="attendee.state != 'needsAction'">
+                            <span class="pull-right label label-info">
+                                <t t-if="attendee.state == 'accepted'">Yes I'm going.</t>
+                                <t t-if="attendee.state == 'declined'">No I'm not going.</t>
+                            </span>
                         </div>
-                        <div class="panel-body">
 
-                            <div class="pull-right mb16" t-if="attendee.state != 'needsAction'">
-                                <span class="label label-info">
-                                    <t t-if="attendee.state == 'accepted'">Yes I'm going.</t>
-                                    <t t-if="attendee.state == 'declined'">No I'm not going.</t>
-                                </span>
-                            </div>
-
+                        <div class="table-responsive">
                             <table class="o_event_table table table-striped">
                                 <tr>
                                     <th>Invitation for</th>
@@ -66,7 +60,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </t>
     </template>
