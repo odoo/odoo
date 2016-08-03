@@ -171,6 +171,7 @@ CREATE TABLE ir_model_relation (
 CREATE TABLE res_currency (
     id serial,
     name varchar NOT NULL,
+    symbol varchar NOT NULL,
     primary key(id)
 );
 
@@ -193,7 +194,7 @@ CREATE TABLE res_partner (
 ---------------------------------
 -- Default data
 ---------------------------------
-insert into res_currency (id, name) VALUES (1, 'EUR');
+insert into res_currency (id, name, symbol) VALUES (1, 'EUR', '€');
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('EUR', 'base', 'res.currency', true, 1);
 select setval('res_currency_id_seq', 2);
 
