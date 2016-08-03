@@ -2,12 +2,78 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from openerp import fields, models, api, _
-import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
+from odoo import fields, models, api, _
+import odoo.addons.decimal_precision as dp
+from odoo.exceptions import UserError
 
 
 class AccountVoucher(models.Model):
+    _name = 'account.voucher'
+    _description = 'Accounting Voucher'
+    _inherit = ['mail.thread']
+    _order = "date desc, id desc"
+
+    @api.model
+    def _default_journal(self):
+        voucher_type = self._context.get('voucher_type', 'sale')
+        company_id = self._context.get('company_id', self.env.user.company_id.id)
+        domain = [
+            ('type', '=', voucher_type),
+            ('company_id', '=', company_id),
+        ]
+        return self.env['account.journal'].search(domain, limit=1)
+
+    voucher_type = fields.Selection([
+        ('sale', 'Sale'),
+        ('purchase', 'Purchase')
+        ], string='Type', readonly=True, states={'draft': [('readonly', False)]}, oldname="type")
+    name = fields.Char('Payment Reference',
+        readonly=True, states={'draft': [('readonly', False)]}, default='')
+    date = fields.Date("Bill Date", readonly=True,
+        select=True, states={'draft': [('readonly', False)]},
+        copy=False, default=fields.Date.context_today)
+    account_date = fields.Date("Accounting Date",
+        readonly=True, select=True, states={'draft': [('readonly', False)]},
+        help="Effective date for accounting entries", copy=False, default=fields.Date.context_today)
+    journal_id = fields.Many2one('account.journal', 'Journal',
+        required=True, readonly=True, states={'draft': [('readonly', False)]}, default=_default_journal)
+    account_id = fields.Many2one('account.account', 'Account',
+        required=True, readonly=True, states={'draft': [('readonly', False)]},
+        domain="[('deprecated', '=', False), ('internal_type','=', (pay_now == 'pay_now' and 'liquidity' or voucher_type == 'purchase' and 'payable' or 'receivable'))]")
+    line_ids = fields.One2many('account.voucher.line', 'voucher_id', 'Voucher Lines',
+        readonly=True, copy=True,
+        states={'draft': [('readonly', False)]})
+    narration = fields.Text('Notes', readonly=True, states={'draft': [('readonly', False)]})
+    currency_id = fields.Many2one('res.currency', compute='_get_journal_currency',
+        string='Currency', readonly=True, required=True, default=lambda self: self._get_currency())
+    company_id = fields.Many2one('res.company', 'Company',
+        required=True, readonly=True, states={'draft': [('readonly', False)]},
+        related='journal_id.company_id', default=lambda self: self._get_company())
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('cancel', 'Cancelled'),
+        ('proforma', 'Pro-forma'),
+        ('posted', 'Posted')
+        ], 'Status', readonly=True, track_visibility='onchange', copy=False, default='draft',
+        help=" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
+             " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
+             " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
+             " * The 'Cancelled' status is used when user cancel voucher.")
+    reference = fields.Char('Bill Reference', readonly=True, states={'draft': [('readonly', False)]},
+                                 help="The partner reference of this document.", copy=False)
+    amount = fields.Monetary(string='Total', store=True, readonly=True, compute='_compute_total')
+    tax_amount = fields.Monetary(readonly=True, store=True, compute='_compute_total')
+    tax_correction = fields.Monetary(readonly=True, states={'draft': [('readonly', False)]},
+        help='In case we have a rounding problem in the tax, use this field to correct it')
+    number = fields.Char(readonly=True, copy=False)
+    move_id = fields.Many2one('account.move', 'Journal Entry', copy=False)
+    partner_id = fields.Many2one('res.partner', 'Partner', change_default=1, readonly=True, states={'draft': [('readonly', False)]})
+    paid = fields.Boolean(compute='_check_paid', help="The Voucher has been totally paid.")
+    pay_now = fields.Selection([
+            ('pay_now', 'Pay Directly'),
+            ('pay_later', 'Pay Later'),
+        ], 'Payment', select=True, readonly=True, states={'draft': [('readonly', False)]}, default='pay_later')
+    date_due = fields.Date('Due Date', readonly=True, select=True, states={'draft': [('readonly', False)]})
 
     @api.one
     @api.depends('move_id.line_ids.reconciled', 'move_id.line_ids.account_id.internal_type')
@@ -35,16 +101,6 @@ class AccountVoucher(models.Model):
     def _get_journal_currency(self):
         self.currency_id = self.journal_id.currency_id.id or self.company_id.currency_id.id
 
-    @api.model
-    def _default_journal(self):
-        voucher_type = self._context.get('voucher_type', 'sale')
-        company_id = self._context.get('company_id', self.env.user.company_id.id)
-        domain = [
-            ('type', '=', voucher_type),
-            ('company_id', '=', company_id),
-        ]
-        return self.env['account.journal'].search(domain, limit=1)
-
     @api.multi
     @api.depends('tax_correction', 'line_ids.price_subtotal')
     def _compute_total(self):
@@ -62,50 +118,6 @@ class AccountVoucher(models.Model):
     @api.depends('account_pay_now_id', 'account_pay_later_id', 'pay_now')
     def _get_account(self):
         self.account_id = self.account_pay_now_id if self.pay_now == 'pay_now' else self.account_pay_later_id
-
-    _name = 'account.voucher'
-    _description = 'Accounting Voucher'
-    _inherit = ['mail.thread']
-    _order = "date desc, id desc"
-
-    voucher_type = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase')], string='Type', readonly=True, states={'draft': [('readonly', False)]}, oldname="type")
-    name = fields.Char('Payment Reference', readonly=True, states={'draft': [('readonly', False)]}, default='')
-    date = fields.Date("Bill Date", readonly=True, select=True, states={'draft': [('readonly', False)]},
-                           copy=False, default=fields.Date.context_today)
-    account_date = fields.Date("Accounting Date", readonly=True, select=True, states={'draft': [('readonly', False)]},
-                               help="Effective date for accounting entries", copy=False, default=fields.Date.context_today)
-    journal_id = fields.Many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=_default_journal)
-    account_id = fields.Many2one('account.account', 'Account', required=True, readonly=True, states={'draft': [('readonly', False)]}, domain="[('deprecated', '=', False), ('internal_type','=', (pay_now == 'pay_now' and 'liquidity' or voucher_type == 'purchase' and 'payable' or 'receivable'))]")
-    line_ids = fields.One2many('account.voucher.line', 'voucher_id', 'Voucher Lines',
-                                   readonly=True, copy=True,
-                                   states={'draft': [('readonly', False)]})
-    narration = fields.Text('Notes', readonly=True, states={'draft': [('readonly', False)]})
-    currency_id = fields.Many2one('res.currency', compute='_get_journal_currency', string='Currency', readonly=True, required=True, default=lambda self: self._get_currency())
-    company_id = fields.Many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}, related='journal_id.company_id', default=lambda self: self._get_company())
-    state = fields.Selection(
-            [('draft', 'Draft'),
-             ('cancel', 'Cancelled'),
-             ('proforma', 'Pro-forma'),
-             ('posted', 'Posted')
-            ], 'Status', readonly=True, track_visibility='onchange', copy=False, default='draft',
-            help=" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
-                 " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
-                 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
-                 " * The 'Cancelled' status is used when user cancel voucher.")
-    reference = fields.Char('Bill Reference', readonly=True, states={'draft': [('readonly', False)]},
-                                 help="The partner reference of this document.", copy=False)
-    amount = fields.Monetary(string='Total', store=True, readonly=True, compute='_compute_total')
-    tax_amount = fields.Monetary(readonly=True, store=True, compute='_compute_total')
-    tax_correction = fields.Monetary(readonly=True, states={'draft': [('readonly', False)]}, help='In case we have a rounding problem in the tax, use this field to correct it')
-    number = fields.Char(readonly=True, copy=False)
-    move_id = fields.Many2one('account.move', 'Journal Entry', copy=False)
-    partner_id = fields.Many2one('res.partner', 'Partner', change_default=1, readonly=True, states={'draft': [('readonly', False)]})
-    paid = fields.Boolean(compute='_check_paid', help="The Voucher has been totally paid.")
-    pay_now = fields.Selection([
-            ('pay_now', 'Pay Directly'),
-            ('pay_later', 'Pay Later'),
-        ], 'Payment', select=True, readonly=True, states={'draft': [('readonly', False)]}, default='pay_later')
-    date_due = fields.Date('Due Date', readonly=True, select=True, states={'draft': [('readonly', False)]})
 
     @api.onchange('date')
     def onchange_date(self):
@@ -235,7 +247,8 @@ class AccountVoucher(models.Model):
             if not line.price_subtotal:
                 continue
             # convert the amount set on the voucher line into the currency of the voucher's company
-            # this calls res_curreny.compute() with the right context, so that it will take either the rate on the voucher if it is relevant or will use the default behaviour
+            # this calls res_curreny.compute() with the right context,
+            # so that it will take either the rate on the voucher if it is relevant or will use the default behaviour
             amount = self._convert_amount(line.price_unit*line.quantity)
             move_line = {
                 'journal_id': self.journal_id.id,
@@ -307,17 +320,9 @@ class AccountVoucher(models.Model):
         return super(AccountVoucher, self)._track_subtype(init_values)
 
 
-class account_voucher_line(models.Model):
+class AccountVoucherLine(models.Model):
     _name = 'account.voucher.line'
     _description = 'Voucher Lines'
-
-    @api.one
-    @api.depends('price_unit', 'tax_ids', 'quantity', 'product_id', 'voucher_id.currency_id')
-    def _compute_subtotal(self):
-        self.price_subtotal = self.quantity * self.price_unit
-        if self.tax_ids:
-            taxes = self.tax_ids.compute_all(self.price_unit, self.voucher_id.currency_id, self.quantity, product=self.product_id, partner=self.voucher_id.partner_id)
-            self.price_subtotal = taxes['total_excluded']
 
     name = fields.Text(string='Description', required=True)
     sequence = fields.Integer(default=10,
@@ -337,6 +342,14 @@ class account_voucher_line(models.Model):
     company_id = fields.Many2one('res.company', related='voucher_id.company_id', string='Company', store=True, readonly=True)
     tax_ids = fields.Many2many('account.tax', string='Tax', help="Only for tax excluded from price")
     currency_id = fields.Many2one('res.currency', related='voucher_id.currency_id')
+
+    @api.one
+    @api.depends('price_unit', 'tax_ids', 'quantity', 'product_id', 'voucher_id.currency_id')
+    def _compute_subtotal(self):
+        self.price_subtotal = self.quantity * self.price_unit
+        if self.tax_ids:
+            taxes = self.tax_ids.compute_all(self.price_unit, self.voucher_id.currency_id, self.quantity, product=self.product_id, partner=self.voucher_id.partner_id)
+            self.price_subtotal = taxes['total_excluded']
 
     def _get_account(self, product, fpos, type):
         accounts = product.product_tmpl_id.get_product_accounts(fpos)
