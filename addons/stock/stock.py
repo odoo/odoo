@@ -726,7 +726,7 @@ class stock_picking(osv.osv):
         default = default.copy()
         picking_obj = self.browse(cr, uid, id, context=context)
         if ('name' not in default) or (picking_obj.name == '/'):
-            seq_obj_name = 'stock.picking.' + picking_obj.type
+            seq_obj_name = 'stock.picking' + ('.' + picking_obj.type if picking_obj.type != 'internal' else '')
             default['name'] = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
             default.setdefault('origin', False)
             default.setdefault('backorder_id', False)
@@ -1293,7 +1293,7 @@ class stock_picking(osv.osv):
                     new_picking_name = pick.name
                     self.write(cr, uid, [pick.id], 
                                {'name': sequence_obj.get(cr, uid,
-                                            'stock.picking.%s'%(pick.type)),
+                                            'stock.picking' + ('.' + pick.type if pick.type != 'internal' else '')),
                                })
                     pick.refresh()
                     new_picking = self.copy(cr, uid, pick.id,
