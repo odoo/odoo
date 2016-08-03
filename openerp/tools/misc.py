@@ -1168,7 +1168,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
 
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 
-    if currency_obj:
+    if currency_obj and currency_obj.symbol:
         if currency_obj.position == 'after':
             res = '%s %s' % (res, currency_obj.symbol)
         elif currency_obj and currency_obj.position == 'before':
