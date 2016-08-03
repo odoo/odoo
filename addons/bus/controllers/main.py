@@ -50,7 +50,6 @@ class BusController(http.Controller):
                 )
 
             if notifications:
-                # TODO: use event name/types? for presence?
                 for n in notifications:
                     # update last event seen so next round doesn't try to
                     # re-fetch messages we've already seen
