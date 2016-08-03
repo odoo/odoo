@@ -175,6 +175,12 @@ if(!$('.o_website_quote').length) {
     nav_menu.setElement($('[data-id="quote_sidebar"]'));
     nav_menu.start($('body[data-target=".navspy"]'));
 
+    $(".o_website_quote .bs-sidebar").affix({
+        offset: {
+            top: 0,
+            bottom: $('body').height() - $('#wrapwrap').outerHeight() + $("footer").outerHeight(),
+        },
+    });
 });
 
 odoo.define('website_quote.payment_method', function (require) {
