@@ -215,7 +215,8 @@ class MailController(http.Controller):
 
     @http.route('/mail/<string:res_model>/<int:res_id>/avatar/<int:partner_id>', type='http', auth='public')
     def avatar(self, res_model, res_id, partner_id):
-        headers = [[('Content-Type', 'image/png')]]
+        headers = [('Content-Type', 'image/png')]
+        status = 200
         content = 'R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='  # default image is one white pixel
         if res_model in request.env:
             try:
