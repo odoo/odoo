@@ -30,10 +30,9 @@ This module manages:
     'demo' : [],
     'data' : [
         'security/ir.model.access.csv',
-        'account_voucher_view.xml',
-        'voucher_sales_purchase_view.xml',
+        'views/account_voucher_views.xml',
         'security/account_voucher_security.xml',
-        'account_voucher_data.xml',
+        'data/account_voucher_data.xml',
     ],
     'test' : [
         'test/account_voucher_users.yml',
