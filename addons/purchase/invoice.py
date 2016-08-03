@@ -37,6 +37,7 @@ class AccountInvoice(models.Model):
             return {}
         if not self.partner_id:
             self.partner_id = self.purchase_id.partner_id.id
+        self.currency_id = self.purchase_id.currency_id
 
         new_lines = self.env['account.invoice.line']
         for line in self.purchase_id.order_line:
@@ -74,6 +75,16 @@ class AccountInvoice(models.Model):
         self.invoice_line_ids += new_lines
         self.purchase_id = False
         return {}
+
+    @api.onchange('journal_id')
+    def _onchange_journal_id(self):
+        super(AccountInvoice, self)._onchange_journal_id()
+        if self.purchase_id:
+            self.currency_id = self.purchase_id.currency_id
+        elif self.origin:
+            po = self.purchase_id.search([('name', '=', self.origin)])
+            if po:
+               self.currency_id = po.currency_id
 
     @api.onchange('currency_id')
     def _onchange_currency_id(self):
