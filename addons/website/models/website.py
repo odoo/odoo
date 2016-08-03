@@ -21,7 +21,7 @@ from openerp.tools.translate import _
 from openerp.osv import orm, osv, fields
 from openerp.tools import html_escape as escape, ustr, image_resize_and_sharpen, image_save_for_web
 from openerp.tools.safe_eval import safe_eval
-from openerp.addons.web.http import request
+from openerp.http import request
 from werkzeug.exceptions import NotFound
 
 logger = logging.getLogger(__name__)

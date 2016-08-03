@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import datetime, timedelta
 
-from openerp import http
-from openerp.exceptions import AccessError
-from openerp.http import request
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo import fields, http
+from odoo.exceptions import AccessError
+from odoo.http import request
 
 
 class WebSettingsDashboard(http.Controller):
@@ -47,7 +48,7 @@ class WebSettingsDashboard(http.Controller):
 
         # See update.py for this computation
         limit_date = datetime.now() - timedelta(15)
-        enterprise_users = request.env['res.users'].search_count([("login_date", ">=", limit_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('share', '=', False)])
+        enterprise_users = request.env['res.users'].search_count([("login_date", ">=", fields.Datetime.to_string(limit_date)), ('share', '=', False)])
 
         return {
             'apps': {

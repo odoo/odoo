@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import werkzeug
 
-from openerp.addons.web import http
+from openerp import http
 from openerp.http import request
 
 

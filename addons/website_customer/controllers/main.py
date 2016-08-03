@@ -3,10 +3,10 @@
 
 import openerp
 from openerp import SUPERUSER_ID
-from openerp.addons.web import http
+from openerp import http
 from openerp.addons.website.models.website import unslug
 from openerp.tools.translate import _
-from openerp.addons.web.http import request
+from openerp.http import request
 import werkzeug.urls
 
 

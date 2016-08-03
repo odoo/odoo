@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp import http
+from openerp.http import request
 
 import datetime
 from werkzeug.exceptions import NotFound

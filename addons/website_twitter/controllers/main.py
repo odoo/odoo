@@ -3,8 +3,8 @@
 
 import json
 from odoo import _
-from odoo.addons.web import http
-from odoo.addons.web.http import request
+from odoo import http
+from odoo.http import request
 
 
 class Twitter(http.Controller):

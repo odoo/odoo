@@ -1,9 +1,15 @@
-import openerp
-from openerp.tools.safe_eval import safe_eval as eval
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-class DiagramView(openerp.http.Controller):
+import odoo
+import odoo.http as http
 
-    @openerp.http.route('/web_diagram/diagram/get_diagram_info', type='json', auth='user')
+from odoo.tools.safe_eval import safe_eval as eval
+
+
+class DiagramView(http.Controller):
+
+    @http.route('/web_diagram/diagram/get_diagram_info', type='json', auth='user')
     def get_diagram_info(self, req, id, model, node, connector,
                          src_node, des_node, label, **kw):
 
