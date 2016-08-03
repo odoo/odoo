@@ -30,7 +30,6 @@ Three reports are available:
     'website': 'https://www.odoo.com/page/accounting',
     'depends': ['account'],
     'data': [
-        'data/account_budget_workflow.xml',
         'security/ir.model.access.csv',
         'security/account_budget_security.xml',
         'views/account_analytic_account_views.xml',
