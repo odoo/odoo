@@ -127,7 +127,7 @@ class Attendee(models.Model):
     def _send_mail_to_attendees(self, template_xmlid, force_send=False):
         """ Send mail for event invitation to event attendees.
             :param template_xmlid: xml id of the email template to use to send the invitation
-            :param force_send: If set to True, email will be sent to user himself. Usefull for alert, ...
+            :param force_send: if set to True, the mail(s) will be sent immediately (instead of the next queue processing)
         """
         res = False
 
