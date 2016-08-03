@@ -2,7 +2,7 @@
 import json
 import random
 
-from openerp import api, http, exceptions
+from openerp import api, http
 from openerp.addons.bus.models.bus import dispatch
 
 KEEPALIVES = [
@@ -19,7 +19,11 @@ class BusController(http.Controller):
     @http.route('/longpolling/stream', type='http', auth='public')
     def stream(self, channels):
         if http.request.registry.in_test_mode():
-            raise exceptions.UserError("bus.Bus not available in test mode")
+            return http.Response(
+                ": test mode, retry tomorrow (~never)\n\n"
+                "retry: 86400000\n\n",
+                mimetype='text/event-stream'
+            )
 
         channels = self._get_channels(channels.split(','))
 
