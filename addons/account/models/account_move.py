@@ -958,13 +958,15 @@ class AccountMoveLine(models.Model):
                 currency = aml.currency_id
             if aml.currency_id and aml.currency_id == currency:
                 total_amount_currency += aml.amount_currency
-                partial_rec_set |= aml.matched_debit_ids | aml.matched_credit_ids
+            partial_rec_set |= aml.matched_debit_ids | aml.matched_credit_ids
 
         if currency and aml_to_balance_currency:
             aml = aml_to_balance_currency[0]
             #eventually create journal entries to book the difference due to foreign currency's exchange rate that fluctuates
             partial_rec = aml.credit and aml.matched_debit_ids[0] or aml.matched_credit_ids[0]
             aml_id, partial_rec_id = partial_rec.with_context(skip_full_reconcile_check=True).create_exchange_rate_entry(aml_to_balance_currency, 0.0, total_amount_currency, currency, maxdate)
+            self |= aml_id
+            partial_rec_set |= partial_rec_id
 
         partial_rec_ids = [x.id for x in list(partial_rec_set)]
         #if the total debit and credit are equal, and the total amount in currency is 0, the reconciliation is full

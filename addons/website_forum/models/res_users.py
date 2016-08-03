@@ -24,6 +24,7 @@ class Users(models.Model):
     gold_badge = fields.Integer('Gold badges count', compute="_get_user_badge_level")
     silver_badge = fields.Integer('Silver badges count', compute="_get_user_badge_level")
     bronze_badge = fields.Integer('Bronze badges count', compute="_get_user_badge_level")
+    forum_waiting_posts_count = fields.Integer('Waiting post', compute="_get_user_waiting_post")
 
     @api.multi
     @api.depends('badge_ids')
@@ -48,6 +49,13 @@ class Users(models.Model):
         for (user_id, level, count) in self.env.cr.fetchall():
             # levels are gold, silver, bronze but fields have _badge postfix
             self.browse(user_id)['{}_badge'.format(level)] = count
+
+    @api.multi
+    def _get_user_waiting_post(self):
+        for user in self:
+            Post = self.env['forum.post']
+            domain = [('parent_id', '=', False), ('state', '=', 'pending'), ('create_uid', '=', user.id)]
+            user.forum_waiting_posts_count = Post.search_count(domain)
 
     @api.model
     def _generate_forum_token(self, user_id, email):
