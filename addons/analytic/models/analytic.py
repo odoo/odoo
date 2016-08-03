@@ -25,16 +25,23 @@ class account_analytic_account(models.Model):
             domain += [('date', '>=', self._context['from_date'])]
         if self._context.get('to_date', False):
             domain += [('date', '<=', self._context['to_date'])]
-        amounts = self.env['account.analytic.line'].read_group(
-            domain, ['account_id', 'amount'], ['account_id'])
-        amounts = dict([(amount['account_id'][0], amount['amount'])
-                       for amount in amounts])
+        # compute debits
+        debit_domain = domain + [('amount', '<', 0.0)]
+        debits = self.env['account.analytic.line'].read_group(
+            debit_domain, ['account_id', 'amount'], ['account_id'])
+        debits = dict([(amount['account_id'][0], amount['amount'])
+                       for amount in debits])
+        # compute credits
+        credit_domain = domain + [('amount', '>', 0.0)]
+        credits = self.env['account.analytic.line'].read_group(
+            credit_domain, ['account_id', 'amount'], ['account_id'])
+        credits = dict([(amount['account_id'][0], amount['amount'])
+                       for amount in credits])
 
         for account in self:
-            amount = amounts.get(account.id, 0.0)
-            account.balance = amount
-            account.credit = amount if amount > 0.0 else 0.0
-            account.debit = -amount if amount < 0.0 else 0.0
+            account.credit = credits.get(account.id, 0.0)
+            account.debit = abs(debits.get(account.id, 0.0))
+            account.balance = account.credit - account.debit
 
     name = fields.Char(string='Analytic Account', index=True, required=True, track_visibility='onchange')
     code = fields.Char(string='Reference', index=True, track_visibility='onchange')
