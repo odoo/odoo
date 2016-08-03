@@ -67,8 +67,8 @@
                   'account_id': account_sale_id[0],
               }
               self._update(cr, uid, 'account.invoice.line', 'sale', vals, 'test_crm_sale_invoice_2_line_1')
-              self.pool.get('account.invoice').signal_workflow(cr, uid, [ref('test_crm_sale_invoice_1')], 'invoice_open')
-              self.pool.get('account.invoice').signal_workflow(cr, uid, [ref('test_crm_sale_invoice_2')], 'invoice_open')
+              self.pool.get('account.invoice').invoice_open(cr, uid, [ref('test_crm_sale_invoice_1')])
+              self.pool.get('account.invoice').invoice_open(cr, uid, [ref('test_crm_sale_invoice_2')])
               bank_journal_id = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'bank')])
               if bank_journal_id:
                   bank_journal_id = bank_journal_id[0]

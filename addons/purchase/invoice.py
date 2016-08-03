@@ -170,9 +170,9 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def write(self, vals):
-        purchase_old = self.invoice_line_ids.mapped('purchase_line_id.order_id')
+        purchase_old = self.mapped('invoice_line_ids.purchase_line_id.order_id')
         invoice = super(AccountInvoice, self).write(vals)
-        purchase_new = self.invoice_line_ids.mapped('purchase_line_id.order_id')
+        purchase_new = self.mapped('invoice_line_ids.purchase_line_id.order_id')
         #To get all po reference when updating invoice line or adding purchase order reference from vendor bill.
         purchase = (purchase_old | purchase_new) - (purchase_old & purchase_new)
         if purchase:

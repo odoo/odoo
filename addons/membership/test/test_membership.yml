@@ -58,7 +58,7 @@
         membership_lines = membership_line_pool.browse(cr, uid, membership_line_ids)
         assert membership_lines, 'Membership is not registrated.'
         membership_line = membership_lines[0]
-        membership_line.account_invoice_id.signal_workflow('invoice_open')
+        membership_line.account_invoice_id.invoice_open()
 
 - |
   I'm checking "Current membership state" of "Seagate". It is an "Invoiced Member" or not.
@@ -121,7 +121,7 @@
         refund_id = invoice_refund_pool.create(cr, uid, {'description': 'Refund of Membership', 'filter_refund': 'refund'}, {'active_id': membership_line.account_invoice_id.id})
         invoice_refund_pool.invoice_refund(cr, uid, [refund_id], {'active_id': membership_line.account_invoice_id.id, 'active_ids': [membership_line.account_invoice_id.id]})
         membership_line.account_invoice_id.journal_id.write({'update_posted': True})
-        membership_line.account_invoice_id.signal_workflow('invoice_cancel')
+        membership_line.account_invoice_id.action_cancel()
 - |
   I'm checking "Current membership state" of "Seagate". It is an "Cancelled Member" or not.
 -

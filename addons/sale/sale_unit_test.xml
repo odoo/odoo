@@ -54,9 +54,9 @@
             <test expr="invoice_ids[0].state">draft</test>
         </assert>
 
-        <workflow action="invoice_open" model="account.invoice">
+        <function model="account.invoice" name="invoice_open">
             <value eval="obj(ref('test_order_1')).invoice_ids[0].id" model="sale.order"/>
-        </workflow>
+        </function>
 
         <function model="account.invoice" name="pay_and_reconcile">
             <value eval="[obj(ref('test_order_1')).invoice_ids[0].id]" model="sale.order"/>

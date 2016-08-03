@@ -950,8 +950,9 @@ class AccountBankStatementLine(models.Model):
             st_line_amount = -sum([x.balance for x in move.line_ids])
             aml_dict = self._prepare_reconciliation_move_line(move, st_line_amount)
             aml_dict['payment_id'] = payment_id
-            aml_obj.with_context(check_move_validity=False).create(aml_dict)            
+            aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
             move.post()
+            self.env['account.invoice'].search([('payment_move_line_ids', 'in', move.line_ids.ids)]).confirm_paid()
         counterpart_moves.assert_balanced()
         return counterpart_moves

@@ -429,6 +429,8 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def confirm_paid(self):
+        if self.filtered(lambda inv: not inv.reconciled and inv.state != 'open'):
+            raise UserError(_('You cannot paid an invoice which is partially paid. You need to reconcile payment entries first.'))
         return self.write({'state': 'paid'})
 
     @api.multi
@@ -596,6 +598,17 @@ class AccountInvoice(models.Model):
         if credit_aml.payment_id:
             credit_aml.payment_id.write({'invoice_ids': [(4, id, None)]})
         return inv.register_payment(credit_aml)
+
+    @api.multi
+    def invoice_open(self):
+        self.action_date_assign()
+        self.action_move_create()
+        self.invoice_validate()
+        return True
+
+    @api.multi
+    def invoice_proforma2(self):
+        return self.write({'state': 'proforma2'})
 
     @api.multi
     def action_date_assign(self):
@@ -843,6 +856,8 @@ class AccountInvoice(models.Model):
             if invoice.type in ('in_invoice', 'in_refund') and invoice.reference:
                 if self.search([('type', '=', invoice.type), ('reference', '=', invoice.reference), ('company_id', '=', invoice.company_id.id), ('commercial_partner_id', '=', invoice.commercial_partner_id.id), ('id', '!=', invoice.id)]):
                     raise UserError(_("Duplicated vendor reference detected. You probably encoded twice the same vendor bill/refund."))
+            if invoice.reconciled and invoice.state == 'paid':
+                raise UserError(_('You cannot re-open an invoice which is partially paid or paid. You need to unreconcile related payment entries first'))
         return self.write({'state': 'open'})
 
     @api.model
@@ -1032,6 +1047,7 @@ class AccountInvoice(models.Model):
             'writeoff_account_id': writeoff_acc and writeoff_acc.id or False,
         })
         payment.post()
+        self.confirm_paid()
 
     @api.v7
     def pay_and_reconcile(self, cr, uid, ids, pay_journal_id, pay_amount=None, date=None, writeoff_acc_id=None, context=None):

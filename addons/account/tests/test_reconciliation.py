@@ -56,7 +56,7 @@ class TestReconciliation(AccountingTestCase):
         })
 
         #validate invoice
-        invoice.signal_workflow('invoice_open')
+        invoice.invoice_open()
         return invoice
 
     def make_payment(self, invoice_record, bank_journal, amount=0.0, amount_currency=0.0, currency_id=None):
@@ -282,7 +282,7 @@ class TestReconciliation(AccountingTestCase):
                 })
             ]
         })
-        self.registry('account.invoice').signal_workflow(cr, uid, [invoice_id], 'invoice_open')
+        self.registry('account.invoice').invoice_open(cr, uid, [invoice_id])
         invoice = self.account_invoice_model.browse(cr, uid, invoice_id)
         # We create a bank statement with two lines of 1.00 USD each.
         bank_stmt_id = self.acc_bank_stmt_model.create(cr, uid, {

@@ -17,8 +17,8 @@
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='invoice_cancel']" position="replace">
-                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel Invoice" groups="account.group_account_invoice"/>
+                <xpath expr="//button[@name='action_cancel']" position="replace">
+                    <button name="action_cancel" type="object" states="draft,proforma2,sale,open" string="Cancel Invoice" groups="account.group_account_invoice"/>
                 </xpath>
             </field>
         </record>
@@ -28,8 +28,8 @@
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='invoice_cancel']" position="replace">
-                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel Invoice" groups="account.group_account_invoice"/>
+                <xpath expr="//button[@name='action_cancel']" position="replace">
+                    <button name="action_cancel" type="object" states="draft,proforma2,sale,open" string="Cancel Invoice" groups="account.group_account_invoice"/>
                 </xpath>
             </field>
         </record>
