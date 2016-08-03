@@ -6,10 +6,10 @@
 -
   I select the period and journal for the bank statement
 -
-  !python {model: account.bank.statement}: |
+  !python {model: account.bank.statement, id: False}: |
     import time
-    journal = self._default_journal(cr, uid, {'lang': u'en_US', 'tz': False, 'active_model': 'ir.ui.menu',
-      'journal_type': 'bank', 'date': time.strftime("%Y/%m/%d")})
+    journal = self.with_context({'lang': u'en_US', 'tz': False, 'active_model': 'ir.ui.menu',
+      'journal_type': 'bank', 'date': time.strftime("%Y/%m/%d")})._default_journal()
     assert journal, 'Journal has not been selected'
 -
   I create a bank statement with Opening and Closing balance 0.
@@ -20,9 +20,9 @@
     date: !eval time.strftime('%Y-%m-%d')
     company_id: base.main_company
 -
-  !python {model: account.bank.statement.line}: |
+  !python {model: account.bank.statement.line, id: False}: |
     import time
-    account_id = self.pool.get('account.account').search(cr, uid, [('user_type_id.type', '=', 'liquidity'), ('currency_id', '=', False)])[0]
+    account_id = self.env['account.account'].search([('user_type_id.type', '=', 'liquidity'), ('currency_id', '=', False)], limit=1).id
     vals = {
         'amount': 1000,
         'date': time.strftime('%Y-%m-%d'),
@@ -30,18 +30,18 @@
         'name': 'EXT001',
         'statement_id': ref('account_bank_statement_0'),
     }
-    self.create(cr, uid, vals)
+    self.create(vals)
 -
   I process the bank statement line
 -
-  !python {model: account.bank.statement}: |
-    account_id = self.pool.get('account.account').create(cr, uid, {'name': 'toto', 'code': 'bidule', 'user_type_id': self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'account.data_account_type_fixed_assets')})
-    statement = self.browse(cr, uid, [ref("account_bank_statement_0")])
+  !python {model: account.bank.statement, id: False}: |
+    account = self.env['account.account'].create({'name': 'toto', 'code': 'bidule', 'user_type_id': self.env.ref('account.data_account_type_fixed_assets').id})
+    statement = self.browse([ref("account_bank_statement_0")])
     statement.line_ids[0].process_reconciliation(new_aml_dicts=[{
         'credit': 1000,
         'debit': 0,
         'name': 'toto',
-        'account_id': account_id,
+        'account_id': account.id,
     }])
 -
   I modify the bank statement and set the Closing Balance.
@@ -51,8 +51,8 @@
 -
   I confirm the bank statement using Confirm button
 -
-  !python {model: account.bank.statement}: |
-    self.button_confirm_bank(cr, uid, [ref("account_bank_statement_0")])
+  !python {model: account.bank.statement, id: False}: |
+    self.browse(ref("account_bank_statement_0")).button_confirm_bank()
 -
   I check that bank statement state is now "Closed"
 -

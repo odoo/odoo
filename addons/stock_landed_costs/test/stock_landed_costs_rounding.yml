@@ -56,15 +56,14 @@
 -
   I receive picking LC_pick_3, and check how many quants are created
 -
-  !python {model: stock.picking}: |
-    pick = self.browse(cr, uid, [ref("picking_landed_cost_3")], context=context)
-    pick.move_lines.price_unit = 1.0
+  !python {model: stock.picking, id: picking_landed_cost_3}: |
+    self.move_lines.price_unit = 1.0
 
-    self.action_confirm(cr, uid, [ref("picking_landed_cost_3")], context=context)
-    self.action_assign(cr, uid, [ref("picking_landed_cost_3")], context=context)
-    self.action_done(cr, uid, [ref("picking_landed_cost_3")], context=context)
+    self.action_confirm()
+    self.action_assign()
+    self.action_done()
 
-    quants = pick.move_lines.quant_ids
+    quants = self.move_lines.quant_ids
     assert len(quants) == 1
     assert quants.qty == 13
     assert quants.cost == 1.0
@@ -83,20 +82,19 @@
 -
   I compute the landed cost using Compute button
 -
-  !python {model: stock.landed.cost}: |
-    self.compute_landed_cost(cr, uid, [ref("stock_landed_cost_2")])
+  !python {model: stock.landed.cost, id: stock_landed_cost_2}: |
+    self.compute_landed_cost()
 -
   I check the valuation adjustment lines
 -
-  !python {model: stock.landed.cost}: |
-    landed_cost = self.browse(cr, uid, ref("stock_landed_cost_2"))
-    for valuation in landed_cost.valuation_adjustment_lines:
+  !python {model: stock.landed.cost, id: stock_landed_cost_2}: |
+    for valuation in self.valuation_adjustment_lines:
         assert valuation.additional_landed_cost == 15
 -
   I confirm the landed cost
 -
-  !python {model: stock.landed.cost}: |
-    self.button_validate(cr, uid, [ref("stock_landed_cost_2")])
+  !python {model: stock.landed.cost, id: stock_landed_cost_2}: |
+    self.button_validate()
 -
   I check that the landed cost is now "Closed" and that it has an accounting entry
 -
@@ -106,9 +104,8 @@
 -
   I check the quants quantity and cost
 -
-  !python {model: stock.landed.cost}: |
-    landed_cost = self.browse(cr, uid, ref("stock_landed_cost_2"))
-    for valuation in landed_cost.valuation_adjustment_lines:
+  !python {model: stock.landed.cost, id: stock_landed_cost_2}: |
+    for valuation in self.valuation_adjustment_lines:
         quants = valuation.move_id.quant_ids
         assert quants.mapped('qty') == [12.0, 1.0]
         assert quants.mapped('cost') == [2.15, 2.2]
@@ -117,15 +114,14 @@
 -
   I receive picking LC_pick_4, and check how many quants are created
 -
-  !python {model: stock.picking}: |
-    pick = self.browse(cr, uid, [ref("picking_landed_cost_4")], context=context)
-    pick.move_lines.price_unit = 17.0/12.0
+  !python {model: stock.picking, id: picking_landed_cost_4}: |
+    self.move_lines.price_unit = 17.0/12.0
 
-    self.action_confirm(cr, uid, [ref("picking_landed_cost_4")], context=context)
-    self.action_assign(cr, uid, [ref("picking_landed_cost_4")], context=context)
-    self.action_done(cr, uid, [ref("picking_landed_cost_4")], context=context)
+    self.action_confirm()
+    self.action_assign()
+    self.action_done()
 
-    quants = pick.move_lines.quant_ids
+    quants = self.move_lines.quant_ids
     assert len(quants) == 2
     assert quants.mapped('qty') == [11.0, 1.0]
     assert [round(c, 2) for c in quants.mapped('cost')] == [1.42, 1.38]
@@ -144,20 +140,19 @@
 -
   I compute the landed cost using Compute button
 -
-  !python {model: stock.landed.cost}: |
-    self.compute_landed_cost(cr, uid, [ref("stock_landed_cost_3")])
+  !python {model: stock.landed.cost, id: stock_landed_cost_3}: |
+    self.compute_landed_cost()
 -
   I check the valuation adjustment lines
 -
-  !python {model: stock.landed.cost}: |
-    landed_cost = self.browse(cr, uid, ref("stock_landed_cost_3"))
-    for valuation in landed_cost.valuation_adjustment_lines:
+  !python {model: stock.landed.cost, id: stock_landed_cost_3}: |
+    for valuation in self.valuation_adjustment_lines:
         assert valuation.additional_landed_cost == 11
 -
   I confirm the landed cost
 -
-  !python {model: stock.landed.cost}: |
-    self.button_validate(cr, uid, [ref("stock_landed_cost_3")])
+  !python {model: stock.landed.cost, id: stock_landed_cost_3}: |
+    self.button_validate()
 -
   I check that the landed cost is now "Closed" and that it has an accounting entry
 -
@@ -167,9 +162,8 @@
 -
   I check the quants quantity and cost
 -
-  !python {model: stock.landed.cost}: |
-    landed_cost = self.browse(cr, uid, ref("stock_landed_cost_3"))
-    for valuation in landed_cost.valuation_adjustment_lines:
+  !python {model: stock.landed.cost, id: stock_landed_cost_3}: |
+    for valuation in self.valuation_adjustment_lines:
         quants = valuation.move_id.quant_ids
         assert quants.mapped('qty') == [11.0, 1.0]
         assert [round(c, 2) for c in quants.mapped('cost')] == [2.34, 2.26]

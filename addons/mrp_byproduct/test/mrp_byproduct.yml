@@ -25,8 +25,8 @@
 -
   I compute the data of production order.
 -
-  !python {model: mrp.production}: |
-    self.action_compute(cr, uid, [ref("mrp_production_mo0")], {"active_ids": [ref("mrp_production_mo0")],"active_id": ref("mrp_production_mo0")})
+  !python {model: mrp.production, id: mrp_production_mo0}: |
+    self.with_context({"active_ids": [ref("mrp_production_mo0")],"active_id": ref("mrp_production_mo0")}).action_compute()
 -
   I confirm the production order.
 -
@@ -40,16 +40,16 @@
   Now I check the stock moves for the byproduct I created in the bill of material.
   This move is created automatically when I confirmed the production order.
 -
-  !python {model: stock.move}: |
-    production_order = self.pool.get('mrp.production').browse(cr, uid, ref("mrp_production_mo0"))
-    move_ids = self.search(cr, uid, [('origin','=',production_order.name), ('product_id','=',ref('product.product_delivery_01'))])
-    assert move_ids, 'No moves are created !'
-    assert self.browse(cr, uid, move_ids).product_uom_qty == 3, "Incorrect quantity for byproduct move"
+  !python {model: stock.move, id: False}: |
+    production_order = self.env['mrp.production'].browse(ref("mrp_production_mo0"))
+    move = self.search([('origin','=',production_order.name), ('product_id','=',ref('product.product_delivery_01'))], limit=1)
+    assert move, 'No move are created !'
+    assert move.product_uom_qty == 3, "Incorrect quantity for byproduct move"
 -
   I want to start the production so I force the reservation of products.
 -
-  !python {model: mrp.production}: |
-    self.force_production(cr, uid, [ref("mrp_production_mo0")], {"active_ids":[ref("mrp.menu_mrp_production_action")], "active_id": ref("mrp.menu_mrp_production_action"),})
+  !python {model: mrp.production, id: mrp_production_mo0}: |
+    self.with_context({"active_ids":[ref("mrp.menu_mrp_production_action")], "active_id": ref("mrp.menu_mrp_production_action"),}).force_production()
 -
   I start the production.
 -
@@ -65,17 +65,15 @@
 -
   I finish the production order.
 -
-  !python {model: mrp.product.produce}: |
+  !python {model: mrp.product.produce, id: mrp_product_produce0}: |
     ctx = context.copy()
-    ctx['active_id'] = ref("mrp_production_mo0")
-    self.on_change_qty(cr, uid, [ref('mrp_product_produce0')], context=ctx)
-    self.do_produce(cr, uid, [ref("mrp_product_produce0")], {"active_model": "mrp.production", "active_ids":[ref("mrp_production_mo0")], "active_id": ref("mrp_production_mo0")})
+    ctx['active_id'] = self.id
+    self.with_context(ctx).on_change_qty()
+    self.with_context({"active_model": "mrp.production", "active_ids":[ref("mrp_production_mo0")], "active_id": ref("mrp_production_mo0")}).do_produce()
 -
   I see that stock moves of External Hard Disk including Headset USB are done now.
 -
-  !python {model: stock.move}: |
-    production_order = self.pool.get('mrp.production').browse(cr, uid, ref("mrp_production_mo0"))
-    move_ids = self.search(cr, uid, [('origin','=',production_order.name), ('product_id','in',[ref("product.product_delivery_02"),ref("product.product_delivery_01")])])
-    moves = self.browse(cr, uid, move_ids)
-    assert all(move.state == 'done' for move in moves), 'Moves are not done!'
-
+  !python {model: stock.move, id: False}: |
+    production_order = self.env['mrp.production'].browse(ref("mrp_production_mo0"))
+    moves = self.search([('origin','=',production_order.name), ('product_id','in',[ref("product.product_delivery_02"),ref("product.product_delivery_01")])])
+    assert all(moves.state == 'done' for moves in moves), 'Moves are not done

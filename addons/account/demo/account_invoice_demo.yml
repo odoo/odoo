@@ -78,19 +78,19 @@
     type: 'in_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-01'
 -
-  !python {model: ir.model.data} : |
+  !python {model: ir.model.data, id: False} : |
       line_vals = {
           'invoice_id': ref('demo_invoice_january_wages'),
           'name': "CEO wages",
           'price_unit': 10000,
       }
-      account_id = self.pool.get('account.account').search(cr, uid, [('tag_ids', 'in', [ref('account.demo_ceo_wages_account')])])
-      if not account_id:
-          account_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_expenses'))])
-      if account_id:
-          line_vals['account_id'] = account_id[0]
-          self._update(cr, uid, 'account.invoice.line', 'account', line_vals, 'ceo_wages_line')
-          self.pool.get('account.invoice').signal_workflow(cr, uid, [ref('demo_invoice_january_wages')], 'invoice_open')
+      account = self.env['account.account'].search([('tag_ids', 'in', [ref('account.demo_ceo_wages_account')])], limit=1)
+      if not account:
+          account = self.env['account.account'].search([('user_type_id', '=', ref('account.data_account_type_expenses'))], limit=1)
+      if account:
+          line_vals['account_id'] = account.id
+          self._update('account.invoice.line', 'account', line_vals, 'ceo_wages_line')
+          self.env['account.invoice'].browse(ref('demo_invoice_january_wages')).signal_workflow('invoice_open')
 -
   !record {model: account.invoice, id: demo_invoice_equipment_purchase}:
     company_id: base.main_company
@@ -98,61 +98,63 @@
     type: 'in_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-15'
 -
-  !python {model: ir.model.data} : |
+  !python {model: ir.model.data, id: False} : |
       line_vals = {
           'invoice_id': ref('demo_invoice_equipment_purchase'),
           'name': "Coffee Machine with huge 'employee\'s performances boosting perk'",
           'price_unit': 4999.99,
       }
-      account_id = self.pool.get('account.account').search(cr, uid, [('tag_ids', 'in', [ref('account.demo_coffee_machine_account')])])
+      account_id = self.env['account.account'].search([('tag_ids', 'in', [ref('account.demo_coffee_machine_account')])], limit=1).id
       if not account_id:
-          account_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_expenses'))])
+          account_id = self.env['account.account'].search([('user_type_id', '=', ref('account.data_account_type_expenses'))], limit=1).id
       if account_id:
-          line_vals['account_id'] = account_id[0]
-          tax_id = self.pool.get('account.tax').search(cr, uid, [('type_tax_use', '=', 'purchase'), ('amount', '>', 0)])
+          line_vals['account_id'] = account_id
+          tax_id = self.env['account.tax'].search([('type_tax_use', '=', 'purchase'), ('amount', '>', 0)], limit=1).id
           if tax_id:
-            line_vals['invoice_line_tax_ids'] = [(6, 0, [tax_id[0]])]
-          self._update(cr, uid, 'account.invoice.line', 'account', line_vals, 'coffee_machine_line')
-          self.pool.get('account.invoice').browse(cr, uid, ref('demo_invoice_equipment_purchase'))._onchange_invoice_line_ids()
-          self.pool.get('account.invoice').signal_workflow(cr, uid, [ref('demo_invoice_equipment_purchase')], 'invoice_open')
+            line_vals['invoice_line_tax_ids'] = [(6, 0, [tax_id])]
+          self._update('account.invoice.line', 'account', line_vals, 'coffee_machine_line')
+          self.env['account.invoice'].browse(ref('demo_invoice_equipment_purchase'))._onchange_invoice_line_ids()
+          self.env['account.invoice'].browse(ref('demo_invoice_equipment_purchase')).signal_workflow('invoice_open')
 -
-  !python {model: account.bank.statement.line} : |
-      account_ids = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_revenue')), ('tag_ids', 'in', [ref('account.account_tag_financing')])])
-      line = self.browse(cr, uid, ref('account.demo_bank_statement_line_5'))
-      if not line.journal_entry_ids and account_ids:
-          line.write({'account_id': account_ids[0]})
+  !python {model: account.bank.statement.line, id: False} : |
+      account = self.env['account.account'].search([
+          ('user_type_id', '=', ref('account.data_account_type_revenue')),
+          ('tag_ids', 'in', [ref('account.account_tag_financing')])], limit=1)
+      line = self.env.ref('account.demo_bank_statement_line_5')
+      if not line.journal_entry_ids and account:
+          line.write({'account_id': account.id})
           line.fast_counterpart_creation()
 -
-  !python {model: ir.model.data} : |
+  !python {model: ir.model.data, id: False} : |
       from datetime import datetime
       from dateutil.relativedelta import relativedelta
       vals = {
           'company_id': ref('base.main_company'),
-          'journal_id': self.pool.get('account.journal').search(cr, uid, [('type', '=', 'general')])[0],
+          'journal_id': self.env['account.journal'].search([('type', '=', 'general')], limit=1).id,
           'date': datetime.now().replace(day=1,month=1) - relativedelta(days=1),
           'ref': 'Company Creation',
       }
-      self._update(cr, uid, 'account.move', 'account', vals, 'demo_opening_move')
+      self._update('account.move', 'account', vals, 'demo_opening_move')
 -
-  !python {model: ir.model.data} : |
-      bank_journal_id = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'bank')])[0]
-      if bank_journal_id:
-          bank_account_id = self.pool.get('account.journal').browse(cr, uid, bank_journal_id).default_debit_account_id.id
-      fixed_asset_account_ids = self.pool.get('account.account').search(cr, uid, [('user_type_id', 'in', (ref('account.data_account_type_fixed_assets'),ref('account.data_account_type_current_assets')))])
-      equity_account_ids = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_equity')), ('tag_ids', 'in', [ref('account.demo_capital_account')])])
-      if bank_account_id and fixed_asset_account_ids and equity_account_ids:
-          self._update(cr, uid, 'account.move.line', 'account', {
+  !python {model: ir.model.data, id: False} : |
+      bank_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
+      if bank_journal:
+          bank_account_id = bank_journal.default_debit_account_id.id
+      fixed_asset_account_id = self.env['account.account'].search([('user_type_id', 'in', (ref('account.data_account_type_fixed_assets'),ref('account.data_account_type_current_assets')))], limit=1).id
+      equity_account_id = self.env['account.account'].search([('user_type_id', '=', ref('account.data_account_type_equity')), ('tag_ids', 'in', [ref('account.demo_capital_account')])], limit=1).id
+      if bank_account_id and fixed_asset_account_id and equity_account_id:
+          self.with_context({'check_move_validity': False})._update('account.move.line', 'account', {
               'move_id': ref('account.demo_opening_move'),
               'name': 'Opening Entry',
               'debit': 5103,
-              'account_id': bank_account_id}, 'opening_line_1', context={'check_move_validity': False})
-          self._update(cr, uid, 'account.move.line', 'account', {
+              'account_id': bank_account_id}, 'opening_line_1')
+          self.with_context({'check_move_validity': False})._update('account.move.line', 'account', {
               'move_id': ref('account.demo_opening_move'),
               'name': 'Opening Entry',
               'debit': 13447,
-              'account_id': fixed_asset_account_ids[0]}, 'opening_line_2', context={'check_move_validity': False})
-          self._update(cr, uid, 'account.move.line', 'account', {
+              'account_id': fixed_asset_account_id[0]}, 'opening_line_2')
+          self.with_context({'check_move_validity': False})._update('account.move.line', 'account', {
               'move_id': ref('account.demo_opening_move'),
               'name': 'Opening Entry',
               'credit': 18550,
-              'account_id': equity_account_ids[0]}, 'opening_line_3', context={'check_move_validity': False})
+              'account_id': equity_account_id[0]}, 'opening_line_3')

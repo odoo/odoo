@@ -1,13 +1,13 @@
 -
-  !python {model: ir.model.data}: |
-    warehouse = self.pool['stock.warehouse'].browse(cr, uid, ref('stock.warehouse0'), context=context)
+  !python {model: ir.model.data, id: False}: |
+    warehouse = self.env['stock.warehouse'].browse(ref('stock.warehouse0'))
     #create xml ids for demo data that are widely used in tests or in other codes, for more convenience
     xml_references = [
         {'name':'picking_type_manufacturing','module':'mrp', 'model':'stock.picking.type','res_id': warehouse.manu_type_id.id},
     ]
     for xml_record in xml_references:
-        xml_ids = self.search(cr, uid, [('module', '=', xml_record['module']), ('model', '=', xml_record['model']), ('name', '=', xml_record['name'])], context=context)
+        xml_ids = self.search([('module', '=', xml_record['module']), ('model', '=', xml_record['model']), ('name', '=', xml_record['name'])]).ids
         if not xml_ids:
-            self.create(cr, uid, xml_record, context=context)
+            self.create(xml_record)
         #avoid the xml id and the associated resource being dropped by the orm by manually making a hit on it
-        self._update_dummy(cr, uid, xml_record['model'], xml_record['module'], xml_record['name'])
+        self._update_dummy(xml_record['model'], xml_record['module'], xml_record['name'])
