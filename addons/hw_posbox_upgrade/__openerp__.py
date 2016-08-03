@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
     'name': 'PosBox Software Upgrader',
-    'version': '1.0',
     'category': 'Point of Sale',
     'website': 'https://www.odoo.com/page/point-of-sale',
     'sequence': 6,
@@ -19,8 +17,5 @@ and should not be installed on regular openerp servers.
 
 """,
     'depends': ['hw_proxy'],
-    'test': [
-    ],
     'installable':  False,
-    'auto_install': False,
 }
