@@ -901,7 +901,7 @@ class MonetaryConverter(osv.AbstractModel):
             formatted_amount,
             pre=pre, post=post,
         ).format(
-            symbol=display_currency.symbol,
+            symbol=display_currency.symbol or '',
         ))
 
     def display_currency(self, cr, uid, currency, options):

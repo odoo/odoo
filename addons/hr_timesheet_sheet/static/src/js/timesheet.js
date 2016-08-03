@@ -190,6 +190,7 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
         }
     },
     is_valid_value:function(value){
+        this.view.do_notify_change();
         var split_value = value.split(":");
         var valid_value = true;
         if (split_value.length > 2) {
