@@ -61,22 +61,22 @@ class TestAccountBudget(TestAccountBudgetCommon):
         self.assertEqual(budget.state, 'draft')
 
         # I pressed the confirm button to confirm the Budget
-        # Performing a workflow action confirm on module crossovered.budget
-        budget.signal_workflow('confirm')
+        # Performing an action confirm on module crossovered.budget
+        budget.action_budget_confirm()
 
         # I check that budget is in "Confirmed" state
         self.assertEqual(budget.state, 'confirm')
 
         # I pressed the validate button to validate the Budget
-        # Performing a workflow action validate on module crossovered.budget
-        budget.signal_workflow('validate')
+        # Performing an action validate on module crossovered.budget
+        budget.action_budget_validate()
 
         # I check that budget is in "Validated" state
         self.assertEqual(budget.state, 'validate')
 
         # I pressed the done button to set the Budget to "Done" state
-        # Performing a workflow action done on module crossovered.budget
-        budget.signal_workflow('done')
+        # Performing an action done on module crossovered.budget
+        budget.action_budget_done()
 
         # I check that budget is in "done" state
         self.assertEqual(budget.state, 'done')
