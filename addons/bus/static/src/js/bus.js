@@ -48,7 +48,7 @@ bus.Bus = Widget.extend({
             var s = this.source = new EventSource('/longpolling/stream?channels=' + this.channels.join(','));
             // TODO: do something on s.onerror?
             s.onmessage = function (e) {
-                this.on_notification([JSON.parse(e.data)]);
+                this.on_notification(JSON.parse(e.data));
             }.bind(this);
         }
     },
@@ -66,11 +66,8 @@ bus.Bus = Widget.extend({
         }
         this.channels = [];
     },
-    on_notification: function(notifications) {
-        var notifs = _.map(notifications, function (notif) {
-            return [notif.channel, notif.message];
-        });
-        this.trigger("notification", notifs);
+    on_notification: function(notification) {
+        this.trigger("notification", notification);
     },
     // reconnect with different channels
     add_channel: function(channel){
@@ -162,45 +159,35 @@ var CrossTabBus = bus.Bus.extend({
             this._super.apply(this, arguments);
         }
      },
-    on_notification: function(notifications){
+    on_notification: function(notification){
         if(this.is_master) { // broadcast to other tabs
             var last = getItem('bus.last', -1);
-            var max_id = Math.max(last, 0);
-            var new_notifications = _.filter(notifications, function (notif) {
-                max_id = Math.max(max_id, notif.id);
-                return notif.id < 0 || notif.id > last;
-            });
-            this.last = max_id;
-            if (new_notifications.length) {
-                setItem('bus.last', max_id);
-                setItem('bus.last_ts', new Date().getTime());
-                setItem('bus.notification', new_notifications);
-                this._super(new_notifications);
+            if (notification.id >= 0 && notification.id <= last) {
+                return;
             }
-        } else {
-            this._super.apply(this, arguments);
+
+            setItem('bus.last', Math.max(0, last, notification.id));
+            setItem('bus.last_ts', new Date().getTime());
+            setItem('bus.notification', JSON.stringify(notification));
         }
+        return this._super(notification);
     },
     on_storage: function (e) {
-        // use the value of event to not read from
-        // localStorage (avoid race condition)
-        var value = e.newValue;
-        // notifications changed
-        if(e.key === 'bus.notification'){
-            var notifs = JSON.parse(value);
-            this.on_notification(notifs);
-        }
-        // update channels
-        if(e.key === 'bus.channels'){
-            this.channels = JSON.parse(value);
-        }
-        // update options
-        if(e.key === 'bus.options'){
-            this.options = JSON.parse(value);
-        }
-        // update focus
-        if(e.key === 'bus.focus'){
-            this.set('window_focus', JSON.parse(value));
+        // use the event-provided value rather than read from localStorage to
+        // avoid possible race condition
+        switch (e.key) {
+        case 'bus.notification':
+            this.on_notification(JSON.parse(e.newValue));
+            break;
+        case 'bus.channels':
+            this.channels = JSON.parse(e.newValue);
+            break;
+        case 'bus.options':
+            this.options = JSON.parse(e.newValue);
+            break;
+        case 'bus.focus':
+            this.set('window_focus', JSON.parse(e.newValue));
+            break;
         }
     },
     add_channel: function(){

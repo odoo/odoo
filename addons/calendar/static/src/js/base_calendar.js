@@ -236,12 +236,10 @@ WebClient.include({
         // in which the current user is involved is created, edited or deleted
         this.calendar_notif_timeouts = {};
         this.calendar_notif = {};
-        bus.on('notification', this, function (notifications) {
-            _.each(notifications, (function (notification) {
-                if (notification[0][1] === 'calendar.alarm') {
-                    this.display_calendar_notif(notification[1]);
-                }
-            }).bind(this));
+        bus.on('notification', this, function (notification) {
+            if (notification.channel === 'calendar.alarm') {
+                this.display_calendar_notif(notification.message);
+            }
         });
         return this._super.apply(this, arguments).then(this.get_next_calendar_notif.bind(this));
     },
