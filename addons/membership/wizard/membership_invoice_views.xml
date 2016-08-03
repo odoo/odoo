@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <record id="view_membership_invoice_view" model="ir.ui.view">
             <field name="name">membership.invoice.view.form</field>
@@ -8,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Membership Invoice">
                     <group>
-                        <field name="product_id" domain="[('membership','=',True)]" widget="selection" on_change="onchange_product(product_id)"/>
+                        <field name="product_id" domain="[('membership','=',True)]" widget="selection"/>
                         <field name="member_price"/>
                     </group>
                     <footer>
@@ -36,5 +35,4 @@
             view_mode="form"
             id="action_membership_invoice_view"/>
 
-    </data>
-</openerp>
+</odoo>
