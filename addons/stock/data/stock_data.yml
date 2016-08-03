@@ -1,11 +1,11 @@
 -
-  !python {model: res.partner}: |
-    main_warehouse = self.pool.get('stock.warehouse').browse(cr, uid, ref('warehouse0'), context=context)
-    self.write(cr, uid, ref('base.main_partner'), {'property_stock_customer':main_warehouse.lot_stock_id.id})    
+  !python {model: res.partner, id: base.main_partner}: |
+    main_warehouse = self.env['stock.warehouse'].browse(ref('warehouse0'))
+    self.write({'property_stock_customer':main_warehouse.lot_stock_id.id})    
 
 -
-  !python {model: ir.model.data}: |
-    main_warehouse = self.pool.get('stock.warehouse').browse(cr, uid, ref('warehouse0'), context=context)
+  !python {model: ir.model.data, id: False}: |
+    main_warehouse = self.env['stock.warehouse'].browse(ref('warehouse0'))
 
     #create xml ids for demo data that are widely used in tests or in other codes, for more convenience
     xml_references = [
@@ -18,16 +18,16 @@
         {'name':'picking_type_out','module':'stock', 'model':'stock.picking.type','res_id':main_warehouse.out_type_id.id},
     ]
     for xml_record in xml_references:
-        xml_ids = self.search(cr, uid, [('module', '=', xml_record['module']), ('model', '=', xml_record['model']), ('name', '=', xml_record['name'])], context=context)
+        xml_ids = self.search([('module', '=', xml_record['module']), ('model', '=', xml_record['model']), ('name', '=', xml_record['name'])]).ids
         if not xml_ids:
-            self.create(cr, uid, xml_record, context=context)
+            self.create(xml_record)
         #avoid the xml id and the associated resource being dropped by the orm by manually making a hit on it
-        self._update_dummy(cr, uid, xml_record['model'], xml_record['module'], xml_record['name'])
+        self._update_dummy(xml_record['model'], xml_record['module'], xml_record['name'])
     
 -
-  !python {model: res.company}: |
+  !python {model: res.company, id: False}: |
     #create the transit location for each company existing
-    company_ids = self.search(cr, uid, [('internal_transit_location_id', '=', False)], context=context)
-    for company in self.browse(cr, uid, company_ids, context=context):
-        self.create_transit_location(cr, uid, [company.id], context=context)
+    companies = self.search([('internal_transit_location_id', '=', False)])
+    for company in companies:
+        company.create_transit_location()
 

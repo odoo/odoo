@@ -1,6 +1,6 @@
 -
-  !python {model: stock.location}: |
-    main_warehouse = self.pool.get('stock.warehouse').browse(cr, uid, ref('warehouse0'), context=context)
+  !python {model: stock.location, id: False}: |
+    main_warehouse = self.env['stock.warehouse'].browse(ref('warehouse0'))
     main_stock = main_warehouse.lot_stock_id.id
-    stowar_op_ids = self.pool.get('stock.warehouse.orderpoint').search(cr, uid, [], context=context)
-    self.pool.get('stock.warehouse.orderpoint').write(cr,uid,stowar_op_ids,{'location_id':main_stock}, context=context)
+    stowar_ops = self.env['stock.warehouse.orderpoint'].search([])
+    stowar_ops.write({'location_id':main_stock})
