@@ -1236,7 +1236,7 @@ class calendar_event(osv.Model):
         """
         if data['interval'] and data['interval'] < 0:
             raise UserError(_('interval cannot be negative.'))
-        if data['count'] and data['count'] <= 0:
+        if data['end_type'] == 'count' and int(data['count']) <= 0:
             raise UserError(_('Event recurrence interval cannot be negative.'))
 
         def get_week_string(freq, data):
@@ -1542,6 +1542,7 @@ class calendar_event(osv.Model):
                 recurrent_id=real_event_id,
                 recurrent_id_date=data.get('start'),
                 rrule_type=False,
+                end_type=False,
                 rrule='',
                 recurrency=False,
                 final_date=datetime.strptime(data.get('start'), DEFAULT_SERVER_DATETIME_FORMAT if data['allday'] else DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(hours=values.get('duration', False) or data.get('duration'))

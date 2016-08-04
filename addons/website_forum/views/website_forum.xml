@@ -690,6 +690,9 @@
         - no need to answer the same question twice. Also, please <b>don't forget to vote</b>
         - it really helps to select the best questions and answers!
     </p>
+    <t t-if="request.params.get('nocontent')">
+        <p class='alert alert-danger' role='alert'>You cannot post an empty answer</p>
+    </t>
     <form t-attf-action="/forum/#{ slug(forum) }/#{slug(question)}/reply" method="post" class="js_website_submit_form" role="form">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
