@@ -1364,7 +1364,7 @@ class Meeting(models.Model):
                     partners_to_notify = meeting.partner_ids.ids
                     event_attendees_changes = attendees_create and attendees_create[real_ids[0]]
                     if event_attendees_changes:
-                        partners_to_notify.update(event_attendees_changes['removed_partners'].ids)
+                        partners_to_notify.append(event_attendees_changes['removed_partners'].ids)
                     self.env['calendar.alarm_manager'].notify_next_alarm(partners_to_notify)
 
             if (values.get('start_date') or values.get('start_datetime')) and values.get('active', True):
