@@ -130,7 +130,7 @@ class TestSaleOrder(TestSale):
             'currency_id': company.currency_id.id,
         }
         inv = self.env['account.invoice'].create(invoice_vals)
-        inv.signal_workflow('invoice_open')
+        inv.action_invoice_open()
         sol = so.order_line.filtered(lambda l: l.product_id == serv_cost)
         self.assertTrue(sol, 'Sale: cost invoicing does not add lines when confirming vendor invoice')
         self.assertTrue(sol.price_unit == 160 and sol.qty_delivered == 2 and sol.product_uom_qty == sol.qty_invoiced == 0, 'Sale: line is wrong after confirming vendor invoice')
