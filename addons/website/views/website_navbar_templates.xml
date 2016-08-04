@@ -38,6 +38,7 @@
                             <li groups="base.group_website_designer">
                                 <a data-action="edit_menu" href="#" title="Edit Top Menu">Edit Menu</a>
                             </li>
+                            <li t-if="deletable" groups="base.group_website_designer" role="separator" class="divider"></li>
                             <li t-if="deletable" groups="base.group_website_designer"><a href="#" data-action="rename_page">Rename Page</a></li>
                             <li t-if="deletable" groups="base.group_website_designer"><a href="#" data-action="delete_page">Delete Page</a></li>
                         </ul>
