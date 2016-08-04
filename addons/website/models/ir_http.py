@@ -299,9 +299,9 @@ class Http(models.AbstractModel):
                 self._auth_method_public()
 
             try:
-                html = request.website._render('website.%s' % code, values)
+                html = request.env['ir.ui.view'].render_template('website.%s' % code, values)
             except Exception:
-                html = request.website._render('website.http_error', values)
+                html = request.env['ir.ui.view'].render_template('website.http_error', values)
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):

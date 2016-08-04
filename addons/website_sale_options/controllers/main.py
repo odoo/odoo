@@ -54,7 +54,7 @@ class WebsiteSaleOptions(WebsiteSale):
         to_currency = pricelist.currency_id
         compute_currency = lambda price: request.env['res.currency']._compute(from_currency, to_currency, price)
         product = request.env['product.product'].with_context(product_context).browse(int(product_id))
-        return request.website._render("website_sale_options.modal", {
+        return request.env['ir.ui.view'].render_template("website_sale_options.modal", {
             'product': product,
             'compute_currency': compute_currency,
             'get_attribute_value_ids': self.get_attribute_value_ids,

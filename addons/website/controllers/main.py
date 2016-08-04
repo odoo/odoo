@@ -238,7 +238,7 @@ class Website(Home):
 
     @http.route(['/website/snippets'], type='json', auth="user", website=True)
     def snippets(self):
-        return request.website._render('website.snippets')
+        return request.env['ir.ui.view'].render_template('website.snippets')
 
     @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True)
     def reset_template(self, templates, redirect='/'):

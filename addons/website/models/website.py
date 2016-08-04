@@ -425,15 +425,6 @@ class Website(models.Model):
         return View.browse(view_id)
 
     @api.model
-    def render(self, template, values=None, status_code=None):
-        # TODO: remove this. (just kept for backward api compatibility for saas-3)
-        return request.render(template, values, uid=self._uid)
-
-    def _render(self, template, values=None):
-        # TODO: remove this. (just kept for backward api compatibility for saas-3)
-        return self.env['ir.ui.view'].render_template(template, values=values)
-
-    @api.model
     def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
         """ Generate a dict with required value to render `website.pager` template. This method compute
             url, page range to display, ... in the pager.

@@ -96,7 +96,7 @@ class WebsiteCustomer(http.Controller):
             'tag': tag,
             'tags': tags,
         }
-        return request.website.render("website_customer.index", values)
+        return request.render("website_customer.index", values)
 
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/customers/<partner_id>'], type='http', auth="public", website=True)
@@ -107,5 +107,5 @@ class WebsiteCustomer(http.Controller):
             if partner.exists() and partner.website_published:
                 values = {}
                 values['main_object'] = values['partner'] = partner
-                return request.website.render("website_customer.details", values)
+                return request.render("website_customer.details", values)
         return self.customers(**post)

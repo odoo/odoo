@@ -59,7 +59,7 @@ class WebsiteBlog(http.Controller):
         post_ids = blog_obj.search(cr, uid, [], offset=(page-1)*self._blog_post_per_page, limit=self._blog_post_per_page, context=context)
         posts = blog_obj.browse(cr, uid, post_ids, context=context)
         blog_url = QueryURL('', ['blog', 'tag'])
-        return request.website.render("website_blog.latest_blogs", {
+        return request.render("website_blog.latest_blogs", {
             'posts': posts,
             'pager': pager,
             'blog_url': blog_url,
@@ -160,7 +160,7 @@ class WebsiteBlog(http.Controller):
             'blog_url': blog_url,
             'date': date_begin,
         }
-        response = request.website.render("website_blog.blog_post_short", values)
+        response = request.render("website_blog.blog_post_short", values)
         return response
 
     @http.route(['/blog/<model("blog.blog"):blog>/feed'], type='http', auth="public")
@@ -241,7 +241,7 @@ class WebsiteBlog(http.Controller):
             'pager': pager,
             'comments': comments,
         }
-        response = request.website.render("website_blog.blog_post_complete", values)
+        response = request.render("website_blog.blog_post_complete", values)
 
         request.session[request.session_id] = request.session.get(request.session_id, [])
         if not (blog_post.id in request.session[request.session_id]):

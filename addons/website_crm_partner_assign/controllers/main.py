@@ -73,7 +73,7 @@ class WebsiteAccount(website_account):
             'default_url': '/my/leads',
             'pager': pager
         })
-        return request.website.render("website_crm_partner_assign.portal_my_leads", values)
+        return request.render("website_crm_partner_assign.portal_my_leads", values)
 
     @http.route(['/my/opportunities', '/my/opportunities/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_opportunities(self, page=1, date_begin=None, date_end=None, opportunity=None, sortby=None, **kw):
@@ -134,15 +134,15 @@ class WebsiteAccount(website_account):
             'default_url': '/my/opportunities',
             'pager': pager
         })
-        return request.website.render("website_crm_partner_assign.portal_my_opportunities", values)
+        return request.render("website_crm_partner_assign.portal_my_opportunities", values)
 
     @http.route(['/my/lead/<model("crm.lead"):lead>'], type='http', auth="user", website=True)
     def portal_my_lead(self, lead=None, **kw):
-        return request.website.render("website_crm_partner_assign.portal_my_lead", {'lead': lead})
+        return request.render("website_crm_partner_assign.portal_my_lead", {'lead': lead})
 
     @http.route(['/my/opportunity/<model("crm.lead"):lead>'], type='http', auth="user", website=True)
     def portal_my_opportunity(self, lead=None, **kw):
-        return request.website.render(
+        return request.render(
             "website_crm_partner_assign.portal_my_opportunity", {
                 'opportunity': lead,
                 'stages': request.env['crm.stage'].search([('probability', '!=', '100')], order='sequence desc'),
@@ -292,5 +292,5 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
                     'current_grade': current_grade,
                     'current_country': current_country
                 }
-                return request.website.render("website_crm_partner_assign.partner", values)
+                return request.render("website_crm_partner_assign.partner", values)
         return self.partners(**post)

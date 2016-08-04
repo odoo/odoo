@@ -16,7 +16,7 @@ class WebsiteEventTrackController(http.Controller):
     def event_track_view(self, event, track, **post):
         track = track.sudo()
         values = {'track': track, 'event': track.event_id, 'main_object': track}
-        return request.website.render("website_event_track.track_view", values)
+        return request.render("website_event_track.track_view", values)
 
     def _prepare_calendar(self, event, event_track_ids):
         local_tz = pytz.timezone(event.date_tz or 'UTC')
@@ -72,7 +72,7 @@ class WebsiteEventTrackController(http.Controller):
             speakers_name = u" – ".join(track.speaker_ids.mapped('name'))
             speakers[track.id] = speakers_name
 
-        return request.website.render("website_event_track.agenda", {
+        return request.render("website_event_track.agenda", {
             'event': event,
             'days': days,
             'days_nbr': days_tracks_count,
@@ -100,11 +100,11 @@ class WebsiteEventTrackController(http.Controller):
             'searches': searches,
             'html2plaintext': html2plaintext
         }
-        return request.website.render("website_event_track.tracks", values)
+        return request.render("website_event_track.tracks", values)
 
     @http.route(['''/event/<model("event.event", "[('show_track_proposal','=',1)]"):event>/track_proposal'''], type='http', auth="public", website=True)
     def event_track_proposal(self, event, **post):
-        return request.website.render("website_event_track.event_track_proposal", {'event': event})
+        return request.render("website_event_track.event_track_proposal", {'event': event})
 
     @http.route(['/event/<model("event.event"):event>/track_proposal/post'], type='http', auth="public", methods=['POST'], website=True)
     def event_track_proposal_post(self, event, **post):
@@ -130,4 +130,4 @@ class WebsiteEventTrackController(http.Controller):
             partner = request.env['res.partner'].sudo().search([('email', '=', post['email_from'])])
             if partner:
                 track.sudo().message_subscribe(partner_ids=partner.ids)
-        return request.website.render("website_event_track.event_track_proposal_success", {'track': track, 'event': event})
+        return request.render("website_event_track.event_track_proposal_success", {'track': track, 'event': event})

@@ -56,4 +56,4 @@ class GoogleMap(http.Controller):
             'partner_url': partner_url,
             'partner_data': json.dumps(partner_data)
         }
-        return request.website.render("website_google_map.google_map", values)
+        return request.render("website_google_map.google_map", values)
