@@ -183,7 +183,7 @@ class AssetsBundle(object):
         ]
         return ira.sudo().search(domain).unlink()
 
-    def get_attachments(self, type):
+    def get_attachments(self, type, inc=None):
         """ Return the ir.attachment records for a given bundle. This method takes care of mitigating
         an issue happening when parallel transactions generate the same bundle: while the file is not
         duplicated on the filestore (as it is stored according to its hash), there are multiple

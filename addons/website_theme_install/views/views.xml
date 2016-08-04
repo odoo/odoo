@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Theme Default Assets Frontend">
+      <xpath expr="link[last()]" position="after">
+        <link rel="alternate" type="application/xml" href="/website_theme_install/static/src/xml/website_theme_install.xml"/>
+      </xpath>
+    </template>
+
     <!-- Custom module kanban : install button (even if already installed) which redirects to website after (fake or not) installation + live preview button -->
     <record model="ir.ui.view" id="theme_view_kanban">
         <field name="name">Themes Kanban</field>
@@ -74,11 +80,4 @@ action = {
         <field name="action_id" ref="theme_install_todo_action"/>
         <field name="type">automatic</field>
     </record>
-
-    <!-- Add link to theme install in default customize modal -->
-    <template id="customize_modal" inherit_id="website.theme_customize" priority="1">
-        <xpath expr="//div[hasclass('modal-header')]" position="inside">
-            <a href="/web#action=website_theme_install.theme_install_kanban_action">See themes here</a>
-        </xpath>
-    </template>
 </odoo>
