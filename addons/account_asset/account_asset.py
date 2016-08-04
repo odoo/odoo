@@ -426,7 +426,7 @@ class AccountAssetDepreciationLine(models.Model):
                 'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
-                'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'sale' else False,
+                'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
                 'date': depreciation_date,
             }
             move_line_2 = {
@@ -438,7 +438,7 @@ class AccountAssetDepreciationLine(models.Model):
                 'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and sign * line.amount or 0.0,
-                'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'purchase' else False,
+                'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
                 'date': depreciation_date,
             }
             move_vals = {
