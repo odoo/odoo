@@ -31,8 +31,9 @@ class ActivityReport(models.Model):
     probability = fields.Float('Probability', group_operator='avg', readonly=True)
 
     def init(self):
+        tools.drop_view_if_exists(self._cr, 'crm_activity_report')
         self._cr.execute("""
-            CREATE OR REPLACE VIEW crm_activity_report AS (
+            CREATE VIEW crm_activity_report AS (
                 select
                     m.id,
                     m.subtype_id,
