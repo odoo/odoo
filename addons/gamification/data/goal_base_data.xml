@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <!-- Mail template is done in a NOUPDATE block
          so users can freely customize/delete them -->
     <data noupdate="1">
@@ -152,7 +152,7 @@
             <field name="name">Mail Group Following</field>
             <field name="description">Follow mail.channels to receive news</field>
             <field name="computation_mode">python</field>
-            <field name="compute_code">result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)</field>
+            <field name="compute_code">result = env['mail.followers'].search([('res_model', '=', 'mail.channel'), ('partner_id', '=', record.user_id.partner_id.id)], count=True)</field>
             <field name="action_id" eval="ref('mail.mail_channel_action_view')" />
         </record>
 
@@ -202,4 +202,4 @@
         </record>
     </data>
 
-</openerp>
+</odoo>

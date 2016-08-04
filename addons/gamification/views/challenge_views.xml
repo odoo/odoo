@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <record id="challenge_list_view" model="ir.ui.view">
             <field name="name">Challenges List</field>
@@ -82,7 +81,7 @@
                                 <field name="line_ids" nolabel="1" colspan="4">
                                     <tree string="Line List" editable="bottom" >
                                         <field name="sequence" widget="handle"/>
-                                        <field name="definition_id" on_change="on_change_definition_id(definition_id)" />
+                                        <field name="definition_id"/>
                                         <field name="condition"/>
                                         <field name="target_goal"/>
                                         <field name="definition_full_suffix"/>
@@ -185,19 +184,6 @@
                 </p>
             </field>
         </record>
-        <!-- Specify form view ID to avoid selecting view_challenge_wizard -->
-        <record id="challenge_list_action_view1" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">kanban</field>
-            <field name="act_window_id" ref="challenge_list_action"/>
-            <field name="view_id" ref="view_challenge_kanban"/>
-        </record>
-        <record id="challenge_list_action_view2" model="ir.actions.act_window.view">
-            <field eval="10" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="act_window_id" ref="challenge_list_action"/>
-            <field name="view_id" ref="challenge_form_view"/>
-        </record>
 
         <!-- Line -->
         <record id="challenge_line_list_view" model="ir.ui.view">
@@ -230,66 +216,4 @@
             </field>
         </record>
 
-
-        <record id="view_challenge_wizard" model="ir.ui.view">
-            <field name="name">Challenge Wizard</field>
-            <field name="model">gamification.challenge</field>
-            <field name="arch" type="xml">
-                <form string="Challenge">
-                    <field name="reward_failure" invisible="1"/>
-                    <div class="oe_title">
-                        <h1><field name="name" nolabel="1" readonly="1"/></h1>
-                    </div>
-                    <field name="description" nolabel="1" readonly="1" />
-                    <group>
-                        <field name="start_date" readonly="1" />
-                        <field name="end_date" readonly="1" />
-                        <field name="user_ids" string="Participating" readonly="1" widget="many2many_tags" />
-                        <field name="invited_user_ids" string="Invited" readonly="1" widget="many2many_tags" />
-                    </group>
-                    <group string="Goals">
-                        <field name="line_ids" nolabel="1" readonly="1" colspan="4">
-                            <tree string="Challenge Lines" editable="bottom" >
-                                <field name="sequence" widget="handle"/>
-                                <field name="definition_id"/>
-                                <field name="condition"/>
-                                <field name="target_goal"/>
-                                <field name="definition_full_suffix"/>
-                            </tree>
-                        </field>
-                    </group>
-                    <group string="Reward">
-                        <div class="oe_grey" attrs="{'invisible': ['|',('reward_id','!=',False),('reward_first_id','!=',False)]}">
-                            There is no reward upon completion of this challenge.
-                        </div>
-                        <group attrs="{'invisible': [('reward_id','=',False),('reward_first_id','=',False)]}">
-                            <field name="reward_id" readonly="1" attrs="{'invisible': [('reward_first_id','=', False)]}" />
-                            <field name="reward_first_id" readonly="1" attrs="{'invisible': [('reward_first_id','=', False)]}" />
-                            <field name="reward_second_id" readonly="1" attrs="{'invisible': [('reward_second_id','=', False)]}" />
-                            <field name="reward_third_id" readonly="1" attrs="{'invisible': [('reward_third_id','=', False)]}" />
-                        </group>
-                        <div class="oe_grey" attrs="{'invisible': [('reward_failure','=',False)]}">
-                            Even if the challenge is failed, best challengers will be rewarded
-                        </div>
-                    </group>
-                    <footer>
-                        <center>
-                            <button string="Accept" type="object" name="accept_challenge" class="btn-primary" />
-                            <button string="Reject" type="object" class="btn-default" name="discard_challenge"/>
-                            <button string="reply later" special="cancel" class="btn-default"/>
-                        </center>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
-        <record id="challenge_wizard" model="ir.actions.act_window">
-            <field name="name">Challenge Description</field>
-            <field name="res_model">gamification.challenge</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_challenge_wizard"/>
-            <field name="target">new</field>
-        </record>
-
-    </data>
-</openerp>
+</odoo>

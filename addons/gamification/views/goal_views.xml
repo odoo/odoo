@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <!-- Goal views -->
         <record id="goal_list_action" model="ir.actions.act_window">
@@ -244,13 +243,13 @@
                                 <field widget="radio" name="computation_mode"/>
 
                                 <!-- Hide the fields below if manually -->
-                                <field name="model_id" class="oe_inline" on_change="on_change_model_id(model_id)"
+                                <field name="model_id" class="oe_inline"
                                     attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}"/>
                                 <field name="field_id" class="oe_inline"
                                     attrs="{'invisible':[('computation_mode','!=','sum')], 'required':[('computation_mode','=','sum')]}"/>
                                 <field name="field_date_id" class="oe_inline" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))]}"/>
                                 <field name="domain" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}" class="oe_inline"/>
-                                <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}" placeholder="e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)"/>
+                                <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}" placeholder="e.g. result = env['mail.followers'].search([('res_model', '=', 'mail.channel'), ('partner_id', '=', record.user_id.partner_id.id)], count=True)"/>
                                 <field name="condition" widget="radio"/>
                             </group>
                             <group string="Optimisation" attrs="{'invisible': [('computation_mode', '!=', 'count')]}">
@@ -299,5 +298,4 @@
             <menuitem id="gamification_definition_menu" parent="gamification_menu" action="goal_definition_list_action" sequence="20"/>
             <menuitem id="gamification_badge_menu" parent="gamification_menu" action="badge_list_action" sequence="30"/>
 
-    </data>
-</openerp>
+</odoo>

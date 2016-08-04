@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
-from openerp.osv import fields, osv, expression
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
-from openerp.tools.safe_eval import safe_eval
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
-
-import logging
 import time
+import logging
+
 from datetime import date, datetime, timedelta
+
+from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.exceptions import UserError
+from odoo.osv import expression
+from odoo.tools.safe_eval import safe_eval
+
 
 _logger = logging.getLogger(__name__)
 
 
-class gamification_goal_definition(osv.Model):
+class GoalDefinition(models.Model):
     """Goal definition
 
     A goal definition contains the way to evaluate an objective
@@ -25,119 +25,94 @@ class gamification_goal_definition(osv.Model):
     _name = 'gamification.goal.definition'
     _description = 'Gamification goal definition'
 
-    def _get_suffix(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, '')
-        for goal in self.browse(cr, uid, ids, context=context):
+    name = fields.Char(string='Goal Definition', required=True, translate=True)
+    description = fields.Text(string='Goal Description')
+    monetary = fields.Boolean(string='Monetary Value', help="The target and current value are defined in the company currency.")
+    suffix = fields.Char(translate=True, help="The unit of the target and current values")
+    full_suffix = fields.Char(compute='_compute_full_suffix', help="The currency and suffix field")
+    computation_mode = fields.Selection([
+            ('manually', 'Recorded manually'),
+            ('count', 'Automatic: number of records'),
+            ('sum', 'Automatic: sum on a field'),
+            ('python', 'Automatic: execute a specific Python code'),
+        ],
+        string="Computation Mode",
+        default='manually',
+        required=True,
+        help="Defined how will be computed the goals. The result of the operation will be stored in the field 'Current'.")
+    display_mode = fields.Selection([
+            ('progress', 'Progressive (using numerical values)'),
+            ('boolean', 'Exclusive (done or not-done)'),
+        ],
+        string="Displayed as", required=True, default='progress')
+    model_id = fields.Many2one('ir.model',
+        string='Model',
+        help='The model object for the field to evaluate')
+    field_id = fields.Many2one('ir.model.fields',
+        string='Field to Sum',
+        help='The field containing the value to evaluate')
+    field_date_id = fields.Many2one('ir.model.fields',
+        string='Date Field',
+        help='The date to use for the time period evaluated')
+    domain = fields.Char(string="Filter Domain",
+        required=True, default='[]',
+        help="Domain for filtering records. General rule, not user depending, e.g. [('state', '=', 'done')]. The expression can contain reference to 'user' which is a browse record of the current user if not in batch mode.")
+
+    batch_mode = fields.Boolean(string='Batch Mode',
+        help="Evaluate the expression in batch instead of once for each user")
+    batch_distinctive_field = fields.Many2one('ir.model.fields',
+        string="Distinctive field for batch user",
+        help="In batch mode, this indicates which field distinct one user form the other, e.g. user_id, partner_id...")
+    batch_user_expression = fields.Char(string="Evaluted expression for batch mode",
+        help="The value to compare with the distinctive field. The expression can contain reference to 'user' which is a browse record of the current user, e.g. user.id, user.partner_id.id...")
+    compute_code = fields.Text(string='Python Code',
+        help="Python code to be executed for each user. 'result' should contains the new current value. Evaluated user can be access through object.user_id.")
+    condition = fields.Selection([
+            ('higher', 'The higher the better'),
+            ('lower', 'The lower the better')
+        ],
+        string='Goal Performance', required=True, default='higher',
+        help='A goal is considered as completed when the current value is compared to the value to reach')
+    action_id = fields.Many2one('ir.actions.act_window', string="Action",
+        help="The action that will be called to update the goal value.")
+    res_id_field = fields.Char(string="ID Field of user",
+        help="The field name on the user profile (res.users) containing the value for res_id for action.")
+
+    @api.depends('suffix', 'monetary')
+    def _compute_full_suffix(self):
+        for goal in self:
             if goal.suffix and not goal.monetary:
-                res[goal.id] = goal.suffix
+                goal.full_suffix = goal.suffix
             elif goal.monetary:
                 # use the current user's company currency
-                user = self.pool.get('res.users').browse(cr, uid, uid, context)
+                user = self.env.user
                 if goal.suffix:
-                    res[goal.id] = "%s %s" % (user.company_id.currency_id.symbol, goal.suffix)
+                    goal.full_suffix = "%s %s" % (user.company_id.currency_id.symbol, goal.suffix)
                 else:
-                    res[goal.id] = user.company_id.currency_id.symbol
+                    goal.full_suffix = user.company_id.currency_id.symbol
             else:
-                res[goal.id] = ""
-        return res
+                goal.full_suffix = ""
 
-    _columns = {
-        'name': fields.char('Goal Definition', required=True, translate=True),
-        'description': fields.text('Goal Description'),
-        'monetary': fields.boolean('Monetary Value', help="The target and current value are defined in the company currency."),
-        'suffix': fields.char('Suffix', help="The unit of the target and current values", translate=True),
-        'full_suffix': fields.function(_get_suffix, type="char", string="Full Suffix", help="The currency and suffix field"),
-        'computation_mode': fields.selection([
-                ('manually', 'Recorded manually'),
-                ('count', 'Automatic: number of records'),
-                ('sum', 'Automatic: sum on a field'),
-                ('python', 'Automatic: execute a specific Python code'),
-            ],
-            string="Computation Mode",
-            help="Defined how will be computed the goals. The result of the operation will be stored in the field 'Current'.",
-            required=True),
-        'display_mode': fields.selection([
-                ('progress', 'Progressive (using numerical values)'),
-                ('boolean', 'Exclusive (done or not-done)'),
-            ],
-            string="Displayed as", required=True),
-        'model_id': fields.many2one('ir.model',
-            string='Model',
-            help='The model object for the field to evaluate'),
-        'field_id': fields.many2one('ir.model.fields',
-            string='Field to Sum',
-            help='The field containing the value to evaluate'),
-        'field_date_id': fields.many2one('ir.model.fields',
-            string='Date Field',
-            help='The date to use for the time period evaluated'),
-        'domain': fields.char("Filter Domain",
-            help="Domain for filtering records. General rule, not user depending, e.g. [('state', '=', 'done')]. The expression can contain reference to 'user' which is a browse record of the current user if not in batch mode.",
-            required=True),
-
-        'batch_mode': fields.boolean('Batch Mode',
-            help="Evaluate the expression in batch instead of once for each user"),
-        'batch_distinctive_field': fields.many2one('ir.model.fields',
-            string="Distinctive field for batch user",
-            help="In batch mode, this indicates which field distinct one user form the other, e.g. user_id, partner_id..."),
-        'batch_user_expression': fields.char("Evaluted expression for batch mode",
-            help="The value to compare with the distinctive field. The expression can contain reference to 'user' which is a browse record of the current user, e.g. user.id, user.partner_id.id..."),
-        'compute_code': fields.text('Python Code',
-            help="Python code to be executed for each user. 'result' should contains the new current value. Evaluated user can be access through object.user_id."),
-        'condition': fields.selection([
-                ('higher', 'The higher the better'),
-                ('lower', 'The lower the better')
-            ],
-            string='Goal Performance',
-            help='A goal is considered as completed when the current value is compared to the value to reach',
-            required=True),
-        'action_id': fields.many2one('ir.actions.act_window', string="Action",
-            help="The action that will be called to update the goal value."),
-        'res_id_field': fields.char("ID Field of user",
-            help="The field name on the user profile (res.users) containing the value for res_id for action."),
-    }
-
-    _defaults = {
-        'condition': 'higher',
-        'computation_mode': 'manually',
-        'domain': "[]",
-        'monetary': False,
-        'display_mode': 'progress',
-    }
-
-    def number_following(self, cr, uid, model_name="mail.thread", context=None):
-        """Return the number of 'model_name' objects the user is following
-
-        The model specified in 'model_name' must inherit from mail.thread
-        """
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return self.pool.get('mail.followers').search(cr, uid, [('res_model', '=', model_name), ('partner_id', '=', user.partner_id.id)], count=True, context=context)
-
-    def _check_domain_validity(self, cr, uid, ids, context=None):
+    def _check_domain_validity(self):
         # take admin as should always be present
-        superuser = self.pool['res.users'].browse(cr, uid, SUPERUSER_ID, context=context)
-        for definition in self.browse(cr, uid, ids, context=context):
-            if definition.computation_mode not in ('count', 'sum'):
-                continue
-
-            obj = self.pool[definition.model_id.model]
+        superuser = self.env['res.users'].browse(SUPERUSER_ID)
+        for definition in self.filtered(lambda definition: definition.computation_mode in ('count', 'sum')):
+            Model = self.env[definition.model_id.model]
             try:
                 domain = safe_eval(definition.domain, {'user': superuser})
                 # demmy search to make sure the domain is valid
-                obj.search(cr, uid, domain, context=context, count=True)
+                Model.search_count(domain)
             except (ValueError, SyntaxError), e:
                 msg = e.message or (e.msg + '\n' + e.text)
                 raise UserError(_("The domain for the definition %s seems incorrect, please check it.\n\n%s") % (definition.name, msg))
         return True
 
-    def _check_model_validity(self, cr, uid, ids, context=None):
+    def _check_model_validity(self):
         """ make sure the selected field and model are usable"""
-        for definition in self.browse(cr, uid, ids, context=context):
+        for definition in self.filtered(lambda definition: definition.model_id and definition.field_id):
             try:
-                if not definition.model_id or not definition.field_id:
-                    continue
-
-                model = self.pool[definition.model_id.model]
-                field = model._fields[definition.field_id.name]
+                Model = self.env[definition.model_id.model]
+                field = Model._fields[definition.field_id.name]
                 if not field.store:
                     raise UserError(
                         _("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not stored") % (definition.name, definition.field_id.name))
@@ -145,153 +120,154 @@ class gamification_goal_definition(osv.Model):
                 raise UserError(
                     _("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not found") % (definition.name, e.message))
 
-    def create(self, cr, uid, vals, context=None):
-        res_id = super(gamification_goal_definition, self).create(cr, uid, vals, context=context)
+    @api.model
+    def create(self, vals):
+        definition = super(GoalDefinition, self).create(vals)
         if vals.get('computation_mode') in ('count', 'sum'):
-            self._check_domain_validity(cr, uid, [res_id], context=context)
+            definition._check_domain_validity()
         if vals.get('field_id'):
-            self._check_model_validity(cr, uid, [res_id], context=context)
-        return res_id
+            definition._check_model_validity()
+        return definition
 
-    def write(self, cr, uid, ids, vals, context=None):
-        res = super(gamification_goal_definition, self).write(cr, uid, ids, vals, context=context)
+    @api.multi
+    def write(self, vals):
+        res = super(GoalDefinition, self).write(vals)
         if vals.get('computation_mode', 'count') in ('count', 'sum') and (vals.get('domain') or vals.get('model_id')):
-            self._check_domain_validity(cr, uid, ids, context=context)
+            self._check_domain_validity()
         if vals.get('field_id') or vals.get('model_id') or vals.get('batch_mode'):
-            self._check_model_validity(cr, uid, ids, context=context)
+            self._check_model_validity()
         return res
 
-    def on_change_model_id(self, cr, uid, ids, model_id, context=None):
+    @api.onchange('model_id')
+    def _onchange_model_id(self):
         """Force domain for the `field_id` and `field_date_id` fields"""
-        if not model_id:
+        if not self.model_id:
             return {'domain': {'field_id': expression.FALSE_DOMAIN, 'field_date_id': expression.FALSE_DOMAIN}}
-        model = self.pool['ir.model'].browse(cr, uid, model_id, context=context)
         model_fields_domain = [('store', '=', True),
-                                '|', ('model_id', '=', model_id), ('model_id', 'in', model.inherited_model_ids.ids)]
+                                '|', ('model_id', '=', self.model_id.id), ('model_id', 'in', self.model_id.inherited_model_ids.ids)]
         model_date_fields_domain = expression.AND([[('ttype', 'in', ('date', 'datetime'))], model_fields_domain])
         return {'domain': {'field_id': model_fields_domain, 'field_date_id': model_date_fields_domain}}
 
 
-class gamification_goal(osv.Model):
+class Goal(models.Model):
     """Goal instance for a user
 
     An individual goal for a user on a specified time period"""
 
     _name = 'gamification.goal'
     _description = 'Gamification goal instance'
-
-    def _get_completion(self, cr, uid, ids, field_name, arg, context=None):
-        """Return the percentage of completeness of the goal, between 0 and 100"""
-        res = dict.fromkeys(ids, 0.0)
-        for goal in self.browse(cr, uid, ids, context=context):
-            if goal.definition_condition == 'higher':
-                if goal.current >= goal.target_goal:
-                    res[goal.id] = 100.0
-                else:
-                    res[goal.id] = round(100.0 * goal.current / goal.target_goal, 2)
-            elif goal.current < goal.target_goal:
-                # a goal 'lower than' has only two values possible: 0 or 100%
-                res[goal.id] = 100.0
-            else:
-                res[goal.id] = 0.0
-        return res
-
-    def on_change_definition_id(self, cr, uid, ids, definition_id=False, context=None):
-        goal_definition = self.pool.get('gamification.goal.definition')
-        if not definition_id:
-            return {'value': {'definition_id': False}}
-        goal_definition = goal_definition.browse(cr, uid, definition_id, context=context)
-        return {'value': {'computation_mode': goal_definition.computation_mode, 'definition_condition': goal_definition.condition}}
-
-    _columns = {
-        'definition_id': fields.many2one('gamification.goal.definition', string='Goal Definition', required=True, ondelete="cascade"),
-        'user_id': fields.many2one('res.users', string='User', required=True, auto_join=True, ondelete="cascade"),
-        'line_id': fields.many2one('gamification.challenge.line', string='Challenge Line', ondelete="cascade"),
-        'challenge_id': fields.related('line_id', 'challenge_id',
-            string="Challenge",
-            type='many2one',
-            relation='gamification.challenge',
-            store=True, readonly=True,
-            help="Challenge that generated the goal, assign challenge to users to generate goals with a value in this field."),
-        'start_date': fields.date('Start Date'),
-        'end_date': fields.date('End Date'),  # no start and end = always active
-        'target_goal': fields.float('To Reach',
-            required=True,
-            track_visibility='always'),  # no goal = global index
-        'current': fields.float('Current Value', required=True, track_visibility='always'),
-        'completeness': fields.function(_get_completion, type='float', string='Completeness'),
-        'state': fields.selection([
-                ('draft', 'Draft'),
-                ('inprogress', 'In progress'),
-                ('reached', 'Reached'),
-                ('failed', 'Failed'),
-                ('canceled', 'Canceled'),
-            ],
-            string='State',
-            required=True,
-            track_visibility='always'),
-        'to_update': fields.boolean('To update'),
-        'closed': fields.boolean('Closed goal', help="These goals will not be recomputed."),
-
-        'computation_mode': fields.related('definition_id', 'computation_mode', type='char', string="Computation mode"),
-        'remind_update_delay': fields.integer('Remind delay',
-            help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified."),
-        'last_update': fields.date('Last Update',
-            help="In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in challenge). Ignored in case of non-manual goal or goal not linked to a challenge."),
-
-        'definition_description': fields.related('definition_id', 'description', type='char', string='Definition Description', readonly=True),
-        'definition_condition': fields.related('definition_id', 'condition', type='char', string='Definition Condition', readonly=True),
-        'definition_suffix': fields.related('definition_id', 'full_suffix', type="char", string="Suffix", readonly=True),
-        'definition_display': fields.related('definition_id', 'display_mode', type="char", string="Display Mode", readonly=True),
-    }
-
-    _defaults = {
-        'current': 0,
-        'state': 'draft',
-        'start_date': fields.date.today,
-    }
     _order = 'start_date desc, end_date desc, definition_id, id'
 
-    def _check_remind_delay(self, cr, uid, goal, context=None):
+    definition_id = fields.Many2one('gamification.goal.definition', string='Goal Definition', required=True, ondelete="cascade")
+    user_id = fields.Many2one('res.users', string='User', required=True, auto_join=True, ondelete="cascade")
+    line_id = fields.Many2one('gamification.challenge.line', string='Challenge Line', ondelete="cascade")
+    challenge_id = fields.Many2one('gamification.challenge', related='line_id.challenge_id',
+        string="Challenge",
+        store=True, readonly=True,
+        help="Challenge that generated the goal, assign challenge to users to generate goals with a value in this field.")
+    start_date = fields.Date(string='Start Date', default=fields.Date.today)
+    end_date = fields.Date(string='End Date')  # no start and end = always active
+    target_goal = fields.Float(string='To Reach',
+        required=True,
+        track_visibility='always')  # no goal = global index
+    current = fields.Float(string='Current Value', required=True, track_visibility='always', default=0)
+    completeness = fields.Float(compute='_compute_completion')
+    state = fields.Selection([
+            ('draft', 'Draft'),
+            ('inprogress', 'In progress'),
+            ('reached', 'Reached'),
+            ('failed', 'Failed'),
+            ('canceled', 'Canceled'),
+        ],
+        default='draft',
+        required=True,
+        track_visibility='always')
+    to_update = fields.Boolean()
+    closed = fields.Boolean(string='Closed goal', help="These goals will not be recomputed.")
+
+    computation_mode = fields.Selection([
+            ('manually', 'Recorded manually'),
+            ('count', 'Automatic: number of records'),
+            ('sum', 'Automatic: sum on a field'),
+            ('python', 'Automatic: execute a specific Python code'),
+        ],
+        related='definition_id.computation_mode')
+    remind_update_delay = fields.Integer(string='Remind delay',
+        help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified.")
+    last_update = fields.Date(
+        help="In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in challenge). Ignored in case of non-manual goal or goal not linked to a challenge.")
+
+    definition_description = fields.Text(related='definition_id.description', string='Definition Description', readonly=True)
+    definition_condition = fields.Selection([
+            ('higher', 'The higher the better'),
+            ('lower', 'The lower the better')
+        ], related='definition_id.condition', string='Definition Condition', readonly=True)
+    definition_suffix = fields.Char(related='definition_id.full_suffix', string="Suffix", readonly=True)
+    definition_display = fields.Selection([
+            ('progress', 'Progressive (using numerical values)'),
+            ('boolean', 'Exclusive (done or not-done)'),
+        ], related='definition_id.display_mode', string="Display Mode", readonly=True)
+
+    @api.depends('definition_condition', 'current', 'target_goal')
+    def _compute_completion(self):
+        """Return the percentage of completeness of the goal, between 0 and 100"""
+        for goal in self:
+            if goal.definition_condition == 'higher':
+                if goal.current >= goal.target_goal:
+                    goal.completeness = 100.0
+                else:
+                    goal.completeness = round(100.0 * goal.current / goal.target_goal, 2)
+            elif goal.current < goal.target_goal:
+                # a goal 'lower than' has only two values possible: 0 or 100%
+                goal.completeness = 100.0
+            else:
+                goal.completeness = 0.0
+
+    @api.onchange('definition_id')
+    def on_change_definition_id(self):
+        self.computation_mode = self.definition_id.computation_mode
+        self.definition_condition = self.definition_id.condition
+
+    def _check_remind_delay(self):
         """Verify if a goal has not been updated for some time and send a
         reminder message of needed.
 
         :return: data to write on the goal object
         """
-        temp_obj = self.pool['mail.template']
-        if goal.remind_update_delay and goal.last_update:
-            delta_max = timedelta(days=goal.remind_update_delay)
-            last_update = datetime.strptime(goal.last_update, DF).date()
+        self.ensure_one()
+        if self.remind_update_delay and self.last_update:
+            delta_max = timedelta(days=self.remind_update_delay)
+            last_update = fields.Date.from_string(self.last_update)
             if date.today() - last_update > delta_max:
                 # generate a remind report
-                temp_obj = self.pool.get('mail.template')
-                template_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'gamification', 'email_template_goal_reminder')[0]
-                template = temp_obj.get_email_template(cr, uid, template_id, goal.id, context=context)
-                body_html = temp_obj.render_template(cr, uid, template.body_html, 'gamification.goal', goal.id, context=template._context)
-                self.pool['mail.thread'].message_post(cr, uid, 0, body=body_html, partner_ids=[goal.user_id.partner_id.id], context=context, subtype='mail.mt_comment')
+                template = self.env.ref('gamification.email_template_goal_reminder').get_email_template(self.id)
+                body_html = self.env['mail.template'].with_context(template._context).render_template(template.body_html, 'gamification.goal', self.id)
+                self.browse().message_post(body=body_html, partner_ids=self.user_id.partner_id.ids, subtype='mail.mt_comment')
                 return {'to_update': True}
         return {}
 
-    def _get_write_values(self, cr, uid, goal, new_value, context=None):
+    def _get_write_values(self, new_value):
         """Generate values to write after recomputation of a goal score"""
-        if new_value == goal.current:
+        self.ensure_one()
+        if new_value == self.current:
             # avoid useless write if the new value is the same as the old one
             return {}
 
-        result = {goal.id: {'current': new_value}}
-        if (goal.definition_id.condition == 'higher' and new_value >= goal.target_goal) \
-          or (goal.definition_id.condition == 'lower' and new_value <= goal.target_goal):
+        result = {self.id: {'current': new_value}}
+        if (self.definition_id.condition == 'higher' and new_value >= self.target_goal) \
+          or (self.definition_id.condition == 'lower' and new_value <= self.target_goal):
             # success, do no set closed as can still change
-            result[goal.id]['state'] = 'reached'
+            result[self.id]['state'] = 'reached'
 
-        elif goal.end_date and fields.date.today() > goal.end_date:
+        elif self.end_date and fields.Date.today() > self.end_date:
             # check goal failure
-            result[goal.id]['state'] = 'failed'
-            result[goal.id]['closed'] = True
+            result[self.id]['state'] = 'failed'
+            result[self.id]['closed'] = True
 
         return result
 
-    def update_goal(self, cr, uid, ids, context=None):
+    @api.multi
+    def update_goal(self):
         """Update the goals to recomputes values and change of states
 
         If a manual goal is not updated for enough time, the user will be
@@ -299,31 +275,33 @@ class gamification_goal(osv.Model):
         If a goal reaches the target value, the status is set to reached
         If the end date is passed (at least +1 day, time not considered) without
         the target value being reached, the goal is set as failed."""
-        if context is None:
-            context = {}
-        commit = context.get('commit_gamification', False)
+        commit = self._context.get('commit_gamification')
 
         goals_by_definition = {}
-        for goal in self.browse(cr, uid, ids, context=context):
+        for goal in self:
             goals_by_definition.setdefault(goal.definition_id, []).append(goal)
 
         for definition, goals in goals_by_definition.items():
             goals_to_write = dict((goal.id, {}) for goal in goals)
             if definition.computation_mode == 'manually':
                 for goal in goals:
-                    goals_to_write[goal.id].update(self._check_remind_delay(cr, uid, goal, context))
+                    goals_to_write[goal.id].update(goal._check_remind_delay())
             elif definition.computation_mode == 'python':
                 # TODO batch execution
                 for goal in goals:
                     # execute the chosen method
                     cxt = {
+                        'env': self.env,
+                        'model': self.env['gamification.goal'],
+                        'record': goal,
+                        'date': date, 'datetime': datetime, 'timedelta': timedelta, 'time': time,
+                        # Backward compatibility
                         'self': self.pool.get('gamification.goal'),
                         'object': goal,
                         'pool': self.pool,
-                        'cr': cr,
-                        'context': dict(context), # copy context to prevent side-effects of eval
-                        'uid': uid,
-                        'date': date, 'datetime': datetime, 'timedelta': timedelta, 'time': time
+                        'cr': self._cr,
+                        'context': dict(self._context), # copy context to prevent side-effects of eval
+                        'uid': self._uid,
                     }
                     code = definition.compute_code.strip()
                     safe_eval(code, cxt, mode="exec", nocopy=True)
@@ -331,7 +309,7 @@ class gamification_goal(osv.Model):
                     result = cxt.get('result')
                     if result is not None and type(result) in (float, int, long):
                         goals_to_write.update(
-                            self._get_write_values(cr, uid, goal, result, context=context)
+                            goal._get_write_values(result)
                         )
 
                     else:
@@ -339,8 +317,8 @@ class gamification_goal(osv.Model):
 
             else:  # count or sum
 
-                obj = self.pool.get(definition.model_id.model)
-                field_date_name = definition.field_date_id and definition.field_date_id.name or False
+                Model = self.env[definition.model_id.model]
+                field_date_name = definition.field_date_id.name
 
                 if definition.computation_mode == 'count' and definition.batch_mode:
                     # batch mode, trying to do as much as possible in one request
@@ -350,7 +328,7 @@ class gamification_goal(osv.Model):
                     for goal in goals:
                         start_date = field_date_name and goal.start_date or False
                         end_date = field_date_name and goal.end_date or False
-                        subqueries.setdefault((start_date, end_date), {}).update({goal.id:safe_eval(definition.batch_user_expression, {'user': goal.user_id})})
+                        subqueries.setdefault((start_date, end_date), {}).update({goal.id: safe_eval(definition.batch_user_expression, {'user': goal.user_id})})
 
                     # the global query should be split by time periods (especially for recurrent goals)
                     for (start_date, end_date), query_goals in subqueries.items():
@@ -363,10 +341,10 @@ class gamification_goal(osv.Model):
 
                         if field_name == 'id':
                             # grouping on id does not work and is similar to search anyway
-                            user_ids = obj.search(cr, uid, subquery_domain, context=context)
-                            user_values = [{'id': user_id, 'id_count': 1} for user_id in user_ids]
+                            users = Model.search(subquery_domain)
+                            user_values = [{'id': user.id, 'id_count': 1} for user in users]
                         else:
-                            user_values = obj.read_group(cr, uid, subquery_domain, fields=[field_name], groupby=[field_name], context=context)
+                            user_values = Model.read_group(subquery_domain, fields=[field_name], groupby=[field_name])
                         # user_values has format of read_group: [{'partner_id': 42, 'partner_id_count': 3},...]
                         for goal in [g for g in goals if g.id in query_goals.keys()]:
                             for user_value in user_values:
@@ -376,7 +354,7 @@ class gamification_goal(osv.Model):
                                 if queried_value == query_goals[goal.id]:
                                     new_value = user_value.get(field_name+'_count', goal.current)
                                     goals_to_write.update(
-                                        self._get_write_values(cr, uid, goal, new_value, context=context)
+                                        goal._get_write_values(new_value)
                                     )
 
                 else:
@@ -393,113 +371,80 @@ class gamification_goal(osv.Model):
                         if definition.computation_mode == 'sum':
                             field_name = definition.field_id.name
                             # TODO for master: group on user field in batch mode
-                            res = obj.read_group(cr, uid, domain, [field_name], [], context=context)
+                            res = Model.read_group(domain, [field_name], [])
                             new_value = res and res[0][field_name] or 0.0
 
                         else:  # computation mode = count
-                            new_value = obj.search(cr, uid, domain, context=context, count=True)
+                            new_value = Model.search(domain, count=True)
 
                         goals_to_write.update(
-                            self._get_write_values(cr, uid, goal, new_value, context=context)
+                            goal._get_write_values(new_value)
                         )
 
             for goal_id, value in goals_to_write.items():
                 if not value:
                     continue
-                self.write(cr, uid, [goal_id], value, context=context)
+                self.browse(goal_id).write(value)
             if commit:
-                cr.commit()
+                self._cr.commit()
         return True
 
-    def action_start(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_start(self):
         """Mark a goal as started.
 
         This should only be used when creating goals manually (in draft state)"""
-        self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
-        return self.update_goal(cr, uid, ids, context=context)
+        self.write({'state': 'inprogress'})
+        return self.update_goal()
 
-    def action_reach(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_reach(self):
         """Mark a goal as reached.
 
         If the target goal condition is not met, the state will be reset to In
         Progress at the next goal update until the end date."""
-        return self.write(cr, uid, ids, {'state': 'reached'}, context=context)
+        return self.write({'state': 'reached'})
 
-    def action_fail(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_fail(self):
         """Set the state of the goal to failed.
 
         A failed goal will be ignored in future checks."""
-        return self.write(cr, uid, ids, {'state': 'failed'}, context=context)
+        return self.write({'state': 'failed'})
 
-    def action_cancel(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_cancel(self):
         """Reset the completion after setting a goal as reached or failed.
 
         This is only the current state, if the date and/or target criterias
         match the conditions for a change of state, this will be applied at the
         next goal update."""
-        return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
+        return self.write({'state': 'inprogress'})
 
-    def create(self, cr, uid, vals, context=None):
+    @api.model
+    def create(self, vals):
         """Overwrite the create method to add a 'no_remind_goal' field to True"""
-        context = dict(context or {})
-        context['no_remind_goal'] = True
-        return super(gamification_goal, self).create(cr, uid, vals, context=context)
+        return super(Goal, self.with_context(no_remind_goal=True)).create(vals)
 
-    def write(self, cr, uid, ids, vals, context=None):
+    @api.multi
+    def write(self, vals):
         """Overwrite the write method to update the last_update field to today
 
         If the current value is changed and the report frequency is set to On
         change, a report is generated
         """
-        if context is None:
-            context = {}
-        vals['last_update'] = fields.date.today()
-        result = super(gamification_goal, self).write(cr, uid, ids, vals, context=context)
-        for goal in self.browse(cr, uid, ids, context=context):
+        vals['last_update'] = fields.Date.today()
+        result = super(Goal, self).write(vals)
+        for goal in self:
             if goal.state != "draft" and ('definition_id' in vals or 'user_id' in vals):
                 # avoid drag&drop in kanban view
                 raise UserError(_('Can not modify the configuration of a started goal'))
 
             if vals.get('current'):
-                if 'no_remind_goal' in context:
+                if 'no_remind_goal' in self._context:
                     # new goals should not be reported
                     continue
 
-                if goal.challenge_id and goal.challenge_id.report_message_frequency == 'onchange':
-                    self.pool.get('gamification.challenge').report_progress(cr, SUPERUSER_ID, goal.challenge_id, users=[goal.user_id], context=context)
+                if goal.challenge_id.report_message_frequency == 'onchange':
+                    goal.challenge_id.sudo().report_progress(users=goal.user_id)
         return result
-
-    def get_action(self, cr, uid, goal_id, context=None):
-        """Get the ir.action related to update the goal
-
-        In case of a manual goal, should return a wizard to update the value
-        :return: action description in a dictionnary
-        """
-        goal = self.browse(cr, uid, goal_id, context=context)
-
-        if goal.definition_id.action_id:
-            # open a the action linked to the goal
-            action = goal.definition_id.action_id.read()[0]
-
-            if goal.definition_id.res_id_field:
-                current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-                action['res_id'] = safe_eval(goal.definition_id.res_id_field, {'user': current_user})
-
-                # if one element to display, should see it in form mode if possible
-                action['views'] = [(view_id, mode) for (view_id, mode) in action['views'] if mode == 'form'] or action['views']
-            return action
-
-        if goal.computation_mode == 'manually':
-            # open a wizard window to update the value manually
-            action = {
-                'name': _("Update %s") % goal.definition_id.name,
-                'id': goal_id,
-                'type': 'ir.actions.act_window',
-                'views': [[False, 'form']],
-                'target': 'new',
-                'context': {'default_goal_id': goal_id, 'default_current': goal.current},
-                'res_model': 'gamification.goal.wizard'
-            }
-            return action
-
-        return False
