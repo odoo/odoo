@@ -41,10 +41,10 @@ class Event(models.Model):
 
     @api.multi
     @api.depends('name')
-    def _website_url(self, name, arg):
-        res = super(Event, self)._website_url(name, arg)
-        res.update({(event.id, '/event/%s' % slug(event)) for event in self})
-        return res
+    def _compute_website_url(self):
+        super(Event, self)._compute_website_url()
+        for event in self:
+            event.website_url = '/event/%s' % slug(event)
 
     @api.multi
     def _get_new_menu_pages(self):

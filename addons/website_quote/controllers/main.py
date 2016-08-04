@@ -32,7 +32,7 @@ class sale_quote(http.Controller):
             order = request.env['sale.order'].search([('id', '=', order_id)])
 
         if not order:
-            return request.website.render('website.404')
+            return request.render('website.404')
 
         dummy, action = request.env['ir.model.data'].get_object_reference('sale', 'action_quotations')
         days = 0
@@ -81,16 +81,16 @@ class sale_quote(http.Controller):
                         'partner_id': order.partner_id.id,
                     },
                     context=render_ctx)
-        return request.website.render('website_quote.so_quotation', values)
+        return request.render('website_quote.so_quotation', values)
 
     @http.route(['/quote/accept'], type='json', auth="public", website=True)
     def accept(self, order_id, token=None, signer=None, sign=None, **post):
         order_obj = request.registry.get('sale.order')
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
         if token != order.access_token:
-            return request.website.render('website.404')
+            return request.render('website.404')
         if order.require_payment:
-            return request.website.render('website.404')
+            return request.render('website.404')
         if order.state != 'sent':
             return False
         attachments=sign and [('signature.png', sign.decode('base64'))] or []
@@ -104,7 +104,7 @@ class sale_quote(http.Controller):
         order_obj = request.registry.get('sale.order')
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
         if token != order.access_token:
-            return request.website.render('website.404')
+            return request.render('website.404')
         if order.state != 'sent':
             return werkzeug.utils.redirect("/quote/%s/%s?message=4" % (order_id, token))
         request.registry.get('sale.order').action_cancel(request.cr, SUPERUSER_ID, [order_id])
@@ -117,7 +117,7 @@ class sale_quote(http.Controller):
     def update(self, line_id, remove=False, unlink=False, order_id=None, token=None, **post):
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, int(order_id))
         if token != order.access_token:
-            return request.website.render('website.404')
+            return request.render('website.404')
         if order.state not in ('draft','sent'):
             return False
         line_id=int(line_id)
@@ -135,16 +135,16 @@ class sale_quote(http.Controller):
     @http.route(["/quote/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True)
     def template_view(self, quote, **post):
         values = { 'template': quote }
-        return request.website.render('website_quote.so_template', values)
+        return request.render('website_quote.so_template', values)
 
     @http.route(["/quote/add_line/<int:option_id>/<int:order_id>/<token>"], type='http', auth="public", website=True)
     def add(self, option_id, order_id, token, **post):
         vals = {}
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
         if token != order.access_token:
-            return request.website.render('website.404')
+            return request.render('website.404')
         if order.state not in ['draft', 'sent']:
-            return request.website.render('website.http_error', {'status_code': 'Forbidden', 'status_message': _('You cannot add options to a confirmed order.')})
+            return request.render('website.http_error', {'status_code': 'Forbidden', 'status_message': _('You cannot add options to a confirmed order.')})
         option_obj = request.registry.get('sale.order.option')
         option = option_obj.browse(request.cr, SUPERUSER_ID, option_id)
 

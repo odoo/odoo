@@ -24,15 +24,15 @@ class WebsiteSurvey(http.Controller):
 
         # In case of auth required, block public user
         if survey.auth_required and request.env.user == request.website.user_id:
-            return request.website.render("survey.auth_required", {'survey': survey, 'token': token})
+            return request.render("survey.auth_required", {'survey': survey, 'token': token})
 
         # In case of non open surveys
         if survey.stage_id.closed:
-            return request.website.render("survey.notopen")
+            return request.render("survey.notopen")
 
         # If there is no pages
         if not survey.page_ids:
-            return request.website.render("survey.nopages")
+            return request.render("survey.nopages")
 
         # Everything seems to be ok
         return None
@@ -46,7 +46,7 @@ class WebsiteSurvey(http.Controller):
             dt_deadline = fields.Datetime.from_string(deadline)
             dt_now = datetime.now()
             if dt_now > dt_deadline:  # survey is not open anymore
-                return request.website.render("survey.notopen")
+                return request.render("survey.notopen")
         return None
 
     ## ROUTES HANDLERS ##
@@ -63,7 +63,7 @@ class WebsiteSurvey(http.Controller):
             _logger.info("[survey] Phantom mode")
             user_input = UserInput.create({'survey_id': survey.id, 'test_entry': True})
             data = {'survey': survey, 'page': None, 'token': user_input.token}
-            return request.website.render('survey.survey_init', data)
+            return request.render('survey.survey_init', data)
         # END Test mode
 
         # Controls if the survey can be displayed
@@ -80,7 +80,7 @@ class WebsiteSurvey(http.Controller):
         else:
             user_input = UserInput.sudo().search([('token', '=', token)], limit=1)
             if not user_input:
-                return request.website.render("website.403")
+                return request.render("website.403")
 
         # Do not open expired survey
         errpage = self._check_deadline(user_input)
@@ -90,7 +90,7 @@ class WebsiteSurvey(http.Controller):
         # Select the right page
         if user_input.state == 'new':  # Intro page
             data = {'survey': survey, 'page': None, 'token': user_input.token}
-            return request.website.render('survey.survey_init', data)
+            return request.render('survey.survey_init', data)
         else:
             return request.redirect('/survey/fill/%s/%s' % (survey.id, user_input.token))
 
@@ -112,7 +112,7 @@ class WebsiteSurvey(http.Controller):
         try:
             user_input = UserInput.sudo().search([('token', '=', token)], limit=1)
         except IndexError:  # Invalid token
-            return request.website.render("website.403")
+            return request.render("website.403")
 
         # Do not display expired survey (even if some pages have already been
         # displayed -- There's a time for everything!)
@@ -126,9 +126,9 @@ class WebsiteSurvey(http.Controller):
             data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
             if last:
                 data.update({'last': True})
-            return request.website.render('survey.survey', data)
+            return request.render('survey.survey', data)
         elif user_input.state == 'done':  # Display success message
-            return request.website.render('survey.sfinished', {'survey': survey,
+            return request.render('survey.sfinished', {'survey': survey,
                                                                'token': token,
                                                                'user_input': user_input})
         elif user_input.state == 'skip':
@@ -142,9 +142,9 @@ class WebsiteSurvey(http.Controller):
             data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
             if last:
                 data.update({'last': True})
-            return request.website.render('survey.survey', data)
+            return request.render('survey.survey', data)
         else:
-            return request.website.render("website.403")
+            return request.render("website.403")
 
     # AJAX prefilling of a survey
     @http.route(['/survey/prefill/<model("survey.survey"):survey>/<string:token>',
@@ -225,7 +225,7 @@ class WebsiteSurvey(http.Controller):
             try:
                 user_input = request.env['survey.user_input'].sudo().search([('token', '=', post['token'])], limit=1)
             except KeyError:  # Invalid token
-                return request.website.render("website.403")
+                return request.render("website.403")
             user_id = request.env.user.id if user_input.type != 'link' else SUPERUSER_ID
 
             for question in questions:
@@ -252,7 +252,7 @@ class WebsiteSurvey(http.Controller):
     def print_survey(self, survey, token=None, **post):
         '''Display an survey in printable view; if <token> is set, it will
         grab the answers of the user_input_id that has <token>.'''
-        return request.website.render('survey.survey_print',
+        return request.render('survey.survey_print',
                                       {'survey': survey,
                                        'token': token,
                                        'page_nr': 0,
@@ -276,7 +276,7 @@ class WebsiteSurvey(http.Controller):
             filter_data = self.get_filter_data(post)
             current_filters = survey.filter_input_ids(filter_data, filter_finish)
             filter_display_data = survey.get_filter_display_data(filter_data)
-        return request.website.render(result_template,
+        return request.render(result_template,
                                       {'survey': survey,
                                        'survey_dict': self.prepare_result_dict(survey, current_filters),
                                        'page_range': self.page_range,

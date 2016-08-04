@@ -46,7 +46,7 @@ class MailGroup(http.Controller):
         message_data = dict((message['res_id'], message['res_id_count']) for message in messages)
 
         group_data = dict((group.id, {'monthly_message_nbr': message_data.get(group.id, 0)}) for group in groups)
-        return request.website.render('website_mail_channel.mail_channels', {'groups': groups, 'group_data': group_data})
+        return request.render('website_mail_channel.mail_channels', {'groups': groups, 'group_data': group_data})
 
     @http.route(["/groups/is_member"], type='json', auth="public", website=True)
     def is_member(self, channel_id=0, **kw):
@@ -144,7 +144,7 @@ class MailGroup(http.Controller):
             'date_end': date_end,
             'replies_per_page': self._replies_per_page,
         }
-        return request.website.render('website_mail_channel.group_messages', values)
+        return request.render('website_mail_channel.group_messages', values)
 
     @http.route([
         '''/groups/<model('mail.channel'):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>''',
@@ -168,7 +168,7 @@ class MailGroup(http.Controller):
             'next_message': next_message,
             'prev_message': prev_message,
         }
-        return request.website.render('website_mail_channel.group_message', values)
+        return request.render('website_mail_channel.group_message', values)
 
     @http.route(
         '''/groups/<model('mail.channel'):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>/get_replies''',
@@ -210,7 +210,7 @@ class MailGroup(http.Controller):
         # add partner
         channel.sudo().write({'channel_partner_ids': [(4, partner_id)]})
 
-        return request.website.render("website_mail_channel.confirmation_subscription", {'subscribing': True})
+        return request.render("website_mail_channel.confirmation_subscription", {'subscribing': True})
 
     @http.route("/groups/unsubscribe/<model('mail.channel'):channel>/<int:partner_id>/<string:token>", type='http', auth='public', website=True)
     def confirm_unsubscribe(self, channel, partner_id, token, **kw):
@@ -226,4 +226,4 @@ class MailGroup(http.Controller):
         # remove partner
         channel.sudo().write({'channel_partner_ids': [(3, partner_id)]})
 
-        return request.website.render("website_mail_channel.confirmation_subscription", {'subscribing': False})
+        return request.render("website_mail_channel.confirmation_subscription", {'subscribing': False})

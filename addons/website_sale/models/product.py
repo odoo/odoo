@@ -127,11 +127,10 @@ class ProductTemplate(models.Model):
             return self.set_sequence_bottom()
 
     @api.multi
-    def _website_url(self, field_name, arg):
-        res = super(ProductTemplate, self)._website_url(field_name, arg)
+    def _compute_website_url(self):
+        super(ProductTemplate, self)._compute_website_url()
         for product in self:
-            res[product.id] = "/shop/product/%s" % (product.id,)
-        return res
+            product.website_url = "/shop/product/%s" % (product.id,)
 
     @api.multi
     def display_price(self, pricelist, qty=1, public=False, **kw):

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import itertools
 
 import unittest
 from lxml import etree as ET, html
 from lxml.html import builder as h
 
-from openerp.tests import common
+from odoo.tests import common
 
 
 def attrs(**kwargs):
@@ -13,6 +15,7 @@ def attrs(**kwargs):
 
 
 class TestViewSaving(common.TransactionCase):
+
     def eq(self, a, b):
         self.assertEqual(a.tag, b.tag)
         self.assertEqual(a.attrib, b.attrib)
@@ -38,7 +41,7 @@ class TestViewSaving(common.TransactionCase):
                     h.LI(h.SPAN("+00 00 000 00 0 000", attrs(model='res.company', id=1, field='phone', type='char')))
                 ))
         )
-        self.view_id = self.registry('ir.ui.view').create(self.cr, self.uid, {
+        self.view_id = self.env['ir.ui.view'].create({
             'name': "Test View",
             'type': 'qweb',
             'arch': ET.tostring(self.arch, encoding='utf-8').decode('utf-8')
@@ -60,7 +63,7 @@ class TestViewSaving(common.TransactionCase):
 
         self.env['ir.ui.view'].save_embedded_field(embedded)
 
-        company = self.registry('res.company').browse(self.cr, self.uid, 1)
+        company = self.env['res.company'].browse(1)
         self.assertEqual(company.phone, "+00 00 000 00 0 000")
 
     @unittest.skip("save conflict for embedded (saved by third party or previous version in page) not implemented")
@@ -91,31 +94,26 @@ class TestViewSaving(common.TransactionCase):
         att['class'] = "foo bar"
         embedded = h.SPAN("My Company", att)
 
-        self.eq(View.to_field_ref(embedded),
-                h.SPAN({'t-field': 'bob', 'class': 'foo bar', 'id': 'whop'}))
+        self.eq(View.to_field_ref(embedded), h.SPAN({'t-field': 'bob', 'class': 'foo bar', 'id': 'whop'}))
 
     def test_replace_arch(self):
         replacement = h.P("Wheee")
 
-        result = self.registry('ir.ui.view').replace_arch_section(
-            self.cr, self.uid, [self.view_id], None, replacement)
+        result = self.view_id.replace_arch_section(None, replacement)
 
         self.eq(result, h.DIV("Wheee"))
 
     def test_replace_arch_2(self):
         replacement = h.DIV(h.P("Wheee"))
 
-        result = self.registry('ir.ui.view').replace_arch_section(
-            self.cr, self.uid, [self.view_id], None, replacement)
+        result = self.view_id.replace_arch_section(None, replacement)
 
         self.eq(result, replacement)
 
     def test_fixup_arch(self):
         replacement = h.H1("I am the greatest title alive!")
 
-        result = self.registry('ir.ui.view').replace_arch_section(
-            self.cr, self.uid, [self.view_id], '/div/div[1]/h3',
-            replacement)
+        result = self.view_id.replace_arch_section('/div/div[1]/h3', replacement)
 
         self.eq(result, h.DIV(
             h.DIV(
@@ -135,12 +133,10 @@ class TestViewSaving(common.TransactionCase):
 
     def test_multiple_xpath_matches(self):
         with self.assertRaises(ValueError):
-            self.registry('ir.ui.view').replace_arch_section(
-                self.cr, self.uid, [self.view_id], '/div/div/h3',
-                h.H6("Lol nope"))
+            self.view_id.replace_arch_section('/div/div/h3', h.H6("Lol nope"))
 
     def test_save(self):
-        Company = self.registry('res.company')
+        Company = self.env['res.company']
         View = self.env['ir.ui.view']
 
         replacement = ET.tostring(h.DIV(
@@ -151,13 +147,13 @@ class TestViewSaving(common.TransactionCase):
                 h.LI(h.SPAN("+12 3456789", attrs(model='res.company', id=1, field='phone', expression="edmund", type='char'))),
             )
         ), encoding='utf-8')
-        View.browse(self.view_id).save(value=replacement, xpath='/div/div[2]')
+        self.view_id.save(value=replacement, xpath='/div/div[2]')
 
-        company = Company.browse(self.cr, self.uid, 1)
+        company = Company.browse(1)
         self.assertEqual(company.name, "Acme Corporation")
         self.assertEqual(company.phone, "+12 3456789")
         self.eq(
-            ET.fromstring(View.browse(self.view_id).arch.encode('utf-8')),
+            ET.fromstring(self.view_id.arch.encode('utf-8')),
             h.DIV(
                 h.DIV(
                     h.H3("Column 1"),
@@ -177,48 +173,45 @@ class TestViewSaving(common.TransactionCase):
 
     def test_save_escaped_text(self):
         """ Test saving html special chars in text nodes """
-        view_id = self.registry('ir.ui.view').create(self.cr, self.uid, {
-            'arch':'<t><p><h1>hello world</h1></p></t>',
-            'type':'qweb'
+        view = self.env['ir.ui.view'].create({
+            'arch': '<t><p><h1>hello world</h1></p></t>',
+            'type': 'qweb'
         })
-        view = self.env['ir.ui.view'].browse(view_id)
         # script and style text nodes should not escaped client side
         replacement = '<script>1 && "hello & world"</script>'
         view.save(replacement, xpath='/t/p/h1')
         self.assertIn(
-                replacement.replace('&', '&amp;'),
-                view.arch,
-                'inline script should be escaped server side'
+            replacement.replace('&', '&amp;'),
+            view.arch,
+            'inline script should be escaped server side'
         )
         self.assertIn(
-                replacement,
-                view.render(),
-                'inline script should not be escaped when rendering'
+            replacement,
+            view.render(),
+            'inline script should not be escaped when rendering'
         )
         # common text nodes should be be escaped client side
         replacement = 'world &amp;amp; &amp;lt;b&amp;gt;cie'
         view.save(replacement, xpath='/t/p')
         self.assertIn(replacement, view.arch, 'common text node should not be escaped server side')
         self.assertIn(
-                replacement,
-                view.render().replace('&', '&amp;'),
-                'text node characters wrongly unescaped when rendering'
+            replacement,
+            view.render().replace('&', '&amp;'),
+            'text node characters wrongly unescaped when rendering'
         )
 
     def test_save_only_embedded(self):
-        Company = self.registry('res.company')
+        Company = self.env['res.company']
         company_id = 1
-        Company.write(self.cr, self.uid, company_id, {'name': "Foo Corporation"})
+        company = Company.browse(company_id)
+        company.write({'name': "Foo Corporation"})
 
         node = html.tostring(h.SPAN(
             "Acme Corporation",
             attrs(model='res.company', id=company_id, field="name", expression='bob', type='char')))
         View = self.env['ir.ui.view']
         View.browse(company_id).save(value=node)
-
-        company = Company.browse(self.cr, self.uid, company_id)
         self.assertEqual(company.name, "Acme Corporation")
-
 
     def test_field_tail(self):
         View = self.env['ir.ui.view']
@@ -228,10 +221,10 @@ class TestViewSaving(common.TransactionCase):
                         field='phone', expression="edmund")),
                  "whop whop"
         ), encoding="utf-8")
-        View.browse(self.view_id).save(value=replacement, xpath='/div/div[2]/ul/li[3]')
+        self.view_id.save(value=replacement, xpath='/div/div[2]/ul/li[3]')
 
         self.eq(
-            ET.fromstring(View.browse(self.view_id).arch.encode('utf-8')),
+            ET.fromstring(self.view_id.arch.encode('utf-8')),
             h.DIV(
                 h.DIV(
                     h.H3("Column 1"),
