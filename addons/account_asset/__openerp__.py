@@ -29,6 +29,7 @@ Keeps track of depreciations, and creates corresponding journal entries.
         'views/account_asset_views.xml',
         'views/account_invoice_views.xml',
         'views/account_asset_templates.xml',
+        'views/product_views.xml',
         'report/account_asset_report_views.xml',
         'data/account_asset_data.xml',
     ],
