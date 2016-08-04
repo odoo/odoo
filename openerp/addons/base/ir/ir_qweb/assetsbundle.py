@@ -191,7 +191,12 @@ class AssetsBundle(object):
         multiple time the same bundle in our `to_html` function, we group our ir.attachment records
         by file name and only return the one with the max id for each group.
         """
-        url_pattern = '/web/content/%-{0}/{1}{2}.{3}'.format(self.version, self.name, ('' if inc is '' else '%' if inc is None else '.%s' % inc), type)
+        if type == 'css':
+            inc = '%'
+        elif inc:
+            inc = '.%s' % inc
+
+        url_pattern = '/web/content/%-{0}/{1}{2}.{3}'.format(self.version, self.name, inc, type)
         self.env.cr.execute("""
              SELECT max(id)
                FROM ir_attachment
@@ -273,7 +278,7 @@ class AssetsBundle(object):
     def xml(self, minify=True):
         lang = self.env.context.get('lang', 'en_US')
         inc = lang
-        attachments = self.get_attachments('xml', inc=inc)
+        attachments = self.get_attachments('xml.js', inc=inc)
         if not attachments:
             content = '\n'.join(asset.to_js() for asset in self.templates)
             modules = list(set([asset.url.split("/", 2)[1] for asset in (self.templates + self.javascripts) if asset.url]))
@@ -287,7 +292,7 @@ class AssetsBundle(object):
                     '});'
                 ]
                 content += '\n\n' + '\n'.join(js)
-            return self.save_attachment('xml', content, inc=inc)
+            return self.save_attachment('xml.js', content, inc=inc)
         return attachments[0]
 
     def css(self):
