@@ -290,7 +290,7 @@ class Slide(models.Model):
         default='document',
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
     index_content = fields.Text('Transcript')
-    datas = fields.Binary('Content')
+    datas = fields.Binary('Content', attachment=True)
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
     mime_type = fields.Char('Mime-type')
