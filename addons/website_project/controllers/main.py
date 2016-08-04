@@ -61,11 +61,11 @@ class WebsiteAccount(website_account):
             'default_url': '/my/projects',
             'pager': pager
         })
-        return request.website.render("website_project.my_projects", values)
+        return request.render("website_project.my_projects", values)
 
     @http.route(['/my/project/<model("project.project"):project>'], type='http', auth="user", website=True)
     def my_project(self, project=None, **kw):
-        return request.website.render("website_project.my_project", {'project': project})
+        return request.render("website_project.my_project", {'project': project})
 
     @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
     def my_tasks(self, page=1, date_begin=None, date_end=None, project=None, sortby=None, **kw):
@@ -123,8 +123,8 @@ class WebsiteAccount(website_account):
             'default_url': '/my/tasks',
             'pager': pager
         })
-        return request.website.render("website_project.my_tasks", values)
+        return request.render("website_project.my_tasks", values)
 
     @http.route(['/my/task/<model("project.task"):task>'], type='http', auth="user", website=True)
     def my_task(self, task=None, **kw):
-        return request.website.render("website_project.my_task", {'task': task, 'user': request.env.user})
+        return request.render("website_project.my_task", {'task': task, 'user': request.env.user})

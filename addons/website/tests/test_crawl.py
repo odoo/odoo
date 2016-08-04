@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 import urlparse
 import time
@@ -9,6 +11,7 @@ import odoo
 import re
 
 _logger = logging.getLogger(__name__)
+
 
 class Crawler(odoo.tests.HttpCase):
     """ Test suite crawling an Odoo CMS instance and checking that all

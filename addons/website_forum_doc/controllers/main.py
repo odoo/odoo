@@ -20,7 +20,7 @@ class WebsiteDoc(http.Controller):
             'forum': forum,
             'sections': sections,
         }
-        return request.website.render("website_forum_doc.documentation", value)
+        return request.render("website_forum_doc.documentation", value)
 
     @http.route(['''/forum/how-to/<model("forum.documentation.toc"):toc>/<model("forum.post", "[('documentation_toc_id','=',toc[0])]"):post>'''], type='http', auth="public", website=True)
     def post(self, toc, post, **kwargs):
@@ -32,7 +32,7 @@ class WebsiteDoc(http.Controller):
             'main_object': post,
             'forum': post.forum_id
         }
-        return request.website.render("website_forum_doc.documentation_post", value)
+        return request.render("website_forum_doc.documentation_post", value)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):post>/promote', type='http', auth="user", website=True)
     def post_toc(self, forum, post, **kwargs):
@@ -42,7 +42,7 @@ class WebsiteDoc(http.Controller):
             'forum': post.forum_id,
             'chapters': request.env['forum.documentation.toc'].search([('child_ids', '=', False)])
         }
-        return request.website.render("website_forum_doc.promote_question", value)
+        return request.render("website_forum_doc.promote_question", value)
 
     @http.route('/forum/<model("forum.forum"):forum>/promote_ok', type='http', auth="user", website=True)
     def post_toc_ok(self, forum, post_id, toc_id, **kwargs):

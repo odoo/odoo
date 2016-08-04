@@ -16,7 +16,7 @@ class WebsiteEventSaleController(WebsiteEventController):
             'main_object': event.with_context(pricelist=pricelist_id),
             'range': range,
         }
-        return request.website.render("website_event.event_description_full", values)
+        return request.render("website_event.event_description_full", values)
 
     def _process_tickets_details(self, data):
         ticket_post = {}
@@ -47,7 +47,7 @@ class WebsiteEventSaleController(WebsiteEventController):
             attendees = request.env['event.registration'].browse(list(attendee_ids))
             # clean context and session, then redirect to the confirmation page
             request.website.sale_reset()
-            return request.website.render("website_event.registration_complete", {
+            return request.render("website_event.registration_complete", {
                 'attendees': attendees,
                 'event': event,
             })

@@ -160,7 +160,7 @@ class WebsiteMembership(http.Controller):
             'post': post,
             'search': "?%s" % werkzeug.url_encode(post),
         }
-        return request.website.render("website_membership.index", values)
+        return request.render("website_membership.index", values)
 
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/members/<partner_id>'], type='http', auth="public", website=True)
@@ -171,5 +171,5 @@ class WebsiteMembership(http.Controller):
             if partner.exists() and partner.website_published:  # TODO should be done with access rules
                 values = {}
                 values['main_object'] = values['partner'] = partner
-                return request.website.render("website_membership.partner", values)
+                return request.render("website_membership.partner", values)
         return self.members(**post)

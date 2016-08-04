@@ -1,7 +1,12 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import odoo
 import odoo.tests
 
 
 class TestUi(odoo.tests.HttpCase):
+
     def test_01_public_homepage(self):
         self.phantom_js("/", "console.log('ok')", "'website.snippets.animation' in odoo.__DEBUG__.services")
 

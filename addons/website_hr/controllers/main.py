@@ -12,4 +12,4 @@ class WebsiteHr(http.Controller):
         if not request.env['res.users'].has_group('base.group_website_publisher'):
             employees_domain += [('website_published', '=', True)]
         employees = request.env['hr.employee'].search(employees_domain)
-        return request.website.render("website.aboutus", {'employees': employees})
+        return request.render("website.aboutus", {'employees': employees})
