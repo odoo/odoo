@@ -23,11 +23,11 @@ odoo.define("website_blog.tour", function (require) {
         }, {
             trigger: "#oe_manipulators .oe_overlay.oe_active a.btn.btn-primary.btn-sm",
             extra_trigger: "#wrap h1[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
-            content: _t("Change and customize your blog post cover."),
-            position: "right",
+            content: _t("Set a blog post <b>cover</b>."),
+            position: "bottom",
         }, {
             trigger: "a:containsExact(" + _t("Change Cover")+ "):eq(1)",
-            content: _t("Select this menu item to change blog cover."),
+            content: _t("Clich here to change your post cover."),
             position: "right",
         }, {
             trigger: ".o_select_media_dialog .o_existing_attachment_cell:nth(1) img",
@@ -41,7 +41,7 @@ odoo.define("website_blog.tour", function (require) {
             position: "top",
         }, {
             trigger: ".blog_content section.mt16",
-            content: _t("Start writing your story here."),
+            content: _t("<b>Write your story here.</b> Use the top toolbar to style your text: add an image or table, set bold or italic, etc. Drag and drop building blocks for more graphical blogs."),
             position: "top",
             run: function (actions) {
                 actions.auto();
@@ -50,27 +50,27 @@ odoo.define("website_blog.tour", function (require) {
         }, {
             trigger: "button[data-action=save]",
             extra_trigger: "#blog_content section:first p:first:not(:containsExact(" + _t("Start writing here...") + "))",
-            content: _t("Click on <b>Save</b> button to record changes on the page."),
+            content: _t("<b>Click on Save</b> to record yoru changes."),
             position: "bottom",
         }, {
             trigger: "a[data-action=show-mobile-preview]",
             extra_trigger: "body:not(.editor_enable)",
-            content: _t("Click on the mobile icon to preview how your blog post will be displayed on a mobile device."),
+            content: _t("Use this icon to preview your blog post on <b>mobile devices</b>."),
             position: "bottom",
         }, {
             trigger: "button[data-dismiss=modal]",
             extra_trigger: ".modal:has(#mobile-viewport)",
-            content: _t("Scroll to check rendering and then close the mobile preview."),
+            content: _t("Once you have reviewed the content on mobile, close the preview."),
             position: "right",
         }, {
             trigger: "button.btn-danger.js_publish_btn",
             extra_trigger: "body:not(.editor_enable)",
-            position: "top",
-            content: _t("Publish your blog post to make it visible to your visitors."),
+            position: "bottom",
+            content: _t("<b>Publish your blog post</b> to make it visible to your visitors."),
         }, {
             trigger: "#customize-menu-button",
             extra_trigger: "body:not(.editor_enable) .js_publish_management button.js_publish_btn.btn-success:visible",
-            content: _t("<p><b>This tutorial is over.</b> Use this button to discover more features and improve the content of this page.</p><p>You can also add some cool content with your text in edit mode or keep adding pages with the upper right buttons.</p>"),
+            content: _t("<b>That's it, your blog post is published!</b> Discover more features through the <i>Customize</i> menu."),
             position: "bottom",
             width: 500,
         }]);
