@@ -420,8 +420,13 @@ class Field(object):
             attrs['copy'] = attrs.get('copy', False)
         if attrs.get('company_dependent'):
             # by default, company-dependent fields are not stored and not copied
-            attrs['store'] = attrs.get('store', False)
+            attrs['store'] = False
             attrs['copy'] = attrs.get('copy', False)
+            attrs['default'] = self._default_company_dependent
+            attrs['compute'] = self._compute_company_dependent
+            if not attrs.get('readonly'):
+                attrs['inverse'] = self._inverse_company_dependent
+            attrs['search'] = self._search_company_dependent
 
         # fix for function fields overridden by regular columns
         if not isinstance(attrs.get('origin'), (NoneType, fields.function)):
@@ -567,6 +572,31 @@ class Field(object):
         return self.related_field.base_field if self.inherited else self
 
     #
+    # Company-dependent fields
+    #
+
+    def _default_company_dependent(self, model):
+        return model.env['ir.property'].get(self.name, self.model_name)
+
+    def _compute_company_dependent(self, records):
+        Property = records.env['ir.property']
+        values = Property.get_multi(self.name, self.model_name, records.ids)
+        for record in records:
+            record[self.name] = values.get(record.id)
+
+    def _inverse_company_dependent(self, records):
+        Property = records.env['ir.property']
+        values = {
+            record.id: self.convert_to_write(record[self.name], record)
+            for record in records
+        }
+        Property.set_multi(self.name, self.model_name, values)
+
+    def _search_company_dependent(self, records, operator, value):
+        Property = records.env['ir.property']
+        return Property.search_multi(self.name, self.model_name, operator, value)
+
+    #
     # Setup of field triggers
     #
     # The triggers of ``self`` are a collection of pairs ``(field, path)`` of
@@ -679,7 +709,7 @@ class Field(object):
         if self.column:
             return self.column
 
-        if not self.store and (self.compute or not self.origin) and not self.company_dependent:
+        if not self.store and (self.compute or not self.origin):
             # non-stored computed fields do not have a corresponding column
             return None
 
@@ -691,12 +721,7 @@ class Field(object):
         for attr, value in self._attrs.iteritems():
             args[attr] = value
 
-        if self.company_dependent:
-            # company-dependent fields are mapped to former property fields
-            args['type'] = self.type
-            args['relation'] = self.comodel_name
-            self.column = fields.property(**args)
-        elif self.origin:
+        if self.origin:
             # let the origin provide a valid column for the given parameters
             self.column = self.origin.new(_computed_field=bool(self.compute), **args)
         else:

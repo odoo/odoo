@@ -1769,39 +1769,13 @@ class property(function):
         return args
 
     def _property_search(self, tobj, cr, uid, obj, name, domain, context=None):
-        ir_property = obj.pool['ir.property']
-        result = []
-        for field, operator, value in domain:
-            result += ir_property.search_multi(cr, uid, name, tobj._name, operator, value, context=context)
-        return result
+        raise TypeError("Dead method")
 
     def _property_write(self, obj, cr, uid, id, prop_name, value, obj_dest, context=None):
-        ir_property = obj.pool['ir.property']
-        ir_property.set_multi(cr, uid, prop_name, obj._name, {id: value}, context=context)
-        return True
+        raise TypeError("Dead method")
 
     def _property_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
-        ir_property = obj.pool['ir.property']
-
-        res = dict.fromkeys(ids, False)
-
-        field = obj._fields[prop_name]
-        values = ir_property.get_multi(cr, uid, prop_name, obj._name, ids, context=context)
-        if field.type == 'many2one':
-            # name_get the non-null values as SUPERUSER_ID
-            vals = sum(set(filter(None, values.itervalues())),
-                       obj.pool[field.comodel_name].browse(cr, uid, [], context=context))
-            vals_name = dict(vals.sudo().name_get()) if vals else {}
-            for id, value in values.iteritems():
-                ng = False
-                if value and value.id in vals_name:
-                    ng = value.id, vals_name[value.id]
-                res[id] = ng
-        else:
-            for id, value in values.iteritems():
-                res[id] = value
-
-        return res
+        raise TypeError("Dead method")
 
     def __init__(self, **args):
         if 'view_load' in args:
