@@ -103,19 +103,3 @@ class AccountInvoiceLine(models.Model):
             elif invoice.type == 'in_invoice':
                 self.asset_category_id = self.product_id.product_tmpl_id.asset_category_id.id
         super(AccountInvoiceLine, self)._set_additional_fields(invoice)
-
-
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
-    asset_category_id = fields.Many2one('account.asset.category', string='Asset Type', company_dependent=True, ondelete="restrict")
-    deferred_revenue_category_id = fields.Many2one('account.asset.category', string='Deferred Revenue Type', company_dependent=True, ondelete="restrict")
-
-
-    @api.multi
-    def _get_asset_accounts(self):
-        res = super(ProductTemplate, self)._get_asset_accounts()
-        if self.asset_category_id:
-            res['stock_input'] = self.property_account_expense_id
-        if self.deferred_revenue_category_id:
-            res['stock_output'] = self.property_account_income_id
-        return res
