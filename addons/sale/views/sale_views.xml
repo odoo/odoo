@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-
+<odoo>
         <!-- Top menu item -->
         <!--
             This menu item's purpose is to overwrite another one defined in
             the base module in order to set new groups.
         -->
-        <menuitem name="Sales"
+        <menuitem
             id="sales_team.menu_base_partner"
+            name="Sales"
             web_icon="sale,static/description/icon.png"/>
 
         <menuitem
             id= "sales_team.menu_sales_config"
+            name= "Sales"
             parent= "sales_team.menu_sale_config"
             sequence= "1"
-            name= "Sales"
             groups= "sales_team.group_sale_manager,sales_team.group_sale_salesman,account.group_account_manager,account.group_account_user"/>
 
         <menuitem id="sales_team.menu_product" name="Product Variants" parent="sales_team.menu_base_partner" sequence="9" groups="product.group_product_variant"/>
         <menuitem id="sales_team.menu_sales" name="Sales" parent="sales_team.menu_base_partner" sequence="5"/>
-        <menuitem action="product.product_template_action" id="sales_team.menu_product_template_action" parent="sales_team.menu_sales" sequence="13" />
+        <menuitem id="sales_team.menu_product_template_action" parent="sales_team.menu_sales" action="product.product_template_action" sequence="13" />
         <menuitem id="sale.prod_config_main" name="Products" parent="sales_team.menu_sale_config" sequence="2"/>
-        <menuitem action="product.attribute_action" id="menu_attribute_action" parent="sale.prod_config_main" sequence="4" groups="product.group_product_variant"/>
-        <menuitem action="product.variants_action" id="menu_variants_action" parent="sale.prod_config_main" sequence="5" groups="product.group_product_variant"/>
-        <menuitem id="product.menu_products" action="product.product_normal_action_sell" parent="sales_team.menu_sales" groups="product.group_product_variant" sequence="99"/>
-        <menuitem action="product.product_category_action_form" groups="base.group_no_one" id="menu_product_category_action_form" parent="sale.prod_config_main" sequence="2"/>
+        <menuitem id="menu_attribute_action" parent="sale.prod_config_main" action="product.attribute_action" sequence="4" groups="product.group_product_variant"/>
+        <menuitem id="menu_variants_action" parent="sale.prod_config_main" action="product.variants_action" sequence="5" groups="product.group_product_variant"/>
+        <menuitem id="product.menu_products" parent="sales_team.menu_sales" action="product.product_normal_action_sell" groups="product.group_product_variant" sequence="99"/>
+        <menuitem id="menu_product_category_action_form" parent="sale.prod_config_main" action="product.product_category_action_form" sequence="2" groups="base.group_no_one"/>
         <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="30" groups="product.group_uom"/>
-        <menuitem action="product.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="6" groups="product.group_uom"/>
-        <menuitem action="product.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="sale.prod_config_main" sequence="7" groups="base.group_no_one"/>
+        <menuitem id="menu_product_uom_form_action" parent="sale.prod_config_main" action="product.product_uom_form_action" sequence="6" groups="product.group_uom"/>
+        <menuitem id="menu_product_uom_categ_form_action" parent="sale.prod_config_main" action="product.product_uom_categ_form_action" sequence="7" groups="base.group_no_one"/>
         <menuitem id="sales_team.menu_sale_config_sales" name="Configuration" parent="sales_team.menu_base_partner" sequence="100"/>
         <menuitem id="menu_product_pricelist_main" name="Pricelists" parent="sales_team.menu_sale_config" groups="product.group_sale_pricelist" sequence="3"/>
-        <menuitem action="product.product_pricelist_action2" id="menu_product_pricelist_action2" parent="menu_product_pricelist_main" sequence="1" groups="product.group_sale_pricelist"/>
+        <menuitem id="menu_product_pricelist_action2" parent="menu_product_pricelist_main" action="product.product_pricelist_action2" sequence="1" groups="product.group_sale_pricelist"/>
 
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
@@ -44,7 +43,7 @@
                 </calendar>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_sale_order_graph">
+        <record id="view_sale_order_graph" model="ir.ui.view">
             <field name="name">sale.order.graph</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
@@ -54,7 +53,7 @@
                 </graph>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_sale_order_pivot">
+        <record id="view_sale_order_pivot" model="ir.ui.view">
             <field name="name">sale.order.pivot</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
@@ -66,7 +65,7 @@
         </record>
 
         <!-- Sales Orders Kanban View  -->
-        <record model="ir.ui.view" id="view_sale_order_kanban">
+        <record id="view_sale_order_kanban" model="ir.ui.view">
             <field name="name">sale.order.kanban</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
@@ -365,7 +364,7 @@
         <!-- inherited view to make the order lines list in the form non-editable
              for the members of some usability groups -->
         <record id="view_order_form_editable_list" model="ir.ui.view">
-            <field name="name">sale.order.form.editable.list</field>
+            <field name="name">sale.order.form.inherit</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="groups_id" eval="[(4, ref('product.group_stock_packaging')), (4, ref('sale.group_mrp_properties'))]"/>
@@ -377,7 +376,7 @@
         </record>
 
         <record id="view_sales_order_filter" model="ir.ui.view">
-            <field name="name">sale.order.list.select</field>
+            <field name="name">sale.order.search</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
@@ -400,7 +399,7 @@
         </record>
 
         <record id="sale_order_view_search_inherit_quotation" model="ir.ui.view">
-            <field name="name">sale.order.search.inherit.quotation</field>
+            <field name="name">sale.order.search.inherit</field>
             <field name="model">sale.order</field>
             <field name="mode">primary</field>
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
@@ -415,7 +414,7 @@
         </record>
 
         <record id="sale_order_view_search_inherit_sale" model="ir.ui.view">
-            <field name="name">sale.order.search.inherit.sale</field>
+            <field name="name">sale.order.search.inherit</field>
             <field name="model">sale.order</field>
             <field name="mode">primary</field>
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
@@ -451,8 +450,8 @@
             </field>
         </record>
 
-        <menuitem action="action_orders"
-            id="menu_sale_order" parent="sales_team.menu_sales"
+        <menuitem id="menu_sale_order"
+            parent="sales_team.menu_sales" action="action_orders"
             sequence="12" groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"/>
 
         <record id="action_orders_to_invoice" model="ir.actions.act_window">
@@ -473,11 +472,11 @@
               </p>
             </field>
         </record>
-        <menuitem name="Invoicing"
-            id="menu_sale_invoicing" parent="sales_team.menu_base_partner"
+        <menuitem id="menu_sale_invoicing" name="Invoicing"
+            parent="sales_team.menu_base_partner"
             sequence="5"/>
-        <menuitem action="action_orders_to_invoice"
-            id="menu_sale_order_invoice" parent="sale.menu_sale_invoicing"
+        <menuitem id="menu_sale_order_invoice"
+            parent="sale.menu_sale_invoicing" action="action_orders_to_invoice"
             sequence="2"/>
 
         <record id="action_orders_upselling" model="ir.actions.act_window">
@@ -501,8 +500,8 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_orders_upselling"
-            id="menu_sale_order_upselling" parent="sale.menu_sale_invoicing"
+        <menuitem id="menu_sale_order_upselling"
+            parent="sale.menu_sale_invoicing" action="action_orders_upselling"
             sequence="5"/>
 
 
@@ -528,7 +527,7 @@
         </record>
 
         <menuitem id="menu_sale_quotations"
-                action="action_quotations" parent="sales_team.menu_sales"
+                parent="sales_team.menu_sales" action="action_quotations"
                 sequence="11"/>
 
         <record id="view_order_line_tree" model="ir.ui.view">
@@ -552,7 +551,7 @@
         </record>
 
         <record id="view_sales_order_line_filter" model="ir.ui.view">
-            <field name="name">sale.order.line.select</field>
+            <field name="name">sale.order.line.search</field>
             <field name="model">sale.order.line</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
@@ -577,121 +576,6 @@
             <field name="res_model">sale.order.line</field>
             <field name="context">{'search_default_product_id': [active_id], 'default_product_id': active_id}</field>
             <field name="domain">[('state', 'in', ['sale', 'done'])]</field>
-        </record>
-
-        <record model="ir.ui.view" id="product_form_view_sale_order_button">
-            <field name="name">product.product.sale.order</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
-            <field name="arch" type="xml">
-                <div name="button_box" position="inside">
-                    <button class="oe_stat_button" name="%(action_product_sale_list)d"
-                        type="action" icon="fa-usd">
-                        <field string="Sales" name="sales_count" widget="statinfo" />
-                    </button>
-                </div>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="product_template_form_view_sale_order_button">
-            <field name="name">product.template.sale.order.button</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_only_form_view"/>
-            <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
-            <field name="arch" type="xml">
-                <div name="button_box" position="inside">
-                    <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-usd">
-                        <field string="Sales" name="sales_count" widget="statinfo" />
-                    </button>
-                </div>
-                <group name="description" position="after">
-                    <group string="Warning when Selling this Product" colspan="2" groups="sale.group_warning_sale">
-                        <field name="sale_line_warn" nolabel="1"/>
-                        <field name="sale_line_warn_msg" colspan="3" nolabel="1"
-                                attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')]}"/>
-                    </group>
-                </group>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="product_template_form_view_invoice_policy">
-            <field name="name">product.template.invoice.policy</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_form_view"/>
-            <field name="arch" type="xml">
-                <group name="sale" position="inside">
-                    <separator string="Invoicing Policy" colspan="4"/>
-                    <group>
-                        <field name="invoice_policy" widget="radio"/>
-                        <field name="track_service" widget="radio" invisible="True"/>
-                    </group>
-                </group>
-            </field>
-        </record>
-
-
-
-        <record model="ir.ui.view" id="view_company_inherit_form2">
-            <field name="name">res.company.form.inherit</field>
-            <field name="inherit_id" ref="base.view_company_form"/>
-            <field name="model">res.company</field>
-            <field name="arch" type="xml">
-                <xpath expr="//group[@name='account_grp']" position="after">
-                    <group name="sale_grp" string="Sales">
-                        <field name="sale_note" nolabel="1" placeholder="Default terms &amp; conditions..."/>
-                    </group>
-                </xpath>
-            </field>
-        </record>
-
-        <!-- Update account invoice search view!-->
-        <record id="account_invoice_groupby_inherit" model="ir.ui.view">
-            <field name="name">account.invoice.groupby</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='user_id']" position="after">
-                    <field name="team_id"/>
-                </xpath>
-                <xpath expr="//group/filter[@name='status']" position="after">
-                    <filter string="Sales Team" domain="[]" context="{'group_by':'team_id'}"/>
-                </xpath>
-            </field>
-        </record>
-
-        <!-- Update account invoice !-->
-        <record model="ir.ui.view" id="account_invoice_form">
-            <field name="name">Account Invoice</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_form"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//field[@name='user_id']" position="after">
-                        <field name="team_id"/>
-                    </xpath>
-                    <xpath expr="//field[@name='partner_id']" position="after">
-                       <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address"/>
-                   </xpath>
-                    <xpath expr="//page/field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="after">
-                        <field name="layout_category_id" groups="sale.group_sale_layout"/>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="account_invoice_line_form">
-            <field name="name">account.invoice.line.form</field>
-            <field name="model">account.invoice.line</field>
-            <field name="inherit_id" ref="account.view_invoice_line_form"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//group/group/field[@name='product_id']" position="after">
-                        <field name="layout_category_id" groups="sale.group_sale_layout"/>
-                    </xpath>
-                </data>
-            </field>
         </record>
 
         <!-- search by Salesteams -->
@@ -762,65 +646,4 @@
               </p>
             </field>
         </record>
-
-        <record id="action_invoice_salesteams" model="ir.actions.act_window">
-            <field name="name">Invoices</field>
-            <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="view_id" ref="account.invoice_tree"/>
-            <field name="domain">[
-                ('state', 'not in', ['draft', 'cancel']),
-                ('type', '=', 'out_invoice')]</field>
-            <field name="context">{
-                    'search_default_team_id': [active_id],
-                    'default_team_id': active_id,
-                    'default_type':'out_invoice',
-                    'type':'out_invoice',
-                    'journal_type': 'sale',
-                }
-            </field>
-            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
-        </record>
-
-        <record id="action_invoice_salesteams_view_tree" model="ir.actions.act_window.view">
-            <field name="sequence">1</field>
-            <field name="view_mode">tree</field>
-            <field name="act_window_id" ref="sale.action_invoice_salesteams"/>
-        </record>
-
-        <record id="action_invoice_salesteams_view_form" model="ir.actions.act_window.view">
-            <field name="sequence">2</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="account.invoice_form"/>
-            <field name="act_window_id" ref="sale.action_invoice_salesteams"/>
-        </record>
-
-        <record id="action_order_report_quotation_salesteam" model="ir.actions.act_window">
-            <field name="name">Quotations Analysis</field>
-            <field name="res_model">sale.report</field>
-            <field name="view_mode">graph</field>
-            <field name="domain">[('state','=','draft'),('team_id', '=', active_id)]</field>
-            <field name="context">{'search_default_order_month':1}</field>
-            <field name="help">This report performs analysis on your quotations. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
-        </record>
-
-        <record id="action_order_report_so_salesteam" model="ir.actions.act_window">
-            <field name="name">Sales Analysis</field>
-            <field name="res_model">sale.report</field>
-            <field name="view_mode">graph</field>
-            <field name="domain">[('state','not in',('draft','cancel')),('team_id', '=', active_id)]</field>
-            <field name="context">{'search_default_order_month':1}</field>
-            <field name="help">This report performs analysis on your sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
-        </record>
-
-        <record id="action_account_invoice_report_salesteam" model="ir.actions.act_window">
-            <field name="name">Invoices Analysis</field>
-            <field name="res_model">account.invoice.report</field>
-            <field name="view_mode">graph</field>
-            <field name="domain">[('team_id', '=', active_id),('state', 'not in', ['draft', 'cancel'])]</field>
-            <field name="context">{'search_default_month':1}</field>
-            <field name="help">From this report, you can have an overview of the amount invoiced to your customer. The search tool can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
-        </record>
-    </data>
-</openerp>
+</odoo>

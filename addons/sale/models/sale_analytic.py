@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models, _
-from openerp.exceptions import UserError
+from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):

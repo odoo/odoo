@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <record id="view_sale_advance_payment_inv" model="ir.ui.view">
-            <field name="name">Invoice Orders</field>
+            <field name="name">sale.advance.payment.inv.form</field>
             <field name="model">sale.advance.payment.inv</field>
             <field name="arch" type="xml">
                 <form string="Invoice Sales Order">
@@ -60,6 +59,4 @@
             <field name="key">action</field>
             <field name="model">sale.order</field>
         </record>
-
-    </data>
-</openerp>
+</odoo>

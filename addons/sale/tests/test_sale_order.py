@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from openerp.exceptions import UserError, AccessError
+
+from odoo.exceptions import UserError, AccessError
 
 from test_sale_common import TestSale
 
