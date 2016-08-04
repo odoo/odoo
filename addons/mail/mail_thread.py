@@ -1056,7 +1056,7 @@ class mail_thread(osv.AbstractModel):
                        decode_header(message, 'Cc'),
                        decode_header(message, 'Resent-To'),
                        decode_header(message, 'Resent-Cc')])
-        local_parts = [e.split('@')[0] for e in tools.email_split(rcpt_tos)]
+        local_parts = [e.split('@')[0].lower() for e in tools.email_split(rcpt_tos)]
         if local_parts:
             alias_ids = mail_alias.search(cr, uid, [('alias_name', 'in', local_parts)])
             if alias_ids:
