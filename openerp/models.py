@@ -1271,18 +1271,12 @@ class BaseModel(object):
 
             field = self._fields.get(name)
 
-            # 3. look up property fields
-            #    TODO: get rid of this one
-            if field and field.company_dependent:
-                defaults[name] = self.env['ir.property'].get(name, self._name)
-                continue
-
-            # 4. look up field.default
+            # 3. look up field.default
             if field and field.default:
                 defaults[name] = field.default(self)
                 continue
 
-            # 5. delegate to parent model
+            # 4. delegate to parent model
             if field and field.inherited:
                 field = field.related_field
                 parent_fields[field.model_name].append(field.name)
@@ -1762,7 +1756,6 @@ class BaseModel(object):
             for name, field in self._fields.iteritems()
             if name not in values
             if name not in MAGIC_COLUMNS
-            if field.base_field.column
             if not (field.inherited and field.related_field.model_name in avoid_models)
         }
 
