@@ -13,7 +13,7 @@ class MaintenanceEquipment(models.Model):
         string='Used By',
         required=True,
         default='employee')
-    owner_user_id = fields.Many2one(compute='_compute_owner')
+    owner_user_id = fields.Many2one(compute='_compute_owner', store=True)
 
     @api.one
     @api.depends('employee_id', 'department_id', 'equipment_assign_to')
