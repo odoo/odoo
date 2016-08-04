@@ -524,7 +524,7 @@ class AccountAssetDepreciationLine(models.Model):
             created_moves.post()
         return [x.id for x in created_moves]
 
-    api.multi
+    @api.multi
     def post_lines_and_close_asset(self):
         # we re-evaluate the assets to determine whether we can close them
         for line in self:
