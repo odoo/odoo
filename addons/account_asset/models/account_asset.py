@@ -50,6 +50,11 @@ class AccountAssetCategory(models.Model):
         else:
             self.method_period = 12
 
+    @api.onchange('method_time')
+    def _onchange_method_time(self):
+        if self.method_time != 'number':
+            self.prorata = False
+
 
 class AccountAssetAsset(models.Model):
     _name = 'account.asset.asset'

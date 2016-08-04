@@ -58,7 +58,7 @@
                     <group attrs="{'invisible': [('type','=','sale')]}" string="Depreciation Method">
                         <field name="method" widget="radio"/>
                         <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
-                        <field name="prorata"/>
+                        <field name="prorata" attrs="{'invisible': [('method_time','=','end')]}"/>
                     </group>
                 </group>
             </form>
@@ -177,10 +177,7 @@
                             <group>
                                 <field name="method" widget="radio" attrs="{'invisible': [('type','=','sale')]}"/>
                                 <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
-                                <label for="method_time"/>
-                                <div>
-                                    <field name="method_time"/>
-                                </div>
+                                <field name="method_time" string="Time Method Based On" widget="radio" attrs="{'invisible': [('type','!=','purchase')]}"/>
                                 <field name="prorata" attrs="{'invisible': [('method_time','=','end')]}"/>
                             </group>
                             <group>
