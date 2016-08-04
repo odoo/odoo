@@ -18,8 +18,7 @@ class WebsiteResPartner(models.Model):
         self.self = self.id
 
     @api.multi
-    def _website_url(self, field_name, arg):
-        res = super(WebsiteResPartner, self)._website_url(field_name, arg)
+    def _compute_website_url(self):
+        super(WebsiteResPartner, self)._compute_website_url()
         for partner in self:
-            res[partner.id] = "/partners/%s" % slug(partner)
-        return res
+            partner.website_url = "/partners/%s" % slug(partner)

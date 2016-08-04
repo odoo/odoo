@@ -82,10 +82,10 @@ class Track(models.Model):
 
     @api.multi
     @api.depends('name')
-    def _website_url(self, field_name, arg):
-        res = super(Track, self)._website_url(field_name, arg)
-        res.update({(track.id, '/event/%s/track/%s' % (slug(track.event_id), slug(track))) for track in self})
-        return res
+    def _compute_website_url(self):
+        super(Track, self)._compute_website_url()
+        for track in self:
+            track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
