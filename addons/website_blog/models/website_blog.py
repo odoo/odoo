@@ -11,6 +11,8 @@ from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools.translate import html_translate
 
+from odoo import api
+
 
 class Blog(osv.Model):
     _name = 'blog.blog'
@@ -87,11 +89,11 @@ class BlogPost(osv.Model):
     _order = 'id DESC'
     _mail_post_access = 'read'
 
-    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        res = super(BlogPost, self)._website_url(cr, uid, ids, field_name, arg, context=context)
-        for blog_post in self.browse(cr, uid, ids, context=context):
-            res[blog_post.id] = "/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post))
-        return res
+    @api.multi
+    def _compute_website_url(self):
+        super(BlogPost, self)._compute_website_url()
+        for blog_post in self:
+            blog_post.website_url = "/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post))
 
     def _compute_ranking(self, cr, uid, ids, name, arg, context=None):
         res = {}

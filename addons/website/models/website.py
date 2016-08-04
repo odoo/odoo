@@ -676,17 +676,12 @@ class WebsitePublishedMixin(models.AbstractModel):
     _name = "website.published.mixin"
 
     website_published = fields.Boolean('Visible in Website', copy=False)
-    website_url = fields.Char('Website URL', compute='_website_url_proxy', help='The full URL to access the document through the website.')
-
-    # TODO remove proxy and _website_url unused arguments
-    def _website_url_proxy(self):
-        result = self._website_url(False, False)
-        for website in self:
-            website.website_url = result.get(website.id)
+    website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 
     @api.multi
-    def _website_url(self, field_name, arg):
-        return dict.fromkeys(self.ids, '#')
+    def _compute_website_url(self):
+        for record in self:
+            record.website_url = '#'
 
     @api.multi
     def website_publish_button(self):
