@@ -729,7 +729,9 @@ options.registry.collapse = options.Class.extend(preventParentEmpty).extend({
         this.create_ids(this.$target);
     },
     on_clone: function ($clone) {
-        this._super();
+        this._super.apply(this, arguments);
+        $clone.find('[data-toggle="collapse"]').removeAttr('data-target').removeData('target');
+        $clone.find('.panel-collapse').removeAttr('id');
         this.create_ids($clone);
     },
     on_move: function () {
