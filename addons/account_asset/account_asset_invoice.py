@@ -96,11 +96,6 @@ class AccountInvoiceLine(models.Model):
                 self.asset_category_id = self.product_id.product_tmpl_id.asset_category_id
         return vals
 
-    @api.onchange('asset_category_id')
-    def onchange_asset_category_id(self):
-        if self.asset_category_id:
-            self.account_id = self.asset_category_id.account_asset_id
-
     def _set_additional_fields(self, invoice):
         if not self.asset_category_id:
             if invoice.type == 'out_invoice':
