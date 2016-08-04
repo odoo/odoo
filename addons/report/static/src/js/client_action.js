@@ -108,10 +108,7 @@ var ReportAction = Widget.extend(ControlPanelMixin, {
     _update_control_panel_buttons: function () {
         this.$buttons.filter('div.o_report_edit_mode').toggle(this.in_edit_mode);
         this.$buttons.filter('div.o_report_no_edit_mode').toggle(! this.in_edit_mode);
-        this.$buttons.filter('div.o_edit_mode_available').toggle(this.edit_mode_available);
-        if (this.edit_mode_available) {
-            this.$buttons.filter('div.o_edit_mode_available').toggle(! this.in_edit_mode);
-        }
+        this.$buttons.filter('div.o_edit_mode_available').toggle(core.debug && this.edit_mode_available && ! this.in_edit_mode);
     },
 
     /**
