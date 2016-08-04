@@ -284,7 +284,7 @@ class ProductTemplate(models.Model):
         return [(template.id, '%s%s' % (template.default_code and '[%s] ' % template.default_code or '', template.name))
                 for template in self]
 
-    @api.multi
+    @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         # Only use the product.product heuristics if there is a search term and the domain
         # does not specify a match on `product.template` IDs.
