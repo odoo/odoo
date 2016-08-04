@@ -41,8 +41,8 @@ class AccountInvoice(models.Model):
         self.partner_shipping_id = addr and addr.get('delivery')
 
     @api.multi
-    def confirm_paid(self):
-        res = super(AccountInvoice, self).confirm_paid()
+    def action_invoice_paid(self):
+        res = super(AccountInvoice, self).action_invoice_paid()
         todo = set()
         for invoice in self:
             for line in invoice.invoice_line_ids:

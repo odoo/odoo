@@ -55,7 +55,7 @@ class TestPayment(AccountingTestCase):
             'name': 'something',
             'account_id': self.account_revenue.id,
         })
-        invoice.signal_workflow('invoice_open')
+        invoice.action_invoice_open()
         return invoice
 
     def reconcile(self, liquidity_aml, amount=0.0, amount_currency=0.0, currency_id=None):
