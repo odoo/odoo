@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-from openerp.http import request
-from openerp.osv import orm
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import ast
 
+from odoo import models
+from odoo.http import request
 
-class QWeb(orm.AbstractModel):
-    """ QWeb object for rendering stuff in the website context
-    """
+
+class QWeb(models.AbstractModel):
+    """ QWeb object for rendering stuff in the website context """
 
     _inherit = 'ir.qweb'
 
@@ -36,6 +38,7 @@ class QWeb(orm.AbstractModel):
 
         url_att = self.URL_ATTRS.get(el.tag)
         cdn_att = self.CDN_TRIGGERS.get(el.tag)
+
         def process(item):
             if isinstance(item, tuple) and (item[0] in (url_att, cdn_att)):
                 return (item[0], ast.Call(

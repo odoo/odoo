@@ -17,11 +17,10 @@ class ResPartnerGrade(models.Model):
         help="Gives the probability to assign a lead to this partner. (0 means no assignation.)")
 
     @api.multi
-    def _website_url(self, field_name, arg):
-        res = super(ResPartnerGrade, self)._website_url(field_name, arg)
+    def _compute_website_url(self):
+        super(ResPartnerGrade, self)._compute_website_url()
         for grade in self:
-            res[grade.id] = "/partners/grade/%s" % (slug(grade))
-        return res
+            grade.website_url = "/partners/grade/%s" % (slug(grade))
 
 
 class ResPartnerActivation(models.Model):

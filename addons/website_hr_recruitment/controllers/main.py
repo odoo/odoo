@@ -58,7 +58,7 @@ class website_hr_recruitment(http.Controller):
             office_id = False
 
         # Render page
-        return request.website.render("website_hr_recruitment.index", {
+        return request.render("website_hr_recruitment.index", {
             'jobs': jobs,
             'countries': countries,
             'departments': departments,

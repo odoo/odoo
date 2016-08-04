@@ -20,5 +20,5 @@ class WebsitePartnerPage(http.Controller):
                     'partner': partner_sudo,
                     'edit_page': False
                 }
-                return request.website.render("website_partner.partner_page", values)
+                return request.render("website_partner.partner_page", values)
         return request.not_found()

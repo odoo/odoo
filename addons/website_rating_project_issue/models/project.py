@@ -19,8 +19,7 @@ class Project(models.Model):
         }
 
     @api.multi
-    def _website_url(self, field_name, arg):
-        res = dict()
+    def _compute_website_url(self):
+        super(Project, self)._compute_website_url()
         for project in self:
-            res[project.id] = "/project/rating/%s" % project.id
-        return res
+            project.website_url = "/project/rating/%s" % project.id

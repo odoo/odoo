@@ -46,11 +46,10 @@ class Job(models.Model):
     website_description = fields.Html('Website description', translate=html_translate, sanitize=False)
 
     @api.multi
-    def _website_url(self, field_name, arg):
-        result = super(Job, self)._website_url(field_name, arg)
+    def _compute_website_url(self):
+        super(Job, self)._compute_website_url()
         for job in self:
-            result[job.id] = "/jobs/detail/%s" % job.id
-        return result
+            job.website_url = "/jobs/detail/%s" % job.id
 
     @api.multi
     def set_open(self):

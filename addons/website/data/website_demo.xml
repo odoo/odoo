@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <record id="default_website" model="website">
@@ -15,28 +15,26 @@
     </data>
 
     <data noupdate="1">
-
         <!--
             Some demo data for front-end server action generating templates
-            -->
-
+        -->
         <template id="template_partner_post" name="Partner Post and Thanks (Website Server Action Demo)">
-<t t-call="website.layout">
-    <t t-set="additional_title">Partner Detail</t>
-    <div id="wrap">
-        <div class="oe_structure">
-            <section>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h2>Thank you for posting a message !</h2>
-                        </div>
+            <t t-call="website.layout">
+                <t t-set="additional_title">Partner Detail</t>
+                <div id="wrap">
+                    <div class="oe_structure">
+                        <section>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h2>Thank you for posting a message !</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
-            </section>
-        </div>
-    </div>
-</t>
+            </t>
         </template>
 
         <record id="action_partner_post" model="ir.actions.server">
@@ -207,4 +205,4 @@ response = request.render("website.template_partner_comment", values)
         </record>
 
     </data>
-</openerp>
+</odoo>

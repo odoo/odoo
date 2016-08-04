@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <record id="view_website_config_settings" model="ir.ui.view">
             <field name="name">Website settings</field>
@@ -12,7 +11,7 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <div>
-                        <field name="website_id" on_change="on_change_website_id(website_id)" invisible="1"/>
+                        <field name="website_id" invisible="1"/>
                         <group string="Domain">
                             <field name="website_name" />
                             <label for="google_analytics_key"/>
@@ -159,5 +158,4 @@
             sequence="100" name="Configuration" groups="base.group_system"/>
         <menuitem id="menu_website_website_settings" parent="menu_website_global_configuration" name="Settings" action="action_website_configuration"/>
 
-    </data>
-</openerp>
+</odoo>
