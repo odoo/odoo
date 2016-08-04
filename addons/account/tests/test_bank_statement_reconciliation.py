@@ -66,7 +66,7 @@ class TestBankStatementReconciliation(AccountingTestCase):
             'name': '.',
             'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id,
         })
-        invoice.signal_workflow('invoice_open')
+        invoice.action_invoice_open()
 
         mv_line = None
         for l in invoice.move_id.line_ids:

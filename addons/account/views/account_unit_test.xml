@@ -44,7 +44,7 @@
             <test expr="sum([l.price_subtotal for l in invoice_line_ids]) == amount_untaxed"/>
         </assert>
 
-        <workflow action="invoice_open" model="account.invoice" ref="test_invoice_1"/>
+        <function model="account.invoice" name="action_invoice_open" eval="[[ref('test_invoice_1')]]"/>
 
         <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now open">
             <test expr="state">open</test>

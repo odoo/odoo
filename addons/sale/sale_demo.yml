@@ -67,8 +67,8 @@
                   'account_id': account_sale_id,
               }
               self._update('account.invoice.line', 'sale', vals, 'test_crm_sale_invoice_2_line_1')
-              self.env['account.invoice'].browse(ref('test_crm_sale_invoice_1')).signal_workflow('invoice_open')
-              self.env['account.invoice'].browse(ref('test_crm_sale_invoice_2')).signal_workflow('invoice_open')
+              self.env['account.invoice'].browse(ref('test_crm_sale_invoice_1')).action_invoice_open()
+              self.env['account.invoice'].browse(ref('test_crm_sale_invoice_2')).action_invoice_open()
               bank_journal_id = self.env['account.journal'].search([('type', '=', 'bank')], limit=1).id
               if bank_journal_id:
                   bank_journal_id = bank_journal_id

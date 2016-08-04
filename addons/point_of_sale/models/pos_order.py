@@ -464,7 +464,8 @@ class PosOrder(models.Model):
 
             new_invoice.with_context(local_context).sudo().compute_taxes()
             order.sudo().signal_workflow('invoice')
-            new_invoice.sudo().signal_workflow('validate')
+            # this workflow signal doesn't exist on account.invoice -> should it be 'invoice_open' ? (and now method .action_invoice_open())
+            # new_invoice.sudo().signal_workflow('validate')
 
         if not Invoice:
             return {}
@@ -523,7 +524,7 @@ class PosOrder(models.Model):
 
             if to_invoice:
                 pos_order.action_invoice()
-                pos_order.invoice_id.sudo().signal_workflow('invoice_open')
+                pos_order.invoice_id.sudo().action_invoice_open()
         return order_ids
 
     def test_paid(self):

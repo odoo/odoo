@@ -36,7 +36,7 @@ class TestAccountSupplierInvoice(AccountingTestCase):
         self.assertTrue((invoice.state == 'draft'), "Initially vendor bill state is Draft")
 
         #change the state of invoice to open by clicking Validate button
-        invoice.signal_workflow('invoice_open')
+        invoice.action_invoice_open()
 
         #I cancel the account move which is in posted state and verifies that it gives warning message
         with self.assertRaises(Warning):
