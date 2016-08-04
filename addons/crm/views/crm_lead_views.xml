@@ -168,7 +168,6 @@
                     <field name="country_id"/>
                     <field name="email_from"/>
                     <field name="phone"/>
-                    <field name="stage_id"/>
                     <field name="user_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="team_id"/>
@@ -336,7 +335,6 @@
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="groupby_salesperson" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" name="groupby_team" domain="[]" context="{'group_by':'team_id'}"/>
-                        <filter string="Stage" name="groupby_stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter name="customer" string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Campaign" name="groupby_campaign"  domain="[]" context="{'group_by':'campaign_id'}"/>
                         <filter string="Source" name="groupby_source" domain="[]" context="{'group_by':'source_id'}"/>
@@ -697,7 +695,7 @@
         <record model="ir.actions.act_window" id="crm_lead_all_leads">
             <field name="name">Leads</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">tree,kanban,graph,pivot,calendar,form</field>
+            <field name="view_mode">tree,graph,pivot,calendar,form</field>
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
             <field name="view_id" ref="crm_case_tree_view_leads"/>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
