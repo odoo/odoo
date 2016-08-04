@@ -114,7 +114,7 @@ class account_journal(models.Model):
         select_sql_clause = """SELECT sum(residual_company_signed) as total, min(date) as aggr_date from account_invoice where journal_id = %(journal_id)s and state = 'open'"""
         query = ''
         start_date = (first_day_of_week + timedelta(days=-7))
-        for i in range(0,6):
+        for i in range(0, 7):
             if i == 0:
                 query += "("+select_sql_clause+" and date < '"+start_date.strftime(DF)+"')"
             elif i == 6:
