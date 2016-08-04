@@ -492,6 +492,9 @@ class AccountInvoice(models.Model):
 
         if type in ('in_invoice', 'in_refund'):
             self.partner_bank_id = bank_id
+            if self.partner_id.property_purchase_currency_id.id:
+                self.currency_id = self.partner_id.property_purchase_currency_id.id
+
 
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
