@@ -2838,7 +2838,7 @@ class BaseModel(object):
             other = self.env[column._obj]
             # TODO the condition could use fields_get_keys().
             if column._fields_id not in other._fields:
-                raise UserError(_("There is no reference field '%s' found for '%s'") % (f._fields_id, f._obj))
+                raise UserError(_("There is no reference field '%s' found for '%s'") % (column._fields_id, column._obj))
 
     @api.model_cr
     def _m2m_raise_or_create_relation(self, column):
