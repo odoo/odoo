@@ -43,7 +43,7 @@ class Inventory(models.Model):
         'stock.location', 'Inventoried Location',
         readonly=True, required=True,
         states={'draft': [('readonly', False)]},
-        default=lambda self: getattr(self.env.ref('stock.warehouse0', raise_if_not_found=False) or self.env['stock.warehouse]'], 'lot_stock_id').id)
+        default=lambda self: getattr(self.env.ref('stock.warehouse0', raise_if_not_found=False) or self.env['stock.warehouse'], 'lot_stock_id').id)
     product_id = fields.Many2one(
         'product.product', 'Inventoried Product',
         readonly=True,
