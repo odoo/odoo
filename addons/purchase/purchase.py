@@ -281,6 +281,8 @@ class PurchaseOrder(models.Model):
     @api.multi
     def button_confirm(self):
         for order in self:
+            if order.state not in ['draft', 'sent']:
+                continue
             order._add_supplier_to_product()
             # Deal with double validation process
             if order.company_id.po_double_validation == 'one_step'\

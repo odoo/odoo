@@ -257,11 +257,6 @@ class purchase_requisition(osv.osv):
             if not confirm:
                 raise UserError(_('You have no line selected for buying.'))
 
-            #check for complete RFQ
-            for quotation in tender.purchase_ids:
-                if (self.check_valid_quotation(cr, uid, quotation, context=context)):
-                    #Set PO state to confirm
-                    po.button_confirm(cr, uid, [quotation.id], context=context)
 
             #get other confirmed lines per supplier
             for po_line in tender.po_line_ids:
