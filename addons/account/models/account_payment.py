@@ -162,6 +162,7 @@ class account_register_payments(models.TransientModel):
     def create_payment(self):
         payment = self.env['account.payment'].create(self.get_payment_vals())
         payment.post()
+        payment.invoice_ids.action_invoice_paid()
         return {'type': 'ir.actions.act_window_close'}
 
 
@@ -407,6 +408,7 @@ class account_payment(models.Model):
         aml_obj.create(liquidity_aml_dict)
 
         move.post()
+        self.env['account.invoice'].search([('payment_move_line_ids', 'in', move.line_ids.ids)]).action_invoice_paid()
         return move
 
     def _create_transfer_entry(self, amount):

@@ -1069,6 +1069,7 @@ class AccountInvoice(models.Model):
             'writeoff_account_id': writeoff_acc and writeoff_acc.id or False,
         })
         payment.post()
+        self.action_invoice_paid()
 
     @api.v7
     def pay_and_reconcile(self, cr, uid, ids, pay_journal_id, pay_amount=None, date=None, writeoff_acc_id=None, context=None):
