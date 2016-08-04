@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
     'name': 'ESC/POS Hardware Driver',
-    'version': '1.0',
     'category': 'Point of Sale',
     'sequence': 6,
     'website': 'https://www.odoo.com/page/point-of-sale',
@@ -22,8 +20,4 @@ that would need such functionality.
     'external_dependencies': {
         'python' : ['usb.core','serial','qrcode'],
     },
-    'test': [
-    ],
-    'installable': True,
-    'auto_install': False,
 }

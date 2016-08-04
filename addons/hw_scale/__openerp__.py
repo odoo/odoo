@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
     'name': 'Weighing Scale Hardware Driver',
-    'version': '1.0',
     'category': 'Point of Sale',
     'sequence': 6,
     'summary': 'Hardware Driver for Weighing Scales',
@@ -19,8 +17,4 @@ such as the Mettler Toledo Ariva.
 """,
     'depends': ['hw_proxy'],
     'external_dependencies': {'python': ['serial']},
-    'test': [
-    ],
-    'installable': True,
-    'auto_install': False,
 }
