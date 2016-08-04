@@ -134,6 +134,29 @@
             sequence="99"/>
 
         <!-- BOM Line -->
+        <record id="mrp_bom_line_view_form" model="ir.ui.view">
+            <field name="name">mrp.bom.line.view.form</field>
+            <field name="model">mrp.bom.line</field>
+            <field name="arch" type="xml">
+                <form string="Bill of Material line">
+                    <group>
+                        <group string="Product">
+                            <field name="product_id"/>
+                            <label for="product_qty" string="Quantity"/>
+                            <div class="o_row">
+                                <field name="product_qty"/>
+                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                            </div>
+                        </group>
+                        <group string="BoM details">
+                            <field name="sequence" widget="handle"/>
+                            <field name="operation_id" groups="mrp.group_mrp_routings"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="mrp_bom_component_tree_view" model="ir.ui.view">
             <field name="name">mrp.bom.component.tree</field>
             <field name="model">mrp.bom.line</field>
