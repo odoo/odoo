@@ -20,12 +20,10 @@ class SaleOrder(models.Model):
             for line in order.order_line:
                 amount_untaxed += line.price_subtotal
                 amount_tax += line.price_tax
-                discount_amount += line.discount_amount
             order.update({
                 'amount_untaxed': order.pricelist_id.currency_id.round(amount_untaxed),
                 'amount_tax': order.pricelist_id.currency_id.round(amount_tax),
                 'amount_total': amount_untaxed + amount_tax,
-                'discount_amount': discount_amount,
             })
 
 class SaleOrderLine(models.Model):
@@ -41,7 +39,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             discount_amount = line.price_unit * (line.discount or 0.0) / 100.0
-            taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_id)
+            taxes = line.tax_id.compute_all(price, discount_amount, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_id)
             line.update({
                 'discount_amount': discount_amount,
                 'price_tax': taxes['total_included'] - taxes['total_excluded'],
