@@ -110,7 +110,7 @@ class ProcurementOrder(models.Model):
         states={'confirmed': [('readonly', False)]})
     product_qty = fields.Float(
         'Quantity',
-        digits_compute=dp.get_precision('Product Unit of Measure'),
+        digits=dp.get_precision('Product Unit of Measure'),
         readonly=True, required=True,
         states={'confirmed': [('readonly', False)]})
     product_uom = fields.Many2one(

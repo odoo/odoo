@@ -36,7 +36,7 @@ class MrpBom(models.Model):
     bom_line_ids = fields.One2many('mrp.bom.line', 'bom_id', 'BoM Lines', copy=True)
     product_qty = fields.Float(
         'Quantity', default=1.0,
-        digits_compute=dp.get_precision('Unit of Measure'), required=True)
+        digits=dp.get_precision('Unit of Measure'), required=True)
     product_uom_id = fields.Many2one(
         'product.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id, oldname='product_uom', required=True,
@@ -151,7 +151,7 @@ class MrpBomLine(models.Model):
         'product.product', 'Product', required=True)
     product_qty = fields.Float(
         'Product Quantity', default=1.0,
-        digits_compute=dp.get_precision('Product Unit of Measure'), required=True)
+        digits=dp.get_precision('Product Unit of Measure'), required=True)
     product_uom_id = fields.Many2one(
         'product.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id,

@@ -53,11 +53,11 @@ class MrpWorkorder(models.Model):
     qty_produced = fields.Float(
         'Quantity', default=0.0,
         readonly=True,
-        digits_compute=dp.get_precision('Product Unit of Measure'),
+        digits=dp.get_precision('Product Unit of Measure'),
         help="The number of products already handled by this work order")
     qty_producing = fields.Float(
         'Currently Produced Quantity', default=1.0,
-        digits_compute=dp.get_precision('Product Unit of Measure'),
+        digits=dp.get_precision('Product Unit of Measure'),
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     is_produced = fields.Boolean(compute='_compute_is_produced')
 
