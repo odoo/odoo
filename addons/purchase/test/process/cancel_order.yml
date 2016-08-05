@@ -8,8 +8,8 @@
 -
   I confirm the purchase order.
 -
-  !python {model: purchase.order}: |
-    self.button_confirm(cr, uid, [ref("purchase_order_5")])
+  !python {model: purchase.order, id: purchase_order_5}: |
+    self.button_confirm()
 -
   I check the "Approved" status  after confirmed RFQ.
 -
@@ -18,14 +18,13 @@
 -
   First I cancel  receptions related to this order if order shipped.
 -
-  !python {model: purchase.order}: |
-    order = self.browse(cr, uid, ref("purchase_order_5"))
-    self.pool.get('stock.picking').action_cancel(cr, uid, [picking.id for picking in  order.picking_ids])
+  !python {model: purchase.order, id: purchase_order_5}: |
+    self.env['stock.picking'].browse([picking.id for picking in self.picking_ids]).action_cancel()
 -
   Now I am able to cancel purchase order.
 -
-  !python {model: purchase.order}: |
-    self.button_cancel(cr, uid, [ref("purchase_order_5")])
+  !python {model: purchase.order, id: purchase_order_5}: |
+    self.button_cancel()
 -
   I check that order is cancelled.
 -

@@ -3,14 +3,15 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from openerp import api, fields, models, _, SUPERUSER_ID
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.translate import _
-from openerp.tools.float_utils import float_is_zero, float_compare
-import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError, AccessError
-from openerp.tools.misc import formatLang
-from openerp.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
+
+from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.float_utils import float_is_zero, float_compare
+from odoo.exceptions import UserError, AccessError
+from odoo.tools.misc import formatLang
+from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
+import odoo.addons.decimal_precision as dp
+
 
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
@@ -96,7 +97,7 @@ class PurchaseOrder(models.Model):
         'cancel': [('readonly', True)],
     }
 
-    name = fields.Char('Order Reference', required=True, select=True, copy=False, default='New')
+    name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
     origin = fields.Char('Source Document', copy=False,\
         help="Reference of the document that generated this purchase order "
              "request (e.g. a sale order or an internal procurement request)")
@@ -105,9 +106,9 @@ class PurchaseOrder(models.Model):
              "It's used to do the matching when you receive the "
              "products as this reference is usually written on the "
              "delivery order sent by your vendor.")
-    date_order = fields.Datetime('Order Date', required=True, states=READONLY_STATES, select=True, copy=False, default=fields.Datetime.now,\
+    date_order = fields.Datetime('Order Date', required=True, states=READONLY_STATES, index=True, copy=False, default=fields.Datetime.now,\
         help="Depicts the date where the Quotation should be validated and converted into a purchase order.")
-    date_approve = fields.Date('Approval Date', readonly=1, select=True, copy=False)
+    date_approve = fields.Date('Approval Date', readonly=1, index=True, copy=False)
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True, states=READONLY_STATES, change_default=True, track_visibility='always')
     dest_address_id = fields.Many2one('res.partner', string='Drop Ship Address', states=READONLY_STATES,\
         help="Put an address if you want to deliver directly from the vendor to the customer. "\
@@ -121,7 +122,7 @@ class PurchaseOrder(models.Model):
         ('purchase', 'Purchase Order'),
         ('done', 'Locked'),
         ('cancel', 'Cancelled')
-        ], string='Status', readonly=True, select=True, copy=False, default='draft', track_visibility='onchange')
+        ], string='Status', readonly=True, index=True, copy=False, default='draft', track_visibility='onchange')
     order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True)
     notes = fields.Text('Terms and Conditions')
 
@@ -137,7 +138,7 @@ class PurchaseOrder(models.Model):
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking', string='Receptions', copy=False)
 
     # There is no inverse function on purpose since the date may be different on each line
-    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', store=True, select=True, oldname='minimum_planned_date')
+    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', store=True, index=True, oldname='minimum_planned_date')
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
@@ -149,7 +150,7 @@ class PurchaseOrder(models.Model):
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     create_uid = fields.Many2one('res.users', 'Responsible')
-    company_id = fields.Many2one('res.company', 'Company', required=True, select=1, states=READONLY_STATES, default=lambda self: self.env.user.company_id.id)
+    company_id = fields.Many2one('res.company', 'Company', required=True, index=True, states=READONLY_STATES, default=lambda self: self.env.user.company_id.id)
 
     picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=READONLY_STATES, required=True, default=_default_picking_type,\
         help="This will determine picking type of incoming shipment")
@@ -548,7 +549,7 @@ class PurchaseOrderLine(models.Model):
     name = fields.Text(string='Description', required=True)
     sequence = fields.Integer(string='Sequence', default=10)
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
-    date_planned = fields.Datetime(string='Scheduled Date', required=True, select=True)
+    date_planned = fields.Datetime(string='Scheduled Date', required=True, index=True)
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, required=True)
@@ -559,7 +560,7 @@ class PurchaseOrderLine(models.Model):
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
     price_tax = fields.Monetary(compute='_compute_amount', string='Tax', store=True)
 
-    order_id = fields.Many2one('purchase.order', string='Order Reference', select=True, required=True, ondelete='cascade')
+    order_id = fields.Many2one('purchase.order', string='Order Reference', index=True, required=True, ondelete='cascade')
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     company_id = fields.Many2one('res.company', related='order_id.company_id', string='Company', store=True, readonly=True)
@@ -776,6 +777,7 @@ class PurchaseOrderLine(models.Model):
 
 class ProcurementRule(models.Model):
     _inherit = 'procurement.rule'
+
     @api.model
     def _get_action(self):
         return [('buy', _('Buy'))] + super(ProcurementRule, self)._get_action()
@@ -1051,6 +1053,7 @@ class ProductProduct(models.Model):
         return True
 
     purchase_count = fields.Integer(compute='_purchase_count', string='# Purchases')
+
 
 class ProductCategory(models.Model):
     _inherit = "product.category"

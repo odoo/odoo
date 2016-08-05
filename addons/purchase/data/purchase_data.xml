@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <!-- notify all employees of module installation -->
@@ -44,5 +44,13 @@
             <field name="sequence">5</field>
         </record>
 
+        <!-- Sequences for purchase.order --> 
+        <record id="seq_purchase_order" model="ir.sequence">
+            <field name="name">Purchase Order</field>
+            <field name="code">purchase.order</field>
+            <field name="prefix">PO</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
     </data>
-</openerp>
+</odoo>
