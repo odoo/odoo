@@ -30,7 +30,6 @@ The validation can be configured in the company:
     'data': [
         'security/ir.model.access.csv',
         'security/hr_timesheet_sheet_security.xml',
-        'data/hr_timesheet_workflow.xml',
         'data/hr_timesheet_sheet_data.xml',
         'views/hr_timesheet_sheet_templates.xml',
         'views/hr_timesheet_sheet_views.xml',
