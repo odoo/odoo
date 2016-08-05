@@ -205,25 +205,13 @@ class sale_order(osv.osv):
         lines = [(5,)]
         quote_template = self.pool.get('sale.quote.template').browse(cr, uid, template_id, context=context)
         for line in quote_template.quote_line:
-            res = self.pool.get('sale.order.line').product_id_change(cr, uid, False,
-                False, line.product_id.id, line.product_uom_qty, line.product_uom_id.id, line.product_uom_qty,
-                line.product_uom_id.id, line.name, partner, False, True, time.strftime('%Y-%m-%d'),
-                False, fiscal_position_id, True, context)
-            data = res.get('value', {})
             if pricelist_id:
-                uom_context = context.copy()
-                uom_context['uom'] = line.product_uom_id.id
+                uom_context = dict(context, uom=line.product_uom_id.id)
                 price = pricelist_obj.get_product_price(cr, uid, [pricelist_id], line.product_id, 1, False, context=uom_context)
             else:
                 price = line.price_unit
 
-            if 'tax_id' in data:
-                data['tax_id'] = [(6, 0, data['tax_id'])]
-            else:
-                fpos = (fiscal_position_id and self.pool['account.fiscal.position'].browse(cr, uid, fiscal_position_id)) or False
-                taxes = fpos.map_tax(line.product_id.product_tmpl_id.taxes_id).ids if fpos else line.product_id.product_tmpl_id.taxes_id.ids
-                data['tax_id'] = [(6, 0, taxes)]
-            data.update({
+            data = {
                 'name': line.name,
                 'price_unit': price,
                 'discount': line.discount,
@@ -234,8 +222,17 @@ class sale_order(osv.osv):
                 'website_description': line.website_description,
                 'state': 'draft',
                 'customer_lead': self._get_customer_lead(cr, uid, line.product_id.product_tmpl_id),
-            })
+            }
+
+            if fiscal_position_id:
+                fpos = self.pool['account.fiscal.position'].browse(cr, uid, fiscal_position_id)
+                taxes = fpos.map_tax(line.product_id.product_tmpl_id.taxes_id).ids
+            else:
+                taxes = line.product_id.product_tmpl_id.taxes_id.ids
+            data['tax_id'] = [(6, 0, taxes)]
+
             lines.append((0, 0, data))
+
         options = []
         for option in quote_template.options:
             if pricelist_id:
