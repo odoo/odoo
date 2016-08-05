@@ -891,9 +891,44 @@ class _rml_flowable(object):
             thickness_hr=node.get('thickness') or 1
             lineCap_hr=node.get('lineCap') or 'round'
             return platypus.flowables.HRFlowable(width=width_hr,color=color.get(color_hr),thickness=float(thickness_hr),lineCap=str(lineCap_hr))
+        elif node.tag == 'keepInFrame':
+            maxWidth = utils.unit_get(node.get('maxWidth')) or 0
+            maxHeight = utils.unit_get(node.get('maxHeight')) or 0
+            mergeSpace = node.get('mergeSpace') or 1
+            mode = node.get('mode') or 'shrink'
+            name = node.get('name') or ''
+            hAlign = node.get('hAlign') or 'LEFT'
+            vAlign = node.get('vAlign') or 'BOTTOM'
+            fakeWidth = False
+            content = self.render_child(node)
+            return platypus.flowables.KeepInFrame(maxWidth=maxWidth,
+                                                  maxHeight=maxHeight,
+                                                  content=content,
+                                                  mergeSpace=mergeSpace,
+                                                  mode=mode,
+                                                  name=name,
+                                                  hAlign=hAlign,
+                                                  vAlign=vAlign,
+                                                  fakeWidth=fakeWidth)
         else:
             sys.stderr.write('Warning: flowable not yet implemented: %s !\n' % (node.tag,))
             return None
+
+    def render_child(self, node_story):
+        def process_story(node_story):
+            sub_story = []
+            for node in utils._child_get(node_story, self):
+                if node.tag == etree.Comment:
+                    node.text = ''
+                    continue
+                flow = self._flowable(node)
+                if flow:
+                    if isinstance(flow,list):
+                        sub_story = sub_story + flow
+                    else:
+                        sub_story.append(flow)
+            return sub_story
+        return process_story(node_story)
 
     def render(self, node_story):
         def process_story(node_story):
