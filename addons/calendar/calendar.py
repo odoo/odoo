@@ -315,7 +315,7 @@ class res_partner(osv.Model):
 
     def _set_calendar_last_notif_ack(self, cr, uid, context=None):
         partner = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id
-        self.write(cr, uid, partner.id, {'calendar_last_notif_ack': datetime.now()}, context=context)
+        self.write(cr, uid, partner.id, {'calendar_last_notif_ack': datetime.utcnow()}, context=context)
         return
 
 
