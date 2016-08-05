@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from openerp import api, fields, models
-from openerp.exceptions import Warning
-from openerp.tools.translate import _
-import openerp.addons.decimal_precision as dp
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo import api, fields, models
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+
+import odoo.addons.decimal_precision as dp
 
 
 class AccountInvoice(models.Model):
@@ -85,7 +85,6 @@ class AccountInvoiceLine(models.Model):
         self.onchange_asset_category_id()
         return result
 
-
     @api.onchange('product_id')
     def _onchange_product_id(self):
         vals = super(AccountInvoiceLine, self)._onchange_product_id()
@@ -96,11 +95,6 @@ class AccountInvoiceLine(models.Model):
                 self.asset_category_id = self.product_id.product_tmpl_id.asset_category_id
         return vals
 
-    @api.onchange('asset_category_id')
-    def onchange_asset_category_id(self):
-        if self.asset_category_id:
-            self.account_id = self.asset_category_id.account_asset_id
-
     def _set_additional_fields(self, invoice):
         if not self.asset_category_id:
             if invoice.type == 'out_invoice':
@@ -108,19 +102,3 @@ class AccountInvoiceLine(models.Model):
             elif invoice.type == 'in_invoice':
                 self.asset_category_id = self.product_id.product_tmpl_id.asset_category_id.id
         super(AccountInvoiceLine, self)._set_additional_fields(invoice)
-
-
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
-    asset_category_id = fields.Many2one('account.asset.category', string='Asset Type', company_dependent=True, ondelete="restrict")
-    deferred_revenue_category_id = fields.Many2one('account.asset.category', string='Deferred Revenue Type', company_dependent=True, ondelete="restrict")
-
-
-    @api.multi
-    def _get_asset_accounts(self):
-        res = super(ProductTemplate, self)._get_asset_accounts()
-        if self.asset_category_id:
-            res['stock_input'] = self.property_account_expense_id
-        if self.deferred_revenue_category_id:
-            res['stock_output'] = self.property_account_income_id
-        return res
