@@ -26,6 +26,8 @@ DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 EMPTY_DICT = frozendict()
 
+RENAMED_ATTRS = [('select', 'index'), ('digits_compute', 'digits')]
+
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__[:-7] + '.schema')
 
@@ -452,6 +454,12 @@ class Field(object):
             attrs['compute'] = self._compute_sparse
             if not attrs.get('readonly'):
                 attrs['inverse'] = self._inverse_sparse
+
+        # check for renamed attributes (conversion errors)
+        for key1, key2 in RENAMED_ATTRS:
+            if key1 in attrs:
+                _logger.warning("Field %s: parameter %r is no longer supported; use %r instead.",
+                                self, key1, key2)
 
         self.set_all_attrs(attrs)
 
