@@ -3,10 +3,10 @@
 from operator import itemgetter
 import time
 
-from openerp import api, fields, models, _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.exceptions import ValidationError
-from openerp.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
+from odoo import api, fields, models, _
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.exceptions import ValidationError
+from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
@@ -44,25 +44,7 @@ class AccountFiscalPosition(models.Model):
             raise ValidationError(_('Invalid "Zip Range", please configure it properly.'))
         return True
 
-    @api.v7
-    def map_tax(self, cr, uid, fposition_id, taxes, product=None, partner=None, context=None):
-        if not taxes:
-            return []
-        if not fposition_id:
-            return map(lambda x: x.id, taxes)
-        result = set()
-        for t in taxes:
-            ok = False
-            for tax in fposition_id.tax_ids:
-                if tax.tax_src_id.id == t.id:
-                    if tax.tax_dest_id:
-                        result.add(tax.tax_dest_id.id)
-                    ok = True
-            if not ok:
-                result.add(t.id)
-        return list(result)
-
-    @api.v8     # noqa
+    @api.model     # noqa
     def map_tax(self, taxes, product=None, partner=None):
         result = self.env['account.tax'].browse()
         for tax in taxes:
@@ -76,24 +58,14 @@ class AccountFiscalPosition(models.Model):
                 result |= tax
         return result
 
-    @api.v7
-    def map_account(self, cr, uid, fposition_id, account_id, context=None):
-        if not fposition_id:
-            return account_id
-        for pos in fposition_id.account_ids:
-            if pos.account_src_id.id == account_id:
-                account_id = pos.account_dest_id.id
-                break
-        return account_id
-
-    @api.v8
+    @api.model
     def map_account(self, account):
         for pos in self.account_ids:
             if pos.account_src_id == account:
                 return pos.account_dest_id
         return account
 
-    @api.v8
+    @api.model
     def map_accounts(self, accounts):
         """ Receive a dictionary having accounts in values and try to replace those accounts accordingly to the fiscal position.
         """

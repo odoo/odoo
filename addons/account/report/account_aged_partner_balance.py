@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import time
-from openerp import api, models, _
-from openerp.tools import float_is_zero
+from odoo import api, models, _
+from odoo.tools import float_is_zero
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
