@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
     <data noupdate="1">
 
         <!-- goal definitions -->
@@ -120,7 +120,7 @@
             <field name="name">Monthly Sales Targets</field>
             <field name="period">monthly</field>
             <field name="visibility_mode">ranking</field>
-            <field name="user_domain" eval="[('groups_id', 'in', ref('sales_team.group_sale_salesman'))]" />
+            <field name="user_domain" eval="str([('groups_id', 'in', ref('sales_team.group_sale_salesman'))])" />
             <field name="report_message_frequency">weekly</field>
         </record>
 
@@ -128,7 +128,7 @@
             <field name="name">Lead Acquisition</field>
             <field name="period">monthly</field>
             <field name="visibility_mode">ranking</field>
-            <field name="user_domain" eval="[('groups_id', 'in', ref('sales_team.group_sale_salesman'))]" />
+            <field name="user_domain" eval="str([('groups_id', 'in', ref('sales_team.group_sale_salesman'))])" />
             <field name="report_message_frequency">weekly</field>
         </record>
 
@@ -160,4 +160,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

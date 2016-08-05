@@ -103,15 +103,6 @@ class Users(models.Model):
             user.karma += karma
         return True
 
-    @api.model
-    def get_serialised_gamification_summary(self, excluded_categories=None):
-        if isinstance(excluded_categories, list):
-            if 'forum' not in excluded_categories:
-                excluded_categories.append('forum')
-        else:
-            excluded_categories = ['forum']
-        return super(Users, self).get_serialised_gamification_summary(excluded_categories=excluded_categories)
-
     # Wrapper for call_kw with inherits
     @api.multi
     def open_website_url(self):
