@@ -10,7 +10,7 @@ class MembershipInvoice(models.TransientModel):
     _description = "Membership Invoice"
 
     product_id = fields.Many2one('product.product', string='Membership', required=True)
-    member_price = fields.Float(string='Member Price', digits_compute= dp.get_precision('Product Price'), required=True)
+    member_price = fields.Float(string='Member Price', digits= dp.get_precision('Product Price'), required=True)
 
     @api.onchange('product_id')
     def onchange_product(self):

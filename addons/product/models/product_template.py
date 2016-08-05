@@ -59,25 +59,25 @@ class ProductTemplate(models.Model):
     # price fields
     price = fields.Float(
         'Price', compute='_compute_template_price', inverse='_set_template_price',
-        digits_compute=dp.get_precision('Product Price'))
+        digits=dp.get_precision('Product Price'))
     list_price = fields.Float(
         'Sale Price', default=1.0,
-        digits_compute=dp.get_precision('Product Price'),
+        digits=dp.get_precision('Product Price'),
         help="Base price to compute the customer price. Sometimes called the catalog price.")
     lst_price = fields.Float(
         'Public Price', related='list_price',
-        digits_compute=dp.get_precision('Product Price'))
+        digits=dp.get_precision('Product Price'))
     standard_price = fields.Float(
         'Cost', compute='_compute_standard_price',
         inverse='_set_standard_price', search='_search_standard_price',
-        digits_compute=dp.get_precision('Product Price'), groups="base.group_user",
+        digits=dp.get_precision('Product Price'), groups="base.group_user",
         help="Cost of the product, in the default unit of measure of the product.")
 
     volume = fields.Float(
         'Volume', compute='_compute_volume', inverse='_set_volume',
         help="The volume in m3.", store=True)
     weight = fields.Float(
-        'Weight', compute='_compute_weight', digits_compute=dp.get_precision('Stock Weight'),
+        'Weight', compute='_compute_weight', digits=dp.get_precision('Stock Weight'),
         inverse='_set_weight', store=True,
         help="The weight of the contents in Kg, not including any packaging, etc.")
 

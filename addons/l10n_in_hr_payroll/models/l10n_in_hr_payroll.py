@@ -13,16 +13,16 @@ class HrContract(models.Model):
     """
     _inherit = 'hr.contract'
 
-    tds = fields.Float(string='TDS', digits_compute=dp.get_precision('Payroll'),
+    tds = fields.Float(string='TDS', digits=dp.get_precision('Payroll'),
         help='Amount for Tax Deduction at Source')
     driver_salay = fields.Boolean(string='Driver Salary', help='Check this box if you provide allowance for driver')
-    medical_insurance = fields.Float(string='Medical Insurance', digits_compute=dp.get_precision('Payroll'),
+    medical_insurance = fields.Float(string='Medical Insurance', digits=dp.get_precision('Payroll'),
         help='Deduction towards company provided medical insurance')
-    voluntary_provident_fund = fields.Float(string='Voluntary Provident Fund (%)', digits_compute=dp.get_precision('Payroll'),
+    voluntary_provident_fund = fields.Float(string='Voluntary Provident Fund (%)', digits=dp.get_precision('Payroll'),
         help='VPF is a safe option wherein you can contribute more than the PF ceiling of 12% that has been mandated by the government and VPF computed as percentage(%)')
-    house_rent_allowance_metro_nonmetro = fields.Float(string='House Rent Allowance (%)', digits_compute=dp.get_precision('Payroll'),
+    house_rent_allowance_metro_nonmetro = fields.Float(string='House Rent Allowance (%)', digits=dp.get_precision('Payroll'),
         help='HRA is an allowance given by the employer to the employee for taking care of his rental or accommodation expenses for metro city it is 50% and for non metro 40%. \nHRA computed as percentage(%)')
-    supplementary_allowance = fields.Float(string='Supplementary Allowance', digits_compute=dp.get_precision('Payroll'))
+    supplementary_allowance = fields.Float(string='Supplementary Allowance', digits=dp.get_precision('Payroll'))
 
 
 class HrPayrollAdvice(models.Model):
@@ -165,7 +165,7 @@ class HrPayrollAdviceLine(models.Model):
     name = fields.Char('Bank Account No.', required=True)
     ifsc_code = fields.Char(string='IFSC Code')
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
-    bysal = fields.Float(string='By Salary', digits_compute=dp.get_precision('Payroll'))
+    bysal = fields.Float(string='By Salary', digits=dp.get_precision('Payroll'))
     debit_credit = fields.Char(string='C/D', default='C')
     company_id = fields.Many2one('res.company', related='advice_id.company_id', string='Company', store=True)
     ifsc = fields.Boolean(related='advice_id.neft', string='IFSC')
