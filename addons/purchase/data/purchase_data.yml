@@ -1,0 +1,5 @@
+-
+  !python {model: stock.warehouse, id: stock.warehouse0}: |
+    #enable purchase on main warehouse
+    self.write({'buy_to_resupply': True})
+

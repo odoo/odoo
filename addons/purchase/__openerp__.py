@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
     'name': 'Purchase Management',
     'version': '1.2',
@@ -30,21 +29,19 @@ Dashboard / Reports for Purchase Management will include:
     'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
-        'invoice_view.xml',
-        'purchase_sequence.xml',
-        'company_view.xml',
-        'purchase_data.xml',
-        'purchase_data.yml',
-        'purchase_report.xml',
-        'purchase_view.xml',
-        'stock_view.xml',
-        'partner_view.xml',
-        'report/purchase_report_view.xml',
+        'views/account_invoice_views.xml',
+        'views/res_company_views.xml',
+        'data/purchase_data.xml',
+        'data/purchase_data.yml',
+        'report/purchase_reports.xml',
+        'views/purchase_views.xml',
+        'views/stock_views.xml',
+        'views/res_partner_views.xml',
+        'report/purchase_report_views.xml',
         'data/mail_template_data.xml',
-        'res_config_view.xml',
-
-        'views/report_purchaseorder.xml',
-        'views/report_purchasequotation.xml',
+        'views/res_config_views.xml',
+        'report/purchase_order_templates.xml',
+        'report/purchase_quotation_templates.xml',
     ],
     'test': [
         '../account/test/account_minimal_test.xml',
@@ -53,16 +50,15 @@ Dashboard / Reports for Purchase Management will include:
         'test/process/run_scheduler.yml',
         'test/fifo_price.yml',
         'test/fifo_returns.yml',
-        # 'test/costmethodchange.yml',
         'test/process/cancel_order.yml',
         'test/ui/duplicate_order.yml',
         'test/ui/delete_order.yml',
         'test/average_price.yml',
     ],
     'demo': [
-        'purchase_order_demo.yml',
-        'purchase_demo.xml',
-        'purchase_stock_demo.yml',
+        'data/purchase_order_demo.yml',
+        'data/purchase_demo.xml',
+        'data/purchase_stock_demo.yml',
     ],
     'installable': True,
     'auto_install': False,
