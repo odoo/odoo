@@ -139,8 +139,7 @@ class HrPayslipRun(models.Model):
                     })
             for slip in run.slip_ids:
                 # TODO is it necessary to interleave the calls ?
-                slip.signal_workflow('hr_verify_sheet')
-                slip.signal_workflow('process_sheet')
+                slip.action_payslip_done()
                 if not slip.employee_id.bank_account_id or not slip.employee_id.bank_account_id.acc_number:
                     raise UserError(_('Please define bank account for the %s employee') % (slip.employee_id.name))
                 payslip_line = self.env['hr.payslip.line'].search([('slip_id', '=', slip.id), ('code', '=', 'NET')], limit=1)
