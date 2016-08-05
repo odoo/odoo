@@ -21,7 +21,7 @@
 
 from lxml import etree
 import re
-rml_parents = ['tr','story','section']
+rml_parents = ['tr','story','section','keepInFrame','td']
 html_parents = ['tr','body','div']
 sxw_parents = ['{http://openoffice.org/2000/table}table-row','{http://openoffice.org/2000/office}body','{http://openoffice.org/2000/text}section']
 odt_parents = ['{urn:oasis:names:tc:opendocument:xmlns:office:1.0}body','{urn:oasis:names:tc:opendocument:xmlns:table:1.0}table-row','{urn:oasis:names:tc:opendocument:xmlns:text:1.0}section']
