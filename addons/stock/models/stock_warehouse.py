@@ -732,15 +732,15 @@ class Orderpoint(models.Model):
         readonly=True, required=True,
         default=lambda self: self._context.get('product_uom', False))
     product_min_qty = fields.Float(
-        'Minimum Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True,
+        'Minimum Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True,
         help="When the virtual stock goes below the Min Quantity specified for this field, Odoo generates "
              "a procurement to bring the forecasted quantity to the Max Quantity.")
     product_max_qty = fields.Float(
-        'Maximum Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True,
+        'Maximum Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True,
         help="When the virtual stock goes below the Min Quantity, Odoo generates "
              "a procurement to bring the forecasted quantity to the Quantity specified as Max Quantity.")
     qty_multiple = fields.Float(
-        'Qty Multiple', digits_compute=dp.get_precision('Product Unit of Measure'),
+        'Qty Multiple', digits=dp.get_precision('Product Unit of Measure'),
         default=1, required=True,
         help="The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.")
     procurement_ids = fields.One2many('procurement.order', 'orderpoint_id', 'Created Procurements')
