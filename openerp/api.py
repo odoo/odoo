@@ -42,6 +42,7 @@ __all__ = [
     'cr_uid_ids', 'cr_uid_ids_context',
     'cr_uid_records', 'cr_uid_records_context',
     'constrains', 'depends', 'onchange', 'returns',
+    'call_kw',
 ]
 
 import logging
@@ -74,6 +75,19 @@ WRAPPED_ATTRS = ('__module__', '__name__', '__doc__', '_constrains',
                  '_depends', '_onchange', '_returns', 'clear_cache')
 
 INHERITED_ATTRS = ('_returns',)
+
+
+class Params(object):
+    def __init__(self, args, kwargs):
+        self.args = args
+        self.kwargs = kwargs
+    def __str__(self):
+        params = []
+        for arg in self.args:
+            params.append(repr(arg))
+        for item in sorted(self.kwargs.iteritems()):
+            params.append("%s=%r" % item)
+        return ', '.join(params)
 
 
 class Meta(type):
@@ -641,6 +655,30 @@ def expected(decorator, func):
     """ Decorate ``func`` with ``decorator`` if ``func`` is not wrapped yet. """
     return decorator(func) if not hasattr(func, '_api') else func
 
+
+
+def call_kw_model(method, self, args, kwargs):
+    context, args, kwargs = split_context(method, args, kwargs)
+    recs = self.with_context(context or {})
+    _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
+    result = method(recs, *args, **kwargs)
+    return downgrade(method, result, recs, args, kwargs)
+
+def call_kw_multi(method, self, args, kwargs):
+    ids, args = args[0], args[1:]
+    context, args, kwargs = split_context(method, args, kwargs)
+    recs = self.with_context(context or {}).browse(ids)
+    _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
+    result = method(recs, *args, **kwargs)
+    return downgrade(method, result, recs, args, kwargs)
+
+def call_kw(model, name, args, kwargs):
+    """ Invoke the given method ``name`` on the recordset ``model``. """
+    method = getattr(type(model), name)
+    if getattr(method, '_api', None) == 'model':
+        return call_kw_model(method, model, args, kwargs)
+    else:
+        return call_kw_multi(method, model, args, kwargs)
 
 
 class Environment(Mapping):
