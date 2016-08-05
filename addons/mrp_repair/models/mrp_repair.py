@@ -30,7 +30,7 @@ class Repair(models.Model):
         readonly=True, required=True, states={'draft': [('readonly', False)]})
     product_qty = fields.Float(
         'Product Quantity',
-        default=1.0, digits_compute=dp.get_precision('Product Unit of Measure'),
+        default=1.0, digits=dp.get_precision('Product Unit of Measure'),
         readonly=True, required=True, states={'draft': [('readonly', False)]})
     product_uom = fields.Many2one(
         'product.uom', 'Product Unit of Measure',
@@ -408,13 +408,13 @@ class RepairLine(models.Model):
     to_invoice = fields.Boolean('To Invoice')
     product_id = fields.Many2one('product.product', 'Product', required=True)
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
-    price_unit = fields.Float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price'))
+    price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', digits=0)
     tax_id = fields.Many2many(
         'account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes')
     product_uom_qty = fields.Float(
         'Quantity', default=1.0,
-        digits_compute=dp.get_precision('Product Unit of Measure'), required=True)
+        digits=dp.get_precision('Product Unit of Measure'), required=True)
     product_uom = fields.Many2one(
         'product.uom', 'Product Unit of Measure',
         required=True)
@@ -513,7 +513,7 @@ class RepairFee(models.Model):
         index=True, ondelete='cascade', required=True)
     name = fields.Char('Description', index=True, required=True)
     product_id = fields.Many2one('product.product', 'Product')
-    product_uom_qty = fields.Float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True)
+    product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
     price_unit = fields.Float('Unit Price', required=True)
     product_uom = fields.Many2one('product.uom', 'Product Unit of Measure', required=True)
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', digits=0)

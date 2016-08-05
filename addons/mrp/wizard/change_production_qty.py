@@ -14,7 +14,7 @@ class ChangeProductionQty(models.TransientModel):
     mo_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True)
     product_qty = fields.Float(
         'Product Qty',
-        digits_compute=dp.get_precision('Product Unit of Measure'), required=True)
+        digits=dp.get_precision('Product Unit of Measure'), required=True)
 
     @api.model
     def default_get(self, fields):

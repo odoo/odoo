@@ -107,8 +107,8 @@ class PurchaseRequisitionLine(models.Model):
 
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], required=True)
     product_uom_id = fields.Many2one('product.uom', string='Product Unit of Measure')
-    product_qty = fields.Float(string='Quantity', digits_compute=dp.get_precision('Product Unit of Measure'))
-    price_unit = fields.Float(string='Unit Price', digits_compute=dp.get_precision('Product Price'))
+    product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'))
+    price_unit = fields.Float(string='Unit Price', digits=dp.get_precision('Product Price'))
     qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered Quantities')
     requisition_id = fields.Many2one('purchase.requisition', string='Purchase Agreement', ondelete='cascade')
     company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True, default= lambda self: self.env['res.company']._company_default_get('purchase.requisition.line'))
