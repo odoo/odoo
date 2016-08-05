@@ -170,15 +170,17 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def write(self, vals):
-        purchase_old = self.invoice_line_ids.mapped('purchase_line_id.order_id')
-        invoice = super(AccountInvoice, self).write(vals)
-        purchase_new = self.invoice_line_ids.mapped('purchase_line_id.order_id')
-        #To get all po reference when updating invoice line or adding purchase order reference from vendor bill.
-        purchase = (purchase_old | purchase_new) - (purchase_old & purchase_new)
-        if purchase:
-            message = _("This vendor bill has been modified from: %s") % (",".join(["<a href=# data-oe-model=purchase.order data-oe-id="+str(order.id)+">"+order.name+"</a>" for order in purchase]))
-            self.message_post(body=message)
-        return invoice
+        result = True
+        for invoice in self:
+            purchase_old = invoice.invoice_line_ids.mapped('purchase_line_id.order_id')
+            result = result and super(AccountInvoice, invoice).write(vals)
+            purchase_new = invoice.invoice_line_ids.mapped('purchase_line_id.order_id')
+            #To get all po reference when updating invoice line or adding purchase order reference from vendor bill.
+            purchase = (purchase_old | purchase_new) - (purchase_old & purchase_new)
+            if purchase:
+                message = _("This vendor bill has been modified from: %s") % (",".join(["<a href=# data-oe-model=purchase.order data-oe-id="+str(order.id)+">"+order.name+"</a>" for order in purchase]))
+                invoice.message_post(body=message)
+        return result
 
 class AccountInvoiceLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
