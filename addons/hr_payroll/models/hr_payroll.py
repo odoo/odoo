@@ -173,6 +173,7 @@ class HrPayslip(models.Model):
     date_to = fields.Date(string='Date To', readonly=True, required=True,
         default=str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10],
         states={'draft': [('readonly', False)]})
+    # this is chaos: 4 states are defined, 3 are used ('verify' isn't) and 5 exist ('confirm' seems to have existed)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('verify', 'Waiting'),
@@ -223,24 +224,25 @@ class HrPayslip(models.Model):
             raise ValidationError(_("Payslip 'Date From' must be before 'Date To'."))
 
     @api.multi
-    def cancel_sheet(self):
-        return self.write({'state': 'cancel'})
+    def action_payslip_draft(self):
+        return self.write({'state': 'draft'})
 
     @api.multi
-    def process_sheet(self):
-        return self.write({'paid': True, 'state': 'done'})
-
-    @api.multi
-    def hr_verify_sheet(self):
+    def action_payslip_done(self):
         self.compute_sheet()
-        return self.write({'state': 'verify'})
+        return self.write({'state': 'done'})
+
+    @api.multi
+    def action_payslip_cancel(self):
+        if self.filtered(lambda slip: slip.state == 'done'):
+            raise UserError(_("Cannot cancel a payslip that is done."))
+        return self.write({'state': 'cancel'})
 
     @api.multi
     def refund_sheet(self):
         for payslip in self:
             copied_payslip = payslip.copy({'credit_note': True, 'name': _('Refund: ') + payslip.name})
-            copied_payslip.signal_workflow('hr_verify_sheet')
-            copied_payslip.signal_workflow('process_sheet')
+            copied_payslip.action_payslip_done()
         formview_ref = self.env.ref('hr_payroll.view_hr_payslip_form', False)
         treeview_ref = self.env.ref('hr_payroll.view_hr_payslip_tree', False)
         return {

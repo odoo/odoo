@@ -37,7 +37,7 @@ class TestPayslipFlow(TestPayslipBase):
         richard_payslip.with_context(context).compute_sheet()
 
         # Then I click on the 'Confirm' button on payslip
-        richard_payslip.signal_workflow('hr_verify_sheet')
+        richard_payslip.action_payslip_done()
 
         # I verify that the payslip is in done state
         self.assertEqual(richard_payslip.state, 'done', 'State not changed!')
