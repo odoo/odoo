@@ -26,7 +26,7 @@ var TopBarContent = Widget.extend({
 
         return this._super();
     },
-    edit_menu: function () {
+    edit_menu: function (action_before_reload) {
         var context = base.get_context();
         var def = $.Deferred();
         if ($("[data-content_menu_id]").length) {
@@ -39,8 +39,8 @@ var TopBarContent = Widget.extend({
             def.resolve(null);
         }
 
-        def.then(function (root_id) {
-            ajax.jsonRpc('/web/dataset/call_kw', 'call', {
+        return def.then(function (root_id) {
+            return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website.menu',
                 method: 'get_tree',
                 args: [context.website_id, root_id],
@@ -48,7 +48,13 @@ var TopBarContent = Widget.extend({
                     context: context
                 },
             }).then(function (menu) {
-                return new EditMenuDialog(this, {}, menu).open();
+                var dialog = new EditMenuDialog(this, {}, menu).open();
+                dialog.on("saved", null, function () {
+                    $.when(action_before_reload && action_before_reload()).then(function () {
+                        editor.reload();
+                    });
+                });
+                return dialog;
             });
         });
     },
@@ -301,9 +307,8 @@ var EditMenuDialog = widget.Dialog.extend({
             kwargs: {
                 context: context
             },
-        }).then(function (menu) {
-            _super();
-            editor.reload();
+        }).then(function () {
+            return _super();
         });
     },
 });

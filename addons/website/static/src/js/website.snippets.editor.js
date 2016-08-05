@@ -1,14 +1,54 @@
 odoo.define('website.snippets.editor', function (require) {
 'use strict';
 
-var animation = require('web_editor.snippets.animation');
+var core = require("web.core");
+var Dialog = require("web.Dialog");
+var editor = require("web_editor.editor");
 var options = require('web_editor.snippets.options');
 var snippet_editor = require('web_editor.snippet.editor');
+var website = require('website.website');
+
+var _t = core._t;
 
 snippet_editor.Class.include({
     _get_snippet_url: function () {
         return '/website/snippets';
     }
+});
+
+options.registry.menu_data = options.Class.extend({
+    start: function () {
+        this._super.apply(this, arguments);
+        this.link = this.$target.attr("href");
+    },
+
+    on_focus: function () {
+        this._super.apply(this, arguments);
+
+        (new Dialog(null, {
+            title: _t("Confirmation"),
+            $content: $(core.qweb.render("website.leaving_current_page_edition")),
+            buttons: [
+                {text: _t("Continue") + " *", classes: "btn-primary", click: save_editor_then_go_to.bind(null, this.link)},
+                {text: _t("Continue & Edit") + " *", classes: "btn-primary", click: save_editor_then_go_to.bind(null, this.link + "?enable_editor=1")},
+                {text: _t("Edit the menu") + " *", classes: "btn-primary", click: function () {
+                    var self = this;
+                    website.topBar.content_menu.edit_menu(function () {
+                        return editor.editor_bar.save_without_reload();
+                    }).then(function (dialog) {
+                        self.close();
+                    });
+                }},
+                {text: _t("Stay on this page"), close: true}
+            ]
+        })).open();
+
+        function save_editor_then_go_to(url) {
+            editor.editor_bar.save_without_reload().then(function () {
+                window.location.href = url;
+            });
+        }
+    },
 });
 
 options.registry.slider = options.Class.extend({
