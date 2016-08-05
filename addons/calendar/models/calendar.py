@@ -763,7 +763,8 @@ class Meeting(models.Model):
                 meeting.stop_date = False
                 meeting.stop_datetime = meeting.stop
 
-                meeting.duration = self._get_duration(meeting.start, meeting.stop)
+                if meeting.start and meeting.stop:
+                    meeting.duration = self._get_duration(meeting.start, meeting.stop)
 
     @api.multi
     def _inverse_dates(self):
