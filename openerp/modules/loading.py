@@ -7,7 +7,6 @@
 
 import itertools
 import logging
-import os
 import sys
 import threading
 import time
@@ -18,12 +17,10 @@ import openerp.modules.graph
 import openerp.modules.migration
 import openerp.modules.registry
 import openerp.tools as tools
-from openerp import SUPERUSER_ID
 
-from openerp.tools.translate import _
-from openerp.modules.module import initialize_sys_path, \
-    load_openerp_module, init_models, adapt_version
-from module import runs_post_install
+from openerp import api, SUPERUSER_ID
+from openerp.modules.module import adapt_version, initialize_sys_path, \
+                                   load_openerp_module, runs_post_install
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('openerp.tests')
@@ -131,12 +128,12 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if pre_init:
                 getattr(py_module, pre_init)(cr)
 
-        models = registry.load(cr, package)
+        model_names = registry.load(cr, package)
 
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             registry.setup_models(cr, partial=True)
-            init_models(models, cr, {'module': package.name})
+            registry.init_models(cr, model_names, {'module': package.name})
 
         idref = {}
 
@@ -145,27 +142,29 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             mode = 'init'
 
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
+            env = api.Environment(cr, SUPERUSER_ID, {})
             # Can't put this line out of the loop: ir.module.module will be
             # registered by init_models() above.
-            modobj = registry['ir.module.module']
+            module = env['ir.module.module'].browse(module_id)
 
             if perform_checks:
-                modobj.check(cr, SUPERUSER_ID, [module_id])
+                module.check()
 
             if package.state=='to upgrade':
                 # upgrading the module information
-                modobj.write(cr, SUPERUSER_ID, [module_id], modobj.get_values_from_terp(package.data))
+                module.write(module.get_values_from_terp(package.data))
             _load_data(cr, module_name, idref, mode, kind='data')
             has_demo = hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed')
             if has_demo:
                 _load_data(cr, module_name, idref, mode, kind='demo')
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
-                modobj.invalidate_cache(cr, SUPERUSER_ID, ['demo'], [module_id])
+                module.invalidate_cache(['demo'])
 
             migrations.migrate_module(package, 'post')
 
             # Update translations for all installed languages
-            modobj.update_translations(cr, SUPERUSER_ID, [module_id], None, {'overwrite': openerp.tools.config["overwrite_existing_translations"]})
+            overwrite = openerp.tools.config["overwrite_existing_translations"]
+            module.with_context(overwrite=overwrite).update_translations()
 
             registry._init_modules.add(package.name)
 
@@ -175,7 +174,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     getattr(py_module, post_init)(cr, registry)
 
             # validate all the views at a whole
-            registry['ir.ui.view']._validate_module_views(cr, SUPERUSER_ID, module_name)
+            env['ir.ui.view']._validate_module_views(module_name)
 
             if has_demo:
                 # launch tests only in demo mode, allowing tests to use demo data.
@@ -183,17 +182,14 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     # Yamel test
                     report.record_result(load_test(module_name, idref, mode))
                     # Python tests
-                    ir_http = registry['ir.http']
-                    if hasattr(ir_http, '_routing_map'):
-                        # Force routing map to be rebuilt between each module test suite
-                        del(type(ir_http)._routing_map)
+                    env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
                     report.record_result(openerp.modules.module.run_unit_tests(module_name, cr.dbname))
 
             processed_modules.append(package.name)
 
             ver = adapt_version(package.data['version'])
             # Set new modules and dependencies
-            modobj.write(cr, SUPERUSER_ID, [module_id], {'state': 'installed', 'latest_version': ver})
+            module.write({'state': 'installed', 'latest_version': ver})
 
             package.state = 'installed'
             for kind in ('init', 'demo', 'update'):
@@ -264,6 +260,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # This is a brand new registry, just created in
         # openerp.modules.registry.RegistryManager.new().
         registry = openerp.registry(cr.dbname)
+        env = api.Environment(cr, SUPERUSER_ID, {})
 
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
@@ -291,27 +288,27 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 2: Mark other modules to be loaded/updated
         if update_module:
-            modobj = registry['ir.module.module']
+            Module = env['ir.module.module']
             if ('base' in tools.config['init']) or ('base' in tools.config['update']):
                 _logger.info('updating modules list')
-                modobj.update_list(cr, SUPERUSER_ID)
+                Module.update_list()
 
             _check_module_names(cr, itertools.chain(tools.config['init'].keys(), tools.config['update'].keys()))
 
-            mods = [k for k in tools.config['init'] if tools.config['init'][k]]
-            if mods:
-                ids = modobj.search(cr, SUPERUSER_ID, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
-                if ids:
-                    modobj.button_install(cr, SUPERUSER_ID, ids)
+            module_names = [k for k, v in tools.config['init'].items() if v]
+            if module_names:
+                modules = Module.search([('state', '=', 'uninstalled'), ('name', 'in', module_names)])
+                if modules:
+                    modules.button_install()
 
-            mods = [k for k in tools.config['update'] if tools.config['update'][k]]
-            if mods:
-                ids = modobj.search(cr, SUPERUSER_ID, ['&', ('state', '=', 'installed'), ('name', 'in', mods)])
-                if ids:
-                    modobj.button_upgrade(cr, SUPERUSER_ID, ids)
+            module_names = [k for k, v in tools.config['update'].items() if v]
+            if module_names:
+                modules = Module.search([('state', '=', 'installed'), ('name', 'in', module_names)])
+                if modules:
+                    modules.button_upgrade()
 
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
-            modobj.invalidate_cache(cr, SUPERUSER_ID, ['state'])
+            Module.invalidate_cache(['state'])
 
 
         # STEP 3: Load marked modules (skipping base which was done in STEP 1)
@@ -345,7 +342,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if processed_modules:
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
-                if model in registry and not registry[model].is_transient() and not isinstance(registry[model], openerp.osv.orm.AbstractModel):
+                if model in registry and not registry[model]._abstract and not registry[model]._transient:
                     _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,,1,0,0,0',
                         model, model.replace('.', '_'), model.replace('.', '_'), model.replace('.', '_'))
 
@@ -353,18 +350,18 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             # been replaced by owner-only access rights
             cr.execute("""select distinct mod.model, mod.name from ir_model_access acc, ir_model mod where acc.model_id = mod.id""")
             for (model, name) in cr.fetchall():
-                if model in registry and registry[model].is_transient():
+                if model in registry and registry[model]._transient:
                     _logger.warning('The transient model %s (%s) should not have explicit access rules!', model, name)
 
             cr.execute("SELECT model from ir_model")
             for (model,) in cr.fetchall():
                 if model in registry:
-                    registry[model]._check_removed_columns(cr, log=True)
+                    env[model]._check_removed_columns(log=True)
                 else:
                     _logger.warning("Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)", model)
 
             # Cleanup orphan records
-            registry['ir.model.data']._process_end(cr, SUPERUSER_ID, processed_modules)
+            env['ir.model.data']._process_end(processed_modules)
 
         for kind in ('init', 'demo', 'update'):
             tools.config[kind] = {}
@@ -385,20 +382,21 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                         py_module = sys.modules['openerp.addons.%s' % (pkg.name,)]
                         getattr(py_module, uninstall_hook)(cr, registry)
 
-                registry['ir.module.module'].module_uninstall(cr, SUPERUSER_ID, modules_to_remove.values())
+                Module = env['ir.module.module']
+                Module.browse(modules_to_remove.values()).module_uninstall()
                 # Recursive reload, should only happen once, because there should be no
                 # modules to remove next time
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
-                openerp.api.Environment.reset()
+                api.Environment.reset()
                 return openerp.modules.registry.RegistryManager.new(cr.dbname, force_demo, status, update_module)
 
         # STEP 6: verify custom views on every model
         if update_module:
-            Views = registry['ir.ui.view']
+            View = env['ir.ui.view']
             custom_view_test = True
-            for model in registry.models.keys():
-                if not Views._validate_custom_views(cr, SUPERUSER_ID, model):
+            for model in registry:
+                if not View._validate_custom_views(model):
                     custom_view_test = False
                     _logger.error('invalid custom view(s) for model %s', model)
             report.record_result(custom_view_test)
@@ -409,8 +407,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.info('Modules loaded.')
 
         # STEP 8: call _register_hook on every model
-        for model in registry.models.values():
-            model._register_hook(cr)
+        for model in env.values():
+            model._register_hook()
 
         # STEP 9: Run the post-install tests
         cr.commit()

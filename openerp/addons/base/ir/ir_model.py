@@ -5,7 +5,6 @@ from collections import defaultdict
 
 from odoo import api, fields, models, SUPERUSER_ID, tools,  _
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.modules import init_models
 from odoo.modules.registry import RegistryManager
 from odoo.tools.safe_eval import safe_eval
 
@@ -150,8 +149,7 @@ class IrModel(models.Model):
             # setup models; this automatically adds model in registry
             self.pool.setup_models(self._cr, partial=(not self.pool.ready))
             # update database schema
-            model = self.pool[vals['model']]
-            init_models([model], self._cr, dict(self._context, update_custom_fields=True))
+            self.pool.init_models(self._cr, [vals['model']], dict(self._context, update_custom_fields=True))
             RegistryManager.signal_registry_change(self._cr.dbname)
         return res
 
@@ -444,8 +442,7 @@ class IrModelFields(models.Model):
                 # setup models; this re-initializes model in registry
                 self.pool.setup_models(self._cr, partial=(not self.pool.ready))
                 # update database schema
-                model = self.pool[vals['model']]
-                init_models([model], self._cr, dict(self._context, update_custom_fields=True))
+                self.pool.init_models(self._cr, [vals['model']], dict(self._context, update_custom_fields=True))
                 RegistryManager.signal_registry_change(self._cr.dbname)
 
         return res
@@ -527,8 +524,7 @@ class IrModelFields(models.Model):
 
         if patched_models:
             # update the database schema of the models to patch
-            models = [self.pool[name] for name in patched_models]
-            init_models(models, self._cr, dict(self._context, update_custom_fields=True))
+            self.pool.init_models(self._cr, patched_models, dict(self._context, update_custom_fields=True))
 
         if column_rename or patched_models:
             RegistryManager.signal_registry_change(self._cr.dbname)

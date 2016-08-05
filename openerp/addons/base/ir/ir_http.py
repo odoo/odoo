@@ -210,8 +210,11 @@ class IrHttp(models.AbstractModel):
             # of the model, each instance will regenared its own routing map and thus
             # regenerate its EndPoint. The routing map should be static.
             type(self)._routing_map = http.routing_map(mods, False, converters=self._get_converters())
-
         return self._routing_map
+
+    def _clear_routing_map(self):
+        if hasattr(self, '_routing_map'):
+            del type(self)._routing_map
 
     def content_disposition(self, filename):
         filename = tools.ustr(filename)
