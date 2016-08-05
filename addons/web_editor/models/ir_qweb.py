@@ -157,12 +157,7 @@ class Contact(models.AbstractModel):
     # helper to call the rendering of contact field
     @api.model
     def get_record_to_html(self, ids, options=None):
-        node = self.record_to_html(
-            self.env['res.partner'].browse(ids[0]),
-            'self',
-            options=options,
-        )
-        return node
+        return self.value_to_html(self.env['res.partner'].browse(ids[0]), options=options)
 
 
 class Date(models.AbstractModel):
