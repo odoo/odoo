@@ -124,7 +124,7 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    discounted_price = fields.Float(compute='_compute_discounted_price', digits_compute=dp.get_precision('Product Price'))
+    discounted_price = fields.Float(compute='_compute_discounted_price', digits=dp.get_precision('Product Price'))
 
     @api.depends('price_unit', 'discount')
     def _compute_discounted_price(self):

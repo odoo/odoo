@@ -31,9 +31,9 @@ class PackOperation(models.Model):
         help='The stock operation where the packing has been made')
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade")
     product_uom_id = fields.Many2one('product.uom', 'Unit of Measure')
-    product_qty = fields.Float('To Do', default=0.0, digits_compute=dp.get_precision('Product Unit of Measure'), required=True)
-    ordered_qty = fields.Float('Ordered Quantity', digits_compute=dp.get_precision('Product Unit of Measure'))
-    qty_done = fields.Float('Done', default=0.0, digits_compute=dp.get_precision('Product Unit of Measure'))
+    product_qty = fields.Float('To Do', default=0.0, digits=dp.get_precision('Product Unit of Measure'), required=True)
+    ordered_qty = fields.Float('Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'))
+    qty_done = fields.Float('Done', default=0.0, digits=dp.get_precision('Product Unit of Measure'))
     # TDE FIXME: what what what what ??
     is_done = fields.Boolean(compute='_compute_is_done', inverse='_set_is_done', string='Done', oldname='processed_boolean')
     package_id = fields.Many2one('stock.quant.package', 'Source Package')

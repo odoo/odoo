@@ -17,7 +17,7 @@ class Product(models.Model):
     stock_move_ids = fields.One2many('stock.move', 'product_id', help='Technical: used to compute quantities.')
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
-        digits_compute=dp.get_precision('Product Unit of Measure'),
+        digits=dp.get_precision('Product Unit of Measure'),
         help="Current quantity of products.\n"
              "In a context with a single Stock Location, this includes "
              "goods stored at this Location, or any of its children.\n"
@@ -30,7 +30,7 @@ class Product(models.Model):
              "with 'internal' type.")
     virtual_available = fields.Float(
         'Forecast Quantity', compute='_compute_quantities', search='_search_virtual_available',
-        digits_compute=dp.get_precision('Product Unit of Measure'),
+        digits=dp.get_precision('Product Unit of Measure'),
         help="Forecast quantity (computed as Quantity On Hand "
              "- Outgoing + Incoming)\n"
              "In a context with a single Stock Location, this includes "
@@ -42,7 +42,7 @@ class Product(models.Model):
              "with 'internal' type.")
     incoming_qty = fields.Float(
         'Incoming', compute='_compute_quantities', search='_search_incoming_qty',
-        digits_compute=dp.get_precision('Product Unit of Measure'),
+        digits=dp.get_precision('Product Unit of Measure'),
         help="Quantity of products that are planned to arrive.\n"
              "In a context with a single Stock Location, this includes "
              "goods arriving to this Location, or any of its children.\n"
@@ -53,7 +53,7 @@ class Product(models.Model):
              "Location with 'internal' type.")
     outgoing_qty = fields.Float(
         'Outgoing', compute='_compute_quantities', search='_search_outgoing_qty',
-        digits_compute=dp.get_precision('Product Unit of Measure'),
+        digits=dp.get_precision('Product Unit of Measure'),
         help="Quantity of products that are planned to leave.\n"
              "In a context with a single Stock Location, this includes "
              "goods leaving this Location, or any of its children.\n"
@@ -365,16 +365,16 @@ class ProductTemplate(models.Model):
     description_picking = fields.Text('Description on Picking', translate=True)
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_quantities',
-        digits_compute=dp.get_precision('Product Unit of Measure'))
+        digits=dp.get_precision('Product Unit of Measure'))
     virtual_available = fields.Float(
         'Forecasted Quantity', compute='_compute_quantities', search='_search_quantities',
-        digits_compute=dp.get_precision('Product Unit of Measure'))
+        digits=dp.get_precision('Product Unit of Measure'))
     incoming_qty = fields.Float(
         'Incoming', compute='_compute_quantities', search='_search_quantities',
-        digits_compute=dp.get_precision('Product Unit of Measure'))
+        digits=dp.get_precision('Product Unit of Measure'))
     outgoing_qty = fields.Float(
         'Outgoing', compute='_compute_quantities', search='_search_quantities',
-        digits_compute=dp.get_precision('Product Unit of Measure'))
+        digits=dp.get_precision('Product Unit of Measure'))
     location_id = fields.Many2one('stock.location', 'Location')
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
     route_ids = fields.Many2many(
