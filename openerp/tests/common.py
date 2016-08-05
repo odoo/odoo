@@ -391,6 +391,11 @@ class HttpCase(TransactionCase):
         t0 = int(time.time())
         for thread in threading.enumerate():
             if thread.name.startswith('openerp.service.http.request.'):
+                if getattr(thread, "dbname") != self.session.db:
+                    _logger.debug(
+                        "Skipping thread from database %s",
+                        getattr(thread, "dbname"))
+                    continue
                 while thread.isAlive():
                     # Need a busyloop here as thread.join() masks signals
                     # and would prevent the forced shutdown.
