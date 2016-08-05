@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp import api, fields, models, _
-from openerp.exceptions import UserError, ValidationError
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
 
 class AccountAssetCategory(models.Model):
@@ -48,6 +49,11 @@ class AccountAssetCategory(models.Model):
             self.method_period = 1
         else:
             self.method_period = 12
+
+    @api.onchange('method_time')
+    def _onchange_method_time(self):
+        if self.method_time != 'number':
+            self.prorata = False
 
 
 class AccountAssetAsset(models.Model):
@@ -532,7 +538,7 @@ class AccountAssetDepreciationLine(models.Model):
             created_moves.post()
         return [x.id for x in created_moves]
 
-    api.multi
+    @api.multi
     def post_lines_and_close_asset(self):
         # we re-evaluate the assets to determine whether we can close them
         for line in self:
@@ -573,23 +579,3 @@ class AccountAssetDepreciationLine(models.Model):
                     msg = _("You cannot delete posted installment lines.")
                 raise UserError(msg)
         return super(AccountAssetDepreciationLine, self).unlink()
-
-
-class AccountMove(models.Model):
-    _inherit = 'account.move'
-
-    asset_depreciation_ids = fields.One2many('account.asset.depreciation.line', 'move_id', string='Assets Depreciation Lines', ondelete="restrict")
-
-    @api.multi
-    def button_cancel(self):
-        for move in self:
-            for line in move.asset_depreciation_ids:
-                line.move_posted_check = False
-        return super(AccountMove, self).button_cancel()
-
-    @api.multi
-    def post(self):
-        for move in self:
-            for depreciation_line in move.asset_depreciation_ids:
-                depreciation_line.post_lines_and_close_asset()
-        return super(AccountMove, self).post()
