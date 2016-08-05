@@ -556,13 +556,13 @@
 </template>
 
 <!-- Error and special pages -->
-<template id="info" name="Odoo Information">
+<template id="website_info" name="Odoo Information">
     <t t-call="website.layout">
         <div id="wrap"/>
     </t>
 </template>
 
-<template id="show_website_info" inherit_id="website.info" customize_show="True" name="Show Odoo Information">
+<template id="show_website_info" inherit_id="website.website_info" customize_show="True" name="Show Odoo Information">
     <xpath expr="//div[@id='wrap']" position="inside">
         <div class="oe_structure">
             <section class="container">

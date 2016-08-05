@@ -199,7 +199,7 @@ class Website(Home):
     @http.route('/website/info', type='http', auth="public", website=True)
     def website_info(self):
         try:
-            request.website.get_template('website.info').name
+            request.website.get_template('website.website_info').name
         except Exception, e:
             return request.env['ir.http']._handle_exception(e, 404)
         Module = request.env['ir.module.module'].sudo()
@@ -210,7 +210,7 @@ class Website(Home):
             'modules': modules,
             'version': odoo.service.common.exp_version()
         }
-        return request.render('website.info', values)
+        return request.render('website.website_info', values)
 
     #------------------------------------------------------
     # Edit
