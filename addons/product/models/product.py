@@ -97,7 +97,7 @@ class ProductPriceHistory(models.Model):
     company_id = fields.Many2one('res.company', default=_get_default_company_id, required=True)
     product_id = fields.Many2one('product.product', 'Product', ondelete='cascade', required=True)
     datetime = fields.Datetime('Date', default=fields.Datetime.now())
-    cost = fields.Float('Cost', digits_compute=dp.get_precision('Product Price'))
+    cost = fields.Float('Cost', digits=dp.get_precision('Product Price'))
 
 
 class ProductProduct(models.Model):
@@ -109,14 +109,14 @@ class ProductProduct(models.Model):
 
     price = fields.Float(
         'Price', compute='_compute_product_price',
-        digits_compute=dp.get_precision('Product Price'), inverse='_set_product_price')
+        digits=dp.get_precision('Product Price'), inverse='_set_product_price')
     price_extra = fields.Float(
         'Variant Price Extra', compute='_compute_product_price_extra',
-        digits_compute=dp.get_precision('Product Price'),
+        digits=dp.get_precision('Product Price'),
         help="This is the sum of the extra price of all attributes")
     lst_price = fields.Float(
         'Sale Price', compute='_compute_product_lst_price',
-        digits_compute=dp.get_precision('Product Price'), inverse='_set_product_price')
+        digits=dp.get_precision('Product Price'), inverse='_set_product_price')
 
     default_code = fields.Char('Internal Reference', index=True)
     code = fields.Char('Internal Reference', compute='_compute_product_code')
@@ -150,13 +150,13 @@ class ProductProduct(models.Model):
 
     standard_price = fields.Float(
         'Cost', company_dependent=True,
-        digits_compute=dp.get_precision('Product Price'),
+        digits=dp.get_precision('Product Price'),
         groups="base.group_user",
         help="Cost of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
              "Expressed in the default unit of measure of the product.")
     volume = fields.Float('Volume', help="The volume in m3.")
     weight = fields.Float(
-        'Weight', digits_compute=dp.get_precision('Stock Weight'),
+        'Weight', digits=dp.get_precision('Stock Weight'),
         help="The weight of the contents in Kg, not including any packaging, etc.")
 
     pricelist_item_ids = fields.Many2many(
@@ -589,7 +589,7 @@ class SuppliferInfo(models.Model):
         'Minimal Quantity', default=0.0, required=True,
         help="The minimal quantity to purchase from this vendor, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise.")
     price = fields.Float(
-        'Price', default=0.0, digits_compute=dp.get_precision('Product Price'),
+        'Price', default=0.0, digits=dp.get_precision('Product Price'),
         required=True, help="The price to purchase a product")
     company_id = fields.Many2one(
         'res.company', 'Company',

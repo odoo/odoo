@@ -65,7 +65,7 @@ class MarketingCampaign(models.Model):
     fixed_cost = fields.Float('Fixed Cost',
         help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each "
              "campaign activity. Cost and Revenue statistics are included in Campaign Reporting.",
-        digits_compute=dp.get_precision('Product Price'))
+        digits=dp.get_precision('Product Price'))
     segment_ids = fields.One2many('marketing.campaign.segment', 'campaign_id', 'Segments', readonly=False)
     segments_count = fields.Integer(compute='_compute_segments_count', string='Segments')
 
@@ -308,7 +308,7 @@ class MarketingCampaignActivity(models.Model):
         help="The action to perform when this activity is activated")
     to_ids = fields.One2many('marketing.campaign.transition', 'activity_from_id', 'Next Activities')
     from_ids = fields.One2many('marketing.campaign.transition', 'activity_to_id', 'Previous Activities')
-    variable_cost = fields.Float('Variable Cost', digits_compute=dp.get_precision('Product Price'),
+    variable_cost = fields.Float('Variable Cost', digits=dp.get_precision('Product Price'),
         help="Set a variable cost if you consider that every campaign item that has reached this point has entailed a "
              "certain cost. You can get cost statistics in the Reporting section")
     revenue = fields.Float('Revenue', digits=0,

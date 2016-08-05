@@ -27,7 +27,7 @@ class ProductAttributevalue(models.Model):
     product_ids = fields.Many2many('product.product', id1='att_id', id2='prod_id', string='Variants', readonly=True)
     price_extra = fields.Float(
         'Attribute Price Extra', compute='_compute_price_extra', inverse='_set_price_extra',
-        default=0.0, digits_compute=dp.get_precision('Product Price'),
+        default=0.0, digits=dp.get_precision('Product Price'),
         help="Price Extra: Extra price for the variant with this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200.")
     price_ids = fields.One2many('product.attribute.price', 'value_id', 'Attribute Prices', readonly=True)
 
@@ -79,7 +79,7 @@ class ProductAttributePrice(models.Model):
 
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', ondelete='cascade', required=True)
     value_id = fields.Many2one('product.attribute.value', 'Product Attribute Value', ondelete='cascade', required=True)
-    price_extra = fields.Float('Price Extra', digits_compute=dp.get_precision('Product Price'))
+    price_extra = fields.Float('Price Extra', digits=dp.get_precision('Product Price'))
 
 
 class ProductAttributeLine(models.Model):

@@ -710,8 +710,8 @@ class HrSalaryRule(models.Model):
         ('fix', 'Fixed Amount'),
         ('code', 'Python Code'),
     ], string='Amount Type', index=True, required=True, default='fix', help="The computation method for the rule amount.")
-    amount_fix = fields.Float(string='Fixed Amount', digits_compute=dp.get_precision('Payroll'))
-    amount_percentage = fields.Float(string='Percentage (%)', digits_compute=dp.get_precision('Payroll Rate'),
+    amount_fix = fields.Float(string='Fixed Amount', digits=dp.get_precision('Payroll'))
+    amount_percentage = fields.Float(string='Percentage (%)', digits=dp.get_precision('Payroll Rate'),
         help='For example, enter 50.0 to apply a percentage of 50%')
     amount_python_compute = fields.Text(string='Python Code',
         default='''
@@ -816,10 +816,10 @@ class HrPayslipLine(models.Model):
     salary_rule_id = fields.Many2one('hr.salary.rule', string='Rule', required=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
     contract_id = fields.Many2one('hr.contract', string='Contract', required=True, index=True)
-    rate = fields.Float(string='Rate (%)', digits_compute=dp.get_precision('Payroll Rate'), default=100.0)
-    amount = fields.Float(digits_compute=dp.get_precision('Payroll'))
-    quantity = fields.Float(digits_compute=dp.get_precision('Payroll'), default=1.0)
-    total = fields.Float(compute='_compute_total', string='Total', digits_compute=dp.get_precision('Payroll'), store=True)
+    rate = fields.Float(string='Rate (%)', digits=dp.get_precision('Payroll Rate'), default=100.0)
+    amount = fields.Float(digits=dp.get_precision('Payroll'))
+    quantity = fields.Float(digits=dp.get_precision('Payroll'), default=1.0)
+    total = fields.Float(compute='_compute_total', string='Total', digits=dp.get_precision('Payroll'), store=True)
 
     @api.depends('quantity', 'amount', 'rate')
     def _compute_total(self):

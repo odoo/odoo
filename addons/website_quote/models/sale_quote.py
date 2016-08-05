@@ -101,10 +101,10 @@ class SaleQuoteOption(models.Model):
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True)
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     website_description = fields.Html('Option Description', translate=html_translate, sanitize=False)
-    price_unit = fields.Float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price'))
-    discount = fields.Float('Discount (%)', digits_compute=dp.get_precision('Discount'))
+    price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
+    discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'))
     uom_id = fields.Many2one('product.uom', 'Unit of Measure ', required=True)
-    quantity = fields.Float('Quantity', required=True, digits_compute=dp.get_precision('Product UoS'), default=1)
+    quantity = fields.Float('Quantity', required=True, digits=dp.get_precision('Product UoS'), default=1)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

@@ -8,16 +8,16 @@ from odoo.addons import decimal_precision as dp
 class HrContract(models.Model):
     _inherit = 'hr.contract'
 
-    travel_reimbursement_amount = fields.Float(string='Reimbursement of travel expenses', digits_compute=dp.get_precision('Payroll'))
-    car_company_amount = fields.Float(string='Company car employer', digits_compute=dp.get_precision('Payroll'))
-    car_employee_deduction = fields.Float(string='Company Car Deduction for Worker', digits_compute=dp.get_precision('Payroll'))
-    misc_onss_deduction = fields.Float(string='Miscellaneous exempt ONSS', digits_compute=dp.get_precision('Payroll'))
-    meal_voucher_amount = fields.Float(string='Check Value Meal', digits_compute=dp.get_precision('Payroll'))
-    meal_voucher_employee_deduction = fields.Float(string='Check Value Meal - by worker', digits_compute=dp.get_precision('Payroll'))
-    insurance_employee_deduction = fields.Float(string='Insurance Group - by worker', digits_compute=dp.get_precision('Payroll'))
-    misc_advantage_amount = fields.Float(string='Benefits of various nature', digits_compute=dp.get_precision('Payroll'))
-    additional_net_amount = fields.Float(string='Net supplements', digits_compute=dp.get_precision('Payroll'))
-    retained_net_amount = fields.Float('Net retained ', digits_compute=dp.get_precision('Payroll'))
+    travel_reimbursement_amount = fields.Float(string='Reimbursement of travel expenses', digits=dp.get_precision('Payroll'))
+    car_company_amount = fields.Float(string='Company car employer', digits=dp.get_precision('Payroll'))
+    car_employee_deduction = fields.Float(string='Company Car Deduction for Worker', digits=dp.get_precision('Payroll'))
+    misc_onss_deduction = fields.Float(string='Miscellaneous exempt ONSS', digits=dp.get_precision('Payroll'))
+    meal_voucher_amount = fields.Float(string='Check Value Meal', digits=dp.get_precision('Payroll'))
+    meal_voucher_employee_deduction = fields.Float(string='Check Value Meal - by worker', digits=dp.get_precision('Payroll'))
+    insurance_employee_deduction = fields.Float(string='Insurance Group - by worker', digits=dp.get_precision('Payroll'))
+    misc_advantage_amount = fields.Float(string='Benefits of various nature', digits=dp.get_precision('Payroll'))
+    additional_net_amount = fields.Float(string='Net supplements', digits=dp.get_precision('Payroll'))
+    retained_net_amount = fields.Float('Net retained ', digits=dp.get_precision('Payroll'))
 
 
 class HrEmployee(models.Model):
