@@ -827,9 +827,13 @@ data.Editor = Class.extend({
         this.load_style_options();
 
         // Initialize move/clone/remove buttons
-        this.$overlay.on('click', '.oe_snippet_clone', _.bind(this.on_clone, this));
-        this.$overlay.on('click', '.oe_snippet_remove', _.bind(this.on_remove, this));
-        this._drag_and_drop();
+        if (!this.$target.parent().is(':o_editable')) {
+            this.$overlay.find('.oe_snippet_move, .oe_snippet_clone, .oe_snippet_remove').remove();
+        } else {
+            this.$overlay.on('click', '.oe_snippet_clone', _.bind(this.on_clone, this));
+            this.$overlay.on('click', '.oe_snippet_remove', _.bind(this.on_remove, this));
+            this._drag_and_drop();
+        }
     },
 
     getName: function () {
@@ -973,7 +977,11 @@ data.Editor = Class.extend({
             self.styles[option].start();
             self.styles[option].__order = i++;
         });
-        $ul.append($("<li/>", {"class": "divider"}));
+        if ($ul.children().length > 1) {
+            $ul.append($("<li/>", {"class": "divider"}));
+        } else {
+            $ul.empty();
+        }
 
         var $parents = this.$target.parents();
         _.each($parents, function (parent) {
