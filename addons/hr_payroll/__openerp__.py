@@ -30,7 +30,6 @@ Generic Payroll system.
         'security/ir.model.access.csv',
         'wizard/hr_payroll_payslips_by_employees_views.xml',
         'views/hr_payroll_views.xml',
-        'views/hr_payroll_workflow.xml',
         'data/hr_payroll_sequence.xml',
         'views/hr_payroll_report.xml',
         'data/hr_payroll_data.xml',
