@@ -113,6 +113,14 @@ def check_pg_name(name):
     if len(name) > 63:
         raise ValidationError("Table name %r is too long" % name)
 
+# match private methods, to prevent their remote invocation
+regex_private = re.compile(r'^(_.*|init)$')
+
+def check_method_name(name):
+    """ Raise an ``AccessError`` if ``name`` is a private method name. """
+    if regex_private.match(name):
+        raise AccessError(_('Private methods (such as %s) cannot be called remotely.') % (name,))
+
 POSTGRES_CONFDELTYPES = {
     'RESTRICT': 'r',
     'NO ACTION': 'a',
