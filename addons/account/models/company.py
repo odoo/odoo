@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import fields, models, api, _
+from odoo import fields, models, api, _
 from datetime import timedelta
 
 

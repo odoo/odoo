@@ -4,11 +4,11 @@ import time
 import datetime
 from dateutil.relativedelta import relativedelta
 
-import openerp
-from openerp import SUPERUSER_ID
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
-from openerp import api, fields, models, _
-from openerp.exceptions import UserError
+import odoo
+from odoo import SUPERUSER_ID
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class AccountConfigSettings(models.TransientModel):

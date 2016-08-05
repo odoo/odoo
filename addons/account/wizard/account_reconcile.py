@@ -1,6 +1,6 @@
-from openerp import models, fields, api, _
-from openerp.tools.float_utils import float_round
-from openerp.exceptions import UserError
+from odoo import models, fields, api, _
+from odoo.tools.float_utils import float_round
+from odoo.exceptions import UserError
 
 
 class AccountMoveLineReconcile(models.TransientModel):

@@ -2,8 +2,8 @@
 
 from datetime import datetime
 import time
-from openerp import api, models
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo import api, models
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class ReportPartnerLedger(models.AbstractModel):

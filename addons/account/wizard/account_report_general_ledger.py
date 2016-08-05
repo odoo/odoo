@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp import fields, models, _
-from openerp.exceptions import UserError
+from odoo import fields, models, _
+from odoo.exceptions import UserError
 
 
 class AccountReportGeneralLedger(models.TransientModel):

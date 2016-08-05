@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp import tools
-from openerp import models, fields, api
+from odoo import tools
+from odoo import models, fields, api
 
 
 class AccountInvoiceReport(models.Model):
@@ -160,10 +160,11 @@ class AccountInvoiceReport(models.Model):
         """
         return group_by_str
 
-    def init(self, cr):
+    @api.model_cr
+    def init(self):
         # self._table = account_invoice_report
-        tools.drop_view_if_exists(cr, self._table)
-        cr.execute("""CREATE or REPLACE VIEW %s as (
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute("""CREATE or REPLACE VIEW %s as (
             WITH currency_rate AS (%s)
             %s
             FROM (
@@ -175,5 +176,5 @@ class AccountInvoiceReport(models.Model):
                  cr.date_start <= COALESCE(sub.date, NOW()) AND
                  (cr.date_end IS NULL OR cr.date_end > COALESCE(sub.date, NOW())))
         )""" % (
-                    self._table, self.pool['res.currency']._select_companies_rates(),
+                    self._table, self.env['res.currency']._select_companies_rates(),
                     self._select(), self._sub_select(), self._from(), self._group_by()))
