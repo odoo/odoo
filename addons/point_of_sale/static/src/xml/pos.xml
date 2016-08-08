@@ -316,15 +316,15 @@
                 <div class='client-details-left'>
                     <div class='client-detail'>
                         <span class='label'>Street</span>
-                        <input class='detail client-address-street' name='street'       t-att-value='partner.street' placeholder='Street'></input>
+                        <input class='detail client-address-street' name='street'       t-att-value='partner.street || ""' placeholder='Street'></input>
                     </div>
                     <div class='client-detail'>
                         <span class='label'>City</span>
-                        <input class='detail client-address-city'   name='city'         t-att-value='partner.city' placeholder='City'></input>
+                        <input class='detail client-address-city'   name='city'         t-att-value='partner.city || ""' placeholder='City'></input>
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Postcode</span>
-                        <input class='detail client-address-zip'    name='zip'          t-att-value='partner.zip' placeholder='ZIP'></input>
+                        <input class='detail client-address-zip'    name='zip'          t-att-value='partner.zip || ""' placeholder='ZIP'></input>
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Country</span>
@@ -372,11 +372,21 @@
                 <div class='client-details-left'>
                     <div class='client-detail'>
                         <span class='label'>Address</span>
-                        <span class='detail client-address'><t t-esc='partner.address' /></span>
+                        <t t-if='partner.address'>
+                            <span class='detail client-address'><t t-esc='partner.address' /></span>
+                        </t>
+                        <t t-if='!partner.address'>
+                            <span class='detail client-address empty'>N/A</span>
+                        </t>
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Email</span>
-                        <span class='detail client-email'><t t-esc='partner.email' /></span>
+                        <t t-if='partner.email'>
+                            <span class='detail client-email'><t t-esc='partner.email' /></span>
+                        </t>
+                        <t t-if='!partner.email'>
+                            <span class='detail client-email empty'>N/A</span>
+                        </t>
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Phone</span>
