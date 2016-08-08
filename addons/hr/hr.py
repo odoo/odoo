@@ -261,7 +261,7 @@ class hr_employee(osv.osv):
                 user_field_lst.append(name)
         return user_field_lst
 
-    _constraints = [(osv.osv._check_recursion, _('Error! You cannot create recursive hierarchy of Employee(s).'), ['parent_id']),]
+    _constraints = [(osv.osv._check_recursion, 'Error! You cannot create recursive hierarchy of Employee(s).', ['parent_id']),]
 
 
 class hr_department(osv.osv):
@@ -291,7 +291,7 @@ class hr_department(osv.osv):
     }
 
     _constraints = [
-        (osv.osv._check_recursion, _('Error! You cannot create recursive departments.'), ['parent_id'])
+        (osv.osv._check_recursion, 'Error! You cannot create recursive departments.', ['parent_id'])
     ]
 
     def name_get(self, cr, uid, ids, context=None):
