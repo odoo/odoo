@@ -277,6 +277,7 @@ var EditMenuDialog = widget.Dialog.extend({
         $menu.remove();
     },
     save: function () {
+        var _super = this._super.bind(this);
         var self = this;
         var new_menu = this.$('.oe_menu_editor').nestedSortable('toArray', {startDepthCount: 0});
         var levels = [];
@@ -301,7 +302,7 @@ var EditMenuDialog = widget.Dialog.extend({
                 context: context
             },
         }).then(function (menu) {
-            self.close();
+            _super();
             editor.reload();
         });
     },
