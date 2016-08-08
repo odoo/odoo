@@ -268,6 +268,7 @@ class website(orm.Model):
                 # then this special pricelist is amongs these available pricelists, and therefore it won't fall in this case.
                 pl = available_pricelists[0]
 
+        request.session['website_sale_current_pl'] = pl.id
         return pl
 
     def sale_product_domain(self, cr, uid, ids, context=None):
