@@ -1,172 +1,155 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import orm, fields
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-def selection_fn(obj, cr, uid, context=None):
+from odoo import api, fields, models
+
+def selection_fn(model):
     return list(enumerate(["Corge", "Grault", "Wheee", "Moog"]))
 
-def function_fn(model, cr, uid, ids, field_name, arg, context):
-    return dict((id, 3) for id in ids)
+def compute_fn(records):
+    for record in records:
+        record.value = 3
 
-def function_fn_write(model, cr, uid, id, field_name, field_value, fnct_inv_arg, context):
-    """ just so CreatorCase.export can be used
-    """
+def inverse_fn(records):
     pass
 
-models = [
-    ('boolean', fields.boolean()),
-    ('integer', fields.integer()),
-    ('float', fields.float()),
-    ('decimal', fields.float(digits=(16, 3))),
-    ('string.bounded', fields.char('unknown', size=16)),
-    ('string.required', fields.char('unknown', size=None, required=True)),
-    ('string', fields.char('unknown', size=None)),
-    ('date', fields.date()),
-    ('datetime', fields.datetime()),
-    ('text', fields.text()),
-    ('selection', fields.selection([(1, "Foo"), (2, "Bar"), (3, "Qux"), (4, '')])),
+MODELS = [
+    ('boolean', fields.Boolean()),
+    ('integer', fields.Integer()),
+    ('float', fields.Float()),
+    ('decimal', fields.Float(digits=(16, 3))),
+    ('string.bounded', fields.Char(size=16)),
+    ('string.required', fields.Char(size=None, required=True)),
+    ('string', fields.Char(size=None)),
+    ('date', fields.Date()),
+    ('datetime', fields.Datetime()),
+    ('text', fields.Text()),
+    ('selection', fields.Selection([(1, "Foo"), (2, "Bar"), (3, "Qux"), (4, '')])),
     # here use size=-1 to store the values as integers instead of strings
-    ('selection.function', fields.selection(selection_fn, size=-1)),
+    ('selection.function', fields.Selection(selection_fn, size=-1)),
     # just relate to an integer
-    ('many2one', fields.many2one('export.integer')),
-    ('one2many', fields.one2many('export.one2many.child', 'parent_id')),
-    ('many2many', fields.many2many('export.many2many.other')),
-    ('function', fields.function(function_fn, fnct_inv=function_fn_write, type="integer")),
+    ('many2one', fields.Many2one('export.integer')),
+    ('one2many', fields.One2many('export.one2many.child', 'parent_id')),
+    ('many2many', fields.Many2many('export.many2many.other')),
+    ('function', fields.Integer(compute=compute_fn, inverse=inverse_fn)),
     # related: specialization of fields.function, should work the same way
     # TODO: reference
 ]
 
-for name, field in models:
-    class NewModel(orm.Model):
+for name, field in MODELS:
+    class NewModel(models.Model):
         _name = 'export.%s' % name
-        _columns = {
-            'const': fields.integer(),
-            'value': field,
-        }
-        _defaults = {
-            'const': 4,
-        }
+        const = fields.Integer(default=4)
+        value = field
 
-        def name_get(self, cr, uid, ids, context=None):
-            return [(record.id, "%s:%s" % (self._name, record.value))
-                for record in self.browse(cr, uid, ids, context=context)]
+        @api.multi
+        def name_get(self):
+            return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
 
-        def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        @api.model
+        def name_search(self, name='', args=None, operator='ilike', limit=100):
             if isinstance(name, basestring) and name.split(':')[0] == self._name:
-                ids = self.search(cr, user, [['value', operator, int(name.split(':')[1])]])
-                return self.name_get(cr, user, ids, context=context)
+                records = self.search([('value', operator, int(name.split(':')[1]))])
+                return records.name_get()
             else:
                 return []
 
 
-class One2ManyChild(orm.Model):
+class One2ManyChild(models.Model):
     _name = 'export.one2many.child'
     # FIXME: orm.py:1161, fix to name_get on m2o field
     _rec_name = 'value'
 
-    _columns = {
-        'parent_id': fields.many2one('export.one2many'),
-        'str': fields.char('unknown', size=None),
-        'value': fields.integer(),
-    }
+    parent_id = fields.Many2one('export.one2many')
+    str = fields.Char()
+    value = fields.Integer()
 
-    def name_get(self, cr, uid, ids, context=None):
-        return [(record.id, "%s:%s" % (self._name, record.value))
-            for record in self.browse(cr, uid, ids, context=context)]
+    @api.multi
+    def name_get(self):
+        return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
         if isinstance(name, basestring) and name.split(':')[0] == self._name:
-            ids = self.search(cr, user, [['value', operator, int(name.split(':')[1])]])
-            return self.name_get(cr, user, ids, context=context)
+            records = self.search([('value', operator, int(name.split(':')[1]))])
+            return records.name_get()
         else:
             return []
 
 
-class One2ManyMultiple(orm.Model):
+class One2ManyMultiple(models.Model):
     _name = 'export.one2many.multiple'
-    _columns = {
-        'parent_id': fields.many2one('export.one2many.recursive'),
-        'const': fields.integer(),
-        'child1': fields.one2many('export.one2many.child.1', 'parent_id'),
-        'child2': fields.one2many('export.one2many.child.2', 'parent_id'),
-    }
-    _defaults = {
-        'const': 36,
-    }
+
+    parent_id = fields.Many2one('export.one2many.recursive')
+    const = fields.Integer(default=36)
+    child1 = fields.One2many('export.one2many.child.1', 'parent_id')
+    child2 = fields.One2many('export.one2many.child.2', 'parent_id')
 
 
-class One2ManyChildMultiple(orm.Model):
+class One2ManyChildMultiple(models.Model):
     _name = 'export.one2many.multiple.child'
     # FIXME: orm.py:1161, fix to name_get on m2o field
     _rec_name = 'value'
 
-    _columns = {
-        'parent_id': fields.many2one('export.one2many.multiple'),
-        'str': fields.char('unknown', size=None),
-        'value': fields.integer(),
-    }
+    parent_id = fields.Many2one('export.one2many.multiple')
+    str = fields.Char()
+    value = fields.Integer()
 
-    def name_get(self, cr, uid, ids, context=None):
-        return [(record.id, "%s:%s" % (self._name, record.value))
-            for record in self.browse(cr, uid, ids, context=context)]
+    @api.multi
+    def name_get(self):
+        return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
 
 
-class One2ManyChild1(orm.Model):
+class One2ManyChild1(models.Model):
     _name = 'export.one2many.child.1'
     _inherit = 'export.one2many.multiple.child'
 
 
-class One2ManyChild2(orm.Model):
+class One2ManyChild2(models.Model):
     _name = 'export.one2many.child.2'
     _inherit = 'export.one2many.multiple.child'
 
 
-class Many2ManyChild(orm.Model):
+class Many2ManyChild(models.Model):
     _name = 'export.many2many.other'
     # FIXME: orm.py:1161, fix to name_get on m2o field
     _rec_name = 'value'
 
-    _columns = {
-        'str': fields.char('unknown', size=None),
-        'value': fields.integer(),
-    }
+    str = fields.Char()
+    value = fields.Integer()
 
-    def name_get(self, cr, uid, ids, context=None):
-        return [(record.id, "%s:%s" % (self._name, record.value))
-            for record in self.browse(cr, uid, ids, context=context)]
+    @api.multi
+    def name_get(self):
+        return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
         if isinstance(name, basestring) and name.split(':')[0] == self._name:
-            ids = self.search(cr, user, [['value', operator, int(name.split(':')[1])]])
-            return self.name_get(cr, user, ids, context=context)
+            records = self.search([('value', operator, int(name.split(':')[1]))])
+            return records.name_get()
         else:
             return []
 
 
-class SelectionWithDefault(orm.Model):
+class SelectionWithDefault(models.Model):
     _name = 'export.selection.withdefault'
-    _columns = {
-        'const': fields.integer(),
-        'value': fields.selection([(1, "Foo"), (2, "Bar")]),
-    }
-    _defaults = {
-        'const': 4,
-        'value': 2,
-    }
+
+    const = fields.Integer(default=4)
+    value = fields.Selection([(1, "Foo"), (2, "Bar")], default=2)
 
 
-class RecO2M(orm.Model):
+class RecO2M(models.Model):
     _name = 'export.one2many.recursive'
-    _columns = {
-        'value': fields.integer(),
-        'child': fields.one2many('export.one2many.multiple', 'parent_id'),
-    }
 
-class OnlyOne(orm.Model):
+    value = fields.Integer()
+    child = fields.One2many('export.one2many.multiple', 'parent_id')
+
+
+class OnlyOne(models.Model):
     _name = 'export.unique'
 
-    _columns = {
-        'value': fields.integer(),
-    }
+    value = fields.Integer()
+
     _sql_constraints = [
         ('value_unique', 'unique (value)', "The value must be unique"),
     ]
