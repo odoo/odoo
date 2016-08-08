@@ -639,6 +639,14 @@ class Meeting(models.Model):
             display_time = _("%s at %s To\n %s at %s (%s)") % (date_str, time_str, date_deadline.strftime(format_date), date_deadline.strftime(format_time), timezone)
         return display_time
 
+    def _get_duration(self, start, stop):
+        """ Get the duration value between the 2 given dates. """
+        diff = fields.Datetime.from_string(stop) - fields.Datetime.from_string(start)
+        if diff:
+            duration = float(diff.days) * 24 + (float(diff.seconds) / 3600)
+            return round(duration, 2)
+        return 0.0
+
     name = fields.Char('Meeting Subject', required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, track_visibility='onchange', default='draft')
 
@@ -748,17 +756,14 @@ class Meeting(models.Model):
                 meeting.stop_date = meeting.stop
                 meeting.stop_datetime = False
 
-                meeting.duration = 0
+                meeting.duration = 0.0
             else:
                 meeting.start_date = False
                 meeting.start_datetime = meeting.start
                 meeting.stop_date = False
                 meeting.stop_datetime = meeting.stop
 
-                diff = fields.Datetime.from_string(meeting.stop) - fields.Datetime.from_string(meeting.start)
-                if diff:
-                    duration = float(diff.days) * 24 + (float(diff.seconds) / 3600)
-                    meeting.duration = round(duration, 2)
+                meeting.duration = self._get_duration(meeting.start, meeting.stop)
 
     @api.multi
     def _inverse_dates(self):
@@ -1320,6 +1325,9 @@ class Meeting(models.Model):
 
     @api.multi
     def write(self, values):
+        # compute duration, only if start and stop are modified
+        if not 'duration' in values and 'start' in values and 'stop' in values:
+            values['duration'] = self._get_duration(values['start'], values['stop'])
         # process events one by one
         for meeting in self:
             # special write of complex IDS
@@ -1383,6 +1391,10 @@ class Meeting(models.Model):
     def create(self, values):
         if not 'user_id' in values:  # Else bug with quick_create when we are filter on an other user
             values['user_id'] = self.env.user.id
+
+        # compute duration, if not given
+        if not 'duration' in values:
+            values['duration'] = self._get_duration(values['start'], values['stop'])
 
         meeting = super(Meeting, self).create(values)
 
