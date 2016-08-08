@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from openerp import fields, models, tools
+from openerp import api, fields, models, tools
 
 
 class ImLivechatReportOperator(models.Model):
@@ -18,10 +18,11 @@ class ImLivechatReportOperator(models.Model):
     time_to_answer = fields.Float('Time to answer', digits=(16, 2), readonly=True, group_operator="avg", help="Average time to give the first answer to the visitor")
     duration = fields.Float('Average duration', digits=(16, 2), readonly=True, group_operator="avg", help="Duration of the conversation (in seconds)")
 
-    def init(self, cr):
+    @api.model_cr
+    def init(self):
         # Note : start_date_hour must be remove when the read_group will allow grouping on the hour of a datetime. Don't forget to change the view !
-        tools.drop_view_if_exists(cr, 'im_livechat_report_operator')
-        cr.execute("""
+        tools.drop_view_if_exists(self.env.cr, 'im_livechat_report_operator')
+        self.env.cr.execute("""
             CREATE OR REPLACE VIEW im_livechat_report_operator AS (
                 SELECT
                     row_number() OVER () AS id,
