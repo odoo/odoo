@@ -42,7 +42,7 @@ class PosMakePayment(models.TransientModel):
         if amount != 0.0:
             order.add_payment(data)
         if order.test_paid():
-            order.signal_workflow('paid')
+            order.action_pos_order_paid()
             return {'type': 'ir.actions.act_window_close'}
         return self.launch_payment()
 
