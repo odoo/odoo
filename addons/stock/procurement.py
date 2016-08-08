@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import logging
+
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -28,6 +30,8 @@ from dateutil.relativedelta import relativedelta
 from datetime import datetime
 from psycopg2 import OperationalError
 import openerp
+
+_logger = logging.getLogger(__name__)
 
 class procurement_group(osv.osv):
     _inherit = 'procurement.group'
@@ -370,12 +374,19 @@ class procurement_order(osv.osv):
                                                              self._prepare_orderpoint_procurement(cr, uid, op, qty_rounded, context=context),
                                                              context=context)
                             self.check(cr, uid, [proc_id])
+                            # self.run can raise and that would destroy this
+                            # procurement, commit at this point
+                            if use_new_cursor:
+                                cr.commit()
                             self.run(cr, uid, [proc_id])
                     if use_new_cursor:
                         cr.commit()
-                except OperationalError:
+                except Exception as e:
+                    _logger.exception("Orderpoint processing failed")
                     if use_new_cursor:
-                        orderpoint_ids.append(op.id)
+                        # is retryable?
+                        if isinstance(e, OperationalError):
+                            orderpoint_ids.append(op.id)
                         cr.rollback()
                         continue
                     else:
