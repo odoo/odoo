@@ -711,9 +711,11 @@ class expression(object):
             """ Return a domain implementing the child_of operator for [(left,child_of,ids)],
                 either as a range using the parent_left/right tree lookup fields
                 (when available), or as an expanded [(left,in,child_ids)] """
+            if context is None:
+                context = {}
             if not ids:
                 return FALSE_DOMAIN
-            if left_model._parent_store and (not left_model.pool._init):
+            if left_model._parent_store and (not left_model.pool._init) and (not context.get('defer_parent_store_computation')):
                 # TODO: Improve where joins are implemented for many with '.', replace by:
                 # doms += ['&',(prefix+'.parent_left','<',o.parent_right),(prefix+'.parent_left','>=',o.parent_left)]
                 doms = []
@@ -736,7 +738,9 @@ class expression(object):
             """ Return a domain implementing the parent_of operator for [(left,parent_of,ids)],
                 either as a range using the parent_left/right tree lookup fields
                 (when available), or as an expanded [(left,in,parent_ids)] """
-            if left_model._parent_store and (not left_model.pool._init):
+            if context is None:
+                context = {}
+            if left_model._parent_store and (not left_model.pool._init) and (not context.get('defer_parent_store_computation')):
                 doms = []
                 for node in left_model.browse(cr, uid, ids, context=context):
                     if doms:
