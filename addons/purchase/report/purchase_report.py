@@ -123,4 +123,4 @@ class PurchaseReport(models.Model):
                     partner.commercial_partner_id,
                     analytic_account.id
             )
-        """ % self.pool['res.currency']._select_companies_rates())
+        """ % self.env['res.currency']._select_companies_rates())
