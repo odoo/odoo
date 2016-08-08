@@ -29,14 +29,14 @@ class account_analytic_account(models.Model):
         debit_domain = domain + [('amount', '<', 0.0)]
         debits = self.env['account.analytic.line'].read_group(
             debit_domain, ['account_id', 'amount'], ['account_id'])
-        debits = dict([(amount['account_id'][0], amount['amount'])
-                       for amount in debits])
+        debits = {amount['account_id'][0]: amount['amount']
+                  for amount in debits}
         # compute credits
         credit_domain = domain + [('amount', '>', 0.0)]
         credits = self.env['account.analytic.line'].read_group(
             credit_domain, ['account_id', 'amount'], ['account_id'])
-        credits = dict([(amount['account_id'][0], amount['amount'])
-                       for amount in credits])
+        credits = {amount['account_id'][0]: amount['amount']
+                   for amount in credits}
 
         for account in self:
             account.credit = credits.get(account.id, 0.0)
