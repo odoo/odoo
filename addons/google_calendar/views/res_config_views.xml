@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-         <record id="view_calendar_config_settings" model="ir.ui.view">
+<odoo>
+        <record id="view_calendar_config_settings" model="ir.ui.view">
             <field name="name">Calendar_settings_grgrgrgt</field>
             <field name="model">base.config.settings</field>
             <field name="inherit_id" ref="base_setup.view_general_configuration"/>
@@ -12,9 +11,9 @@
                         <field name="google_cal_sync"/>
                         <div attrs="{'invisible':[('google_cal_sync','=',False)]}">
                             <br/><h2>To setup the signin process with Google, first you have to perform the following steps</h2>
-                            <ul> 
+                            <ul>
                                 <li> Connect on your google account and go to <a href='https://console.developers.google.com/' target='_blank'>https://console.developers.google.com/</a> </li>
-                                <li> 
+                                <li>
                                     Click on <b>'Create a project...'</b> and enter a project name and change your id if you want. Don't forget to accept the Terms of Services
                                     <br/><br/><img src='/google_calendar/static/src/img/setup_01.png' class='calendar_img_tuto'/>
                                 </li>
@@ -24,8 +23,8 @@
                                     <br/><br/> <img src='/google_calendar/static/src/img/setup_03.png' class='calendar_img_tuto'/>
                                     <br/> <img src='/google_calendar/static/src/img/setup_04.png' class='calendar_img_tuto'/>
                                     <br/> <img src='/google_calendar/static/src/img/setup_05.png' class='calendar_img_tuto'/>
-                                </li> 
-                                <li> 
+                                </li>
+                                <li>
                                     In the menu on left side, select the sub menu <b>'Credentials'</b> (from menu APIs and auth) and click on button <b>'Create new Client ID'</b>
                                     <br/><br/> <img src='/google_calendar/static/src/img/setup_06.png' class='calendar_img_tuto'/>
                                 </li>
@@ -42,13 +41,13 @@
                                 <li>Once done, you will have the both informations (<b>Client ID</b> and <b>Client Secret</b>) that you need to insert in the 2 fields below!
                                     <br/><br/> <img src='/google_calendar/static/src/img/setup_08.png' class='calendar_img_tuto'/>
                                 </li>
-                                <a href="#" class="oe_link">Return at Top</a>                                       
+                                <a href="#" class="oe_link">Return at Top</a>
                             </ul>
                         </div>
 
                         <div>
                             <label for="cal_client_id" string="Google Client ID"/>
-                            <field name="cal_client_id" nolabel="1" class="oe_inline"/>  
+                            <field name="cal_client_id" nolabel="1" class="oe_inline"/>
                         </div>
                         <div>
                             <label for="cal_client_secret" string="Google Client Secret"/>
@@ -67,6 +66,10 @@
             <field name="target">inline</field>
         </record>
 
-        <menuitem id="menu_calendar_google_tech_config" name="API Credentials" parent="calendar.menu_calendar_configuration" groups="base.group_no_one" action="action_config_settings_google_calendar"/>
-    </data>
-</openerp>
+        <menuitem id="menu_calendar_google_tech_config"
+            name="API Credentials"
+            parent="calendar.menu_calendar_configuration"
+            groups="base.group_no_one"
+            action="action_config_settings_google_calendar"/>
+
+</odoo>
