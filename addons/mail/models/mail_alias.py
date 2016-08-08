@@ -232,9 +232,10 @@ class AliasMixin(models.AbstractModel):
         aliases.unlink()
         return res
 
-    def _init_column(self, cr, name, context=None):
+    @api.model_cr_context
+    def _init_column(self, name):
         """ Create aliases for existing rows. """
-        super(AliasMixin, self)._init_column(cr, name, context=context)
+        super(AliasMixin, self)._init_column(name)
         if name != 'alias_id':
             return
 
@@ -242,13 +243,13 @@ class AliasMixin(models.AbstractModel):
             'alias_model_name': self.get_alias_model_name({}),
             'alias_parent_model_name': self._name,
         }
-        alias_model = self.pool['mail.alias'].browse(cr, SUPERUSER_ID, [], alias_ctx)
+        alias_model = self.env['mail.alias'].sudo().with_context(alias_ctx).browse([])
 
         child_ctx = {
             'active_test': False,       # retrieve all records
             'prefetch_fields': False,   # do not prefetch fields on records
         }
-        child_model = self.browse(cr, SUPERUSER_ID, [], child_ctx)
+        child_model = self.sudo().with_context(child_ctx).browse([])
 
         for record in child_model.search([('alias_id', '=', False)]):
             # create the alias, and link it to the current record
