@@ -1278,7 +1278,7 @@ class BaseModel(object):
                 except ValidationError, e:
                     raise
                 except Exception, e:
-                    raise ValidationError("Error while validating constraint\n\n%s" % tools.ustr(e))
+                    raise ValidationError("%s\n\n%s" % (_("Error while validating constraint"), tools.ustr(e)))
 
     @api.model
     def default_get(self, fields_list):
