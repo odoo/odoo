@@ -672,8 +672,8 @@
             <field name="model_id" ref="model_crm_lead"/>
             <field name="state">code</field>
             <field name="code">
-                if context.get('active_model') == 'crm.lead' and context.get('active_ids'):
-                    self.action_set_lost(cr, uid, context['active_ids'], context=context)
+                if env.context.get('active_model') == 'crm.lead' and env.context.get('active_ids'):
+                    env['crm.lead'].browse(context['active_ids']).action_set_lost()
             </field>
         </record>
 
@@ -778,7 +778,7 @@
             <field name="name">My Pipeline</field>
             <field name="model_id" ref="crm.model_crm_team"/>
             <field name="state">code</field>
-            <field name="code">action = self.action_your_pipeline(cr, uid, context=context)</field>
+            <field name="code">action = env['crm.team'].action_your_pipeline()</field>
             <field eval="True" name="condition"/>
         </record>
 
