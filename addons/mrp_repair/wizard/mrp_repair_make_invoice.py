@@ -19,10 +19,10 @@ class MakeInvoice(models.TransientModel):
             repairs = self.env['mrp.repair'].browse(self._context['active_ids'])
             new_invoice = repairs.action_invoice_create(group=wizard.group)
 
-            # We have to trigger the workflow of the given repairs, otherwise they remain 'to be invoiced'.
-            # Note that the signal 'action_invoice_create' will trigger another call to the method 'action_invoice_create',
+            # We have to udpate the state of the given repairs, otherwise they remain 'to be invoiced'.
+            # Note that this will trigger another call to the method 'action_invoice_create',
             # but that second call will not do anything, since the repairs are already invoiced.
-            repairs.signal_workflow('action_invoice_create')
+            repairs.action_repair_invoice_create()
         return {
             'domain': [('id', 'in', new_invoice.values())],
             'name': 'Invoices',

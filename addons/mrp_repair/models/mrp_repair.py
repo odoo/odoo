@@ -189,18 +189,21 @@ class Repair(models.Model):
         return True
 
     @api.multi
-    def action_cancel_draft(self):
+    def action_repair_cancel_draft(self):
+        if self.filtered(lambda repair: repair.state != 'cancel'):
+            raise UserError(_("Repair must be canceled in order to reset it to draft."))
         self.mapped('operations').write({'state': 'draft'})
-        self.write({'state': 'draft'})
-        return self.create_workflow()
+        return self.write({'state': 'draft'})
 
     @api.multi
-    def action_confirm(self):
+    def action_repair_confirm(self):
         """ Repair order state is set to 'To be invoiced' when invoice method
         is 'Before repair' else state becomes 'Confirmed'.
         @param *arg: Arguments
         @return: True
         """
+        if self.filtered(lambda repair: repair.state != 'draft'):
+            raise UserError(_("Can only confirm draft repairs."))
         before_repair = self.filtered(lambda repair: repair.invoice_method == 'b4repair')
         before_repair.write({'state': '2binvoiced'})
         to_confirm = self - before_repair
@@ -210,17 +213,24 @@ class Repair(models.Model):
                 raise UserError(_("Serial number is required for operation line with product '%s'") % (operation.product_id.name))
         to_confirm_operations.write({'state': 'confirmed'})
         to_confirm.write({'state': 'confirmed'})
+        return True
 
     @api.multi
-    def action_cancel(self):
+    def action_repair_cancel(self):
+        if self.filtered(lambda repair: repair.state == 'done'):
+            raise UserError(_("Cannot cancel completed repairs."))
         if any(repair.invoiced for repair in self):
             raise UserError(_('Repair order is already invoiced.'))
         self.mapped('operations').write({'state': 'cancel'})
         return self.write({'state': 'cancel'})
 
     @api.multi
-    def wkf_invoice_create(self):
+    def action_repair_invoice_create(self):
         self.action_invoice_create()
+        if self.invoice_method == 'b4repair':
+            self.action_repair_ready()
+        elif self.invoice_method == 'after_repair':
+            self.action_repair_done()
         return True
 
     @api.multi
@@ -322,17 +332,17 @@ class Repair(models.Model):
     @api.multi
     def action_repair_ready(self):
         self.mapped('operations').write({'state': 'confirmed'})
-        self.write({'state': 'ready'})
-        return True
+        return self.write({'state': 'ready'})
 
     @api.multi
     def action_repair_start(self):
         """ Writes repair order state to 'Under Repair'
         @return: True
         """
+        if self.filtered(lambda repair: repair.state not in ['confirmed', 'ready']):
+            raise UserError(_("Repair must be confirmed before starting reparation."))
         self.mapped('operations').write({'state': 'confirmed'})
-        self.write({'state': 'under_repair'})
-        return True
+        return self.write({'state': 'under_repair'})
 
     @api.multi
     def action_repair_end(self):
@@ -340,8 +350,10 @@ class Repair(models.Model):
         After repair else state is set to 'Ready'.
         @return: True
         """
+        if self.filtered(lambda repair: repair.state != 'under_repair'):
+            raise UserError(_("Repair must be under repair in order to end reparation."))
         for order in self:
-            vals = {'repaired': True}
+            vals = {'repaired': True, 'state': 'done'}
             if not order.invoiced and order.invoice_method == 'after_repair':
                 vals['state'] = '2binvoiced'
             elif not order.invoiced and order.invoice_method == 'b4repair':
@@ -350,15 +362,15 @@ class Repair(models.Model):
         return True
 
     @api.multi
-    def wkf_repair_done(self):
-        self.action_repair_done()
-        return True
-
-    @api.multi
     def action_repair_done(self):
         """ Creates stock move for operation and stock move for final product of repair order.
         @return: Move ids of final products
+
         """
+        if self.filtered(lambda repair: not repair.repaired):
+            raise UserError(_("Repair must be repaired in order to finalize it."))
+        if self.filtered(lambda repair: not repair.invoiced and repair.invoice_method != 'none'):
+            raise UserError(_("Repair must be invoiced in order to finalize it."))
         res = {}
         Move = self.env['stock.move']
         for repair in self:
