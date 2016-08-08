@@ -6,26 +6,25 @@ import csv
 import fnmatch
 import inspect
 import locale
-import os
-import openerp.sql_db as sql_db
-import re
 import logging
+import os
+import re
 import tarfile
 import tempfile
 import threading
-from babel.messages import extract
 from collections import defaultdict
 from datetime import datetime
-from lxml import etree
 from os.path import join
 from xml.sax.saxutils import escape
 
-import config
-import misc
-from misc import SKIPPED_ELEMENT_TYPES
-import osutil
+from babel.messages import extract
+from lxml import etree
+
 import openerp
-from openerp import SUPERUSER_ID
+from openerp.tools import config
+from openerp.tools.misc import file_open, get_iso_codes, SKIPPED_ELEMENT_TYPES
+from openerp.tools.osutil import walksymlinks
+from openerp import sql_db, SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -315,7 +314,7 @@ def html_translate(callback, value):
 
 
 #
-# Warning: better use self.pool.get('ir.translation')._get_source if you can
+# Warning: better use self.env['ir.translation']._get_source if you can
 #
 def translate(cr, name, source_type, lang, source=None):
     if source and name:
@@ -397,11 +396,11 @@ class GettextAlias(object):
                 # Pitfall: some operations are performed in sudo mode, and we
                 #          don't know the originial uid, so the language may
                 #          be wrong when the admin language differs.
-                pool = getattr(s, 'pool', None)
                 (cr, dummy) = self._get_cr(frame, allow_create=False)
                 uid = self._get_uid(frame)
-                if pool and cr and uid:
-                    lang = pool['res.users'].context_get(cr, uid)['lang']
+                if cr and uid:
+                    env = openerp.api.Environment(cr, uid, {})
+                    lang = env['res.users'].context_get()['lang']
         return lang
 
     def __call__(self, source):
@@ -420,8 +419,8 @@ class GettextAlias(object):
                 cr, is_new_cr = self._get_cr(frame)
                 if cr:
                     # Try to use ir.translation to benefit from global cache if possible
-                    registry = openerp.registry(cr.dbname)
-                    res = registry['ir.translation']._get_source(cr, SUPERUSER_ID, None, ('code','sql_constraint'), lang, source)
+                    env = openerp.api.Environment(cr, SUPERUSER_ID, {})
+                    res = env['ir.translation']._get_source(None, ('code','sql_constraint'), lang, source)
                 else:
                     _logger.debug('no context cursor detected, skipping translation for "%r"', source)
             else:
@@ -455,12 +454,9 @@ def unquote(str):
     return re_escaped_char.sub(_sub_replacement, str[1:-1])
 
 # class to handle po files
-class TinyPoFile(object):
+class PoFile(object):
     def __init__(self, buffer):
         self.buffer = buffer
-
-    def warn(self, msg, *args):
-        _logger.warning(msg, *args)
 
     def __iter__(self):
         self.buffer.seek(0)
@@ -572,8 +568,8 @@ class TinyPoFile(object):
 
         if name is None:
             if not fuzzy:
-                self.warn('Missing "#:" formated comment at line %d for the following source:\n\t%s',
-                        self.cur_line(), source[:30])
+                _logger.warning('Missing "#:" formated comment at line %d for the following source:\n\t%s',
+                                self.cur_line(), source[:30])
             return self.next()
         return trans_type, name, res_id, source, trad, '\n'.join(comments)
 
@@ -645,8 +641,9 @@ def trans_export(lang, modules, buffer, format, cr):
             for module, type, name, res_id, src, trad, comments in rows:
                 comments = '\n'.join(comments)
                 writer.writerow((module, type, name, res_id, src, trad, comments))
+
         elif format == 'po':
-            writer = TinyPoFile(buffer)
+            writer = PoFile(buffer)
             writer.write_infos(modules)
 
             # we now group the translations by source. That means one translation per source.
@@ -694,6 +691,7 @@ def trans_export(lang, modules, buffer, format, cr):
     _process(format, modules, translations, buffer, lang)
     del translations
 
+
 def trans_parse_rml(de):
     res = []
     for n in de:
@@ -707,12 +705,14 @@ def trans_parse_rml(de):
         res.extend(trans_parse_rml(n))
     return res
 
+
 def _push(callback, term, source_line):
     """ Sanity check before pushing translation terms """
     term = (term or "").strip().encode('utf8')
     # Avoid non-char tokens like ':' '...' '.00' etc.
     if len(term) > 8 or any(x.isalpha() for x in term):
         callback(term, source_line)
+
 
 # tests whether an object is in a list of modules
 def in_modules(object_name, modules):
@@ -727,6 +727,7 @@ def in_modules(object_name, modules):
     module = object_name.split('.')[0]
     module = module_dict.get(module, module)
     return module in modules
+
 
 def _extract_translatable_qweb_terms(element, callback):
     """ Helper method to walk an etree document representing
@@ -752,6 +753,7 @@ def _extract_translatable_qweb_terms(element, callback):
             _extract_translatable_qweb_terms(el, callback)
         _push(callback, el.tail, el.sourceline)
 
+
 def babel_extract_qweb(fileobj, keywords, comment_tags, options):
     """Babel message extractor for qweb template files.
 
@@ -772,39 +774,11 @@ def babel_extract_qweb(fileobj, keywords, comment_tags, options):
     _extract_translatable_qweb_terms(tree.getroot(), handle_text)
     return result
 
+
 def trans_generate(lang, modules, cr):
-    dbname = cr.dbname
+    env = openerp.api.Environment(cr, SUPERUSER_ID, {})
+    to_translate = set()
 
-    registry = openerp.registry(dbname)
-    trans_obj = registry['ir.translation']
-    model_data_obj = registry['ir.model.data']
-    uid = 1
-
-    query = 'SELECT name, model, res_id, module' \
-            '  FROM ir_model_data'
-
-    query_models = """SELECT m.id, m.model, imd.module
-            FROM ir_model AS m, ir_model_data AS imd
-            WHERE m.id = imd.res_id AND imd.model = 'ir.model' """
-
-    if 'all_installed' in modules:
-        query += ' WHERE module IN ( SELECT name FROM ir_module_module WHERE state = \'installed\') '
-        query_models += " AND imd.module in ( SELECT name FROM ir_module_module WHERE state = 'installed') "
-    query_param = None
-    if 'all' not in modules:
-        query += ' WHERE module IN %s'
-        query_models += ' AND imd.module in %s'
-        query_param = (tuple(modules),)
-    else:
-        query += ' WHERE module != %s'
-        query_models += ' AND imd.module != %s'
-        query_param = ('__export__',)
-    query += ' ORDER BY module, model, name'
-    query_models += ' ORDER BY module, model'
-
-    cr.execute(query, query_param)
-
-    _to_translate = set()
     def push_translation(module, type, name, id, source, comments=None):
         # empty and one-letter terms are ignored, they probably are not meant to be
         # translated, and would be very hard to translate anyway.
@@ -823,99 +797,102 @@ def trans_generate(lang, modules, cr):
             return
 
         tnx = (module, source, name, id, type, tuple(comments or ()))
-        _to_translate.add(tnx)
+        to_translate.add(tnx)
 
-    def push(mod, type, name, res_id, term):
-        term = (term or '').strip()
-        if len(term) > 2 or term in ENGLISH_SMALL_WORDS:
-            push_translation(mod, type, name, res_id, term)
+    query = 'SELECT name, model, res_id, module FROM ir_model_data'
+    query_models = """SELECT m.id, m.model, imd.module
+                      FROM ir_model AS m, ir_model_data AS imd
+                      WHERE m.id = imd.res_id AND imd.model = 'ir.model'"""
 
-    def get_root_view(xml_id):
-        view = model_data_obj.xmlid_to_object(cr, uid, xml_id)
-        if view:
-            while view.mode != 'primary':
-                view = view.inherit_id
-        xml_id = view.get_external_id(cr, uid).get(view.id, xml_id)
-        return xml_id
+    if 'all_installed' in modules:
+        query += ' WHERE module IN ( SELECT name FROM ir_module_module WHERE state = \'installed\') '
+        query_models += " AND imd.module in ( SELECT name FROM ir_module_module WHERE state = 'installed') "
 
-    for (xml_name,model,res_id,module) in cr.fetchall():
+    if 'all' not in modules:
+        query += ' WHERE module IN %s'
+        query_models += ' AND imd.module IN %s'
+        query_param = (tuple(modules),)
+    else:
+        query += ' WHERE module != %s'
+        query_models += ' AND imd.module != %s'
+        query_param = ('__export__',)
+
+    query += ' ORDER BY module, model, name'
+    query_models += ' ORDER BY module, model'
+
+    cr.execute(query, query_param)
+
+    for (xml_name, model, res_id, module) in cr.fetchall():
         module = encode(module)
         model = encode(model)
         xml_name = "%s.%s" % (module, encode(xml_name))
 
-        if model not in registry:
+        if model not in env:
             _logger.error("Unable to find object %r", model)
             continue
 
-        Model = registry[model]
-        if not Model._translate:
+        record = env[model].browse(res_id)
+        if not record._translate:
             # explicitly disabled
             continue
 
-        obj = Model.browse(cr, uid, res_id)
-        if not obj.exists():
+        if not record.exists():
             _logger.warning("Unable to find object %r with id %d", model, res_id)
             continue
 
         if model=='ir.model.fields':
             try:
-                field_name = encode(obj.name)
+                field_name = encode(record.name)
             except AttributeError, exc:
                 _logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
-            field_model = registry.get(obj.model)
+            field_model = env.get(record.model)
             if (field_model is None or not field_model._translate or
                     field_name not in field_model._fields):
                 continue
-            field_def = field_model._fields[field_name]
+            field = field_model._fields.get[field_name]
 
-            if hasattr(field_def, 'selection') and isinstance(field_def.selection, (list, tuple)):
-                name = "%s,%s" % (encode(obj.model), field_name)
-                for dummy, val in field_def.selection:
+            if isinstance(getattr(field, 'selection', None), (list, tuple)):
+                name = "%s,%s" % (encode(record.model), field_name)
+                for dummy, val in field.selection:
                     push_translation(module, 'selection', name, 0, encode(val))
 
         elif model=='ir.actions.report.xml':
-            name = encode(obj.report_name)
+            name = encode(record.report_name)
             fname = ""
-            if obj.report_rml:
-                fname = obj.report_rml
+            if record.report_rml:
+                fname = record.report_rml
                 parse_func = trans_parse_rml
                 report_type = "report"
-            elif obj.report_xsl:
+            elif record.report_xsl:
                 continue
-            if fname and obj.report_type in ('pdf', 'xsl'):
+            if fname and record.report_type in ('pdf', 'xsl'):
                 try:
-                    report_file = misc.file_open(fname)
-                    try:
+                    with file_open(fname) as report_file:
                         d = etree.parse(report_file)
                         for t in parse_func(d.iter()):
                             push_translation(module, report_type, name, 0, t)
-                    finally:
-                        report_file.close()
                 except (IOError, etree.XMLSyntaxError):
                     _logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
-        for field_name, field_def in obj._fields.iteritems():
-            if getattr(field_def, 'translate', None):
+        for field_name, field in record._fields.iteritems():
+            if getattr(field, 'translate', None):
                 name = model + "," + field_name
                 try:
-                    value = obj[field_name] or ''
+                    value = record[field_name] or ''
                 except Exception:
                     continue
-                for term in set(field_def.get_trans_terms(value)):
+                for term in set(field.get_trans_terms(value)):
                     push_translation(module, 'model', name, xml_name, encode(term))
 
         # End of data for ir.model.data query results
 
-    cr.execute(query_models, query_param)
-
     def push_constraint_msg(module, term_type, model, msg):
-        if not hasattr(msg, '__call__'):
+        if not callable(msg):
             push_translation(encode(module), term_type, encode(model), 0, encode(msg))
 
     def push_local_constraints(module, model, cons_type='sql_constraints'):
-        """Climb up the class hierarchy and ignore inherited constraints
-           from other modules"""
+        """ Climb up the class hierarchy and ignore inherited constraints from other modules. """
         term_type = 'sql_constraint' if cons_type == 'sql_constraints' else 'constraint'
         msg_pos = 2 if cons_type == 'sql_constraints' else 1
         for cls in model.__class__.__mro__:
@@ -925,31 +902,30 @@ def trans_generate(lang, modules, cr):
             for constraint in constraints:
                 push_constraint_msg(module, term_type, model._name, constraint[msg_pos])
             
+    cr.execute(query_models, query_param)
+
     for (_, model, module) in cr.fetchall():
-        if model not in registry:
+        if model not in env:
             _logger.error("Unable to find object %r", model)
             continue
+        Model = env[model]
+        if Model._constraints:
+            push_local_constraints(module, Model, 'constraints')
+        if Model._sql_constraints:
+            push_local_constraints(module, Model, 'sql_constraints')
 
-        model_obj = registry[model]
-
-        if model_obj._constraints:
-            push_local_constraints(module, model_obj, 'constraints')
-
-        if model_obj._sql_constraints:
-            push_local_constraints(module, model_obj, 'sql_constraints')
-
-    installed_modules = map(
-        lambda m: m['name'],
-        registry['ir.module.module'].search_read(cr, uid, [('state', '=', 'installed')], fields=['name']))
+    installed_modules = [
+        m['name']
+        for m in env['ir.module.module'].search_read([('state', '=', 'installed')], fields=['name'])
+    ]
 
     path_list = [(path, True) for path in openerp.modules.module.ad_paths]
     # Also scan these non-addon paths
     for bin_path in ['osv', 'report', 'modules', 'service', 'tools']:
-        path_list.append((os.path.join(config.config['root_path'], bin_path), True))
-
+        path_list.append((os.path.join(config['root_path'], bin_path), True))
     # non-recursive scan for individual files in root directory but without
     # scanning subdirectories that may contain addons
-    path_list.append((config.config['root_path'], False))
+    path_list.append((config['root_path'], False))
     _logger.debug("Scanning modules at paths: %s", path_list)
 
     def get_module_from_path(path):
@@ -978,8 +954,7 @@ def trans_generate(lang, modules, cr):
         if not module: return
         src_file = open(fabsolutepath, 'r')
         try:
-            for extracted in extract.extract(extract_method, src_file,
-                                             keywords=extract_keywords):
+            for extracted in extract.extract(extract_method, src_file, keywords=extract_keywords):
                 # Babel 0.9.6 yields lineno, message, comments
                 # Babel 1.3 yields lineno, message, comments, context
                 lineno, message, comments = extracted[:3]
@@ -992,7 +967,7 @@ def trans_generate(lang, modules, cr):
 
     for (path, recursive) in path_list:
         _logger.debug("Scanning files of modules at %s", path)
-        for root, dummy, files in osutil.walksymlinks(path):
+        for root, dummy, files in walksymlinks(path):
             for fname in fnmatch.filter(files, '*.py'):
                 babel_extract_terms(fname, path, root)
             # mako provides a babel extractor: http://docs.makotemplates.org/en/latest/usage.html#babel
@@ -1015,41 +990,39 @@ def trans_generate(lang, modules, cr):
 
     out = []
     # translate strings marked as to be translated
-    for module, source, name, id, type, comments in sorted(_to_translate):
-        trans = '' if not lang else trans_obj._get_source(cr, uid, name, type, lang, source)
+    Translation = env['ir.translation']
+    for module, source, name, id, type, comments in sorted(to_translate):
+        trans = Translation._get_source(name, type, lang, source) if lang else ""
         out.append((module, type, name, id, source, encode(trans) or '', comments))
     return out
 
+
 def trans_load(cr, filename, lang, verbose=True, module_name=None, context=None):
     try:
-        fileobj = misc.file_open(filename)
-        _logger.info("loading %s", filename)
-        fileformat = os.path.splitext(filename)[-1][1:].lower()
-        result = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, module_name=module_name, context=context)
-        fileobj.close()
-        return result
+        with file_open(filename) as fileobj:
+            _logger.info("loading %s", filename)
+            fileformat = os.path.splitext(filename)[-1][1:].lower()
+            result = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, module_name=module_name, context=context)
+            return result
     except IOError:
         if verbose:
             _logger.error("couldn't read translation file %s", filename)
         return None
 
+
 def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True, module_name=None, context=None):
     """Populates the ir_translation table."""
     if verbose:
         _logger.info('loading translation file for language %s', lang)
-    if context is None:
-        context = {}
-    db_name = cr.dbname
-    registry = openerp.registry(db_name)
-    lang_obj = registry.get('res.lang')
-    trans_obj = registry.get('ir.translation')
-    iso_lang = misc.get_iso_codes(lang)
-    try:
-        ids = lang_obj.search(cr, SUPERUSER_ID, [('code','=', lang)])
 
-        if not ids:
+    env = openerp.api.Environment(cr, SUPERUSER_ID, context or {})
+    Lang = env['res.lang']
+    Translation = env['ir.translation']
+
+    try:
+        if not Lang.search_count([('code', '=', lang)]):
             # lets create the language with locale information
-            lang_obj.load_lang(cr, SUPERUSER_ID, lang=lang, lang_name=lang_name)
+            Lang.load_lang(lang=lang, lang_name=lang_name)
 
         # Parse also the POT: it will possibly provide additional targets.
         # (Because the POT comments are correct on Launchpad but not the
@@ -1064,8 +1037,9 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             for row in reader:
                 fields = row
                 break
+
         elif fileformat == 'po':
-            reader = TinyPoFile(fileobj)
+            reader = PoFile(fileobj)
             fields = ['type', 'name', 'res_id', 'src', 'value', 'comments']
 
             # Make a reader for the POT file and be somewhat defensive for the
@@ -1079,9 +1053,9 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     addons_module_i18n, _ignored = os.path.split(fileobj.name)
                     addons_module, i18n_dir = os.path.split(addons_module_i18n)
                     addons, module = os.path.split(addons_module)
-                    pot_handle = misc.file_open(os.path.join(
+                    pot_handle = file_open(os.path.join(
                         addons, module, i18n_dir, module + '.pot'))
-                    pot_reader = TinyPoFile(pot_handle)
+                    pot_reader = PoFile(pot_handle)
                 except:
                     pass
 
@@ -1104,7 +1078,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                 target.comments = comments
 
         # read the rest of the file
-        irt_cursor = trans_obj._get_import_cursor(cr, SUPERUSER_ID, context=context)
+        irt_cursor = Translation._get_import_cursor()
 
         def process_row(row):
             """Process a single PO (or POT) entry."""
@@ -1161,13 +1135,15 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             process_row(row)
 
         irt_cursor.finish()
-        trans_obj.clear_caches()
+        Translation.clear_caches()
         if verbose:
             _logger.info("translation file loaded succesfully")
 
     except IOError:
+        iso_lang = get_iso_codes(lang)
         filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
         _logger.exception("couldn't read translation file %s", filename)
+
 
 def get_locales(lang=None):
     if lang is None:
@@ -1200,7 +1176,6 @@ def get_locales(lang=None):
     yield lang
 
 
-
 def resetlocale():
     # locale.resetlocale is bugged with some locales.
     for ln in get_locales():
@@ -1209,14 +1184,14 @@ def resetlocale():
         except locale.Error:
             continue
 
+
 def load_language(cr, lang):
-    """Loads a translation terms for a language.
+    """ Loads a translation terms for a language.
     Used mainly to automate language loading at db initialization.
 
     :param lang: language ISO code with optional _underscore_ and l10n flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
     :type lang: str
     """
-    registry = openerp.registry(cr.dbname)
-    language_installer = registry['base.language.install']
-    oid = language_installer.create(cr, SUPERUSER_ID, {'lang': lang})
-    language_installer.lang_install(cr, SUPERUSER_ID, [oid], context=None)
+    env = openerp.api.Environment(cr, SUPERUSER_ID, {})
+    installer = env['base.language.install'].create({'lang': lang})
+    installer.lang_install()
