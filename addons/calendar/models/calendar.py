@@ -1347,7 +1347,7 @@ class Meeting(models.Model):
                 else:
                     data = meeting.read(['start', 'stop', 'rrule', 'duration'])[0]
                     if data.get('rrule'):
-                        new_ids = meeting.with_context(dont_notify=True)._detach_one_event(values).ids  # to prevent multiple notify_next_alarm
+                        new_ids = meeting.with_context(dont_notify=True).detach_recurring_event(values).ids  # to prevent multiple notify_next_alarm
 
             new_meetings = self.browse(new_ids)
             real_meetings = self.browse(real_ids)
