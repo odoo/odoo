@@ -34,6 +34,9 @@ var RunningTourActionHelper = core.Class.extend({
     drag_and_drop: function (to, element) {
         this._drag_and_drop(this._get_action_values(element), to);
     },
+    keydown: function (keyCodes, element) {
+        this._keydown(this._get_action_values(element), keyCodes.split(/[,\s]+/));
+    },
     auto: function (element) {
         var values = this._get_action_values(element);
         if (values.consume_event === "input") {
@@ -88,6 +91,27 @@ var RunningTourActionHelper = core.Class.extend({
         values.$element.trigger($.Event("mousedown", {which: 1, pageX: elementCenter.left, pageY: elementCenter.top}));
         values.$element.trigger($.Event("mousemove", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
         values.$element.trigger($.Event("mouseup", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
+    },
+    _keydown: function (values, keyCodes) {
+        var self = this;
+        var keyCode = +keyCodes.shift();
+        setTimeout(function () {
+            values.$element.trigger({ type: 'keydown', keyCode: keyCode });
+            if ((keyCode > 47 && keyCode < 58)   || // number keys
+                keyCode == 32  || // spacebar
+                (keyCode > 64 && keyCode < 91)   || // letter keys
+                (keyCode > 95 && keyCode < 112)  || // numpad keys
+                (keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
+                (keyCode > 218 && keyCode < 223)) {   // [\]' (in order))
+                document.execCommand('insertText', 0, String.fromCharCode(keyCode));
+            }
+            values.$element.trigger({ type: 'keyup', keyCode: keyCode });
+
+            // next keydown
+            if (keyCodes.length) {
+                self._keydown(values, keyCodes);
+            }
+        });
     },
 });
 
@@ -337,7 +361,7 @@ return core.Class.extend({
             if (typeof tip.run === "function") {
                 tip.run.call(tip.widget, action_helper);
             } else if (tip.run !== undefined) {
-                var m = tip.run.match(/^(click|text|drag_and_drop) *(?:\(? *["']?(.+)["']? *\)?)?$/);
+                var m = tip.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
                 action_helper[m[1]](m[2]);
             } else {
                 action_helper.auto();
