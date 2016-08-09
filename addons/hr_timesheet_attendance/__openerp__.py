@@ -9,6 +9,7 @@
 
     'depends': ['hr_timesheet_sheet', 'hr_attendance'],
     'data': [
+        'security/ir.model.access.csv',
         'report/hr_timesheet_attendance_report_view.xml',
         'views/hr_timesheet_sheet_views.xml',
     ],
