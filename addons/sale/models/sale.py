@@ -3,13 +3,13 @@
 
 from itertools import groupby
 from datetime import datetime, timedelta
-from openerp import SUPERUSER_ID
-from openerp import api, fields, models, _
-import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
-from openerp.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.misc import formatLang
-from openerp.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
+
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.misc import formatLang
+
+import odoo.addons.decimal_precision as dp
 
 
 class SaleOrder(models.Model):
@@ -236,7 +236,7 @@ class SaleOrder(models.Model):
             # Block if partner only has warning but parent company is blocked
             if partner.sale_warn != 'block' and partner.parent_id and partner.parent_id.sale_warn == 'block':
                 partner = partner.parent_id
-            title =  _("Warning for %s") % partner.name
+            title = ("Warning for %s") % partner.name
             message = partner.sale_warn_msg
             warning = {
                     'title': title,
@@ -263,7 +263,6 @@ class SaleOrder(models.Model):
             vals['pricelist_id'] = vals.setdefault('pricelist_id', partner.property_product_pricelist and partner.property_product_pricelist.id)
         result = super(SaleOrder, self).create(vals)
         return result
-
 
     @api.multi
     def _prepare_invoice(self):
@@ -366,7 +365,6 @@ class SaleOrder(models.Model):
 
         if not invoices:
             raise UserError(_('There is no invoicable line.'))
-
 
         for invoice in invoices.values():
             if not invoice.invoice_line_ids:
@@ -482,7 +480,6 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        group_user = self.env.ref('base.group_user')
         for recipient in recipients:
             if recipient.id in done_ids:
                 continue
@@ -580,7 +577,7 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id.invoice_policy', 'order_id.state')
     def _compute_qty_delivered_updateable(self):
         for line in self:
-            line.qty_delivered_updateable = (line.order_id.state == 'sale') and (line.product_id.track_service == 'manual') and (line.product_id.expense_policy=='no')
+            line.qty_delivered_updateable = (line.order_id.state == 'sale') and (line.product_id.track_service == 'manual') and (line.product_id.expense_policy == 'no')
 
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
     def _get_to_invoice_qty(self):
@@ -660,7 +657,7 @@ class SaleOrderLine(models.Model):
         procurements are created. If the quantity is decreased, no automated action is taken.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        new_procs = self.env['procurement.order'] #Empty recordset
+        new_procs = self.env['procurement.order']  # Empty recordset
         for line in self:
             if line.state != 'sale' or not line.product_id._need_procurement():
                 continue
@@ -782,8 +779,8 @@ class SaleOrderLine(models.Model):
         res = {}
         account = self.product_id.property_account_income_id or self.product_id.categ_id.property_account_income_categ_id
         if not account:
-            raise UserError(_('Please define income account for this product: "%s" (id:%d) - or for its category: "%s".') % \
-                            (self.product_id.name, self.product_id.id, self.product_id.categ_id.name))
+            raise UserError(_('Please define income account for this product: "%s" (id:%d) - or for its category: "%s".') %
+                (self.product_id.name, self.product_id.id, self.product_id.categ_id.name))
 
         fpos = self.order_id.fiscal_position_id or self.order_id.partner_id.property_account_position_id
         if fpos:

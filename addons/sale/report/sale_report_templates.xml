@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_saleorder_document">
     <t t-call="report.external_layout">
         <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
@@ -179,5 +178,4 @@
         </t>
     </t>
 </template>
-</data>
-</openerp>
+</odoo>
