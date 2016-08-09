@@ -75,6 +75,10 @@ class MarketingCampaign(models.Model):
             campaign.segments_count = len(campaign.segment_ids)
 
     @api.multi
+    def state_draft_set(self):
+        return self.write({'state': 'draft'})
+
+    @api.multi
     def state_running_set(self):
         # TODO check that all subcampaigns are running
         self.ensure_one()
@@ -202,6 +206,10 @@ class MarketingCampaignSegment(models.Model):
         else:
             self.ir_filter_id = False
         return res
+
+    @api.multi
+    def state_draft_set(self):
+        return self.write({'state': 'draft'})
 
     @api.multi
     def state_running_set(self):

@@ -12,14 +12,14 @@ class TestMarketingCampaignFlow(common.TransactionCase):
 
         # In order to test process of compaign, I start compaign.
         partner_channel = self.env.ref('marketing_campaign.marketing_campaign_openerppartnerchannel')
-        partner_channel.signal_workflow('state_running_set')
+        partner_channel.state_running_set()
 
         # I check the campaign on Running mode after started.
         self.assertEqual(partner_channel.state, 'running', 'The campaign should be on Running mode after having started.')
 
         # I start this segment after assinged campaign.
         segment0 = self.env.ref('marketing_campaign.marketing_campaign_segment0')
-        segment0.signal_workflow('state_running_set')
+        segment0.state_running_set()
 
         # I check the segment on Running mode after started.
         self.assertEqual(segment0.state, 'running', 'The segment should be on Running mode after having started.')
@@ -90,26 +90,26 @@ class TestMarketingCampaignFlow(common.TransactionCase):
         workitems.preview()
 
         # I cancel segmentation because of some activity.
-        segment0.signal_workflow('state_cancel_set')
+        segment0.state_cancel_set()
 
         # I check the segmentation is canceled.
         self.assertEqual(segment0.state, 'cancelled', 'Segment should be in cancelled state.')
 
         # I reopen the segmentation.
-        segment0.signal_workflow('state_draft_set')
-        segment0.signal_workflow('state_running_set')
+        segment0.state_draft_set()
+        segment0.state_running_set()
 
         # I check the segment on Running mode after started.
         self.assertEqual(segment0.state, 'running', 'Segment should be in running state.')
 
         # I close segmentation After completion of all activity.
-        segment0.signal_workflow('state_done_set')
+        segment0.state_done_set()
 
         # I check the segmentation is done.
         self.assertEqual(segment0.state, 'done', 'Segment should be in done state.')
 
         # I close this campaing.
-        partner_channel.signal_workflow('state_done_set')
+        partner_channel.state_done_set()
 
         # I check the campaing is done.
         self.assertEqual(partner_channel.state, 'done', 'Campaign should be in done state.')
