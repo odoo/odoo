@@ -478,6 +478,7 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
                 this.$('.o_debug_input').val(this.get('value'));
             }
         } else {
+            this.$('.o_form_input').val('');
             this.$('.o_count').text(_t('No selected record'));
             var $arrow = this.$('button span').detach();
             this.$('button').text(_('Select records ')).append($("<span/>").addClass('fa fa-arrow-right'));
