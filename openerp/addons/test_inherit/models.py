@@ -1,20 +1,14 @@
 # -*- coding: utf-8 -*-
-from openerp import models, fields, api, osv
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# We just create a new model
+from odoo import models, fields, api
+
+# We create a new model
 class mother(models.Model):
     _name = 'test.inherit.mother'
 
-    _columns = {
-        # check interoperability of field inheritance with old-style fields
-        'name': osv.fields.char('Name'),
-        'state': osv.fields.selection([('a', 'A'), ('b', 'B')], string='State'),
-    }
-    _defaults = {
-        'name': 'Foo',
-        'state': 'a',
-    }
-
+    name = fields.Char(default='Foo')
+    state = fields.Selection([('a', 'A'), ('b', 'B')], default='a')
     surname = fields.Char(compute='_compute_surname')
 
     @api.one
@@ -22,8 +16,8 @@ class mother(models.Model):
     def _compute_surname(self):
         self.surname = self.name or ''
 
-# We want to inherits from the parent model and we add some fields
-# in the child object
+
+# We inherit from the parent model, and we add some fields in the child model
 class daughter(models.Model):
     _name = 'test.inherit.daughter'
 
@@ -32,9 +26,8 @@ class daughter(models.Model):
     field_in_daughter = fields.Char('Field1')
 
 
-# We add a new field in the parent object. Because of a recent refactoring,
-# this feature was broken.
-# This test and these models try to show the bug and fix it.
+# We add a new field in the parent model. Because of a recent refactoring, this
+# feature was broken. These models rely on that feature.
 class mother(models.Model):
     _inherit = 'test.inherit.mother'
 
@@ -86,23 +79,16 @@ class res_partner(models.Model):
 class test_inherit_property(models.Model):
     _name = 'test.inherit.property'
 
-    _columns = {
-        'name': osv.fields.char('Name', required=True),
-        'property_foo': osv.fields.property(string='Foo', type='integer'),
-        'property_bar': osv.fields.property(string='Bar', type='integer'),
-    }
+    name = fields.Char('Name', required=True)
+    property_foo = fields.Integer(string='Foo', company_dependent=True)
+    property_bar = fields.Integer(string='Bar', company_dependent=True)
+
 
 class test_inherit_property(models.Model):
     _inherit = 'test.inherit.property'
 
-    @api.multi
-    def _get_foo(self, name, arg):
-        return dict.fromkeys(self.ids, 42)
-
-    _columns = {
-        # override property_foo with an old-api function field
-        'property_foo': osv.fields.function(_get_foo, type='integer', string='Foo'),
-    }
+    # override property_foo with a plain normal field
+    property_foo = fields.Integer(company_dependent=False)
 
     # override property_bar with a new-api computed field
     property_bar = fields.Integer(compute='_compute_bar', company_dependent=False)
