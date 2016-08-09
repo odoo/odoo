@@ -52,7 +52,7 @@ var RunningTourActionHelper = core.Class.extend({
     },
     _click: function (values) {
         var href = values.$element.attr("href");
-        if (href && href.length && href[0] !== "#" && values.$element.is("a")) {
+        if (href && href.length && href[0] !== "#" && values.$element.is("a") && href !== "javascript:void(0)") {
             window.location.href = href;
         } else {
             values.$element.mousedown().mouseup().click();
