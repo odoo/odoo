@@ -61,6 +61,18 @@
             <field name="parent_id" eval="ref('account.mt_invoice_validated')"/>
             <field name="relation_field">team_id</field>
         </record>
+        <record id="sale_layout_cat_1" model="sale.layout_category">
+            <field name="name">Services</field>
+            <field name="subtotal" eval="True"></field>
+            <field name="pagebreak" eval="True"></field>
+            <field name="sequence">1</field>
+        </record>
 
+        <record id="sale_layout_cat_2" model="sale.layout_category">
+            <field name="name">Material</field>
+            <field name="subtotal" eval="True"></field>
+            <field name="pagebreak" eval="False"></field>
+            <field name="sequence">10</field>
+        </record>
     </data>
 </openerp>

@@ -45,7 +45,6 @@ The Dashboard for the Sales Manager will include
     'data': [
         'data/ir_sequence_data.xml',
         'data/sale_data.xml',
-        'data/sale_layout_category_data.xml',
         'data/sale_tour.xml',
         'report/sale_report.xml',
         'data/mail_template_data.xml',
@@ -61,7 +60,6 @@ The Dashboard for the Sales Manager will include
         'views/sale_config_settings_views.xml',
         'views/sale_templates.xml',
         'views/sale_layout_category_view.xml',
-        'views/sales_team_dashboard_views.xml',
     ],
     'demo': [
         'data/sale_demo.xml',
