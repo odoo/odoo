@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.addons.hr_recruitment.models import hr_recruitment
 
 
@@ -33,9 +33,10 @@ class HrRecruitmentReport(models.Model):
     medium_id = fields.Many2one('utm.medium', 'Medium', readonly=True, help="This is the method of delivery. Ex: Postcard, Email, or Banner Ad")
     source_id = fields.Many2one('utm.source', 'Source', readonly=True, help="This is the source of the link Ex: Search Engine, another domain, or name of email list")
 
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'hr_recruitment_report')
-        cr.execute("""
+    @api.model_cr
+    def init(self):
+        tools.drop_view_if_exists(self._cr, 'hr_recruitment_report')
+        self._cr.execute("""
             create or replace view hr_recruitment_report as (
                  select
                      min(s.id) as id,
