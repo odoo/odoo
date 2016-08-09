@@ -79,7 +79,7 @@ class PosOrder(models.Model):
             _logger.warning('attempting to create new session for order %s', order['name'])
             new_session = PosSession.create({'config_id': closed_session.config_id.id})
             # bypass opening_control (necessary when using cash control)
-            new_session.signal_workflow('open')
+            new_session.action_pos_session_open()
             return new_session
 
     def _match_payment_to_invoice(self, order):
