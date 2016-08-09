@@ -12,7 +12,7 @@ class CrmPartnerReportAssign(models.Model):
 
     partner_id = fields.Many2one('res.partner', 'Partner', required=False, readonly=True)
     grade_id = fields.Many2one('res.partner.grade', 'Grade', readonly=True)
-    activation = fields.Many2one('res.partner.activation', 'Activation', select=1)
+    activation = fields.Many2one('res.partner.activation', 'Activation', index=True)
     user_id = fields.Many2one('res.users', 'User', readonly=True)
     date_review = fields.Date('Latest Partner Review')
     date_partnership = fields.Date('Partnership Date')

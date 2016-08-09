@@ -93,10 +93,10 @@ class ProcurementOrder(models.Model):
     # These two fields are used for scheduling
     priority = fields.Selection(
         PROCUREMENT_PRIORITIES, string='Priority', default='1',
-        required=True, select=True, track_visibility='onchange')
+        required=True, index=True, track_visibility='onchange')
     date_planned = fields.Datetime(
         'Scheduled Date', default=fields.Datetime.now,
-        required=True, select=True, track_visibility='onchange')
+        required=True, index=True, track_visibility='onchange')
 
     group_id = fields.Many2one('procurement.group', 'Procurement Group')
     rule_id = fields.Many2one(

@@ -34,7 +34,7 @@ class ResPartner(models.Model):
     partner_weight = fields.Integer('Level Weight', default=lambda *args: 0,
         help="Gives the probability to assign a lead to this partner. (0 means no assignation.)")
     grade_id = fields.Many2one('res.partner.grade', 'Level')
-    activation = fields.Many2one('res.partner.activation', 'Activation', select=1)
+    activation = fields.Many2one('res.partner.activation', 'Activation', index=True)
     date_partnership = fields.Date('Partnership Date')
     date_review = fields.Date('Latest Partner Review')
     date_review_next = fields.Date('Next Partner Review')
