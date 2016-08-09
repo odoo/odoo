@@ -21,7 +21,7 @@ from openerp import SUPERUSER_ID
 from openerp.osv.fields import float as float_field, function as function_field, datetime as datetime_field
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -391,7 +391,7 @@ class report_sxw(report_rml, preprocess.report):
             objs = self.getObjects(cr, uid, ids, context)
             results = []
             for obj in objs:
-                aname = eval(attach, {'object':obj, 'time':time})
+                aname = safe_eval(attach, {'object':obj, 'time':time})
                 result = False
                 if report_xml.attachment_use and aname and context.get('attachment_use', True):
                     aids = registry['ir.attachment'].search(cr, uid, [('datas_fname','=',aname+'.pdf'),('res_model','=',self.table),('res_id','=',obj.id)])

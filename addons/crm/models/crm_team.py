@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 
 class Team(models.Model):
@@ -22,7 +22,7 @@ class Team(models.Model):
     def get_alias_values(self):
         has_group_use_lead = self.env.user.has_group('crm.group_use_lead')
         values = super(Team, self).get_alias_values()
-        values['alias_defaults'] = defaults = eval(self.alias_defaults or "{}")
+        values['alias_defaults'] = defaults = safe_eval(self.alias_defaults or "{}")
         defaults['type'] = 'lead' if has_group_use_lead and self.use_leads else 'opportunity'
         defaults['team_id'] = self.id
         return values
@@ -61,7 +61,7 @@ class Team(models.Model):
             if user_team_id:
                 action['help'] += "<p>As you don't belong to any sales team, Odoo opens the first one by default.</p>"
 
-        action_context = eval(action['context'], {'uid': self.env.uid})
+        action_context = safe_eval(action['context'], {'uid': self.env.uid})
         if user_team_id:
             action_context['default_team_id'] = user_team_id
 

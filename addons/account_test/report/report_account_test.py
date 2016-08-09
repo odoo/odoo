@@ -3,7 +3,7 @@
 
 import datetime
 from odoo import api, models, _
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 #
 # Use period and Journal for selection or resources
 #
@@ -41,7 +41,7 @@ class ReportAssertAccount(models.AbstractModel):
             'result': None,  # used to store the result of the test
             'column_order': None,  # used to choose the display order of columns (in case you are returning a list of dict)
         }
-        eval(code_exec, localdict, mode="exec", nocopy=True)
+        safe_eval(code_exec, localdict, mode="exec", nocopy=True)
         result = localdict['result']
         column_order = localdict.get('column_order', None)
 

@@ -5,7 +5,7 @@ import logging
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -287,7 +287,7 @@ class DeliveryCarrier(models.Model):
         criteria_found = False
         price_dict = {'price': total, 'volume': volume, 'weight': weight, 'wv': volume * weight, 'quantity': quantity}
         for line in self.price_rule_ids:
-            test = eval(line.variable + line.operator + str(line.max_value), price_dict)
+            test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
             if test:
                 price = line.list_base_price + line.list_price * price_dict[line.variable_factor]
                 criteria_found = True

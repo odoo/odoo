@@ -9,7 +9,7 @@ import re
 import reportlab
 
 import openerp.tools as tools
-from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.safe_eval import safe_eval
 from openerp.tools.misc import ustr
 
 _logger = logging.getLogger(__name__)
@@ -26,12 +26,12 @@ def _child_get(node, self=None, tagname=None):
     for n in node:
         if self and self.localcontext and n.get('rml_loop'):
 
-            for ctx in eval(n.get('rml_loop'),{}, self.localcontext):
+            for ctx in safe_eval(n.get('rml_loop'),{}, self.localcontext):
                 self.localcontext.update(ctx)
                 if (tagname is None) or (n.tag==tagname):
                     if n.get('rml_except', False):
                         try:
-                            eval(n.get('rml_except'), {}, self.localcontext)
+                            safe_eval(n.get('rml_except'), {}, self.localcontext)
                         except GeneratorExit:
                             continue
                         except Exception, e:
@@ -39,7 +39,7 @@ def _child_get(node, self=None, tagname=None):
                             continue
                     if n.get('rml_tag'):
                         try:
-                            (tag,attr) = eval(n.get('rml_tag'),{}, self.localcontext)
+                            (tag,attr) = safe_eval(n.get('rml_tag'),{}, self.localcontext)
                             n2 = copy.deepcopy(n)
                             n2.tag = tag
                             n2.attrib.update(attr)
@@ -54,7 +54,7 @@ def _child_get(node, self=None, tagname=None):
             continue
         if self and self.localcontext and n.get('rml_except'):
             try:
-                eval(n.get('rml_except'), {}, self.localcontext)
+                safe_eval(n.get('rml_except'), {}, self.localcontext)
             except GeneratorExit:
                 continue
             except Exception, e:
@@ -62,7 +62,7 @@ def _child_get(node, self=None, tagname=None):
                 continue
         if self and self.localcontext and n.get('rml_tag'):
             try:
-                (tag,attr) = eval(n.get('rml_tag'),{}, self.localcontext)
+                (tag,attr) = safe_eval(n.get('rml_tag'),{}, self.localcontext)
                 n2 = copy.deepcopy(n)
                 n2.tag = tag
                 n2.attrib.update(attr or {})
@@ -99,7 +99,7 @@ def _process_text(self, txt):
                 txt = None
                 try:
                     expr = sps.pop(0)
-                    txt = eval(expr, self.localcontext)
+                    txt = safe_eval(expr, self.localcontext)
                     if txt and isinstance(txt, basestring):
                         txt = tools.ustr(txt)
                 except Exception:

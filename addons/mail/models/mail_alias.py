@@ -8,7 +8,7 @@ import unicodedata
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import ustr
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -94,7 +94,7 @@ class Alias(models.Model):
     @api.constrains('alias_defaults')
     def _check_alias_defaults(self):
         try:
-            dict(eval(self.alias_defaults))
+            dict(safe_eval(self.alias_defaults))
         except Exception:
             raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
 

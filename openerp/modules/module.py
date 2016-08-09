@@ -23,7 +23,7 @@ import openerp
 import openerp.tools as tools
 import openerp.release as release
 from openerp import SUPERUSER_ID
-from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.safe_eval import safe_eval
 
 MANIFEST = '__openerp__.py'
 README = ['README.rst', 'README.md', 'README.txt']
@@ -318,7 +318,7 @@ def load_information_from_description_file(module, mod_path=None):
 
             f = tools.file_open(terp_file)
             try:
-                info.update(eval(f.read()))
+                info.update(safe_eval(f.read()))
             finally:
                 f.close()
 
