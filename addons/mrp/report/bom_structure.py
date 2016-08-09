@@ -1,16 +1,11 @@
-## -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
-from odoo.report import report_sxw
+from odoo import api, models
 
 
-class bom_structure(report_sxw.rml_parse):
-    def __init__(self, cr, uid, name, context):
-        super(bom_structure, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update({
-            'get_children': self.get_children,
-        })
+class BomStructureReport(models.AbstractModel):
+    _name = 'report.mrp.report_mrpbomstructure'
 
     def get_children(self, object, level=0):
         result = []
@@ -26,20 +21,24 @@ class bom_structure(report_sxw.rml_parse):
                 res['code'] = l.bom_id.code
                 result.append(res)
                 if l.child_line_ids:
-                    if level<6:
+                    if level < 6:
                         level += 1
-                    _get_rec(l.child_line_ids,level)
-                    if level>0 and level<6:
+                    _get_rec(l.child_line_ids, level)
+                    if level > 0 and level < 6:
                         level -= 1
             return result
 
-        children = _get_rec(object,level)
+        children = _get_rec(object, level)
 
         return children
 
-
-class report_mrpbomstructure(models.AbstractModel):
-    _name = 'report.mrp.report_mrpbomstructure'
-    _inherit = 'report.abstract_report'
-    _template = 'mrp.report_mrpbomstructure'
-    _wrapped_report_class = bom_structure
+    @api.multi
+    def render_html(self, docids, data=None):
+        docargs = {
+            'doc_ids': docids,
+            'doc_model': 'mrp.bom',
+            'docs': self.env['mrp.bom'].browse(docids),
+            'get_children': self.get_children,
+            'data': data,
+        }
+        return self.env['report'].render('mrp.report_mrpbomstructure', docargs)
