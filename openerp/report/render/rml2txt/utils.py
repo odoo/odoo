@@ -5,7 +5,7 @@ import copy
 import re
 import reportlab
 import reportlab.lib.units
-from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.safe_eval import safe_eval
 
 _regex = re.compile('\[\[(.+?)\]\]')
 
@@ -13,17 +13,17 @@ def _child_get(node, self=None, tagname=None):
     for n in node:
         if self and self.localcontext and n.get('rml_loop', False):
             oldctx = self.localcontext
-            for ctx in eval(n.get('rml_loop'),{}, self.localcontext):
+            for ctx in safe_eval(n.get('rml_loop'),{}, self.localcontext):
                 self.localcontext.update(ctx)
                 if (tagname is None) or (n.tag==tagname):
                     if n.get('rml_except', False):
                         try:
-                            eval(n.get('rml_except'), {}, self.localcontext)
+                            safe_eval(n.get('rml_except'), {}, self.localcontext)
                         except Exception:
                             continue
                     if n.get('rml_tag'):
                         try:
-                            (tag,attr) = eval(n.get('rml_tag'),{}, self.localcontext)
+                            (tag,attr) = safe_eval(n.get('rml_tag'),{}, self.localcontext)
                             n2 = copy.copy(n)
                             n2.tag = tag
                             n2.attrib.update(attr)
@@ -36,7 +36,7 @@ def _child_get(node, self=None, tagname=None):
             continue
         if self and self.localcontext and n.get('rml_except', False):
             try:
-                eval(n.get('rml_except'), {}, self.localcontext)
+                safe_eval(n.get('rml_except'), {}, self.localcontext)
             except Exception:
                 continue
         if (tagname is None) or (n.tag==tagname):
@@ -54,7 +54,7 @@ def _process_text(self, txt):
             result += self.localcontext.get('translate', lambda x:x)(sps.pop(0))
             if sps:
                 try:
-                    txt2 = eval(sps.pop(0),self.localcontext)
+                    txt2 = safe_eval(sps.pop(0),self.localcontext)
                 except Exception:
                     txt2 = ''
                 if isinstance(txt2, (int, float)):

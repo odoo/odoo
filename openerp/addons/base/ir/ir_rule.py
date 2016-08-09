@@ -6,7 +6,7 @@ from collections import defaultdict
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 
 class IrRule(models.Model):
@@ -50,7 +50,7 @@ class IrRule(models.Model):
         eval_context = self._eval_context()
         for rule in self:
             if rule.domain_force:
-                rule.domain = expression.normalize_domain(eval(rule.domain_force, eval_context))
+                rule.domain = expression.normalize_domain(safe_eval(rule.domain_force, eval_context))
             else:
                 rule.domain = []
 

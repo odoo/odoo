@@ -12,7 +12,7 @@ from email.utils import formataddr
 from odoo import _, api, fields, models
 from odoo import tools
 from odoo.addons.base.ir.ir_mail_server import MailDeliveryException
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -227,7 +227,7 @@ class MailMail(models.Model):
                         headers['Return-Path'] = '%s-%d@%s' % (bounce_alias, mail.id, catchall_domain)
                 if mail.headers:
                     try:
-                        headers.update(eval(mail.headers))
+                        headers.update(safe_eval(mail.headers))
                     except Exception:
                         pass
 

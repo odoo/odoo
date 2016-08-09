@@ -7,7 +7,7 @@ from dateutil import relativedelta
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons import decimal_precision as dp
 
@@ -756,19 +756,19 @@ class HrSalaryRule(models.Model):
         self.ensure_one()
         if self.amount_select == 'fix':
             try:
-                return self.amount_fix, float(eval(self.quantity, localdict)), 100.0
+                return self.amount_fix, float(safe_eval(self.quantity, localdict)), 100.0
             except:
                 raise UserError(_('Wrong quantity defined for salary rule %s (%s).') % (self.name, self.code))
         elif self.amount_select == 'percentage':
             try:
-                return (float(eval(self.amount_percentage_base, localdict)),
-                        float(eval(self.quantity, localdict)),
+                return (float(safe_eval(self.amount_percentage_base, localdict)),
+                        float(safe_eval(self.quantity, localdict)),
                         self.amount_percentage)
             except:
                 raise UserError(_('Wrong percentage base or quantity defined for salary rule %s (%s).') % (self.name, self.code))
         else:
             try:
-                eval(self.amount_python_compute, localdict, mode='exec', nocopy=True)
+                safe_eval(self.amount_python_compute, localdict, mode='exec', nocopy=True)
                 return float(localdict['result']), 'result_qty' in localdict and localdict['result_qty'] or 1.0, 'result_rate' in localdict and localdict['result_rate'] or 100.0
             except:
                 raise UserError(_('Wrong python code defined for salary rule %s (%s).') % (self.name, self.code))
@@ -785,13 +785,13 @@ class HrSalaryRule(models.Model):
             return True
         elif self.condition_select == 'range':
             try:
-                result = eval(self.condition_range, localdict)
+                result = safe_eval(self.condition_range, localdict)
                 return self.condition_range_min <= result and result <= self.condition_range_max or False
             except:
                 raise UserError(_('Wrong range condition defined for salary rule %s (%s).') % (self.name, self.code))
         else:  # python code
             try:
-                eval(self.condition_python, localdict, mode='exec', nocopy=True)
+                safe_eval(self.condition_python, localdict, mode='exec', nocopy=True)
                 return 'result' in localdict and localdict['result'] or False
             except:
                 raise UserError(_('Wrong python condition defined for salary rule %s (%s).') % (self.name, self.code))

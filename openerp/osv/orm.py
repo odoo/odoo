@@ -11,7 +11,7 @@ from ..models import (
     LOG_ACCESS_COLUMNS,
 )
 
-from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.safe_eval import safe_eval
 
 # extra definitions for backward compatibility
 browse_record_list = BaseModel
@@ -52,7 +52,7 @@ def transfer_field_to_modifiers(field, modifiers):
 # For non-tree views, the context shouldn't be given.
 def transfer_node_to_modifiers(node, modifiers, context=None, in_tree_view=False):
     if node.get('attrs'):
-        modifiers.update(eval(node.get('attrs')))
+        modifiers.update(safe_eval(node.get('attrs')))
 
     if node.get('states'):
         if 'invisible' in modifiers and isinstance(modifiers['invisible'], list):
@@ -63,7 +63,7 @@ def transfer_node_to_modifiers(node, modifiers, context=None, in_tree_view=False
 
     for a in ('invisible', 'readonly', 'required'):
         if node.get(a):
-            v = bool(eval(node.get(a), {'context': context or {}}))
+            v = bool(safe_eval(node.get(a), {'context': context or {}}))
             if in_tree_view and a == 'invisible':
                 # Invisible in a tree view has a specific meaning, make it a
                 # new key in the modifiers attribute.
