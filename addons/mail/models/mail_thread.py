@@ -22,7 +22,7 @@ from werkzeug import url_encode
 
 from odoo import _, api, exceptions, fields, models, tools
 from odoo.addons.mail.models.mail_message import decode
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 
 _logger = logging.getLogger(__name__)
@@ -371,7 +371,7 @@ class MailThread(models.AbstractModel):
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//field[@name='message_ids']"):
                 # the 'Log a note' button is employee only
-                options = eval(node.get('options', '{}'))
+                options = safe_eval(node.get('options', '{}'))
                 is_employee = self.env.user.has_group('base.group_user')
                 options['display_log_button'] = is_employee
                 # emoji list
@@ -1092,7 +1092,7 @@ class MailThread(models.AbstractModel):
                         # user_id = self._message_find_user_id(message)
                         user_id = self._uid
                         _logger.info('No matching user_id for the alias %s', alias.alias_name)
-                    route = (alias.alias_model_id.model, alias.alias_force_thread_id, eval(alias.alias_defaults), user_id, alias)
+                    route = (alias.alias_model_id.model, alias.alias_force_thread_id, safe_eval(alias.alias_defaults), user_id, alias)
                     route = self.message_route_verify(
                         message, message_dict, route,
                         update_author=True, assert_model=True, create_fallback=True)

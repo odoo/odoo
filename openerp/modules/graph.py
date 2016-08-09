@@ -13,7 +13,6 @@ import openerp
 import openerp.osv as osv
 import openerp.tools as tools
 import openerp.tools.osutil as osutil
-from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
 import zipfile

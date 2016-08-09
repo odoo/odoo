@@ -5,7 +5,7 @@ from lxml import etree
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 
 class ProjectTaskType(models.Model):
@@ -670,7 +670,7 @@ class Task(models.Model):
         headers = {}
         if res.get('headers'):
             try:
-                headers.update(eval(res['headers']))
+                headers.update(safe_eval(res['headers']))
             except Exception:
                 pass
         if self.project_id:

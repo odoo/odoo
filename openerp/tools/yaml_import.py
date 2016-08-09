@@ -21,7 +21,7 @@ from openerp import SUPERUSER_ID
 # YAML import needs both safe and unsafe eval, but let's
 # default to /safe/.
 unsafe_eval = eval
-from .safe_eval import safe_eval as eval
+from .safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -173,7 +173,7 @@ class YamlInterpreter(object):
     def get_context(self, node, eval_dict):
         context = self.context.copy()
         if node.context:
-            context.update(eval(node.context, eval_dict))
+            context.update(safe_eval(node.context, eval_dict))
         return context
 
     def isnoupdate(self, node):
@@ -199,7 +199,7 @@ class YamlInterpreter(object):
         if assertion.id:
             ids = [self.get_id(assertion.id)]
         elif assertion.search:
-            q = eval(assertion.search, self.eval_context)
+            q = safe_eval(assertion.search, self.eval_context)
             ids = self.env(context=assertion.context)[assertion.model].search(q)
         else:
             raise YamlImportException('Nothing to assert: you must give either an id or a search criteria.')
@@ -465,9 +465,9 @@ class YamlInterpreter(object):
                     form_view = get_2many_view(fg, field_name, 'form')
                     ctx['field_parent'] = fg[field_name]['relation_field']
                 if default and field_elem.get('context'):
-                    ctx.update(eval(field_elem.get('context'),
-                                    globals_dict={'parent': dotdict(parent)},
-                                    locals_dict=record_dict))
+                    ctx.update(safe_eval(field_elem.get('context'),
+                                         globals_dict={'parent': dotdict(parent)},
+                                         locals_dict=record_dict))
 
                 field_value = self._eval_field(model, field_name, fields[field_name], form_view, parent=record_dict, default=default, context=ctx)
                 record_dict.update(process_vals(fg, {field_name: field_value}))
@@ -513,7 +513,7 @@ class YamlInterpreter(object):
             else:
                 raise YamlImportException('You need to give a model for the search, or a field to infer it.')
             model = self.env[model_name]
-            q = eval(node.search, self.eval_context)
+            q = safe_eval(node.search, self.eval_context)
             instances = model.search(q)
             if node.use:
                 value = [inst[node.use] for inst in instances]
@@ -530,7 +530,7 @@ class YamlInterpreter(object):
         return value
 
     def process_eval(self, node):
-        return eval(node.expression, self.eval_context)
+        return safe_eval(node.expression, self.eval_context)
 
     def _eval_field(self, model, field_name, expression, view_info=False, parent={}, default=True, context=None):
         # TODO this should be refactored as something like model.get_field() in bin/osv
@@ -634,7 +634,7 @@ class YamlInterpreter(object):
             value_model = self.env[value['model']]
             local_context = {'obj': value_model.browse}
             local_context.update(self.id_map)
-            id = eval(value['eval'], self.eval_context, local_context)
+            id = safe_eval(value['eval'], self.eval_context, local_context)
 
         if workflow.uid is not None:
             uid = workflow.uid
@@ -659,13 +659,13 @@ class YamlInterpreter(object):
             elif isinstance(param, types.DictionaryType): # supports XML syntax
                 param_model = self.env[param.get('model', model)]
                 if 'search' in param:
-                    q = eval(param['search'], self.eval_context)
+                    q = safe_eval(param['search'], self.eval_context)
                     ids = param_model.search(q).ids
                     value = self._get_first_result(ids)
                 elif 'eval' in param:
                     local_context = {'obj': param_model.browse}
                     local_context.update(self.id_map)
-                    value = eval(param['eval'], self.eval_context, local_context)
+                    value = safe_eval(param['eval'], self.eval_context, local_context)
                 else:
                     raise YamlImportException('You must provide either a !ref or at least a "eval" or a "search" to function parameter #%d.' % i)
             else:
@@ -744,7 +744,7 @@ class YamlInterpreter(object):
             view_id = self.get_id(node.view)
         if not node.context:
             node.context={}
-        context = eval(str(node.context), self.eval_context)
+        context = safe_eval(str(node.context), self.eval_context)
         values = {
             'name': node.name,
             'type': node.type or 'ir.actions.act_window',
@@ -781,7 +781,7 @@ class YamlInterpreter(object):
         assert getattr(node, 'model'), "Attribute %s of delete tag is empty !" % ('model',)
         if node.model in self.env:
             if node.search:
-                records = self.env[node.model].search(eval(node.search, self.eval_context))
+                records = self.env[node.model].search(safe_eval(node.search, self.eval_context))
             else:
                 records = self.env[node.model].browse(self.get_id(node.id))
             if records:
@@ -797,7 +797,7 @@ class YamlInterpreter(object):
         id = self.sudo_env['ir.model.data']._update("ir.actions.act_url", self.module, res, node.id, mode=self.mode)
         self.id_map[node.id] = int(id)
         # ir_set
-        if (not node.menu or eval(node.menu)) and id:
+        if (not node.menu or safe_eval(node.menu)) and id:
             keyword = node.keyword or 'client_action_multi'
             value = 'ir.actions.act_url,%s' % id
             self.env['ir.values'].sudo().set_action(node.url, action_slot=keyword, model="ir.actions.act_url", action=value, res_id=False)
@@ -809,7 +809,7 @@ class YamlInterpreter(object):
         res = {}
         for fieldname, expression in fields.items():
             if is_eval(expression):
-                value = eval(expression.expression, self.eval_context)
+                value = safe_eval(expression.expression, self.eval_context)
             else:
                 value = expression
             res[fieldname] = value
@@ -832,7 +832,7 @@ class YamlInterpreter(object):
             if getattr(node, field):
                 values[dest] = getattr(node, field)
         if node.auto:
-            values['auto'] = eval(node.auto)
+            values['auto'] = safe_eval(node.auto)
         if node.sxw:
             sxw_file = file_open(node.sxw)
             try:
@@ -841,8 +841,8 @@ class YamlInterpreter(object):
             finally:
                 sxw_file.close()
         if node.header:
-            values['header'] = eval(node.header)
-        values['multi'] = node.multi and eval(node.multi)
+            values['header'] = safe_eval(node.header)
+        values['multi'] = node.multi and safe_eval(node.multi)
         xml_id = node.id
         self.validate_xml_id(xml_id)
 
@@ -852,7 +852,7 @@ class YamlInterpreter(object):
                 self.module, values, xml_id, noupdate=self.isnoupdate(node), mode=self.mode)
         self.id_map[xml_id] = int(id)
 
-        if not node.menu or eval(node.menu):
+        if not node.menu or safe_eval(node.menu):
             keyword = node.keyword or 'client_print_multi'
             value = 'ir.actions.report.xml,%s' % id
             ir_values = self.env['ir.values']

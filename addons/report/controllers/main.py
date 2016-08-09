@@ -11,7 +11,7 @@ from werkzeug.wrappers import BaseResponse
 from odoo.http import Controller, route, request
 from odoo.tools import html_escape
 from odoo.addons.web.controllers.main import _serialize_exception, content_disposition
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 
 class ReportController(Controller):
@@ -105,7 +105,7 @@ class ReportController(Controller):
                     ids = [int(x) for x in docids.split(",")]
                     obj = request.env[report.model].browse(ids)
                     if report.print_report_name and not len(obj) > 1:
-                        filename = eval(report.print_report_name, {'object': obj, 'time': time})
+                        filename = safe_eval(report.print_report_name, {'object': obj, 'time': time})
                 response.headers.add('Content-Disposition', content_disposition(filename))
                 response.set_cookie('fileToken', token)
                 return response

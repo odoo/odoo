@@ -24,7 +24,7 @@ from odoo.osv import orm
 from odoo.tools import config, graph, ConstantMapping, SKIPPED_ELEMENT_TYPES
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.parse_version import parse_version
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 from odoo.tools.view_validation import valid_view
 from odoo.tools.translate import encode, xml_translate, TRANSLATED_ATTRS
 
@@ -1091,7 +1091,7 @@ actual arch.
                 tres[str(t['id'])] = (line.id, t[des_node].id)
                 label_string = ""
                 if label:
-                    for lbl in eval(label):
+                    for lbl in safe_eval(label):
                         if tools.ustr(lbl) in t and tools.ustr(t[lbl]) == 'False':
                             label_string += ' '
                         else:

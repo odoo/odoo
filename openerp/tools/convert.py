@@ -30,7 +30,7 @@ _logger = logging.getLogger(__name__)
 # almost everywhere, which is ok because it supposedly comes
 # from trusted data, but at least we make it obvious now.
 unsafe_eval = eval
-from .safe_eval import safe_eval as eval
+from .safe_eval import safe_eval
 
 class ParseError(Exception):
     def __init__(self, msg, text, filename, lineno):
@@ -293,14 +293,14 @@ form: module.record_id""" % (xml_id,)
             if rec.get(field):
                 res[dest] = rec.get(field).encode('utf8')
         if rec.get('auto'):
-            res['auto'] = eval(rec.get('auto','False'))
+            res['auto'] = safe_eval(rec.get('auto','False'))
         if rec.get('sxw'):
             sxw_content = file_open(rec.get('sxw')).read()
             res['report_sxw_content'] = sxw_content
         if rec.get('header'):
-            res['header'] = eval(rec.get('header','False'))
+            res['header'] = safe_eval(rec.get('header','False'))
 
-        res['multi'] = rec.get('multi') and eval(rec.get('multi','False'))
+        res['multi'] = rec.get('multi') and safe_eval(rec.get('multi','False'))
 
         xml_id = rec.get('id','').encode('utf8')
         self._test_xml_id(xml_id)
@@ -324,12 +324,12 @@ form: module.record_id""" % (xml_id,)
         id = self.env['ir.model.data']._update("ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 
-        if not rec.get('menu') or eval(rec.get('menu','False')):
+        if not rec.get('menu') or safe_eval(rec.get('menu','False')):
             keyword = str(rec.get('keyword', 'client_print_multi'))
             value = 'ir.actions.report.xml,'+str(id)
             action = self.env['ir.values'].set_action(res['name'], keyword, res['model'], value)
             self.env['ir.actions.report.xml'].browse(id).write({'ir_values_id': action.id})
-        elif self.mode=='update' and eval(rec.get('menu','False'))==False:
+        elif self.mode=='update' and safe_eval(rec.get('menu','False'))==False:
             # Special check for report having attribute menu=False on update
             value = 'ir.actions.report.xml,'+str(id)
             self._remove_ir_values(res['name'], value, res['model'])
@@ -435,7 +435,7 @@ form: module.record_id""" % (xml_id,)
         if rec.get('target'):
             res['target'] = rec.get('target','')
         if rec.get('multi'):
-            res['multi'] = eval(rec.get('multi', 'False'))
+            res['multi'] = safe_eval(rec.get('multi', 'False'))
         id = self.env['ir.model.data']._update('ir.actions.act_window', self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 

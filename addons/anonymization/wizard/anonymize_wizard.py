@@ -14,7 +14,7 @@ from operator import itemgetter
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.release import version_info
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 from odoo.addons.anonymization.models.anonymization import group
 
 WIZARD_ANONYMIZATION_STATES = [('clear', 'Clear'), ('anonymized', 'Anonymized'), ('unstable', 'Unstable')]
@@ -294,7 +294,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
                         'id': line['id']
                     })
                 elif query[1] == 'python':
-                    eval(query[0] % line)
+                    safe_eval(query[0] % line)
                 else:
                     raise Exception("Unknown query type '%s'. Valid types are: sql, python." % (query['query_type'], ))
 

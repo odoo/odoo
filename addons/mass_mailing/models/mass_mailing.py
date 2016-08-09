@@ -6,7 +6,7 @@ import random
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 
 class MassMailingTag(models.Model):
@@ -540,7 +540,7 @@ class MassMailing(models.Model):
 
     def get_recipients(self):
         if self.mailing_domain:
-            domain = eval(self.mailing_domain)
+            domain = safe_eval(self.mailing_domain)
             res_ids = self.env[self.mailing_model].search(domain).ids
         else:
             res_ids = []
