@@ -296,8 +296,8 @@
             <field name="model_id" ref="model_procurement_order"/>
             <field name="state">code</field>
             <field name="code">
-                if context.get('active_model') == 'procurement.order' and context.get('active_ids'):
-                    self.run(cr, uid, context['active_ids'], context=context)</field>
+if env.context.get('active_model') == 'procurement.order' and env.context.get('active_ids'):
+    model.browse(context['active_ids']).run()</field>
         </record>
 
         <record id="run_procurement_order_action" model="ir.values">
