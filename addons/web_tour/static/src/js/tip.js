@@ -263,7 +263,8 @@ var Tip = Widget.extend({
 
 Tip.getConsumeEventType = function ($element) {
     if ($element.is("textarea") || $element.filter("input").is(function () {
-        return !!$(this).attr("type").match(/^(email|number|password|search|tel|text|url)$/);
+        var type = $(this).attr("type");
+        return !type || !!type.match(/^(email|number|password|search|tel|text|url)$/);
     })) {
         return "input";
     }
