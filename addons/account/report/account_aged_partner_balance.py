@@ -190,8 +190,8 @@ class ReportAgedPartnerBalance(models.AbstractModel):
 
         return res, total, lines
 
-    @api.multi
-    def render_html(self, data):
+    @api.model
+    def render_html(self, docids, data=None):
         total = []
         model = self.env.context.get('active_model')
         docs = self.env[model].browse(self.env.context.get('active_id'))

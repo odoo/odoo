@@ -41,8 +41,8 @@ class MrpBomCost(models.AbstractModel):
                 product_lines += [product_line]
         return product_lines
 
-    @api.multi
-    def render_html(self, data=None):
-        boms = self.env['mrp.bom'].browse(self.ids)
+    @api.model
+    def render_html(self, docids, data=None):
+        boms = self.env['mrp.bom'].browse(docids)
         res = self.get_lines(boms)
         return self.env['report'].render('mrp.mrp_bom_cost', {'lines': res})
