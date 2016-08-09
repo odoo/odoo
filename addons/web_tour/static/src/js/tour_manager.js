@@ -55,7 +55,7 @@ var RunningTourActionHelper = core.Class.extend({
         if (href && href.length && href[0] !== "#" && values.$element.is("a") && href !== "javascript:void(0)") {
             window.location.href = href;
         } else {
-            values.$element.mousedown().mouseup().click();
+            values.$element.trigger("mouseenter").mousedown().mouseup().click().trigger("mouseleave");
         }
     },
     _text: function (values, text) {
