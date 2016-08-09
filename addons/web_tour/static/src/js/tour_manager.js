@@ -63,10 +63,16 @@ var RunningTourActionHelper = core.Class.extend({
 
         text = text || "Test";
         if (values.consume_event === "input") {
-            values.$element.val(text).trigger("input");
+            values.$element.trigger('keydown').val(text).trigger('keyup').trigger("input");
+        } else if (values.$element.is('select')) {
+            values.$element.find('option').removeProp('selected')
+                .filter(function () { return $(this).val() == text; })
+                .prop('selected', 'selected');
+            values.$element.mousedown().mouseup().click();
         } else {
             values.$element.text(text);
         }
+        values.$element.trigger("change");
     },
     _drag_and_drop: function (values, to) {
         var $to = $(to || document.body);
