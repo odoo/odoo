@@ -6,4 +6,4 @@ import openerp.tests
 class TestUi(openerp.tests.HttpCase):
 
     def test_01_crm_tour(self):
-        self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('crm_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.crm_tour", login="admin")
+        self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('crm_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.crm_tour", login="admin", timeout=120)
