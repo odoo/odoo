@@ -51,22 +51,40 @@ class ReportController(Controller):
     #------------------------------------------------------
     # Misc. route utils
     #------------------------------------------------------
-    @route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="user")
-    def report_barcode(self, type, value, width=600, height=100, humanreadable=0):
-        """Contoller able to render barcode images thanks to reportlab.
+    @route(['/report/barcode', '/report/barcode/<type>/<path:value>'],
+           type='http', auth="user")
+    def report_barcode(self, type, value, barmargin=0, backgroundcolor='FFFFFF',
+                       barcolor='000000', textalign=None, textfont='Arial',
+                       textsize=11, textmargin=None, width=600, height=100,
+                       humanreadable=0):
+        """Controller able to render barcode images thanks to reportlab.
         Samples:
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
             <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
                 ('QR', o.name, 200, 200)"/>
 
-        :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
-        'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
-        'UPCA', 'USPS_4State'
+        :param type: Accepted types: 'auspost', 'azteccode', 'codabar',
+        'code11', 'code128', 'code25', 'code39', 'code93', 'datamatrix', 'ean',
+        'i2of5', 'japanpost', 'kix', 'maxicode', 'msi', 'onecode', 'pdf417',
+        'pharmacode', 'plessey', 'postnet', 'qrcode', 'royalmail', 'rss14',
+        'symbol', 'upc'
+        :param barmargin: Accepted positive and negative values
+        :param backgroundcolor: Accepted hex color codes: from 000000 to FFFFFF
+        :param barcolor: Accepted hex color codes: from 000000 to FFFFFF
+        :param textalign: Accepted values: left, center or right. Used to specify where to
+        horizontally position the text.
+        :param textfont: Accepted values: Arial, Courier, Monospace, Times
+        :param textsize: Accepted values: from 0 to 100
+        :param textmargin: Accepted positive and negative values
         :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
         at the bottom of the output image
         """
         try:
-            barcode = request.env['report'].barcode(type, value, width=width, height=height, humanreadable=humanreadable)
+            barcode = request.registry['report'].barcode(
+                type, value, barmargin=barmargin, backgroundcolor=backgroundcolor,
+                barcolor=barcolor, textalign=textalign, textfont=textfont,
+                textsize=textsize, textmargin=textmargin, width=width, height=height,
+                humanreadable=humanreadable)
         except (ValueError, AttributeError):
             raise exceptions.HTTPException(description='Cannot convert into barcode.')
 
