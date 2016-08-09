@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import datetime
@@ -6,7 +7,6 @@ import dateutil
 import email
 import json
 import lxml
-from lxml import etree
 import logging
 import pytz
 import re
@@ -17,13 +17,12 @@ import xmlrpclib
 from collections import namedtuple
 from email.message import Message
 from email.utils import formataddr
+from lxml import etree
 from werkzeug import url_encode
 
-from openerp import _, api, fields, models
-from openerp import exceptions
-from openerp import tools
-from openerp.addons.mail.models.mail_message import decode
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import _, api, exceptions, fields, models, tools
+from odoo.addons.mail.models.mail_message import decode
+from odoo.tools.safe_eval import safe_eval as eval
 
 
 _logger = logging.getLogger(__name__)
@@ -1837,7 +1836,7 @@ class MailThread(models.AbstractModel):
         handle ir ui views. """
         values = kwargs.pop('values', None) or dict()
         try:
-            from openerp.addons.website.models.website import slug
+            from odoo.addons.website.models.website import slug
             values['slug'] = slug
         except ImportError:
             values['slug'] = lambda self: self.id

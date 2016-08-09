@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-from openerp import http
-from openerp.http import request
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from werkzeug.exceptions import NotFound
 
 import datetime
-from werkzeug.exceptions import NotFound
+
+from odoo import http
+from odoo.http import request
 
 
 class WebsiteRatingProject(http.Controller):

@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import logging
 
 from email.header import decode_header
 from email.utils import formataddr
-import logging
 
-from openerp import _, api, fields, models, SUPERUSER_ID
-from openerp import tools
-from openerp.exceptions import UserError, AccessError
-from openerp.osv import expression
+from odoo import _, api, fields, models, SUPERUSER_ID, tools
+from odoo.exceptions import UserError, AccessError
+from odoo.osv import expression
 
 
 _logger = logging.getLogger(__name__)

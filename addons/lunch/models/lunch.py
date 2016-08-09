@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
 
-from openerp import models, fields, api, _
-import openerp.addons.decimal_precision as dp
-from openerp.exceptions import AccessError, ValidationError
+from odoo import api, fields, models, _
+from odoo.exceptions import AccessError, ValidationError
+import odoo.addons.decimal_precision as dp
 
 
 class LunchOrder(models.Model):

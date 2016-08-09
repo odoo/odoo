@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 import lxml
 import random
 
-from openerp import tools
-from openerp import SUPERUSER_ID
-from openerp.addons.website.models.website import slug
-from openerp.osv import osv, fields
-from openerp.tools.translate import _
-from openerp.tools.translate import html_translate
+from datetime import datetime
 
-from odoo import api
+from odoo import api, tools, SUPERUSER_ID
+from odoo.addons.website.models.website import slug
+from odoo.osv import osv, fields
+from odoo.tools.translate import _, html_translate
 
 
 class Blog(osv.Model):

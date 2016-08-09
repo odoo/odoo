@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import base64
+import json
+import lxml
 import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
-import json
-import lxml
-from urllib2 import urlopen, URLError
-import base64
 
-import openerp
-from openerp import tools, _
-from openerp import http
-from openerp.addons.web.controllers.main import binary_content
-from openerp.http import request
-from openerp.addons.website.models.website import slug
+from datetime import datetime
+from urllib2 import urlopen, URLError
+
+from odoo import http, modules, SUPERUSER_ID, tools, _
+from odoo.addons.web.controllers.main import binary_content
+from odoo.addons.website.models.website import slug
+from odoo.http import request
 
 
 class WebsiteForum(http.Controller):
@@ -562,10 +563,10 @@ class WebsiteForum(http.Controller):
 
     @http.route(['/forum/user/<int:user_id>/avatar'], type='http', auth="public", website=True)
     def user_avatar(self, user_id=0, **post):
-        status, headers, content = binary_content(model='res.users', id=user_id, field='image_medium', default_mimetype='image/png', env=request.env(user=openerp.SUPERUSER_ID))
+        status, headers, content = binary_content(model='res.users', id=user_id, field='image_medium', default_mimetype='image/png', env=request.env(user=SUPERUSER_ID))
 
         if not content:
-            img_path = openerp.modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
+            img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
             with open(img_path, 'rb') as f:
                 image = f.read()
             content = image.encode('base64')

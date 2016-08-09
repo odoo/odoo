@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from openerp import api, fields, models, _
-from openerp.exceptions import UserError, ValidationError
-from openerp.tools.safe_eval import safe_eval as eval
+
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 

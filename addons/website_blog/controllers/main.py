@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
 import json
 import werkzeug
 
-from openerp import tools
-from openerp import http
-from openerp.http import request
-from openerp.addons.website.models.website import slug, unslug
+from odoo import http, tools, SUPERUSER_ID, _
 from odoo.addons.website.controllers.main import QueryURL
-from openerp.exceptions import UserError
-from openerp.tools.translate import _
-from openerp import SUPERUSER_ID
-from openerp.tools import html2plaintext
+from odoo.addons.website.models.website import slug, unslug
+from odoo.exceptions import UserError
+from odoo.http import request
+from odoo.tools import html2plaintext
 
 
 class WebsiteBlog(http.Controller):

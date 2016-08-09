@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import werkzeug
 
-from openerp import http
-from openerp.http import request
+from odoo import http
+from odoo.http import request
 
 
-class link_tracker(http.Controller):
+class LinkTracker(http.Controller):
     @http.route('/r/<string:code>', type='http', auth='none', website=True)
     def full_url_redirect(self, code, **post):
         request.env['link.tracker.click'].add_click(code, request.httprequest.remote_addr, request.session['geoip'].get('country_code'), stat_id=False)

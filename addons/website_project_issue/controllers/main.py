@@ -3,13 +3,12 @@
 
 from collections import OrderedDict
 
-from openerp import http, _
-from openerp.addons.website_portal.controllers.main import website_account
-from openerp.http import request
+from odoo import http, _
+from odoo.addons.website_portal.controllers.main import website_account
+from odoo.http import request
 
 
 class WebsiteAccount(website_account):
-
 
     def _prepare_portal_layout_values(self):
         values = super(WebsiteAccount, self)._prepare_portal_layout_values()

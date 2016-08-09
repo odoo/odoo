@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import fields, models, tools
-from ..models import hr_recruitment
+from odoo import fields, models, tools
+from odoo.addons.hr_recruitment.models import hr_recruitment
 
 
-class hr_recruitment_report(models.Model):
+class HrRecruitmentReport(models.Model):
     _name = "hr.recruitment.report"
     _description = "Recruitments Statistics"
     _auto = False

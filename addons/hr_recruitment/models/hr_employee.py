@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models
+from odoo import api, fields, models
 
 
-class hr_employee(models.Model):
+class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     newly_hired_employee = fields.Boolean('Newly hired employee', compute='_compute_newly_hired_employee',

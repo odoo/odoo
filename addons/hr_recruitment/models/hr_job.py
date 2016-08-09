@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import _, api, fields, models
+from odoo import api, fields, models
 
 
 class Job(models.Model):

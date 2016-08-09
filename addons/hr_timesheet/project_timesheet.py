@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api
-from openerp.osv import osv
+from odoo import models, fields, api
+from odoo.osv import osv
 
 
 class Project(models.Model):
     _inherit = "project.project"
 
-    subtask_project_id = fields.Many2one('project.project', string='Sub-task Project', help="Choosing a sub-tasks project will both enable sub-tasks and set their default project (possibly the project itself)",
-            ondelete="restrict")
+    subtask_project_id = fields.Many2one(
+        'project.project', string='Sub-task Project', ondelete="restrict",
+        help="Choosing a sub-tasks project will both enable sub-tasks and set their default project (possibly the project itself)")
 
 
 class Task(models.Model):

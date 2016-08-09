@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from traceback import format_exception
 from sys import exc_info
+
 import re
-import openerp.addons.decimal_precision as dp
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.safe_eval import safe_eval as eval
 
+import odoo.addons.decimal_precision as dp
 
 _intervalTypes = {
     'hours': lambda interval: relativedelta(hours=interval),
@@ -20,6 +19,7 @@ _intervalTypes = {
     'months': lambda interval: relativedelta(months=interval),
     'years': lambda interval: relativedelta(years=interval),
 }
+
 
 class MarketingCampaign(models.Model):
     _name = "marketing.campaign"

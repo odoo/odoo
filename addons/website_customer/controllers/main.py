@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import openerp
-from openerp import SUPERUSER_ID
-from openerp import http
-from openerp.addons.website.models.website import unslug
-from openerp.tools.translate import _
-from openerp.http import request
 import werkzeug.urls
+
+from odoo import http
+from odoo.addons.website.models.website import unslug
+from odoo.tools.translate import _
+from odoo.http import request
 
 
 class WebsiteCustomer(http.Controller):

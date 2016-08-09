@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 
 
 class StockMoveInvoice(AccountingTestCase):
