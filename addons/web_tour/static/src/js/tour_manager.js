@@ -212,7 +212,7 @@ return core.Class.extend({
     },
     _check_for_tooltip: function (tip, tour_name) {
         var $trigger;
-        if (this.$modal_displayed.length) {
+        if (tip.in_modal !== false && this.$modal_displayed.length) {
             $trigger = this.$modal_displayed.find(tip.trigger);
         } else {
             $trigger = $(tip.trigger);
