@@ -1,8 +1,10 @@
 odoo.define('website.snippets.editor', function (require) {
 'use strict';
 
+var ajax = require("web.ajax");
 var core = require("web.core");
 var Dialog = require("web.Dialog");
+var Model = require("web.Model");
 var editor = require("web_editor.editor");
 var options = require('web_editor.snippets.options');
 var snippet_editor = require('web_editor.snippet.editor');
@@ -48,6 +50,41 @@ options.registry.menu_data = options.Class.extend({
                 window.location.href = url;
             });
         }
+    },
+});
+
+options.registry.company_data = options.Class.extend({
+    start: function () {
+        this._super.apply(this, arguments);
+
+        var proto = options.registry.company_data.prototype;
+
+        if (proto.__link_deferred === undefined) {
+            proto.__link_deferred = $.Deferred();
+            return ajax.jsonRpc("/web/session/get_session_info", "call").then(function (session) {
+                return (new Model("res.users")).get_func("read")(session.uid, ["company_id"]).then(function (res) {
+                    proto.__link_deferred.resolve(
+                        "/web#action=base.action_res_company_form&view_type=form&id=" + (res && res[0] && res[0].company_id[0] || 1)
+                    );
+                });
+            });
+        }
+    },
+
+    on_focus: function () {
+        this._super.apply(this, arguments);
+
+        var proto = options.registry.company_data.prototype;
+
+        Dialog.confirm(null, _t("Do you want to edit the company data ?"), {
+            confirm_callback: function () {
+                editor.editor_bar.save_without_reload().then(function () {
+                    proto.__link_deferred.then(function (link) {
+                        window.location.href = link;
+                    });
+                });
+            },
+        });
     },
 });
 
