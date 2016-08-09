@@ -118,7 +118,7 @@ class MarketingCampaign(models.Model):
 
     # prevent duplication until the server properly duplicates several levels of nested o2m
     @api.multi
-    def copy(self, cr, uid, id, default=None, context=None):
+    def copy(self, default=None):
         self.ensure_one()
         raise UserError(_('Duplicating campaigns is not supported.'))
 
