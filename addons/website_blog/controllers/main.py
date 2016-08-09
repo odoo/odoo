@@ -224,8 +224,8 @@ class WebsiteBlog(http.Controller):
         # should always return at least the current post
         all_post_ids = all_post.ids
         current_blog_post_index = all_post_ids.index(blog_post.id)
-        next_post_id = all_post_ids[0 if current_blog_post_index == len(all_post_ids) - 1 \
-                            else current_blog_post_index + 1]
+        nb_posts = len(all_post_ids)
+        next_post_id = all_post_ids[(current_blog_post_index + 1) % nb_posts] if nb_posts > 1 else None
         next_post = next_post_id and BlogPost.browse(next_post_id) or False
 
         values = {
