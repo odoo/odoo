@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import openerp
-from openerp.report.interface import report_int
-import openerp.tools as tools
+import os
+import time
 
-from openerp.report import render
 from lxml import etree
 
-import time, os
+import openerp
+import openerp.tools as tools
+from openerp.report import render
+from openerp.report.interface import report_int
 
 
 class report_printscreen_list(report_int):
-    def __init__(self, name):
-        report_int.__init__(self, name)
-
     def _parse_node(self, root_node):
         result = []
         for node in root_node:
@@ -36,18 +34,17 @@ class report_printscreen_list(report_int):
     def create(self, cr, uid, ids, datas, context=None):
         if not context:
             context={}
+        env = openerp.api.Environment(cr, uid, context)
         datas['ids'] = ids
-        registry = openerp.registry(cr.dbname)
-        model = registry[datas['model']]
+        records = env[datas['model']].browse(ids)
         # title come from description of model which are specified in py file.
-        self.title = model._description
-        result = model.fields_view_get(cr, uid, view_type='form', context=context)
+        self.title = records._description
+        result = records.fields_view_get(view_type='form')
 
         fields_order = self._parse_string(result['arch'])
-        rows = model.read(cr, uid, datas['ids'], result['fields'].keys() )
-        self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model._description)
+        rows = records.read(list(result['fields']))
+        self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, records._description)
         return self.obj.get(), 'pdf'
-
 
     def _create_table(self, uid, ids, fields, fields_order, results, context, title=''):
         pageSize=[297.0,210.0]
@@ -113,4 +110,5 @@ class report_printscreen_list(report_int):
         self.obj = render.rml(rml, self.title)
         self.obj.render()
         return True
+
 report_printscreen_list('report.printscreen.form')

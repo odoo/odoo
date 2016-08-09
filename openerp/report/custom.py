@@ -1,23 +1,25 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import cStringIO
 import os
 import time
 
+from lxml import etree
+from pychart import area, arrow, axis, bar_plot, canvas, category_coord, \
+                    fill_style, legend, line_plot, line_style, pie_plot, theme
+
 import openerp
 import openerp.tools as tools
-from openerp.tools.safe_eval import safe_eval
-import print_xml
-import render
-from interface import report_int
-import common
-from openerp.osv.orm import BaseModel
-from pychart import *
-import misc
-import cStringIO
-from lxml import etree
-from openerp.tools.translate import _
 from openerp.exceptions import UserError
+from openerp.models import BaseModel
+from openerp.tools.safe_eval import safe_eval
+from openerp.tools.translate import _
+from . import common
+from . import misc
+from . import render
+from .interface import report_int
+
 
 class external_pdf(render.render):
     def __init__(self, pdf):
@@ -37,6 +39,7 @@ theme.use_color = 1
 class report_custom(report_int):
     def __init__(self, name):
         report_int.__init__(self, name)
+
     #
     # PRE:
     #    fields = [['address','city'],['name'], ['zip']]
@@ -104,26 +107,18 @@ class report_custom(report_int):
                         result.append(row)
         return result 
 
-
     def create(self, cr, uid, ids, datas, context=None):
-        if not context:
-            context={}
-        self.pool = openerp.registry(cr.dbname)
-        report = self.pool['ir.report.custom'].browse(cr, uid, [datas['report_id']])[0]
+        env = openerp.api.Environment(cr, uid, context or {})
+        report = env['ir.report.custom'].browse([datas['report_id']])
         datas['model'] = report.model_id.model
         if report.menu_id:
-            ids = self.pool[report.model_id.model].search(cr, uid, [])
+            ids = env[report.model_id.model].search([]).ids
             datas['ids'] = ids
 
-        report_id = datas['report_id']
-        report = self.pool['ir.report.custom'].read(cr, uid, [report_id], context=context)[0]
-        fields = self.pool['ir.report.custom.fields'].read(cr, uid, report['fields_child0'], context=context)
-
-        fields.sort(lambda x,y : x['sequence'] - y['sequence'])
-
-        if report['field_parent']:
-            parent_field = self.pool['ir.model.fields'].read(cr, uid, [report['field_parent'][0]], ['model'])
-        model_name = self.pool['ir.model'].read(cr, uid, [report['model_id'][0]], ['model'], context=context)[0]['model']
+        report = report.read()[0]
+        fields = env['ir.report.custom.fields'].browse(report['fields_child0']).read()
+        fields.sort(key=lambda x: x['sequence'])
+        model_name = env['ir.model'].browse(report['model_id'][0]).model
 
         fct = {
             'id': lambda x: x,
@@ -139,7 +134,7 @@ class report_custom(report_int):
                 field_child = f['field_child'+str(i)]
                 if field_child:
                     row.append(
-                        self.pool['ir.model.fields'].read(cr, uid, [field_child[0]], ['name'], context=context)[0]['name']
+                        env['ir.model.fields'].browse(field_child[0]).name
                     )
                     if f['fc'+str(i)+'_operande']:
                         fct_name = 'id'
@@ -152,7 +147,7 @@ class report_custom(report_int):
                         cond.append(None)
             new_fields.append(row)
             new_cond.append(cond)
-        objs = self.pool[model_name].browse(cr, uid, ids)
+        objs = env[model_name].browse(ids)
 
         # Group by
         groupby = None
@@ -167,9 +162,9 @@ class report_custom(report_int):
         if report['field_parent']:
             level = []
             def build_tree(obj, level, depth):
-                res = self._row_get(cr, uid,[obj], new_fields, new_cond)
+                res = self._row_get(cr, uid, [obj], new_fields, new_cond)
                 level.append(depth)
-                new_obj = safe_eval('obj.'+report['field_parent'][1],{'obj': obj})
+                new_obj = safe_eval('obj.'+report['field_parent'][1], {'obj': obj})
                 if not isinstance(new_obj, list) :
                     new_obj = [new_obj]
                 for o in new_obj:
@@ -180,7 +175,7 @@ class report_custom(report_int):
             for obj in objs:
                 results += build_tree(obj, level, 0)
         else:
-            results = self._row_get(cr, uid,objs, new_fields, new_cond, group_by=groupby)
+            results = self._row_get(cr, uid, objs, new_fields, new_cond, group_by=groupby)
 
         fct = {
             'calc_sum': lambda l: reduce(lambda x,y: float(x)+float(y), filter(None, l), 0),
@@ -214,7 +209,7 @@ class report_custom(report_int):
                         row.append(fct[str(fields[col]['operation'])](map(lambda x: x[col], res_dic[key])))
                 new_res.append(row)
             results = new_res
-        
+
         if report['type']=='table':
             if report['field_parent']:
                 res = self._create_tree(uid, ids, report, fields, level, results, context)
@@ -225,12 +220,13 @@ class report_custom(report_int):
                         sort_idx = idx
                         break
                 try :
-                    results.sort(lambda x,y : cmp(float(x[sort_idx]),float(y[sort_idx])))
+                    results.sort(key=lambda x: float(x[sort_idx]))
                 except :
-                    results.sort(lambda x,y : cmp(x[sort_idx],y[sort_idx]))
+                    results.sort(key=lambda x: x[sort_idx])
                 if report['limitt']:
                     results = results[:int(report['limitt'])]
                 res = self._create_table(uid, ids, report, fields, None, results, context)
+
         elif report['type'] in ('pie','bar', 'line'):
             results2 = []
             prev = False
@@ -254,6 +250,7 @@ class report_custom(report_int):
                 res = self._create_bars(cr,uid, ids, report, fields, results2, context)
             elif report['type']=='line':
                 res = self._create_lines(cr,uid, ids, report, fields, results2, context)
+
         return self.obj.get(), 'pdf'
 
     def _create_tree(self, uid, ids, report, fields, level, results, context):
@@ -262,7 +259,7 @@ class report_custom(report_int):
             pageSize=[pageSize[1],pageSize[0]]
 
         new_doc = etree.Element('report')
-        
+
         config = etree.SubElement(new_doc, 'config')
 
         def _append_node(name, text):
@@ -319,41 +316,34 @@ class report_custom(report_int):
         self.obj.render()
         return True
 
-
     def _create_lines(self, cr, uid, ids, report, fields, results, context):
-        pool = openerp.registry(cr.dbname)
+        env = openerp.api.Environment(cr, uid, context or {})
         pdf_string = cStringIO.StringIO()
+
         can = canvas.init(fname=pdf_string, format='pdf')
-        
         can.show(80,380,'/16/H'+report['title'])
-        
+
         ar = area.T(size=(350,350),
-        #x_coord = category_coord.T(['2005-09-01','2005-10-22'],0),
-        x_axis = axis.X(label = fields[0]['name'], format="/a-30{}%s"),
-        y_axis = axis.Y(label = ', '.join(map(lambda x : x['name'], fields[1:]))))
-        
+                    #x_coord = category_coord.T(['2005-09-01','2005-10-22'],0),
+                    x_axis=axis.X(label = fields[0]['name'], format="/a-30{}%s"),
+                    y_axis=axis.Y(label = ', '.join(map(lambda x : x['name'], fields[1:]))))
+
         process_date = {
             'D': lambda x: reduce(lambda xx, yy: xx + '-' + yy, x.split('-')[1:3]),
             'M': lambda x: x.split('-')[1],
             'Y': lambda x: x.split('-')[0]
         }
 
-        order_date = {
-            'D': lambda x: time.mktime((2005, int(x.split('-')[0]), int(x.split('-')[1]), 0, 0, 0, 0, 0, 0)),
-            'M': lambda x: x,
-            'Y': lambda x: x
-        }
-
         abscissa = []
-        
+
         idx = 0 
         date_idx = None
         fct = {}
         for f in fields:
             field_id = (f['field_child3'] and f['field_child3'][0]) or (f['field_child2'] and f['field_child2'][0]) or (f['field_child1'] and f['field_child1'][0]) or (f['field_child0'] and f['field_child0'][0])
             if field_id:
-                type = pool['ir.model.fields'].read(cr, uid, [field_id],['ttype'])
-                if type[0]['ttype'] == 'date':
+                ttype = env['ir.model.fields'].browse(field_id).ttype
+                if ttype == 'date':
                     date_idx = idx
                     fct[idx] = process_date[report['frequency']] 
                 else:
@@ -411,7 +401,7 @@ class report_custom(report_int):
                 ar.add_plot(plot)
                 abscissa.update(fields_bar[idx])
                 idx0 += 1
-        
+
         abscissa = map(lambda x : [x, None], abscissa)
         ar.x_coord = category_coord.T(abscissa,0)
         ar.draw(can)
@@ -422,30 +412,22 @@ class report_custom(report_int):
         pdf_string.close()
         return True
 
-
-
     def _create_bars(self, cr, uid, ids, report, fields, results, context):
-        pool = openerp.registry(cr.dbname)
+        env = openerp.api.Environment(cr, uid, context or {})
         pdf_string = cStringIO.StringIO()
+
         can = canvas.init(fname=pdf_string, format='pdf')
-        
         can.show(80,380,'/16/H'+report['title'])
-        
+
         process_date = {
             'D': lambda x: reduce(lambda xx, yy: xx + '-' + yy, x.split('-')[1:3]),
             'M': lambda x: x.split('-')[1],
             'Y': lambda x: x.split('-')[0]
         }
 
-        order_date = {
-            'D': lambda x: time.mktime((2005, int(x.split('-')[0]), int(x.split('-')[1]), 0, 0, 0, 0, 0, 0)),
-            'M': lambda x: x,
-            'Y': lambda x: x
-        }
-
         ar = area.T(size=(350,350),
-            x_axis = axis.X(label = fields[0]['name'], format="/a-30{}%s"),
-            y_axis = axis.Y(label = ', '.join(map(lambda x : x['name'], fields[1:]))))
+                    x_axis=axis.X(label = fields[0]['name'], format="/a-30{}%s"),
+                    y_axis=axis.Y(label = ', '.join(map(lambda x : x['name'], fields[1:]))))
 
         idx = 0 
         date_idx = None
@@ -453,8 +435,8 @@ class report_custom(report_int):
         for f in fields:
             field_id = (f['field_child3'] and f['field_child3'][0]) or (f['field_child2'] and f['field_child2'][0]) or (f['field_child1'] and f['field_child1'][0]) or (f['field_child0'] and f['field_child0'][0])
             if field_id:
-                type = pool['ir.model.fields'].read(cr, uid, [field_id],['ttype'])
-                if type[0]['ttype'] == 'date':
+                ttype = env['ir.model.fields'].browse(field_id).ttype
+                if ttype == 'date':
                     date_idx = idx
                     fct[idx] = process_date[report['frequency']] 
                 else:
@@ -462,7 +444,7 @@ class report_custom(report_int):
             else:
                 fct[idx] = lambda x : x
             idx+=1
-        
+
         # plot are usually displayed year by year
         # so we do so if the first field is a date
         data_by_year = {}
@@ -480,7 +462,7 @@ class report_custom(report_int):
 
         nb_bar = len(data_by_year)*(len(fields)-1)
         colors = map(lambda x:fill_style.Plain(bgcolor=x), misc.choice_colors(nb_bar))
-        
+
         abscissa = {}
         for line in data_by_year.keys():
             fields_bar = []
@@ -508,7 +490,7 @@ class report_custom(report_int):
                     data_cum.append([k, float(data[k])+float(prev)])
                     if fields[idx+1]['cumulate']:
                         prev += data[k]
-                        
+
                 idx0 = 0
                 plot = bar_plot.T(label=fields[idx+1]['name']+' '+str(line), data = data_cum, cluster=(idx0*(len(fields)-1)+idx,nb_bar), fill_style=colors[idx0*(len(fields)-1)+idx])
                 ar.add_plot(plot)
@@ -601,4 +583,5 @@ class report_custom(report_int):
         self.obj = render.rml(rml)
         self.obj.render()
         return True
+
 report_custom('report.custom')

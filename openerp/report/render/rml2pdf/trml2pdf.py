@@ -1,27 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
-import sys
-import copy
-import reportlab
-import re
-from reportlab.pdfgen import canvas
-from reportlab import platypus
-import utils
-import color
-import os
-import logging
-import traceback
-from lxml import etree
 import base64
+import copy
+import logging
+import os
+import re
+import sys
+import traceback
 from distutils.version import LooseVersion
-from reportlab.platypus.doctemplate import ActionFlowable
-from openerp.tools.safe_eval import safe_eval
-from reportlab.lib.units import inch,cm,mm
-from openerp.tools.misc import file_open
-from reportlab.pdfbase import pdfmetrics
-from reportlab.lib.pagesizes import A4, letter
 
 try:
     from cStringIO import StringIO
@@ -29,8 +16,21 @@ try:
 except ImportError:
     from StringIO import StringIO
 
+import reportlab
+from reportlab import platypus
+from reportlab.lib.pagesizes import A4, letter
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfgen import canvas
+from reportlab.platypus.doctemplate import ActionFlowable
+from lxml import etree
+
+from openerp.tools.misc import file_open
+from openerp.tools.safe_eval import safe_eval
+from . import color
+from . import utils
+
 try:
-    from customfonts import SetCustomFonts
+    from .customfonts import SetCustomFonts
 except ImportError:
     SetCustomFonts=lambda x:None
 
@@ -271,7 +271,6 @@ class _rml_doc(object):
 
     def setTTFontMapping(self,face, fontname, filename, mode='all'):
         from reportlab.lib.fonts import addMapping
-        from reportlab.pdfbase import pdfmetrics
         from reportlab.pdfbase.ttfonts import TTFont
 
         if mode:

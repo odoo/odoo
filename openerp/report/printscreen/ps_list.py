@@ -1,25 +1,26 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import openerp
-from openerp.report.interface import report_int
-import openerp.tools as tools
-from openerp.tools.safe_eval import safe_eval
-from lxml  import etree
-from openerp.report import render, report_sxw
 import locale
-
-import time, os
-from operator import itemgetter
+import os
+import time
 from datetime import datetime
+
+from lxml  import etree
+
+import openerp
+import openerp.tools as tools
+from openerp.report import render, report_sxw
+from openerp.report.interface import report_int
+from openerp.tools.safe_eval import safe_eval
 
 
 class report_printscreen_list(report_int):
     def __init__(self, name):
-        report_int.__init__(self, name)
+        super(report_printscreen_list, self).__init__(name)
         self.context = {}
         self.groupby = []
-        self.cr=''
+        self.cr = ''
 
     def _parse_node(self, root_node):
         result = []
@@ -43,25 +44,23 @@ class report_printscreen_list(report_int):
 
     def create(self, cr, uid, ids, datas, context=None):
         if not context:
-            context={}
-        self.cr=cr
+            context = {}
+        self.cr = cr
         self.context = context
         self.groupby = context.get('group_by',[])
-        self.groupby_no_leaf = context.get('group_by_no_leaf',False)
-        registry = openerp.registry(cr.dbname)
-        model = registry[datas['model']]
-        model_id = registry['ir.model'].search(cr, uid, [('model','=',model._name)])
-        model_desc = model._description
-        if model_id:
-            model_desc = registry['ir.model'].browse(cr, uid, model_id[0], context).name
+        self.groupby_no_leaf = context.get('group_by_no_leaf', False)
+        env = openerp.api.Environment(cr, uid, context)
+        Model = env[datas['model']]
+        model = env['ir.model'].search([('model', '=', Model._name)])
+        model_desc = model.name or Model._description
         self.title = model_desc
         datas['ids'] = ids
-        result = model.fields_view_get(cr, uid, view_type='tree', context=context)
+        result = Model.fields_view_get(view_type='tree')
         fields_order =  self.groupby + self._parse_string(result['arch'])
         if self.groupby:
             rows = []
             def get_groupby_data(groupby = [], domain = []):
-                records =  model.read_group(cr, uid, domain, fields_order, groupby , 0, None, context)
+                records =  Model.read_group(domain, fields_order, groupby, 0, None)
                 for rec in records:
                     rec['__group'] = True
                     rec['__no_leaf'] = self.groupby_no_leaf
@@ -79,25 +78,23 @@ class report_printscreen_list(report_int):
                     else:
                         if self.groupby_no_leaf:
                             continue
-                        child_ids = model.search(cr, uid, inner_domain)
-                        res = model.read(cr, uid, child_ids, result['fields'].keys(), context)
-                        res.sort(lambda x,y: cmp(ids.index(x['id']), ids.index(y['id'])))
+                        children = Model.search(inner_domain)
+                        res = children.read(list(result['fields']))
+                        res.sort(key=lambda x: ids.index(x['id']))
                         rows.extend(res)
             dom = [('id','in',ids)]
             if self.groupby_no_leaf and len(ids) and not ids[0]:
                 dom = datas.get('_domain',[])
             get_groupby_data(self.groupby, dom)
         else:
-            rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context)
-            ids2 = map(itemgetter('id'), rows) # getting the ids from read result
-            if datas['ids'] != ids2: # sorted ids were not taken into consideration for print screen
+            rows = Model.browse(ids).read(list(result['fields']))
+            if datas['ids'] != rows.ids: # sorted ids were not taken into consideration for print screen
                 rows_new = []
                 for id in datas['ids']:
                     rows_new += [elem for elem in rows if elem['id'] == id]
                 rows = rows_new
         res = self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model_desc)
         return self.obj.get(), 'pdf'
-
 
     def _create_table(self, uid, ids, fields, fields_order, results, context, title=''):
         pageSize=[297.0, 210.0]
@@ -116,10 +113,10 @@ class report_printscreen_list(report_int):
         _append_node('PageHeight', '%.2f' %(pageSize[1] * 2.8346,))
         _append_node('report-header', title)
 
-        registry = openerp.registry(self.cr.dbname)
-        _append_node('company', registry['res.users'].browse(self.cr,uid,uid).company_id.name)
-        rpt_obj = registry['res.users']
-        rml_obj=report_sxw.rml_parse(self.cr, uid, rpt_obj._name,context)
+        env = openerp.api.Environment(self.cr, uid, {})
+        Users = env['res.users']
+        _append_node('company', Users.browse(uid).company_id.name)
+        rml_obj = report_sxw.rml_parse(self.cr, uid, Users._name, context)
         _append_node('header-date', str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")))
         l = []
         t = 0
@@ -249,4 +246,5 @@ class report_printscreen_list(report_int):
         self.obj = render.rml(rml, title=self.title)
         self.obj.render()
         return True
+
 report_printscreen_list('report.printscreen.list')

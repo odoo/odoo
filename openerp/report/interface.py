@@ -3,18 +3,15 @@
 
 import os
 import re
+import urllib
 
 from lxml import etree
 
 import openerp
 import openerp.tools as tools
-import openerp.modules
-import print_xml
-import render
-import urllib
-
-from openerp import SUPERUSER_ID
-from openerp.report.render.rml2pdf import customfonts
+from . import print_xml
+from . import render
+from openerp.modules import get_module_resource
 
 #
 # coerce any type to a unicode string (to preserve non-ascii characters)
@@ -23,6 +20,7 @@ from openerp.report.render.rml2pdf import customfonts
 def toxml(value):
     unicode_value = tools.ustr(value)
     return unicode_value.replace('&', '&amp;').replace('<','&lt;').replace('>','&gt;')
+
 
 class report_int(object):
 
@@ -49,6 +47,7 @@ class report_int(object):
     def create(self, cr, uid, ids, datas, context=None):
         return False
 
+
 class report_rml(report_int):
     """
         Automatically builds a document using the transformation process:
@@ -73,27 +72,24 @@ class report_rml(report_int):
             'makohtml2html' :self.create_makohtml2html,
         }
 
-    def create(self, cr, uid, ids, datas, context):
-        registry = openerp.registry(cr.dbname)
+    def create(self, cr, uid, ids, datas, context=None):
+        env = openerp.api.Environment(cr, uid, context or {})
         xml = self.create_xml(cr, uid, ids, datas, context)
         xml = tools.ustr(xml).encode('utf8')
         report_type = datas.get('report_type', 'pdf')
         if report_type == 'raw':
             return xml, report_type
 
-        registry['res.font'].font_scan(cr, SUPERUSER_ID, lazy=True, context=context)
+        env['res.font'].sudo().font_scan(lazy=True)
 
         rml = self.create_rml(cr, xml, uid, context)
-        ir_actions_report_xml_obj = registry['ir.actions.report.xml']
-        report_xml_ids = ir_actions_report_xml_obj.search(cr, uid, [('report_name', '=', self.name[7:])], context=context)
-        self.title = report_xml_ids and ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name or 'OpenERP Report'
+        reports = env['ir.actions.report.xml'].search([('report_name', '=', self.name[7:])])
+        self.title = reports[0].name if reports else 'Odoo Report'
         create_doc = self.generators[report_type]
         pdf = create_doc(rml, title=self.title)
         return pdf, report_type
 
     def create_xml(self, cr, uid, ids, datas, context=None):
-        if not context:
-            context={}
         doc = print_xml.document(cr, uid, datas, {})
         self.bin_datas.update( doc.bin_datas  or {})
         doc.parse(self.tmpl, ids, self.table, context)
@@ -102,9 +98,6 @@ class report_rml(report_int):
         return self.post_process_xml_data(cr, uid, xml, context)
 
     def post_process_xml_data(self, cr, uid, xml, context=None):
-
-        if not context:
-            context={}
         # find the position of the 3rd tag
         # (skip the <?xml ...?> and the "root" tag)
         iter = re.finditer('<[^>]*>', xml)
@@ -113,7 +106,7 @@ class report_rml(report_int):
         pos_xml = i.end()
 
         doc = print_xml.document(cr, uid, {}, {})
-        tmpl_path = openerp.modules.get_module_resource('base', 'report', 'corporate_defaults.xml')
+        tmpl_path = get_module_resource('base', 'report', 'corporate_defaults.xml')
         doc.parse(tmpl_path, [uid], 'res.users', context)
         corporate_header = doc.xml_get()
         doc.close()
@@ -131,10 +124,8 @@ class report_rml(report_int):
     def create_rml(self, cr, xml, uid, context=None):
         if self.tmpl=='' and not self.internal_header:
             self.internal_header=True
-        if not context:
-            context={}
-        registry = openerp.registry(cr.dbname)
-        ir_translation_obj = registry['ir.translation']
+        env = openerp.api.Environment(cr, uid, context or {})
+        Translation = env['ir.translation']
 
         # In some case we might not use xsl ...
         if not self.xsl:
@@ -172,17 +163,17 @@ class report_rml(report_int):
                     if node.tail:
                         tail = node.tail.strip().replace('\n',' ')
                     if text:
-                        translation1 = ir_translation_obj._get_source(cr, uid, self.name2, 'xsl', lang, text)
-                        if translation1:
-                            node.text = node.text.replace(text, translation1)
+                        text1 = Translation._get_source(self.name2, 'xsl', lang, text)
+                        if text1:
+                            node.text = node.text.replace(text, text1)
                     if tail:
-                        translation2 = ir_translation_obj._get_source(cr, uid, self.name2, 'xsl', lang, tail)
-                        if translation2:
-                            node.tail = node.tail.replace(tail, translation2)
+                        tail1 = Translation._get_source(self.name2, 'xsl', lang, tail)
+                        if tail1:
+                            node.tail = node.tail.replace(tail, tail1)
                 translate_aux(node, lang, t)
 
-        if context.get('lang', False):
-            translate(stylesheet.iter(), context['lang'])
+        if env.lang:
+            translate(stylesheet.iter(), env.lang)
 
         transform = etree.XSLT(stylesheet)
         xml = etree.tostring(
@@ -190,7 +181,7 @@ class report_rml(report_int):
 
         return xml
 
-    def create_pdf(self, rml, localcontext = None, logo=None, title=None):
+    def create_pdf(self, rml, localcontext=None, logo=None, title=None):
         if not localcontext:
             localcontext = {}
         localcontext.update({'internal_header':self.internal_header})
@@ -203,7 +194,7 @@ class report_rml(report_int):
         obj.render()
         return obj.get()
 
-    def create_html(self, rml, localcontext = None, logo=None, title=None):
+    def create_html(self, rml, localcontext=None, logo=None, title=None):
         obj = render.rml2html(rml, localcontext, self.bin_datas)
         obj.render()
         return obj.get()
@@ -213,28 +204,28 @@ class report_rml(report_int):
         obj.render()
         return obj.get().encode('utf-8')
 
-    def create_html2html(self, rml, localcontext = None, logo=None, title=None):
+    def create_html2html(self, rml, localcontext=None, logo=None, title=None):
         obj = render.html2html(rml, localcontext, self.bin_datas)
         obj.render()
         return obj.get()
 
 
-    def create_raw(self,rml, localcontext = None, logo=None, title=None):
+    def create_raw(self,rml, localcontext=None, logo=None, title=None):
         obj = render.odt2odt(etree.XML(rml),localcontext)
         obj.render()
         return etree.tostring(obj.get())
 
-    def create_sxw(self,rml,localcontext = None):
+    def create_sxw(self,rml,localcontext=None):
         obj = render.odt2odt(rml,localcontext)
         obj.render()
         return obj.get()
 
-    def create_odt(self,rml,localcontext = None):
+    def create_odt(self,rml,localcontext=None):
         obj = render.odt2odt(rml,localcontext)
         obj.render()
         return obj.get()
 
-    def create_makohtml2html(self,html,localcontext = None):
+    def create_makohtml2html(self,html,localcontext=None):
         obj = render.makohtml2html(html,localcontext)
         obj.render()
         return obj.get()

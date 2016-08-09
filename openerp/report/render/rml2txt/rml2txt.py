@@ -4,9 +4,10 @@
 
 import sys
 import StringIO
+
 from lxml import etree
 
-import utils
+from . import utils
 
 Font_size= 10.0
 
