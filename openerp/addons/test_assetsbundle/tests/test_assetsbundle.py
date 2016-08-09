@@ -27,10 +27,14 @@ class TestJavascriptAssetsBundle(TransactionCase):
     def _any_ira_for_bundle(self, type):
         """ Returns all ir.attachments associated to a bundle, regardless of the verion.
         """
-        bundle = self.jsbundle_xmlid if type == 'js' else self.cssbundle_xmlid
-        return self.registry['ir.attachment'].search(self.cr, self.uid,[
-            ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(bundle, type))
-        ])
+        bundle = self.cssbundle_xmlid
+        if type == 'js':
+            bundle = self.jsbundle_xmlid
+        elif type == 'xml.js':
+            bundle = self.xmlbundle_xmlid
+
+        url = '/web/content/%-%/{0}{1}.{2}'.format(bundle, '' if type == 'js' else '%', type)
+        return self.registry['ir.attachment'].search(self.cr, self.uid, [('url', '=like', url)])
 
     def test_01_generation(self):
         """ Checks that a bundle creates an ir.attachment record when its `js` method is called
@@ -305,6 +309,32 @@ class TestJavascriptAssetsBundle(TransactionCase):
         # the ir.attachment records should be deduplicated in the bundle's content
         content = bundle0.to_html()
         self.assertEqual(content.count('test_assetsbundle.bundle2.0.css'), 1)
+
+    def test_15_xml(self):
+        """ Checks that a bundle creates an ir.attachment record when its `xml` method is called
+        for the first time.
+        """
+        self.bundle = self._get_asset(self.xmlbundle_xmlid, env=self.env)
+
+        # there shouldn't be any attachment associated to this bundle
+        self.assertEquals(len(self._any_ira_for_bundle('xml.js')), 0)
+        self.assertEquals(len(self.bundle.get_attachments('xml.js', inc='en_US')), 0)
+
+        # trigger the first generation and, thus, the first save in database
+        self.bundle.xml()
+
+        # there should be one attachment associated to this bundle
+        self.assertEquals(len(self._any_ira_for_bundle('xml.js')), 1)
+        self.assertEquals(len(self.bundle.get_attachments('xml.js', inc='en_US')), 1)
+
+    def test_16_html(self):
+        """ Checks that a bundle creates ir.attachment records and return html code.
+        """
+        self.bundle = self._get_asset(self.xmlbundle_xmlid, env=self.env)
+        html = self.bundle.to_html(css=True, js=True)
+
+        self.assertIn('/test_assetsbundle.bundle4.js"></script>', html)
+        self.assertIn('/test_assetsbundle.bundle4.en_US.xml.js"></script>', html)
 
 
 class TestAssetsBundleInBrowser(HttpCase):
