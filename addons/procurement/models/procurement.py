@@ -72,7 +72,8 @@ class ProcurementRule(models.Model):
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company')
 
-    def _get_action(self, cr, uid, context=None):
+    @api.model
+    def _get_action(self):
         return []
 
 
