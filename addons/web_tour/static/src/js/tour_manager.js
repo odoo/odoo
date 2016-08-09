@@ -163,13 +163,15 @@ return core.Class.extend({
             };
         }
         this.tours[name] = tour;
-        if (this.running_tour === name || (!tour.test && !_.contains(this.consumed_tours, name))) {
-            this._to_next_step(name, 0);
-        }
+        _.defer(function () {
+            if (self.running_tour === name || (!tour.test && !_.contains(self.consumed_tours, name))) {
+                self._to_next_step(name, 0);
+            }
 
-        if (!this.running_tour || this.running_tour === name) {
-            this.update(name);
-        }
+            if (self.active_tooltips[name] && (!self.running_tour || self.running_tour === name)) {
+                self.update(name);
+            }
+        });
     },
     run: function (tour_name, step_delay) {
         if (this.running_tour) {
