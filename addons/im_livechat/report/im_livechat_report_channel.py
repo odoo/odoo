@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from openerp import api, fields, models, tools
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import api, fields, models, tools
 
 
 class ImLivechatReportChannel(models.Model):

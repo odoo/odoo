@@ -100,7 +100,7 @@ if res:
         <field name="name">Test 6 : Invoices status</field>
         <field name="desc">Check that paid/reconciled invoices are not in 'Open' state</field>
         <field name="code_exec"><![CDATA[
-from openerp import _
+from odoo import _
 res = []
 column_order = ['number','id','name','state']
 if reconciled_inv():

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api, _
-from openerp.exceptions import UserError
-import openerp.addons.decimal_precision as dp
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
+import odoo.addons.decimal_precision as dp
 
 
 class SaleOrder(models.Model):

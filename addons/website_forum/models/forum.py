@@ -1,21 +1,17 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 import itertools
 import logging
 import math
 import re
 import uuid
+
+from datetime import datetime
 from werkzeug.exceptions import Forbidden
 
-from openerp import _
-from openerp import api, fields, models
-from openerp import http
-from openerp import modules
-from openerp import tools
-from openerp import SUPERUSER_ID
-from openerp.addons.website.models.website import slug
-from openerp.exceptions import UserError, ValidationError
+from odoo import api, fields, models, modules, tools, SUPERUSER_ID, _
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 

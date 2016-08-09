@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import http
-from openerp.http import request
+from odoo import http
+from odoo.http import request
 
 
 class WebsiteLivechat(http.Controller):

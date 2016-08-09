@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import _, api, fields, models
-import openerp
+from odoo import _, api, exceptions, fields, models
 
 
 class Users(models.Model):
@@ -47,7 +47,7 @@ class Users(models.Model):
         if not values.get('login', False):
             action = self.env.ref('base.action_res_users')
             msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
-            raise openerp.exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
+            raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
         user = super(Users, self).create(values)
 

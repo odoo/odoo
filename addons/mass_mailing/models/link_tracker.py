@@ -3,11 +3,13 @@
 
 from odoo import fields, models
 
+
 class LinkTracker(models.Model):
     _inherit = "link.tracker"
 
     mass_mailing_id = fields.Many2one('mail.mass_mailing', string='Mass Mailing')
     mass_mailing_campaign_id = fields.Many2one('mail.mass_mailing.campaign', string='Mass Mailing Campaign')
+
 
 class LinkTrackerClick(models.Model):
     _inherit = "link.tracker.click"

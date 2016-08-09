@@ -3,27 +3,28 @@
 
 import logging
 
-from openerp import models, fields, api, _
+from odoo import models, fields, api, _
 
 _logger = logging.getLogger(__name__)
 
-class barcode_rule(models.Model):
+
+class BarcodeRule(models.Model):
     _inherit = 'barcode.rule'
 
     type = fields.Selection(selection_add=[
-            ('credit', _('Credit Card'))
-        ])
+        ('credit', _('Credit Card'))
+    ])
 
 
-class pos_mercury_payment_data(models.Model):
+class PosMercuryConfiguration(models.Model):
     _name = 'pos_mercury.configuration'
 
-    # FIELDS #
     name = fields.Char(required=True, help='Name of this Mercury configuration')
     merchant_id = fields.Char(string='Merchant ID', required=True, help='ID of the merchant to authenticate him on the payment provider server')
     merchant_pwd = fields.Char(string='Merchant Password', required=True, help='Password of the merchant to authenticate him on the payment provider server')
 
-class account_bank_statement_line(models.Model):
+
+class AccountBankStatementLine(models.Model):
     _inherit = "account.bank.statement.line"
 
     mercury_card_number = fields.Char(string='Card Number', help='The last 4 numbers of the card used to pay')
@@ -41,17 +42,19 @@ class account_bank_statement_line(models.Model):
         else:
             self.mercury_prefixed_card_number = ""
 
-class account_journal(models.Model):
+
+class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
     pos_mercury_config_id = fields.Many2one('pos_mercury.configuration', string='Mercury configuration', help='The configuration of Mercury used for this journal')
 
-class pos_order_card(models.Model):
+
+class PosOrder(models.Model):
     _inherit = "pos.order"
 
     @api.model
     def _payment_fields(self, ui_paymentline):
-        fields = super(pos_order_card, self)._payment_fields(ui_paymentline)
+        fields = super(PosOrder, self)._payment_fields(ui_paymentline)
 
         fields.update({
             'card_number': ui_paymentline.get('mercury_card_number'),
@@ -65,7 +68,7 @@ class pos_order_card(models.Model):
         return fields
 
     def add_payment(self, data):
-        statement_id = super(pos_order_card, self).add_payment(data)
+        statement_id = super(PosOrder, self).add_payment(data)
         statement_lines = self.env['account.bank.statement.line'].search([('statement_id', '=', statement_id),
                                                                          ('pos_statement_id', '=', self.id),
                                                                          ('journal_id', '=', data['journal']),
@@ -88,6 +91,7 @@ class pos_order_card(models.Model):
                 break
 
         return statement_id
+
 
 class AutoVacuum(models.AbstractModel):
     _inherit = 'ir.autovacuum'

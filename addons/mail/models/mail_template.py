@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import copy
@@ -7,13 +8,12 @@ import dateutil.relativedelta as relativedelta
 import logging
 import lxml
 import urlparse
-import openerp
+
 from urllib import urlencode, quote as quote
 
-from openerp import _, api, fields, models, SUPERUSER_ID
-from openerp import tools
-from openerp import report as odoo_report
-from openerp.exceptions import UserError
+from odoo import _, api, fields, models, osv, SUPERUSER_ID, tools
+from odoo import report as odoo_report
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
         context['tz'] = tz or pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz'] or "UTC"
     timestamp = datetime.datetime.strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
-    ts = openerp.osv.fields.datetime.context_timestamp(cr, uid, timestamp, context)
+    ts = osv.fields.datetime.context_timestamp(cr, uid, timestamp, context)
 
     # Babel allows to format datetime in a specific language without change locale
     # So month 1 = January in English, and janvier in French

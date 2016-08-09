@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import base64
 import logging
 import werkzeug
 
-from openerp import http
-from openerp.exceptions import AccessError, UserError
-from openerp.http import request
-from openerp.tools.translate import _
+from odoo import http, _
+from odoo.exceptions import AccessError, UserError
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
 
-class website_slides(http.Controller):
+class WebsiteSlides(http.Controller):
     _slides_per_page = 12
     _slides_per_list = 20
     _order_by_criterion = {

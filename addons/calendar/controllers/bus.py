@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*
-import openerp
-from openerp.http import request
+
+from odoo.addons.bus.controllers.main import BusController
+from odoo.http import request
 
 
-class CalendarBusController(openerp.addons.bus.controllers.main.BusController):
+class CalendarBusController(BusController):
     # --------------------------
     # Extends BUS Controller Poll
     # --------------------------

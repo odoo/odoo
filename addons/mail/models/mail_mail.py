@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import datetime
 import logging
+import psycopg2
 import threading
 
 from email.utils import formataddr
 
-import psycopg2
-
-from openerp import _, api, fields, models
-from openerp import tools
-from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import _, api, fields, models
+from odoo import tools
+from odoo.addons.base.ir.ir_mail_server import MailDeliveryException
+from odoo.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 

@@ -1,21 +1,25 @@
 # -*- coding: utf-8 -*-
-from ast import literal_eval
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import datetime
-from functools import partial
 import logging
 import werkzeug.urls
 import urllib2
 
-from openerp import release, SUPERUSER_ID
-from openerp.models import AbstractModel
-from openerp.tools.translate import _
-from openerp.tools.config import config
-from openerp.tools import misc
-from openerp.exceptions import UserError
+from ast import literal_eval
+from functools import partial
+
+from odoo import release, SUPERUSER_ID
+from odoo.exceptions import UserError
+from odoo.models import AbstractModel
+from odoo.tools.translate import _
+from odoo.tools import config
+from odoo.tools import misc
 
 _logger = logging.getLogger(__name__)
 
-class publisher_warranty_contract(AbstractModel):
+
+class PublisherWarrantyContract(AbstractModel):
     _name = "publisher_warranty.contract"
 
     def _get_message(self, cr, uid):

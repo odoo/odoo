@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .common import KARMA, TestForumCommon
 from ..models.forum import KarmaError
-from openerp.exceptions import UserError, AccessError
-from openerp.tools import mute_logger
+from odoo.exceptions import UserError, AccessError
+from odoo.tools import mute_logger
 
 
 class TestForum(TestForumCommon):

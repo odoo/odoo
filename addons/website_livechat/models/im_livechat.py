@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-from openerp import api, models, fields
-from openerp.addons.website.models.website import slug
-from openerp.tools.translate import html_translate
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import api, models, fields
+from odoo.addons.website.models.website import slug
+from odoo.tools.translate import html_translate
 
 
 class ImLivechatChannel(models.Model):

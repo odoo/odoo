@@ -3,9 +3,10 @@
 
 import json
 
-import openerp
 from odoo import models
 from odoo.http import request
+
+import odoo
 
 
 class Http(models.AbstractModel):
@@ -20,7 +21,7 @@ class Http(models.AbstractModel):
     def session_info(self):
         user = request.env.user
         display_switch_company_menu = user.has_group('base.group_multi_company') and len(user.company_ids) > 1
-        version_info = openerp.service.common.exp_version()
+        version_info = odoo.service.common.exp_version()
         return {
             "session_id": request.session_id,
             "uid": request.session.uid,

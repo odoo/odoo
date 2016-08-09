@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
-from odoo import api, models, SUPERUSER_ID
-from openerp.http import request
-from openerp.api import Environment
+from odoo import models, SUPERUSER_ID
+from odoo.http import request
+from odoo.api import Environment
 
 from werkzeug.exceptions import BadRequest
 

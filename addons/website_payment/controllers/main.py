@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from openerp import http
-from openerp.http import request
-from openerp.tools.translate import _
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import http, _
+from odoo.http import request
 
 
-class website_payment(http.Controller):
+class WebsitePayment(http.Controller):
     @http.route(['/my/payment_method'], type='http', auth="user", website=True)
     def payment_method(self):
         acquirers = list(request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False)]))

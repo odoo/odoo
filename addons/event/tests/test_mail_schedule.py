@@ -3,9 +3,9 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp import fields, tools
-from openerp.addons.event.tests.common import TestEventCommon
-from openerp.tools import mute_logger
+from odoo import fields, tools
+from odoo.addons.event.tests.common import TestEventCommon
+from odoo.tools import mute_logger
 
 
 class TestMailSchedule(TestEventCommon):

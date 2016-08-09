@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from PIL import Image
+from urllib import urlencode
+from urlparse import urlparse
 
 import datetime
 import io
 import json
-from PIL import Image
 import re
-from urllib import urlencode
 import urllib2
-from urlparse import urlparse
 
-from openerp import api, fields, models, SUPERUSER_ID, _
-from openerp.tools import image
-from openerp.tools.translate import html_translate
-from openerp.exceptions import Warning
-from openerp.addons.website.models.website import slug
+from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.tools import image
+from odoo.tools.translate import html_translate
+from odoo.exceptions import Warning
+from odoo.addons.website.models.website import slug
 
 
 class Channel(models.Model):

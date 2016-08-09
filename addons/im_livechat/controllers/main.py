@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-from openerp import http, _
-from openerp.http import request
-from openerp.addons.base.ir.ir_qweb import AssetsBundle
-from openerp.addons.web.controllers.main import binary_content
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import base64
+
+from odoo import http, _
+from odoo.http import request
+from odoo.addons.base.ir.ir_qweb import AssetsBundle
+from odoo.addons.web.controllers.main import binary_content
 
 
 class LivechatController(http.Controller):
