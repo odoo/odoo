@@ -126,11 +126,9 @@
             <script type="text/javascript">
                 var odoo = {
                     csrf_token: "<t t-esc="request.csrf_token(None)"/>",
-                    session_info: {
-                        is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
-                        is_frontend: true,
-                    },
+                    session_info: <t t-raw="session_info"/>
                 };
+                odoo.session_info.is_frontend = true;
             </script>
 
             <t t-call-assets="web.assets_common" t-js="false"/>

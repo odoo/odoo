@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+import json
 
 from odoo import models
 from odoo.http import request
@@ -22,6 +23,12 @@ class QWeb(models.AbstractModel):
         'script':  'src',
         'img':     'src',
     }
+
+    def default_values(self):
+        values = super(QWeb, self).default_values()
+        if request and getattr(request, 'website', None):
+            values['session_info'] = json.dumps(request.env['ir.http'].session_info())
+        return values
 
     def _website_build_attribute(self, tagName, name, value, options, values):
         """ Compute the value of an attribute while rendering the template. """

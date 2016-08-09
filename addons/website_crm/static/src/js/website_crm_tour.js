@@ -1,59 +1,54 @@
 odoo.define('website_crm.tour', function(require) {
     'use strict';
 
-    var base = require('web_editor.base');
-    var core    = require('web.core');
-    var Tour    = require('web.Tour');
-    var Model   = require('web.Model');
-    var Session = require('web.Session');
+    var tour    = require('web_tour.tour');
 
+    var base = require('web_editor.base');
     base.ready().done(function () {
-        Tour.register({
-            id:   'website_crm_tour',
-            name: "Test the contact us form",
-            path: '/page/contactus',
-            mode: 'test',
-            steps: [
+
+        tour.register('website_crm_tour', { test: true, url: '/page/contactus' },
+            [
                 {
-                    title:          "Complete name",
-                    element:        "input[name=contact_name]",
-                    sampleText:     "John Smith",
+                    content: "Complete name",
+                    trigger: "input[name=contact_name]",
+                    run: "text John Smith",
                 },
                 {
-                    title:          "Complete phone number",
-                    element:        "input[name=phone]",
-                    sampleText:     "118.218"
+                    content: "Complete phone number",
+                    trigger: "input[name=phone]",
+                    run: "text 118.218"
                 },
                 {
-                    title:          "Complete Email",
-                    element:        "input[name=email_from]",
-                    sampleText:     "john@smith.com"
+                    content: "Complete Email",
+                    trigger: "input[name=email_from]",
+                    run: "text john@smith.com"
                 },
                 {
-                    title:          "Complete Company",
-                    element:        "input[name=partner_name]",
-                    sampleText:     "Odoo S.A."
+                    content: "Complete Company",
+                    trigger: "input[name=partner_name]",
+                    run: "text Odoo S.A."
                 },
                 {
-                    title:          "Complete Subject",
-                    element:        "input[name=name]",
-                    sampleText:     "Useless message"
+                    content: "Complete Subject",
+                    trigger: "input[name=name]",
+                    run: "text Useless message"
                 },
                 {
-                    title:          "Complete Subject",
-                    element:        "textarea[name=description]",
-                    sampleText:     "### TOUR DATA ###"
+                    content: "Complete Subject",
+                    trigger: "textarea[name=description]",
+                    run: "text ### TOUR DATA ###"
                 },
                 {
-                    title:          "Send the form",
-                    element:        ".o_website_form_send"
+                    content: "Send the form",
+                    trigger: ".o_website_form_send"
                 },
                 {
-                    title:          "Check we were redirected to the success page",
-                    waitFor:        "#wrap:has(h1:contains('Thanks')):has(div.alert-success)"
+                    content: "Check we were redirected to the success page",
+                    trigger: "#wrap:has(h1:contains('Thanks')):has(div.alert-success)"
                 }
             ]
-        });
+        );
+
     });
 
     return {};
