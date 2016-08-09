@@ -46,6 +46,7 @@ class account_fiscal_position(osv.osv):
 
     _defaults = {
         'active': True,
+        'company_id': lambda self, cr, uid, ctx: self.pool['res.company']._company_default_get(cr, uid, object='account', context=ctx)
     }
 
     def _check_country(self, cr, uid, ids, context=None):
