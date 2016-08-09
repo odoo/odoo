@@ -9,7 +9,7 @@ import werkzeug
 from operator import itemgetter
 from werkzeug import url_encode
 
-from odoo import http, registry, SUPERUSER_ID
+from odoo import api, http, registry, SUPERUSER_ID
 from odoo.addons.web.controllers.main import binary_content
 from odoo.exceptions import AccessError
 from odoo.http import request
@@ -32,8 +32,8 @@ class MailController(http.Controller):
             try:
                 db_registry = registry(db)
                 with db_registry.cursor() as cr:
-                    mail_thread = db_registry['mail.thread']
-                    mail_thread.message_process(cr, SUPERUSER_ID, None, message)
+                    env = api.Environment(cr, SUPERUSER_ID, {})
+                    env['mail.thread'].message_process(None, message)
             except psycopg2.Error:
                 pass
         return True

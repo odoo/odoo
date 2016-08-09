@@ -11,43 +11,38 @@ import urlparse
 
 from urllib import urlencode, quote as quote
 
-from odoo import _, api, fields, models, osv, SUPERUSER_ID, tools
+from odoo import _, api, fields, models, tools
 from odoo import report as odoo_report
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
 
-def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
-    context = dict(context or {})
-    if tz:
-        context['tz'] = tz or pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz'] or "UTC"
+def format_tz(env, dt, tz=False, format=False):
+    record_user_timestamp = env.user.sudo().with_context(tz=tz or env.user.sudo().tz or 'UTC')
     timestamp = datetime.datetime.strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
-    ts = osv.fields.datetime.context_timestamp(cr, uid, timestamp, context)
+    ts = fields.Datetime.context_timestamp(record_user_timestamp, timestamp)
 
     # Babel allows to format datetime in a specific language without change locale
     # So month 1 = January in English, and janvier in French
     # Be aware that the default value for format is 'medium', instead of 'short'
     #     medium:  Jan 5, 2016, 10:20:31 PM |   5 janv. 2016 22:20:31
     #     short:   1/5/16, 10:20 PM         |   5/01/16 22:20
-    if context.get('use_babel'):
+    if env.context.get('use_babel'):
         # Formatting available here : http://babel.pocoo.org/en/latest/dates.html#date-fields
         from babel.dates import format_datetime
-        return format_datetime(ts, format or 'medium', locale=context.get("lang") or 'en_US')
+        return format_datetime(ts, format or 'medium', locale=env.context.get("lang") or 'en_US')
 
     if format:
         return ts.strftime(format)
     else:
-        lang = context.get("lang")
-        lang_params = {}
+        lang = env.context.get("lang")
+        langs = env['res.lang']
         if lang:
-            res_lang = pool.get('res.lang')
-            ids = res_lang.search(cr, uid, [("code", "=", lang)])
-            if ids:
-                lang_params = res_lang.read(cr, uid, ids[0], ["date_format", "time_format"])
-        format_date = lang_params.get("date_format", '%B-%d-%Y')
-        format_time = lang_params.get("time_format", '%I-%M %p')
+            langs = env['res.lang'].search([("code", "=", lang)])
+        format_date = langs.date_format or '%B-%d-%Y'
+        format_time = langs.time_format or '%I-%M %p'
 
         fdate = ts.strftime(format_date).decode('utf-8')
         ftime = ts.strftime(format_time)
@@ -355,7 +350,7 @@ class MailTemplate(models.Model):
         for record in records:
             res_to_rec[record.id] = record
         variables = {
-            'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.pool, self._cr, self._uid, dt, tz, format, context),
+            'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.env, dt, tz, format),
             'user': self.env.user,
             'ctx': self._context,  # context kw would clash with mako internals
         }

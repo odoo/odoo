@@ -3,9 +3,9 @@
 from email.utils import formataddr
 
 from .common import TestMail
-from openerp.exceptions import AccessError
-from openerp.exceptions import except_orm
-from openerp.tools import mute_logger
+from odoo import api
+from odoo.exceptions import AccessError, except_orm
+from odoo.tools import mute_logger
 
 
 class TestMailGroup(TestMail):
@@ -28,8 +28,9 @@ class TestMailGroup(TestMail):
     @classmethod
     def tearDownClass(cls):
         # set master class behavior back
-        def mail_group_message_get_recipient_values(self, cr, uid, ids, notif_message=None, recipient_ids=None, context=None):
-            return self.pool['mail.thread'].message_get_recipient_values(cr, uid, ids, notif_message=notif_message, recipient_ids=recipient_ids, context=context)
+        @api.multi
+        def mail_group_message_get_recipient_values(self, notif_message=None, recipient_ids=None):
+            return self.env['mail.thread'].message_get_recipient_values(notif_message=notif_message, recipient_ids=recipient_ids)
         cls.env['mail.channel']._patch_method('message_get_recipient_values', mail_group_message_get_recipient_values)
         super(TestMail, cls).tearDownClass()
 
@@ -105,7 +106,7 @@ class TestMailGroup(TestMail):
 
     def test_mail_group_notification_recipients_grouped(self):
         # Data: set alias_domain to see emails with alias
-        self.registry('ir.config_parameter').set_param(self.cr, self.uid, 'mail.catchall.domain', 'schlouby.fr')
+        self.env['ir.config_parameter'].set_param('mail.catchall.domain', 'schlouby.fr')
         self.group_private.write({'alias_name': 'Test'})
         self.group_private.message_subscribe_users([self.user_employee.id, self.user_portal.id])
 
