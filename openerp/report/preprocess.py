@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from lxml import etree
 import re
+
+from lxml import etree
+
 rml_parents = ['tr','story','section']
 html_parents = ['tr','body','div']
 sxw_parents = ['{http://openoffice.org/2000/table}table-row','{http://openoffice.org/2000/office}body','{http://openoffice.org/2000/text}section']
 odt_parents = ['{urn:oasis:names:tc:opendocument:xmlns:office:1.0}body','{urn:oasis:names:tc:opendocument:xmlns:table:1.0}table-row','{urn:oasis:names:tc:opendocument:xmlns:text:1.0}section']
+
 
 class report(object):
     def preprocess_rml(self, root_node,type='pdf'):

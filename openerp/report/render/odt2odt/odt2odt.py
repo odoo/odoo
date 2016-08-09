@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.report.render.rml2pdf import utils
 import copy
+
+from openerp.report.render.rml2pdf import utils
 
 class odt2odt(object):
     def __init__(self, odt, localcontext):

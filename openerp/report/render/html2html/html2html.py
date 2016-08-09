@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.report.render.rml2pdf import utils
-import copy
 import base64
+import copy
 import cStringIO
 import re
+
 from reportlab.lib.utils import ImageReader
+
+from openerp.report.render.rml2pdf import utils
 
 _regex = re.compile('\[\[(.+?)\]\]')
 utils._regex = re.compile('\[\[\s*(.+?)\s*\]\]',re.DOTALL)

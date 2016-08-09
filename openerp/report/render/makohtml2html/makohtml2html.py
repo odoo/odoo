@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
-import mako
-from lxml import etree
-from mako.template import Template
-from mako.lookup import TemplateLookup
 import os
+
+import mako
+from mako.lookup import TemplateLookup
+from mako.template import Template
+from lxml import etree
 
 _logger = logging.getLogger(__name__)
 

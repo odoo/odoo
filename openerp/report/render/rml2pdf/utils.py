@@ -3,9 +3,9 @@
 
 import copy
 import locale
-
 import logging
 import re
+
 import reportlab
 
 import openerp.tools as tools

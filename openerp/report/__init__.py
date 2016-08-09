@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import openerp
 from openerp import api
-import interface
-import print_xml
-import print_fnc
-import custom
-import render
-import int_to_text
-
-import report_sxw
-
-import printscreen
+from . import custom
+from . import int_to_text
+from . import interface
+from . import print_fnc
+from . import print_xml
+from . import printscreen
+from . import render
+from . import report_sxw
 
 def render_report(cr, uid, ids, name, data, context=None):
     """

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from reportlab import rl_config
-import logging
 import glob
+import logging
 import os
+
+from reportlab import rl_config
 
 # .apidoc title: TTF Font Table
 

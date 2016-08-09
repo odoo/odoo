@@ -1,27 +1,29 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from lxml import etree
-import StringIO
-import cStringIO
+
 import base64
-from datetime import datetime
+import cStringIO
+import logging
 import os
 import re
+import StringIO
 import time
-from interface import report_rml
-import preprocess
-import logging
-import openerp.tools as tools
 import zipfile
-import common
-from openerp.exceptions import AccessError
+from datetime import datetime
+
+from lxml import etree
 
 import openerp
-from openerp import SUPERUSER_ID
+import openerp.tools as tools
+from . import common
+from . import preprocess
+from .interface import report_rml
+from openerp.exceptions import AccessError
 from openerp.osv.fields import float as float_field, function as function_field, datetime as datetime_field
-from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval
+from openerp.tools.translate import _
+
 
 _logger = logging.getLogger(__name__)
 
@@ -59,11 +61,11 @@ def get_date_length(date_format=DEFAULT_SERVER_DATE_FORMAT):
 class rml_parse(object):
     def __init__(self, cr, uid, name, parents=rml_parents, tag=rml_tag, context=None):
         if not context:
-            context={}
+            context = {}
         self.cr = cr
         self.uid = uid
-        self.pool = openerp.registry(cr.dbname)
-        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        env = openerp.api.Environment(cr, uid, context)
+        user = env['res.users'].browse(uid)
         self.localcontext = {
             'user': user,
             'setCompany': self.setCompany,
@@ -93,7 +95,7 @@ class rml_parse(object):
         self.lang_dict = {}
         self.default_lang = {}
         self.lang_dict_called = False
-        self._transl_regex = re.compile('(\[\[.+?\]\])')
+        self._transl_regex = re.compile(r'(\[\[.+?\]\])')
 
     def setTag(self, oldtag, newtag, attrs=None):
         return newtag, attrs
@@ -123,19 +125,19 @@ class rml_parse(object):
     def removeParentNode(self, tag=None):
         raise GeneratorExit('Skip')
 
-    def set_html_image(self,id,model=None,field=None,context=None):
-        if not id :
+    def set_html_image(self, id, model=None, field=None, context=None):
+        if not id:
             return ''
         if not model:
             model = 'ir.attachment'
-        try :
-            id = int(id)
-            res = self.pool[model].read(self.cr,self.uid,id)
-            if field :
+        try:
+            env = openerp.api.Environment(self.cr, self.uid, {})
+            res = env[model].browse(int(id)).read()[0]
+            if field:
                 return res[field]
-            elif model =='ir.attachment' :
+            elif model =='ir.attachment':
                 return res['datas']
-            else :
+            else:
                 return ''
         except Exception:
             return ''
@@ -148,13 +150,14 @@ class rml_parse(object):
         self.objects = self.objects.with_env(env)
 
     def _get_lang_dict(self):
-        pool_lang = self.pool['res.lang']
+        env = openerp.api.Environment(self.cr, self.uid, {})
+        Lang = env['res.lang']
         lang = self.localcontext.get('lang', 'en_US') or 'en_US'
-        lang_ids = pool_lang.search(self.cr,self.uid,[('code','=',lang)])
-        if not lang_ids:
-            lang_ids = pool_lang.search(self.cr,self.uid,[('code','=','en_US')])
-        lang_obj = pool_lang.browse(self.cr,self.uid,lang_ids[0])
-        self.lang_dict.update({'lang_obj':lang_obj,'date_format':lang_obj.date_format,'time_format':lang_obj.time_format})
+        lang_obj = Lang.search([('code', '=', lang)], limit=1) or \
+                   Lang.search([('code', '=', 'en_US')])
+        self.lang_dict.update({'lang_obj': lang_obj,
+                               'date_format': lang_obj.date_format,
+                               'time_format':lang_obj.time_format})
         self.default_lang[lang] = self.lang_dict.copy()
         return True
 
@@ -165,10 +168,10 @@ class rml_parse(object):
     def get_digits(self, obj=None, f=None, dp=None):
         d = DEFAULT_DIGITS = 2
         if dp:
-            decimal_precision_obj = self.pool['decimal.precision']
-            d = decimal_precision_obj.precision_get(self.cr, self.uid, dp)
+            env = openerp.api.Environment(self.cr, self.uid, {})
+            d = env['decimal.precision'].precision_get(dp)
         elif obj and f:
-            res_digits = getattr(obj._columns[f], 'digits', lambda x: ((16, DEFAULT_DIGITS)))
+            res_digits = getattr(obj._fields[f], 'digits', lambda x: ((16, DEFAULT_DIGITS)))
             if isinstance(res_digits, tuple):
                 d = res_digits[1]
             else:
@@ -243,13 +246,14 @@ class rml_parse(object):
     def _translate(self,text):
         lang = self.localcontext['lang']
         if lang and text and not text.isspace():
-            transl_obj = self.pool['ir.translation']
+            env = openerp.api.Environment(self.cr, self.uid, {})
+            Translation = env['ir.translation']
             piece_list = self._transl_regex.split(text)
             for pn in range(len(piece_list)):
                 if not self._transl_regex.match(piece_list[pn]):
                     source_string = piece_list[pn].replace('\n', ' ').strip()
                     if len(source_string):
-                        translated_string = transl_obj._get_source(self.cr, self.uid, self.name, ('report', 'rml'), lang, source_string)
+                        translated_string = Translation._get_source(self.name, ('report', 'rml'), lang, source_string)
                         if translated_string:
                             piece_list[pn] = piece_list[pn].replace(source_string, translated_string)
             text = ''.join(piece_list)
@@ -273,7 +277,7 @@ class rml_parse(object):
                     found.getparent().replace(found,tag)
         return True
 
-    def set_context(self, objects, data, ids, report_type = None):
+    def set_context(self, objects, data, ids, report_type=None):
         self.localcontext['data'] = data
         self.localcontext['objects'] = objects
         self.localcontext['digits_fmt'] = self.digits_fmt
@@ -295,6 +299,7 @@ class rml_parse(object):
             # company in the localcontext. For other cases the report
             # will have to call setCompany() inside the main repeatIn loop.
             self.setCompany(objects[0].company_id)
+
 
 class report_sxw(report_rml, preprocess.report):
     """
@@ -319,8 +324,8 @@ class report_sxw(report_rml, preprocess.report):
             self.internal_header=True
 
     def getObjects(self, cr, uid, ids, context):
-        table_obj = openerp.registry(cr.dbname)[self.table]
-        return table_obj.browse(cr, uid, ids, context=context)
+        env = openerp.api.Environment(cr, uid, context or {})
+        return env[self.table].browse(ids)
 
     def create(self, cr, uid, ids, data, context=None):
         context = dict(context or {})
@@ -329,15 +334,12 @@ class report_sxw(report_rml, preprocess.report):
 
         # skip osv.fields.sanitize_binary_value() because we want the raw bytes in all cases
         context.update(bin_raw=True)
-        registry = openerp.registry(cr.dbname)
-        ir_obj = registry['ir.actions.report.xml']
-        registry['res.font'].font_scan(cr, SUPERUSER_ID, lazy=True, context=context)
+        env = openerp.api.Environment(cr, uid, context)
+        env['res.font'].sudo().font_scan(lazy=True)
+        ir_obj = env['ir.actions.report.xml']
 
-        report_xml_ids = ir_obj.search(cr, uid,
-                [('report_name', '=', self.name[7:])], context=context)
-        if report_xml_ids:
-            report_xml = ir_obj.browse(cr, uid, report_xml_ids[0], context=context)
-        else:
+        report_xml = ir_obj.search([('report_name', '=', self.name[7:])], limit=1)
+        if not report_xml:
             title = ''
             report_file = tools.file_open(self.tmpl, subdir=None)
             try:
@@ -384,8 +386,8 @@ class report_sxw(report_rml, preprocess.report):
 
     def create_source_pdf(self, cr, uid, ids, data, report_xml, context=None):
         if not context:
-            context={}
-        registry = openerp.registry(cr.dbname)
+            context = {}
+        env = openerp.api.Environment(cr, uid, context)
         attach = report_xml.attachment
         if attach:
             objs = self.getObjects(cr, uid, ids, context)
@@ -394,12 +396,11 @@ class report_sxw(report_rml, preprocess.report):
                 aname = safe_eval(attach, {'object':obj, 'time':time})
                 result = False
                 if report_xml.attachment_use and aname and context.get('attachment_use', True):
-                    aids = registry['ir.attachment'].search(cr, uid, [('datas_fname','=',aname+'.pdf'),('res_model','=',self.table),('res_id','=',obj.id)])
-                    if aids:
-                        brow_rec = registry['ir.attachment'].browse(cr, uid, aids[0])
-                        if not brow_rec.datas:
+                    att = env['ir.attachment'].search([('datas_fname','=',aname+'.pdf'),('res_model','=',self.table),('res_id','=',obj.id)], limit=1)
+                    if att:
+                        if not att.datas:
                             continue
-                        d = base64.decodestring(brow_rec.datas)
+                        d = base64.decodestring(att.datas)
                         results.append((d,'pdf'))
                         continue
                 result = self.create_single_pdf(cr, uid, [obj.id], data, report_xml, context)
@@ -414,14 +415,13 @@ class report_sxw(report_rml, preprocess.report):
                         # field.
                         ctx = dict(context)
                         ctx.pop('default_type', None)
-                        registry['ir.attachment'].create(cr, uid, {
+                        env['ir.attachment'].with_context(ctx).create({
                             'name': aname,
                             'datas': base64.encodestring(result[0]),
                             'datas_fname': name,
                             'res_model': self.table,
                             'res_id': obj.id,
-                            }, context=ctx
-                        )
+                        })
                     except AccessError:
                         #TODO: should probably raise a proper osv_except instead, shouldn't we? see LP bug #325632
                         _logger.info('Could not create saved report attachment', exc_info=True)
