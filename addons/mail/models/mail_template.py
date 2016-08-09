@@ -116,7 +116,7 @@ class MailTemplate(models.Model):
 
     name = fields.Char('Name')
     model_id = fields.Many2one('ir.model', 'Applies to', help="The kind of document with with this template can be used")
-    model = fields.Char('Related Document Model', related='model_id.model', select=True, store=True, readonly=True)
+    model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     lang = fields.Char('Language',
                        help="Optional translation language (ISO code) to select when sending out an email. "
                             "If not set, the english version will be used. "

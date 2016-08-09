@@ -147,7 +147,7 @@ class LunchOrderLine(models.Model):
                               ('confirmed', 'Received'),
                               ('ordered', 'Ordered'),
                               ('cancelled', 'Cancelled')],
-                             'Status', readonly=True, select=True, default='new')
+                             'Status', readonly=True, index=True, default='new')
     cashmove = fields.One2many('lunch.cashmove', 'order_id', 'Cash Move')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
 
@@ -234,7 +234,7 @@ class LunchAlert(models.Model):
     alert_type = fields.Selection([('specific', 'Specific Day'),
                                    ('week', 'Every Week'),
                                    ('days', 'Every Day')],
-                                  string='Recurrency', required=True, select=True, default='specific')
+                                  string='Recurrency', required=True, index=True, default='specific')
     specific_day = fields.Date('Day', default=fields.Date.context_today)
     monday = fields.Boolean('Monday')
     tuesday = fields.Boolean('Tuesday')
