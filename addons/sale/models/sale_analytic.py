@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models, _
-from openerp.exceptions import UserError
+from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
@@ -78,8 +77,8 @@ class AccountAnalyticLine(models.Model):
     def _get_sale_order_line(self, vals=None):
         result = dict(vals or {})
         so_line = result.get('so_line', False) or self.so_line
-        if not so_line and self.account_id and self.product_id and (self.product_id.expense_policy!='no'):
-            order = self.env['sale.order'].search([('project_id', '=', self.account_id.id), ('state','=','sale')], limit=1)
+        if not so_line and self.account_id and self.product_id and (self.product_id.expense_policy != 'no'):
+            order = self.env['sale.order'].search([('project_id', '=', self.account_id.id), ('state', '=', 'sale')], limit=1)
             if not order:
                 return result
             price = self._get_invoice_price(order)
