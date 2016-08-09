@@ -21,15 +21,8 @@ if (config.device.size_class <= config.device.SIZES.XS) {
 }
 
 return session.is_bound.then(function () {
-    var defs = [];
-    // Load the list of consumed tours and the tip template only if we are admin, in the frontend,
-    // tours being only available for the admin. For the backend, the list of consumed is directly
-    // in the page source.
-    if (session.is_frontend && session.is_superuser) {
-        defs.push(new Model('web_tour.tour').call('get_consumed_tours'));
-        defs.push(ajax.loadXML('/web_tour/static/src/xml/tip.xml', QWeb));
-    }
-    return $.when.apply($, defs).then(function (consumed_tours) {
+    return ajax.loadXML('/web_tour/static/src/xml/tip.xml', QWeb).then(function () {
+        var consumed_tours = odoo.session_info ? odoo.session_info.web_tours : [];
         var tour = new TourManager(session.is_frontend ? consumed_tours : session.web_tours);
 
         // Use a MutationObserver to detect DOM changes

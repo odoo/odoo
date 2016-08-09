@@ -10,6 +10,5 @@ class Http(models.AbstractModel):
 
     def session_info(self):
         result = super(Http, self).session_info()
-        if result['is_superuser']:
-            result['web_tours'] = request.env['web_tour.tour'].get_consumed_tours()
+        result['web_tours'] = request.env['web_tour.tour'].get_consumed_tours()
         return result
