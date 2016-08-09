@@ -86,11 +86,11 @@ class PayslipDetailsReport(models.AbstractModel):
                     })
         return res
 
-    @api.multi
-    def render_html(self, data=None):
-        payslips = self.env['hr.payslip'].browse(self.ids)
+    @api.model
+    def render_html(self, docids, data=None):
+        payslips = self.env['hr.payslip'].browse(docids)
         docargs = {
-            'doc_ids': self.ids,
+            'doc_ids': docids,
             'doc_model': 'hr.payslip',
             'docs': payslips,
             'data': data,

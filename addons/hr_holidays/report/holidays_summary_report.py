@@ -96,8 +96,8 @@ class HrHolidaySummaryReport(models.AbstractModel):
             res.append({'color': holiday.color_name, 'name': holiday.name})
         return res
 
-    @api.multi
-    def render_html(self, data=None):
+    @api.model
+    def render_html(self, docids, data=None):
         Report = self.env['report']
         holidays_report = Report._get_report_from_name('hr_holidays.report_holidayssummary')
         holidays = self.env['hr.holidays'].browse(self.ids)

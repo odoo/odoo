@@ -125,12 +125,12 @@ class EmployeesYearlySalaryReport(models.AbstractModel):
     def get_total(self):
         return self.total
 
-    @api.multi
-    def render_html(self, data):
+    @api.model
+    def render_html(self, docids, data=None):
         model = self.env.context.get('active_model')
         docs = self.env[model].browse(self.env.context.get('active_id'))
         docargs = {
-            'doc_ids': self.ids,
+            'doc_ids': docids,
             'doc_model': model,
             'data': data,
             'docs': docs,

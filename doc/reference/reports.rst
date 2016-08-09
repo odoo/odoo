@@ -290,12 +290,12 @@ the function ``render_html`` and pass objects in the ``docargs`` dictionary:
 
     class ParticularReport(models.AbstractModel):
         _name = 'report.module.report_name'
-        @api.multi
-        def render_html(self, data=None):
+        @api.model
+        def render_html(self, docids, data=None):
             report_obj = self.env['report']
             report = report_obj._get_report_from_name('module.report_name')
             docargs = {
-                'doc_ids': self._ids,
+                'doc_ids': docids,
                 'doc_model': report.model,
                 'docs': self,
             }

@@ -29,11 +29,11 @@ class FichePayeParser(models.AbstractModel):
     def get_employer_line(self, obj, parent_line):
         return self.env['hr.payslip.line'].search([('slip_id', '=', obj.id), ('salary_rule_id.parent_rule_id.id', '=', parent_line.salary_rule_id.id)], limit=1)
 
-    @api.multi
-    def render_html(self, data):
-        payslip = self.env['hr.payslip'].browse(self.ids)
+    @api.model
+    def render_html(self, docids, data=None):
+        payslip = self.env['hr.payslip'].browse(docids)
         docargs = {
-            'doc_ids': self.ids,
+            'doc_ids': docids,
             'doc_model': 'hr.payslip',
             'data': data,
             'docs': payslip,

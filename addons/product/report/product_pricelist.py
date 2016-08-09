@@ -8,8 +8,8 @@ from odoo.tools import float_round
 class report_product_pricelist(models.AbstractModel):
     _name = 'report.product.report_pricelist'
 
-    @api.multi
-    def render_html(self, data=None):
+    @api.model
+    def render_html(self, docids, data=None):
         data = data if data is not None else {}
         pricelist = self.env['product.pricelist'].browse(data.get('form', {}).get('price_list', False))
         products = self.env['product.product'].browse(data.get('ids', data.get('active_ids')))

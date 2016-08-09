@@ -65,8 +65,8 @@ class ReportPartnerLedger(models.AbstractModel):
             result = contemp[0] or 0.0
         return result
 
-    @api.multi
-    def render_html(self, data):
+    @api.model
+    def render_html(self, docids, data=None):
         data['computed'] = {}
 
         obj_partner = self.env['res.partner']

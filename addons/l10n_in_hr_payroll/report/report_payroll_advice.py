@@ -45,11 +45,11 @@ class payroll_advice_report(models.AbstractModel):
             result.append(res)
         return result
 
-    @api.multi
-    def render_html(self, data):
-        advice = self.env['hr.payroll.advice'].browse(self.ids)
+    @api.model
+    def render_html(self, docids, data=None):
+        advice = self.env['hr.payroll.advice'].browse(docids)
         docargs = {
-            'doc_ids': self.ids,
+            'doc_ids': docids,
             'doc_model': 'hr.payroll.advice',
             'data': data,
             'docs': advice,

@@ -91,8 +91,8 @@ class ReportHrSalaryEmployeeBymonth(models.AbstractModel):
                 self.total += item[count]
         return self.total
 
-    @api.multi
-    def render_html(self, data):
+    @api.model
+    def render_html(self, docids, data=None):
         model = self.env.context.get('active_model')
         docs = self.env[model].browse(self.env.context.get('active_id'))
         get_periods, months, total_mnths = self.get_periods(data['form'])
@@ -100,7 +100,7 @@ class ReportHrSalaryEmployeeBymonth(models.AbstractModel):
         get_months_tol = self.get_months_tol()
         get_total = self.get_total(get_months_tol)
         docargs = {
-            'doc_ids': self.ids,
+            'doc_ids': docids,
             'doc_model': model,
             'data': data,
             'docs': docs,
