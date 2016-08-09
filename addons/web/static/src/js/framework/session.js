@@ -88,10 +88,13 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     session_init: function () {
         var self = this;
         return this.session_reload().then(function() {
-            var modules = self.module_list.join(',');
-            var deferred = self.load_qweb(modules);
-            if(self.session_is_valid()) {
-                return deferred.then(function() { return self.load_modules(); });
+            var deferred;
+            if (self.module_list.length) {
+                var modules = self.module_list.join(',');
+                deferred = self.load_qweb(modules);
+                if(self.session_is_valid()) {
+                    return deferred.then(function() { return self.load_modules(); });
+                }
             }
             return $.when(
                     deferred,
