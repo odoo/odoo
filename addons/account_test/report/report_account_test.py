@@ -59,8 +59,8 @@ class ReportAssertAccount(models.AbstractModel):
 
         return result
 
-    @api.multi
-    def render_html(self, data=None):
+    @api.model
+    def render_html(self, docids, data=None):
         Report = self.env['report']
         report = Report._get_report_from_name('account_test.report_accounttest')
         records = self.env['accounting.assert.test'].browse(self.ids)
