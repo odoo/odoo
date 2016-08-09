@@ -129,11 +129,10 @@ class GoalDefinition(models.Model):
         """Force domain for the `field_id` and `field_date_id` fields"""
         if not self.model_id:
             return {'domain': {'field_id': expression.FALSE_DOMAIN, 'field_date_id': expression.FALSE_DOMAIN}}
-        model = self.env['ir.model'].browse(self.model_id)
         model_fields_domain = [
             ('store', '=', True),
-            '|', ('model_id', '=', self.model_id),
-                 ('model_id', 'in', model.inherited_model_ids.ids)]
+            '|', ('model_id', '=', self.model_id.id),
+                 ('model_id', 'in', self.model_id.inherited_model_ids.ids)]
         model_date_fields_domain = expression.AND([[('ttype', 'in', ('date', 'datetime'))], model_fields_domain])
         return {'domain': {'field_id': model_fields_domain, 'field_date_id': model_date_fields_domain}}
 
