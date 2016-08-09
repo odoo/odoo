@@ -209,14 +209,14 @@ class Post(models.Model):
     )
 
     # history
-    create_date = fields.Datetime('Asked on', select=True, readonly=True)
-    create_uid = fields.Many2one('res.users', string='Created by', select=True, readonly=True)
-    write_date = fields.Datetime('Update on', select=True, readonly=True)
+    create_date = fields.Datetime('Asked on', index=True, readonly=True)
+    create_uid = fields.Many2one('res.users', string='Created by', index=True, readonly=True)
+    write_date = fields.Datetime('Update on', index=True, readonly=True)
     bump_date = fields.Datetime('Bumped on', readonly=True,
                                 help="Technical field allowing to bump a question. Writing on this field will trigger "
                                      "a write on write_date and therefore bump the post. Directly writing on write_date "
                                      "is currently not supported and this field is a workaround.")
-    write_uid = fields.Many2one('res.users', string='Updated by', select=True, readonly=True)
+    write_uid = fields.Many2one('res.users', string='Updated by', index=True, readonly=True)
     relevancy = fields.Float('Relevance', compute="_compute_relevancy", store=True)
 
     # vote
@@ -244,7 +244,7 @@ class Post(models.Model):
 
     # closing
     closed_reason_id = fields.Many2one('forum.post.reason', string='Reason')
-    closed_uid = fields.Many2one('res.users', string='Closed by', select=1)
+    closed_uid = fields.Many2one('res.users', string='Closed by', index=True)
     closed_date = fields.Datetime('Closed on', readonly=True)
 
     # karma calculation and access
@@ -796,7 +796,7 @@ class Vote(models.Model):
     post_id = fields.Many2one('forum.post', string='Post', ondelete='cascade', required=True)
     user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self._uid)
     vote = fields.Selection([('1', '1'), ('-1', '-1'), ('0', '0')], string='Vote', required=True, default='1')
-    create_date = fields.Datetime('Create Date', select=True, readonly=True)
+    create_date = fields.Datetime('Create Date', index=True, readonly=True)
     forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True)
     recipient_id = fields.Many2one('res.users', string='To', related="post_id.create_uid", store=True)
 

@@ -27,7 +27,7 @@ class Bank(models.Model):
     phone = fields.Char()
     fax = fields.Char()
     active = fields.Boolean(default=True)
-    bic = fields.Char('Bank Identifier Code', select=True, help="Sometimes called BIC or Swift.")
+    bic = fields.Char('Bank Identifier Code', index=True, help="Sometimes called BIC or Swift.")
 
     @api.multi
     @api.depends('name', 'bic')
@@ -58,7 +58,7 @@ class ResPartnerBank(models.Model):
     acc_type = fields.Char(compute='_compute_acc_type', help='Bank account type, inferred from account number')
     acc_number = fields.Char('Account Number', required=True)
     sanitized_acc_number = fields.Char(compute='_compute_sanitized_acc_number', string='Sanitized Account Number', readonly=True, store=True)
-    partner_id = fields.Many2one('res.partner', 'Account Holder', ondelete='cascade', select=True, domain=['|', ('is_company', '=', True), ('parent_id', '=', False)])
+    partner_id = fields.Many2one('res.partner', 'Account Holder', ondelete='cascade', index=True, domain=['|', ('is_company', '=', True), ('parent_id', '=', False)])
     bank_id = fields.Many2one('res.bank', string='Bank')
     bank_name = fields.Char(related='bank_id.name')
     bank_bic = fields.Char(related='bank_id.bic')

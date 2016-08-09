@@ -290,7 +290,7 @@ class event_registration(models.Model):
         string='Status', default='draft', readonly=True, copy=False, track_visibility='onchange')
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
-    name = fields.Char(string='Attendee Name', select=True)
+    name = fields.Char(string='Attendee Name', index=True)
 
     @api.one
     @api.constrains('event_id', 'state')
