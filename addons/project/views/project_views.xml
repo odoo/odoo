@@ -360,7 +360,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="project_id" domain="[('active', '=', False)]" context="{'default_use_tasks':1}"/>
+                            <field name="project_id" domain="[('active', '=', True)]" context="{'default_use_tasks':1}"/>
                             <field name="user_id"
                                 class="o_task_user_field"
                                 options='{"no_open": True}'/>
