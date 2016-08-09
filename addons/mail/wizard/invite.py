@@ -25,8 +25,8 @@ class Invite(models.TransientModel):
             result['message'] = _('<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>') % user_name
         return result
 
-    res_model = fields.Char('Related Document Model', required=True, select=1, help='Model of the followed resource')
-    res_id = fields.Integer('Related Document ID', select=1, help='Id of the followed resource')
+    res_model = fields.Char('Related Document Model', required=True, index=True, help='Model of the followed resource')
+    res_id = fields.Integer('Related Document ID', index=True, help='Id of the followed resource')
     partner_ids = fields.Many2many('res.partner', string='Recipients', help="List of partners that will be added as follower of the current document.")
     channel_ids = fields.Many2many('mail.channel', string='Channels', help='List of channels that will be added as listeners of the current document.',
                                    domain=[('channel_type', '=', 'channel')])
