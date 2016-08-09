@@ -105,10 +105,7 @@ class Users(models.Model):
         if user_pid not in current_pids:
             partner_ids.append(user_pid)
         kwargs['partner_ids'] = partner_ids
-        # ??
-        # if context and context.get('thread_model') == 'res.partner':
-        #   return self.pool['res.partner'].message_post(cr, uid, user_pid, **kwargs)
-        return self.env['mail.thread'].message_post(**kwargs)  # ??
+        return self.env['mail.thread'].message_post(**kwargs)
 
     def message_update(self, msg_dict, update_vals=None):
         return True
@@ -116,9 +113,9 @@ class Users(models.Model):
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
         return True
 
-    @api.cr_uid_context
-    def message_get_partner_info_from_emails(self, cr, uid, emails, link_mail=False, context=None):
-        return self.pool.get('mail.thread').message_get_partner_info_from_emails(cr, uid, emails, link_mail=link_mail, context=context)
+    @api.multi
+    def message_partner_info_from_emails(self, emails, link_mail=False):
+        return self.pool.get('mail.thread').message_partner_info_from_emails(emails, link_mail=link_mail)
 
     @api.multi
     def message_get_suggested_recipients(self):
