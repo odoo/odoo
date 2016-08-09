@@ -1,610 +1,458 @@
 odoo.define('web.test.x2many', function (require) {
-'use strict';
+    'use strict';
 
-var Tour = require('web.Tour');
-var inc;
+    var tour = require("web_tour.tour");
+    var inc;
 
-Tour.register({
-    id:   'widget_x2many',
-    name: "one2many and many2many checks",
-    mode: 'test',
-    path: '/web#action=test_new_api.action_discussions',
+    tour.register('widget_x2many', {
+        url: '/web?debug=assets#action=test_new_api.action_discussions',
+        test: true,
+    }, [{
+        content: "wait web client",
+        trigger: '.breadcrumb:contains(Discussions)',
+    }, { // create test discussion
+        content: "create new discussion",
+        trigger: 'button.o_list_button_add',
+    }, {
+        content: "insert content",
+        trigger: 'input.o_form_required',
+        run: 'text test',
+    }, { // try to add a user with one2many form
+        content: "click on moderator one2many drop down",
+        trigger: 'tr:contains(Moderator) .o_form_input_dropdown > input',
+        run: 'click',
+    }, {
+        content: "click on 'Create and Edit...'",
+        trigger: '.ui-autocomplete .o_m2o_dropdown_option:last',
+    }, {
+        content: "insert a name into the modal form",
+        trigger: 'input.o_form_field.o_form_required:first',
+        extra_trigger: '.modal:visible',
+        run: function (action_helper) {
+            action_helper.text('user_test_' + (inc = new Date().getTime()));
+        }
+    }, {
+        content: "insert an email into the modal form",
+        extra_trigger: 'input.o_form_field.o_form_required:propValueContains(user_test)',
+        trigger: 'input.o_form_field.o_form_required:eq(1)',
+        run: function (action_helper) {
+            action_helper.text('user_test_' + inc + '@test');
+        }
+    }, {
+        content: "save the modal content and create the new moderator",
+        trigger: '.modal-footer button:contains(Save)',
+        extra_trigger: 'input.o_form_field.o_form_required:propValueContains(@test)',
+    }, {
+        content: "check if the modal is saved",
+        trigger: 'tr:contains(Moderator) .o_form_field_many2one input:propValueContains(user_test)',
+        run: function () {}, // it's a check
+    }, {
+        content: "check the onchange from the o2m to the m2m",
+        trigger: '.o_content:has(.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr td:contains(user_test))',
+        run: function () {}, // it's a check
+    }, { // add ourself as participant
+        content: "change tab to Participants",
+        trigger: '[data-toggle="tab"]:contains(Participants)'
+    }, {
+        content: "click to add participants",
+        trigger: '.tab-pane:eq(2).active .o_form_field_x2many_list_row_add a'
+    }, {
+        content: "select Admin",
+        trigger: 'tr:has(td[data-field="name"]:containsExact(Administrator)) .o_list_record_selector input[type="checkbox"]'
+    }, {
+        content: "save selected participants",
+        trigger: '.o_selectcreatepopup_search_select',
+        extra_trigger: 'tr:has(td[data-field="name"]:containsExact(Administrator)) .o_list_record_selector input[type="checkbox"]:propChecked',
+    }, { // save
+        content: "save discussion",
+        trigger: 'button.o_form_button_save',
+        extra_trigger: '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr:has(td:containsExact(Administrator))',
+    }, { // edit
+        content: "edit discussion",
+        trigger: 'button.o_form_button_edit',
+    }, { // add message a
+        content: "Select First Tab",
+        trigger: 'a[role=tab]:first',
+    }, {
+        content: "create new message a",
+        trigger: '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a'
+    }, {
+        content: "insert body a",
+        trigger: 'textarea.o_form_textarea[name="body"]',
+        run: 'text a',
+    }, {
+        content: "save new message a",
+        trigger: '.modal-footer button:contains(Save)',
+        extra_trigger: '.modal textarea.o_form_textarea[name="body"]:propValue(a)',
+    }, { // add message b
+        content: "create new message b",
+        trigger: '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a',
+        extra_trigger: '.o_web_client:has(textarea[name="message_concat"]:propValue([test] Administrator:a))',
+    }, {
+        content: "insert body b",
+        trigger: 'textarea.o_form_textarea[name="body"]',
+        run: 'text b',
+    }, {
+        content: "save new message b",
+        trigger: '.modal-footer button:contains(Save)',
+        extra_trigger: 'textarea.o_form_textarea[name="body"]:propValue(b)',
+    }, { // change content to trigger on change
+        content: "insert content",
+        trigger: 'input.o_form_required',
+        extra_trigger: 'textarea[name="message_concat"]:propValue([test] Administrator:a\n[test] Administrator:b)',
+        run: 'text test_trigger',
+    }, {
+        content: "blur the content field",
+        trigger: '.o_form_field_many2one input:first',
+        extra_trigger: 'input.o_form_required:propValue(test_trigger)',
+    }, {
+        content: "check onchange",
+        trigger: 'textarea[name="message_concat"]:propValue([test_trigger] Administrator:a\n[test_trigger] Administrator:b)',
+        run: function () {},
+    }, { // change message b
+        content: "edit message b",
+        trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:containsExact(b)',
+        extra_trigger: 'body:not(:has(.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2))) .tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:contains([test_trigger] )',
+    }, {
+        content: "change the body",
+        trigger: 'textarea.o_form_textarea[name="body"]',
+        run: 'text bbb',
+    }, {
+        content: "save changes",
+        trigger: '.modal-footer button:contains(Save)',
+        extra_trigger: 'textarea.o_form_textarea[name="body"]:propValue(bbb)',
+    }, { // add message c
+        content: "create new message c",
+        trigger: '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a',
+        extra_trigger: 'textarea[name="message_concat"]:propValue([test_trigger] Administrator:a\n[test_trigger] Administrator:bbb)',
+    }, {
+        content: "insert body",
+        trigger: 'textarea.o_form_textarea[name="body"]',
+        run: 'text c',
+    }, {
+        content: "save new message c",
+        trigger: '.modal-footer button:contains(Save)',
+        extra_trigger: 'textarea.o_form_textarea[name="body"]:propValue(c)',
+    }, { // add participants
+        content: "change tab to Participants",
+        trigger: '[data-toggle="tab"]:contains(Participants)',
+        extra_trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
+    }, {
+        content: "click to add participants",
+        trigger: '.tab-pane:eq(2).active .o_form_field_x2many_list_row_add a',
+    }, {
+        content: "select Demo User",
+        trigger: 'tr:has(td[data-field="name"]:containsExact(Demo User)) .o_list_record_selector input[type="checkbox"]',
+    }, {
+        content: "save selected participants",
+        trigger: '.o_selectcreatepopup_search_select',
+        extra_trigger: 'tr:has(td[data-field="name"]:containsExact(Demo User)) .o_list_record_selector input[type="checkbox"]:propChecked',
+    }, { // save
+        content: "save discussion",
+        trigger: 'button.o_form_button_save',
+        extra_trigger: 'body:not(:has(.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(3))) .tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
+    }, { // check saved data
+        content: "check data 1",
+        trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2))',
+        extra_trigger: 'body:not(:has(.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(3)))',
+        run: function () {}, // it's a check
+    }, {
+        content: "check data 2",
+        trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field.o_view_manager_content tr:has(td:containsExact(bbb)):has(td:containsExact([test_trigger] Administrator)))',
+        run: function () {}, // it's a check
+    }, {
+        content: "check data 3",
+        trigger: '.o_content:has(.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2))',
+        extra_trigger: 'body:not(:has(.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(3)))',
+        run: function () {}, // it's a check
+    }, { // edit
+        content: "edit discussion",
+        trigger: 'button.o_form_button_edit',
+    }, {
+        content: "change tab to Messages",
+        trigger: '[data-toggle="tab"]:contains(Messages)',
+        extra_trigger: '.o_form_editable',
+    }, { // add message d
+        content: "create new message d",
+        trigger: '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a',
+        extra_trigger: 'li.active a[data-toggle="tab"]:contains(Messages)',
+    }, {
+        content: "insert body",
+        trigger: 'textarea.o_form_textarea[name="body"]',
+        run: 'text d',
+    }, {
+        content: "save new message d",
+        trigger: '.modal-footer button:contains(Save)',
+        extra_trigger: 'textarea.o_form_textarea[name="body"]:propValue(d)',
+    }, { // add message e
+        content: "create new message e",
+        trigger: '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a',
+        extra_trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:containsExact(d)',
+    }, {
+        content: "insert body",
+        trigger: 'textarea.o_form_textarea[name="body"]',
+        run: 'text e',
+    }, {
+        content: "save new message e",
+        trigger: '.modal-footer button:contains(Save)',
+        extra_trigger: 'textarea.o_form_textarea[name="body"]:propValue(e)',
+    }, { // change message a
+        content: "edit message a",
+        trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:containsExact(a)',
+        extra_trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:containsExact(e)',
+    }, {
+        content: "change the body",
+        trigger: 'textarea.o_form_textarea[name="body"]',
+        run: 'text aaa',
+    }, {
+        content: "save changes",
+        trigger: '.modal-footer button:contains(Save)',
+        extra_trigger: 'textarea.o_form_textarea[name="body"]:propValue(aaa)',
+    }, { // change message e
+        content: "edit message e",
+        trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:containsExact(e)',
+        extra_trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:contains(aaa)',
+    }, {
+        content: "open the many2one to select another user",
+        trigger: '.o_form_input_dropdown > input',
+        run: 'text Demo',
+    }, {
+        content: "select another user",
+        trigger: '.ui-autocomplete li:contains(Demo User)',
+        in_modal: false,
+    }, {
+        content: "test one2many's line onchange after many2one",
+        trigger: '.o_form_field:contains([test_trigger] Demo User)',
+        run: function () {}, // it's a check
+    }, {
+        content: "test one2many field not triggered onchange",
+        trigger: 'textarea[name="message_concat"]:propValueContains([test_trigger] Administrator:e)',
+        in_modal: false,
+        run: function () {}, // don't change texarea content
+    }, {
+        content: "save changes",
+        trigger: '.modal-footer button:contains(Save):contains(Close)'
+    }, {
+        content: "test one2many triggered the onchange on save for the line",
+        trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td.o_readonly:contains([test_trigger] Demo User))',
+        run: function () {}, // it's a check
+    }, {
+        content: "test one2many triggered the onchange on save",
+        trigger: 'textarea[name="message_concat"]:propValueContains([test_trigger] Demo User:e)',
+        run: function () {}, // don't change texarea content
+    }, { // remove
+        content: "remove b",
+        trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr:has(td:containsExact(bbb)) .o_list_record_delete',
+        extra_trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:contains(aaa)',
+    }, {
+        content: "remove e",
+        trigger: 'tr:has(td:containsExact(e)) .o_list_record_delete',
+        extra_trigger: 'body:not(:has(tr:has(td:containsExact(bbb))))',
+    }, { // save
+        content: "save discussion",
+        trigger: 'button.o_form_button_save',
+        extra_trigger: 'body:not(:has(tr:has(td:containsExact(e))))',
+    }, { // check saved data
+        content: "check data 4",
+        trigger: '.o_content:not(:has(.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr:has(.o_list_record_delete):eq(4)))',
+        run: function () {}, // it's a check
+    }, {
+        content: "check data 5",
+        trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody:has(tr td:containsExact(aaa)):has(tr td:containsExact(c)):has(tr td:containsExact(d)))',
+        run: function () {}, // it's a check
+    }, {
+        content: "check data 6",
+        trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr:has(td:containsExact([test_trigger] Administrator)):has(td:containsExact(aaa)))',
+        run: function () {}, // it's a check
+    }, {
+        content: "check data 7",
+        trigger: '.o_content:has(.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2))',
+        extra_trigger: '.o_content:not(:has(.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[date-id]:eq(3)))',
+        run: function () {}, // it's a check
+    }, { // edit
+        content: "edit discussion",
+        trigger: 'button.o_form_button_edit',
+    }, { // add message ddd
+        content: "create new message ddd",
+        trigger: '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a',
+        extra_trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr:has(td:containsExact(d))',
+    }, {
+        content: "select another user",
+        trigger: '.o_form_field_many2one .o_form_input_dropdown > input',
+        extra_trigger: 'body:has(.modal) .tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr:has(td:containsExact(d))',
+        run: 'text Demo',
+    }, {
+        content: "select demo user",
+        trigger: '.ui-autocomplete li a:contains(Demo User)',
+        in_modal: false,
+    }, {
+        content: "test one2many's line onchange after many2one",
+        trigger: '.o_form_field:contains([test_trigger] Demo User)',
+        run: function () {}, // it's a check
+    }, {
+        content: "insert body",
+        trigger: 'textarea.o_form_textarea[name="body"]',
+        run: 'text ddd',
+    }, {
+        content: "save new message ddd",
+        trigger: '.modal-footer button:contains(Save)',
+        extra_trigger: 'textarea.o_form_textarea[name="body"]:propValue(ddd)',
+    }, { // trigger onchange
+        content: "blur the one2many",
+        trigger: 'input.o_form_required',
+        extra_trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody:has(tr td:containsExact(ddd))',
+    }, { // check onchange data
+        content: "check data 8",
+        trigger: 'textarea[name="message_concat"]:propValueContains([test_trigger] Administrator:aaa\n[test_trigger] Administrator:c\n[test_trigger] Administrator:d\n[test_trigger] Demo User:ddd)',
+        run: function () {}, // don't change texarea content
+    }, {
+        content: "check data 9",
+        trigger: '.o_content:has(.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(3))',
+        extra_trigger: 'body:not(:has(.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(4)))',
+        run: function () {}, // it's a check
+    }, { // cancel
+        content: "cancel change",
+        trigger: '.o_cp_buttons .o_form_button_cancel',
+        extra_trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody:has(tr td:containsExact(ddd))',
+        run: 'click',
+    }, {
+        content: "confirm cancel change",
+        trigger: '.modal-footer button:contains(Ok)',
+    },
 
-    steps: [
-        {
-            title:      "wait web client",
-            waitFor:    '.breadcrumb:contains(Discussions)'
-        },
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////
 
-        // create test discussion
-        {
-            title:      "create new discussion",
-            element:    'button.o_list_button_add',
-        },
-        {
-            title:      "insert title",
-            element:    'input.o_form_required',
-            sampleText: 'test'
-        },
-
-        // try to add a user with one2many form
-        {
-            title:      "click on moderator one2many drop down",
-            waitFor:    'input.o_form_required:propValue(test)',
-            element:    'tr:contains(Moderator) .o_form_input_dropdown > input'
-        },
-        {
-            title:      "click on 'Create and Edit...'",
-            element:    '.o_m2o_dropdown_option:last'
-        },
-        {
-            title:      "insert a name into the modal form",
-            element:    '.modal input.o_form_field.o_form_required:first',
-            sampleText: 'user_test',
-            onload: function () {
-                inc = new Date().getTime();
-                this.sampleText = 'user_test_' + inc;
-            }
-        },
-        {
-            title:      "insert an email into the modal form",
-            waitFor:    '.modal input.o_form_field.o_form_required:propValueContains(user_test)',
-            element:    '.modal input.o_form_field.o_form_required:eq(1)',
-            sampleText: 'user_test@test',
-            onload: function () {
-                this.sampleText = 'user_test_' + inc + '@test';
-            }
-        },
-        {
-            title:      "save the modal content and create the new moderator",
-            waitFor:    '.modal input.o_form_field.o_form_required:propValueContains(@test)',
-            element:    '.modal .modal-footer button:contains(Save)',
-        },
-        {
-            title:      "check if the modal is saved",
-            waitFor:    'tr:contains(Moderator) .o_form_field_many2one input:propValueContains(user_test)',
-        },
-        {
-            title:      "check the onchange from the o2m to the m2m",
-            waitFor:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr td:contains(user_test)',
-        },
-
-        // add ourself as participant
-        {
-            title:      "change tab to Participants",
-            element:    '[data-toggle="tab"]:contains(Participants)'
-        },
-        {
-            title:      "click to add participants",
-            element:    '.tab-pane:eq(2).active .o_form_field_x2many_list_row_add a'
-        },
-        {
-            title:      "select Admin",
-            element:    '.modal tr:has(td[data-field="name"]:containsExact(Administrator)) .o_list_record_selector input[type="checkbox"]'
-        },
-        {
-            title:      "save selected participants",
-            waitFor:    '.modal tr:has(td[data-field="name"]:containsExact(Administrator)) .o_list_record_selector input[type="checkbox"]:propChecked',
-            element:    '.o_selectcreatepopup_search_select'
-        },
-
-        // save
-        {
-            title:      "save discussion",
-            waitFor:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr:has(td:containsExact(Administrator))',
-            element:    'button.o_form_button_save'
-        },
-        // edit
-        {
-            title:      "edit discussion",
-            element:    'button.o_form_button_edit'
-        },
-
-        // add message a
-        {
-            title:      "Select First Tab",
-            element:    'a[role=tab]:first',
-        },
-        {
-            title:      "create new message a",
-            element:    '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a'
-        },
-        {
-            title:      "insert body a",
-            element:    '.modal textarea.o_form_textarea',
-            sampleText: 'a'
-        },
-        {
-            title:      "save new message a",
-            waitFor:    '.modal textarea.o_form_textarea:propValue(a)',
-            element:    '.modal .modal-footer button:contains(Save)'
-        },
-
-        // add message b
-        {
-            title:      "create new message b",
-            waitNot:    '.modal',
-            waitFor:    '.o_web_client:has(textarea[name="message_concat"]:propValue([test] Administrator:a))',
-            element:    '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a'
-        },
-        {
-            title:      "insert body b",
-            element:    '.modal textarea.o_form_textarea',
-            sampleText: 'b'
-        },
-        {
-            title:      "save new message b",
-            waitFor:    '.modal textarea.o_form_textarea:propValue(b)',
-            element:    '.modal .modal-footer button:contains(Save)'
-        },
-
-        // change title to trigger on change
-        {
-            title:      "insert title",
-            waitNot:    '.modal',
-            waitFor:    'textarea[name="message_concat"]:propValue([test] Administrator:a\n[test] Administrator:b)',
-            element:    'input.o_form_required',
-            sampleText: 'test_trigger'
-        },
-        {
-            title:      "blur the title field",
-            waitFor:    'input.o_form_required:propValue(test_trigger)',
-            element:    '.o_form_field_many2one input:first',
-        },
-        {
-            title:      "check onchange",
-            waitFor:    'textarea[name="message_concat"]:propValue([test_trigger] Administrator:a\n[test_trigger] Administrator:b)',
-        },
-
-        // change message b
-        
-        {
-            title:      "edit message b",
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:contains([test_trigger] )',
-            waitNot:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
-            element:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:containsExact(b)'
-        },
-        {
-            title:      "change the body",
-            element:    '.modal textarea.o_form_textarea',
-            sampleText: 'bbb'
-        },
-        {
-            title:      "save changes",
-            waitFor:    '.modal textarea.o_form_textarea:propValue(bbb)',
-            element:    '.modal .modal-footer button:contains(Save)'
-        },
-
-        // add message c
-        {
-            title:      "create new message c",
-            waitNot:    '.modal',
-            waitFor:    'textarea[name="message_concat"]:propValue([test_trigger] Administrator:a\n[test_trigger] Administrator:bbb)',
-            element:    '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a'
-        },
-        {
-            title:      "insert body",
-            element:    '.modal textarea.o_form_textarea',
-            sampleText: 'c'
-        },
-        {
-            title:      "save new message c",
-            waitFor:    '.modal textarea.o_form_textarea:propValue(c)',
-            element:    '.modal .modal-footer button:contains(Save)'
-        },
-
-        // add participants
-        {
-            title:      "change tab to Participants",
-            waitNot:    '.modal',
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
-            element:    '[data-toggle="tab"]:contains(Participants)'
-        },
-        {
-            title:      "click to add participants",
-            element:    '.tab-pane:eq(2).active .o_form_field_x2many_list_row_add a'
-        },
-        {
-            title:      "select Demo User",
-            element:    '.modal tr:has(td[data-field="name"]:containsExact(Demo User)) .o_list_record_selector input[type="checkbox"]'
-        },
-        {
-            title:      "save selected participants",
-            waitFor:    '.modal tr:has(td[data-field="name"]:containsExact(Demo User)) .o_list_record_selector input[type="checkbox"]:propChecked',
-            element:    '.o_selectcreatepopup_search_select'
-        },
-
-        // save
-        {
-            title:      "save discussion",
-            waitFor:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
-            waitNot:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(3)',
-            element:    'button.o_form_button_save'
-        },
-
-        // check saved data
-        {
-            title:      "check data 1",
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
-            waitNot:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(3)',
-        },
-        {
-            title:      "check data 2",
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tr:has(td:containsExact(bbb)):has(td:containsExact([test_trigger] Administrator))',
-        },
-        {
-            title:      "check data 3",
-            waitFor:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
-            waitNot:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(3)',
-        },
-
-        // edit
-        {
-            title:      "edit discussion",
-            element:    'button.o_form_button_edit'
-        },
-        {
-            title:      "change tab to Messages",
-            waitFor:    '.o_form_editable',
-            element:    '[data-toggle="tab"]:contains(Messages)'
-        },
-
-        // add message d
-        {
-            title:      "create new message d",
-            waitFor:    'li.active a[data-toggle="tab"]:contains(Messages)',
-            element:    '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a'
-        },
-        {
-            title:      "insert body",
-            element:    '.modal textarea.o_form_textarea',
-            sampleText: 'd'
-        },
-        {
-            title:      "save new message d",
-            waitFor:    '.modal textarea.o_form_textarea:propValue(d)',
-            element:    '.modal .modal-footer button:contains(Save)'
-        },
-
-        // add message e
-        {
-            title:      "create new message e",
-            waitNot:    '.modal',
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:containsExact(d)',
-            element:    '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a'
-        },
-        {
-            title:      "insert body",
-            element:    '.modal textarea.o_form_textarea',
-            sampleText: 'e'
-        },
-        {
-            title:      "save new message e",
-            waitFor:    '.modal textarea.o_form_textarea:propValue(e)',
-            element:    '.modal .modal-footer button:contains(Save)'
-        },
-
-        // change message a
-        {
-            title:      "edit message a",
-            waitNot:    '.modal',
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:containsExact(e)',
-            element:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:containsExact(a)'
-        },
-        {
-            title:      "change the body",
-            element:    '.modal textarea.o_form_textarea',
-            sampleText: 'aaa'
-        },
-        {
-            title:      "save changes",
-            waitFor:    '.modal textarea.o_form_textarea:propValue(aaa)',
-            element:    '.modal .modal-footer button:contains(Save)'
-        },
-
-        // change message e
-        {
-            title:      "edit message e",
-            waitNot:    '.modal',
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:contains(aaa)',
-            element:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:containsExact(e)'
-        },
-
-        {
-            title:      "open the many2one to select another user",
-            element:    '.modal .o_form_input_dropdown > input',
-        },
-        {
-            title:      "select another user",
-            element:    '.ui-autocomplete li:contains(Demo User)',
-        },
-        {
-            title:      "test one2many's line onchange after many2one",
-            waitFor:    '.modal .o_form_field:contains([test_trigger] Demo User)',
-        },
-        {
-            title:      "test one2many field not triggered onchange",
-            waitFor:    'textarea[name="message_concat"]:propValueContains([test_trigger] Administrator:e)',
-        },
-        {
-            title:      "save changes",
-            element:    '.modal .modal-footer button:contains(Save)'
-        },
-        {
-            title:      "test one2many triggered the onchange on save for the line",
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td.o_readonly:contains([test_trigger] Demo User)',
-        },
-        {
-            title:      "test one2many triggered the onchange on save",
-            waitFor:    'textarea[name="message_concat"]:propValueContains([test_trigger] Demo User:e)',
-        },
-
-        // remove
-        {
-            title:      "remove b",
-            waitNot:    '.modal',
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr td:contains(aaa)',
-            element:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr:has(td:containsExact(bbb)) .o_list_record_delete'
-        },
-        {
-            title:      "remove e",
-            waitNot:    'tr:has(td:containsExact(bbb))',
-            element:    'tr:has(td:containsExact(e)) .o_list_record_delete'
-        },
-
-        // save
-        {
-            title:      "save discussion",
-            waitNot:    'tr:has(td:containsExact(e))',
-            element:    'button.o_form_button_save'
-        },
-
-        // check saved data
-        {
-            title:      "check data 4",
-            waitNot:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr:has(.o_list_record_delete):eq(4)',
-        },
-        {
-            title:      "check data 5",
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody:has(tr td:containsExact(aaa)):has(tr td:containsExact(c)):has(tr td:containsExact(d))',
-        },
-        {
-            title:      "check data 6",
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr:has(td:containsExact([test_trigger] Administrator)):has(td:containsExact(aaa))',
-        },
-        {
-            title:      "check data 7",
-            waitFor:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
-            waitNot:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[date-id]:eq(3)',
-        },
-
-        // edit
-        {
-            title:      "edit discussion",
-            element:    'button.o_form_button_edit'
-        },
-
-        // add message ddd
-        {
-            title:      "create new message ddd",
-            waitNot:    '.modal',
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr:has(td:containsExact(d))',
-            element:    '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a'
-        },
-        {
-            title:      "select another user",
-            element:    '.modal .o_form_field_many2one .o_form_input_dropdown > input',
-        },
-        {
-            title:      "select demo user",
-            element:    'li a:contains(Demo User)',
-        },
-        {
-            title:      "test one2many's line onchange after many2one",
-            waitFor:    '.modal .o_form_field:contains([test_trigger] Demo User)',
-        },
-        {
-            title:      "insert body",
-            element:    '.modal textarea.o_form_textarea',
-            sampleText: 'ddd'
-        },
-        {
-            title:      "save new message ddd",
-            waitFor:    '.modal textarea.o_form_textarea:propValue(ddd)',
-            element:    '.modal .modal-footer button:contains(Save)'
-        },
-
-        // trigger onchange
-        {
-            title:      "blur the one2many",
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody:has(tr td:containsExact(ddd))',
-            element:    'input.o_form_required',
-        },
-
-        // check onchange data
-        {
-            title:      "check data 8",
-            waitFor:    'textarea[name="message_concat"]:propValueContains([test_trigger] Administrator:aaa\n[test_trigger] Administrator:c\n[test_trigger] Administrator:d\n[test_trigger] Demo User:ddd)',
-        },
-        {
-            title:      "check data 9",
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(3)',
-            waitNot:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(4)',
-        },
-
-        // cancel
-        {
-            title:      "cancel change",
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody:has(tr td:containsExact(ddd))',
-            element:    '.o_form_button_cancel',
-            onload: function () {
-                // remove the window alert (can't click on it with JavaScript tour)
-                $('.oe_form_dirty').removeClass('oe_form_dirty');
-            }
-        },
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////
-
-        {
-            title:      "switch to the second form view to test one2many with editable list (toggle menu dropdown)",
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
-            element:    '.o_sub_menu .oe_secondary_submenu .oe_menu_leaf .oe_menu_text:containsExact(Discussions)'
-        },
-        {
-            title:      "switch to the second form view to test one2many with editable list (open submenu)",
-            element:    '.o_sub_menu .oe_secondary_submenu .oe_menu_leaf .oe_menu_text:contains(Discussions 2)'
-        },
-
-        {
-            title:      "select previous created record",
-            waitFor:    '.breadcrumb li:containsExact(Discussions 2)',
-            element:    'td[data-field="name"]:contains(test_trigger):last',
-        },
-        {
-            title:      "click on edit",
-            element:    '.o_form_button_edit',
-        },
-
-        {
-            title:      "edit title",
-            waitFor:    ".o_form_editable",
-            element:    'input.o_form_required',
-            sampleText: 'test_trigger2'
-        },
-        {
-            title:      "click outside to trigger onchange",
-            element:    '.o_form_sheet',
-        },
-        {
-            title:      "click on a field of the editable list to edit content",
-            waitFor:    '.o_list_editable:contains(test_trigger2)',
-            element:    '.o_list_editable tr[data-id]:eq(1) td',
-        },
-        {
-            title:      "change text value",
-            element:    '.o_list_editable_form textarea.o_form_field[data-fieldname="body"]',
-            sampleText: 'ccc'
-        },
-        {
-            title:      "click on first field (trigger the line onchange)",
-            element:    '.o_list_editable_form .o_form_field[data-fieldname="name"]',
-        },
-        {
-            title:      "test one2many's line onchange",
-            waitFor:    '.o_list_editable_form .o_form_field[data-fieldname="size"]:contains(3)',
-        },
-        {
-            title:      "test one2many field not triggered onchange",
-            waitNot:    'textarea[name="message_concat"]:propValueContains(ccc)',
-        },
-
-        {
-            title:      "open the many2one to select an other user",
-            element:    '.o_list_editable_form .o_form_field_many2one .o_form_input_dropdown > input',
-        },
-        {
-            title:      "select an other user",
-            element:    '.ui-autocomplete li a:contains(Demo User)',
-        },
-        {
-            title:      "test one2many's line onchange after many2one",
-            waitFor:    '.o_list_editable_form span.o_form_field:contains([test_trigger2] Demo User)',
-        },
-        {
-            title:      "test one2many field not triggered onchange",
-            waitNot:    'textarea[name="message_concat"]:propValueContains(ccc)',
-        },
-        {
-            title:      "change text value",
-            element:    'textarea.o_form_field[data-fieldname="body"]',
-            sampleText: 'ccccc'
-        },
-
-        // check onchange
-        {
-            title:      "click outside to trigger one2many onchange",
-            waitNot:    'textarea[name="message_concat"]:propValueContains(Demo User)',
-            element:    'input.o_form_required',
-        },
-        {
-            title:      "test one2many onchange",
-            waitFor:    'textarea[name="message_concat"]:propValueContains([test_trigger2] Demo User:ccccc)',
-        },
-
-        {
-            title:      "click outside to trigger one2many onchange",
-            element:    '.o_form_field_many2manytags .o_form_input_dropdown > input',
-        },
-        {
-            title:      "add a tag",
-            element:    '.ui-autocomplete a:first',
-        },
-
-        // remove record
-        {
-            title:      "delete the last item in the editable list",
-            element:    '.o_list_view tr[data-id] td.o_list_record_delete span:visible:last',
-        },
-        {
-            title:      "test one2many onchange after delete",
-            waitNot:   'textarea[name="message_concat"]:propValueContains(Administrator:d)',
-        },
-        
-        // save
-        {
-            title:      "save discussion",
-            waitNot:    'tr:has(td:containsExact(d))',
-            element:    'button.o_form_button_save'
-        },
-
-        // check saved data
-        {
-            title:      "check data 10",
-            waitFor:    '.o_form_textarea:containsExact([test_trigger2] Administrator:aaa\n[test_trigger2] Demo User:ccccc)',
-        },
-        {
-            title:      "check data 11",
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(1)',
-            waitNot:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
-        },
-
-        // edit
-        {
-            title:      "edit discussion",
-            element:    'button.o_form_button_edit'
-        },
-
-        // add message eee
-        {
-            title:      "create new message eee",
-            waitFor:    'li.active a[data-toggle="tab"]:contains(Messages)',
-            element:    '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a'
-        },
-        {
-            title:      "change text value",
-            element:    'textarea.o_form_field[data-fieldname="body"]',
-            sampleText: 'eee'
-        },
-
-        // save
-        {
-            title:      "save discussion",
-            waitFor:    'textarea.o_form_field[data-fieldname="body"]:propValueContains(eee)',
-            element:    'button.o_form_button_save'
-        },
-
-        // check saved data
-        {
-            title:      "check data 12",
-            waitFor:    '.o_form_textarea:containsExact([test_trigger2] Administrator:aaa\n[test_trigger2] Demo User:ccccc\n[test_trigger2] Administrator:eee)',
-        },
-        {
-            title:      "check data 13",
-            waitFor:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
-            waitNot:    '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(3)',
-        },
-    ]
-});
-
+    {
+        content: "switch to the second form view to test one2many with editable list (toggle menu dropdown)",
+        trigger: '.o_sub_menu .oe_secondary_submenu .oe_menu_leaf .oe_menu_text:containsExact(Discussions)',
+        extra_trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
+        edition: 'community'
+    }, {
+        content: "switch to the second form view to test one2many with editable list (toggle menu dropdown)",
+        trigger: 'nav .o_menu_sections li a:containsExact(Discussions)',
+        extra_trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
+        edition: 'enterprise'
+    }, {
+        content: "switch to the second form view to test one2many with editable list (open submenu)",
+        trigger: '.o_sub_menu .oe_secondary_submenu .oe_menu_leaf .oe_menu_text:contains(Discussions 2)',
+        edition: 'community'
+    }, {
+        content: "switch to the second form view to test one2many with editable list (open submenu)",
+        trigger: 'nav .o_menu_sections ul li a:contains(Discussions 2)',
+        edition: 'enterprise'
+    }, {
+        content: "select previous created record",
+        trigger: 'td[data-field="name"]:contains(test_trigger):last',
+        extra_trigger: '.breadcrumb li:containsExact(Discussions 2)',
+    }, {
+        content: "click on edit",
+        trigger: '.o_cp_buttons .o_form_button_edit',
+    }, {
+        content: "edit content",
+        trigger: 'input.o_form_required',
+        extra_trigger: ".o_form_editable",
+        run: 'text test_trigger2'
+    }, {
+        content: "click outside to trigger onchange",
+        trigger: '.o_form_sheet',
+    }, {
+        content: "click on a field of the editable list to edit content",
+        trigger: '.o_list_editable tr[data-id]:eq(1) td',
+        extra_trigger: '.o_list_editable:contains(test_trigger2)',
+    }, {
+        content: "change text value",
+        trigger: '.o_list_editable_form textarea.o_form_field[data-fieldname="body"]',
+        run: 'text ccc'
+    }, {
+        content: "click on other field (trigger the line onchange)",
+        trigger: '.o_list_editable_form .o_form_field_many2one[data-fieldname="author"] input',
+        run: 'click'
+    }, {
+        content: "test one2many's line onchange",
+        trigger: '.o_list_editable_form .o_form_field[data-fieldname="size"]:contains(3)',
+        run: function () {}, // don't blur the many2one
+    }, {
+        content: "test one2many field not triggered onchange",
+        trigger: '.o_content:not(:has(textarea[name="message_concat"]:propValueContains(ccc)))',
+        run: function () {}, // don't blur the many2one
+    }, {
+        content: "open the many2one to select an other user",
+        trigger: '.o_list_editable_form .o_form_field_many2one .o_form_input_dropdown > input',
+        run: 'text Demo',
+    }, {
+        content: "select an other user",
+        trigger: '.ui-autocomplete li a:contains(Demo User)',
+    }, {
+        content: "test one2many's line onchange after many2one",
+        trigger: '.o_list_editable_form span.o_form_field:contains([test_trigger2] Demo User)',
+        run: function () {}, // don't blur the many2one
+    }, {
+        content: "test one2many field not triggered onchange",
+        trigger: '.o_content:not(:has(textarea[name="message_concat"]:propValueContains(ccc)))',
+        run: function () {}, // don't blur the many2one
+    }, {
+        content: "change text value",
+        trigger: 'textarea.o_form_field[data-fieldname="body"]',
+        run: 'text ccccc',
+    }, { // check onchange
+        content: "click outside to trigger one2many onchange",
+        trigger: 'input.o_form_required',
+        extra_trigger: 'body:not(:has(textarea[name="message_concat"]:propValueContains(Demo User)))',
+        run: 'click'
+    }, {
+        content: "test one2many onchange",
+        trigger: 'textarea[name="message_concat"]:propValueContains([test_trigger2] Demo User:ccccc)',
+        run: function () {}, // don't change texarea content
+    }, {
+        content: "click outside to trigger one2many onchange",
+        trigger: '.o_form_field_many2manytags .o_form_input_dropdown > input',
+    }, {
+        content: "add a tag",
+        trigger: '.ui-autocomplete a:first',
+    }, { // remove record
+        content: "delete the last item in the editable list",
+        trigger: '.o_list_view tr[data-id] td.o_list_record_delete span:visible:last',
+    }, {
+        content: "test one2many onchange after delete",
+        trigger: '.o_content:not(:has(textarea[name="message_concat"]:propValueContains(Administrator:d)))',
+        run: function () {},
+    }, { // save
+        content: "save discussion",
+        trigger: 'button.o_form_button_save',
+        extra_trigger: 'body:not(:has(tr:has(td:containsExact(d))))',
+    }, { // check saved data
+        content: "check data 10",
+        trigger: '.o_form_textarea:containsExact([test_trigger2] Administrator:aaa\n[test_trigger2] Demo User:ccccc)',
+        run: function () {}, // don't change texarea content
+    }, {
+        content: "check data 11",
+        trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(1)',
+        extra_trigger: 'body:not(:has(.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)))',
+        run: function () {},
+    }, { // edit
+        content: "edit discussion",
+        trigger: 'button.o_form_button_edit'
+    }, { // add message eee
+        content: "create new message eee",
+        trigger: '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a',
+        extra_trigger: 'li.active a[data-toggle="tab"]:contains(Messages)',
+    }, {
+        content: "change text value",
+        trigger: 'textarea.o_form_field[data-fieldname="body"]',
+        run: 'text eee'
+    }, { // save
+        content: "save discussion",
+        trigger: 'button.o_form_button_save',
+        extra_trigger: 'textarea.o_form_field[data-fieldname="body"]:propValueContains(eee)',
+    }, { // check saved data
+        content: "check data 12",
+        trigger: '.o_form_textarea:containsExact([test_trigger2] Administrator:aaa\n[test_trigger2] Demo User:ccccc\n[test_trigger2] Administrator:eee)',
+        run: function () {}, // it's a check
+    }, {
+        content: "check data 13",
+        trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
+        extra_trigger: 'body:not(:has(.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(3)))',
+        run: function () {}, // it's a check
+    }]);
 });
