@@ -350,9 +350,9 @@ class PaymentTransaction(models.Model):
 
     Methods defined for convention, depending on your controllers:
 
-     - ``<name>_form_feedback(self, cr, uid, data, context=None)``: method that
-       handles the data coming from the acquirer after the transaction. It will
-       generally receives data posted by the acquirer after the transaction.
+     - ``<name>_form_feedback(self, data)``: method that handles the data coming
+       from the acquirer after the transaction. It will generally receives data
+       posted by the acquirer after the transaction.
     """
     _name = 'payment.transaction'
     _description = 'Payment Transaction'
