@@ -25,6 +25,8 @@ from .misc import ustr
 
 import openerp
 
+unsafe_eval = eval
+
 __all__ = ['test_expr', 'safe_eval', 'const_eval']
 
 # The time module is usually already provided in the safe_eval environment
@@ -181,7 +183,7 @@ def const_eval(expr):
     ValueError: opcode BINARY_ADD not allowed
     """
     c = test_expr(expr, _CONST_OPCODES)
-    return eval(c)
+    return unsafe_eval(c)
 
 def expr_eval(expr):
     """expr_eval(expression) -> value
@@ -202,7 +204,7 @@ def expr_eval(expr):
     ValueError: opcode LOAD_NAME not allowed
     """
     c = test_expr(expr, _EXPR_OPCODES)
-    return eval(c)
+    return unsafe_eval(c)
 
 def _import(name, globals=None, locals=None, fromlist=None, level=-1):
     if globals is None:
@@ -296,7 +298,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         locals_dict.update(_BUILTINS)
     c = test_expr(expr, _SAFE_OPCODES, mode=mode)
     try:
-        return eval(c, globals_dict, locals_dict)
+        return unsafe_eval(c, globals_dict, locals_dict)
     except openerp.exceptions.except_orm:
         raise
     except openerp.exceptions.Warning:

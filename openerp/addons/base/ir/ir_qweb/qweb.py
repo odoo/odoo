@@ -18,8 +18,10 @@ except ImportError:
     astor = None
 
 import logging
-_logger = logging.getLogger(__name__)
 
+unsafe_eval = eval
+
+_logger = logging.getLogger(__name__)
 
 ####################################
 ###          qweb tools          ###
@@ -292,7 +294,7 @@ class QWeb(object):
         try:
             # noinspection PyBroadException
             ns = {}
-            eval(compile(astmod, '<template>', 'exec'), ns)
+            unsafe_eval(compile(astmod, '<template>', 'exec'), ns)
             compiled = ns[def_name]
         except QWebException, e:
             raise e
