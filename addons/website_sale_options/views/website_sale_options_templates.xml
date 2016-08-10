@@ -86,7 +86,7 @@
               <t t-set="option_inc" t-value="0"/>
               <tr class="js_product" t-foreach="product.optional_product_ids" t-as="product">
                 <td width="100">
-                  <input type="hidden" class="product_id" t-attf-name="optional-product-#{option_inc}" t-att-value="int(product.product_variant_ids[0]) if len(product.product_variant_ids) == 1 else '0'"/>
+                  <input type="hidden" class="product_id" t-attf-name="optional-product-#{option_inc}" t-att-value="product.product_variant_id.id if len(product.product_variant_ids) == 1 else '0'"/>
                   <span t-field="product.image_small" t-options='{"widget": "image"}'/>
                 </td>
                 <td>
