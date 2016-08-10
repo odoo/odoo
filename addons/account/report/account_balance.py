@@ -57,7 +57,6 @@ class ReportTrialBalance(models.AbstractModel):
 
     @api.model
     def render_html(self, docids, data=None):
-        import pdb; pdb.set_trace()
         self.model = self.env.context.get('active_model')
         docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
         display_account = data['form'].get('display_account')
