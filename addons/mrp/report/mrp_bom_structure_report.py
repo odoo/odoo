@@ -41,4 +41,4 @@ class BomStructureReport(models.AbstractModel):
             'get_children': self.get_children,
             'data': data,
         }
-        return self.env['report'].render('mrp.report_mrpbomstructure', docargs)
+        return self.env['report'].render('mrp.mrp_bom_structure_report', docargs)
