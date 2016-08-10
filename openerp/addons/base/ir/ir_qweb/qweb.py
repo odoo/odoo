@@ -273,7 +273,10 @@ class QWeb(object):
         astmod = self._base_module()
         try:
             body = self._compile_node(element, _options)
+            ast_calls = _options['ast_calls']
+            _options['ast_calls'] = []
             def_name = self._create_def(_options, body, prefix='template_%s' % name.replace('.', '_'))
+            _options['ast_calls'] += ast_calls
         except QWebException, e:
             raise e
         except Exception, e:
