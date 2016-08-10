@@ -61,7 +61,7 @@ Tour.register({
         },
         {
             waitFor:   '#editable_area > section .row > div:first:not(:has(p font)) h1 font',
-            element:   '.note-color button.dropdown-toggle:visible:first',
+            element:   '.note-color button.dropdown-toggle:visible',
             title:     "change selection to change text color",
             onload: function () {
                 var $el = $('#editable_area > section .row > div:first:not(:has(p font)) h1 font');
@@ -70,17 +70,12 @@ Tour.register({
             }
         },
         {
-            title:     "Select foreground spectrum colorpanel",
-            waitFor:   ".dropdown-menu:visible",
-            element:   ".dropdown-menu:visible .o_colorpicker_section_menu li:last a",
-        },
-        {
-            element:   ".dropdown-menu:visible .note-color-row:eq(1) button[data-event=foreColor]:first",
+            element:   ".dropdown-menu:visible .btn-group:last .note-color-row:eq(1) button[data-event=foreColor]:first",
             title:     "change text color",
         },
         {
             waitFor:   '#editable_area > section .row > div:first h1 font:eq(2)',
-            element:   '.note-color button.dropdown-toggle:visible:last',
+            element:   '.note-color button.dropdown-toggle:visible',
             title:     "change selection to change text bg-color again",
             onload: function () {
                 var $el = $('#editable_area > section .row > div:first h1 font:eq(2)');
@@ -89,12 +84,7 @@ Tour.register({
             }
         },
         {
-            title:     "Select background spectrum colorpanel",
-            waitFor:   ".dropdown-menu:visible",
-            element:   ".dropdown-menu:visible .o_colorpicker_section_menu li:last a",
-        },
-        {
-            element:   ".dropdown-menu:visible .note-color-row:eq(0) button[data-event=backColor]:first",
+            element:   ".dropdown-menu:visible .btn-group:first .note-color-row:eq(0) button[data-event=backColor]:first",
             title:     "change text backColor again",
         },
         {
@@ -109,7 +99,7 @@ Tour.register({
         },
         {
             waitFor:   ".dropdown-menu:visible",
-            element:   ".dropdown-menu:visible .note-color-row:eq(0) button[data-event=foreColor]:first",
+            element:   ".dropdown-menu:visible .btn-group:last .note-color-row:eq(0) button[data-event=foreColor]:first",
             title:     "change text foreColor again",
         },
         {
