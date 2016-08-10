@@ -3,18 +3,13 @@
 
 from itertools import groupby
 from datetime import datetime, timedelta
-from openerp import SUPERUSER_ID
-from openerp import api, fields, models, _
-import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
-from openerp.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.misc import formatLang
-from openerp.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.misc import formatLang
 
-class res_company(models.Model):
-    _inherit = "res.company"
-    sale_note = fields.Text(string='Default Terms and Conditions', translate=True)
+import odoo.addons.decimal_precision as dp
 
 
 class SaleOrder(models.Model):
@@ -241,7 +236,7 @@ class SaleOrder(models.Model):
             # Block if partner only has warning but parent company is blocked
             if partner.sale_warn != 'block' and partner.parent_id and partner.parent_id.sale_warn == 'block':
                 partner = partner.parent_id
-            title =  _("Warning for %s") % partner.name
+            title = ("Warning for %s") % partner.name
             message = partner.sale_warn_msg
             warning = {
                     'title': title,
@@ -268,7 +263,6 @@ class SaleOrder(models.Model):
             vals['pricelist_id'] = vals.setdefault('pricelist_id', partner.property_product_pricelist and partner.property_product_pricelist.id)
         result = super(SaleOrder, self).create(vals)
         return result
-
 
     @api.multi
     def _prepare_invoice(self):
@@ -371,7 +365,6 @@ class SaleOrder(models.Model):
 
         if not invoices:
             raise UserError(_('There is no invoicable line.'))
-
 
         for invoice in invoices.values():
             if not invoice.invoice_line_ids:
@@ -487,7 +480,6 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        group_user = self.env.ref('base.group_user')
         for recipient in recipients:
             if recipient.id in done_ids:
                 continue
@@ -585,7 +577,7 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id.invoice_policy', 'order_id.state')
     def _compute_qty_delivered_updateable(self):
         for line in self:
-            line.qty_delivered_updateable = (line.order_id.state == 'sale') and (line.product_id.track_service == 'manual') and (line.product_id.expense_policy=='no')
+            line.qty_delivered_updateable = (line.order_id.state == 'sale') and (line.product_id.track_service == 'manual') and (line.product_id.expense_policy == 'no')
 
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
     def _get_to_invoice_qty(self):
@@ -665,7 +657,7 @@ class SaleOrderLine(models.Model):
         procurements are created. If the quantity is decreased, no automated action is taken.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        new_procs = self.env['procurement.order'] #Empty recordset
+        new_procs = self.env['procurement.order']  # Empty recordset
         for line in self:
             if line.state != 'sale' or not line.product_id._need_procurement():
                 continue
@@ -787,8 +779,8 @@ class SaleOrderLine(models.Model):
         res = {}
         account = self.product_id.property_account_income_id or self.product_id.categ_id.property_account_income_categ_id
         if not account:
-            raise UserError(_('Please define income account for this product: "%s" (id:%d) - or for its category: "%s".') % \
-                            (self.product_id.name, self.product_id.id, self.product_id.categ_id.name))
+            raise UserError(_('Please define income account for this product: "%s" (id:%d) - or for its category: "%s".') %
+                (self.product_id.name, self.product_id.id, self.product_id.categ_id.name))
 
         fpos = self.order_id.fiscal_position_id or self.order_id.partner_id.property_account_position_id
         if fpos:
@@ -907,173 +899,3 @@ class SaleOrderLine(models.Model):
         :rtype: float
         '''
         return 0.0
-
-
-class MailComposeMessage(models.TransientModel):
-    _inherit = 'mail.compose.message'
-
-    @api.multi
-    def send_mail(self, auto_commit=False):
-        if self._context.get('default_model') == 'sale.order' and self._context.get('default_res_id') and self._context.get('mark_so_as_sent'):
-            order = self.env['sale.order'].browse([self._context['default_res_id']])
-            if order.state == 'draft':
-                order.state = 'sent'
-        return super(MailComposeMessage, self.with_context(mail_post_autofollow=True)).send_mail(auto_commit=auto_commit)
-
-
-class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
-
-    @api.model
-    def _get_default_team(self):
-        return self.env['crm.team']._get_default_team_id()
-
-    def _default_comment(self):
-        invoice_type = self.env.context.get('type', 'out_invoice')
-        if invoice_type == 'out_invoice':
-            return self.env.user.company_id.sale_note
-
-    team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_default_team, oldname='section_id')
-    comment = fields.Text(default=_default_comment)
-    partner_shipping_id = fields.Many2one(
-        'res.partner',
-        string='Delivery Address',
-        readonly=True,
-        states={'draft': [('readonly', False)]},
-        help="Delivery address for current invoice.")
-
-    @api.onchange('partner_shipping_id')
-    def _onchange_partner_shipping_id(self):
-        """
-        Trigger the change of fiscal position when the shipping address is modified.
-        """
-        fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
-        if fiscal_position:
-            self.fiscal_position_id = fiscal_position
-
-    @api.onchange('partner_id', 'company_id')
-    def _onchange_delivery_address(self):
-        addr = self.partner_id.address_get(['delivery'])
-        self.partner_shipping_id = addr and addr.get('delivery')
-
-    @api.multi
-    def confirm_paid(self):
-        res = super(AccountInvoice, self).confirm_paid()
-        todo = set()
-        for invoice in self:
-            for line in invoice.invoice_line_ids:
-                for sale_line in line.sale_line_ids:
-                    todo.add((sale_line.order_id, invoice.number))
-        for (order, name) in todo:
-            order.message_post(body=_("Invoice %s paid") % (name))
-        return res
-
-    @api.model
-    def _refund_cleanup_lines(self, lines):
-        result = super(AccountInvoice, self)._refund_cleanup_lines(lines)
-        if self.env.context.get('mode') == 'modify':
-            for i in xrange(0, len(lines)):
-                for name, field in lines[i]._fields.iteritems():
-                    if name == 'sale_line_ids':
-                        result[i][2][name] = [(6, 0, lines[i][name].ids)]
-                        lines[i][name] = False
-        return result
-
-    @api.multi
-    def order_lines_layouted(self):
-        """
-        Returns this sale order lines ordered by sale_layout_category sequence. Used to render the report.
-        """
-        self.ensure_one()
-        report_pages = [[]]
-        for category, lines in groupby(self.invoice_line_ids, lambda l: l.layout_category_id):
-            # If last added category induced a pagebreak, this one will be on a new page
-            if report_pages[-1] and report_pages[-1][-1]['pagebreak']:
-                report_pages.append([])
-            # Append category to current report page
-            report_pages[-1].append({
-                'name': category and category.name or 'Uncategorized',
-                'subtotal': category and category.subtotal,
-                'pagebreak': category and category.pagebreak,
-                'lines': list(lines)
-            })
-
-        return report_pages
-
-class AccountInvoiceLine(models.Model):
-    _inherit = 'account.invoice.line'
-    _order = 'invoice_id, layout_category_id, sequence, id'
-
-    sale_line_ids = fields.Many2many('sale.order.line', 'sale_order_line_invoice_rel', 'invoice_line_id', 'order_line_id', string='Sale Order Lines', readonly=True, copy=False)
-    layout_category_id = fields.Many2one('sale.layout_category', string='Section')
-    layout_category_sequence = fields.Integer(related='layout_category_id.sequence', string='Layout Sequence', store=True, default=0)
-
-
-class ProcurementOrder(models.Model):
-    _inherit = 'procurement.order'
-    sale_line_id = fields.Many2one('sale.order.line', string='Sale Order Line')
-
-
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
-
-    @api.multi
-    def _sales_count(self):
-        r = {}
-        domain = [
-            ('state', 'in', ['sale', 'done']),
-            ('product_id', 'in', self.ids),
-        ]
-        for group in self.env['sale.report'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id']):
-            r[group['product_id'][0]] = group['product_uom_qty']
-        for product in self:
-            product.sales_count = r.get(product.id, 0)
-        return r
-
-    sales_count = fields.Integer(compute='_sales_count', string='# Sales')
-
-
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
-    track_service = fields.Selection([('manual', 'Manually set quantities on order')], string='Track Service',
-        help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
-             "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-             "Create a task and track hours: Create a task on the sale order validation and track the work hours.",
-        default='manual')
-    sale_line_warn = fields.Selection(WARNING_MESSAGE, 'Sales Order Line', help=WARNING_HELP, required=True, default="no-message")
-    sale_line_warn_msg = fields.Text('Message for Sales Order Line')
-    expense_policy = fields.Selection(
-        [('no', 'No'), ('cost', 'At cost'), ('sales_price', 'At sale price')],
-        string='Re-Invoice Expenses',
-        default='no')
-    @api.multi
-    @api.depends('product_variant_ids.sales_count')
-    def _sales_count(self):
-        for product in self:
-            product.sales_count = sum([p.sales_count for p in product.product_variant_ids])
-
-    @api.multi
-    def action_view_sales(self):
-        self.ensure_one()
-        action = self.env.ref('sale.action_product_sale_list')
-        product_ids = self.product_variant_ids.ids
-
-        return {
-            'name': action.name,
-            'help': action.help,
-            'type': action.type,
-            'view_type': action.view_type,
-            'view_mode': action.view_mode,
-            'target': action.target,
-            'context': "{'default_product_id': " + str(product_ids[0]) + "}",
-            'res_model': action.res_model,
-            'domain': [('state', 'in', ['sale', 'done']), ('product_id.product_tmpl_id', '=', self.id)],
-        }
-
-    sales_count = fields.Integer(compute='_sales_count', string='# Sales')
-    invoice_policy = fields.Selection(
-        [('order', 'Ordered quantities'),
-         ('delivery', 'Delivered quantities'),
-        ], string='Invoicing Policy', help='Ordered Quantity: Invoice based on the quantity the customer ordered.\n'
-                                        'Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries).',
-                                        default='order')
