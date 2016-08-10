@@ -46,65 +46,38 @@ renderer.createPalette = function ($container, options) {
 
     var $clpicker = $(QWeb.render('web_editor.colorpicker'));
 
-    $container.find('.colorpicker').each(function (i, picker) {
-        var $picker = $(picker);
-
-        var $sections = $clpicker.find('.o_colorpicker_section').clone(true);
-
-        var $toggles = $picker.find('.o_colorpicker_section_menu');
-        var $tabs = $picker.find('.o_colorpicker_section_tabs');
-        var $defaultToggle = $toggles.find('li');
-        var $defaultTab = $tabs.find('.tab-pane');
-
-        var newDefaultID = _.uniqueId();
-        $defaultToggle.children('a').attr('href', $defaultToggle.children('a').attr('href') + newDefaultID);
-        $defaultTab.attr('id', $defaultTab.attr('id') + newDefaultID);
-
-        if ($sections.length) {
-            $sections.each(function () {
-                var $section = $(this);
-                var id = 'o_palette_' + $section.data('name') + _.uniqueId();
-
-                var $li = $('<li/>')
-                            .append($('<a/>', {href: '#' + id})
-                                .append($('<i/>', {'class': $section.data('iconClass') || '', html: $section.data('iconContent') || ''})));
-                $defaultToggle.before($li);
-
-                $defaultTab.before($section.addClass('tab-pane').attr('id', id));
-            });
-        } else {
-            var id = 'o_palette_other' + _.uniqueId();
-
-            var $li = $('<li/>')
-                        .append($('<a/>', {href: '#' + id, 'aria-controls': id})
-                            .append($('<i/>', {'class': 'fa fa-magic'})));
-            $toggles.prepend($li);
-
-            $tabs.prepend($('<div/>', {'class': 'tab-pane', id: id}).append($clpicker.clone(true)));
-        }
-
-        $toggles.find('li:first-child').addClass('active');
-        $tabs.find('div:first-child').addClass('active');
-
-        $toggles.on('click mouseover', '> li > a', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $(this).tab('show');
+    var groups;
+    if ($clpicker.is("colorpicker")) {
+        groups = _.map($clpicker.children(), function (el) {
+            return $(el).find("button").empty();
         });
-    });
+    } else {
+        groups = [$clpicker.find("button").empty()];
+    }
 
-    var $bg = $container.find('.o_background_toggle .dropdown-menu button');
-    var $fore = $container.find('.o_foreground_toggle .dropdown-menu button');
+    var html = "<h6>" + _t("Theme colors") + "</h6>" + _.map(groups, function ($group) {
+        var $row = $("<div/>", {"class": "note-color-row mb8"}).append($group);
+        var $after_breaks = $row.find(".o_small + :not(.o_small)");
+        if ($after_breaks.length === 0) {
+            $after_breaks = $row.find(":nth-child(8n+9)");
+        }
+        $after_breaks.addClass("o_clear");
+        return $row[0].outerHTML;
+    }).join("") + "<h6>" + _t("Common colors") + "</h6>";
+    var $palettes = $container.find(".note-color .note-color-palette");
+    $palettes.prepend(html);
 
+    var $bg = $palettes.first().find("button:not(.note-color-btn)").addClass("note-color-btn");
+    var $fore = $palettes.last().find("button:not(.note-color-btn)").addClass("note-color-btn");
     $bg.each(function () {
         var $el = $(this);
-        var className = $el.hasClass('note-color-btn')? $el.attr('title') : ('bg-' + $el.data('color'));
+        var className = 'bg-' + $el.data('color');
         $el.attr('data-event', 'backColor').attr('data-value', className).addClass(className);
     });
     $fore.each(function () {
         var $el = $(this);
-        var className = $el.hasClass('note-color-btn')? $el.attr('title') : ('text-' + $el.data('color'));
-        $el.attr('data-event', 'foreColor').attr('data-value', className).addClass(className);
+        var className = 'text-' + $el.data('color');
+        $el.attr('data-event', 'foreColor').attr('data-value', className).addClass('bg-' + $el.data('color'));
     });
 };
 
