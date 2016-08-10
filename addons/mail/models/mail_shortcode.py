@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import cgi
 import re
 
-from openerp import api, fields, models
+from odoo import api, fields, models
 
 
 class MailShortcode(models.Model):

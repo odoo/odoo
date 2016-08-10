@@ -1,17 +1,18 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import base64
 import json
-from operator import itemgetter
 import psycopg2
 import werkzeug
+
+from operator import itemgetter
 from werkzeug import url_encode
 
-import openerp
-from openerp import SUPERUSER_ID
-from openerp import http
-from openerp.exceptions import AccessError
-from openerp.http import request
-
-from openerp.addons.web.controllers.main import binary_content
+from odoo import api, http, registry, SUPERUSER_ID
+from odoo.addons.web.controllers.main import binary_content
+from odoo.exceptions import AccessError
+from odoo.http import request
 
 
 class MailController(http.Controller):
@@ -29,10 +30,10 @@ class MailController(http.Controller):
         for db in dbs:
             message = dbs[db].decode('base64')
             try:
-                registry = openerp.registry(db)
-                with registry.cursor() as cr:
-                    mail_thread = registry['mail.thread']
-                    mail_thread.message_process(cr, SUPERUSER_ID, None, message)
+                db_registry = registry(db)
+                with db_registry.cursor() as cr:
+                    env = api.Environment(cr, SUPERUSER_ID, {})
+                    env['mail.thread'].message_process(None, message)
             except psycopg2.Error:
                 pass
         return True
@@ -222,7 +223,7 @@ class MailController(http.Controller):
                 # if the current user has access to the document, get the partner avatar as sudo()
                 request.env[res_model].browse(res_id).check_access_rule('read')
                 if partner_id in request.env[res_model].browse(res_id).sudo().exists().message_ids.mapped('author_id').ids:
-                    status, headers, _content = binary_content(model='res.partner', id=partner_id, field='image_medium', default_mimetype='image/png', env=request.env(user=openerp.SUPERUSER_ID))
+                    status, headers, _content = binary_content(model='res.partner', id=partner_id, field='image_medium', default_mimetype='image/png', env=request.env(user=SUPERUSER_ID))
                     # binary content return an empty string and not a placeholder if obj[field] is False
                     if _content != '':
                         content = _content

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import copy
@@ -7,47 +8,41 @@ import dateutil.relativedelta as relativedelta
 import logging
 import lxml
 import urlparse
-import openerp
+
 from urllib import urlencode, quote as quote
 
-from openerp import _, api, fields, models, SUPERUSER_ID
-from openerp import tools
-from openerp import report as odoo_report
-from openerp.exceptions import UserError
+from odoo import _, api, fields, models, tools
+from odoo import report as odoo_report
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
 
-def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
-    context = dict(context or {})
-    if tz:
-        context['tz'] = tz or pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz'] or "UTC"
+def format_tz(env, dt, tz=False, format=False):
+    record_user_timestamp = env.user.sudo().with_context(tz=tz or env.user.sudo().tz or 'UTC')
     timestamp = datetime.datetime.strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
-    ts = openerp.osv.fields.datetime.context_timestamp(cr, uid, timestamp, context)
+    ts = fields.Datetime.context_timestamp(record_user_timestamp, timestamp)
 
     # Babel allows to format datetime in a specific language without change locale
     # So month 1 = January in English, and janvier in French
     # Be aware that the default value for format is 'medium', instead of 'short'
     #     medium:  Jan 5, 2016, 10:20:31 PM |   5 janv. 2016 22:20:31
     #     short:   1/5/16, 10:20 PM         |   5/01/16 22:20
-    if context.get('use_babel'):
+    if env.context.get('use_babel'):
         # Formatting available here : http://babel.pocoo.org/en/latest/dates.html#date-fields
         from babel.dates import format_datetime
-        return format_datetime(ts, format or 'medium', locale=context.get("lang") or 'en_US')
+        return format_datetime(ts, format or 'medium', locale=env.context.get("lang") or 'en_US')
 
     if format:
         return ts.strftime(format)
     else:
-        lang = context.get("lang")
-        lang_params = {}
+        lang = env.context.get("lang")
+        langs = env['res.lang']
         if lang:
-            res_lang = pool.get('res.lang')
-            ids = res_lang.search(cr, uid, [("code", "=", lang)])
-            if ids:
-                lang_params = res_lang.read(cr, uid, ids[0], ["date_format", "time_format"])
-        format_date = lang_params.get("date_format", '%B-%d-%Y')
-        format_time = lang_params.get("time_format", '%I-%M %p')
+            langs = env['res.lang'].search([("code", "=", lang)])
+        format_date = langs.date_format or '%B-%d-%Y'
+        format_time = langs.time_format or '%I-%M %p'
 
         fdate = ts.strftime(format_date).decode('utf-8')
         ftime = ts.strftime(format_time)
@@ -355,7 +350,7 @@ class MailTemplate(models.Model):
         for record in records:
             res_to_rec[record.id] = record
         variables = {
-            'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.pool, self._cr, self._uid, dt, tz, format, context),
+            'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.env, dt, tz, format),
             'user': self.env.user,
             'ctx': self._context,  # context kw would clash with mako internals
         }
@@ -451,7 +446,7 @@ class MailTemplate(models.Model):
         if fields is None:
             fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'scheduled_date']
 
-        res_ids_to_templates = self.get_email_template_batch(res_ids)
+        res_ids_to_templates = self.get_email_template(res_ids)
 
         # templates: res_id -> template; template -> res_ids
         templates_to_res_ids = {}
@@ -564,18 +559,3 @@ class MailTemplate(models.Model):
         if force_send:
             mail.send(raise_exception=raise_exception)
         return mail.id  # TDE CLEANME: return mail + api.returns ?
-
-    # compatibility
-    render_template_batch = render_template
-    get_email_template_batch = get_email_template
-    generate_email_batch = generate_email
-
-    # Compatibility method
-    # def render_template(self, cr, uid, template, model, res_id, context=None):
-    #     return self.render_template_batch(cr, uid, template, model, [res_id], context)[res_id]
-
-    # def get_email_template(self, cr, uid, template_id=False, record_id=None, context=None):
-    #     return self.get_email_template_batch(cr, uid, template_id, [record_id], context)[record_id]
-
-    # def generate_email(self, cr, uid, template_id, res_id, context=None):
-    #     return self.generate_email_batch(cr, uid, template_id, [res_id], context)[res_id]

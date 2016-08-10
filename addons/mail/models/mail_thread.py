@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import datetime
@@ -6,7 +7,6 @@ import dateutil
 import email
 import json
 import lxml
-from lxml import etree
 import logging
 import pytz
 import re
@@ -17,13 +17,12 @@ import xmlrpclib
 from collections import namedtuple
 from email.message import Message
 from email.utils import formataddr
+from lxml import etree
 from werkzeug import url_encode
 
-from openerp import _, api, fields, models
-from openerp import exceptions
-from openerp import tools
-from openerp.addons.mail.models.mail_message import decode
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import _, api, exceptions, fields, models, tools
+from odoo.addons.mail.models.mail_message import decode
+from odoo.tools.safe_eval import safe_eval as eval
 
 
 _logger = logging.getLogger(__name__)
@@ -301,10 +300,10 @@ class MailThread(models.AbstractModel):
         ).unlink()
         return res
 
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        context = dict(context or {}, mail_notrack=True)
+    @api.multi
+    def copy_data(self, default=None):
         # avoid tracking multiple temporary changes during copy
-        return super(MailThread, self).copy_data(cr, uid, id, default=default, context=context)
+        return super(MailThread, self.with_context(mail_notrack=True)).copy_data(default=default)
 
     # ------------------------------------------------------
     # Technical methods (to clean / move to controllers ?)
@@ -487,15 +486,6 @@ class MailThread(models.AbstractModel):
             # By passing this key, that allows to let the subtype empty and so don't sent email because partners_to_notify from mail_message._notify will be empty
             if not self._context.get('mail_track_log_only'):
                 subtype_xmlid = record._track_subtype(dict((col_name, initial_values[record.id][col_name]) for col_name in changes))
-                # compatibility: use the deprecated _track dict
-                if not subtype_xmlid and hasattr(self, '_track'):
-                    for field, track_info in self._track.items():
-                        if field not in changes or subtype_xmlid:
-                            continue
-                        for subtype, method in track_info.items():
-                            if method(self, self._cr, self._uid, record, self._context):
-                                _logger.warning("Model %s still using deprecated _track dict; override _track_subtype method instead" % self._name)
-                                subtype_xmlid = subtype
 
             if subtype_xmlid:
                 subtype_rec = self.env.ref(subtype_xmlid)  # TDE FIXME check for raise if not found
@@ -1099,7 +1089,7 @@ class MailThread(models.AbstractModel):
                         # that send the email has the right to create or modify a new document
                         # Fallback on user_id = uid
                         # Note: recognized partners will be added as followers anyway
-                        # user_id = self._message_find_user_id(cr, uid, message, context=context)
+                        # user_id = self._message_find_user_id(message)
                         user_id = self._uid
                         _logger.info('No matching user_id for the alias %s', alias.alias_name)
                     route = (alias.alias_model_id.model, alias.alias_force_thread_id, eval(alias.alias_defaults), user_id, alias)
@@ -1837,7 +1827,7 @@ class MailThread(models.AbstractModel):
         handle ir ui views. """
         values = kwargs.pop('values', None) or dict()
         try:
-            from openerp.addons.website.models.website import slug
+            from odoo.addons.website.models.website import slug
             values['slug'] = slug
         except ImportError:
             values['slug'] = lambda self: self.id

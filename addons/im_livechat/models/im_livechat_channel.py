@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-import json
-import openerp
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import random
 import re
 from datetime import datetime, timedelta
 
-from openerp import api, fields, models
-from openerp import tools
+from odoo import api, fields, models, modules, tools
 
 
 class ImLivechatChannel(models.Model):
@@ -20,7 +19,7 @@ class ImLivechatChannel(models.Model):
     _description = 'Livechat Channel'
 
     def _default_image(self):
-        image_path = openerp.modules.get_module_resource('im_livechat', 'static/src/img', 'default.png')
+        image_path = modules.get_module_resource('im_livechat', 'static/src/img', 'default.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     def _default_user_ids(self):

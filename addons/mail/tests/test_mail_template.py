@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import datetime
 
-from openerp.addons.mail.tests.common import TestMail
-from openerp.tools import mute_logger
+from odoo.addons.mail.tests.common import TestMail
+from odoo.tools import mute_logger
 
 
 class TestMailTemplate(TestMail):

@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 import threading
 
-from openerp import _, api, fields, models, tools
-from openerp.osv import expression
+from odoo import _, api, fields, models
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
+
 
 class Partner(models.Model):
     """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used

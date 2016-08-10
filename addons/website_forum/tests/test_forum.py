@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .common import KARMA, TestForumCommon
 from ..models.forum import KarmaError
-from openerp.exceptions import UserError, AccessError
-from openerp.tools import mute_logger
+from odoo.exceptions import UserError, AccessError
+from odoo.tools import mute_logger
 
 
 class TestForum(TestForumCommon):
@@ -216,8 +217,8 @@ class TestForum(TestForumCommon):
         Post = self.env['forum.post']
 
         # converting a question does nothing
-        msg_ids = self.post.sudo(self.user_portal).convert_answer_to_comment()
-        self.assertEqual(msg_ids[0], False, 'website_forum: question to comment conversion failed')
+        new_msg = self.post.sudo(self.user_portal).convert_answer_to_comment()
+        self.assertEqual(new_msg.id, False, 'website_forum: question to comment conversion failed')
         self.assertEqual(Post.search([('name', '=', 'TestQuestion')])[0].forum_id.name, 'TestForum', 'website_forum: question to comment conversion failed')
 
         with self.assertRaises(KarmaError):
@@ -226,11 +227,10 @@ class TestForum(TestForumCommon):
     def test_convert_answer_to_comment(self):
         self.user_portal.karma = KARMA['com_conv_all']
         post_author = self.answer.create_uid.partner_id
-        msg_ids = self.answer.sudo(self.user_portal).convert_answer_to_comment()
-        self.assertEqual(len(msg_ids), 1, 'website_forum: wrong answer to comment conversion')
-        msg = self.env['mail.message'].browse(msg_ids[0])
-        self.assertEqual(msg.author_id, post_author, 'website_forum: wrong answer to comment conversion')
-        self.assertIn('I am an anteater', msg.body, 'website_forum: wrong answer to comment conversion')
+        new_msg = self.answer.sudo(self.user_portal).convert_answer_to_comment()
+        self.assertEqual(len(new_msg), 1, 'website_forum: wrong answer to comment conversion')
+        self.assertEqual(new_msg.author_id, post_author, 'website_forum: wrong answer to comment conversion')
+        self.assertIn('I am an anteater', new_msg.body, 'website_forum: wrong answer to comment conversion')
 
     def test_edit_post_crash(self):
         with self.assertRaises(KarmaError):

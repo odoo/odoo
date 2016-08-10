@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import uuid
-from odoo import api, fields, models
-from openerp import tools
 
+from odoo import api, fields, models, tools
 
 
 class Rating(models.Model):
@@ -46,6 +46,7 @@ class Rating(models.Model):
                 'feedback': False,
                 'consumed': False,
             })
+
 
 class RatingMixin(models.AbstractModel):
     _name = 'rating.mixin'

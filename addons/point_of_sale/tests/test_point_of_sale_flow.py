@@ -209,8 +209,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'debit': 0.0,
         }]
 
-        self.AccountBankStatementLine._model.process_reconciliations(
-            self.env.cr, self.env.uid, [account_statement_line.id], [{'new_aml_dicts': new_aml_dicts}])
+        account_statement_line.process_reconciliations([{'new_aml_dicts': new_aml_dicts}])
 
         # I confirm the bank statement using Confirm button
 

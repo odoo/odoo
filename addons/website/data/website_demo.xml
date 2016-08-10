@@ -44,7 +44,7 @@
             <field name="website_path">partner_thanks</field>
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="code">
-partner_id, partner = False, None
+partner = model
 post_partner_id = request.params.get('partner_id')
 post_body = request.params.get('body')
 if post_partner_id:
@@ -53,10 +53,9 @@ if post_partner_id:
     except:
         post_partner_id = False
 if post_partner_id:
-    partner_ids = pool['res.partner'].search(cr, uid, [('id', '=', post_partner_id)], context=context)
-    partner_id = partner_ids and partner_ids[0] or False
-if partner_id and post_body:
-    partner = pool['res.partner'].message_post(cr, uid, partner_id, body=post_body, subtype='mail.mt_comment', context=context)
+    partner = model.browse(post_partner_id).exists()
+if partner and post_body:
+    message = partner.message_post(body=post_body, subtype='mail.mt_comment')
 values = {
     'partner': partner,
 }
@@ -121,12 +120,9 @@ response = request.website.render("website.template_partner_post", values)
             <field name="website_path">partner_comment</field>
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="code">
-partner_ids = pool['res.partner'].search(cr, uid, [('customer', '=', True)], context=context)
-partners = pool['res.partner'].browse(cr, uid, partner_ids, context=context)
-values = {
-    'partners': partners,
-}
-response = request.render("website.template_partner_comment", values)
+response = request.render("website.template_partner_comment", {
+    'partners': model.search([('customer', '=', True)]),
+})
             </field>
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>

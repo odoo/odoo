@@ -2,11 +2,12 @@
 
 import pytz
 
-from openerp import _, api, fields, models
-from openerp.exceptions import AccessError, UserError, ValidationError
-from openerp.tools.translate import html_translate
+from odoo import _, api, fields, models
+from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tools.translate import html_translate
 
-class event_type(models.Model):
+
+class EventType(models.Model):
     """ Event Type """
     _name = 'event.type'
     _description = 'Event Type'
@@ -21,7 +22,7 @@ class event_type(models.Model):
         help="It will select this default maximum value when you choose this event")
 
 
-class event_event(models.Model):
+class EventEvent(models.Model):
     """Event"""
     _name = 'event.event'
     _description = 'Event'
@@ -207,7 +208,7 @@ class event_event(models.Model):
 
     @api.model
     def create(self, vals):
-        res = super(event_event, self).create(vals)
+        res = super(EventEvent, self).create(vals)
         if res.organizer_id:
             res.message_subscribe([res.organizer_id.id])
         if res.auto_confirm:
@@ -216,7 +217,7 @@ class event_event(models.Model):
 
     @api.multi
     def write(self, vals):
-        res = super(event_event, self).write(vals)
+        res = super(EventEvent, self).write(vals)
         if vals.get('organizer_id'):
             self.message_subscribe([vals['organizer_id']])
         return res
@@ -263,7 +264,7 @@ class event_event(models.Model):
             self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
 
 
-class event_registration(models.Model):
+class EventRegistration(models.Model):
     _name = 'event.registration'
     _description = 'Attendee'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -311,7 +312,7 @@ class event_registration(models.Model):
 
     @api.model
     def create(self, vals):
-        registration = super(event_registration, self).create(vals)
+        registration = super(EventRegistration, self).create(vals)
         if registration._check_auto_confirmation():
             registration.sudo().confirm_registration()
         return registration
@@ -372,7 +373,7 @@ class event_registration(models.Model):
 
     @api.multi
     def message_get_suggested_recipients(self):
-        recipients = super(event_registration, self).message_get_suggested_recipients()
+        recipients = super(EventRegistration, self).message_get_suggested_recipients()
         try:
             for attendee in self:
                 if attendee.partner_id:

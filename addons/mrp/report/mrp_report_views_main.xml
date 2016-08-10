@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <report 
             string="BOM Structure" 
@@ -14,10 +14,11 @@
             string="Production Order" 
             id="action_report_production_order" 
             model="mrp.production" 
-            name="mrp.report_mrporder" 
+            name="mrp.report_mrporder"
             file="mrp.report.mrp_production_templates" 
             report_type="qweb-pdf"
         />
+
         <report
             string="BOM Cost"
             id="action_report_bom_price"
@@ -27,4 +28,4 @@
             report_type="qweb-pdf"
         />
     </data>
-</openerp>
+</odoo>

@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date, timedelta
+
 import cgi
 import urllib2
 import ssl
 import werkzeug
-from datetime import date, timedelta
 
-from openerp import models, api, service
-from openerp.exceptions import UserError
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo import models, api, service
+from odoo.exceptions import UserError
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+
 
 class MercuryTransaction(models.Model):
     _name = 'pos_mercury.mercury_transaction'

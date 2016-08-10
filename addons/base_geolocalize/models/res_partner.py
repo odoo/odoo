@@ -3,8 +3,8 @@
 import json
 import urllib
 
-from openerp import api, fields, models, tools, _
-from openerp.exceptions import UserError
+from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError
 
 
 def geo_find(addr):

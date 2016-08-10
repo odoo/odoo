@@ -456,7 +456,6 @@ class MassMailing(models.Model):
         """ Override read_group to always display all states. """
         if groupby and groupby[0] == "state":
             # Default result structure
-            # states = self._get_state_list(cr, uid, context=context)
             states = [('draft', _('Draft')), ('in_queue', _('In Queue')), ('sending', _('Sending')), ('done', _('Sent'))]
             read_group_all_states = [{
                 '__context': {'group_by': groupby[1:]},

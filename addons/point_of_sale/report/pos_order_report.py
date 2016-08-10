@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools
+from odoo import api, fields, models, tools
 
 
 class PosOrderReport(models.Model):
@@ -38,10 +38,10 @@ class PosOrderReport(models.Model):
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', readonly=True)
     session_id = fields.Many2one('pos.session', string='Session', readonly=True)
 
-
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_pos_order')
-        cr.execute("""
+    @api.model_cr
+    def init(self):
+        tools.drop_view_if_exists(self._cr, 'report_pos_order')
+        self._cr.execute("""
             CREATE OR REPLACE VIEW report_pos_order AS (
                 SELECT
                     MIN(l.id) AS id,

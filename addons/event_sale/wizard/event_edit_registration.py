@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api
+from odoo import models, fields, api
 
 
-class SaleOrderEventRegistration(models.TransientModel):
+class RegistrationEditor(models.TransientModel):
     _name = "registration.editor"
 
     sale_order_id = fields.Many2one('sale.order', 'Sale Order', required=True)
@@ -11,7 +11,7 @@ class SaleOrderEventRegistration(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        res = super(SaleOrderEventRegistration, self).default_get(fields)
+        res = super(RegistrationEditor, self).default_get(fields)
         if not res.get('sale_order_id'):
             sale_order_id = res.get('sale_order_id', self._context.get('active_id'))
             res['sale_order_id'] = sale_order_id
