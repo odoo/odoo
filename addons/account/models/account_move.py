@@ -1111,8 +1111,6 @@ class AccountMoveLine(models.Model):
 
     @api.multi
     def write(self, vals):
-        if vals.get('tax_line_id') or vals.get('tax_ids'):
-            raise UserError(_('You cannot change the tax, you should remove and recreate lines.'))
         if ('account_id' in vals) and self.env['account.account'].browse(vals['account_id']).deprecated:
             raise UserError(_('You cannot use deprecated account.'))
         if any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit')):
