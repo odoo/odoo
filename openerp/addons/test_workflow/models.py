@@ -1,63 +1,74 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 
-import openerp.osv.orm
+from odoo import models, fields, api
+from odoo.workflow import trg_trigger
 
 _logger = logging.getLogger(__name__)
 
-class m(openerp.osv.orm.Model):
+class m(models.Model):
     """ A model for which we will define a workflow (see data.xml). """
     _name = 'test.workflow.model'
 
-    def print_(self, cr, uid, ids, s, context=None):
-        _logger.info('Running activity `%s` for record %s', s, ids)
+    @api.multi
+    def _print(self, s):
+        _logger.info('Running activity `%s` for record %s', s, self.ids)
         return True
 
-    def print_a(self, cr, uid, ids, context=None):
-        return self.print_(cr, uid, ids, 'a', context)
+    @api.multi
+    def print_a(self):
+        return self._print('a')
 
-    def print_b(self, cr, uid, ids, context=None):
-        return self.print_(cr, uid, ids, 'b', context)
+    @api.multi
+    def print_b(self):
+        return self._print('b')
 
-    def print_c(self, cr, uid, ids, context=None):
-        return self.print_(cr, uid, ids, 'c', context)
+    @api.multi
+    def print_c(self):
+        return self._print('c')
 
-    def condition(self, cr, uid, ids, context=None):
-        m = self.pool['test.workflow.trigger']
-        for r in m.browse(cr, uid, [1], context=context):
-            if not r.value:
-                return False
-        return True
+    @api.multi
+    def condition(self):
+        record = self.env['test.workflow.trigger'].browse(1)
+        return bool(record.value)
 
-    def trigger(self, cr, uid, context=None):
-        return openerp.workflow.trg_trigger(uid, 'test.workflow.trigger', 1, cr)
+    @api.model
+    def trigger(self):
+        return trg_trigger(self._uid, 'test.workflow.trigger', 1, self._cr)
 
-class n(openerp.osv.orm.Model):
+
+class n(models.Model):
     """ A model used for the trigger feature. """
     _name = 'test.workflow.trigger'
-    _columns = { 'value': openerp.osv.fields.boolean('Value') }
-    _defaults = { 'value': False }
+    value = fields.Boolean(default=False)
 
-class a(openerp.osv.orm.Model):
+
+class a(models.Model):
     _name = 'test.workflow.model.a'
-    _columns = { 'value': openerp.osv.fields.integer('Value') }
-    _defaults = { 'value': 0 }
+    value = fields.Integer(default=0)
 
-class b(openerp.osv.orm.Model):
+
+class b(models.Model):
     _name = 'test.workflow.model.b'
     _inherit = 'test.workflow.model.a'
 
-class c(openerp.osv.orm.Model):
+
+class c(models.Model):
     _name = 'test.workflow.model.c'
     _inherit = 'test.workflow.model.a'
 
-class d(openerp.osv.orm.Model):
+
+class d(models.Model):
     _name = 'test.workflow.model.d'
     _inherit = 'test.workflow.model.a'
 
-class e(openerp.osv.orm.Model):
+
+class e(models.Model):
     _name = 'test.workflow.model.e'
     _inherit = 'test.workflow.model.a'
+
 
 for name in 'bcdefghijkl':
     #
@@ -65,6 +76,6 @@ for name in 'bcdefghijkl':
     # This is because the __module__ of the new class would be the one of the
     # metaclass that provides method __new__!
     #
-    class NewModel(openerp.osv.orm.Model):
+    class NewModel(models.Model):
         _name = 'test.workflow.model.%s' % name
         _inherit = 'test.workflow.model.a'
