@@ -1,89 +1,110 @@
 # -*- coding: utf-8 -*-
-import openerp.exceptions
-import openerp.osv.orm
-import openerp.osv.osv
-import openerp.tools.safe_eval
-from openerp.exceptions import UserError
-from openerp.exceptions import except_orm
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-class m(openerp.osv.osv.Model):
+import odoo.exceptions
+import odoo.osv.osv
+from odoo import models, api
+from odoo.tools.safe_eval import safe_eval
+
+class m(models.Model):
     """ This model exposes a few methods that will raise the different
         exceptions that must be handled by the server (and its RPC layer)
         and the clients.
     """
     _name = 'test.exceptions.model'
 
-    def generate_except_osv(self, cr, uid, ids, context=None):
+    @api.multi
+    def generate_except_osv(self):
         # title is ignored in the new (6.1) exceptions
-        raise openerp.osv.osv.except_osv('title', 'description')
+        raise odoo.osv.osv.except_osv('title', 'description')
 
-    def generate_except_orm(self, cr, uid, ids, context=None):
+    @api.multi
+    def generate_except_orm(self):
         # title is ignored in the new (6.1) exceptions
-        raise except_orm('title', 'description')
+        raise odoo.exceptions.except_orm('title', 'description')
 
-    def generate_warning(self, cr, uid, ids, context=None):
-        raise openerp.exceptions.Warning('description')
+    @api.multi
+    def generate_warning(self):
+        raise odoo.exceptions.Warning('description')
 
-    def generate_redirect_warning(self, cr, uid, ids, context=None):
-        dummy, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'test_exceptions', 'action_test_exceptions')
-        raise openerp.exceptions.RedirectWarning('description', action_id, 'Go to the redirection')
+    @api.multi
+    def generate_redirect_warning(self):
+        action = self.env.ref('test_exceptions.action_test_exceptions')
+        raise odoo.exceptions.RedirectWarning('description', action.id, 'Go to the redirection')
 
-    def generate_access_denied(self, cr, uid, ids, context=None):
-        raise openerp.exceptions.AccessDenied()
+    @api.multi
+    def generate_access_denied(self):
+        raise odoo.exceptions.AccessDenied()
 
-    def generate_access_error(self, cr, uid, ids, context=None):
-        raise openerp.exceptions.AccessError('description')
+    @api.multi
+    def generate_access_error(self):
+        raise odoo.exceptions.AccessError('description')
 
-    def generate_exc_access_denied(self, cr, uid, ids, context=None):
+    @api.multi
+    def generate_exc_access_denied(self):
         raise Exception('AccessDenied')
 
-    def generate_undefined(self, cr, uid, ids, context=None):
+    @api.multi
+    def generate_undefined(self):
         self.surely_undefined_symbol
 
-    def generate_user_error(self, cr, uid, ids, context=None):
-        raise UserError('description')
+    @api.multi
+    def generate_user_error(self):
+        raise odoo.exceptions.UserError('description')
 
-    def generate_missing_error(self, cr, uid, ids, context=None):
-        raise openerp.exceptions.MissingError('description')
+    @api.multi
+    def generate_missing_error(self):
+        raise odoo.exceptions.MissingError('description')
 
-    def generate_validation_error(self, cr, uid, ids, context=None):
-        raise openerp.exceptions.ValidationError('description')
+    @api.multi
+    def generate_validation_error(self):
+        raise odoo.exceptions.ValidationError('description')
 
+    @api.multi
+    def generate_except_osv_safe_eval(self):
+        self.generate_safe_eval(self.generate_except_osv)
 
-    def generate_except_osv_safe_eval(self, cr, uid, ids, context=None):
-        self.generate_safe_eval(cr, uid, ids, self.generate_except_osv, context)
+    @api.multi
+    def generate_except_orm_safe_eval(self):
+        self.generate_safe_eval(self.generate_except_orm)
 
-    def generate_except_orm_safe_eval(self, cr, uid, ids, context=None):
-        self.generate_safe_eval(cr, uid, ids, self.generate_except_orm, context)
+    @api.multi
+    def generate_warning_safe_eval(self):
+        self.generate_safe_eval(self.generate_warning)
 
-    def generate_warning_safe_eval(self, cr, uid, ids, context=None):
-        self.generate_safe_eval(cr, uid, ids, self.generate_warning, context)
+    @api.multi
+    def generate_redirect_warning_safe_eval(self):
+        self.generate_safe_eval(self.generate_redirect_warning)
 
-    def generate_redirect_warning_safe_eval(self, cr, uid, ids, context=None):
-        self.generate_safe_eval(cr, uid, ids, self.generate_redirect_warning, context)
+    @api.multi
+    def generate_access_denied_safe_eval(self):
+        self.generate_safe_eval(self.generate_access_denied)
 
-    def generate_access_denied_safe_eval(self, cr, uid, ids, context=None):
-        self.generate_safe_eval(cr, uid, ids, self.generate_access_denied, context)
+    @api.multi
+    def generate_access_error_safe_eval(self):
+        self.generate_safe_eval(self.generate_access_error)
 
-    def generate_access_error_safe_eval(self, cr, uid, ids, context=None):
-        self.generate_safe_eval(cr, uid, ids, self.generate_access_error, context)
+    @api.multi
+    def generate_exc_access_denied_safe_eval(self):
+        self.generate_safe_eval(self.generate_exc_access_denied)
 
-    def generate_exc_access_denied_safe_eval(self, cr, uid, ids, context=None):
-        self.generate_safe_eval(cr, uid, ids, self.generate_exc_access_denied, context)
+    @api.multi
+    def generate_undefined_safe_eval(self):
+        self.generate_safe_eval(self.generate_undefined)
 
-    def generate_undefined_safe_eval(self, cr, uid, ids, context=None):
-        self.generate_safe_eval(cr, uid, ids, self.generate_undefined, context)
+    @api.multi
+    def generate_user_error_safe_eval(self):
+        self.generate_safe_eval(self.generate_user_error)
 
-    def generate_user_error_safe_eval(self, cr, uid, ids, context=None):
-        self.generate_safe_eval(cr, uid, ids, self.generate_user_error, context)
+    @api.multi
+    def generate_missing_error_safe_eval(self):
+        self.generate_safe_eval(self.generate_missing_error)
 
-    def generate_missing_error_safe_eval(self, cr, uid, ids, context=None):
-        self.generate_safe_eval(cr, uid, ids, self.generate_missing_error, context)
+    @api.multi
+    def generate_validation_error_safe_eval(self):
+        self.generate_safe_eval(self.generate_validation_error)
 
-    def generate_validation_error_safe_eval(self, cr, uid, ids, context=None):
-        self.generate_safe_eval(cr, uid, ids, self.generate_validation_error, context)
-
-
-    def generate_safe_eval(self, cr, uid, ids, f, context):
-        globals_dict = { 'generate': lambda *args: f(cr, uid, ids, context) }
-        openerp.tools.safe_eval.safe_eval("generate()", mode='exec', globals_dict=globals_dict)
+    @api.multi
+    def generate_safe_eval(self, f):
+        globals_dict = { 'generate': f }
+        safe_eval("generate()", mode='exec', globals_dict=globals_dict)
