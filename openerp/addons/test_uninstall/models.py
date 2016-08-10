@@ -1,21 +1,19 @@
 # -*- coding: utf-8 -*-
-import openerp
-from openerp.osv import fields
-from openerp.osv.orm import Model
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-class test_uninstall_model(Model):
+from openerp import models, fields
+
+class test_uninstall_model(models.Model):
     """
     This model uses different types of columns to make it possible to test
-    the uninstall feature of OpenERP.
+    the uninstall feature of Odoo.
     """
     _name = 'test_uninstall.model'
 
-    _columns = {
-        'name': fields.char('Name'),
-        'ref': fields.many2one('res.users', string='User'),
-        'rel': fields.many2many('res.users', string='Users'),
-    }
+    name = fields.Char('Name')
+    ref = fields.Many2one('res.users', string='User')
+    rel = fields.Many2many('res.users', string='Users')
 
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'Each name must be unique.')
+        ('name_uniq', 'unique (name)', 'Each name must be unique.'),
     ]
