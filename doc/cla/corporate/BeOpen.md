@@ -8,8 +8,8 @@ declaration.
 
 Signed,
 
-Kim Huysmans kim.huysmans@telenet.be https://github.com/huysmki
+Kim Huysmans kim.huysmans@rhea.be https://github.com/huysmki
 
 List of contributors:
 
-Kim Huysmans kim.huysmans@telenet.be https://github.com/huysmki
+Kim Huysmans kim.huysmans@rhea.be https://github.com/huysmki
