@@ -55,11 +55,13 @@ class account_invoice_line(osv.osv):
         asset_obj.write(cr, SUPERUSER_ID, asset_ids, {'active': False})
         for line in lines:
             if line.asset_category_id:
+                #FORWARDPORT UP TO SAAS-6
+                sign = -1 if line.invoice_id.type in ("in_refund", 'out_refund') else 1
                 vals = {
                     'name': line.name,
                     'code': line.invoice_id.number or False,
                     'category_id': line.asset_category_id.id,
-                    'purchase_value': line.price_subtotal,
+                    'purchase_value': sign * line.price_subtotal,
                     'partner_id': line.invoice_id.partner_id.id,
                     'company_id': line.invoice_id.company_id.id,
                     'currency_id': line.invoice_id.currency_id.id,
