@@ -54,9 +54,8 @@ class ReportController(Controller):
     @route(['/report/barcode', '/report/barcode/<type>/<path:value>'],
            type='http', auth="user")
     def report_barcode(self, type, value, barmargin=0, backgroundcolor='FFFFFF',
-                       barcolor='000000', textalign=None, textfont='Arial',
-                       textsize=11, textmargin=None, width=600, height=100,
-                       humanreadable=0):
+                       barcolor='000000', textalign=None, textmargin=None,
+                       width=600, height=100, scale=2.0, humanreadable=0):
         """Controller able to render barcode images thanks to reportlab.
         Samples:
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
@@ -73,18 +72,16 @@ class ReportController(Controller):
         :param barcolor: Accepted hex color codes: from 000000 to FFFFFF
         :param textalign: Accepted values: left, center or right. Used to specify where to
         horizontally position the text.
-        :param textfont: Accepted values: Arial, Courier, Monospace, Times
-        :param textsize: Accepted values: from 0 to 100
         :param textmargin: Accepted positive and negative values
+        :param scale: Accepted value: float number to set the image scale
         :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
         at the bottom of the output image
         """
         try:
             barcode = request.registry['report'].barcode(
                 type, value, barmargin=barmargin, backgroundcolor=backgroundcolor,
-                barcolor=barcolor, textalign=textalign, textfont=textfont,
-                textsize=textsize, textmargin=textmargin, width=width, height=height,
-                humanreadable=humanreadable)
+                barcolor=barcolor, textalign=textalign, textmargin=textmargin,
+                width=width, height=height, scale=scale, humanreadable=humanreadable)
         except (ValueError, AttributeError):
             raise exceptions.HTTPException(description='Cannot convert into barcode.')
 

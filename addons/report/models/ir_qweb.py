@@ -21,7 +21,7 @@ class IrQwebFieldBarcode(models.AbstractModel):
             value,
             **dict((key, value) for key, value in options.items() if key in [
                 'barmargin', 'backgroundcolor', 'barcolor', 'textalign',
-                'textfont', 'textsize', 'textmargin', 'width', 'height', 'humanreadable']))
+                'textmargin', 'width', 'height', 'scale', 'humanreadable']))
         return unicodifier('<img src="data:%s;base64,%s">' % ('png', barcode.encode('base64')))
 
     @api.model

@@ -555,24 +555,21 @@ class Report(models.Model):
 
         return merged_file_path
 
-    def barcode(self, barcode_type, value, barmargin=0,
-                    backgroundcolor='FFFFFF',
-                    barcolor='000000', textalign=None, textfont='Arial',
-                    textsize=11, textmargin=None, width=600, height=100,
-                    humanreadable=0):
+    def barcode(self, barcode_type, value, barmargin=0, backgroundcolor='FFFFFF',
+                barcolor='000000', textalign=None, textmargin=None, width=600,
+                height=100, scale=2.0, humanreadable=0):
         if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
             barcode_type = 'EAN13'
             if len(value) in (11, 12):
                 value = '0%s' % value
         try:
-            width, height, margin, humanreadable = int(
-                width), int(height), int(barmargin), bool(int(
+            width, height, scale, margin, humanreadable = int(
+                width), int(height), float(scale), int(barmargin), bool(int(
                 humanreadable))
             opts = dict(barcolor=barcolor, backgroundcolor=backgroundcolor)
 
             if humanreadable:
-                opts.update(includetext=True, textfont=textfont,
-                            textsize=textsize)
+                opts.update(includetext=True)
                 if textalign:
                     opts.update(textxalign=textalign)
                 if textmargin:
@@ -580,8 +577,8 @@ class Report(models.Model):
                     opts.update(textxoffset=textmargin)
 
             barcode_out = cStringIO.StringIO()
-            barcode_img = barcode(barcode_type, str(value), opts, width=width,
-                                  height=height, margin=margin)
+            barcode_img = barcode(barcode_type, str(value), opts, scale=scale, margin=margin)
+            barcode_img = barcode_img.resize((width, height))
             barcode_img.save(barcode_out, "png", resolution=100.0)
 
             return barcode_out.getvalue()
