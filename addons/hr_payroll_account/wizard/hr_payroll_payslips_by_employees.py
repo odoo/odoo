@@ -11,4 +11,4 @@ class HrPayslipEmployees(models.TransientModel):
         journal_id = False
         if self.env.context.get('active_id'):
             journal_id = self.env['hr.payslip.run'].browse(self.env.context.get('active_id')).journal_id.id
-        return super(HrPayslipEmployees, self).with_context(journal_id=journal_id).compute_sheet()
+        return super(HrPayslipEmployees, self.with_context(journal_id=journal_id)).compute_sheet()
