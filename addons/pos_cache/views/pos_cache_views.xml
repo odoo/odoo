@@ -6,11 +6,11 @@
             <field name="model">pos.config</field>
             <field name="inherit_id" ref="point_of_sale.view_pos_config_form" />
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='set_deprecate']" position="after">
-                    <button name='delete_cache' type="object" string="Recompute cache"/>
-                </xpath>
-                <xpath expr="//field[@name='sequence_id']" position="after">
+                <xpath expr="//field[@name='currency_id']" position="after">
                     <field name='oldest_cache_time'/>
+                    <button name='delete_cache' type="object"
+                        string="Invalidate cache"
+                        attrs="{'invisible': [('oldest_cache_time', '=', False)]}"/>
                 </xpath>
             </field>
         </record>
