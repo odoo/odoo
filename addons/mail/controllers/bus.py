@@ -18,7 +18,7 @@ class MailChatController(openerp.addons.bus.controllers.main.BusController):
     # --------------------------
     # Extends BUS Controller Poll
     # --------------------------
-    def _poll(self, dbname, channels, last, options):
+    def _get_channels(self, channels):
         if request.session.uid:
             partner_id = request.env.user.partner_id.id
 
@@ -28,7 +28,7 @@ class MailChatController(openerp.addons.bus.controllers.main.BusController):
                 # personal and needaction channel
                 channels.append((request.db, 'res.partner', partner_id))
                 channels.append((request.db, 'ir.needaction', partner_id))
-        return super(MailChatController, self)._poll(dbname, channels, last, options)
+        return super(MailChatController, self)._get_channels(channels)
 
     # --------------------------
     # Anonymous routes (Common Methods)

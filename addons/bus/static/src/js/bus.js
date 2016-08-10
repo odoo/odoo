@@ -18,11 +18,10 @@ bus.Bus = Widget.extend({
         var self = this;
         this._super();
         this.options = {};
-        this.activated = false;
         this.channels = [];
         this.last = 0;
-        this.stop = false;
         this.is_master = true;
+        this.source = null;
 
         // bus presence
         this.last_presence = new Date().getTime();
@@ -43,57 +42,42 @@ bus.Bus = Widget.extend({
         });
     },
     start_polling: function(){
-        if(!this.activated){
-            this.poll();
-            this.stop = false;
+        if (!this.source) {
+            // TODO: pass channels, options
+            // var data = {channels: self.channels, options: options};
+            var s = this.source = new EventSource('/longpolling/stream?channels=' + this.channels.join(','));
+            // TODO: do something on s.onerror?
+            s.onmessage = function (e) {
+                this.on_notification(JSON.parse(e.data));
+            }.bind(this);
         }
+    },
+    restart_polling: function () {
+        if (this.source) {
+            this.source.close();
+            this.source = null;
+        }
+        this.start_polling();
     },
     stop_polling: function(){
-        this.activated = false;
-        this.stop = true;
+        if (this.source) {
+            this.source.close();
+            this.source = null;
+        }
         this.channels = [];
     },
-    poll: function() {
-        var self = this;
-        self.activated = true;
-        var now = new Date().getTime();
-        var options = _.extend({}, this.options, {
-            bus_inactivity: now - this.get_last_presence(),
-        });
-        if (this.last_partners_presence_check + PARTNERS_PRESENCE_CHECK_PERIOD > now) {
-            options = _.omit(options, 'bus_presence_partner_ids');
-        } else {
-            this.last_partners_presence_check = now;
-        }
-        var data = {channels: self.channels, last: self.last, options: options};
-        session.rpc('/longpolling/poll', data, {shadow : true}).then(function(result) {
-            self.on_notification(result);
-            if(!self.stop){
-                self.poll();
-            }
-        }, function(unused, e) {
-            // no error popup if request is interrupted or fails for any reason
-            e.preventDefault();
-            // random delay to avoid massive longpolling
-            setTimeout(_.bind(self.poll, self), bus.ERROR_DELAY + (Math.floor((Math.random()*20)+1)*1000));
-        });
+    on_notification: function(notification) {
+        this.trigger("notification", notification);
     },
-    on_notification: function(notifications) {
-        var self = this;
-        var notifs = _.map(notifications, function (notif) {
-            if (notif.id > self.last) {
-                self.last = notif.id;
-            }
-            return [notif.channel, notif.message];
-        });
-        this.trigger("notification", notifs);
-    },
+    // reconnect with different channels
     add_channel: function(channel){
         this.channels.push(channel);
         this.channels = _.uniq(this.channels);
+        this.restart_polling();
     },
     delete_channel: function(channel){
         this.channels = _.without(this.channels, channel);
+        this.restart_polling();
     },
     // bus presence : window focus/unfocus
     focus_change: function(focus) {
@@ -175,45 +159,35 @@ var CrossTabBus = bus.Bus.extend({
             this._super.apply(this, arguments);
         }
      },
-    on_notification: function(notifications){
+    on_notification: function(notification){
         if(this.is_master) { // broadcast to other tabs
             var last = getItem('bus.last', -1);
-            var max_id = Math.max(last, 0);
-            var new_notifications = _.filter(notifications, function (notif) {
-                max_id = Math.max(max_id, notif.id);
-                return notif.id < 0 || notif.id > last;
-            });
-            this.last = max_id;
-            if (new_notifications.length) {
-                setItem('bus.last', max_id);
-                setItem('bus.last_ts', new Date().getTime());
-                setItem('bus.notification', new_notifications);
-                this._super(new_notifications);
+            if (notification.id >= 0 && notification.id <= last) {
+                return;
             }
-        } else {
-            this._super.apply(this, arguments);
+
+            setItem('bus.last', Math.max(0, last, notification.id));
+            setItem('bus.last_ts', new Date().getTime());
+            setItem('bus.notification', JSON.stringify(notification));
         }
+        return this._super(notification);
     },
     on_storage: function (e) {
-        // use the value of event to not read from
-        // localStorage (avoid race condition)
-        var value = e.newValue;
-        // notifications changed
-        if(e.key === 'bus.notification'){
-            var notifs = JSON.parse(value);
-            this.on_notification(notifs);
-        }
-        // update channels
-        if(e.key === 'bus.channels'){
-            this.channels = JSON.parse(value);
-        }
-        // update options
-        if(e.key === 'bus.options'){
-            this.options = JSON.parse(value);
-        }
-        // update focus
-        if(e.key === 'bus.focus'){
-            this.set('window_focus', JSON.parse(value));
+        // use the event-provided value rather than read from localStorage to
+        // avoid possible race condition
+        switch (e.key) {
+        case 'bus.notification':
+            this.on_notification(JSON.parse(e.newValue));
+            break;
+        case 'bus.channels':
+            this.channels = JSON.parse(e.newValue);
+            break;
+        case 'bus.options':
+            this.options = JSON.parse(e.newValue);
+            break;
+        case 'bus.focus':
+            this.set('window_focus', JSON.parse(e.newValue));
+            break;
         }
     },
     add_channel: function(){

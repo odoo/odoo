@@ -422,36 +422,6 @@ var channel_seen = _.throttle(function (channel) {
 
 // Notification handlers
 // ---------------------------------------------------------------------------------
-function on_notification (notifications) {
-    // sometimes, the web client receives unsubscribe notification and an extra
-    // notification on that channel.  This is then followed by an attempt to
-    // rejoin the channel that we just left.  The next few lines remove the
-    // extra notification to prevent that situation to occur.
-    var unsubscribed_notif = _.find(notifications, function (notif) {
-        return notif[1].info === "unsubscribe";
-    });
-    if (unsubscribed_notif) {
-        notifications = _.reject(notifications, function (notif) {
-            return notif[0][1] === "mail.channel" && notif[0][2] === unsubscribed_notif[1].id;
-        });
-    }
-    _.each(notifications, function (notification) {
-        var model = notification[0][1];
-        if (model === 'ir.needaction') {
-            // new message in the inbox
-            on_needaction_notification(notification[1]);
-        } else if (model === 'mail.channel') {
-            // new message in a channel
-            on_channel_notification(notification[1]);
-        } else if (model === 'res.partner') {
-            // channel joined/left, message marked as read/(un)starred, chat open/closed
-            on_partner_notification(notification[1]);
-        } else if (model === 'bus.presence') {
-            // update presence of users
-            on_presence_notification(notification[1]);
-        }
-    });
-}
 
 function on_needaction_notification (message) {
     message = add_message(message, {
@@ -631,6 +601,17 @@ function on_transient_message_notification (data) {
     data.id = (last_message ? last_message.id : 0) + 0.01;
     data.author_id = data.author_id || ODOOBOT_ID;
     add_message(data);
+}
+
+var HANDLERS = {
+    'ir.needaction': on_needaction_notification,
+    'mail.channel': on_channel_notification,
+    'res.partner': on_partner_notification,
+    'bus.presence': on_presence_notification,
+};
+function on_notification (notification) {
+    var handler = HANDLERS[notification.channel[1]] || _.noop;
+    handler(notification.message);
 }
 
 // Public interface

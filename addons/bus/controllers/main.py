@@ -1,39 +1,68 @@
 # -*- coding: utf-8 -*-
-import openerp
-from openerp.http import request
+import json
+import random
+
+from openerp import api, http
 from openerp.addons.bus.models.bus import dispatch
 
+KEEPALIVES = [
+    "Hellooo.",
+    "Searching.",
+    "Canvassing.",
+    "Sentry mode activated.",
+    "Is anyone there?",
+    "Could you come over here?",
+]
 
-class BusController(openerp.http.Controller):
-    """ Examples:
-    openerp.jsonRpc('/longpolling/poll','call',{"channels":["c1"],last:0}).then(function(r){console.log(r)});
-    openerp.jsonRpc('/longpolling/send','call',{"channel":"c1","message":"m1"});
-    openerp.jsonRpc('/longpolling/send','call',{"channel":"c2","message":"m2"});
-    """
+class BusController(http.Controller):
+    # EventSource implementation
+    @http.route('/longpolling/stream', type='http', auth='public')
+    def stream(self, channels):
+        if http.request.registry.in_test_mode():
+            return http.Response(
+                ": test mode, retry tomorrow (~never)\n\n"
+                "retry: 86400000\n\n",
+                mimetype='text/event-stream'
+            )
 
-    @openerp.http.route('/longpolling/send', type="json", auth="public")
-    def send(self, channel, message):
-        if not isinstance(channel, basestring):
-            raise Exception("bus.Bus only string channels are allowed.")
-        return request.env['bus.bus'].sendone(channel, message)
+        channels = self._get_channels(channels.split(','))
 
-    # override to add channels
-    def _poll(self, dbname, channels, last, options):
-        # update the user presence
-        if request.session.uid and 'bus_inactivity' in options:
-            request.env['bus.presence'].update(options.get('bus_inactivity'))
-        request.cr.close()
-        request._cr = None
-        return dispatch.poll(dbname, channels, last, options)
+        db = http.request.db
+        last = int(http.request.httprequest.headers.get('Last-Event-Id') or 0)
 
-    @openerp.http.route('/longpolling/poll', type="json", auth="public")
-    def poll(self, channels, last, options=None):
-        if options is None:
-            options = {}
-        if not dispatch:
-            raise Exception("bus.Bus unavailable")
-        if [c for c in channels if not isinstance(c, basestring)]:
-            raise Exception("bus.Bus only string channels are allowed.")
-        if request.registry.in_test_mode():
-            raise openerp.exceptions.UserError("bus.Bus not available in test mode")
-        return self._poll(request.db, channels, last, options)
+        http.request.cr.close()
+        http.request._cr = None
+        return http.Response(
+            self._get_events_stream(db, channels, last),
+            mimetype='text/event-stream'
+        )
+
+    def _get_channels(self, cs):
+        return cs
+
+    def _get_events_stream(self, db, channels, last):
+        # first set random retry delay (between 0.1s and 10s) to mitigate stampedes
+        yield 'retry: {}\n\n'.format(random.randint(100, 10000))
+
+        while True:
+            with api.Environment.manage():
+                notifications = dispatch.poll(
+                    dbname=db,
+                    channels=channels,
+                    last=last,
+                    timeout=15,
+                )
+
+            if notifications:
+                for n in notifications:
+                    # update last event seen so next round doesn't try to
+                    # re-fetch messages we've already seen
+                    last = max(last, n['id'])
+                    if n['id'] != -1:  # ignore id for presence messages
+                        yield 'id: {}\n'.format(n['id'])
+                    yield 'data: {}\n\n'.format(json.dumps(n))
+            else:
+                # timeout, just send a keepalive comment to the client so they
+                # don't close the connection
+                yield ': {}\n\n'.format(random.choice(KEEPALIVES))
+
