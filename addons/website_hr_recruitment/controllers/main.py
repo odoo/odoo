@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-import base64
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
-from openerp import http
-from openerp.tools.translate import _
-from openerp.http import request
+from odoo import http, _
+from odoo.addons.website.models.website import slug
+from odoo.http import request
 
-from openerp.addons.website.models.website import slug
 
-class website_hr_recruitment(http.Controller):
+class WebsiteHrRecruitment(http.Controller):
     @http.route([
         '/jobs',
         '/jobs/country/<model("res.country"):country>',

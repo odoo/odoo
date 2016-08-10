@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import re
 
-from openerp import _, api, fields, models, SUPERUSER_ID
-from openerp import tools
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import _, api, fields, models, SUPERUSER_ID, tools
+from odoo.tools.safe_eval import safe_eval as eval
 
 
 # main mako-like expression pattern

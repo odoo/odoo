@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import itertools
 
-from openerp import tools
-from openerp import models, fields, api
+from odoo import models, fields, api
 
 MAGIC_FIELDS = ["id", "create_uid", "create_date", "write_uid", "write_date", "__last_update"]
 

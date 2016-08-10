@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, models
+from odoo import api, models
 
 
 class MrpBomCost(models.AbstractModel):
@@ -45,4 +45,4 @@ class MrpBomCost(models.AbstractModel):
     def render_html(self, docids, data=None):
         boms = self.env['mrp.bom'].browse(docids)
         res = self.get_lines(boms)
-        return self.env['report'].render('mrp.mrp_bom_cost', {'lines': res})
+        return self.env['report'].render('mrp.mrp_bom_cost_report', {'lines': res})

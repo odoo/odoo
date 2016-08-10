@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 <data>
-<template id="report_mrpbomstructure">
+<template id="mrp_bom_structure_report">
     <t t-call="report.html_container">
         <t t-call="report.internal_layout">
             <div class="page">
@@ -36,7 +36,7 @@
                                     <span t-esc="l['pname']"/>
                                 </td>
                                 <td>
-                                    <span t-esc="formatLang(l['pqty'])"/>
+                                    <span t-esc="l['pqty']"/>
                                     <span t-esc="l['uname']" groups="product.group_uom"/>
                                 </td>
                                 <td>
@@ -51,4 +51,4 @@
     </t>
 </template>
 </data>
-</openerp>
+</odoo>

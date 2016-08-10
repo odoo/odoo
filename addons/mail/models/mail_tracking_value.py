@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import datetime
 
-from openerp import api, fields, models, tools
+from odoo import api, fields, models, tools
 
 
 class MailTracking(models.Model):

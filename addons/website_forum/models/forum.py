@@ -1,21 +1,17 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 import itertools
 import logging
 import math
 import re
 import uuid
+
+from datetime import datetime
 from werkzeug.exceptions import Forbidden
 
-from openerp import _
-from openerp import api, fields, models
-from openerp import http
-from openerp import modules
-from openerp import tools
-from openerp import SUPERUSER_ID
-from openerp.addons.website.models.website import slug
-from openerp.exceptions import UserError, ValidationError
+from odoo import api, fields, models, modules, tools, SUPERUSER_ID, _
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -684,13 +680,14 @@ class Post(models.Model):
                 Vote.create({'post_id': post_id, 'vote': new_vote})
         return {'vote_count': self.vote_count, 'user_vote': new_vote}
 
-    @api.one
+    @api.multi
     def convert_answer_to_comment(self):
         """ Tools to convert an answer (forum.post) to a comment (mail.message).
         The original post is unlinked and a new comment is posted on the question
         using the post create_uid as the comment's author. """
+        self.ensure_one()
         if not self.parent_id:
-            return False
+            return self.env['mail.message']
 
         # karma-based action check: use the post field that computed own/all value
         if not self.can_comment_convert:
@@ -705,7 +702,7 @@ class Post(models.Model):
             'subtype': 'mail.mt_comment',
             'date': self.create_date,
         }
-        new_message = self.browse(question.id).with_context(mail_create_nosubscribe=True).message_post(**values)
+        new_message = question.with_context(mail_create_nosubscribe=True).message_post(**values)
 
         # unlink the original answer, using SUPERUSER_ID to avoid karma issues
         self.sudo().unlink()
@@ -790,23 +787,14 @@ class Post(models.Model):
             res[category]['button_access'] = {'url': access_action, 'title': '%s %s' % (_('View'), self.post_type)}
         return res
 
-    @api.cr_uid_ids_context
-    def message_post(self, cr, uid, thread_id, message_type='notification', subtype=None, context=None, **kwargs):
-        if thread_id and message_type == 'comment':  # user comments have a restriction on karma
-            if isinstance(thread_id, (list, tuple)):
-                post_id = thread_id[0]
-            else:
-                post_id = thread_id
-            post = self.browse(cr, uid, post_id, context=context)
-            # TDE FIXME: trigger browse because otherwise the function field is not compted - check with RCO
-            tmp1, tmp2 = post.karma_comment, post.can_comment
-            user = self.pool['res.users'].browse(cr, uid, uid)
-            tmp3 = user.karma
-            # TDE END FIXME
-            if not post.can_comment:
+    @api.multi
+    def message_post(self, message_type='notification', subtype=None, **kwargs):
+        if self.ids and message_type == 'comment':  # user comments have a restriction on karma
+            self.ensure_one()
+            if not self.can_comment:
                 raise KarmaError('Not enough karma to comment')
-            kwargs['record_name'] = kwargs.get('record_name') or post.parent_id and post.parent_id.name
-        return super(Post, self).message_post(cr, uid, thread_id, message_type=message_type, subtype=subtype, context=context, **kwargs)
+            kwargs['record_name'] = kwargs.get('record_name') or self.parent_id and self.parent_id.name
+        return super(Post, self).message_post(message_type=message_type, subtype=subtype, **kwargs)
 
 
 class PostReason(models.Model):

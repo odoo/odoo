@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from email.utils import formataddr
 
 import re
 import uuid
 
-from openerp import _, api, fields, models, modules, tools
-from openerp.exceptions import UserError
-from openerp.osv import expression
-from openerp.tools import ormcache
-from openerp.tools.safe_eval import safe_eval as eval
-
+from odoo import _, api, fields, models, modules, tools
+from odoo.exceptions import UserError
+from odoo.osv import expression
+from odoo.tools import ormcache
+from odoo.tools.safe_eval import safe_eval as eval
 
 
 class ChannelPartner(models.Model):

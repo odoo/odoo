@@ -1,5 +1,10 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.api import Environment
+
 import odoo.tests
-from openerp.api import Environment
+
 
 class TestUi(odoo.tests.HttpCase):
     def test_01_pos_basic_order(self):

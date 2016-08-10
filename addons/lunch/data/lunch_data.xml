@@ -5,8 +5,8 @@
         <field name="model_id" ref="model_lunch_order_line"/>
         <field name="state">code</field>
         <field name="code">
-            if context.get('active_ids'):
-                self.order(cr, uid, context['active_ids'], context=context)
+if env.context.get('active_ids'):
+    model.browse(context['active_ids']).order()
         </field>
     </record>
 
@@ -24,8 +24,8 @@
         <field name="model_id" ref="model_lunch_order_line"/>
         <field name="state">code</field>
         <field name="code">
-            if context.get('active_ids'):
-                self.confirm(cr, uid, context['active_ids'], context=context)
+if env.context.get('active_ids'):
+    model.browse(context['active_ids']).confirm()
         </field>
     </record>
 
@@ -43,8 +43,8 @@
         <field name="model_id" ref="model_lunch_order_line"/>
         <field name="state">code</field>
         <field name="code">
-            if context.get('active_ids'):
-                self.cancel(cr, uid, context['active_ids'], context=context)
+if env.context.get('active_ids'):
+    model.browse(context['active_ids']).cancel()
         </field>
     </record>
 

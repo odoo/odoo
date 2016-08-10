@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 import re
 import unicodedata
 
-from openerp import _, api, fields, models, SUPERUSER_ID
-from openerp.exceptions import ValidationError
-from openerp.modules.registry import RegistryManager
-from openerp.tools import ustr
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
+from odoo.tools import ustr
+from odoo.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 

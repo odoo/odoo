@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, models, fields
-from openerp import tools
+from odoo import api, models, fields
+from odoo import tools
 
 
-class report_event_registration(models.Model):
+class ReportEventRegistration(models.Model):
     """Events Analysis"""
     _name = "report.event.registration"
     _order = 'event_date desc'
