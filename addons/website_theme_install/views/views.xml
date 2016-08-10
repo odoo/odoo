@@ -62,7 +62,7 @@
         <field name="name">Choose Your Theme Todo Action</field>
         <field name="model_id" ref="model_ir_module_module"/>
         <field name="code">
-self.update_list(cr, uid, context=context)
+model.update_list()
 action = {
     'type': 'ir.actions.act_url',
     'url': '/web?reload#action=website_theme_install.theme_install_kanban_action', # the ?reload option is there to fool the webclient into thinking it is a different location and so to force a reload
