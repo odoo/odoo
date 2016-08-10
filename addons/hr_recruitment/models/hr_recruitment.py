@@ -111,19 +111,19 @@ class Applicant(models.Model):
                            help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact")
-    create_date = fields.Datetime("Creation Date", readonly=True, select=True)
+    create_date = fields.Datetime("Creation Date", readonly=True, index=True)
     write_date = fields.Datetime("Update Date", readonly=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', track_visibility='onchange',
-                               domain="[('job_ids', '=', job_id)]", copy=False, select=1,
+                               domain="[('job_ids', '=', job_id)]", copy=False, index=True,
                                default=_default_stage_id)
     last_stage_id = fields.Many2one('hr.recruitment.stage', "Last Stage",
                                     help="Stage of the applicant before being in the current stage. Used for lost cases analysis.")
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
     company_id = fields.Many2one('res.company', "Company", default=_default_company_id)
     user_id = fields.Many2one('res.users', "Responsible", track_visibility="onchange", default=lambda self: self.env.uid)
-    date_closed = fields.Datetime("Closed", readonly=True, select=True)
-    date_open = fields.Datetime("Assigned", readonly=True, select=True)
-    date_last_stage_update = fields.Datetime("Last Stage Update", select=True, default=fields.Datetime.now)
+    date_closed = fields.Datetime("Closed", readonly=True, index=True)
+    date_open = fields.Datetime("Assigned", readonly=True, index=True)
+    date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     date_action = fields.Date("Next Action Date")
     title_action = fields.Char("Next Action", size=64)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')

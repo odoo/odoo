@@ -102,8 +102,8 @@ class AccountVoucher(models.Model):
     pay_now = fields.Selection([
             ('pay_now', 'Pay Directly'),
             ('pay_later', 'Pay Later'),
-        ], 'Payment', select=True, readonly=True, states={'draft': [('readonly', False)]}, default='pay_later')
-    date_due = fields.Date('Due Date', readonly=True, select=True, states={'draft': [('readonly', False)]})
+        ], 'Payment', index=True, readonly=True, states={'draft': [('readonly', False)]}, default='pay_later')
+    date_due = fields.Date('Due Date', readonly=True, index=True, states={'draft': [('readonly', False)]})
 
     @api.onchange('partner_id', 'pay_now')
     def onchange_partner_id(self):
