@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api
-from openerp.tests import HttpCase
-from openerp.tests.common import TransactionCase
-from openerp.modules.module import get_resource_path
-from openerp.addons.base.ir.ir_qweb import AssetsBundle
-
 from collections import Counter
 from os import utime
 import time
+
+from odoo import api
+from odoo.addons.base.ir.ir_qweb import AssetsBundle
+from odoo.modules.module import get_resource_path
+from odoo.tests import HttpCase
+from odoo.tests.common import TransactionCase
 
 
 class TestJavascriptAssetsBundle(TransactionCase):
@@ -27,7 +27,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
         """ Returns all ir.attachments associated to a bundle, regardless of the verion.
         """
         bundle = self.jsbundle_xmlid if type == 'js' else self.cssbundle_xmlid
-        return self.registry['ir.attachment'].search(self.cr, self.uid,[
+        return self.env['ir.attachment'].search([
             ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(bundle, type))
         ])
 
@@ -58,7 +58,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
         self.assertEquals(len(self._any_ira_for_bundle('js')), 1)
 
         version0 = bundle0.version
-        ira0 = self.registry['ir.attachment'].browse(self.cr, self.uid, self._any_ira_for_bundle('js')[0])
+        ira0 = self._any_ira_for_bundle('js')
         date0 = ira0.create_date
 
         bundle1 = self._get_asset(self.jsbundle_xmlid)
@@ -67,7 +67,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
         self.assertEquals(len(self._any_ira_for_bundle('js')), 1)
 
         version1 = bundle1.version
-        ira1 = self.registry['ir.attachment'].browse(self.cr, self.uid, self._any_ira_for_bundle('js')[0])
+        ira1 = self._any_ira_for_bundle('js')
         date1 = ira1.create_date
 
         self.assertEquals(version0, version1)
@@ -113,15 +113,15 @@ class TestJavascriptAssetsBundle(TransactionCase):
             </xpath>
         </data>
         """
-        bundle_id = self.browse_ref(self.jsbundle_xmlid).id
-        newid = self.registry['ir.ui.view'].create(self.cr, self.uid, {
+        bundle = self.browse_ref(self.jsbundle_xmlid)
+        view = self.env['ir.ui.view'].create({
             'name': 'test bundle inheritance',
             'type': 'qweb',
             'arch': view_arch,
-            'inherit_id': bundle_id,
+            'inherit_id': bundle.id,
         })
 
-        bundle1 = self._get_asset(self.jsbundle_xmlid, env=self.env(context={'check_view_ids': [newid]}))
+        bundle1 = self._get_asset(self.jsbundle_xmlid, env=self.env(context={'check_view_ids': view.ids}))
         bundle1.js()
         files1 = bundle1.files
         remains1 = bundle1.remains
@@ -180,11 +180,9 @@ class TestJavascriptAssetsBundle(TransactionCase):
         self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
 
         version0 = bundle0.version
-        ira0 = self.registry['ir.attachment'].browse(self.cr, self.uid, self._any_ira_for_bundle('css')[0])
+        ira0, ira1, ira2 = self._any_ira_for_bundle('css')
         date0 = ira0.create_date
-        ira1 = self.registry['ir.attachment'].browse(self.cr, self.uid, self._any_ira_for_bundle('css')[1])
         date1 = ira1.create_date
-        ira2 = self.registry['ir.attachment'].browse(self.cr, self.uid, self._any_ira_for_bundle('css')[2])
         date2 = ira2.create_date
 
         bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
@@ -193,11 +191,9 @@ class TestJavascriptAssetsBundle(TransactionCase):
         self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
 
         version1 = bundle1.version
-        ira3 = self.registry['ir.attachment'].browse(self.cr, self.uid, self._any_ira_for_bundle('css')[0])
+        ira3, ira4, ira5 = self._any_ira_for_bundle('css')
         date3 = ira1.create_date
-        ira4 = self.registry['ir.attachment'].browse(self.cr, self.uid, self._any_ira_for_bundle('css')[1])
         date4 = ira1.create_date
-        ira5 = self.registry['ir.attachment'].browse(self.cr, self.uid, self._any_ira_for_bundle('css')[2])
         date5 = ira1.create_date
 
         self.assertEquals(version0, version1)
@@ -246,15 +242,15 @@ class TestJavascriptAssetsBundle(TransactionCase):
             </xpath>
         </data>
         """
-        bundle_id = self.browse_ref(self.cssbundle_xmlid).id
-        newid = self.registry['ir.ui.view'].create(self.cr, self.uid, {
+        bundle = self.browse_ref(self.cssbundle_xmlid)
+        view = self.env['ir.ui.view'].create({
             'name': 'test bundle inheritance',
             'type': 'qweb',
             'arch': view_arch,
-            'inherit_id': bundle_id,
+            'inherit_id': bundle.id,
         })
 
-        bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'check_view_ids': [newid], 'max_css_rules': 1}))
+        bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'check_view_ids': view.ids, 'max_css_rules': 1}))
         bundle1.css()
         files1 = bundle1.files
         remains1 = bundle1.remains
@@ -296,7 +292,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
         self.assertEquals(len(self._any_ira_for_bundle('css')), 1)
 
         # duplicate the asset bundle
-        ira0 = self.registry['ir.attachment'].browse(self.cr, self.uid, self._any_ira_for_bundle('css')[0])
+        ira0 = self._any_ira_for_bundle('css')
         ira1 = ira0.copy()
         self.assertEquals(len(self._any_ira_for_bundle('css')), 2)
         self.assertEquals(ira0.store_fname, ira1.store_fname)
@@ -329,7 +325,7 @@ class TestAssetsBundleInBrowser(HttpCase):
                 </xpath>
             </data>
             """
-            self.registry['ir.ui.view'].create(test_cursor, self.uid, {
+            self.env(cr=test_cursor)['ir.ui.view'].create({
                 'name': 'test bundle inheritance inline js',
                 'type': 'qweb',
                 'arch': view_arch,
