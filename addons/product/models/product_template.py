@@ -110,6 +110,9 @@ class ProductTemplate(models.Model):
 
     attribute_line_ids = fields.One2many('product.attribute.line', 'product_tmpl_id', 'Product Attributes')
     product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', required=True)
+    # performance: product_variant_id provides prefetching on the first product variant only
+    product_variant_id = fields.Many2one('product.product', 'Product', compute='_compute_product_variant_id')
+
     product_variant_count = fields.Integer(
         '# Product Variants', compute='_compute_product_variant_count')
 
@@ -135,6 +138,11 @@ class ProductTemplate(models.Model):
         help="Small-sized image of the product. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
+
+    @api.depends('product_variant_ids')
+    def _compute_product_variant_id(self):
+        for p in self:
+            p.product_variant_id = p.product_variant_ids[:1].id
 
     @api.multi
     def _compute_currency_id(self):
@@ -181,7 +189,7 @@ class ProductTemplate(models.Model):
     def _compute_standard_price(self):
         unique_variants = self.filtered(lambda template: template.product_variant_count == 1)
         for template in unique_variants:
-            template.standard_price = template.product_variant_ids[0].standard_price
+            template.standard_price = template.product_variant_id.standard_price
         for template in (self - unique_variants):
             template.standard_price = 0.0
 
@@ -198,7 +206,7 @@ class ProductTemplate(models.Model):
     def _compute_volume(self):
         unique_variants = self.filtered(lambda template: template.product_variant_count == 1)
         for template in unique_variants:
-            template.volume = template.product_variant_ids[0].volume
+            template.volume = template.product_variant_id.volume
         for template in (self - unique_variants):
             template.volume = 0.0
 
@@ -211,7 +219,7 @@ class ProductTemplate(models.Model):
     def _compute_weight(self):
         unique_variants = self.filtered(lambda template: template.product_variant_count == 1)
         for template in unique_variants:
-            template.weight = template.product_variant_ids[0].weight
+            template.weight = template.product_variant_id.weight
         for template in (self - unique_variants):
             template.weight = 0.0
 
@@ -229,7 +237,7 @@ class ProductTemplate(models.Model):
     def _compute_default_code(self):
         unique_variants = self.filtered(lambda template: template.product_variant_count == 1)
         for template in unique_variants:
-            template.default_code = template.product_variant_ids[0].default_code
+            template.default_code = template.product_variant_id.default_code
         for template in (self - unique_variants):
             template.default_code = ''
 

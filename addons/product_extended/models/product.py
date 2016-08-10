@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
     def compute_price(self):
         for template in self:
             if template.product_variant_count == 1:
-                return template.product_variant_ids[0].compute_price()
+                return template.product_variant_id.compute_price()
 
 
 class ProductProduct(models.Model):
