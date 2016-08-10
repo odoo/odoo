@@ -731,8 +731,8 @@ class WebsiteForum(http.Controller):
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/convert_to_comment', type='http', auth="user", methods=['POST'], website=True)
     def convert_answer_to_comment(self, forum, post, **kwarg):
         question = post.parent_id
-        new_msg_id = post.convert_answer_to_comment()[0]
-        if not new_msg_id:
+        new_msg = post.convert_answer_to_comment()
+        if not new_msg:
             return werkzeug.utils.redirect("/forum/%s" % slug(forum))
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
