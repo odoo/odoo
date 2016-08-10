@@ -1,14 +1,17 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import collections
 import unittest
-from lxml import etree as ET
+
 from lxml.builder import E
 
-from openerp.tests import common
-
-from openerp.tools.convert import _eval_xml
+from odoo.tests import common
+from odoo.tools.convert import _eval_xml
 
 Field = E.field
 Value = E.value
+
 class TestEvalXML(common.TransactionCase):
     def eval_xml(self, node, obj=None):
         return _eval_xml(obj, node, self.env)
