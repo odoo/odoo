@@ -151,7 +151,7 @@ class PurchaseOrder(models.Model):
         help="This will determine picking type of incoming shipment")
     default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',\
         help="Technical field used to display the Drop Ship Address", readonly=True)
-    group_id = fields.Many2one('procurement.group', string="Procurement Group")
+    group_id = fields.Many2one('procurement.group', string="Procurement Group", copy=False)
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
