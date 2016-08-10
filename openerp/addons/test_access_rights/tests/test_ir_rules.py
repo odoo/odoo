@@ -1,5 +1,8 @@
-import openerp.exceptions
-from openerp.tests.common import TransactionCase
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.exceptions import AccessError
+from odoo.tests.common import TransactionCase
 
 class TestRules(TransactionCase):
     def setUp(self):
@@ -29,7 +32,7 @@ class TestRules(TransactionCase):
         self.assertEqual(browse1.val, 1)
 
         # but this should
-        with self.assertRaises(openerp.exceptions.AccessError):
+        with self.assertRaises(AccessError):
             self.assertEqual(browse2.val, -1)
 
     def test_many2many(self):
