@@ -639,7 +639,8 @@ class Partner(models.Model, FormatAddress):
                          FROM res_partner
                       {where} ({email} {operator} {percent}
                            OR {display_name} {operator} {percent}
-                           OR {reference} {operator} {percent})
+                           OR {reference} {operator} {percent}
+                           OR {ref} {operator} {percent})
                            -- don't panic, trust postgres bitmap
                      ORDER BY {display_name} {operator} {percent} desc,
                               {display_name}
