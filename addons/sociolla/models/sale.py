@@ -56,3 +56,21 @@ class SaleOrderLine(models.Model):
                 'price_total': taxes['total_included'],
                 'price_subtotal': taxes['total_excluded'],
             })
+
+    @api.multi
+    def _prepare_invoice_line(self, qty):
+        """
+        Override base function to set discount account.
+        Prepare the dict of values to create the new invoice line for a sales order line.
+
+        :param qty: float quantity to invoice
+        """
+        
+        self.ensure_one()
+        discount_account = self.product_id.property_account_sales_discount_id or self.product_id.categ_id.property_account_sales_discount_categ_id
+        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
+        res['discount_account_id'] = discount_account.id
+        res['discount_amount'] = self.discount_amount
+        res['price_undiscounted'] = self.price_undiscounted
+        return res
+    
