@@ -285,13 +285,17 @@ class AccountInvoice(models.Model):
                 if name in MAGIC_COLUMNS:
                     continue
                 elif name == 'account_id':
-                    if TYPE2REFUND[line.invoice_id.type] =='out_refund':
-                        values[name] = line.get_invoice_line_account('out_refund', line.product_id, line.invoice_id.fiscal_position_id, line.invoice_id.company_id).id
+                    if TYPE2REFUND[line.invoice_id.type] == 'out_refund':
+                        account = line.get_invoice_line_account('out_refund', line.product_id, line.invoice_id.fiscal_position_id, line.invoice_id.company_id)
+                        if account:
+                            values[name] = account.id
+                        else:
+                            raise UserError(_('Configuration error!\nCould not find any account to create the return, are you sure you have a chart of account installed?'))
                     else:
                         values[name] = line[name].id
                 elif field.type == 'many2one':
                     values[name] = line[name].id
-                elif field.type not in ['many2many', 'one2many']:
+                elif field.type not in['many2many', 'one2many']:
                     values[name] = line[name]
                 elif name == 'invoice_line_tax_ids':
                     values[name] = [(6, 0, line[name].ids)]
@@ -329,6 +333,8 @@ class AccountInvoiceLine(models.Model):
             account = product.product_tmpl_id.get_product_accounts()
             if account:
                 self.discount_account_id = account['sales_discount']
+            else:
+                raise UserError(_('Configuration error!\nCould not find any account to create the discount, are you sure you have a chart of account installed?'))
 
     @api.v8
     def get_invoice_line_account(self, type, product, fpos, company):

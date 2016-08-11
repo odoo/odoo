@@ -6,7 +6,7 @@ from openerp.exceptions import UserError
 from openerp.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
 
 class SaleOrder(models.Model):
-    _inherit= "sale.order"
+    _inherit = "sale.order"
 
     discount_amount = fields.Monetary(string='Discount Amount', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     price_undiscounted = fields.Monetary(string='Undiscount Amount', store=True, readonly=True, compute='_amount_all', track_visibility='always')
@@ -33,7 +33,7 @@ class SaleOrder(models.Model):
             })
 
 class SaleOrderLine(models.Model):
-    _inherit="sale.order.line"
+    _inherit = "sale.order.line"
 
     discount_amount = fields.Monetary(string='Discount Amount', store=True, readonly=True, compute='_compute_amount', track_visibility='always')
     price_undiscounted = fields.Monetary(string='Undiscount Amount', store=True, readonly=True, compute='_compute_amount', track_visibility='always')
@@ -68,9 +68,13 @@ class SaleOrderLine(models.Model):
         
         self.ensure_one()
         discount_account = self.product_id.property_account_sales_discount_id or self.product_id.categ_id.property_account_sales_discount_categ_id
-        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
-        res['discount_account_id'] = discount_account.id
-        res['discount_amount'] = self.discount_amount
-        res['price_undiscounted'] = self.price_undiscounted
+        if discount_account:
+            res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
+            res['discount_account_id'] = discount_account.id
+            res['discount_amount'] = self.discount_amount
+            res['price_undiscounted'] = self.price_undiscounted
+        else:
+            raise UserError(_('Configuration error!\nCould not find any account to create the discount, are you sure you have a chart of account installed?'))
+        
         return res
     
