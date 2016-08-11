@@ -179,12 +179,21 @@
     </t>
 </template>
 
+<template id="blog_cover">
+    <div t-attf-class="o_blog_cover_container #{cover_properties.get('resize_class')} #{additionnal_classes or ''}">
+        <div class="o_blog_cover_component o_blog_cover_image" t-attf-style="background-image: #{cover_properties.get('background-image')};"/>
+        <div t-attf-class="o_blog_cover_component o_blog_cover_filter #{cover_properties.get('background-color')}" t-attf-style="opacity: #{cover_properties.get('opacity', 0.0)};"/>
+        <t t-raw="0"/>
+    </div>
+</template>
+
 <!-- Option: Blog Post List: cover image -->
 <template id="opt_blog_post_cover_image" name="Cover image"
         customize_show="True" active="True" inherit_id="website_blog.blog_post_short">
     <xpath expr="//h2[@t-field='blog_post.name']/.." position="before">
-        <t t-if="blog_posts_cover_properties[blog_post_index].get('background-image', 'none') != 'none'">
-            <div id="js_blogcover" t-attf-class="#{blog_posts_cover_properties[blog_post_index].get('background-color')}" t-attf-style="background-image: #{blog_posts_cover_properties[blog_post_index].get('background-image', 'none')};opacity:1; height:250px; margin-top: 15px; margin-bottom: 30px;"></div>
+        <t t-call="website_blog.blog_cover">
+            <t t-set="cover_properties" t-value="blog_posts_cover_properties[blog_post_index]"/>
+            <t t-set="additionnal_classes" t-value="'o_list_cover mt16 mb32'"/>
         </t>
     </xpath>
 </template>
@@ -207,42 +216,41 @@
     </xpath>
 </template>
 
-
-
-
-
 <!-- Blog Post Complete -->
 <template id="blog_post_complete" name="Blog Post">
     <t t-call="website_blog.index">
-        <div class="container blog_publish_btn">
-            <t t-call="website.publish_management">
-                <t t-set="object" t-value="blog_post"/>
-                <t t-set="publish_edit" t-value="True"/>
-                <li>
-                  <form class="duplicate hidden" action="/blog/post_duplicate" method="POST">
-                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                    <input name="blog_post_id" t-att-value="blog_post.id"/>
-                  </form>
-                  <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
-                </li>
-            </t>
-        </div>
-        <div t-attf-class="#{blog_post_cover_properties.get('resize_class', '')}" id="title"  t-ignore="True">
-            <div id="js_blogcover" t-attf-class="#{blog_post_cover_properties.get('background-color')}" t-attf-style="background-image: #{blog_post_cover_properties.get('background-image', 'none')};opacity:#{blog_post_cover_properties.get('opacity', 1)}"></div>
-            <div class="blog_title">
-                <h1 t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
-                <h2 t-field="blog_post.subtitle" placeholder="Subtitle"/>
-                <p class="post-meta text-muted text-center" name="blog_post_data"/>
-                <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
-                    <span class="fa fa-tags"/>
-                    <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                        <a class="label label-primary mr8" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
-                    </t>
-                </p>
-                <div t-if="blog_post_cover_properties.get('resize_class') == 'cover cover_full'" id="blog_angle_down">
-                    <strong><a href="#blog_content" class="fa fa-angle-down fa-3x fa-inverse mt4"/></strong>
-                </div>
+        <div id="title" class="blog_header" t-ignore="True">
+            <div class="container" style="position: relative;">
+                <t t-call="website.publish_management">
+                    <t t-set="object" t-value="blog_post"/>
+                    <t t-set="publish_edit" t-value="True"/>
+                    <li>
+                        <form class="duplicate hidden" action="/blog/post_duplicate" method="POST">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input name="blog_post_id" t-att-value="blog_post.id"/>
+                        </form>
+                        <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
+                    </li>
+                </t>
             </div>
+            <t t-call="website_blog.blog_cover">
+                <t t-set="cover_properties" t-value="blog_post_cover_properties"/>
+
+                <div class="blog_title">
+                    <h1 t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
+                    <h2 t-field="blog_post.subtitle" placeholder="Subtitle"/>
+                    <p class="post-meta text-muted text-center" name="blog_post_data"/>
+                    <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
+                        <span class="fa fa-tags"/>
+                        <t t-foreach="blog_post.tag_ids" t-as="one_tag">
+                            <a class="label label-primary mr8" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
+                        </t>
+                    </p>
+                    <div t-if="'cover_full' in blog_post_cover_properties.get('resize_class', '')" id="blog_angle_down">
+                        <strong><a href="#blog_content" class="fa fa-angle-down fa-3x fa-inverse mt4"/></strong>
+                    </div>
+                </div>
+            </t>
         </div>
 
         <div id="blog_content" t-field="blog_post.content" class="blog_content mt32"/>
@@ -294,25 +302,27 @@
         inherit_id="website_blog.blog_post_complete" active="True" customize_show="True">
     <xpath expr="//div[@id='comments']|//div[@class='o_blog_post_complete o_sharing_links']" position="after">
         <t t-if="next_post">
-        <div class="cover cover_footer mb0 text-center" t-ignore="True">
-            <div id="js_blogcover" t-attf-class="cover_footer_bg #{next_post_cover_properties.get('background-color')}" t-attf-style="background-image: #{next_post_cover_properties.get('background-image')};opacity:#{next_post_cover_properties.get('opacity')}"></div>
-            <div class="blog_title">
-                <a class="hidden js_next" t-attf-href="/blog/#{ slug(next_post.blog_id) }/post/#{ slug(next_post) }/#wrap"/>
-                <h1 t-field="next_post.name" placeholder="Blog Post Title"/>
-                <h2 t-field="next_post.subtitle" placeholder="Subtitle"/>
-                <div>
-                    <t t-if="next_post.author_avatar">
-                        <span t-field="next_post.author_avatar" t-field-options='{"widget": "image", "class": "img-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
-                    </t>
-                    <span t-field="next_post.author_id" style="display: inline-block;" t-field-options='{
+            <t t-call="website_blog.blog_cover">
+                <t t-set="cover_properties" t-value="next_post_cover_properties"/>
+                <t t-set="additionnal_classes" t-value="'cover_footer'"/>
+
+                <div class="blog_title">
+                    <a class="hidden js_next" t-attf-href="/blog/#{ slug(next_post.blog_id) }/post/#{ slug(next_post) }/#wrap"/>
+                    <h1 t-field="next_post.name" placeholder="Blog Post Title"/>
+                    <h2 t-field="next_post.subtitle" placeholder="Subtitle"/>
+                    <div>
+                        <t t-if="next_post.author_avatar">
+                            <span t-field="next_post.author_avatar" t-field-options='{"widget": "image", "class": "img-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
+                        </t>
+                        <span t-field="next_post.author_id" style="display: inline-block;" t-field-options='{
                             "widget": "contact",
                             "fields": ["name"]
                         }'/>
+                    </div>
+                    <p class="mt32">Read Next <span class="fa fa-long-arrow-right"/></p>
                 </div>
-                <p class="mt32">Read Next <span class="fa fa-long-arrow-right"/></p>
-            </div>
-        </div>
-    </t>
+            </t>
+        </t>
     </xpath>
 </template>
 
