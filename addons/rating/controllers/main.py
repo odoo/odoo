@@ -26,7 +26,6 @@ class Rating(http.Controller):
             'rating': rating, 'token': token,
             'rate_name': rate_names[rate], 'rate': rate
         })
-        return request.not_found()
 
     @http.route(['/rating/<string:token>/<int:rate>/submit_feedback'], type="http", auth="public", method=['post'])
     def submit_rating(self, token, rate, **kwargs):
