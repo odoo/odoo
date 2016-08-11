@@ -255,13 +255,13 @@ define([
           title: lang.color.foreground,
           className: 'o_foreground_toggle',
           dropdown: foreground,
-          no_caret: true,
+          no_caret: false,
         });
         var backgroundButton = tplButton('', {
           title: lang.color.background,
           className: 'o_background_toggle',
           dropdown: background,
-          no_caret: true,
+          no_caret: false,
         });
 
         return colorButton + foregroundButton + backgroundButton;
