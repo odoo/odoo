@@ -630,7 +630,10 @@ ListView.include(/** @lends instance.web.ListView# */{
             if (saveInfo.created) {
                 return self.start_edition();
             }
-            var record = self.records[next_record](saveInfo.record, {wraparound: true});
+            var record = self.records[next_record](saveInfo.record);
+            if (record === undefined) {
+                return self.start_edition();
+            }
             return self.start_edition(record, options);
         });
     },

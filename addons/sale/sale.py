@@ -60,7 +60,8 @@ class SaleOrder(models.Model):
             # Search for refunds as well
             refund_ids = self.env['account.invoice'].browse()
             if invoice_ids:
-                refund_ids = refund_ids.search([('type', '=', 'out_refund'), ('origin', 'in', invoice_ids.mapped('number')), ('origin', '!=', False)])
+                for inv in invoice_ids:
+                    refund_ids += refund_ids.search([('type', '=', 'out_refund'), ('origin', '=', inv.number), ('origin', '!=', False), ('journal_id', '=', inv.journal_id.id)])
 
             line_invoice_status = [line.invoice_status for line in order.order_line]
 
@@ -98,7 +99,7 @@ class SaleOrder(models.Model):
         for order in self:
             order.order_line._compute_tax_id()
 
-    name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'))
+    name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
     origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
 
@@ -207,8 +208,9 @@ class SaleOrder(models.Model):
             'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
-            'note': self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note,
         }
+        if self.env.user.company_id.sale_note:
+            values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note
 
         if self.partner_id.user_id:
             values['user_id'] = self.partner_id.user_id.id
@@ -323,6 +325,9 @@ class SaleOrder(models.Model):
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
                 elif line.qty_to_invoice < 0 and final:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
+
+        if not invoices:
+            raise UserError(_('There is no invoicable line.'))
 
         for invoice in invoices.values():
             if not invoice.invoice_line_ids:
@@ -545,17 +550,9 @@ class SaleOrderLine(models.Model):
     def _compute_tax_id(self):
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
-            if fpos:
-                # The superuser is used by website_sale in order to create a sale order. We need to make
-                # sure we only select the taxes related to the company of the partner. This should only
-                # apply if the partner is linked to a company.
-                if self.env.uid == SUPERUSER_ID and line.order_id.company_id:
-                    taxes = fpos.map_tax(line.product_id.taxes_id).filtered(lambda r: r.company_id == line.order_id.company_id)
-                else:
-                    taxes = fpos.map_tax(line.product_id.taxes_id)
-                line.tax_id = taxes
-            else:
-                line.tax_id = line.product_id.taxes_id if line.product_id.taxes_id else False
+            # If company_id is set, always filter taxes by the company
+            taxes = line.product_id.taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
+            line.tax_id = fpos.map_tax(taxes) if fpos else taxes
 
     @api.multi
     def _prepare_order_line_procurement(self, group_id=False):
@@ -657,7 +654,7 @@ class SaleOrderLine(models.Model):
     price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True, store=True)
 
     price_reduce = fields.Monetary(compute='_get_price_reduce', string='Price Reduce', readonly=True, store=True)
-    tax_id = fields.Many2many('account.tax', string='Taxes')
+    tax_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
 
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
 

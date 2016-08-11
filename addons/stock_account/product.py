@@ -87,9 +87,10 @@ class product_template(osv.osv):
         @return: dictionary which contains information regarding stock accounts and super (income+expense accounts)
         """
         accounts = super(product_template, self)._get_product_accounts()
+        res = self._get_asset_accounts()
         accounts.update({
-            'stock_input': self.property_stock_account_input or self.categ_id.property_stock_account_input_categ_id,
-            'stock_output': self.property_stock_account_output or self.categ_id.property_stock_account_output_categ_id,
+            'stock_input': res['stock_input'] or self.property_stock_account_input or self.categ_id.property_stock_account_input_categ_id,
+            'stock_output': res['stock_output'] or self.property_stock_account_output or self.categ_id.property_stock_account_output_categ_id,
             'stock_valuation': self.categ_id.property_stock_valuation_account_id or False,
         })
         return accounts

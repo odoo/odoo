@@ -4,7 +4,7 @@
 {
     'name': 'Full Reconciliation Concept',
     'version': '1.1',
-    'category': 'Accounting & Finance',
+    'category': 'Accounting',
     'description': """
 Add the concept of full reconciliation back into the accounting.
     """,

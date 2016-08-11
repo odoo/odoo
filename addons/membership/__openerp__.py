@@ -5,7 +5,7 @@
 {
     'name': 'Membership Management',
     'version': '0.1',
-    'category': 'Association',
+    'category': 'Sales',
     'description': """
 This module allows you to manage all operations for managing memberships.
 =========================================================================

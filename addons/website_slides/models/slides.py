@@ -191,7 +191,7 @@ class EmbeddedSlide(models.Model):
     _description = 'Embedded Slides View Counter'
     _rec_name = 'slide_id'
 
-    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, select=1)
+    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, index=True)
     url = fields.Char('Third Party Website URL', required=True)
     count_views = fields.Integer('# Views', default=1)
 
@@ -373,6 +373,9 @@ class Slide(models.Model):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.iteritems():
                 values.setdefault(key, value)
+        if values.get('channel_id'):
+            custom_channels = self.env['slide.channel'].search([('custom_slide_id', '=', self.id), ('id', '!=', values.get('channel_id'))])
+            custom_channels.write({'custom_slide_id': False})
         res = super(Slide, self).write(values)
         if values.get('website_published'):
             self.date_published = datetime.datetime.now()

@@ -151,6 +151,8 @@ TRANSLATED_ATTRS = {
     'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title',
 }
 
+avoid_pattern = re.compile(r"[\s\n]*<!DOCTYPE", re.IGNORECASE)
+
 class XMLTranslator(object):
     """ A sequence of serialized XML/HTML items, with some of them to translate
         (todo) and others already translated (done). The purpose of this object
@@ -241,7 +243,11 @@ class XMLTranslator(object):
 
         # process children nodes locally in child_trans
         child_trans = XMLTranslator(self.callback, self.method, parser=self.parser)
-        child_trans.todo(escape(node.text or ""))
+        if node.text:
+            if avoid_pattern.match(node.text):
+                child_trans.done(escape(node.text)) # do not translate <!DOCTYPE...
+            else:
+                child_trans.todo(escape(node.text))
         for child in node:
             child_trans.process(child)
 
@@ -947,8 +953,9 @@ def trans_generate(lang, modules, cr):
 
     def get_module_from_path(path):
         for (mp, rec) in path_list:
+            mp = os.path.join(mp, '')
             if rec and path.startswith(mp) and os.path.dirname(path) != mp:
-                path = path[len(mp)+1:]
+                path = path[len(mp):]
                 return path.split(os.path.sep)[0]
         return 'base' # files that are not in a module are considered as being in 'base' module
 

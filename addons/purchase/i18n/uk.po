@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-05-06 12:24+0000\n"
+"PO-Revision-Date: 2016-06-28 10:36+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -1473,7 +1473,7 @@ msgstr "Простий тендер (обирати тільки з одного
 #: selection:purchase.config.settings,group_uom:0
 msgid ""
 "Some products may be sold/puchased in different unit of measures (advanced)"
-msgstr "Товари мають тільки одну одиницю виміру (простіше)"
+msgstr "Деякі товари можуть бути продані/куплені в інших одиницях виміру (розширено)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_origin
@@ -1813,6 +1813,12 @@ msgid ""
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractants."
 msgstr "Ви повинні створити товар для всього, що ви купуєте не залежно від того чи це послуга, чи матеріальні цінності."
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:335
+#, python-format
+msgid "You must set a Vendor Location for this partner %s"
+msgstr "Ви повинні вказати розташування для цього партнера %s"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings

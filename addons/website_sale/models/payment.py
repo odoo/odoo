@@ -29,9 +29,9 @@ class PaymentTransaction(orm.Model):
                 tx = getattr(self, tx_find_method_name)(cr, uid, data, context=context)
             _logger.info('<%s> transaction processed: tx ref:%s, tx amount: %s', acquirer_name, tx.reference if tx else 'n/a', tx.amount if tx else 'n/a')
 
-            if tx and tx.sale_order_id:
+            if tx and tx.sale_order_id and tx.sale_order_id.state in ['draft', 'sent']:
                 # verify SO/TX match, excluding tx.fees which are currently not included in SO
-                amount_matches = (tx.sale_order_id.state in ['draft', 'sent'] and float_compare(tx.amount, tx.sale_order_id.amount_total, 2) == 0)
+                amount_matches = float_compare(tx.amount, tx.sale_order_id.amount_total, 2) == 0
                 if amount_matches:
                     if tx.state == 'done' and tx.acquirer_id.auto_confirm == 'at_pay_confirm':
                         _logger.info('<%s> transaction completed, auto-confirming order %s (ID %s)', acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id)

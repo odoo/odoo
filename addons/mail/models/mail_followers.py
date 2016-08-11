@@ -18,13 +18,13 @@ class Followers(models.Model):
     _description = 'Document Followers'
 
     res_model = fields.Char(
-        'Related Document Model', required=True, select=1, help='Model of the followed resource')
+        'Related Document Model', required=True, index=True, help='Model of the followed resource')
     res_id = fields.Integer(
-        'Related Document ID', select=1, help='Id of the followed resource')
+        'Related Document ID', index=True, help='Id of the followed resource')
     partner_id = fields.Many2one(
-        'res.partner', string='Related Partner', ondelete='cascade', select=1)
+        'res.partner', string='Related Partner', ondelete='cascade', index=True)
     channel_id = fields.Many2one(
-        'mail.channel', string='Listener', ondelete='cascade', select=1)
+        'mail.channel', string='Listener', ondelete='cascade', index=True)
     subtype_ids = fields.Many2many(
         'mail.message.subtype', string='Subtype',
         help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall.")

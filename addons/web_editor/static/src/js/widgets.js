@@ -1065,17 +1065,17 @@ var LinkDialog = Dialog.extend({
         var isNewWindow = this.$('input.window-new').prop('checked');
 
         if ($e.hasClass('email-address') && $e.val().indexOf("@") !== -1) {
-            self.get_data_buy_mail(def, $e, isNewWindow, label, classes);
+            self.get_data_buy_mail(def, $e, isNewWindow, label, classes, test);
         } else {
-            self.get_data_buy_url(def, $e, isNewWindow, label, classes);
+            self.get_data_buy_url(def, $e, isNewWindow, label, classes, test);
         }
         return def;
     },
-    get_data_buy_mail: function (def, $e, isNewWindow, label, classes) {
+    get_data_buy_mail: function (def, $e, isNewWindow, label, classes, test) {
         var val = $e.val();
         def.resolve(val.indexOf("mailto:") === 0 ? val : 'mailto:' + val, isNewWindow, label, classes);
     },
-    get_data_buy_url: function (def, $e, isNewWindow, label, classes) {
+    get_data_buy_url: function (def, $e, isNewWindow, label, classes, test) {
         def.resolve($e.val(), isNewWindow, label, classes);
     },
     save: function () {

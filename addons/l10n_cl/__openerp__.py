@@ -14,7 +14,7 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
     """,
     'author': 'Cubic ERP',
     'website': 'http://cubicERP.com',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'depends': ['account'],
     'data': [
         'l10n_cl_chart.xml',

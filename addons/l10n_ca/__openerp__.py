@@ -6,7 +6,7 @@
     'version': '1.0',
     'author': 'Savoir-faire Linux',
     'website': 'https://www.savoirfairelinux.com',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 This is the module to manage the Canadian accounting chart in OpenERP.
 ===========================================================================================

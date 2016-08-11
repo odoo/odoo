@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2016-02-04 16:19+0000\n"
+"PO-Revision-Date: 2016-05-16 12:20+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -216,7 +216,7 @@ msgstr ""
 msgid ""
 "Install the module that allows to affect landed costs on pickings, and split"
 " them onto the different products."
-msgstr ""
+msgstr "ثبت الوحدة النمطية التي تسمح بتأثير التكاليف الاضافيه على الالتقاطات، وتقسيمها على المنتجات المختلفة."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -262,7 +262,7 @@ msgstr "بند الفاتورة"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_module_stock_landed_costs
 msgid "Landed Costs"
-msgstr ""
+msgstr "Landed Costs"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price___last_update
@@ -303,7 +303,7 @@ msgstr "نقل"
 #: code:addons/stock_account/product.py:124
 #, python-format
 msgid "No difference between standard price and new price!"
-msgstr ""
+msgstr "لا يوجد إختلاف بين السعر القياسى و السعر الجديد "
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
@@ -444,7 +444,7 @@ msgstr "السعر القياسي"
 #: code:addons/stock_account/product.py:152
 #, python-format
 msgid "Standard Price changed"
-msgstr ""
+msgstr "تغيير السعر المعيارى "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
@@ -543,7 +543,7 @@ msgid ""
 "being moved from an internal location into this location, instead of the "
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
+msgstr "تستخدم في الوقت الحقيقي لتقييم المخزون. عندما وضعت على الموقع الوهمى (نوع غير الداخلية)، وسيتم استخدام هذا الحساب لعقد قيمة المنتجات التي يجري نقلها من مكان داخلي في هذا الموقع، بدلا من حساب المخزون الناتج من تعيين منتج. هذا لا يؤثر على المواقع الداخلية. "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
@@ -553,7 +553,7 @@ msgid ""
 "being moved out of this location and into an internal location, instead of "
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
+msgstr "تستخدم في الوقت الحقيقي للتقييم المخزون. عندما وضعت على موقع الوهمى (نوع غير الداخلية)، وسيتم استخدام هذا الحساب لعقد قيمة المنتجات التي خرجت من هذا المكان وإلى المكان الداخلي، بدلا من حساب المخزون الناتج عام تعيين على المنتج. هذا أي تأثير للمواقع الداخلية."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
@@ -606,7 +606,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
+msgstr "عند القيام في الوقت الحقيقي بتقييم المخزون، سوف يتم نشر عناصر اليوميه المناظره لجميع تحركات المخزون الواردة في هذا الحساب، ما لم يكن هناك حساب تقييم معين على موقع المصدر. عندما لم يتم التعيين على المنتج، يتم استخدام واحدة من فئة المنتج."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
@@ -616,7 +616,7 @@ msgid ""
 "specific valuation account set on the destination location. This is the "
 "default value for all products in this category. It can also directly be set"
 " on each product"
-msgstr ""
+msgstr "عند القيام في الوقت الحقيقي بتقييم المخزون، سوف يتم نشر عناصر اليوميه المناظره لجميع تحركات المخزون الصادرة في هذا الحساب، ما لم يكن هناك حساب تقييم معين على موقع الوصول . هذه هي القيمة الافتراضية لجميع المنتجات في هذه الفئة. ويمكن أيضا أن توضع مباشرة على كل منتج "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
@@ -626,7 +626,7 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
+msgstr "عند القيام في الوقت الحقيقي بتقييم المخزون، سوف يتم نشر عناصر اليوميه المناظره لجميع تحركات المخزون الصادرة في هذا الحساب، ما لم يكن هناك حساب تقييم معين على موقع الوصول. عندما يتم تعيين على المنتج، يتم استخدام واحدة من فئة المنتج."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_journal
@@ -645,7 +645,7 @@ msgstr "عندما يكون الوقت الحقيقي لتقييم الجرد م
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history
 msgid "Wizard that opens the stock valuation history table"
-msgstr ""
+msgstr "المعالج الذي يفتح جدول تاريخ تقييم المخزون"
 
 #. module: stock_account
 #: code:addons/stock_account/stock_account.py:275

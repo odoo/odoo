@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-02-20 10:42+0000\n"
+"PO-Revision-Date: 2016-06-22 09:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -216,7 +216,7 @@ msgstr "<strong>數量</strong>"
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Shipping address:</strong>"
-msgstr ""
+msgstr "<strong>送貨地址：</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -246,7 +246,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "待處理"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
@@ -1809,6 +1809,12 @@ msgid ""
 "You must define a product for everything you purchase, whether\n"
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractants."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:335
+#, python-format
+msgid "You must set a Vendor Location for this partner %s"
 msgstr ""
 
 #. module: purchase

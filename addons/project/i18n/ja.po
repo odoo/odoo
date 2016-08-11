@@ -3,15 +3,16 @@
 # * project
 # 
 # Translators:
+# Manami Hashi <manami@roomsfor.hk>, 2016
 # takuan_osho <shimizu.taku@gmail.com>, 2015
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-02-20 10:42+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-08-02 15:45+0000\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +23,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
 msgid "# Tasks"
-msgstr ""
+msgstr "タスク数"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_no_of_days
@@ -33,7 +34,7 @@ msgstr "日数"
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_nbr_tasks
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
 msgid "# of Tasks"
-msgstr ""
+msgstr "タスク数"
 
 #. module: project
 #: code:addons/project/project.py:248 code:addons/project/project.py:267
@@ -653,7 +654,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Accept Emails From"
-msgstr ""
+msgstr "Eメール受信対象"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -664,7 +665,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_message_needaction
 #: model:ir.model.fields,field_description:project.field_project_task_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "必要なアクション"
 
 #. module: project
 #. openerp-web
@@ -742,12 +743,12 @@ msgstr "エイリアスするモデル"
 #: code:addons/project/project.py:121
 #, python-format
 msgid "All Employees Project: all employees can access"
-msgstr ""
+msgstr "全従業員プロジェクト: 全ての従業員がアクセス可"
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
 msgid "Allow activating customer rating on projects, at issue completion"
-msgstr ""
+msgstr "課題終了時にプロジェクトへの顧客評価を使用する"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_group_time_work_estimation_tasks
@@ -810,7 +811,7 @@ msgstr "アーカイブ済"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
 msgid "Assignation Date"
-msgstr "割当て日"
+msgstr "割当日"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -825,7 +826,7 @@ msgstr "タスクの割当"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_user_id
 msgid "Assigned To"
-msgstr "割当先"
+msgstr "担当者"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_user_id
@@ -833,12 +834,12 @@ msgstr "割当先"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Assigned to"
-msgstr "割当先"
+msgstr "担当者"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_assign
 msgid "Assigning Date"
-msgstr ""
+msgstr "割当日"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -846,7 +847,7 @@ msgid ""
 "At each stage employees can block or make task/issue ready for next stage.\n"
 "                            You can define here labels that will be displayed for the state instead\n"
 "                            of the default labels."
-msgstr ""
+msgstr "ステージごとにステータスのラベルを調整することができます。ここで設定するラベルが本ステージでのラベル表示に使われます（設定しない場合は標準ラベルのまま）。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -898,7 +899,7 @@ msgstr "残高"
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_1
 msgid "Basic"
-msgstr ""
+msgstr "初期"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -958,7 +959,7 @@ msgstr "取消"
 #: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
-msgstr "キャンセル済"
+msgstr "取消済"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1011,12 +1012,12 @@ msgstr "閉じる"
 #. module: project
 #: selection:project.project,state:0
 msgid "Closed"
-msgstr "閉じた"
+msgstr "終了"
 
 #. module: project
 #: selection:project.config.settings,module_pad:0
 msgid "Collaborative rich text on task description"
-msgstr ""
+msgstr "タスクの説明に共同リッチテキストを使用"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_color
@@ -1083,7 +1084,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Contact"
-msgstr "コンタクト"
+msgstr "連絡先"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_analytic_account_id
@@ -1212,7 +1213,7 @@ msgstr "顧客Eメール"
 #: code:addons/project/project.py:120
 #, python-format
 msgid "Customer Project: visible in portal if the customer is a follower"
-msgstr ""
+msgstr "顧客プロジェクト: 顧客がフォロワーなら、ポータルで閲覧可"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1272,7 +1273,7 @@ msgstr "日付"
 #: model:ir.model.fields,help:project.field_project_project_message_last_post
 #: model:ir.model.fields,help:project.field_project_task_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "記録上の最後のメッセージが投稿された日"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
@@ -1363,7 +1364,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project.js:50
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "破棄"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
@@ -1380,7 +1381,7 @@ msgstr "表示名"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
 msgid "Displayed Image"
-msgstr ""
+msgstr "表示イメージ"
 
 #. module: project
 #. openerp-web
@@ -1404,7 +1405,7 @@ msgstr ""
 #. module: project
 #: selection:project.config.settings,group_time_work_estimation_tasks:0
 msgid "Do not estimate working time on tasks"
-msgstr ""
+msgstr "タスクの所要時間見積をしない"
 
 #. module: project
 #: selection:project.config.settings,module_project_timesheet:0
@@ -1414,14 +1415,14 @@ msgstr ""
 #. module: project
 #: selection:project.config.settings,module_project_issue_sheet:0
 msgid "Do not track working hours on issues"
-msgstr ""
+msgstr "課題で作業時間を追跡しない"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:50
 #, python-format
 msgid "Documentation"
-msgstr ""
+msgstr "ドキュメント"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1485,7 +1486,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Email Alias"
-msgstr ""
+msgstr "Eメールエイリアス"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1567,7 +1568,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date
 msgid "Expiration Date"
-msgstr ""
+msgstr "有効期日"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_legend_priority
@@ -1579,7 +1580,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "拡張フィルタ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
@@ -1589,7 +1590,7 @@ msgstr "追加情報"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Extra features"
-msgstr ""
+msgstr "追加機能"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1613,7 +1614,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_fold
 msgid "Folded in Tasks Pipeline"
-msgstr ""
+msgstr "タスクパイプラインで折り畳む"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1625,7 +1626,7 @@ msgstr "関連タスクや課題についてのイベントを自動追跡する
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Followed by Me"
-msgstr ""
+msgstr "フォロー中"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_message_follower_ids
@@ -1637,13 +1638,13 @@ msgstr "フォロワー"
 #: model:ir.model.fields,field_description:project.field_project_project_message_channel_ids
 #: model:ir.model.fields,field_description:project.field_project_task_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "フォロワー(チャンネル)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_task_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "フォロワー(取引先)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1674,12 +1675,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Forecasts"
-msgstr ""
+msgstr "フォーキャスト"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
 msgid "Forecasts, planning and Gantt charts"
-msgstr ""
+msgstr "フォーキャスト、計画およびガントチャート"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -1927,7 +1928,7 @@ msgstr "入庫"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Incoming Emails create"
-msgstr ""
+msgstr "受信Eメールで作成するもの"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_planned_hours
@@ -1963,7 +1964,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_tags_search_view
 msgid "Issue Version"
-msgstr "問題のバージョン"
+msgstr "課題バージョン"
 
 #. module: project
 #. openerp-web
@@ -1982,12 +1983,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Issues"
-msgstr "発行物"
+msgstr "課題"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Issues analysis"
-msgstr ""
+msgstr "課題分析"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2042,12 +2043,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Kanban Stage"
-msgstr ""
+msgstr "かんばんステージ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Kanban Stages"
-msgstr ""
+msgstr "かんばんステージ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_kanban_state
@@ -2081,7 +2082,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_message_last_post
 #: model:ir.model.fields,field_description:project.field_project_task_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "最終メッセージ日"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
@@ -2104,7 +2105,7 @@ msgstr "最終更新日"
 #: model:ir.model.fields,field_description:project.field_project_task_date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_last_stage_update
 msgid "Last Stage Update"
-msgstr ""
+msgstr "最終ステージ更新日"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_write_uid
@@ -2214,7 +2215,7 @@ msgstr "月"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
+msgstr "さらに <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2224,13 +2225,13 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
 msgid "My Projects"
-msgstr "私のプロジェクト"
+msgstr "自分のプロジェクト"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Tasks"
-msgstr "私のタスク"
+msgstr "自分のタスク"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags_name
@@ -2270,12 +2271,12 @@ msgstr ""
 #. module: project
 #: selection:project.config.settings,module_sale_service:0
 msgid "No automatic task creation"
-msgstr ""
+msgstr "自動でタスク生成しない"
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
 msgid "No customer rating"
-msgstr ""
+msgstr "顧客評価を使用しない"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -2304,7 +2305,7 @@ msgstr "通知"
 #: model:ir.model.fields,field_description:project.field_project_project_message_needaction_counter
 #: model:ir.model.fields,field_description:project.field_project_task_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "アクションの数"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
@@ -2365,7 +2366,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Open"
-msgstr "開く"
+msgstr "オープン"
 
 #. module: project
 #: model:ir.actions.client,name:project.action_client_project_menu
@@ -2390,7 +2391,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Organize meetings"
-msgstr ""
+msgstr "打ち合わせをアレンジ"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -2445,7 +2446,7 @@ msgstr "所有者"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
 msgid "Pads"
-msgstr ""
+msgstr "パッド"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
@@ -2539,7 +2540,7 @@ msgstr "プライバシー/可視性"
 #: code:addons/project/project.py:122
 #, python-format
 msgid "Private Project: followers only"
-msgstr ""
+msgstr "プライベートプロジェクト: フォロワーのみ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2639,7 +2640,7 @@ msgstr "プロジェクト"
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Projects using this stage"
-msgstr ""
+msgstr "このステージを使用しているプロジェクト"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_project_issue_sheet
@@ -2651,7 +2652,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
 msgid "Rating"
-msgstr ""
+msgstr "評価"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2671,7 +2672,7 @@ msgstr ""
 #: selection:project.task.history.cumulative,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "次のステージに移動可"
 
 #. module: project
 #. openerp-web
@@ -2737,13 +2738,13 @@ msgstr "リリース"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_remaining_hours
 msgid "Remaining Hours"
-msgstr "残り時間数"
+msgstr "残時間"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_remaining_hours
 #: model:ir.model.fields,field_description:project.field_project_task_history_remaining_hours
 msgid "Remaining Time"
-msgstr "残り時間"
+msgstr "残時間"
 
 #. module: project
 #. openerp-web
@@ -2774,7 +2775,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Reporting"
-msgstr ""
+msgstr "レポーティング"
 
 #. module: project
 #. openerp-web
@@ -2786,7 +2787,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Responsibilities"
-msgstr ""
+msgstr "責任"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2807,7 +2808,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_sale_service
 msgid "Sale Service"
-msgstr ""
+msgstr "受注サービス"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2848,7 +2849,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type_sequence
 msgid "Sequence"
-msgstr "付番"
+msgstr "順序"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2932,17 +2933,17 @@ msgstr "スプリント"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Stage"
-msgstr "段階"
+msgstr "ステージ"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "ステージ変更"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr ""
+msgstr "ステージ説明およびステータス定義"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_name
@@ -2952,7 +2953,7 @@ msgstr "ステージ名"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "ステージ変更"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
@@ -2977,7 +2978,7 @@ msgstr "開始日"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_account_type
 msgid "State"
-msgstr ""
+msgstr "状態"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -2989,12 +2990,12 @@ msgstr "ステータス"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_subscription_ids
 msgid "Subscriptions"
-msgstr ""
+msgstr "サブスクリプション"
 
 #. module: project
 #: sql_constraint:project.tags:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "そのタグ名は既に使われています！"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -3036,7 +3037,7 @@ msgstr "タスクブロック"
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Opened"
-msgstr ""
+msgstr "タスク作成"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
@@ -3047,7 +3048,7 @@ msgstr ""
 #: model:mail.message.subtype,name:project.mt_project_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready"
-msgstr ""
+msgstr "次ステージに移動可"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -3065,12 +3066,12 @@ msgstr "タスクステージ変更"
 #: model:ir.model.fields,field_description:project.field_project_task_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_name
 msgid "Task Title"
-msgstr ""
+msgstr "タスク名"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
-msgstr ""
+msgstr "タスク名..."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
@@ -3080,7 +3081,7 @@ msgstr "タスクブロック"
 #. module: project
 #: selection:project.config.settings,module_pad:0
 msgid "Task description is a plain text"
-msgstr ""
+msgstr "タスクの説明はプレーンテキストで記述"
 
 #. module: project
 #. openerp-web
@@ -3106,12 +3107,12 @@ msgstr ""
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 msgid "Task opened"
-msgstr ""
+msgstr "タスク作成"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 msgid "Task ready for Next Stage"
-msgstr ""
+msgstr "次ステージに移動できるタスク"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -3121,7 +3122,7 @@ msgstr "タスクの分析"
 #. module: project
 #: model:res.groups,name:project.group_tasks_work_on_tasks
 msgid "Task's Work on Tasks"
-msgstr ""
+msgstr "タスクでのタイムシート"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -3146,7 +3147,7 @@ msgstr "タスク"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks &amp; Issues"
-msgstr ""
+msgstr "タスク &amp; 課題"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -3328,17 +3329,17 @@ msgstr "これはプロジェクトとタスクの中で使われる単位をセ
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
-msgstr ""
+msgstr "タスクの時間見積"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Time Scheduling"
-msgstr ""
+msgstr "時間管理"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_group_time_work_estimation_tasks
 msgid "Time on Tasks"
-msgstr ""
+msgstr "タスクの所要時間"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
@@ -3348,18 +3349,18 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_timesheet_synchro
 msgid "Timesheet app for Chrome/Android/iOS"
-msgstr ""
+msgstr "Chrome/Android/iOS 向けタイムシートアプリ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_use_timesheets
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Timesheets"
-msgstr ""
+msgstr "タイムシート"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_issue_sheet
 msgid "Timesheets Invoicing"
-msgstr ""
+msgstr "タイムシートによる請求"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3382,7 +3383,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Timesheets to Approve"
-msgstr ""
+msgstr "未承認タイムシート"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_resource_calendar_id
@@ -3419,7 +3420,7 @@ msgstr ""
 msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
-msgstr "合計残り時間は定期的にタスクの割当者によって再評価されます。"
+msgstr "残時間合計は定期的にタスクの担当者により再評価されます。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_account_type
@@ -3566,13 +3567,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_website_message_ids
 #: model:ir.model.fields,field_description:project.field_project_task_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "ウェブサイトメッセージ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_website_message_ids
 #: model:ir.model.fields,help:project.field_project_task_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "ウェブサイトコミュニケーション履歴"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3626,21 +3627,21 @@ msgstr "作業時間"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
 msgid "Workload"
-msgstr ""
+msgstr "負荷"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
-msgstr ""
+msgstr "こちらに、このステージの意味・目的を定義してください。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid ""
 "You can also give a tooltip about the use of the stars available in the "
 "kanban and form views."
-msgstr ""
+msgstr "こちらに、かんばん/フォームビューのスターの用途を定義してください。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3742,7 +3743,7 @@ msgstr ""
 #: code:addons/project/project.py:569
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "タスク"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

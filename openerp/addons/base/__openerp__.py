@@ -10,8 +10,6 @@
 The kernel of OpenERP, needed for all installation.
 ===================================================
 """,
-    'author': 'OpenERP SA',
-    'maintainer': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [],
     'data': [

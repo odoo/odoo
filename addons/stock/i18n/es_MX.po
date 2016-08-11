@@ -4,13 +4,14 @@
 # 
 # Translators:
 # David Hernandez <davidhernandez.ctam@gmail.com>, 2016
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-02-16 10:36+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-07-12 17:19+0000\n"
+"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,16 +56,6 @@ msgstr "(%s reservado)"
 #, python-format
 msgid " (reserved)"
 msgstr "(reservado)"
-
-#. module: stock
-#: code:addons/stock/stock.py:3182
-#, python-format
-msgid ""
-"You cannot have two inventory adjustements in state 'in Progess' with the "
-"same product(%s), same location(%s), same package, same owner and same lot. "
-"Please first validate the first inventory adjustement with this product "
-"before creating another one."
-msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:3482
@@ -160,7 +151,7 @@ msgid ""
 "                       \n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations\n"
 "                      "
-msgstr ""
+msgstr "* Ubicación de Proveedor: Ubicación virtual que representa la ubicación de origen para productos provenientes de tus proveedores.\n                       \n* Vista: Ubicación virtual usara para crear estructura jerarquica de tus almacenes, agregando sus ubicaciones hijas; no puede contener productos directamente.\n                       \n* Ubicación Interna: Ubicación física dentro de tus propios almacenes.\n                       \n* Ubicación de Clientes: Ubicación física que representa la ubicación de destino cuando los productos son enviados a los clientes.\n                       \n* Pérdidas de Inventario: Ubicación virtual que sirve como contraparte de las operaciones de inventario usado para corregir los niveles de inventario (Inventarios Físicos).\n                       \n* Procurement: Ubicación virtual que sirve como contraparte temporal de las operaciones de requisisiones cuando el origen (proveedor o producción) aún no son conocidas. Esta ubicación debe vaciarse cuando el planificador se ejecuta.\n                       \n* Producción: Ubicación virtual que sirve como contraparte para las operaciones de producción: esta ubicación consume la materia prima y genera los productos terminados.\n                       \n* Ubicación de Tránsito: Ubicación que sirve como contraparte para ser usada en operaciones inter-compañía e inter-almacenes."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -263,7 +254,7 @@ msgid ""
 "                                        <strong>Import a file</strong><br/>\n"
 "                                        <span class=\"small\">Recommended if &gt;100 products</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n                                        <strong>Importa un archivo</strong><br/>\n                                        <span class=\"small\">Recomendado si &gt;100 productos</span>\n                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -273,7 +264,7 @@ msgid ""
 "                                        <strong>Import</strong><br/>\n"
 "                                        <span class=\"small\">&gt; 50 vendors</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n<span class=\"fa\" data-icon=\"&#57408;\"/>\n<strong>Importar</strong><br/>\n<span class=\"small\">&gt; 50 proveedores</span>\n</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -283,7 +274,7 @@ msgid ""
 "                                        <strong> Create manually</strong><br/>\n"
 "                                        <span class=\"small\">&lt; 50 vendors</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n<span class=\"fa\" data-icon=\"&#57440;\"/>\n<strong> Crear proveedores</strong><br/>\n<span class=\"small\">&lt; 50 manualmente</span>\n</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -338,7 +329,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Vendor Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Dirección del Proveedor:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -360,7 +351,7 @@ msgstr "<span>Vista</span>"
 msgid ""
 "<span>You need to install the Accounting or Purchases app to manage "
 "vendors.</span>"
-msgstr ""
+msgstr "<span>Necesitas instalar la aplicación de Contabilidad o Compras para administrar proveedores.</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -410,7 +401,7 @@ msgstr ""
 msgid ""
 "<strong>Buy:</strong> the product is bought from a vendor through a Purchase"
 " Order"
-msgstr ""
+msgstr "<strong>Comprar:</strong> el producto es comprado de un proveedor a travez de una Prden de Compra"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -427,7 +418,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Date</strong>"
-msgstr ""
+msgstr "<strong>Fecha</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -550,7 +541,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Scheduled Date</strong>"
-msgstr ""
+msgstr "<strong>Fecha Planificada</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -951,7 +942,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_4
 msgid "Big Vendors"
-msgstr ""
+msgstr "Proveedores grandes"
 
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
@@ -1332,7 +1323,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Create Vendors"
-msgstr "Crear Vendedores"
+msgstr "Crear Proveedores"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1681,7 +1672,7 @@ msgid ""
 "                vendors) and virtual locations which are the counterpart of\n"
 "                the stock operations like the manufacturing orders\n"
 "                consumptions, inventories, etc."
-msgstr ""
+msgstr "Define tus ubicaciones para reflejar la estructura de tu almacén\ny organización. Odoo permite administrar ubicaciones físicas\n(almacenes, entantes, cajas, etc.), ubicaciones de empresas (clientes,\nproveedores) y ubicaciones virtuales que son la contraparte de\nlas operaciones de almacén, como las ordenes de fabricación,\nconsumos, inventarios, etc."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_putaway_strategy_id
@@ -1996,7 +1987,7 @@ msgid ""
 "                from a vendor, Odoo will move products from the Vendor\n"
 "                location to the Stock location. Each report can be performed on\n"
 "                physical, partner or virtual locations."
-msgstr ""
+msgstr "Cada operación de almacén en Odoo mueve productos de una\nubicación a otra. Por ejemplo, si tu recibes productos de un proveedor,\nOdoo va a mover los productos de la ubicación de Proveedor a la \nubicación de Existencias. Cada registro puede ser ejecutado en\nubicaciones físicas, de empresas o virtuales."
 
 #. module: stock
 #: code:addons/stock/stock.py:4186
@@ -2176,7 +2167,7 @@ msgstr "Puerta B"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_5
 msgid "Generic IT Vendors"
-msgstr ""
+msgstr "Proveedores Genericos de TI"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_fixed_putaway_strat_sequence
@@ -2272,7 +2263,7 @@ msgid ""
 "                an order, you can filter based on the name of the vendor or\n"
 "                the purchase order reference. Then you can confirm all products\n"
 "                received using the buttons on the right of each line."
-msgstr ""
+msgstr "Aquí tu puedes recibir productos individuales, sin importar que\norden de compra o de entrega vengan. Vas a encontrar la lista\nde todos los productos que están pendientes de recibir. Una vez\nque recibes una órden, puedes filtrar basado en el nombre del \nproveedor o la referencia de la orden de compra. Después puedes\nconfirmar todos los productos recibidos usando los botones a la\nderecha de cada línea."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_deliver_move
@@ -2350,7 +2341,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_3
 msgid "IT Vendors"
-msgstr ""
+msgstr "Proveedores de TI"
 
 #. module: stock
 #: model:product.product,name:stock.product_icecream
@@ -2510,7 +2501,7 @@ msgstr ""
 msgid ""
 "If you have less than 50 vendors, we recommend you\n"
 "                                        to create them manually."
-msgstr ""
+msgstr "Si tienes menos de 50 proveedores, recomendamos \ncrearlos manualmente."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2682,7 +2673,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_ref
 msgid "Internal Reference"
-msgstr ""
+msgstr "Referencia Interna"
 
 #. module: stock
 #: code:addons/stock/stock.py:3680
@@ -2800,7 +2791,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template_property_stock_inventory
 msgid "Inventory Location"
-msgstr ""
+msgstr "Inventario de Localización"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
@@ -3677,7 +3668,7 @@ msgstr "Número de días"
 msgid ""
 "Number of days after the orderpoint is triggered to receive the products or "
 "to order to the vendor"
-msgstr ""
+msgstr "Número de días después de que la orden es registrada para recibir los productos o para ser pedidos al proveedor"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_delay
@@ -4011,7 +4002,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_package
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form
 msgid "Packages"
-msgstr ""
+msgstr "Paquetes"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_package_view
@@ -4133,7 +4124,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "Paquetes Físicos"
 
 #. module: stock
 #: code:addons/stock/stock.py:3704
@@ -4192,7 +4183,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Picking Type"
-msgstr ""
+msgstr "Tipo de albarán"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_name
@@ -4365,7 +4356,7 @@ msgstr "Grupo de Adquisiciones"
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_procurement
 #: model:ir.model.fields,field_description:stock.field_product_template_property_stock_procurement
 msgid "Procurement Location"
-msgstr ""
+msgstr "Lugar de adquisiciones"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_make_procurement
@@ -4505,7 +4496,7 @@ msgstr "Producción"
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_production
 #: model:ir.model.fields,field_description:stock.field_product_template_property_stock_production
 msgid "Production Location"
-msgstr ""
+msgstr "Lugar de Producción"
 
 #. module: stock
 #: code:addons/stock/stock.py:243
@@ -5035,7 +5026,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.stock_location_route_tree
 #: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Routes"
-msgstr ""
+msgstr "Rutas"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6239,7 +6230,7 @@ msgstr ""
 msgid ""
 "Unless you are starting a new business, you probably have a list of vendors "
 "you would like to import."
-msgstr ""
+msgstr "A menos que estés iniciando un nuevo negocio, probablemente tienes una lista de proveedores que quisieras importar."
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
@@ -6368,23 +6359,23 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_location_search
 #: model:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
 msgid "Vendor"
-msgstr "Vendedor"
+msgstr "Proveedor"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_supplier
 #: selection:stock.location,usage:0
 msgid "Vendor Location"
-msgstr ""
+msgstr "Ubicación de Proveedor"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor Locations"
-msgstr ""
+msgstr "Ubicaciones de Proveedor"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_suppliers
 msgid "Vendors"
-msgstr "Vendedores"
+msgstr "Proveedores"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -6851,7 +6842,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Your Vendors"
-msgstr ""
+msgstr "Tus Proveedores"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6948,7 +6939,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "from your vendor with the products and the requested quantities"
-msgstr ""
+msgstr "de tu proveedor con los productos y las cantidades requeridas"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7017,7 +7008,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "the list of vendors"
-msgstr ""
+msgstr "la lista de proveedores"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner

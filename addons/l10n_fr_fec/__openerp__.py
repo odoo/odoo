@@ -6,7 +6,7 @@
 {
     'name': 'France - FEC',
     'version': '1.0',
-    'category': 'French Localization',
+    'category': 'Localization',
     'summary': "Fichier d'Échange Informatisé (FEC) for France",
     'author': "Akretion,Odoo Community Association (OCA)",
     'website': 'http://www.akretion.com',

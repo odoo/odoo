@@ -64,6 +64,10 @@ var SalesTeamDashboardView = KanbanView.extend({
             } else if (action_extra === 'overdue') {
                 additional_context['search_default_overdue'] = 1;
             }
+        } else if (action_name === 'crm.action_your_pipeline') {
+            if (action_extra === 'overdue') {
+                additional_context['search_default_overdue'] = 1;
+            }
         } else if (action_name === 'crm.crm_opportunity_report_action_graph') {
             additional_context['search_default_won'] = 1;
         }

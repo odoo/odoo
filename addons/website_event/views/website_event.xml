@@ -271,7 +271,6 @@
             <h4 class="text-center text-muted">
                 <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-field-options='{"hide_seconds":"True"}'/> to
                 <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-field-options='{"hide_seconds":"True"}'/>
-                <span itemprop="endDate"><t t-esc="event.date_end_located[:-3]"/></span>
                 <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
             </h4>
             <h4 class="text-center text-muted"
@@ -466,7 +465,8 @@
                                 <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
                                     <t t-set="counter" t-value="counter + 1"/>
                                     <div class="row mb4">
-                                        <div class="col-md-4"><input class='form-control' type='text' t-attf-name="#{counter}-name" required="This field is required" t-att-placeholder="'Attendee #%s' %counter"/></div>
+                                        <t t-set="attendee_placeholder">Attendee #%s</t>
+                                        <div class="col-md-4"><input class='form-control' type='text' t-attf-name="#{counter}-name" required="This field is required" t-att-placeholder="attendee_placeholder %counter"/></div>
                                         <div class="col-md-5"><input class='form-control' type='email' t-attf-name="#{counter}-email" required="This field is required"/></div>
                                         <div class="col-md-3"><input class='form-control' type='tel' t-attf-name="#{counter}-phone"/></div>
                                         <input class='hidden' type='text' t-attf-name="#{counter}-ticket_id" t-attf-value="#{ticket['id']}"/>

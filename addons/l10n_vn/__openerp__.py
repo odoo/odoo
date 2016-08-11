@@ -8,7 +8,7 @@
     "version" : "1.0",
     "author" : "General Solutions",
     'website': 'http://gscom.vn',
-    "category" : "Localization/Account Charts",
+    'category': 'Localization',
     "description": """
 This is the module to manage the accounting chart for Vietnam in OpenERP.
 =========================================================================

@@ -20,7 +20,7 @@ class crm_stage(osv.Model):
     _name = "crm.stage"
     _description = "Stage of case"
     _rec_name = 'name'
-    _order = "sequence"
+    _order = "sequence, name, id"
 
     def _default_team_ids(self, cr, uid, context=None):
         return context.get('default_team_id') and [(6, 0, [context['default_team_id']])] or False

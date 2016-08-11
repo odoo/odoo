@@ -124,11 +124,11 @@ var Dialog = Widget.extend({
         this.$modal.modal('hide');
     },
 
-    destroy: function() {
+    destroy: function(reason) {
         if(this.isDestroyed())
             return;
 
-        this.trigger("closed");
+        this.trigger("closed", reason);
 
         this._super();
 

@@ -5,13 +5,15 @@
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+# Marko Happonen <marko.happonen@sprintit.fi>, 2016
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-04-11 14:07+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
+"PO-Revision-Date: 2016-07-15 13:40+0000\n"
+"Last-Translator: Marko Happonen <marko.happonen@sprintit.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -127,7 +129,7 @@ msgstr "Summa jonka ylittyessä toimitus on ilmainen, ilmaistuna yrityksen valuu
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
 msgid "Asset Type"
-msgstr ""
+msgstr "Käyttöomaisuus tyyppi"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_value_ids
@@ -182,7 +184,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image
 msgid "Big-sized image"
-msgstr ""
+msgstr "Suurikokoinen kuva"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_ids
@@ -260,7 +262,7 @@ msgstr ""
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
 "coeff"
-msgstr ""
+msgstr "Kerroin muunnettaessa oletusyksikkö myyntiyksiköksi\n my = yks * kerroin"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_color
@@ -280,7 +282,7 @@ msgstr "Ehto"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_method
 msgid "Control Purchase Bills"
-msgstr ""
+msgstr "Ostolaskun luonti perustuen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_standard_price
@@ -714,7 +716,7 @@ msgstr "on seuraaja"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
 msgid "Is a Delivery"
-msgstr ""
+msgstr "On toimitus"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_is_product_variant
@@ -763,7 +765,7 @@ msgstr "Logistiset yksiköt"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
 msgid "Manufacturing Lead Time"
-msgstr "Tuotannon läpimenoaika"
+msgstr "Valmistuksen läpimenoaika"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
@@ -932,7 +934,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
-msgstr ""
+msgstr "Hinnoittelu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_rule_ids
@@ -994,7 +996,7 @@ msgstr "Tuotteen käyttöaika"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_production
 msgid "Production Location"
-msgstr "Tuotannon paikka"
+msgstr "Valmistuksen paikka"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_ids
@@ -1492,7 +1494,7 @@ msgstr "Tilavuus"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_warehouse_id
 msgid "Warehouse"
-msgstr "Gestión Inventario"
+msgstr "Varasto"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_warranty
@@ -1520,14 +1522,14 @@ msgstr "Paino * Tilavuus"
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
-msgstr ""
+msgstr "Kun uusi sarjanumero myönnetään käyttöön, niin näin monta päivää aikaisemmin pitäisi aiheesta tulla hälytys."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_life_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr ""
+msgstr "Kun uusi sarjanumero myönnetään käyttöön, niin näin monta päivää aikaisemmin tuotteet tulevat vaaralliseksi eikä niitä pitäisi nauttia."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
@@ -1567,7 +1569,7 @@ msgid ""
 "When validating an invoice, an email will be sent to the customer based on "
 "this template. The customer will receive an email for each product linked to"
 " an email template."
-msgstr ""
+msgstr "Laskun hyväksynnän yhteydessä asiakkaalle lähetetään sähköposti perustuen tähän sähköpostimalliin. Asiakas saa sähköpostin jokaisesta sähköpostimalliin liitetystä tuotteesta."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from

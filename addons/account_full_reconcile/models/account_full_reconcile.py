@@ -10,6 +10,33 @@ class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
     full_reconcile_id = fields.Many2one('account.full.reconcile', string="Matching Number")
 
+    @api.model
+    def compute_full_after_batch_reconcile(self):
+        super(AccountMoveLine, self).compute_full_after_batch_reconcile()
+        #check if the reconcilation is full
+        partial_rec_set = self.env['account.partial.reconcile']
+        total_debit = 0
+        total_credit = 0
+        total_amount_currency = 0
+        currency = False
+        for aml in self:
+            total_debit += aml.debit
+            total_credit += aml.credit
+            if not currency and aml.currency_id:
+                currency = aml.currency_id
+            if aml.currency_id and aml.currency_id == currency:
+                total_amount_currency += aml.amount_currency
+                partial_rec_set |= aml.matched_debit_ids | aml.matched_credit_ids
+        partial_rec_ids = [x.id for x in list(partial_rec_set)]
+        #if the total debit and credit are equal, and the total amount in currency is 0, the reconciliation is full
+        digits_rounding_precision = self[0].company_id.currency_id.rounding
+        if float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0 \
+          and (not currency or float_is_zero(total_amount_currency, precision_rounding=currency.rounding)):
+            #in that case, mark the reference on the partial reconciliations and the entries
+            self.env['account.full.reconcile'].with_context(check_move_validity=False).create({
+                'partial_reconcile_ids': [(6, 0, partial_rec_ids)],
+                'reconciled_line_ids': [(6, 0, self.ids)]})
+
 
 class AccountPartialReconcile(models.Model):
     _inherit = "account.partial.reconcile"
@@ -19,6 +46,10 @@ class AccountPartialReconcile(models.Model):
     @api.model
     def create(self, vals):
         res = super(AccountPartialReconcile, self).create(vals)
+        if self._context.get('skip_full_reconcile_check'):
+            #when running the manual reconciliation wizard, don't check the partials separately for full
+            #reconciliation or exchange rate because it is handled manually after the whole processing
+            return res
         #check if the reconcilation is full
         #first, gather all journal items involved in the reconciliation just created
         partial_rec_set = OrderedDict.fromkeys([x for x in res])

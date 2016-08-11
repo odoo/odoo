@@ -101,18 +101,19 @@
                                 <group>
                                     <field name="start" attrs="{'invisible': True}"/>
                                     <field name="stop" attrs="{'invisible': True}"/>
+                                    <field name="id" attrs="{'invisible': True}"/>
 
-                                    <field name="start_date" string="Starting at" on_change="onchange_dates('start', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
-                                    <field name="stop_date" string="Ending at" on_change="onchange_dates('stop', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
+                                    <field name="start_date" string="Starting at" on_change="onchange_dates('start', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="stop_date" string="Ending at" on_change="onchange_dates('stop', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
 
-                                    <field name="start_datetime" string="Starting at" on_change="onchange_duration(start_datetime, duration)" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <field name="start_datetime" string="Starting at" on_change="onchange_duration(start_datetime, duration)" attrs="{'invisible': [('allday','=',True)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                     <field name="stop_datetime" invisible="1"/>
                                     <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <div attrs="{'invisible': [('allday','=',True)]}">
-                                        <field name="duration" widget="float_time" string="Duration" on_change="onchange_duration(start_datetime, duration)" class="oe_inline"/>
+                                        <field name="duration" widget="float_time" string="Duration" on_change="onchange_duration(start_datetime, duration)" class="oe_inline" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                         <span> hours</span>
                                     </div>
-                                    <field name="allday"  on_change="onchange_allday(start, stop, start_date, stop_date, start_datetime, stop_datetime, allday)"/>
+                                    <field name="allday"  on_change="onchange_allday(start, stop, start_date, stop_date, start_datetime, stop_datetime, allday)" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                 </group>
                                 <group>
                                     <field name="categ_ids" widget="many2many_tags" />

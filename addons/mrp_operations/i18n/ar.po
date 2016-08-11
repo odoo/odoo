@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-10-27 10:42+0000\n"
+"PO-Revision-Date: 2016-05-16 16:00+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgid ""
 "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
 "* When order is completely processed that time it is set in 'Finished' status."
-msgstr ""
+msgstr "* عندما يتم إنشاء أمر التشغيل يتم تعيين الحاله \"مسوده\"\n* عندما يحدد المستخدم من أمر التشغيل  فى حاله البدايه ذلك الوقت سيتم تعيين الحاله  \" في التقدم \" \n* عندما يكون أمر التشغيل في وسط التشغيل، وخلال ذلك الوقت إذا كان المستخدم يريد أن يتوقف أو لإجراء تغييرات في الامر ثم يمكن أن يحدد الحاله \"معلق\"\n* عندما يلغي المستخدم أمر التشغيل سيتم تعيين الحاله \"ملغاة\"\n* عندما تتم معالجة الامر  تماما ذلك الوقت يتم تعيين الحاله \"انتهى...."
 
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -118,7 +118,7 @@ msgstr "الحالي"
 #. module: mrp_operations
 #: model:ir.filters,name:mrp_operations.filter_mrp_workorder_current_production
 msgid "Current Production"
-msgstr ""
+msgstr "الانتاج الحالى "
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_date
@@ -223,20 +223,20 @@ msgstr "قيد التقدم"
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
-msgstr ""
+msgstr "لكى يتم إنهاء العمليه ، يجب أن يكون في البداية أو سير الحاله !"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:429
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
-msgstr ""
+msgstr "من أجل إيقاف مؤقت للعملية، يجب أن يكون في البداية أو سير الحاله !"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:433
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
-msgstr ""
+msgstr "من أجل سير العملية، يجب أن تكون الحاله إيقاف مؤقت !"
 
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -276,7 +276,7 @@ msgstr "أمر الإنتاج"
 #: code:addons/mrp_operations/mrp_operations.py:105
 #, python-format
 msgid "Manufacturing order cannot be started in state \"%s\"!"
-msgstr ""
+msgstr "لا يمكن بدء أمر التصنيع في الحاله \"٪ S\"!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:445
@@ -300,7 +300,7 @@ msgstr "اسم العملية"
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
 "operation."
-msgstr ""
+msgstr "بدأت العملية بالفعل! يمكنك إما إيقاف مؤقت / النهاية / الغاء العملية. "
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:441
@@ -318,7 +318,7 @@ msgstr "تم إنهاء العملية سابقاً"
 #: code:addons/mrp_operations/mrp_operations.py:418
 #, python-format
 msgid "Operation is not started yet!"
-msgstr ""
+msgstr "لم يتم بدء تشغيل بعد ! "
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
@@ -341,7 +341,7 @@ msgstr "إيقاف مؤقت"
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
 msgid "Pause Work Order"
-msgstr ""
+msgstr "إيقاف مؤقت لإمر التشغيل "
 
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
@@ -360,7 +360,7 @@ msgstr "الوقت المخطط"
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
 msgid "Planned Month"
-msgstr ""
+msgstr "شهر مخطط "
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_product
@@ -411,7 +411,7 @@ msgstr "كود عملية الانتاج"
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_production_state
 msgid "Production Status"
-msgstr ""
+msgstr "الحاله الانتاجيه "
 
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -431,7 +431,7 @@ msgstr "الكمية"
 #. module: mrp_operations
 #: model:ir.filters,name:mrp_operations.filter_mrp_workorder_quantity_produced
 msgid "Quantity Produced"
-msgstr ""
+msgstr "الكمية المنتجة "
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -459,7 +459,7 @@ msgstr "السيرة الذاتية"
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
 msgid "Resume Work Order"
-msgstr ""
+msgstr "استئناف ترتيب العمل "
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_routing_id
@@ -474,7 +474,7 @@ msgstr "التاريخ المجدول"
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "من المقرر التسجيل حسب الشهر "
 
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -544,7 +544,7 @@ msgstr "حركة المخزون"
 #. module: mrp_operations
 #: model:ir.model.fields,help:mrp_operations.field_mrp_production_workcenter_line_delay
 msgid "The elapsed time between operation start and stop in this Work Center"
-msgstr ""
+msgstr "في الوقت الذي انقضى بين بداية تشغيل وتوقف في هذا المركز العمل "
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
@@ -619,7 +619,7 @@ msgstr "اوامر العمل"
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
 msgid "Work Orders By Resource"
-msgstr ""
+msgstr "أوامر العمل من خلال الموارد "
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning

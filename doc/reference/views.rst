@@ -502,12 +502,6 @@ The states are shown following the order used in the field (the list in a
 selection field, etc). States that are always visible are specified with the
 attribute ``statusbar_visible``.
 
-``statusbar_colors``
-    can be used to give a custom color to specific states.
-
-    .. deprecated:: 9.0
-
-
 ::
 
     <field name="state" widget="statusbar"
@@ -815,7 +809,7 @@ attributes:
 
 ``default_group_by``
   whether the kanban view should be grouped if no grouping is specified via
-  the action or the current research. Should be the name of the field to group
+  the action or the current search. Should be the name of the field to group
   by when no grouping is otherwise specified
 ``default_order``
   cards sorting order used if the user has not already sorted the records (via

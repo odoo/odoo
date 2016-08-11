@@ -79,10 +79,10 @@ var DashboardInvitations = Widget.extend({
     send_invitations: function(e){
         var self = this;
         var $target = $(e.currentTarget);
-        var user_emails =  _.filter(this.$('#user_emails').val().split(/[\n, ]/), function(email){
+        var user_emails =  _.filter($(e.delegateTarget).find('#user_emails').val().split(/[\n, ]/), function(email){
             return email !== "";
         });
-        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,63}(?:\.[a-z]{2})?)$/i;
         var is_valid_emails = _.every(user_emails, function(email) {
             return re.test(email);
         });
@@ -98,8 +98,8 @@ var DashboardInvitations = Widget.extend({
                 })
                 .always(function() {
                     // Re-enable button
-                    self.$('.o_web_settings_dashboard_invitations').prop('disabled', false);
-                    self.$('i.fa-cog').addClass('hidden');
+                    $(e.delegateTarget).find('.o_web_settings_dashboard_invitations').prop('disabled', false);
+                    $(e.delegateTarget).find('i.fa-cog').addClass('hidden');
                 });
 
         }

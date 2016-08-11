@@ -256,6 +256,8 @@ class project(osv.osv):
         if not default.get('name'):
             default.update(name=_("%s (copy)") % (proj.name))
         res = super(project, self).copy(cr, uid, id, default, context)
+        for follower in proj.message_follower_ids:
+            self.message_subscribe(cr, uid, res, partner_ids=[follower.partner_id.id], subtype_ids=[subtype.id for subtype in follower.subtype_ids])
         self.map_tasks(cr, uid, id, res, context=context)
         return res
 
@@ -392,6 +394,7 @@ class task(osv.osv):
     def onchange_planned(self, cr, uid, ids, planned=0.0, effective=0.0):
         return {'value': {'remaining_hours': planned - effective}}
 
+    @api.cr_uid_ids_context
     def onchange_project(self, cr, uid, id, project_id, context=None):
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)

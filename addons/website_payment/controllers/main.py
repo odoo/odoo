@@ -10,6 +10,7 @@ class website_payment(http.Controller):
         acquirers = list(request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False)]))
         partner = request.env.user.partner_id
         payment_methods = partner.payment_method_ids
+        payment_methods |= partner.commercial_partner_id.sudo().payment_method_ids
         values = {
             'pms': payment_methods,
             'acquirers': acquirers
@@ -35,8 +36,8 @@ class website_payment(http.Controller):
 
         # Try default one then fallback on first
         acquirer_id = acquirer_id and int(acquirer_id) or \
-            env['ir.values'].get_default('payment.acquirer', 'acquirer_id') or \
-            env['payment.acquirer'].search([('website_published', '=', True)])[0].id
+            env['ir.values'].get_default('payment.transaction', 'acquirer_id', company_id=user.company_id.id) or \
+            env['payment.acquirer'].search([('website_published', '=', True), ('company_id', '=', user.company_id.id)])[0].id
 
         acquirer = env['payment.acquirer'].with_context(submit_class='btn btn-primary pull-right',
                                                         submit_txt=_('Pay Now')).browse(acquirer_id)
@@ -50,7 +51,7 @@ class website_payment(http.Controller):
             'reference': reference,
             'acquirer': acquirer,
             'currency': currency,
-            'amount': amount,
+            'amount': float(amount),
             'payment_form': payment_form,
         }
         return request.website.render('website_payment.pay', values)

@@ -395,7 +395,7 @@ database upgrade request.
         KEY="Aw7pItGVKFuZ_FOR3U8VFQ=="
         REQUEST_ID="10534"
         URL_PARAMS="key=${KEY}&request=${REQUEST_ID}"
-        curl -sS "${PROCESS_URL}?${URL_PARAMS}"
+        curl -sS "${STATUS_URL}?${URL_PARAMS}"
 
 Sample output
 -------------

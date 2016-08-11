@@ -3,14 +3,15 @@
 # * hr_timesheet_sheet
 # 
 # Translators:
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 10:41+0000\n"
-"PO-Revision-Date: 2016-01-14 10:09+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-08-05 12:41+0000\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +60,7 @@ msgstr "欠勤"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "必要なアクション"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -174,7 +175,7 @@ msgstr "開始日"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "記録上の最後のメッセージが投稿された日"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
@@ -266,12 +267,12 @@ msgstr "フォロワー"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "フォロワー(チャンネル)"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "フォロワー(取引先)"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -304,11 +305,6 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
-msgid "Important Messages"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -351,7 +347,7 @@ msgstr "現在の勤務表が表示されます。"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "最終メッセージ日"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -405,7 +401,7 @@ msgstr "自分のタイムシートからあなたのタイムシートを開き
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_my_timesheets
 msgid "My Timesheets"
-msgstr ""
+msgstr "自分のタイムシート"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,state:0
@@ -416,7 +412,7 @@ msgstr "新規"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 msgid "New timesheet to approve."
-msgstr ""
+msgstr "新しいタイムシート作成"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_name
@@ -426,7 +422,7 @@ msgstr "注記"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "アクションの数"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction_counter
@@ -532,7 +528,7 @@ msgstr "ステータス"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Submit to Manager"
-msgstr "マネジャーに申請"
+msgstr "マネジャに申請"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -634,7 +630,7 @@ msgstr "期間ごとの勤務表"
 msgid ""
 "Timesheets can also be invoiced to customers, depending on the\n"
 "                configuration of each project's related contract."
-msgstr ""
+msgstr "各プロジェクトの契約内容によっては、\nタイムシートに基づき顧客に請求を行うことが出来ます。"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -642,7 +638,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
 #: model:mail.message.subtype,name:hr_timesheet_sheet.mt_department_timesheet_confirmed
 msgid "Timesheets to Approve"
-msgstr ""
+msgstr "未承認タイムシート"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -688,6 +684,7 @@ msgstr "全ての勤務表"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Unread Messages"
 msgstr "未読メッセージ"
 
@@ -715,12 +712,12 @@ msgstr "承認待ち"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "ウェブサイトメッセージ"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "ウェブサイトコミュニケーション履歴"
 
 #. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
@@ -812,7 +809,7 @@ msgid ""
 "You must record timesheets every day and confirm at the end\n"
 "                of the week. Once the timesheet is confirmed, it should be\n"
 "                validated by a manager."
-msgstr ""
+msgstr "タイムシートの記入は毎日行い、毎週末に確定させてください。\nその後、上司によって承認をうける必要があります。"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -829,7 +826,7 @@ msgstr "hr.timesheet.current.open"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 msgid "new timesheet."
-msgstr ""
+msgstr "新しいタイムシート"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form

@@ -59,7 +59,7 @@
                     <field name="weight"/>
                     <field name="categ_id"/>
                     <field name="type"/>
-                    <field name="state"/>
+                    <field name="state" invisible="1"/>
                     <field name="uom_id" invisible="1"/>
                 </tree>
             </field>
@@ -469,6 +469,22 @@
                 </field>
                 <field name="name" position="after">
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" attrs="{'required': [('id', '!=', False)]}"/>
+                </field>
+                <field name="item_ids" position="replace">
+                    <field name="item_ids" widget="many2many">
+                        <tree string="Pricelist Items">
+                            <field name="name" string="Applicable On"/>
+                            <field name="min_quantity"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="price" string="Price"/>
+                            <field name="base" invisible="1"/>
+                            <field name="sequence" invisible="1"/>
+                            <field name="price_discount" invisible="1"/>
+                            <field name="applied_on" invisible="1"/>
+                            <field name="compute_price" invisible="1"/>
+                        </tree>
+                    </field>
                 </field>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>

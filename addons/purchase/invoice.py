@@ -87,6 +87,22 @@ class AccountInvoice(models.Model):
         if purchase_ids:
             self.origin = ', '.join(purchase_ids.mapped('name'))
 
+    @api.onchange('partner_id', 'company_id')
+    def _onchange_partner_id(self):
+        res = super(AccountInvoice, self)._onchange_partner_id()
+        if not self.env.context.get('default_journal_id') and self.partner_id and self.currency_id and\
+                self.type in ['in_invoice', 'in_refund'] and\
+                self.currency_id != self.partner_id.property_purchase_currency_id:
+            journal_domain = [
+                ('type', '=', 'purchase'),
+                ('company_id', '=', self.company_id.id),
+                ('currency_id', '=', self.partner_id.property_purchase_currency_id.id),
+            ]
+            default_journal_id = self.env['account.journal'].search(journal_domain, limit=1)
+            if default_journal_id:
+                self.journal_id = default_journal_id
+        return res
+
     @api.model
     def invoice_line_move_line_get(self):
         res = super(AccountInvoice, self).invoice_line_move_line_get()
@@ -167,6 +183,6 @@ class AccountInvoiceLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
     _inherit = 'account.invoice.line'
 
-    purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', select=True, readonly=True)
+    purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index=True, readonly=True)
     purchase_id = fields.Many2one('purchase.order', related='purchase_line_id.order_id', string='Purchase Order', store=False, readonly=True,
         help='Associated Purchase Order. Filled in automatically when a PO is chosen on the vendor bill.')

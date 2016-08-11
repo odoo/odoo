@@ -93,7 +93,7 @@ class PurchaseOrder(models.Model):
         'cancel': [('readonly', True)],
     }
 
-    name = fields.Char('Order Reference', required=True, select=True, copy=False, default='New')
+    name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
     origin = fields.Char('Source Document', copy=False,\
         help="Reference of the document that generated this purchase order "
              "request (e.g. a sale order or an internal procurement request)")
@@ -102,9 +102,9 @@ class PurchaseOrder(models.Model):
              "It's used to do the matching when you receive the "
              "products as this reference is usually written on the "
              "delivery order sent by your vendor.")
-    date_order = fields.Datetime('Order Date', required=True, states=READONLY_STATES, select=True, copy=False, default=fields.Datetime.now,\
+    date_order = fields.Datetime('Order Date', required=True, states=READONLY_STATES, index=True, copy=False, default=fields.Datetime.now,\
         help="Depicts the date where the Quotation should be validated and converted into a purchase order.")
-    date_approve = fields.Date('Approval Date', readonly=1, select=True, copy=False)
+    date_approve = fields.Date('Approval Date', readonly=1, index=True, copy=False)
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True, states=READONLY_STATES, change_default=True, track_visibility='always')
     dest_address_id = fields.Many2one('res.partner', string='Drop Ship Address', states=READONLY_STATES,\
         help="Put an address if you want to deliver directly from the vendor to the customer. "\
@@ -118,7 +118,7 @@ class PurchaseOrder(models.Model):
         ('purchase', 'Purchase Order'),
         ('done', 'Done'),
         ('cancel', 'Cancelled')
-        ], string='Status', readonly=True, select=True, copy=False, default='draft', track_visibility='onchange')
+        ], string='Status', readonly=True, index=True, copy=False, default='draft', track_visibility='onchange')
     order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines', states=READONLY_STATES, copy=True)
     notes = fields.Text('Terms and Conditions')
 
@@ -133,7 +133,7 @@ class PurchaseOrder(models.Model):
     picking_count = fields.Integer(compute='_compute_picking', string='Receptions', default=0)
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking', string='Receptions', copy=False)
 
-    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', inverse='_inverse_date_planned', required=True, select=True, oldname='minimum_planned_date')
+    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', inverse='_inverse_date_planned', required=True, index=True, oldname='minimum_planned_date')
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
@@ -145,13 +145,13 @@ class PurchaseOrder(models.Model):
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     create_uid = fields.Many2one('res.users', 'Responsible')
-    company_id = fields.Many2one('res.company', 'Company', required=True, select=1, states=READONLY_STATES, default=lambda self: self.env.user.company_id.id)
+    company_id = fields.Many2one('res.company', 'Company', required=True, index=True, states=READONLY_STATES, default=lambda self: self.env.user.company_id.id)
 
     picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=READONLY_STATES, required=True, default=_default_picking_type,\
         help="This will determine picking type of incoming shipment")
     default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',\
         help="Technical field used to display the Drop Ship Address", readonly=True)
-    group_id = fields.Many2one('procurement.group', string="Procurement Group")
+    group_id = fields.Many2one('procurement.group', string="Procurement Group", copy=False)
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
@@ -188,7 +188,7 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def copy(self, default=None):
-        new_po = super(PurchaseOrder, self).copy()
+        new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:
             seller = line.product_id._select_seller(
                 line.product_id, partner_id=line.partner_id, quantity=line.product_qty,
@@ -281,6 +281,8 @@ class PurchaseOrder(models.Model):
     @api.multi
     def button_confirm(self):
         for order in self:
+            if order.state not in ['draft', 'sent']:
+                continue
             order._add_supplier_to_product()
             # Deal with double validation process
             if order.company_id.po_double_validation == 'one_step'\
@@ -331,6 +333,8 @@ class PurchaseOrder(models.Model):
                 'name': self.name,
                 'partner_id': self.partner_id.id
             })
+        if not self.partner_id.property_stock_supplier.id:
+            raise UserError(_("You must set a Vendor Location for this partner %s") % self.partner_id.name)
         return {
             'picking_type_id': self.picking_type_id.id,
             'partner_id': self.partner_id.id,
@@ -455,7 +459,8 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             qty = 0.0
             for inv_line in line.invoice_lines:
-                qty += inv_line.uom_id._compute_qty_obj(inv_line.uom_id, inv_line.quantity, line.product_uom)
+                if inv_line.invoice_id.state not in ['cancel']:
+                    qty += inv_line.uom_id._compute_qty_obj(inv_line.uom_id, inv_line.quantity, line.product_uom)
             line.qty_invoiced = qty
 
     @api.depends('order_id.state', 'move_ids.state')
@@ -513,8 +518,8 @@ class PurchaseOrderLine(models.Model):
 
     name = fields.Text(string='Description', required=True)
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
-    date_planned = fields.Datetime(string='Scheduled Date', required=True, select=True)
-    taxes_id = fields.Many2many('account.tax', string='Taxes')
+    date_planned = fields.Datetime(string='Scheduled Date', required=True, index=True)
+    taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, required=True)
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, ondelete='set null', copy=False)
@@ -524,7 +529,7 @@ class PurchaseOrderLine(models.Model):
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
     price_tax = fields.Monetary(compute='_compute_amount', string='Tax', store=True)
 
-    order_id = fields.Many2one('purchase.order', string='Order Reference', select=True, required=True, ondelete='cascade')
+    order_id = fields.Many2one('purchase.order', string='Order Reference', index=True, required=True, ondelete='cascade')
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain=[('account_type', '=', 'normal')])
     company_id = fields.Many2one('res.company', related='order_id.company_id', string='Company', store=True, readonly=True)
     state = fields.Selection(related='order_id.state', stored=True)

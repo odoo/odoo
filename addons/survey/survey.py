@@ -1152,7 +1152,7 @@ class survey_user_input_line(osv.Model):
         if old_uil:
             self.unlink(cr, SUPERUSER_ID, old_uil, context=context)
 
-        ca = dict_keys_startswith(post, answer_tag)
+        ca = dict_keys_startswith(post, answer_tag+"_")
         comment_answer = ca.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if len(ca) > 0:
             for a in ca:
@@ -1184,7 +1184,7 @@ class survey_user_input_line(osv.Model):
             self.unlink(cr, SUPERUSER_ID, old_uil, context=context)
 
         no_answers = True
-        ca = dict_keys_startswith(post, answer_tag)
+        ca = dict_keys_startswith(post, answer_tag+"_")
 
         comment_answer = ca.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if comment_answer:

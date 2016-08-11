@@ -3,7 +3,7 @@
 {
     'name': 'Automated Translations through Gengo API',
     'version': '0.1',
-    'category': 'Tools',
+    'category': 'Extra Tools',
     'description': """
 Automated Translations through Gengo API
 ========================================

@@ -102,8 +102,8 @@ class AccountVoucher(models.Model):
     pay_now = fields.Selection([
             ('pay_now', 'Pay Directly'),
             ('pay_later', 'Pay Later'),
-        ], 'Payment', select=True, readonly=True, states={'draft': [('readonly', False)]}, default='pay_later')
-    date_due = fields.Date('Due Date', readonly=True, select=True, states={'draft': [('readonly', False)]})
+        ], 'Payment', index=True, readonly=True, states={'draft': [('readonly', False)]}, default='pay_later')
+    date_due = fields.Date('Due Date', readonly=True, index=True, states={'draft': [('readonly', False)]})
 
     @api.onchange('partner_id', 'pay_now')
     def onchange_partner_id(self):
@@ -144,7 +144,7 @@ class AccountVoucher(models.Model):
     def unlink(self):
         for voucher in self:
             if voucher.state not in ('draft', 'cancel'):
-                raise Warning(_('Cannot delete voucher(s) which are already opened or paid.'))
+                raise UserError(_('Cannot delete voucher(s) which are already opened or paid.'))
         return super(AccountVoucher, self).unlink()
 
     @api.multi
@@ -351,7 +351,7 @@ class account_voucher_line(models.Model):
             self = self.with_context(lang=part.lang)
 
         product = self.env['product.product'].browse(product_id)
-        fpos = part.property_account_position_id.id
+        fpos = part.property_account_position_id
         account = self._get_account(product, fpos, type)
         values = {
             'name': product.partner_ref,

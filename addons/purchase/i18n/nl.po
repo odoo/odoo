@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-03-08 19:02+0000\n"
+"PO-Revision-Date: 2016-08-06 10:39+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -239,7 +239,7 @@ msgstr "<strong>Totaal</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Unit Price</strong>"
-msgstr "<strong>Eenheidsprijs</strong>"
+msgstr "<strong>Prijs</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -613,7 +613,7 @@ msgstr "Bestemmingslocatie soort"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_display_name
 msgid "Display Name"
-msgstr "Naam weergeven"
+msgstr "Weergave naam"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
@@ -1813,6 +1813,12 @@ msgid ""
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractants."
 msgstr "U moet een product definiëren voor alles dat u inkoopt, of het nu\neen fysiek product, verbruiksartikel of een dienst is die u inkoopt bij een\nuit te besteden opdracht."
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:335
+#, python-format
+msgid "You must set a Vendor Location for this partner %s"
+msgstr "U dient een leverancierslocatie in te stellen voor deze partner %s"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings

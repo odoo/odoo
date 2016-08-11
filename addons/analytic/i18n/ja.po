@@ -3,13 +3,13 @@
 # * analytic
 # 
 # Translators:
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2015-12-05 03:28+0000\n"
+"PO-Revision-Date: 2016-08-06 12:17+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
 msgid "(Keep empty to open the current situation)"
-msgstr "（現在の状態を開くために空のままとします）"
+msgstr "(全期間指定の場合は日付を入れないでください)"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_chart
@@ -31,12 +31,12 @@ msgstr "アカウント分析チャート"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
 msgid "Account Currency"
-msgstr ""
+msgstr "会計通貨"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "必要なアクション"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
@@ -76,12 +76,12 @@ msgstr "分析勘定"
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Analytic Entries"
-msgstr "分析エントリー"
+msgstr "分析エントリ"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Entry"
-msgstr "分析エントリー"
+msgstr "分析エントリ"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
@@ -111,7 +111,7 @@ msgstr "分析ビュー"
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Associated Partner"
-msgstr "関連パートナ"
+msgstr "関連取引先"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
@@ -182,7 +182,7 @@ msgstr "作成日"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_credit
 msgid "Credit"
-msgstr "貸方"
+msgstr "費用"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_currency_id
@@ -202,12 +202,12 @@ msgstr "日付"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "記録上の最後のメッセージが投稿された日"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_debit
 msgid "Debit"
-msgstr "借方"
+msgstr "収益"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_name
@@ -230,17 +230,17 @@ msgstr "フォロワー"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "フォロワー(チャンネル)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "フォロワー(取引先)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
 msgid "From"
-msgstr "差出人"
+msgstr "開始日"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -283,7 +283,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "最終メッセージ日"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
@@ -332,7 +332,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "アクションの数"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction_counter
@@ -404,7 +404,7 @@ msgstr "会社の通貨と等しくない場合は関連するアカウントの
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_to_date
 msgid "To"
-msgstr "宛先"
+msgstr "終了日"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree

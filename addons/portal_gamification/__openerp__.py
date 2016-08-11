@@ -5,7 +5,7 @@
 {
     'name': 'Portal Gamification',
     'version': '1',
-    'category': 'Tools',
+    'category': 'Extra Tools',
     'complexity': 'easy',
     'description': """
 This module adds security rules for gamification to allow portal users to participate to challenges

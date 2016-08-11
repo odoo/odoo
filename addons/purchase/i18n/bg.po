@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-02-20 10:42+0000\n"
+"PO-Revision-Date: 2016-07-29 14:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -236,7 +236,7 @@ msgstr "<strong>Общо</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Unit Price</strong>"
-msgstr ""
+msgstr "<strong>Единична Цена</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -306,7 +306,7 @@ msgstr ""
 msgid ""
 "An administrator can set up default Terms and conditions in your Company "
 "settings."
-msgstr ""
+msgstr "Администраторът може да създаде нови Правила и Условия в настройите на компанията."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
@@ -401,7 +401,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_product_template_purchase_ok
 #: model:ir.ui.view,arch_db:purchase.product_template_search_view_purchase
 msgid "Can be Purchased"
-msgstr ""
+msgstr "Може да бъде Поръчано"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:621
@@ -458,7 +458,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
 msgid "Click to define a new product."
-msgstr ""
+msgstr "Натисни за да дефинираш нов продукт."
 
 #. module: purchase
 #: model:web.tip,description:purchase.purchase_tip_1
@@ -559,7 +559,7 @@ msgstr "Одобрен на дата"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Дата на последното съобщение, публикувано на записа."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report_date
@@ -679,12 +679,12 @@ msgstr "Последователи"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Последователи (канали)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Последователи (партньори)"
 
 #. module: purchase
 #: selection:res.company,po_double_validation:0
@@ -733,12 +733,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ако е отбелязано, новите съобщения ще изискват внимание."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Ако е отбелязано, новите съобщения ще изискват внимание."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:184
@@ -899,7 +899,7 @@ msgstr "Съобщения"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_ids
 msgid "Messages and communication history"
-msgstr ""
+msgstr "История на събщенията и комуникациите"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
@@ -958,7 +958,7 @@ msgstr "Брой действия"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Брой съобщения, които изискват внимание"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_unread_counter
@@ -1163,7 +1163,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_mail_mail_website_published
 msgid "Published"
-msgstr ""
+msgstr "Published"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1622,7 +1622,7 @@ msgstr "Обща сума"
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Трансфер"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:283
@@ -1669,7 +1669,7 @@ msgstr "Непрочетени съобщения"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Брой непрочетени съобщения"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
@@ -1761,7 +1761,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_mail_mail_website_published
 msgid "Visible on the website as a comment"
-msgstr ""
+msgstr "Visible on the website as a comment"
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
@@ -1812,9 +1812,15 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:335
+#, python-format
+msgid "You must set a Vendor Location for this partner %s"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_settings

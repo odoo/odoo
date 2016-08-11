@@ -3,7 +3,10 @@
 # * account
 # 
 # Translators:
+# Andi Fadhel <cliffryu@gmail.com>, 2016
 # Budi Iskandar <budiiskandar11@gmail.com>, 2015
+# Deddy ddr <deddy.ddr@gmail.com>, 2016
+# Edi Santoso <repopamor@gmail.com>, 2016
 # Lorenz Adam Damara <lorenzrenz@gmail.com>, 2015
 # Martin Trigaux, 2015-2016
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2015
@@ -12,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-02-27 10:43+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-06-28 02:13+0000\n"
+"Last-Translator: Deddy ddr <deddy.ddr@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +80,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n    <p>Halo ${object.partner_id.name},</p>\n    <p>Ada sebuah tagihan baru untukmu: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>Referensi</strong><br />\n       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Referensi Pemesanan: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Kontak anda: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Juga tersedia pembayaran via Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Jika ada pertanyaan, jangan sungkan untuk menghubungi kami.</p>\n    <p>Terima kasih telah memilih ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telpon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Website :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -146,7 +149,7 @@ msgstr "&amp;bull;"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ", if accounting or purchase is installed"
-msgstr ", jika modul Akuning atau purchase diinstall"
+msgstr ", jika modul Akunting atau purchase diinstall"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:321
@@ -177,12 +180,12 @@ msgstr "5) Untuk Setup, anda akan membutuhkan informasi berikut :"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid ": General ledger"
-msgstr "Buku Besar"
+msgstr ": Buku Besar"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid ": Trial Balance"
-msgstr "Neraca Percobaan"
+msgstr ": Neraca Percobaan"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -197,7 +200,7 @@ msgstr "<span class=\"fa\"/> Undang Pengguna lain"
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "<span class=\"o_stat_text\">Invoiced</span>"
-msgstr "<span class=\"o_stat_text\">tagihand</span>"
+msgstr "<span class=\"o_stat_text\">tagihan</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -374,7 +377,7 @@ msgstr "<span>Laporan</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>View</span>"
-msgstr "<span>Pemandangan</span>"
+msgstr "<span>Lihat</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -384,29 +387,29 @@ msgstr "<strong>-Tim Odoo</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>1. Register Outstanding Invoices</strong>"
-msgstr "<strong>1. daftar tagihan yang beredar</strong>"
+msgstr "<strong>1. Daftar Tagihan yang Beredar</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>2. Register Unmatched Payments</strong>"
-msgstr "<strong>2. daftar tak tertandingi pembayaran</strong>"
+msgstr "<strong>2. Daftar Pembayaran yang Kurang Tepat</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Assets Management</strong>"
-msgstr "<strong>Manajemen aset</strong>"
+msgstr "<strong>Manajemen Aset</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Automated documents sending:</strong> automatically send your "
 "invoices by email or snail mail."
-msgstr "<strong>Otomatis dokumen pengiriman:</strong> secara otomatis mengirim tagihan Anda oleh email atau siput mail."
+msgstr "<strong>Pengiriman Dokumen Otomatis:</strong> secara otomatis mengirim tagihan Anda via email."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "<strong>Balance :</strong>"
-msgstr "<strong>Saldo:</strong>"
+msgstr "<strong>Saldo :</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -425,7 +428,7 @@ msgstr "<strong>Transaksi tunai</strong><br/>(untuk yang ada invoice atau tagiha
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Check the Taxes configuration:</strong>"
-msgstr "<strong>Periksa konfigurasi pajak:</strong>"
+msgstr "<strong>Periksa Konfigurasi Pajak:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -449,12 +452,12 @@ msgstr "<strong>Komentar:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Contracts &amp; Subscriptions</strong>"
-msgstr "<strong>Kontrak &amp; langganan</strong>"
+msgstr "<strong>Kontrak &amp; Langganan</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Create a Customer Invoice</strong>"
-msgstr "<strong>Membuat tagihan pelanggan</strong>"
+msgstr "<strong>Membuat sebuah Tagihan Pelanggan</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -473,7 +476,7 @@ msgstr "<strong>Membuat tagihan di Odoo</strong><br/>dengan tepat tanggal, dan m
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
-msgstr "<strong>Kode pelanggan:</strong>"
+msgstr "<strong>Kode Pelanggan:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_financial
@@ -487,7 +490,7 @@ msgstr "<strong>Dari tanggal:</strong>"
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Date to :</strong>"
-msgstr "<strong>Tanggal untuk:</strong>"
+msgstr "<strong>Sampai Tanggal:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -507,12 +510,12 @@ msgstr "<strong>Menampilkan Akun:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "<strong>Display Account</strong>"
-msgstr "<strong>Tampilan akun</strong>"
+msgstr "<strong>Tampilan Akun</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date:</strong>"
-msgstr "<strong>Tanggal jatuh tempo:</strong>"
+msgstr "<strong>Tanggal Jatuh Tempo:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -527,7 +530,7 @@ msgstr "<strong>Posisi fiskal Catatan:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Invoice Date:</strong>"
-msgstr "Tanggal tagihan"
+msgstr "<strong>Tanggal Tagihan:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -563,7 +566,7 @@ msgstr "<strong>Atau menghasilkan perintah pembayaran</strong><br/>Membuat pemba
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Partner's:</strong>"
-msgstr "Rekanan"
+msgstr "<strong>Rekanan:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -585,7 +588,7 @@ msgstr "<strong>Pembelian</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Reconcile Bank Statement</strong>"
-msgstr "<strong>Mendamaikan pernyataan Bank</strong>"
+msgstr "<strong>Rekonsiliasi Rekening Bank</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -597,7 +600,7 @@ msgstr "<strong>Mendamaikan dengan transaksi yang ada</strong><br/>Dalam kasus i
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Reconcile your Bank Statements</strong>"
-msgstr "<strong>Mendamaikan pernyataan Bank Anda</strong>"
+msgstr "<strong>Merekonsiliasi Rekening Bank Anda</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -609,7 +612,7 @@ msgstr "<strong>Merekam pernyataan Bank (atau mengimpor file)</strong><br/>Terga
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Record Bank Statement</strong>"
-msgstr "<strong>Pernyataan Bank catatan</strong>"
+msgstr "<strong>Rekaman Rekening Bank</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -633,7 +636,7 @@ msgstr "<strong>Rujukan:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Revenue Recognition</strong>"
-msgstr "<strong>Pengakuan pendapatan</strong>"
+msgstr "<strong>Pengakuan Pendapatan</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -643,7 +646,7 @@ msgstr "<strong>Kirim Surat tindak lanjut</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "<strong>Sorted By:</strong>"
-msgstr "<strong>Diurutkan berdasarkan:</strong>"
+msgstr "<strong>Diurutkan Berdasar:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -653,12 +656,12 @@ msgstr "<strong>Sumber:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Start Date:</strong>"
-msgstr "<strong>Tanggal mulai:</strong>"
+msgstr "<strong>Tanggal Mulai:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "<strong>Sub-Total :</strong>"
-msgstr "<strong>Total sub:</strong>"
+msgstr "<strong>Sub-Total :</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -671,7 +674,7 @@ msgstr "<strong>Subtotal</strong>"
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Target Moves:</strong>"
-msgstr "<strong>Target bergerak:</strong>"
+msgstr "<strong>Target Bergerak:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -761,7 +764,7 @@ msgstr "Jurnal digunakan untuk merekam transaksi dari semua data akuntansi yang 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "A list of common taxes and their rates."
-msgstr "Daftar umum pajak dan tarif mereka."
+msgstr "Daftar pajak dan tarif mereka."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1644,7 +1647,7 @@ msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr ""
+msgstr "Aset managemen: Hal ini memungkinkan Anda untuk mengelola aset-aset yang dimiliki oleh perusahaan atau perorangan. Anda dapat terus melacak depresiasi yang terjadi pada aset-aset ini, dan menciptakan akun untuk memindahkan baris-baris depresiasi.\n\n-Ini modul pengaplikasian account_asset. Jika Anda tidak mencentang kotak ini, Anda hanya mampu untuk melakukan pemfakturan & pembayaran, tetapi tidak untuk akuntansi (Isi Jurnal, Bagan Perhitungan, ...)"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1654,7 +1657,7 @@ msgstr "Aset"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
 msgid "Assets management"
-msgstr ""
+msgstr "Manajemen aset"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -2198,7 +2201,7 @@ msgstr "Cashbox Lines"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_cashbox_id
 msgid "Cashbox"
-msgstr ""
+msgstr "Kotak uang"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_expense_categ_id
@@ -3572,7 +3575,7 @@ msgstr "Saldo Akhir"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_end_id
 msgid "Ending Cashbox"
-msgstr ""
+msgstr "Tutup Kotak uang"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7455,7 +7458,7 @@ msgstr "Saldo awal"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_start_id
 msgid "Starting Cashbox"
-msgstr ""
+msgstr "Memulai kotak uang"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
@@ -9230,7 +9233,7 @@ msgstr "Anda tidak dapat melakukan modifikasi ini pada entri didamaikan. Anda ha
 msgid ""
 "You cannot empty the account number once set.\n"
 "If you would like to delete the account number, you can do it from the Bank Accounts list."
-msgstr ""
+msgstr "Anda tidak bisa mengosongkan angka "
 
 #. module: account
 #: code:addons/account/models/account.py:96
@@ -9633,7 +9636,7 @@ msgstr "perusahaan induk"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "the product list"
-msgstr ""
+msgstr "daftar produk"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

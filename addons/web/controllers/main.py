@@ -37,6 +37,7 @@ from openerp.modules import get_resource_path
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp.tools import ustr
+from openerp.tools.misc import str2bool
 from openerp import http
 from openerp.http import request, serialize_exception as _serialize_exception
 from openerp.exceptions import AccessError
@@ -708,7 +709,7 @@ class Database(http.Controller):
     def restore(self, master_pwd, backup_file, name, copy=False):
         try:
             data = base64.b64encode(backup_file.read())
-            request.session.proxy("db").restore(master_pwd, name, data, copy)
+            request.session.proxy("db").restore(master_pwd, name, data, str2bool(copy))
             return http.local_redirect('/web/database/manager')
         except Exception, e:
             error = "Database restore error: %s" % e
@@ -1329,7 +1330,7 @@ class ExportFormat(object):
 
         Model = request.session.model(model)
         context = dict(request.context or {}, **params.get('context', {}))
-        ids = ids or Model.search(domain, 0, False, False, context=context)
+        ids = ids or Model.search(domain, offset=0, limit=False, order=False, context=context)
 
         if not request.env[model]._is_an_ordinary_table():
             fields = [field for field in fields if field['name'] != 'id']

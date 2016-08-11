@@ -138,11 +138,11 @@
 
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Livechat : Javascript appending the livechat button">
+            <t t-translation="off">
 
             <t t-if="not info">
                 <t t-set="info" t-value="request.env['im_livechat.channel'].get_livechat_info(channel)"/>
             </t>
-
                 document.addEventListener("DOMContentLoaded", function(event) {
                     <t t-if="web_session_required">
                     odoo.define('web.session', function (require) {
@@ -165,6 +165,7 @@
             </t>
                     });
                 });
+            </t>
         </template>
 
 

@@ -528,11 +528,11 @@ class crm_lead(format_address, osv.osv):
                 value = dict(key).get(lead[field_name], lead[field_name])
             elif field.type == 'many2one':
                 if lead[field_name]:
-                    value = lead[field_name].name_get()[0][1]
+                    value = lead[field_name].sudo().name_get()[0][1]
             elif field.type == 'many2many':
                 if lead[field_name]:
                     for val in lead[field_name]:
-                        field_value = val.name_get()[0][1]
+                        field_value = val.sudo().name_get()[0][1]
                         value += field_value + ","
             else:
                 value = lead[field_name]
@@ -906,7 +906,7 @@ class crm_lead(format_address, osv.osv):
             vals.update(onchange_stage_values)
         if vals.get('probability') >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.datetime.now()
-        elif vals.get('probability') < 100:
+        elif 'probability' in vals and vals['probability'] < 100:
             vals['date_closed'] = False
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
@@ -974,11 +974,12 @@ Update your business card, phone book, social media,... Send an email right now 
     def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
         res = super(crm_lead, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
 
+        lead = self.browse(cr, uid, ids[0], context=context)
+
         won_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='case_mark_won')
         lost_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='case_mark_lost')
-        convert_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='convert_opportunity')
+        convert_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='convert_opportunity', partner_id=lead.partner_id.id)
 
-        lead = self.browse(cr, uid, ids[0], context=context)
         if lead.type == 'lead':
             res['group_sale_salesman'] = {
                 'actions': [{'url': convert_action, 'title': 'Convert to opportunity'}]

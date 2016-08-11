@@ -5,12 +5,14 @@
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-20 13:58+0000\n"
-"PO-Revision-Date: 2016-03-24 17:12+0000\n"
+"PO-Revision-Date: 2016-07-15 13:36+0000\n"
 "Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -405,19 +407,19 @@ msgstr ""
 #: code:addons/calendar/calendar.py:263
 #, python-format
 msgid "%s has accepted invitation"
-msgstr ""
+msgstr "%s on hyväksynyt kutsun"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:278
 #, python-format
 msgid "%s has declined invitation"
-msgstr ""
+msgstr "%s on hylännyt kutsun"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "<span> hours</span>"
-msgstr ""
+msgstr "<span> tuntia</span>"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1613
@@ -451,7 +453,7 @@ msgstr "Aktiivinen"
 #: code:addons/calendar/static/src/js/base_calendar.js:120
 #, python-format
 msgid "Add Favorite Calendar"
-msgstr ""
+msgstr "Lisää kalenteri"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_allday
@@ -534,14 +536,14 @@ msgstr "Kalenteri"
 #: model:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
-msgstr ""
+msgstr "Kalenterihälytys"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:43
 #, python-format
 msgid "Calendar Invitation"
-msgstr ""
+msgstr "Kalenterikutsu"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -551,7 +553,7 @@ msgstr "Klikkaa tästä päivittääksesi tämä merkintä, mutta ei toistuvaism
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "Click to schedule a new meeting."
-msgstr ""
+msgstr "Klikkaa lisätäksesi uusi tapaaminen. "
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_color_partner_id
@@ -672,7 +674,7 @@ msgstr "Kesto"
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_duration_minutes
 #: model:ir.model.fields,help:calendar.field_calendar_alarm_duration_minutes
 msgid "Duration in minutes"
-msgstr ""
+msgstr "Kesto minuuteissa"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
@@ -715,7 +717,7 @@ msgstr "Päättymispäivä"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Ending at"
-msgstr ""
+msgstr "Päättyy"
 
 #. module: calendar
 #: constraint:calendar.event:0
@@ -741,7 +743,7 @@ msgstr "Tapahtuman hälytys"
 #: code:addons/calendar/calendar.py:1252
 #, python-format
 msgid "Event recurrence interval cannot be negative."
-msgstr ""
+msgstr "Tapahtuman toistumisväli ei voi olla negatiivinen."
 
 #. module: calendar
 #. openerp-web
@@ -753,7 +755,7 @@ msgstr "Kaikkien kalenterit"
 #. module: calendar
 #: selection:calendar.event,class:0
 msgid "Everyone"
-msgstr "Kaikki"
+msgstr "Näytä kaikille"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1008,7 +1010,7 @@ msgstr "Viestit"
 #. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Minute(s)"
-msgstr ""
+msgstr "Minuutti(a)"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1057,7 +1059,7 @@ msgstr "Vaatii toimia"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:36
 #, python-format
 msgid "No I'm not going."
-msgstr ""
+msgstr "Ei, en osallistu"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
@@ -1094,12 +1096,12 @@ msgstr "OK"
 #. module: calendar
 #: selection:calendar.event,class:0
 msgid "Only internal users"
-msgstr ""
+msgstr "Näytä vain sisäisille käyttäjille"
 
 #. module: calendar
 #: selection:calendar.event,class:0
 msgid "Only me"
-msgstr ""
+msgstr "Näytä vain minulle"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_month_by
@@ -1171,14 +1173,14 @@ msgstr "Toistosääntä"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_alarm_ids
 msgid "Reminders"
-msgstr ""
+msgstr "Muistutukset"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:26
 #, python-format
 msgid "Remove this favorite from the list"
-msgstr ""
+msgstr "Poista tämä suosikkikalentereista"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_count
@@ -1234,7 +1236,7 @@ msgstr "Sekunti"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Select attendees..."
-msgstr ""
+msgstr "Valitse osallistujat..."
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1251,7 +1253,7 @@ msgstr "Näytä aika muodossa"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:19
 #, python-format
 msgid "Snooze"
-msgstr ""
+msgstr "Torkku"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_start
@@ -1319,7 +1321,7 @@ msgstr "Sunnuntai"
 #. module: calendar
 #: sql_constraint:calendar.event.type:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Tunnisteen nimi on jo olemassa!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_categ_ids
@@ -1460,21 +1462,21 @@ msgstr "Arkipäivä"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:48
 #, python-format
 msgid "When"
-msgstr ""
+msgstr "Milloin"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:52
 #, python-format
 msgid "Where"
-msgstr ""
+msgstr "Missä"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:56
 #, python-format
 msgid "Who"
-msgstr ""
+msgstr "Kuka"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
@@ -1486,7 +1488,7 @@ msgstr "Vuotta"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:35
 #, python-format
 msgid "Yes I'm going."
-msgstr ""
+msgstr "Kyllä, osallistun"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:106
@@ -1502,23 +1504,23 @@ msgstr "aktiivinen"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "calendar.alarm_manager"
-msgstr ""
+msgstr "calendar.alarm_manager"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_contacts
 msgid "calendar.contacts"
-msgstr ""
+msgstr "calendar.contacts"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
-msgstr ""
+msgstr "esim. lounastapaaminen"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1250
 #, python-format
 msgid "interval cannot be negative."
-msgstr ""
+msgstr "väli ei voi olla negatiivinen."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_attachment

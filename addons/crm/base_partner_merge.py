@@ -306,7 +306,7 @@ class MergePartnerAutomatic(osv.TransientModel):
         for partner_id in partner_ids:
             child_ids = child_ids.union(set(proxy.search(cr, uid, [('id', 'child_of', [partner_id])])) - set([partner_id]))
         if set(partner_ids).intersection(child_ids):
-            raise osv.except_osv(_('Error'), _("You cannot merge a contact with one of his parent."))
+            raise UserError(_("You cannot merge a contact with one of his parent."))
 
         if openerp.SUPERUSER_ID != uid and len(set(partner.email for partner in proxy.browse(cr, uid, partner_ids, context=context))) > 1:
             raise UserError(_("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))

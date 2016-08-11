@@ -8,35 +8,22 @@
 # Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015-2016
 # Melanie Bernard <mbe@odoo.com>, 2015
 # Quentin THEURET <quentin@theuret.net>, 2015
-# Symons Xavier <xsy@openerp.com>, 2015
+# Shark McGnark <peculiarcheese@gmail.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2015
 # timo bellanger <bellanger.timo@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:20+0000\n"
-"PO-Revision-Date: 2016-01-18 08:09+0000\n"
-"Last-Translator: timo bellanger <bellanger.timo@gmail.com>\n"
+"POT-Creation-Date: 2016-05-26 12:06+0000\n"
+"PO-Revision-Date: 2016-05-27 16:18+0000\n"
+"Last-Translator: Shark McGnark <peculiarcheese@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:222
-#, python-format
-msgid " for the following reason: %s"
-msgstr "pour la raison suivante : %s"
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.loader
-msgid ""
-"\", {modules:modules, use_cors: false});\n"
-"                    });"
-msgstr "\", {modules:modules, use_cors: false});\n                    });"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_nbr_channel
@@ -53,21 +40,6 @@ msgstr "Nb. d'orateurs "
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "% Happy"
 msgstr "% content"
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "&lt;!DOCTYPE html&gt;"
-msgstr "&lt;!DOCTYPE html&gt;"
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.loader
-msgid ""
-");\n"
-"                        button.appendTo($('body'));\n"
-"                        window.livechat_button = button;\n"
-"                    });\n"
-"                });"
-msgstr ");\n                        button.appendTo($('body'));\n                        window.livechat_button = button;\n                    });\n                });"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_action
@@ -104,10 +76,16 @@ msgstr "Êtes-vous dans la matrice?"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:26
+#: code:addons/im_livechat/static/src/js/im_livechat.js:27
 #, python-format
 msgid "Ask something ..."
 msgstr "Demander quelquechose"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "Attendees"
+msgstr "Participants"
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
@@ -193,6 +171,7 @@ msgstr "Cliquez pour définir un nouveau canal de conversation du site internet.
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_technical_name
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Code"
 msgstr "Code"
 
@@ -205,9 +184,8 @@ msgstr "Conversation"
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
-"Copy and paste this code into your website, within the &amp;lt;head&amp;gt; "
-"tag:"
-msgstr "Copiez et collez ce code dans votre site web, sans les balises &amp;lt;head&amp;gt; :"
+"Copy and paste this code into your website, within the &lt;head&gt; tag:"
+msgstr "Copiez et collez ce code dans votre site web, à l'intérieur de la balise <head> :"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_country_ids
@@ -313,15 +291,10 @@ msgstr "Chaque canal a son propre URL que vous pouvez envoyer par email à\nvos 
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/xml/im_livechat.xml:16
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:19
 #, python-format
 msgid "Explain your note"
 msgstr "Expliquez votre note"
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
-msgid "Feedback"
-msgstr "Discussion"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -330,11 +303,6 @@ msgid ""
 " Then go to Settings &gt; Website Settings and select the Website Live Chat "
 "Channel you want to add on your website."
 msgstr "Pour les sites web réalisés avec Odoo CMS, installez le module website_livechat. Ensuite, allez dans Paramètres > Site web et sélectionner le canal de discussion que vous voulez ajouter à votre site."
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
-msgid "General"
-msgstr "Général"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_sequence
@@ -389,10 +357,10 @@ msgstr "Comment utiliser le widget de messagerie instantanée sur le site web?"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:220
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:15
 #, python-format
-msgid "I rated you with :rating_%d"
-msgstr "Je vous ai mis :rating_%d"
+msgid "I don't want to rate this conversation"
+msgstr "Je ne souhaite pas donner de note à cette conversation"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_id
@@ -616,6 +584,11 @@ msgid "Options"
 msgstr "Produits suggérés"
 
 #. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rating_percentage_satisfaction
+msgid "Percentage of happy ratings over the past 7 days"
+msgstr "Pourcentage de notes satisfaites au cours des 7 derniers jours"
+
+#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Quit"
 msgstr "Sortir"
@@ -625,6 +598,13 @@ msgstr "Sortir"
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel_rating_ids
 msgid "Rating"
 msgstr "Évaluation"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/im_livechat.js:308
+#, python-format
+msgid "Rating: :rating_%d"
+msgstr "Note : :rating_%d"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_regex_url
@@ -661,9 +641,10 @@ msgid "Search report"
 msgstr "Recherche de rapport"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-msgid "Session"
-msgstr "Session"
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "Session Date"
+msgstr "Date de la session"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
@@ -830,11 +811,6 @@ msgid ""
 msgstr "Vous pouvez créer des canaux pour chaque site sur lequel vous souhaitez intégrer le site widget chat en direct , vous permettant visiteurs du site Web de parler en temps réel avec vos opérateurs ."
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.loader
-msgid "document.addEventListener(\"DOMContentLoaded\", function(event) {"
-msgstr "document.addEventListener(\"DOMContentLoaded\", function(event) {"
-
-#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Hello, how may I help you?"
 msgstr "ex. Bonjour, comment puis-je vous aider?"
@@ -845,32 +821,6 @@ msgid "e.g. YourWebsite.com"
 msgstr "ex: VotreSiteWeb.com"
 
 #. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:6
-#, python-format
-msgid "livechat"
-msgstr "Canal de discussion instantanée"
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.loader
-msgid ""
-"odoo.define('im_livechat.livesupport', function (require) {\n"
-"                        var im_livechat = require('im_livechat.im_livechat');\n"
-"                        var button = new im_livechat.LivechatButton(\n"
-"                            $('body'),\n"
-"                            \""
-msgstr "odoo.define('im_livechat.livesupport', function (require) {\n                        var im_livechat = require('im_livechat.im_livechat');\n                        var button = new im_livechat.LivechatButton(\n                            $('body'),\n                            \""
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.loader
-msgid ""
-"odoo.define('web.session', function (require) {\n"
-"                        var Session = require('web.Session');\n"
-"                        var modules = odoo._modules;\n"
-"                        return new Session(undefined, \""
-msgstr "odoo.define('web.session', function (require) {\n                        var Session = require('web.Session');\n                        var modules = odoo._modules;\n                        return new Session(undefined, \""
-
-#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
 msgstr "ou copiez cet URL et envoyez la par courriel à vos clients ou fournisseurs:"
@@ -879,11 +829,3 @@ msgstr "ou copiez cet URL et envoyez la par courriel à vos clients ou fournisse
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "seconds"
 msgstr "secondes"
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:9
-#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:12
-#, python-format
-msgid "true"
-msgstr "vrai"

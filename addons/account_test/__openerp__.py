@@ -7,8 +7,7 @@
 {
     'name': 'Accounting Consistency Tests',
     'version': '1.0',
-    'author': 'Odoo S.A.',
-    'category': 'Accounting & Finance',
+    'category': 'Accounting',
     'website': 'https://www.odoo.com/page/accounting',
     'description': """
 Asserts on accounting.

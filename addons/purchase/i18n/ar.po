@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-03-17 10:29+0000\n"
+"PO-Revision-Date: 2016-07-21 10:49+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -1081,12 +1081,12 @@ msgstr "التوريدات"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_group_id
 msgid "Procurement Group"
-msgstr ""
+msgstr "مجموعه التوريدات "
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "قاعده المشتريات "
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -1653,7 +1653,7 @@ msgstr "فئات وحدات القياس"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_uom
 msgid "Unit of Measures"
-msgstr ""
+msgstr "وحدة القياس"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
@@ -1809,6 +1809,12 @@ msgid ""
 "You must define a product for everything you purchase, whether\n"
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractants."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:335
+#, python-format
+msgid "You must set a Vendor Location for this partner %s"
 msgstr ""
 
 #. module: purchase

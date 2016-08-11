@@ -4,7 +4,6 @@
     'name': 'Assets Management',
     'version': '1.0',
     'depends': ['account_accountant'],
-    'author': 'Odoo S.A.',
     'description': """
 Assets management
 =================
@@ -13,7 +12,7 @@ Keeps track of depreciations, and creates corresponding journal entries.
 
     """,
     'website': 'https://www.odoo.com/page/accounting',
-    'category': 'Accounting & Finance',
+    'category': 'Accounting',
     'sequence': 32,
     'demo': [
         'account_asset_demo.yml',

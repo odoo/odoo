@@ -3,15 +3,16 @@
 # * account_bank_statement_import
 # 
 # Translators:
-# Davor Bojkić <bole@dajmi5.com>, 2015
+# Bole <bole@dajmi5.com>, 2015
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
+# Jasmina Otročak <jasmina@uvid.hr>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-12-21 08:53+0000\n"
-"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
+"PO-Revision-Date: 2016-07-01 12:12+0000\n"
+"Last-Translator: Jasmina Otročak <jasmina@uvid.hr>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,7 +124,7 @@ msgstr "Nemogu pronaći dnevnik u koji bi uvezli ovaj izvod. Molimo odabreite dn
 msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " refunds made from this journal"
-msgstr ""
+msgstr "Označite ako ne želite imati istu sekvencu za račune i povrate koji su napravljeni iz ovog dnevnika"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
@@ -255,7 +256,7 @@ msgstr "Uvoz bankovnog izvoda"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
 msgid "Import Bank Statement Journal Creation Wizard"
-msgstr ""
+msgstr "Čarobnjak za kreiranje dnevnika za uvoz bankovnih izvoda"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -309,7 +310,7 @@ msgstr "ID dnevnika"
 msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
-msgstr ""
+msgstr "Pritisnite gumb OK za kreiranje konta/dnevnika i kako bi mogli dovršiti uvoz. Ako želite odustati od uvoza pritisnite gumb OTKAŽI."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
@@ -350,7 +351,7 @@ msgid ""
 "Means of payment for collecting money. Odoo modules offer various payments "
 "handling facilities, but you can always use the 'Manual' payment method in "
 "order to manage payments outside of the software."
-msgstr ""
+msgstr "Sredstva plaćanja. Odoo moduli nude različite metode plaćanja, ali uvijek možete izabrati 'Ručnu' metodu plaćanja kako bi upravljali plaćanjima izvan programa."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
@@ -358,7 +359,7 @@ msgid ""
 "Means of payment for sending money. Odoo modules offer various payments "
 "handling facilities, but you can always use the 'Manual' payment method in "
 "order to manage payments outside of the software."
-msgstr ""
+msgstr "Sredstva plaćanja. Odoo moduli nude različite metode plaćanja, ali uvijek možete izabrati 'Ručnu' metodu plaćanja kako bi upravljali plaćanjima izvan programa."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:132
@@ -394,7 +395,7 @@ msgid ""
 "customer or vendor payments. Select 'General' for miscellaneous operations "
 "journals. Select 'Opening/Closing Situation' for entries generated for new "
 "fiscal years."
-msgstr ""
+msgstr "Odaberite 'Prodaju' za dnevnike izlaznih računa. Odaberite 'Nabavu' za dnevnike ulaznih računa. Odaberite 'Gotovina' ili 'Banka' za dnevnike koji se koriste za plaćanja kupaca ili plaćanja dobavljačima. Odaberite 'Općenito' za ostale dnevnike. Odaberite 'Početno/završno stanje' za dnevnike koji se odnose na novu fiskalnu godinu."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -427,14 +428,14 @@ msgid ""
 "The account of the statement you are importing is not yet recorded in Odoo. "
 "In order to proceed with the import, you need to create a bank journal for "
 "this account."
-msgstr ""
+msgstr "Žiro račun koji se nalazi na ovom izvodu banke koji uvozite još nije unesen u Odoo. Kako bi nastavili sa uvozom, morate kreirati dnevnik banke za ovaj žiro račun."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:143
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
-msgstr ""
+msgstr "Žiro račun ovog izvoda banke (%s) nije jednak dnevniku (%s)."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:156
@@ -466,7 +467,7 @@ msgstr "Ovo polje sadržava informacije vezane uz sljednosti temeljnica dnevnika
 msgid ""
 "This field contains the information related to the numbering of the refund "
 "entries of this journal."
-msgstr ""
+msgstr "Ovo polje sadrži informacije povezane sa numeriranjem povrata ovog dnevnika."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:110
@@ -495,14 +496,14 @@ msgstr "Koristi se za poredak dnevnika na nadzornoj ploči"
 msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
-msgstr ""
+msgstr "Koristi se za knjiženje rashoda kada je završni saldo blagajne različit od onog koji je izračunao program."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
 msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
-msgstr ""
+msgstr "Koristi se za knjiženje prihoda kada je završni saldo blagajne različit od onog koji je izračunao program."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard

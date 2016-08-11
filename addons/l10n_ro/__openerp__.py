@@ -12,7 +12,7 @@
     "version" : "1.0",
     "author" : "Fekete Mihai (Forest and Biomass Services Romania)",
     "website": "http://www.forbiom.eu",
-    "category" : "Localization/Account Charts",
+    'category': 'Localization',
     "depends" : ['account','base_vat'],
     "description": """
 This is the module to manage the Accounting Chart, VAT structure, Fiscal Position and Tax Mapping.

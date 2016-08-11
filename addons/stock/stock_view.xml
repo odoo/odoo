@@ -856,14 +856,14 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                     </div>
-                    <h1>
+                    <h1 class="hidden-xs">
                         <field name="name" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
                     </h1>
-                    <group>
+                    <group class="hidden-xs">
                         <group>
                             <field name="partner_id" attrs="{'invisible': [('picking_type_code', '=', 'internal')]}" on_change="onchange_picking_type(picking_type_id,partner_id)"/>
-                            <field name="location_id" groups="stock.group_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
-                            <field name="location_dest_id" groups="stock.group_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
+                            <field name="location_id" groups="stock.group_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
+                            <field name="location_dest_id" groups="stock.group_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
                         <group>
@@ -1480,7 +1480,7 @@
                         <field name="date_expected"/>
                         <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                     </group>
-                    <group name="quants_grp" string="Reserved">
+                    <group name="quants_grp" string="Reserved" attrs="{'invisible': [('state', '=', 'draft')]}">
                         <field name="string_availability_info"/>
                     </group>
                     <group name="moved_quants_grp" string="Moved Quants" colspan="4" groups="base.group_no_one" attrs="{'invisible': [('state', '!=', 'done')]}">

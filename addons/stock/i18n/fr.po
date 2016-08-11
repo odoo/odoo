@@ -6,22 +6,25 @@
 # Clo <clo@odoo.com>, 2015
 # Fabien Pinckaers <fp@openerp.com>, 2015
 # Florian Hatat, 2015
+# Julien Martin <204336@supinfo.com>, 2016
 # Loic <loic.richard2@gmail.com>, 2015
+# Lucas Deliege <lud@odoo.com>, 2016
 # Martin Trigaux, 2015-2016
 # Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015-2016
 # Melanie Bernard <mbe@odoo.com>, 2015
 # Quentin THEURET <quentin@theuret.net>, 2015-2016
+# Régis GEROMEGNACE <regis.geromegnace@gmail.com>, 2016
 # Saad Thaifa <saad.thaifa@gmail.com>, 2015
-# Sébastien LANGE <sebastien.lange@syleam.fr>, 2016
-# Symons Xavier <xsy@openerp.com>, 2015
+# Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
+# Xavier Symons <xsy@openerp.com>, 2015
 # zoe <yann.hoareau@migs.re>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-01-30 10:36+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-07-11 00:23+0000\n"
+"Last-Translator: Régis GEROMEGNACE <regis.geromegnace@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,16 +69,6 @@ msgstr " (%s réservé)"
 #, python-format
 msgid " (reserved)"
 msgstr " (réservé)"
-
-#. module: stock
-#: code:addons/stock/stock.py:3182
-#, python-format
-msgid ""
-"You cannot have two inventory adjustements in state 'in Progess' with the "
-"same product(%s), same location(%s), same package, same owner and same lot. "
-"Please first validate the first inventory adjustement with this product "
-"before creating another one."
-msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:3482
@@ -2525,14 +2518,6 @@ msgstr "Si vous avez moins de 50 vendeurs, nous vous recommandons\nde les créer
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
-msgid ""
-"If you need help, do not hesitate to contact our experts\n"
-"                        using the <span class=\"fa fa-question-circle\"/> button on\n"
-"                        the top bar."
-msgstr ""
-
-#. module: stock
-#: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "If you want to do it yourself:"
 msgstr "Pour le faire soi-même :"
 
@@ -4201,7 +4186,7 @@ msgstr "Listes de préparation"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_picking
 msgid "Picking Operations"
-msgstr "Opérations de picking"
+msgstr " Bon de préparation"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_picking_type_id
@@ -5634,7 +5619,7 @@ msgid ""
 "The 'Automatic Move' / 'Manual Operation' value will create a stock move "
 "after the current one.  With 'Automatic No Step Added', the location is "
 "replaced in the original move."
-msgstr ""
+msgstr "Ceci est utilisé uniquement si vous sélectionnez un emplacement de type chainé.\nLa valeur 'Mouvement automatique' va créer un mouvement de stock après le mouvement actuel, qui sera validé automatiquement. La valeur 'Opération manuelle', le mouvement de stock devra être validé par un opérateur. La valeur 'Automatique sans étape supplémentaire', l'emplacement est remplacé sur le mouvement d'origine."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6189,7 +6174,7 @@ msgstr "Intégration d'USPS"
 #: code:addons/stock/stock.py:730
 #, python-format
 msgid "Under no circumstances should you delete or change quants yourselves!"
-msgstr ""
+msgstr "En aucun cas vous ne devez supprimer ou modifier les quants!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot_name

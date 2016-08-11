@@ -12,7 +12,7 @@ var web_client = require('web.web_client');
 
 var _t = core._t;
 var _lt = core._lt;
-var LIMIT = 100;
+var LIMIT = 25;
 var preview_msg_max_size = 350;  // optimal for native english speakers
 
 var MessageModel = new Model('mail.message', session.context);
@@ -459,7 +459,7 @@ function fetch_document_messages (ids, options) {
                 processed_msgs.push(add_message(msg, {silent: true}));
             });
             return _.sortBy(loaded_msgs.concat(processed_msgs), function (msg) {
-                return msg.date;
+                return msg.id;
             });
         });
     } else {

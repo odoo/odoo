@@ -3,12 +3,13 @@
 # * mrp
 # 
 # Translators:
+# larmar <martin.wilderoth@linserv.se>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2016-05-03 00:48+0000\n"
+"POT-Creation-Date: 2016-07-06 07:28+0000\n"
+"PO-Revision-Date: 2016-07-06 08:35+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -27,13 +28,13 @@ msgstr "Tillverka"
 #: model:ir.model.fields,field_description:mrp.field_product_product_bom_count
 #: model:ir.model.fields,field_description:mrp.field_product_template_bom_count
 msgid "# Bill of Material"
-msgstr ""
+msgstr "# Produktstruktur"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product_mo_count
 #: model:ir.model.fields,field_description:mrp.field_product_template_mo_count
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "# Tillverkningsorder"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:332
@@ -45,7 +46,7 @@ msgstr "%s (kopia)"
 #: code:addons/mrp/mrp.py:1009
 #, python-format
 msgid "%s produced"
-msgstr ""
+msgstr "%s tillverkade"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_product_produce_mode
@@ -227,6 +228,11 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.report.xml,name:mrp.action_report_bom_price
+msgid "BOM Cost"
 msgstr ""
 
 #. module: mrp
@@ -558,6 +564,11 @@ msgid "Consumed for"
 msgstr ""
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Cost Structure"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
 msgid "Cost per cycle"
 msgstr "Kostnad per cykel"
@@ -681,6 +692,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_display_name
@@ -757,7 +769,7 @@ msgstr "Följare (Kanaler)"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_message_partner_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Följare (Partners)"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -838,6 +850,7 @@ msgstr "Hour Account"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_id
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_id
@@ -907,7 +920,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_message_is_follower
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Är följare"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
@@ -939,6 +952,7 @@ msgstr "Senast meddelandedatum"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load___last_update
@@ -1360,7 +1374,7 @@ msgstr "Inköp"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Anskaffningsregel"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -1590,6 +1604,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_qty
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
@@ -1599,6 +1614,11 @@ msgstr "Antal"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_qty
 msgid "Quantity (in default UoM)"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Raw Materials"
 msgstr ""
 
 #. module: mrp
@@ -1651,7 +1671,7 @@ msgstr "Relaterat användarnamn för resursen vid administration av dess rättig
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Reserve"
-msgstr ""
+msgstr "Reservera"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_id
@@ -1972,6 +1992,16 @@ msgid "To Consume"
 msgstr ""
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Total Cost"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Total Cost of Raw Materials"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_cycle_total
 #: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Total Cycles"
@@ -1992,6 +2022,11 @@ msgstr "Total kvantitet"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Type"
 msgstr "Typ"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Unit Cost"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view

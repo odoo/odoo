@@ -566,6 +566,15 @@ def mod10r(number):
             report = codec[ (int(digit) + report) % 10 ]
     return result + str((10 - report) % 10)
 
+def str2bool(s, default=None):
+    s = ustr(s).lower()
+    y = 'y yes 1 true t on'.split()
+    n = 'n no 0 false f off'.split()
+    if s not in (y + n):
+        if default is None:
+            raise ValueError('Use 0/1/yes/no/true/false/on/off')
+        return bool(default)
+    return s in y
 
 def human_size(sz):
     """
@@ -975,7 +984,7 @@ class CountingStream(object):
 
 def stripped_sys_argv(*strip_args):
     """Return sys.argv with some arguments stripped, suitable for reexecution or subprocesses"""
-    strip_args = sorted(set(strip_args) | set(['-s', '--save', '-u', '--update', '-i', '--init']))
+    strip_args = sorted(set(strip_args) | set(['-s', '--save', '-u', '--update', '-i', '--init', '--i18n-overwrite']))
     assert all(config.parser.has_option(s) for s in strip_args)
     takes_value = dict((s, config.parser.get_option(s).takes_value()) for s in strip_args)
 
@@ -1159,7 +1168,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
 
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 
-    if currency_obj:
+    if currency_obj and currency_obj.symbol:
         if currency_obj.position == 'after':
             res = '%s %s' % (res, currency_obj.symbol)
         elif currency_obj and currency_obj.position == 'before':

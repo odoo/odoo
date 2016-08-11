@@ -42,7 +42,7 @@ function get_fc_defaultOptions() {
         weekNumbers: true,
         titleFormat: {
             month: 'MMMM yyyy',
-            week: "W",
+            week: "w",
             day: dateFormat,
         },
         columnFormat: {
@@ -841,7 +841,7 @@ var CalendarView = View.extend({
      * between given start, end dates.
      */
     get_range_domain: function(domain, start, end) {
-        var format = time.date_to_str;
+        var format = time.datetime_to_str;
         var extend_domain = [[this.date_start, '<=', format(end)]];
         if (this.date_stop) {
             extend_domain.push([this.date_stop, '>=', format(start)]);

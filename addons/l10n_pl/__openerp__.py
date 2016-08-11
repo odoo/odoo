@@ -8,7 +8,7 @@
     'version' : '1.02',
     'author' : 'Grzegorz Grzelak (OpenGLOBE)',
     'website': 'http://www.openglobe.pl',
-    'category' : 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 This is the module to manage the accounting chart and taxes for Poland in OpenERP.
 ==================================================================================

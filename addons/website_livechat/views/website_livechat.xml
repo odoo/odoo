@@ -157,7 +157,7 @@
                                     <t t-foreach="channels" t-as="channel">
                                         <div class="media">
                                             <a class="pull-left" t-attf-href="/livechat/channel/#{ slug(channel)}">
-                                                <img t-att-src="'data:image/png;base64,' + channel.image_small" t-att-alt="channel.name" />
+                                                <img t-att-src="channel.image_small and ('data:image/png;base64,' + channel.image_small) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" />
                                             </a>
                                             <div class="media-body">
                                                 <h4 class="media-heading"><t t-esc="channel.name"/></h4>

@@ -308,6 +308,7 @@
             <field name="name">Switzerland</field>
             <field name="code">ch</field>
             <field file="base/static/img/country_flags/ch.png" name="image" type="base64" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
             <field name="currency_id" ref="CHF" />
             <field eval="41" name="phone_code" />
         </record>
@@ -905,6 +906,7 @@
             <field name="name">Liechtenstein</field>
             <field name="code">li</field>
             <field file="base/static/img/country_flags/li.png" name="image" type="base64" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
             <field name="currency_id" ref="CHF" />
             <field eval="423" name="phone_code" />
         </record>

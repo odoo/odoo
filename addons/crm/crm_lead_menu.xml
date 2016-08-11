@@ -73,6 +73,14 @@
                 'default_user_id': uid,
                 'search_default_assigned_to_me': 1,
 }</field>
+        <field name="view_ids"
+               eval="[(5, 0, 0),
+                      (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_oppor')}),
+                      (0, 0, {'view_mode': 'form', 'view_id': ref('crm_case_form_view_oppor')}),
+                      (0, 0, {'view_mode': 'kanban', 'view_id': ref('crm_case_kanban_view_leads')}),
+                      (0, 0, {'view_mode': 'calendar'}),
+                      (0, 0, {'view_mode': 'pivot'}),
+                      (0, 0, {'view_mode': 'graph'})]"/>
         <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
         <field name="help" type="html">
             <p>

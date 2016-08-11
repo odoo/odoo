@@ -3,16 +3,17 @@
 # * mrp
 # 
 # Translators:
+# Ademílson F. Tonato <apraqueisso@gmail.com>, 2016
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
-# Grazziano Duarte <g.negocios@outlook.com.br>, 2015
-# Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
+# grazziano <g.negocios@outlook.com.br>, 2015
+# Mateus Lopes <mateus1@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2016-03-14 03:01+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
+"POT-Creation-Date: 2016-07-06 07:28+0000\n"
+"PO-Revision-Date: 2016-07-09 17:36+0000\n"
+"Last-Translator: Ademílson F. Tonato <apraqueisso@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -231,6 +232,11 @@ msgstr "Atraso médio em dias para produzir este produto. No caso de múltiplos 
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
 msgstr "Aguardando Matérias Prima"
+
+#. module: mrp
+#: model:ir.actions.report.xml,name:mrp.action_report_bom_price
+msgid "BOM Cost"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
@@ -561,6 +567,11 @@ msgid "Consumed for"
 msgstr "Consumido por"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Cost Structure"
+msgstr "Estrutura de Custo"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
 msgid "Cost per cycle"
 msgstr "Custo por ciclo"
@@ -684,6 +695,7 @@ msgstr "Local Destino."
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_display_name
@@ -841,6 +853,7 @@ msgstr "Conta da Hora"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_id
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_id
@@ -942,6 +955,7 @@ msgstr "Data da última mensagem"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load___last_update
@@ -1593,6 +1607,7 @@ msgstr "Grupos de Propriedades"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_qty
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
@@ -1603,6 +1618,11 @@ msgstr "Quantidade"
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_qty
 msgid "Quantity (in default UoM)"
 msgstr "Quantidade (em padrão UoM)"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Raw Materials"
+msgstr "Matéria Prima"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1975,6 +1995,16 @@ msgid "To Consume"
 msgstr "Para Consumo"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Total Cost"
+msgstr "Custo Total"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Total Cost of Raw Materials"
+msgstr "Custo Total de Matéria Prima"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_cycle_total
 #: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Total Cycles"
@@ -1995,6 +2025,11 @@ msgstr "Total Qtd"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Type"
 msgstr "Tipo"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Unit Cost"
+msgstr "Custo unitário"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view

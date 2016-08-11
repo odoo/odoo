@@ -1014,6 +1014,13 @@ class Field(object):
         # ``records``, except fields currently being computed
         spec = []
         for field, path in records._field_triggers[self]:
+            if not field.compute:
+                # Note: do not invalidate non-computed fields. Such fields may
+                # require invalidation in general (like *2many fields with
+                # domains) but should not be invalidated in this case, because
+                # we would simply lose their values during an onchange!
+                continue
+
             target = env[field.model_name]
             computed = target.browse(env.computed[field])
             if path == 'id' and field.model_name == records._name:

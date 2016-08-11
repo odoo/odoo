@@ -115,8 +115,8 @@
                 </thead>
                 <t t-foreach="invoices" t-as="invoice">
                     <tr t-att-class="'hidden to_hide' if invoice.state!='open' and invoice_index &gt; 4 else ''">
-                        <td>
-                            <a t-att-href="'/report/pdf/account.report_invoice/'+str(invoice.id)"><t t-esc="invoice.number"/></a>
+                        <td class= "cell_overflow">
+                            <a t-att-href="'/report/pdf/account.report_invoice/'+str(invoice.id)" t-att-title="invoice.number"><t t-esc="invoice.number"/></a>
                         </td>
                         <td><span t-field="invoice.date_invoice"/></td>
                         <td><span t-field="invoice.date_due"/></td>

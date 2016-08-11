@@ -10,7 +10,15 @@ class WebsiteAccount(website_account):
     def account(self):
         response = super(WebsiteAccount, self).account()
         user = request.env.user
-        project_issues = request.env['project.issue'].search([])
+        # TDE FIXME: shouldn't that be mnaged by the access rule itself ?
+        # portal projects where you or someone from your company are a follower
+        project_issues = request.env['project.issue'].sudo().search([
+            '&',
+            ('project_id.privacy_visibility', '=', 'portal'),
+            '|',
+            ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+            ('message_partner_ids', 'child_of', [user.partner_id.id])
+        ])
         response.qcontext.update({'issues': project_issues})
         return response
 

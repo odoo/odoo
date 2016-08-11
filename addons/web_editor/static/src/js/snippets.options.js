@@ -31,7 +31,7 @@ var Option = Class.extend({
 
     // helper for this.$target.find
     $: function (selector) {
-        return this.$target(selector);
+        return this.$target.find(selector);
     },
 
     _bind_li_menu: function () {

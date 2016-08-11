@@ -62,7 +62,7 @@ class hr_job(osv.Model):
         'no_of_employee': fields.function(_get_nbr_employees, string="Current Number of Employees",
             help='Number of employees currently occupying this job position.',
             store = {
-                'hr.employee': (_get_job_position, ['job_id'], 10),
+                'hr.employee': (_get_job_position, ['job_id', 'active'], 10),
             }, type='integer',
             multi='_get_nbr_employees'),
         'no_of_recruitment': fields.integer('Expected New Employees', copy=False,
@@ -261,7 +261,7 @@ class hr_employee(osv.osv):
                 user_field_lst.append(name)
         return user_field_lst
 
-    _constraints = [(osv.osv._check_recursion, _('Error! You cannot create recursive hierarchy of Employee(s).'), ['parent_id']),]
+    _constraints = [(osv.osv._check_recursion, 'Error! You cannot create recursive hierarchy of Employee(s).', ['parent_id']),]
 
 
 class hr_department(osv.osv):
@@ -291,7 +291,7 @@ class hr_department(osv.osv):
     }
 
     _constraints = [
-        (osv.osv._check_recursion, _('Error! You cannot create recursive departments.'), ['parent_id'])
+        (osv.osv._check_recursion, 'Error! You cannot create recursive departments.', ['parent_id'])
     ]
 
     def name_get(self, cr, uid, ids, context=None):

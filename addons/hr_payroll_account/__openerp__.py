@@ -12,7 +12,6 @@ Generic Payroll system Integrated with Accounting.
     * Payment Encoding
     * Company Contribution Management
     """,
-    'author':'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
     'depends': [
         'hr_payroll',

@@ -3,7 +3,7 @@
 {
     'name': 'HR Gamification',
     'version': '1.0',
-    'category': 'hidden',
+    'category': 'Human Resources',
     'website': 'https://www.odoo.com/page/employees',
     'depends': ['gamification', 'hr'],
     'description': """Use the HR ressources for the gamification process.

@@ -18,7 +18,7 @@ return Widget.extend({
         this._super(parent);
         this.context = options.context;
         this.fields = options.fields;
-        this.fields.__count__ = {string: _t("Quantity"), type: "integer"};
+        this.fields.__count__ = {string: _t("Count"), type: "integer"};
         this.model = new Model(model, {group_by_no_leaf: true});
 
         this.domain = options.domain || [];
@@ -164,7 +164,7 @@ return Widget.extend({
         var chart = nv.models.multiBarChart();
         var maxVal = _.max(values, function(v) {return v.y})
         chart.options({
-          margin: {left: 12 * String(maxVal && maxVal.y || 0).length},
+          margin: {left: 12 * String(maxVal && maxVal.y || 10000000).length},
           delay: 250,
           transition: 10,
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
@@ -296,7 +296,7 @@ return Widget.extend({
         var chart = nv.models.lineChart();
         var maxVal = _.max(values, function(v) {return v.y})
         chart.options({
-          margin: {left: 12 * String(maxVal && maxVal.y || 0).length, right: 50},
+          margin: {left: 12 * String(maxVal && maxVal.y || 10000000).length, right: 50},
           useInteractiveGuideline: true,
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,

@@ -3,13 +3,14 @@
 # * account_asset
 # 
 # Translators:
+# Eng.Walid Ramadan <tdatasa@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-15 09:26+0000\n"
-"PO-Revision-Date: 2016-05-12 09:34+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-06-02 03:49+0000\n"
+"Last-Translator: Eng.Walid Ramadan <tdatasa@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -165,12 +166,12 @@ msgstr "بند إهلاك الأصل"
 #: code:addons/account_asset/account_asset.py:271
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
-msgstr "Asset sold or disposed. Accounting entry awaiting for validation."
+msgstr "تم بيع أو تخريد الأصل . الإثبات المحاسبي يحتاج للمراجعه و التأكيد"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset/Revenue Recognition"
-msgstr "Asset/Revenue Recognition"
+msgstr "الأصل / حساب الشهره"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
@@ -193,7 +194,7 @@ msgstr "تحليل الأصول"
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
 msgid "Assets and Revenues"
-msgstr "Assets and Revenues"
+msgstr "الاصول و حسابات الشهره"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -445,12 +446,12 @@ msgstr "قيد الإهلاك"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Asset Account"
-msgstr ""
+msgstr "حساب مجمع إهلاك الأصل"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Expense Account"
-msgstr ""
+msgstr "حساب مصروف إهلاك الأصل"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -504,19 +505,19 @@ msgstr "اسم العرض"
 #: code:addons/account_asset/account_asset.py:274
 #, python-format
 msgid "Disposal Move"
-msgstr "Disposal Move"
+msgstr "حركة تخريد"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:277
 #, python-format
 msgid "Disposal Moves"
-msgstr "Disposal Moves"
+msgstr "حركات التخريد"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:468
 #, python-format
 msgid "Document closed."
-msgstr "Document closed."
+msgstr "إقفال المستند ."
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
@@ -572,7 +573,7 @@ msgstr "المتابعون (الشركاء)"
 msgid ""
 "From this report, you can have an overview on all depreciations. The\n"
 "            search bar can also be used to personalize your assets depreciation reporting."
-msgstr "From this report, you can have an overview on all depreciations. The\n            search bar can also be used to personalize your assets depreciation reporting."
+msgstr "من هذا التقرير يمكنك أن تلقي نظرة عامة على كافة الإهلاكات.\nيمكنك كذلك استخدام شريط البحث لتخصيص تقارير اهلاكات الأصول\nوبالتالي استخراج التقارير التي تحتاجها بالضبط."
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
@@ -758,7 +759,7 @@ msgstr "الشهر"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_mrr
 msgid "Monthly Recurring Revenue"
-msgstr "Monthly Recurring Revenue"
+msgstr "الايرادات الشهرية المتكررة"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_remaining_value
@@ -896,7 +897,7 @@ msgstr "السبب"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_income_recognition_id
 msgid "Recognition Income Account"
-msgstr "Recognition Income Account"
+msgstr "حساب قيد الإيرادات"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_code
@@ -922,7 +923,7 @@ msgstr "جاري"
 #. module: account_asset
 #: selection:account.asset.category,type:0
 msgid "Sale: Revenue Recognition"
-msgstr "Sale: Revenue Recognition"
+msgstr "بيع : الإعتراف بالايراد"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -986,7 +987,7 @@ msgstr "عدد مرات الإهلاك اللازمة لإهلاك الأصل."
 msgid ""
 "This wizard will post installment/depreciation lines for the selected month.<br/>\n"
 "                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
-msgstr "This wizard will post installment/depreciation lines for the selected month.<br/>\n                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
+msgstr "هذا المعالج سيقوم بترحيل بنود اقساط الإهلاك لهذا الشهر <br/>\nو سيقوم بإنشاء القيود المحاسبية لجميع بنود أقساط الإهلاك لهذه الفترة للأصول ."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -1054,7 +1055,7 @@ msgstr "السنة"
 msgid ""
 "You already have assets with the reference %s.\n"
 "Please delete these assets before creating new ones for this invoice."
-msgstr ""
+msgstr "لديك بالفعل أصول تتصل ب / أو تشير الى %s\nيرجي محو هذه الاصول قبل إنشاء أصول جديده لهذه الفاتورة"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:100

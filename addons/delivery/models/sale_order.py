@@ -34,7 +34,7 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for so in self:
-            self.invoice_shipping_on_delivery = all([not line.is_delivery for line in so.order_line])
+            so.invoice_shipping_on_delivery = all([not line.is_delivery for line in so.order_line])
         return res
 
     @api.multi
@@ -70,6 +70,8 @@ class SaleOrder(models.Model):
             else:
                 raise UserError(_('No carrier set for this order.'))
 
+        return True
+
     def _create_delivery_line(self, carrier, price_unit):
         SaleOrderLine = self.env['sale.order.line']
 
@@ -92,7 +94,7 @@ class SaleOrder(models.Model):
         }
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
-        sol = SaleOrderLine.create(values)
+        sol = SaleOrderLine.sudo().create(values)
         return sol
 
 

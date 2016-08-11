@@ -6,7 +6,7 @@
 {
     'name': 'Ethiopia - Accounting',
     'version': '2.0',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 Base Module for Ethiopian Localization
 ======================================

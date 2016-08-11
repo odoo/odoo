@@ -128,7 +128,7 @@ class AccountBankStatement(models.Model):
     _inherit = ['mail.thread']
 
     name = fields.Char(string='Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True)
-    date = fields.Date(required=True, states={'confirm': [('readonly', True)]}, select=True, copy=False, default=fields.Date.context_today)
+    date = fields.Date(required=True, states={'confirm': [('readonly', True)]}, index=True, copy=False, default=fields.Date.context_today)
     date_done = fields.Datetime(string="Closed On")
     balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, default=_default_opening_balance)
     balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]})
@@ -259,7 +259,7 @@ class AccountBankStatement(models.Model):
         return {
             'name': _('Journal Items'),
             'view_type': 'form',
-            'view_mode': 'tree',
+            'view_mode': 'tree,form',
             'res_model': 'account.move.line',
             'view_id': False,
             'type': 'ir.actions.act_window',
@@ -419,17 +419,30 @@ class AccountBankStatementLine(models.Model):
 
     @api.multi
     def button_cancel_reconciliation(self):
-        # TOCKECK : might not behave as expected in case of reconciliations (match statement line with already
-        # registered payment) or partial reconciliations : it will completely remove the existing payment.
-        move_recs = self.env['account.move']
+        moves_to_unbind = self.env['account.move']
+        moves_to_cancel = self.env['account.move']
+        payment_to_unreconcile = self.env['account.payment']
         for st_line in self:
-            move_recs = (move_recs | st_line.journal_entry_ids)
-        if move_recs:
-            for move in move_recs:
+            moves_to_unbind |= st_line.journal_entry_ids
+            for move in st_line.journal_entry_ids:
+                if any(line.payment_id for line in move.line_ids):
+                    for line in move.line_ids:
+                        payment_to_unreconcile |= line.payment_id
+                    continue
+                moves_to_cancel |= st_line.journal_entry_ids
+        if moves_to_unbind:
+            moves_to_unbind.write({'statement_line_id': False})
+            for move in moves_to_unbind:
+                move.line_ids.filtered(lambda x:x.statement_id == st_line.statement_id).write({'statement_id': False})
+
+        if moves_to_cancel:
+            for move in moves_to_cancel:
                 move.line_ids.remove_move_reconcile()
-            move_recs.write({'statement_line_id': False})
-            move_recs.button_cancel()
-            move_recs.unlink()
+            moves_to_cancel.button_cancel()
+            moves_to_cancel.unlink()
+
+        if payment_to_unreconcile:
+            payment_to_unreconcile.unreconcile()
 
     ####################################################
     # Reconciliation interface methods
@@ -562,7 +575,19 @@ class AccountBankStatementLine(models.Model):
                 else:
                     domain = [(f, '>', 0), (f, '<', amount)]
             elif comparator == '=':
-                domain = [(f, '=', float_round(amount, precision_digits=p))]
+                if f == 'amount_residual':
+                    liquidity_field = amount > 0 and 'debit' or 'credit'
+                    domain = [
+                        '|', (f, '=', float_round(amount, precision_digits=p)),
+                        '&', ('account_id.internal_type', '=', 'liquidity'),
+                        (liquidity_field, '=', amount),
+                    ]
+                else:
+                    domain = [
+                        '|', (f, '=', float_round(amount, precision_digits=p)),
+                        '&', ('account_id.internal_type', '=', 'liquidity'),
+                        ('amount_currency', '=', amount),
+                    ]
             else:
                 raise UserError(_("Programmation error : domain_maker_move_line_amount requires comparator '=' or '<'"))
             domain += [('currency_id', '=', c)]
@@ -711,8 +736,11 @@ class AccountBankStatementLine(models.Model):
             elif st_line_currency == company_currency:
                 total_amount = self.amount_currency
             else:
-                total_amount = statement_currency.with_context({'date': self.date}).compute(self.amount, company_currency)
-            ratio = total_amount / amount
+                total_amount = statement_currency.with_context({'date': self.date}).compute(self.amount, company_currency, round=False)
+            if float_compare(total_amount, amount, precision_digits=company_currency.rounding) == 0:
+                ratio = 1.0
+            else:
+                ratio = total_amount / amount
             # Then use it to adjust the statement.line field that correspond to the move.line amount_currency
             if statement_currency != company_currency:
                 amount_currency = self.amount * ratio
@@ -768,6 +796,7 @@ class AccountBankStatementLine(models.Model):
             items, as well as a journal item for the bank statement line.
             Finally, mark the statement line as reconciled by putting the matched moves ids in the column journal_entry_ids.
 
+            :param self: browse collection of records that are supposed to have no accounting entries already linked.
             :param (list of dicts) counterpart_aml_dicts: move lines to create to reconcile with existing payables/receivables.
                 The expected keys are :
                 - 'name'
@@ -802,8 +831,6 @@ class AccountBankStatementLine(models.Model):
         counterpart_moves = self.env['account.move']
 
         # Check and prepare received data
-        if self.journal_entry_ids.ids:
-            raise UserError(_('The bank statement line was already reconciled.'))
         if any(rec.statement_id for rec in payment_aml_rec):
             raise UserError(_('A selected move line was already reconciled.'))
         for aml_dict in counterpart_aml_dicts:

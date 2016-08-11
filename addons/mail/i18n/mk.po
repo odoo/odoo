@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-13 14:27+0000\n"
-"PO-Revision-Date: 2016-05-12 15:16+0000\n"
-"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
+"POT-Creation-Date: 2016-07-22 13:00+0000\n"
+"PO-Revision-Date: 2016-07-23 09:04+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,8 +24,10 @@ msgid ""
 "\n"
 "<div itemscope itemtype=\"http://schema.org/EmailMessage\">\n"
 "    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\">\n"
+"        % if ctx.get('button_access'):\n"
 "        <link itemprop=\"target\" href=\"${ctx['button_access']['url']}\"/>\n"
 "        <link itemprop=\"url\" href=\"${ctx['button_access']['url']}\"/>\n"
+"        % endif\n"
 "        <meta itemprop=\"name\" content=\"View ${ctx['model_name']}\"/>\n"
 "    </div>\n"
 "</div>\n"
@@ -121,13 +123,6 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:53
-#, python-format
-msgid " from "
-msgstr ""
-
-#. module: mail
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
 msgid ""
 "${object.subject or (object.record_name and 'Re: %s' % object.record_name) "
@@ -138,19 +133,19 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:59
+#: code:addons/mail/static/src/js/chat_manager.js:83
 #, python-format
 msgid "%d Messages"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_template.py:216
+#: code:addons/mail/models/mail_template.py:230
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копија)"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:234
+#: code:addons/mail/models/mail_thread.py:238
 #, python-format
 msgid "%s created"
 msgstr "%s креирани"
@@ -187,7 +182,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:147
 #, python-format
 msgid "-------- Show older messages --------"
-msgstr ""
+msgstr "-------- Прикажи постари пораки --------"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:513
@@ -274,20 +269,6 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:13
-#, python-format
-msgid "@ Inbox"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/systray.xml:20
-#, python-format
-msgid "@Inbox"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_defaults
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_defaults
 #: model:ir.model.fields,help:mail.field_res_users_alias_defaults
@@ -350,7 +331,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/chatter.xml:144
 #, python-format
 msgid "Add Channels"
-msgstr ""
+msgstr "Додади канали"
 
 #. module: mail
 #. openerp-web
@@ -662,7 +643,7 @@ msgstr "Промени"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field
 msgid "Changed Field"
-msgstr ""
+msgstr "Изменето поле"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_channel_id
@@ -726,7 +707,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail_child_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message_child_ids
 msgid "Child Messages"
-msgstr "Порака (дете)"
+msgstr "Подредени пораки"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -810,10 +791,10 @@ msgstr "Состави е-пошта"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/systray.xml:4
+#: code:addons/mail/static/src/xml/client_action.xml:135
 #, python-format
-msgid "Compose new Message"
-msgstr "Состави нова порака"
+msgid "Compose a new message"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_composition_mode
@@ -861,7 +842,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/systray.xml:14
 #, python-format
 msgid "Conversations"
-msgstr ""
+msgstr "Конверзации"
 
 #. module: mail
 #. openerp-web
@@ -994,20 +975,6 @@ msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
 msgstr "Опис што ќе биде додаден во пораката пратена за овој подтип. Доколку е поништено, ќе се додаде името."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:124
-#, python-format
-msgid "Detach"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:124
-#, python-format
-msgid "Detach the conversation"
-msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -1428,7 +1395,7 @@ msgstr "ID"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr "ИБ на родителот што го содржи alias-от (пример: проект што го содржи креаторот на задачи alias)"
+msgstr "ИБ на надредениот запис што го содржи alias-от (пример: проект што го содржи креаторот на задачи alias)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers_res_id
@@ -1491,11 +1458,6 @@ msgid ""
 msgstr "Ако сте подесиле домен што ќе ги прима сите е-маил пораки пренасочен кон Odoo серверот, внесете го тука името на доменот."
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_message_search
-msgid "Important messages"
-msgstr ""
-
-#. module: mail
 #: code:addons/mail/models/mail_alias.py:141
 #, python-format
 msgid "Inactive Alias"
@@ -1503,7 +1465,9 @@ msgstr "Неактивен алијас"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:426
+#: code:addons/mail/static/src/js/chat_manager.js:1033
+#: code:addons/mail/static/src/xml/client_action.xml:22
+#: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
 msgid "Inbox"
 msgstr "Влезно Сандаче"
@@ -1541,7 +1505,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chat_manager.js:514
 #, python-format
 msgid "Invitation"
-msgstr ""
+msgstr "Покана"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:53
@@ -1567,16 +1531,16 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:30
-#: code:addons/mail/static/src/xml/client_action.xml:123
+#: code:addons/mail/static/src/xml/client_action.xml:132
 #, python-format
 msgid "Invite people"
-msgstr ""
+msgstr "Поканете луѓе"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:454
+#: code:addons/mail/static/src/js/client_action.js:626
 #, python-format
-msgid "Invite people to %s"
+msgid "Invite people to #%s"
 msgstr ""
 
 #. module: mail
@@ -1703,7 +1667,7 @@ msgstr "Последно ажурирање на"
 #: code:addons/mail/static/src/xml/client_action.xml:97
 #, python-format
 msgid "Leave this channel"
-msgstr ""
+msgstr "Излези од овој канал"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite_channel_ids
@@ -1725,6 +1689,11 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_partner_ids
 msgid "Listeners"
+msgstr ""
+
+#. module: mail
+#: selection:mail.channel,channel_type:0
+msgid "Livechat Conversation"
 msgstr ""
 
 #. module: mail
@@ -1930,8 +1899,6 @@ msgid "Message-Id"
 msgstr "Идентификатор на порака"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/systray.xml:6
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_ids
@@ -1939,7 +1906,6 @@ msgstr "Идентификатор на порака"
 #: model:ir.model.fields,field_description:mail.field_res_users_message_ids
 #: model:ir.ui.menu,name:mail.menu_mail_message
 #: model:ir.ui.view,arch_db:mail.view_message_tree
-#, python-format
 msgid "Messages"
 msgstr "Пораки"
 
@@ -2138,13 +2104,6 @@ msgid "Notification"
 msgstr "Известување"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/systray.xml:12
-#, python-format
-msgid "Notifications"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_notify
 msgid "Notify followers"
 msgstr "Извести следбеници"
@@ -2191,7 +2150,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "Odoo needs your permission to"
-msgstr ""
+msgstr "На Odoo му е потребна ваша дозвола за"
 
 #. module: mail
 #. openerp-web
@@ -2257,7 +2216,7 @@ msgstr "Отвори документ"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Parent Document"
-msgstr "Отвори главен документ"
+msgstr "Отвори надреден документ"
 
 #. module: mail
 #. openerp-web
@@ -2357,21 +2316,21 @@ msgstr "Сопственик"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_parent_id
 msgid "Parent"
-msgstr "Родител"
+msgstr "Надреден елемент"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_parent_id
 #: model:ir.model.fields,field_description:mail.field_mail_mail_parent_id
 #: model:ir.model.fields,field_description:mail.field_mail_message_parent_id
 msgid "Parent Message"
-msgstr "Изворна порака"
+msgstr "Надредна порака"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_parent_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_parent_model_id
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_parent_model_id
 msgid "Parent Model"
-msgstr "Модел Родител"
+msgstr "Надреден модел"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_parent_thread_id

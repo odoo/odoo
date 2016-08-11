@@ -160,11 +160,11 @@ widget.LinkDialog.include({
         }
         return this._super();
     },
-    get_data_buy_url: function (def, $e, isNewWindow, label, classes) {
+    get_data_buy_url: function (def, $e, isNewWindow, label, classes, test) {
         var val = $e.val();
         if (val && val.length && $e.hasClass('page')) {
             var data = $e.select2('data');
-            if (!data.create) {
+            if (!data.create || test) {
                 def.resolve(data.id, isNewWindow, label || data.text, classes);
             } else {
                 // Create the page, get the URL back
@@ -175,7 +175,7 @@ widget.LinkDialog.include({
                     });
             }
         } else {
-            def.resolve(val, isNewWindow, label, classes);
+            return this._super.apply(this, arguments);
         }
     },
     changed: function (e) {

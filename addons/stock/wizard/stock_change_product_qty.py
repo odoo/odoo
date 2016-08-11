@@ -53,6 +53,23 @@ class stock_change_product_qty(osv.osv_memory):
             values.update(self.onchange_product_id(cr, uid, None, values['product_id'], context=context)['value'])
         return super(stock_change_product_qty, self).create(cr, uid, values, context=context)
 
+    def _prepare_inventory_line(self, cr, uid, inventory_id, data, context=None):
+
+        product = data.product_id.with_context(location=data.location_id.id, lot_id=data.lot_id.id)
+        th_qty = product.qty_available
+
+        res = {
+               'inventory_id': inventory_id,
+               'product_qty': data.new_quantity,
+               'location_id': data.location_id.id,
+               'product_id': data.product_id.id,
+               'product_uom_id': data.product_id.uom_id.id,
+               'theoretical_qty': th_qty,
+               'prod_lot_id': data.lot_id.id,
+        }
+
+        return res
+
     def onchange_product_id(self, cr, uid, ids, prod_id, context=None):
         product = self.pool.get('product.product').browse(cr, uid, prod_id)
         return {'value': {
@@ -86,18 +103,10 @@ class stock_change_product_qty(osv.osv_memory):
                 'product_id': data.product_id.id,
                 'location_id': data.location_id.id,
                 'lot_id': data.lot_id.id}, context=context)
-            product = data.product_id.with_context(location=data.location_id.id, lot_id= data.lot_id.id)
-            th_qty = product.qty_available
-            line_data = {
-                'inventory_id': inventory_id,
-                'product_qty': data.new_quantity,
-                'location_id': data.location_id.id,
-                'product_id': data.product_id.id,
-                'product_uom_id': data.product_id.uom_id.id,
-                'theoretical_qty': th_qty,
-                'prod_lot_id': data.lot_id.id
-            }
-            inventory_line_obj.create(cr , uid, line_data, context=context)
+
+            line_data = self._prepare_inventory_line(cr, uid, inventory_id, data, context=context)
+
+            inventory_line_obj.create(cr, uid, line_data, context=context)
             inventory_obj.action_done(cr, uid, [inventory_id], context=context)
         return {}
 

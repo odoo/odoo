@@ -12,7 +12,7 @@ This module allows you to easily add extra costs on pickings and decide the spli
     """,
     'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['stock_account', 'purchase'],
-    'category': 'Warehouse Management',
+    'category': 'Warehouse',
     'sequence': 16,
     'demo': [
     ],

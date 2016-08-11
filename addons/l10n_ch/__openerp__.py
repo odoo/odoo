@@ -40,7 +40,7 @@ https://github.com/OCA/l10n-switzerland
 """,
  'version': '9.0',
  'author': 'Camptocamp',
- 'category': 'Localization/Account Charts',
+ 'category': 'Localization',
  'website': 'http://www.camptocamp.com',
  'depends': ['account', 'l10n_multilang'],
  'data': ['chart/account.xml',

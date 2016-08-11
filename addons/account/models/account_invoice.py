@@ -69,9 +69,6 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _default_currency(self):
-        if 'default_purchase_id' in self.env.context:
-            purchase_id = self.env.context['default_purchase_id']
-            return self.env['purchase.order'].browse(purchase_id).currency_id
         journal = self._default_journal()
         return journal.currency_id or journal.company_id.currency_id
 
@@ -148,14 +145,19 @@ class AccountInvoice(models.Model):
             info = {'title': _('Less Payment'), 'outstanding': False, 'content': []}
             currency_id = self.currency_id
             for payment in self.payment_move_line_ids:
+                payment_currency_id = False
                 if self.type in ('out_invoice', 'in_refund'):
                     amount = sum([p.amount for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
                     amount_currency = sum([p.amount_currency for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
+                    if payment.matched_debit_ids:
+                        payment_currency_id = all([p.currency_id == payment.matched_debit_ids[0].currency_id for p in payment.matched_debit_ids]) and payment.matched_debit_ids[0].currency_id or False
                 elif self.type in ('in_invoice', 'out_refund'):
                     amount = sum([p.amount for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
                     amount_currency = sum([p.amount_currency for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
+                    if payment.matched_credit_ids:
+                        payment_currency_id = all([p.currency_id == payment.matched_credit_ids[0].currency_id for p in payment.matched_credit_ids]) and payment.matched_credit_ids[0].currency_id or False
                 # get the payment value in invoice currency
-                if payment.currency_id and payment.currency_id == self.currency_id:
+                if payment_currency_id and payment_currency_id == self.currency_id:
                     amount_to_show = amount_currency
                 else:
                     amount_to_show = payment.company_id.currency_id.with_context(date=payment.date).compute(amount, self.currency_id)
@@ -202,7 +204,7 @@ class AccountInvoice(models.Model):
         track_visibility='always')
 
     number = fields.Char(related='move_id.name', store=True, readonly=True, copy=False)
-    move_name = fields.Char(string='Journal Entry', readonly=True,
+    move_name = fields.Char(string='Journal Entry', readonly=False,
         default=False, copy=False,
         help="Technical field holding the number given to the invoice, automatically set when the invoice is validated then stored to set the same number again if the invoice is cancelled, set to draft and re-validated.")
     reference = fields.Char(string='Vendor Reference',
@@ -321,9 +323,26 @@ class AccountInvoice(models.Model):
 
     @api.model
     def create(self, vals):
+        onchanges = {
+            '_onchange_partner_id': ['account_id', 'payment_term_id', 'fiscal_position_id', 'partner_bank_id'],
+            '_onchange_journal_id': ['currency_id'],
+        }
+        for onchange_method, changed_fields in onchanges.items():
+            if any(f not in vals for f in changed_fields):
+                invoice = self.new(vals)
+                getattr(invoice, onchange_method)()
+                for field in changed_fields:
+                    if field not in vals and invoice[field]:
+                        vals[field] = invoice._fields[field].convert_to_write(invoice[field])
         if not vals.get('account_id',False):
             raise UserError(_('Configuration error!\nCould not find any account to create the invoice, are you sure you have a chart of account installed?'))
-        return super(AccountInvoice, self.with_context(mail_create_nolog=True)).create(vals)
+
+        invoice = super(AccountInvoice, self.with_context(mail_create_nolog=True)).create(vals)
+
+        if any(line.invoice_line_tax_ids for line in invoice.invoice_line_ids) and not invoice.tax_line_ids:
+            invoice.compute_taxes()
+
+        return invoice
 
     @api.model
     def fields_view_get(self, view_id=None, view_type=False, toolbar=False, submenu=False):
@@ -498,14 +517,24 @@ class AccountInvoice(models.Model):
         self.write({'state': 'draft', 'date': False})
         self.delete_workflow()
         self.create_workflow()
-        # Delete attachments now since an invoice can also be generated when the invoice is cancelled
-        self.env['ir.attachment'].search([('res_model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
+        # Delete former printed invoice
+        try:
+            report_invoice = self.env['report']._get_report_from_name('account.report_invoice')
+        except IndexError:
+            report_invoice = False
+        if report_invoice:
+            for invoice in self:
+                with invoice.env.do_in_draft():
+                    invoice.number, invoice.state = invoice.move_name, 'open'
+                    attachment = self.env['report']._attachment_stored(invoice, report_invoice)[invoice.id]
+                if attachment:
+                    attachment.unlink()
         return True
 
     @api.multi
     def get_formview_id(self):
         """ Update form view id of action to open the invoice """
-        if self.type == 'in_invoice':
+        if self.type in ('in_invoice', 'in_refund'):
             return self.env.ref('account.invoice_supplier_form').id
         else:
             return self.env.ref('account.invoice_form').id
@@ -535,7 +564,8 @@ class AccountInvoice(models.Model):
                 if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
                     val['account_analytic_id'] = line.account_analytic_id.id
 
-                key = tax['id']
+                key = self.env['account.tax'].browse(tax['id']).get_grouping_key(val)
+
                 if key not in tax_grouped:
                     tax_grouped[key] = val
                 else:
@@ -637,9 +667,18 @@ class AccountInvoice(models.Model):
     @api.model
     def tax_line_move_line_get(self):
         res = []
-        for tax_line in self.tax_line_ids:
+        # keep track of taxes already processed
+        done_taxes = []
+        # loop the invoice.tax.line in reversal sequence
+        for tax_line in sorted(self.tax_line_ids, key=lambda x: -x.sequence):
             if tax_line.amount:
+                tax = tax_line.tax_id
+                if tax.amount_type == "group":
+                    for child_tax in tax.children_tax_ids:
+                        done_taxes.append(child_tax.id)
+                done_taxes.append(tax.id)
                 res.append({
+                    'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
                     'type': 'tax',
                     'name': tax_line.name,
@@ -649,6 +688,7 @@ class AccountInvoice(models.Model):
                     'account_id': tax_line.account_id.id,
                     'account_analytic_id': tax_line.account_analytic_id.id,
                     'invoice_id': self.id,
+                    'tax_ids': [(6, 0, done_taxes)] if tax_line.tax_id.include_base_amount else []
                 })
         return res
 
@@ -677,6 +717,9 @@ class AccountInvoice(models.Model):
                     line2[tmp]['credit'] = (am < 0) and -am or 0.0
                     line2[tmp]['amount_currency'] += l['amount_currency']
                     line2[tmp]['analytic_line_ids'] += l['analytic_line_ids']
+                    qty = l.get('quantity')
+                    if qty:
+                        line2[tmp]['quantity'] = line2[tmp].get('quantity', 0.0) + qty
                 else:
                     line2[tmp] = l
             line = []
@@ -1085,7 +1128,7 @@ class AccountInvoiceLine(models.Model):
         default=0.0)
     invoice_line_tax_ids = fields.Many2many('account.tax',
         'account_invoice_line_tax', 'invoice_line_id', 'tax_id',
-        string='Taxes', domain=[('type_tax_use','!=','none')], oldname='invoice_line_tax_id')
+        string='Taxes', domain=[('type_tax_use','!=','none'), '|', ('active', '=', False), ('active', '=', True)], oldname='invoice_line_tax_id')
     account_analytic_id = fields.Many2one('account.analytic.account',
         string='Analytic Account')
     company_id = fields.Many2one('res.company', string='Company',
@@ -1242,11 +1285,13 @@ class AccountInvoiceTax(models.Model):
             for line in tax.invoice_id.invoice_line_ids:
                 if tax.tax_id in line.invoice_line_tax_ids:
                     base += line.price_subtotal
+                    # To add include base amount taxes
+                    base += sum((line.invoice_line_tax_ids.filtered(lambda t: t.include_base_amount) - tax.tax_id).mapped('amount'))
             tax.base = base
 
     invoice_id = fields.Many2one('account.invoice', string='Invoice', ondelete='cascade', index=True)
     name = fields.Char(string='Tax Description', required=True)
-    tax_id = fields.Many2one('account.tax', string='Tax')
+    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict')
     account_id = fields.Many2one('account.account', string='Tax Account', required=True, domain=[('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
     amount = fields.Monetary()
@@ -1336,7 +1381,7 @@ class AccountPaymentTermLine(models.Model):
     days = fields.Integer(string='Number of Days', required=True, default=0)
     option = fields.Selection([
             ('day_after_invoice_date', 'Day(s) after the invoice date'),
-            ('fix_day_following_month', 'Fixed day of the following month'),
+            ('fix_day_following_month', 'Day(s) after the end of the invoice month (Net EOM)'),
             ('last_day_following_month', 'Last day of following month'),
             ('last_day_current_month', 'Last day of current month'),
         ],

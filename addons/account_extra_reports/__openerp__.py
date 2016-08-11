@@ -4,7 +4,7 @@
 {
     'name': 'Extra Accounting Reports',
     'version': '1.1',
-    'category': 'Accounting & Finance',
+    'category': 'Accounting',
     'description': """
 Extra Accounting Reports.
 ====================================

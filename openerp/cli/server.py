@@ -128,11 +128,14 @@ def main(args):
     # bit overkill, but better safe than sorry I guess
     csv.field_size_limit(500 * 1024 * 1024)
 
-    if config["db_name"]:
-        try:
-            openerp.service.db._create_empty_database(config["db_name"])
-        except openerp.service.db.DatabaseExists:
-            pass
+    preload = []
+    if config['db_name']:
+        preload = config['db_name'].split(',')
+        for db_name in preload:
+            try:
+                openerp.service.db._create_empty_database(db_name)
+            except openerp.service.db.DatabaseExists:
+                pass
 
     if config["test_file"]:
         config["test_enable"] = True
@@ -149,10 +152,6 @@ def main(args):
     # signaling mecanism for registries loaded with -d
     if config['workers']:
         openerp.multi_process = True
-
-    preload = []
-    if config['db_name']:
-        preload = config['db_name'].split(',')
 
     stop = config["stop_after_init"]
 

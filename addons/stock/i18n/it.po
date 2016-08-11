@@ -4,6 +4,7 @@
 # 
 # Translators:
 # ginfriz <ginfriz84@hotmail.it>, 2015
+# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2016
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2016
 # Paolo Valier, 2016
 # Simone Bernini <simone@aperturelabs.it>, 2016
@@ -12,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-05-06 07:28+0000\n"
-"Last-Translator: Paolo Valier\n"
+"PO-Revision-Date: 2016-08-05 15:28+0000\n"
+"Last-Translator: Lorenzo Battistini <lorenzo.battistini@agilebg.com>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +46,7 @@ msgstr "\n* Bozza: ancora non confermato e non può essere schedulato fino alla 
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
-msgstr "\nCrea il percorso navetta e aggiunge prove più complesse-Questo installa il modulo stock_dropshipping"
+msgstr "\nCrea il percorso dropshipping e aggiunge test più complessi-Questo installa il modulo stock_dropshipping"
 
 #. module: stock
 #: code:addons/stock/stock.py:1847
@@ -1019,7 +1020,7 @@ msgstr ""
 #: code:addons/stock/stock.py:3466
 #, python-format
 msgid "Can't find any generic Make To Order route."
-msgstr ""
+msgstr "Non è stata trovata una rotta generica di Produzione su Ordine."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
@@ -1964,7 +1965,7 @@ msgstr "Movimenti Bozza"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_dropshipping
 msgid "Dropshipping"
-msgstr "Scaricare la consegna"
+msgstr "Dropshipping"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2554,7 +2555,7 @@ msgstr ""
 msgid ""
 "In case of dropshipping, we need to know the destination address more "
 "precisely"
-msgstr "In caso di consegna diretta dal produttore, abbiamo bisogno di conoscere l'indirizzo di destinazione con maggiore precisione"
+msgstr "In caso di consegna diretta dal fornitore, abbiamo bisogno di conoscere l'indirizzo di destinazione con maggiore precisione"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2704,27 +2705,27 @@ msgstr "Numero di riferimento interno nel caso sia diverso dal numero seriale di
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_location_id
 msgid "Inventoried Location"
-msgstr ""
+msgstr "Location inventariata"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_lot_id
 msgid "Inventoried Lot/Serial Number"
-msgstr ""
+msgstr "Lotto/Numero di serie inventariato"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_partner_id
 msgid "Inventoried Owner"
-msgstr ""
+msgstr "Proprietario inventariato"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_package_id
 msgid "Inventoried Pack"
-msgstr ""
+msgstr "Pacco inventariato"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_product_id
 msgid "Inventoried Product"
-msgstr ""
+msgstr "Prodotto inventariato"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_ids
@@ -3267,7 +3268,7 @@ msgstr "Genera approvvigionamenti"
 #: model:stock.location.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Make To Order"
-msgstr ""
+msgstr "Produrre su Ordine"
 
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
@@ -3439,7 +3440,7 @@ msgstr "Muovi"
 #: code:addons/stock/procurement.py:25
 #, python-format
 msgid "Move From Another Location"
-msgstr ""
+msgstr "Sposta da altra Location"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_lines_related
@@ -3554,7 +3555,7 @@ msgstr "Nuovo"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_new_quantity
 msgid "New Quantity on Hand"
-msgstr ""
+msgstr "Nuova Quantità a disposizione"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_form
@@ -3647,7 +3648,7 @@ msgstr "Note"
 #: code:addons/stock/stock.py:1040
 #, python-format
 msgid "Nothing to check the availability for."
-msgstr ""
+msgstr "Nulla di cui controllare la disponibilità."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4538,7 +4539,7 @@ msgstr "Prodotti "
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_propagate
 #: model:ir.model.fields,field_description:stock.field_stock_move_propagate
 msgid "Propagate cancel and split"
-msgstr ""
+msgstr "Propaga Cancellazione e Frazione"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5192,7 +5193,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_warehouse_id
 msgid "Served Warehouse"
-msgstr ""
+msgstr "Magazzino servito"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category_removal_strategy_id
@@ -6314,7 +6315,7 @@ msgid ""
 "                        product. According to the product configuration, this may\n"
 "                        trigger a draft purchase order, a manufacturing order or\n"
 "                        a new task."
-msgstr ""
+msgstr "Utilizzare questa procedura per generare una richiesta di \napprovvigionamento per questo prodotto. In base alla \nconfigurazione del prodotto, questa può innescare una bozza \ndi ordine di acquisto, un ordine di produzione o una nuova attività."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
@@ -6471,7 +6472,7 @@ msgstr "Nome Magazzino"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_propagate_warehouse_id
 msgid "Warehouse to Propagate"
-msgstr ""
+msgstr "Magazzino da Propagare"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_warehouse_id
@@ -6606,7 +6607,7 @@ msgstr ""
 msgid ""
 "When you select a serial number (lot), the quantity is corrected with respect to\n"
 "                            the quantity of that serial number (lot) and not to the total quantity of the product."
-msgstr ""
+msgstr "Quando viene selezionato un numero di serie (lotto), la quantità è aggiornata rispetto\nalla quantità di tale numero di serie (lotto) e non alla quantità totale del prodotto."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_wizard_id
@@ -6708,7 +6709,7 @@ msgstr ""
 #: code:addons/stock/stock.py:2435
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
-msgstr ""
+msgstr "Non è possibile cancellare un movimento di magazzino che è nello stato 'Completato'."
 
 #. module: stock
 #: code:addons/stock/stock.py:718

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-04-04 22:47+0000\n"
+"PO-Revision-Date: 2016-07-06 13:39+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bosnian (http://www.transifex.com/odoo/odoo-9/language/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -148,7 +148,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_supplier_invoice_count
 msgid "# Vendor Bills"
-msgstr ""
+msgstr "# Računa dobavljača"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_count
@@ -184,7 +184,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Opis</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
@@ -210,7 +210,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Qty</strong>"
-msgstr ""
+msgstr "<strong>Kol</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -221,12 +221,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Taxes</strong>"
-msgstr ""
+msgstr "<strong>Porezi</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Total Without Taxes</strong>"
-msgstr ""
+msgstr "<strong>Ukupno bez poreza</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -236,7 +236,7 @@ msgstr "<strong>Ukupno</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Unit Price</strong>"
-msgstr ""
+msgstr "<strong>Jedinična cijena</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -458,7 +458,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
 msgid "Click to define a new product."
-msgstr ""
+msgstr "Kliknite da kreirate novi proizvod."
 
 #. module: purchase
 #: model:web.tip,description:purchase.purchase_tip_1
@@ -679,12 +679,12 @@ msgstr "Pratioci"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Pratioci (kanali)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Pratioci (Partneri)"
 
 #. module: purchase
 #: selection:res.company,po_double_validation:0
@@ -996,7 +996,7 @@ msgstr "Stavke naloga"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order Month"
-msgstr ""
+msgstr "Mjesec narudžbe"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_order_id
@@ -1128,7 +1128,7 @@ msgstr "Jedinica mjere proizvoda"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_product_variant
 msgid "Product Variants"
-msgstr ""
+msgstr "Varijante proizvoda"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.product_normal_action_puchased
@@ -1503,7 +1503,7 @@ msgstr "Sub-ukupno"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_property_purchase_currency_id
 msgid "Supplier Currency"
-msgstr ""
+msgstr "Valuta dobavljača"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
@@ -1809,6 +1809,12 @@ msgid ""
 "You must define a product for everything you purchase, whether\n"
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractants."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:335
+#, python-format
+msgid "You must set a Vendor Location for this partner %s"
 msgstr ""
 
 #. module: purchase

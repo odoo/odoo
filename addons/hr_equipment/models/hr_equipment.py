@@ -236,7 +236,7 @@ class HrEquipmentRequest(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', default=_default_employee_get)
     department_id = fields.Many2one('hr.department', string='Department')
     category_id = fields.Many2one('hr.equipment.category', string='Category')
-    equipment_id = fields.Many2one('hr.equipment', string='Asset', select=True)
+    equipment_id = fields.Many2one('hr.equipment', string='Asset', index=True)
     user_id = fields.Many2one('res.users', string='Assigned to', track_visibility='onchange')
     stage_id = fields.Many2one('hr.equipment.stage', string='Stage', track_visibility='onchange', default=_default_stage)
     priority = fields.Selection([('0', 'Very Low'), ('1', 'Low'), ('2', 'Normal'), ('3', 'High')], string='Priority')

@@ -3,12 +3,13 @@
 # * portal_sale
 # 
 # Translators:
+# Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:19+0000\n"
-"PO-Revision-Date: 2016-02-09 23:10+0000\n"
+"POT-Creation-Date: 2016-07-22 11:24+0000\n"
+"PO-Revision-Date: 2016-07-23 10:09+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Peru) (http://www.transifex.com/odoo/odoo-9/language/es_PE/)\n"
 "MIME-Version: 1.0\n"
@@ -40,7 +41,7 @@ msgid ""
 "       % endif\n"
 "    </p>  \n"
 "\n"
-"    <% set signup_url = object.get_signup_url() %>\n"
+"    % set signup_url = object.get_signup_url()\n"
 "    % if signup_url:\n"
 "    <p>\n"
 "    You can access the invoice document and pay online via our Customer Portal:\n"
@@ -115,8 +116,8 @@ msgid ""
 "       % endif\n"
 "    </p>\n"
 "\n"
-"    <% set signup_url = object.get_signup_url() %>\n"
-"    % if signup_url and object.amount_total > 0 :\n"
+"    % set signup_url = object.get_signup_url()\n"
+"    % if signup_url and object.amount_total:\n"
 "    <p>\n"
 "    You can access this document and pay online via our Customer Portal:\n"
 "    </p>\n"
@@ -124,7 +125,7 @@ msgid ""
 "           href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "    % endif\n"
 "\n"
-"    % if object.paypal_url and object.amount_total > 0 :\n"
+"    % if object.paypal_url and object.amount_total:\n"
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
@@ -166,19 +167,18 @@ msgstr ""
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: portal_sale
 #: model:mail.template,subject:portal_sale.email_template_edi_sale
 msgid ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 
 #. module: portal_sale
 #: model:mail.template,subject:portal_sale.email_template_edi_invoice
-msgid ""
-"${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
+msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"
 msgstr ""
 
 #. module: portal_sale
@@ -191,7 +191,7 @@ msgstr "Factura"
 msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
-msgstr ""
+msgstr "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.portal_action_invoices
@@ -202,40 +202,40 @@ msgstr "Facturas"
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Correos Salientes"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_quotations_portal
 #: model:ir.ui.menu,name:portal_sale.portal_quotations
 msgid "Quotations"
-msgstr "Cotizacion"
+msgstr "Cotización"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_orders_portal
 msgid "Sale Orders"
-msgstr ""
+msgstr "Pedidos de Venta"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_sale_order
 msgid "Sales Order"
-msgstr "Órdenes de venta"
+msgstr "Pedidos de Venta"
 
 #. module: portal_sale
 #: model:ir.ui.menu,name:portal_sale.portal_sales_orders
 msgid "Sales Orders"
-msgstr "Pedidos de Ventas"
+msgstr "Pedidos de Venta"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
 msgid "We haven't sent you any invoice."
-msgstr ""
+msgstr "No le hemos enviado ninguna factura."
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
 msgid "We haven't sent you any quotation."
-msgstr ""
+msgstr "No le hemos enviado ninguna cotización."
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_orders_portal
 msgid "We haven't sent you any sales order."
-msgstr ""
+msgstr "No le hemos enviado ningún pedido de venta."

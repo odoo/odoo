@@ -5,7 +5,7 @@
 
 {
     'name': 'Brazilian - Accounting',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 Base module for the Brazilian localization
 ==========================================

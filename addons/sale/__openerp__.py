@@ -4,7 +4,7 @@
 {
     'name': 'Sales Management',
     'version': '1.0',
-    'category': 'Sales Management',
+    'category': 'Sales',
     'sequence': 15,
     'summary': 'Quotations, Sales Orders, Invoicing',
     'description': """
