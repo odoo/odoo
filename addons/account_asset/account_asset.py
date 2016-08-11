@@ -415,8 +415,8 @@ class AccountAssetDepreciationLine(models.Model):
             journal_id = line.asset_id.category_id.journal_id.id
             partner_id = line.asset_id.partner_id.id
             categ_type = line.asset_id.category_id.type
-            debit_account = line.asset_id.category_id.account_asset_id.id
-            credit_account = line.asset_id.category_id.account_depreciation_id.id
+            credit_account = line.asset_id.category_id.account_asset_id.id
+            debit_account = line.asset_id.category_id.account_depreciation_id.id
             move_line_1 = {
                 'name': asset_name,
                 'account_id': credit_account,
