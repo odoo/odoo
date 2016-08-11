@@ -26,13 +26,14 @@ class Forum(models.Model):
     _description = 'Forum'
     _inherit = ['mail.thread', 'website.seo.metadata']
 
-    def init(self, cr):
+    @api.model_cr
+    def init(self):
         """ Add forum uuid for user email validation.
 
         TDE TODO: move me somewhere else, auto_init ? """
-        forum_uuids = self.pool['ir.config_parameter'].search(cr, SUPERUSER_ID, [('key', '=', 'website_forum.uuid')])
+        forum_uuids = self.env['ir.config_parameter'].search([('key', '=', 'website_forum.uuid')])
         if not forum_uuids:
-            self.pool['ir.config_parameter'].set_param(cr, SUPERUSER_ID, 'website_forum.uuid', str(uuid.uuid4()), ['base.group_system'])
+            forum_uuids.set_param('website_forum.uuid', str(uuid.uuid4()), ['base.group_system'])
 
     @api.model
     def _get_default_faq(self):

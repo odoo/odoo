@@ -409,10 +409,11 @@ class Message(models.Model):
     # mail_message internals
     #------------------------------------------------------
 
-    def init(self, cr):
-        cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'mail_message_model_res_id_idx'""")
-        if not cr.fetchone():
-            cr.execute("""CREATE INDEX mail_message_model_res_id_idx ON mail_message (model, res_id)""")
+    @api.model_cr
+    def init(self):
+        self._cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'mail_message_model_res_id_idx'""")
+        if not self._cr.fetchone():
+            self._cr.execute("""CREATE INDEX mail_message_model_res_id_idx ON mail_message (model, res_id)""")
 
     @api.model
     def _find_allowed_model_wise(self, doc_model, doc_dict):

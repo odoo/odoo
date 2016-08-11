@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools
+from odoo import api, fields, models, tools
 
 
 class ProjectIssueReport(models.Model):
@@ -29,9 +29,10 @@ class ProjectIssueReport(models.Model):
     task_id = fields.Many2one('project.task', 'Task')
     email = fields.Integer('# Emails', readonly=True)
 
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'project_issue_report')
-        cr.execute("""
+    @api.model_cr
+    def init(self):
+        tools.drop_view_if_exists(self._cr, 'project_issue_report')
+        self._cr.execute("""
             CREATE OR REPLACE VIEW project_issue_report AS (
                 SELECT
                     c.id as id,
