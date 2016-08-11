@@ -37,4 +37,8 @@ class event_config_settings(models.TransientModel):
 
     @api.multi
     def set_default_auto_confirmation(self):
-        self.env['ir.values'].set_default('event.config.settings', 'auto_confirmation', self.auto_confirmation)
+        if self.env.user._is_admin() or self.env['res.users'].has_group('event.group_event_manager'):
+            IrValues = self.env['ir.values'].sudo()
+        else:
+            IrValues = self.env['ir.values']
+        IrValues.set_default('event.config.settings', 'auto_confirmation', self.auto_confirmation)
