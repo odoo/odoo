@@ -6,7 +6,7 @@ import time
 
 import openerp
 import openerp.tools as tools
-from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.safe_eval import safe_eval
 import print_xml
 import render
 from interface import report_int
@@ -52,8 +52,8 @@ class report_custom(report_int):
             for cond in conditions:
                 if cond and cond[0]:
                     c = cond[0]
-                    temp = c[0](eval('obj.'+c[1],{'obj': obj}))
-                    if not eval('\''+temp+'\''+' '+c[2]+' '+'\''+str(c[3])+'\''):
+                    temp = c[0](safe_eval('obj.'+c[1],{'obj': obj}))
+                    if not safe_eval('\''+temp+'\''+' '+c[2]+' '+'\''+str(c[3])+'\''):
                         tobreak = True
             if tobreak:
                 break
@@ -66,7 +66,7 @@ class report_custom(report_int):
                         row_canvas[i]=False
                 elif len(fields[i])==1:
                     if obj:
-                        row.append(str(eval('obj.'+fields[i][0],{'obj': obj})))
+                        row.append(str(safe_eval('obj.'+fields[i][0],{'obj': obj})))
                     else:
                         row.append(None)
                 else:
@@ -86,7 +86,7 @@ class report_custom(report_int):
                 else:
                     key = levels.keys()
                 for l in key:
-                    objs = eval('obj.'+l,{'obj': obj})
+                    objs = safe_eval('obj.'+l,{'obj': obj})
                     if not isinstance(objs, (BaseModel, list)):
                         objs = [objs]
                     field_new = []
@@ -169,7 +169,7 @@ class report_custom(report_int):
             def build_tree(obj, level, depth):
                 res = self._row_get(cr, uid,[obj], new_fields, new_cond)
                 level.append(depth)
-                new_obj = eval('obj.'+report['field_parent'][1],{'obj': obj})
+                new_obj = safe_eval('obj.'+report['field_parent'][1],{'obj': obj})
                 if not isinstance(new_obj, list) :
                     new_obj = [new_obj]
                 for o in new_obj:

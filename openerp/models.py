@@ -52,7 +52,7 @@ from .tools import frozendict, lazy_property, ormcache, Collector, LastOrderedSe
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, pickle
-from .tools.safe_eval import safe_eval as eval
+from .tools.safe_eval import safe_eval
 from .tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -66,7 +66,7 @@ onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 
-# base environment for doing a safe eval
+# base environment for doing a safe_eval
 SAFE_EVAL_BASE = {
     'datetime': datetime,
     'dateutil': dateutil,
@@ -75,7 +75,7 @@ SAFE_EVAL_BASE = {
 
 def make_compute(text, deps):
     """ Return a compute function from its code body and dependencies. """
-    func = lambda self: eval(text, SAFE_EVAL_BASE, {'self': self}, mode="exec")
+    func = lambda self: safe_eval(text, SAFE_EVAL_BASE, {'self': self}, mode="exec")
     deps = [arg.strip() for arg in (deps or "").split(",")]
     return api.depends(*deps)(func)
 
@@ -770,13 +770,13 @@ class BaseModel(object):
                 attrs['translate'] = bool(field['translate'])
                 attrs['size'] = field['size'] or None
             elif field['ttype'] in ('selection', 'reference'):
-                attrs['selection'] = eval(field['selection'])
+                attrs['selection'] = safe_eval(field['selection'])
             elif field['ttype'] == 'many2one':
                 if partial and field['relation'] not in self.pool:
                     continue
                 attrs['comodel_name'] = field['relation']
                 attrs['ondelete'] = field['on_delete']
-                attrs['domain'] = eval(field['domain']) if field['domain'] else None
+                attrs['domain'] = safe_eval(field['domain']) if field['domain'] else None
             elif field['ttype'] == 'one2many':
                 if partial and not (
                     field['relation'] in self.pool and (
@@ -786,7 +786,7 @@ class BaseModel(object):
                     continue
                 attrs['comodel_name'] = field['relation']
                 attrs['inverse_name'] = field['relation_field']
-                attrs['domain'] = eval(field['domain']) if field['domain'] else None
+                attrs['domain'] = safe_eval(field['domain']) if field['domain'] else None
             elif field['ttype'] == 'many2many':
                 if partial and field['relation'] not in self.pool:
                     continue
@@ -795,7 +795,7 @@ class BaseModel(object):
                 attrs['relation'] = field['relation_table'] or rel
                 attrs['column1'] = field['column1'] or col1
                 attrs['column2'] = field['column2'] or col2
-                attrs['domain'] = eval(field['domain']) if field['domain'] else None
+                attrs['domain'] = safe_eval(field['domain']) if field['domain'] else None
             # add compute function if given
             if field['compute']:
                 attrs['compute'] = make_compute(field['compute'], field['depends'])
@@ -3477,7 +3477,7 @@ class BaseModel(object):
                         '(a dictionary was expected).' % (fs[0], self._name)
                     for vals in result:
                         # TOCHECK : why got string instend of dict in python2.6
-                        # if isinstance(res2[vals['id']], str): res2[vals['id']] = eval(res2[vals['id']])
+                        # if isinstance(res2[vals['id']], str): res2[vals['id']] = safe_eval(res2[vals['id']])
                         multi_fields = res2.get(vals['id'], {})
                         if multi_fields:
                             for f in fs:
@@ -5965,7 +5965,7 @@ class BaseModel(object):
                 record = self[self._context['field_parent']]
                 global_vars['parent'] = RawRecord(record)
             field_vars = RawRecord(self)
-            params = eval("[%s]" % params, global_vars, field_vars, nocopy=True)
+            params = safe_eval("[%s]" % params, global_vars, field_vars, nocopy=True)
 
             # call onchange method with context when possible
             args = (self._cr, self._uid, self._origin.ids) + tuple(params)

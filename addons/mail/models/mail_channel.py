@@ -10,7 +10,7 @@ from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import ormcache
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 
 class ChannelPartner(models.Model):
@@ -184,7 +184,7 @@ class Channel(models.Model):
         headers = {}
         if res.get('headers'):
             try:
-                headers.update(eval(res['headers']))
+                headers.update(safe_eval(res['headers']))
             except Exception:
                 pass
         headers['Precedence'] = 'list'

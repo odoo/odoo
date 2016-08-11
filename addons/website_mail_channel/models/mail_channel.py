@@ -6,7 +6,7 @@ import hmac
 from urlparse import urljoin
 
 from odoo import api, models
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 from odoo.addons.website.models.website import slug
 
 
@@ -21,7 +21,7 @@ class MailGroup(models.Model):
         headers = {}
         if res.get('headers'):
             try:
-                headers = eval(res['headers'])
+                headers = safe_eval(res['headers'])
             except Exception:
                 pass
         headers.update({

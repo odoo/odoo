@@ -9,7 +9,7 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 import odoo.addons.decimal_precision as dp
 
@@ -247,7 +247,7 @@ class MarketingCampaignSegment(models.Model):
             if segment.sync_last_date and segment.sync_mode != 'all':
                 criteria += [(segment.sync_mode, '>', segment.sync_last_date)]
             if segment.ir_filter_id:
-                criteria += eval(segment.ir_filter_id.domain)
+                criteria += safe_eval(segment.ir_filter_id.domain)
 
             # XXX TODO: rewrite this loop more efficiently without doing 1 search per record!
             for record in self.env[segment.object_id.model].search(criteria):
@@ -485,7 +485,7 @@ class MarketingCampaignWorkitem(models.Model):
             condition = activity.condition
             campaign_mode = self.campaign_id.mode
             if condition:
-                if not eval(condition, eval_context):
+                if not safe_eval(condition, eval_context):
                     if activity.keep_if_condition_not_met:
                         self.write({'state': 'cancelled'})
                     else:

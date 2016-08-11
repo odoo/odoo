@@ -12,7 +12,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, SUPERUSER_ID
 from odoo.modules.registry import RegistryManager
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -143,7 +143,7 @@ class BaseActionRule(models.Model):
 
     def _get_eval_context(self):
         """ Prepare the context used when evaluating python code
-            :returns: dict -- evaluation context given to (safe_)eval
+            :returns: dict -- evaluation context given to safe_eval
         """
         return {
             'datetime': datetime,
@@ -156,11 +156,11 @@ class BaseActionRule(models.Model):
     def _filter_pre(self, records):
         """ Filter the records that satisfy the precondition of action ``self``. """
         if self.filter_pre_id and records:
-            domain = [('id', 'in', records.ids)] + eval(self.filter_pre_id.domain, self._get_eval_context())
-            ctx = eval(self.filter_pre_id.context)
+            domain = [('id', 'in', records.ids)] + safe_eval(self.filter_pre_id.domain, self._get_eval_context())
+            ctx = safe_eval(self.filter_pre_id.context)
             return records.with_context(**ctx).search(domain).with_env(records.env)
         elif self.filter_pre_domain and records:
-            domain = [('id', 'in', records.ids)] + eval(self.filter_pre_domain, self._get_eval_context())
+            domain = [('id', 'in', records.ids)] + safe_eval(self.filter_pre_domain, self._get_eval_context())
             return records.search(domain)
         else:
             return records
@@ -168,11 +168,11 @@ class BaseActionRule(models.Model):
     def _filter_post(self, records):
         """ Filter the records that satisfy the postcondition of action ``self``. """
         if self.filter_id and records:
-            domain = [('id', 'in', records.ids)] + eval(self.filter_id.domain, self._get_eval_context())
-            ctx = eval(self.filter_id.context)
+            domain = [('id', 'in', records.ids)] + safe_eval(self.filter_id.domain, self._get_eval_context())
+            ctx = safe_eval(self.filter_id.context)
             return records.with_context(**ctx).search(domain).with_env(records.env)
         elif self.filter_domain and records:
-            domain = [('id', 'in', records.ids)] + eval(self.filter_domain, self._get_eval_context())
+            domain = [('id', 'in', records.ids)] + safe_eval(self.filter_domain, self._get_eval_context())
             return records.search(domain)
         else:
             return records
@@ -352,10 +352,10 @@ class BaseActionRule(models.Model):
             domain = []
             context = dict(self._context)
             if action.filter_domain:
-                domain = eval(action.filter_domain, eval_context)
+                domain = safe_eval(action.filter_domain, eval_context)
             elif action.filter_id:
-                domain = eval(action.filter_id.domain, eval_context)
-                context.update(eval(action.filter_id.context))
+                domain = safe_eval(action.filter_id.domain, eval_context)
+                context.update(safe_eval(action.filter_id.context))
                 if 'lang' not in context:
                     # Filters might be language-sensitive, attempt to reuse creator lang
                     # as we are usually running this as super-user in background
