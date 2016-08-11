@@ -147,7 +147,9 @@ class purchase_order(osv.osv):
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for purchase in self.browse(cursor, user, ids, context=context):
-            res[purchase.id] = all(line.invoiced for line in purchase.order_line if line.state != 'cancel')
+            lines_invoiced = [line.invoiced for line in purchase.order_line
+                                            if line.state != 'cancel']
+            res[purchase.id] = lines_invoiced and all(lines_invoiced) or False
         return res
     
     def _get_journal(self, cr, uid, context=None):
