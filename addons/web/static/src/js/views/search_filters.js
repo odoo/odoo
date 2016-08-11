@@ -198,7 +198,7 @@ ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
         case '∄': 
             return [[field.name, '=', false]];
         case 'between':
-            return [[field.name, '>=', this.datewidget_1.get_value()], [field.name,'<=', this.datewidget_2.get_value()]];
+            return [[field.name, '>=', this.datewidget_1.get_value()], [field.name,'<=', this.datewidget_1.get_value()]];
         default: 
             return [[field.name, operator.value, this.get_value()]];
         }
@@ -206,24 +206,24 @@ ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
     show_inputs: function ($operator) {
         this._super($operator);
         if ($operator.val() === 'between') {
-            if (!this.datewidget_2) {
-                this.datewidget_2 = new (this.widget())(this);
-                this.datewidget_2.appendTo(this.$el);
+            if (!this.datewidget_1) {
+                this.datewidget_1 = new (this.widget())(this);
+                this.datewidget_1.appendTo(this.$el);
             }
             else {
-                this.datewidget_2.$el.show();
+                this.datewidget_1.$el.show();
             }
         }
         else {
-            if (this.datewidget_2) {
-                this.datewidget_2.$el.hide();
+            if (this.datewidget_1) {
+                this.datewidget_1.$el.hide();
             }
         }
     },
     toString: function () {
         var str = formats.format_value(this.get_value(), { type:this.attributes['type'] });
-        if (this.datewidget_2.get_value()) {
-            str += ' and ' + formats.format_value(this.datewidget_2.get_value(), { type:this.attributes['type'] });
+        if (this.datewidget_1.get_value()) {
+            str += ' and ' + formats.format_value(this.datewidget_1.get_value(), { type:this.attributes['type'] });
         }
         return str;
     },
