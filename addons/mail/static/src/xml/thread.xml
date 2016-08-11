@@ -116,17 +116,7 @@
                 </t>
                 <p t-if="options.display_subject &amp;&amp; message.display_subject" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
                 <t t-if="!(message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0)">
-                    <t t-if="options.shorten_messages &amp;&amp; message.body_short">
-                        <div class="o_mail_body_short">
-                            <t t-raw="message.body_short"/>
-                        </div>
-                        <div class="o_mail_body_long">
-                            <t t-raw="message.body"/>
-                        </div>
-                    </t>
-                    <t t-if="!options.shorten_messages || !message.body_short">
-                        <div><t t-raw="message.body"/></div>
-                    </t>
+                    <t t-raw="message.body"/>
                 </t>
                 <t t-foreach="message.attachment_ids" t-as="attachment">
                     <t t-call="mail.Attachment"/>

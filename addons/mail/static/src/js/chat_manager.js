@@ -192,6 +192,7 @@ function make_message (data) {
     var msg = {
         id: data.id,
         author_id: data.author_id,
+        // keep for compatibility in 9, remove in master
         body_short: data.body_short || "",
         body: data.body || "",
         date: moment(time.str_to_datetime(data.date)),
