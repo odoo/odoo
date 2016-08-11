@@ -230,7 +230,7 @@
       <main class="container-fluid {{ ' '.join(classes) }}">
         {% if pagename != master_doc %}
         <div class="row">
-          {% if 'has-toc' not in meta %}
+          {% if 'has-toc' not in meta and not (pagename in toc) %}
           <aside>
             <div class="navbar-aside text-center">
               {{ toc }}
@@ -242,7 +242,7 @@
             </div>
           </aside>
           {% endif %}
-          <article class="doc-body {% if 'has-toc' in meta %}doc-toc{% endif %}">
+          <article class="doc-body {% if 'has-toc' in meta %}doc-toc{% endif %}{% if pagename in toc%}index-category{% endif %}">
             {% endif %}
             {% block body %} {% endblock %}
           {% if pagename != master_doc %}</article>
