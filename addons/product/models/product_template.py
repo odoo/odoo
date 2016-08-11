@@ -246,6 +246,11 @@ class ProductTemplate(models.Model):
         if len(self.product_variant_ids) == 1:
             self.product_variant_ids.default_code = self.default_code
 
+    @api.constrains('categ_id')
+    def _check_category(self):
+        if self.categ_id.type == 'view':
+            raise ValidationError(_("You cannot create a product with an Internal Category set as View. Please change the category or the category type."))
+
     @api.constrains('uom_id', 'uom_po_id')
     def _check_uom(self):
         if any(template.uom_id and template.uom_po_id and template.uom_id.category_id != template.uom_po_id.category_id for template in self):
