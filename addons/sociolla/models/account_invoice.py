@@ -1,5 +1,23 @@
 from openerp import api, fields, models, _
 
+# mapping invoice type to journal type
+TYPE2JOURNAL = {
+    'out_invoice': 'sale',
+    'in_invoice': 'purchase',
+    'out_refund': 'sale',
+    'in_refund': 'purchase',
+}
+
+# mapping invoice type to refund type
+TYPE2REFUND = {
+    'out_invoice': 'out_refund',        # Customer Invoice
+    'in_invoice': 'in_refund',          # Vendor Bill
+    'out_refund': 'out_invoice',        # Customer Refund
+    'in_refund': 'in_invoice',          # Vendor Refund
+}
+
+MAGIC_COLUMNS = ('id', 'create_uid', 'create_date', 'write_uid', 'write_date')
+
 class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
@@ -43,9 +61,13 @@ class AccountInvoice(models.Model):
             # lines amount
             total, total_currency, total_discount, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, iml)
 
+            price_amount = total
+            if self.type in ('out_invoice', 'out_refund'):
+                price_amount -= total_discount
+
             name = inv.name or '/'
             if inv.payment_term_id:
-                totlines = inv.with_context(ctx).payment_term_id.with_context(currency_id=inv.currency_id.id).compute(total - total_discount, date_invoice)[0]
+                totlines = inv.with_context(ctx).payment_term_id.with_context(currency_id=inv.currency_id.id).compute(price_amount, date_invoice)[0]
                 res_amount_currency = total_currency
                 ctx['date'] = date_invoice
                 for i, t in enumerate(totlines):
@@ -74,7 +96,7 @@ class AccountInvoice(models.Model):
                 iml.append({
                     'type': 'dest',
                     'name': name,
-                    'price': total - total_discount,
+                    'price': price_amount,
                     'discount_amount': 0,
                     'account_id': inv.account_id.id,
                     'date_maturity': inv.date_due,
@@ -83,7 +105,9 @@ class AccountInvoice(models.Model):
                     'invoice_id': inv.id
                 })
 
-            iml += inv.discount_line_move_line_get()
+            # Journla Sales will record account Sales Discount
+            if self.type in ('out_invoice', 'out_refund'):
+                iml += inv.discount_line_move_line_get()
 
             part = self.env['res.partner']._find_accounting_partner(inv.partner_id)
             line = [(0, 0, self.line_get_convert(l, part.id)) for l in iml]
@@ -131,14 +155,22 @@ class AccountInvoice(models.Model):
                     if child.type_tax_use != 'none':
                         tax_ids.append((4, child.id, None))
 
+            price_amount = line.price_subtotal
+            discount_amount = 0
+
+            # Journal sales for account income the amount will be add discount_amount
+            if self.type in ('out_invoice', 'out_refund'):
+                price_amount += line.discount_amount
+                discount_amount = line.discount_amount
+
             move_line_dict = {
                 'invl_id': line.id,
                 'type': 'src',
                 'name': line.name.split('\n')[0][:64],
                 'price_unit': line.price_unit,
                 'quantity': line.quantity,
-                'price': line.price_subtotal + line.discount_amount,
-                'discount_amount': line.discount_amount,
+                'price': price_amount,
+                'discount_amount': discount_amount,
                 'account_id': line.account_id.id,
                 'product_id': line.product_id.id,
                 'uom_id': line.uom_id.id,
@@ -186,14 +218,19 @@ class AccountInvoice(models.Model):
         res = []
         for line in self.invoice_line_ids:
             if line.discount_amount > 0:
+                amount = line.discount_amount
+
+                if self.type == 'out_refund':
+                    amount = - line.discount_amount
+
                 move_line_dict = {
                     'invl_id': line.id,
                     'type': 'disc',
-                    'name': 'Sales Discount',
+                    'name': 'Sales Discount ' + line.name.split('\n')[0][:64],
                     'price_unit': line.price_unit,
                     'quantity': line.quantity,
-                    'price': line.discount_amount,
-                    'discount_amount': line.discount_amount,
+                    'price':amount,
+                    'discount_amount':0,
                     'account_id': line.discount_account_id.id,
                     'product_id': line.product_id.id,
                     'uom_id': line.uom_id.id,
@@ -229,10 +266,37 @@ class AccountInvoice(models.Model):
                 line['price'] = - line['price']
             else:
                 total -= line['price']
-                total_currency -= line['amount_currency'] or line['price']
                 total_discount -= line['discount_amount']
+                total_currency -= line['amount_currency'] or line['price']
 
         return total, total_currency, total_discount, invoice_move_lines
+
+    @api.model
+    def _refund_cleanup_lines(self, lines):
+        """ Convert records to dict of values suitable for one2many line creation
+
+            :param recordset lines: records to convert
+            :return: list of command tuple for one2many line creation [(0, 0, dict of valueis), ...]
+        """
+        result = []
+        for line in lines:
+            values = {}
+            for name, field in line._fields.iteritems():
+                if name in MAGIC_COLUMNS:
+                    continue
+                elif name == 'account_id':
+                    if TYPE2REFUND[line.invoice_id.type] =='out_refund':
+                        values[name] = line.get_invoice_line_account('out_refund', line.product_id, line.invoice_id.fiscal_position_id, line.invoice_id.company_id).id
+                    else:
+                        values[name] = line[name].id
+                elif field.type == 'many2one':
+                    values[name] = line[name].id
+                elif field.type not in ['many2many', 'one2many']:
+                    values[name] = line[name]
+                elif name == 'invoice_line_tax_ids':
+                    values[name] = [(6, 0, line[name].ids)]
+            result.append((0, 0, values))
+        return result
 
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
@@ -265,3 +329,13 @@ class AccountInvoiceLine(models.Model):
             account = product.product_tmpl_id.get_product_accounts()
             if account:
                 self.discount_account_id = account['sales_discount']
+
+    @api.v8
+    def get_invoice_line_account(self, type, product, fpos, company):
+        accounts = product.product_tmpl_id.get_product_accounts(fpos)
+        if type == 'out_invoice':
+            return accounts['income']
+        elif type == 'out_refund':
+            return accounts['sales_return']
+
+        return accounts['expense']
