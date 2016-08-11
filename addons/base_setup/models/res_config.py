@@ -11,6 +11,8 @@ class BaseConfigSettings(models.TransientModel):
     group_multi_company = fields.Boolean(string='Manage multiple companies',
         help='Work in multi-company environments, with appropriate security access between companies.',
         implied_group='base.group_multi_company')
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
     module_share = fields.Boolean(string='Allow documents sharing',
         help="""Share or embbed any screen of Odoo.""")
     module_portal = fields.Boolean(string='Activate the customer portal',
@@ -31,6 +33,17 @@ class BaseConfigSettings(models.TransientModel):
     group_multi_currency = fields.Boolean(string='Allow multi currencies',
             implied_group='base.group_multi_currency',
             help="Allows to work in a multi currency environment")
+
+    # Report config from base/res/res_company.py
+    custom_footer = fields.Boolean(related="company_id.custom_footer", string="Custom footer *", help="Check this to define the report footer manually. Otherwise it will be filled in automatically.")
+    rml_footer = fields.Text(related="company_id.rml_footer", string='Custom Report Footer *', help="Footer text displayed at the bottom of all reports.")
+    rml_footer_readonly = fields.Text(related='rml_footer', string='Report Footer *', readonly=True)
+    rml_paper_format = fields.Selection(related="company_id.rml_paper_format", string="Paper Format *", required=True)
+    font = fields.Many2one(related='company_id.font', string="Font *", help="Set the font into the report header, it will be used as default font in the RML reports of the user company")
+    rml_header = fields.Text(related="company_id.rml_header", string="RML Header *")
+    rml_header2 = fields.Text(related="company_id.rml_header2", string='RML Internal Header *')
+    rml_header3 = fields.Text(related="company_id.rml_header3", string='RML Internal Header for Landscape Reports *')
+
 
     @api.multi
     def open_company(self):
@@ -63,3 +76,6 @@ class BaseConfigSettings(models.TransientModel):
         partner_rule = self.env.ref('base.res_partner_rule')
         for config in self:
             partner_rule.write({'active': not config.company_share_partner})
+
+    def act_discover_fonts(self):
+        self.company_id.act_discover_fonts()

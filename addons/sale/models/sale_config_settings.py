@@ -11,6 +11,9 @@ _logger = logging.getLogger(__name__)
 class SaleConfiguration(models.TransientModel):
     _inherit = 'sale.config.settings'
 
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
+    sale_note = fields.Text(related='company_id.sale_note', string="Default Terms and Conditions *")
     group_product_variant = fields.Selection([
         (0, "No variants on products"),
         (1, 'Products can have several attributes, defining variants (Example: size, color,...)')

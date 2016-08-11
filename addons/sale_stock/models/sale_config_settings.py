@@ -7,6 +7,7 @@ from odoo import api, fields, models
 class SaleConfiguration(models.TransientModel):
     _inherit = 'sale.config.settings'
 
+    security_lead = fields.Float(related='company_id.security_lead', string="Sales Safety Days *")
     module_delivery = fields.Selection([
         (0, 'No shipping costs on sales orders'),
         (1, 'Allow adding shipping costs')

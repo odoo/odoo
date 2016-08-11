@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base_config_settings_inherited" model="ir.ui.view">
+        <field name="name">base.config.settings.inherited</field>
+        <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+        <field name="model">base.config.settings</field>
+        <field name="arch" type="xml">
+            <data>
+                <group name="report" position="inside">
+                    <label for="paperformat_id"/>
+                    <div>
+                        <field name="paperformat_id" class="oe_inline"/>
+                        <button name="%(action_report_internalpreview)d" string="Preview Internal Report" type="action"/>
+                        <button name="%(action_report_externalpreview)d" string="Preview External Report" type="action"/>
+                        <button name="edit_external_header" string="Edit external header" type="object" class="oe_link"/>
+                        <button name="edit_external_footer" string="Edit external footer" type="object" class="oe_link"/>
+                        <button name="edit_internal_header" string="Edit internal header" type="object" class="oe_link"/>
+                    </div>
+                </group>
+            </data>
+        </field>
+    </record>
+</odoo>

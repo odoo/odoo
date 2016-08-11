@@ -30,7 +30,6 @@ Dashboard / Reports for Purchase Management will include:
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
         'views/account_invoice_views.xml',
-        'views/res_company_views.xml',
         'data/purchase_data.xml',
         'data/purchase_data.yml',
         'report/purchase_reports.xml',

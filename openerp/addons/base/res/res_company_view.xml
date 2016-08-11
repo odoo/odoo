@@ -48,36 +48,6 @@
                                 </group>
                             </group>
                         </page>
-                        <page name="configuration" string="Configuration">
-                            <group>
-                                <group name="account_grp" string="Accounting"/>
-                            </group>
-                        </page>
-                        <page name="report" string="Report Configuration">
-                            <group string="Configuration">
-                                <group col="2" colspan="2">
-                                    <field name="custom_footer"/>
-                                    <field name="rml_footer" attrs="{'invisible': [('custom_footer','=',False)]}"/>
-                                    <field name="rml_footer_readonly" attrs="{'invisible': [('custom_footer','=',True)]}"/>
-                                </group>
-                            </group>
-
-                            <group string="Configuration (RML)" groups="base.group_no_one">
-                                <group col="2" colspan="2">
-                                    <button name="%(preview_rml_report)d" string="Preview RML Report" type="action" colspan="2"/>
-                                    <field name="rml_paper_format"/>
-                                </group>
-                                <group col="3" colspan="2">
-                                    <field name="font" class="oe_inline"/>
-                                    <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link"/>
-                                </group>
-                                <group col="1" colspan="2">
-                                    <field name="rml_header"/>
-                                    <field name="rml_header2"/>
-                                    <field name="rml_header3"/>
-                                </group>
-                            </group>
-                        </page>
                     </notebook>
                     </sheet>
                 </form>
