@@ -98,9 +98,9 @@ class CountryState(models.Model):
 
     name_search = location_name_search
 
-    def merge_states(self, cr, uid, ids=None, context=None):
-        Imd = self.pool['ir.model.data']
-        State = self.pool['res.country.state']
+    @api.model
+    def merge_states(self):
+        IMD = self.env['ir.model.data']
 
         query = """
             SELECT st.id, st.oldid, imd.id, imd.name, imd2.id, ids
@@ -114,8 +114,8 @@ class CountryState(models.Model):
                 LEFT JOIN ir_model_data imd2 on (imd2.model = 'res.country.state' and imd2.res_id = st.oldid)
             WHERE imd.module = 'base';
         """
-        cr.execute(query)
-        data = cr.fetchall()
+        self._cr.execute(query)
+        data = self._cr.fetchall()
 
         for st_id, st_oldid, imd_id, imd_name, imd2_id, ids in data:
             values = dict(module=self._module)
@@ -123,22 +123,22 @@ class CountryState(models.Model):
                 # If duplicated record had already a xml_id we update the old xml_id and
                 # force to delete the new xml_id created to avoid constraint error
                 keepid = imd2_id
-                Imd.unlink(cr, uid, imd_id, context=context)
+                IMD.browse(imd_id).unlink()
                 values.update(name=imd_name)
             else:
                 # Else we point the new xml_id to the oldest duplicated state
                 keepid = imd_id
                 values.update(res_id=st_oldid)
 
-            Imd.write(cr, uid, keepid, values, context=context)
-            State.unlink(cr, uid, st_id, context=context)
+            IMD.browse(keepid).write(values)
+            self.browse(st_id).unlink()
 
             duplicated_ids = set(map(int, ids.split(','))) - set([st_id, st_oldid])
             if duplicated_ids:
                 _logger.warning(_('State with id [%s] (%s) seems to have duplicated code: %s' % (st_oldid, imd_name, ','.join(duplicated_ids))))
 
         if data:
-            self._add_sql_constraints(cr)
+            self._add_sql_constraints()
 
     _sql_constraints = [
         ('name_code_uniq', 'unique(country_id, code)', 'The code of the state must be unique by country !')

@@ -310,12 +310,7 @@ class IrActionsActWindow(models.Model):
     search_view = fields.Text(compute='_compute_search_view')
     multi = fields.Boolean(string='Restrict to lists', help="If checked and the action is bound to a model, it will only appear in the More menu on list views")
 
-    @api.v7
-    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        result = IrActionsActWindow.read(self.browse(cr, uid, ids, context), fields, load=load)
-        return result if isinstance(ids, list) else (bool(result) and result[0])
-
-    @api.v8
+    @api.multi
     def read(self, fields=None, load='_classic_read'):
         """ call the method get_empty_list_help of the model and set the window action help message
         """

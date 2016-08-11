@@ -36,14 +36,14 @@ class ormcache(object):
     signature of the decorated method, and are used to compute a cache key::
 
         @ormcache('model_name', 'mode')
-        def _compute_domain(self, cr, uid, model_name, mode="read"):
+        def _compute_domain(self, model_name, mode="read"):
             ...
 
     For the sake of backward compatibility, the decorator supports the named
     parameter `skiparg`::
 
-        @ormcache(skiparg=3)
-        def _compute_domain(self, cr, uid, model_name, mode="read"):
+        @ormcache(skiparg=1)
+        def _compute_domain(self, model_name, mode="read"):
             ...
     """
     def __init__(self, *args, **kwargs):

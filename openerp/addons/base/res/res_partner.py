@@ -349,11 +349,7 @@ class Partner(models.Model, FormatAddress):
     def onchange_company_type(self):
         self.is_company = (self.company_type == 'company')
 
-    @api.v7
-    def _update_fields_values(self, cr, uid, partner, fields, context=None):
-        return Partner._update_fields_values(partner, fields)
-
-    @api.v8
+    @api.multi
     def _update_fields_values(self, fields):
         """ Returns dict of write() values for synchronizing ``fields`` """
         values = {}
@@ -389,11 +385,7 @@ class Partner(models.Model, FormatAddress):
         extended by inheriting classes. """
         return ['vat', 'credit_limit']
 
-    @api.v7
-    def _commercial_sync_from_company(self, cr, uid, partner, context=None):
-        return Partner._commercial_sync_from_company(partner)
-
-    @api.v8
+    @api.multi
     def _commercial_sync_from_company(self):
         """ Handle sync of commercial fields when a new parent commercial entity is set,
         as if they were related fields """
@@ -402,11 +394,7 @@ class Partner(models.Model, FormatAddress):
             sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
             self.write(sync_vals)
 
-    @api.v7
-    def _commercial_sync_to_children(self, cr, uid, partner, context=None):
-        return Partner._commercial_sync_to_children(partner)
-
-    @api.v8
+    @api.multi
     def _commercial_sync_to_children(self):
         """ Handle sync of commercial fields to descendants """
         commercial_partner = self.commercial_partner_id
@@ -416,11 +404,7 @@ class Partner(models.Model, FormatAddress):
             child._commercial_sync_to_children()
         return sync_children.write(sync_vals)
 
-    @api.v7
-    def _fields_sync(self, cr, uid, partner, values, context=None):
-        return Partner._fields_sync(partner, values)
-
-    @api.v8
+    @api.multi
     def _fields_sync(self, values):
         """ Sync commercial fields and address fields from company and to children after create/update,
         just as if those were all modeled as fields.related to the parent """
@@ -447,11 +431,7 @@ class Partner(models.Model, FormatAddress):
                 contacts = self.child_ids.filtered(lambda c: c.type == 'contact')
                 contacts.update_address(values)
 
-    @api.v7
-    def _handle_first_contact_creation(self, cr, uid, partner, context=None):
-        return Partner._handle_first_contact_creation(partner)
-
-    @api.v8
+    @api.multi
     def _handle_first_contact_creation(self):
         """ On creation of first contact for a company (or root) that has no address, assume contact address
         was meant to be company address """
@@ -747,11 +727,7 @@ class Partner(models.Model, FormatAddress):
         ''' Return the main partner '''
         return self.env.ref('base.main_partner')
 
-    @api.v7
-    def _display_address(self, cr, uid, address, without_company=False, context=None):
-        return self.browse(cr, uid, address.id, context=context)._display_address(without_company=without_company)
-
-    @api.v8
+    @api.multi
     def _display_address(self, without_company=False):
 
         '''

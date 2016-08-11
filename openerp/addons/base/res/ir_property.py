@@ -92,11 +92,7 @@ class Property(models.Model):
     def create(self, values):
         return super(Property, self).create(self._update_values(values))
 
-    @api.v7
-    def get_by_record(self, cr, uid, record, context=None):
-        return Property.get_by_record(self.browse(cr, uid, record.id, context=context))
-
-    @api.v8
+    @api.multi
     def get_by_record(self):
         self.ensure_one()
         if self.type in ('char', 'text', 'selection'):

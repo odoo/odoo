@@ -183,12 +183,6 @@ class Lang(models.Model):
     def _lang_get(self, code):
         return self.browse(self._lang_get_id(code))
 
-    @api.v7
-    def _lang_data_get(self, cr, uid, lang, monetary=False):
-        if isinstance(lang, basestring):
-            lang = self._lang_get(cr, uid, lang)
-        return self.browse(cr, uid, lang)._data_get(monetary)
-
     @tools.ormcache('self.code', 'monetary')
     def _data_get(self, monetary=False):
         conv = locale.localeconv()
@@ -240,19 +234,7 @@ class Lang(models.Model):
         self.clear_caches()
         return super(Lang, self).unlink()
 
-    #
-    # IDS: can be a list of IDS or a list of XML_IDS
-    #
-    @api.v7
-    def format(self, cr, uid, ids, percent, value, grouping=False, monetary=False, context=None):
-        # Refering the old code, `ids` is expected to have only one value(ID or XML_ID) inside list, hence used ids[0].
-        lang_id = ids[0]
-        if isinstance(lang_id, (str, unicode)):
-            lang_id = self._lang_get(cr, uid, lang_id)
-        lang = self.browse(cr, uid, lang_id, context=context)
-        return Lang.format(lang, percent, value, grouping=grouping, monetary=monetary)
-
-    @api.v8
+    @api.multi
     def format(self, percent, value, grouping=False, monetary=False):
         """ Format() will return the language-specific output for float values"""
         self.ensure_one()

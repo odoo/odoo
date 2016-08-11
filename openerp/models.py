@@ -3252,15 +3252,7 @@ class BaseModel(object):
 
         return fields
 
-    # add explicit old-style implementation to read()
-    @api.v7
-    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        records = self.browse(cr, user, ids, context)
-        result = BaseModel.read(records, fields, load=load)
-        return result if isinstance(ids, list) else (bool(result) and result[0])
-
-    # new-style implementation of read()
-    @api.v8
+    @api.multi
     def read(self, fields=None, load='_classic_read'):
         """ read([fields])
 
@@ -4871,13 +4863,7 @@ class BaseModel(object):
 
         return [default]
 
-    @api.v7
-    def copy_translations(self, cr, uid, old_id, new_id, context=None):
-        old = self.browse(cr, uid, old_id, context)
-        new = self.browse(cr, uid, new_id, context)
-        BaseModel.copy_translations(old, new)
-
-    @api.v8
+    @api.multi
     def copy_translations(old, new):
         # avoid recursion through already copied records in case of circular relationship
         if '__copy_translations_seen' not in old._context:

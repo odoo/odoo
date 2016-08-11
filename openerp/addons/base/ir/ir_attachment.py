@@ -341,12 +341,7 @@ class IrAttachment(models.Model):
         result = [id for id in orig_ids if id in ids]
         return len(result) if count else list(result)
 
-    @api.v7
-    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        result = IrAttachment.read(self.browse(cr, uid, ids, context), fields, load=load)
-        return result if isinstance(ids, list) else (bool(result) and result[0])
-
-    @api.v8
+    @api.multi
     def read(self, fields=None, load='_classic_read'):
         self.check('read')
         return super(IrAttachment, self).read(fields, load=load)
