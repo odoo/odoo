@@ -188,11 +188,10 @@ def _eval_xml(self, node, env):
             return_val = _eval_xml(self, n, env)
             if return_val is not None:
                 args.append(return_val)
-        model = env[node.get('model', '')]._model
+        model = env[node.get('model', '')]
         method = node.get('name')
         # this one still depends on the old API
-        res = getattr(model, method)(env.cr, env.uid, *args)
-        return res
+        return openerp.api.call_kw(model, method, args, {})
     elif node.tag == "test":
         return node.text
 

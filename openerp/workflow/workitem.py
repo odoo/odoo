@@ -32,10 +32,10 @@ class Environment(dict):
         self.model = record.model
         self.id = record.id
         self.ids = [record.id]
-        self.obj = openerp.registry(self.cr.dbname)[self.model]
 
     def __getitem__(self, key):
-        records = self.obj.browse(self.cr, self.uid, self.ids)
+        env = openerp.api.Environment(self.cr, self.uid, {})
+        records = env[self.model].browse(self.ids)
         if hasattr(records, key):
             return getattr(records, key)
         else:
@@ -282,10 +282,9 @@ class WorkflowItem(object):
             'active_id': self.record.id,
             'active_ids': [self.record.id]
         }
-
-        ir_actions_server = openerp.registry(self.session.cr.dbname)['ir.actions.server']
-        result = ir_actions_server.run(self.session.cr, self.session.uid, [activity['action_id']], context)
-
+        env = openerp.api.Environment(self.session.cr, self.session.uid, context)
+        action = env['ir.actions.server'].browse(activity['action_id'])
+        result = action.run()
         return result
 
     def wkf_expr_execute(self, activity):
@@ -307,9 +306,9 @@ class WorkflowItem(object):
             return False
 
         if self.session.uid != openerp.SUPERUSER_ID and transition['group_id']:
-            registry = openerp.registry(self.session.cr.dbname)
-            user_groups = registry['res.users'].read(self.session.cr, self.session.uid, [self.session.uid], ['groups_id'])[0]['groups_id']
-            if transition['group_id'] not in user_groups:
+            env = openerp.api.Environment(self.session.cr, self.session.uid, {})
+            user_groups = env.user.groups_id
+            if transition['group_id'] not in user_groups.ids:
                 return False
 
         return self.wkf_expr_eval_expr(transition['condition'])

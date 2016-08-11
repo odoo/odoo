@@ -100,13 +100,10 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         if '.' in action_id:
             our_module = action_id.split('.', 1)[0]
 
-    if context is None:
-        context = {}
-    else:
-        context = context.copy() # keep it local
+    context = dict(context or {})
     # TODO context fill-up
 
-    registry = openerp.registry(cr.dbname)
+    env = openerp.api.Environment(cr, uid, context)
 
     def log_test(msg, *args):
         _test_logger.info("  - " + msg, *args)
@@ -122,30 +119,33 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
 
     if isinstance(action_id, basestring):
         if '.' in action_id:
-            act_module, act_xmlid = action_id.split('.', 1)
+            _, act_xmlid = action_id.split('.', 1)
         else:
             if not our_module:
                 raise ValueError('You cannot only specify action_id "%s" without a module name' % action_id)
-            act_module = our_module
             act_xmlid = action_id
-        act_model, act_id = registry['ir.model.data'].get_object_reference(cr, uid, act_module, act_xmlid)
+            action_id = '%s.%s' % (our_module, action_id)
+        action = env.ref(action_id)
+        act_model, act_id = action._name, action.id
     else:
         assert isinstance(action_id, (long, int))
         act_model = 'ir.action.act_window'     # assume that
         act_id = action_id
         act_xmlid = '<%s>' % act_id
 
-    def _exec_action(action, datas, context):
+    def _exec_action(action, datas, env):
         # taken from client/modules/action/main.py:84 _exec_action()
         if isinstance(action, bool) or 'type' not in action:
             return
         # Updating the context : Adding the context of action in order to use it on Views called from buttons
+        context = dict(env.context)
         if datas.get('id',False):
             context.update( {'active_id': datas.get('id',False), 'active_ids': datas.get('ids',[]), 'active_model': datas.get('model',False)})
         context1 = action.get('context', {})
         if isinstance(context1, basestring):
-            context1 = safe_eval(context1, context.copy())
+            context1 = safe_eval(context1, dict(context))
         context.update(context1)
+        env = env(context=context)
         if action['type'] in ['ir.actions.act_window', 'ir.actions.submenu']:
             for key in ('res_id', 'res_model', 'view_type', 'view_mode',
                         'limit', 'search_view', 'auto_search', 'search_view_id'):
@@ -167,11 +167,11 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
             log_test("will emulate a %s view: %s#%s",
                         action['view_type'], datas['res_model'], view_id or '?')
 
-            view_res = registry[datas['res_model']].fields_view_get(cr, uid, view_id, action['view_type'], context)
+            view_res = env[datas['res_model']].fields_view_get(view_id, action['view_type'])
             assert view_res and view_res.get('arch'), "Did not return any arch for the view"
             view_data = {}
-            if view_res.get('fields',{}).keys():
-                view_data = registry[datas['res_model']].default_get(cr, uid, view_res['fields'].keys(), context)
+            if view_res.get('fields'):
+                view_data = env[datas['res_model']].default_get(list(view_res['fields']))
             if datas.get('form'):
                 view_data.update(datas.get('form'))
             if wiz_data:
@@ -212,11 +212,12 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                         button_weight += 10
                     string = button.getAttribute('string') or '?%s' % len(buttons)
 
-                    buttons.append( { 'name': button.getAttribute('name'),
-                                'string': string,
-                                'type': button.getAttribute('type'),
-                                'weight': button_weight,
-                                })
+                    buttons.append({
+                        'name': button.getAttribute('name'),
+                        'string': string,
+                        'type': button.getAttribute('type'),
+                        'weight': button_weight,
+                    })
             except Exception, e:
                 _logger.warning("Cannot resolve the view arch and locate the buttons!", exc_info=True)
                 raise AssertionError(e.args[0])
@@ -224,7 +225,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
             if not datas['res_id']:
                 # it is probably an orm_memory object, we need to create
                 # an instance
-                datas['res_id'] = registry[datas['res_model']].create(cr, uid, view_data, context)
+                datas['res_id'] = env[datas['res_model']].create(view_data).id
 
             if not buttons:
                 raise AssertionError("view form doesn't have any buttons to press!")
@@ -241,11 +242,12 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                     continue
                 if b['type'] == 'object':
                     #there we are! press the button!
-                    fn =  getattr(registry[datas['res_model']], b['name'])
-                    if not fn:
+                    rec = env[datas['res_model']].browse(datas['res_id'])
+                    func = getattr(rec, b['name'], None)
+                    if not func:
                         _logger.error("The %s model doesn't have a %s attribute!", datas['res_model'], b['name'])
                         continue
-                    res = fn(cr, uid, [datas['res_id'],], context)
+                    res = func()
                     break
                 else:
                     _logger.warning("in the \"%s\" form, the \"%s\" button has unknown type %s",
@@ -269,8 +271,8 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
             raise Exception("Cannot handle action of type %s" % act_model)
 
     log_test("will be using %s action %s #%d", act_model, act_xmlid, act_id)
-    action = registry[act_model].read(cr, uid, [act_id], context=context)[0]
-    assert action, "Could not read action %s[%s]" %(act_model, act_id)
+    action = env[act_model].browse(act_id).read()[0]
+    assert action, "Could not read action %s[%s]" % (act_model, act_id)
     loop = 0
     while action:
         loop += 1
@@ -279,7 +281,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
             _logger.info("Passed %d loops, giving up", loop)
             raise Exception("Too many loops at action")
         log_test("it is an %s action at loop #%d", action.get('type', 'unknown'), loop)
-        result = _exec_action(action, datas, context)
+        result = _exec_action(action, datas, env)
         if not isinstance(result, dict):
             break
         datas = result.get('datas', {})
