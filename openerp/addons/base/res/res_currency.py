@@ -78,11 +78,7 @@ class Currency(models.Model):
     def name_get(self):
         return [(currency.id, tools.ustr(currency.name)) for currency in self]
 
-    @api.v7
-    def round(self, cr, uid, currency, amount):
-        return Currency.round(currency, amount)
-
-    @api.v8
+    @api.multi
     def round(self, amount):
         """Return ``amount`` rounded  according to ``self``'s rounding rules.
 
@@ -96,11 +92,7 @@ class Currency(models.Model):
         #self.ensure_one()
         return tools.float_round(amount, precision_rounding=self.rounding)
 
-    @api.v7
-    def compare_amounts(self, cr, uid, currency, amount1, amount2):
-        return Currency.compare_amounts(currency, amount1, amount2)
-
-    @api.v8
+    @api.multi
     def compare_amounts(self, amount1, amount2):
         """Compare ``amount1`` and ``amount2`` after rounding them according to the
            given currency's precision..
@@ -123,11 +115,7 @@ class Currency(models.Model):
         """
         return tools.float_compare(amount1, amount2, precision_rounding=self.rounding)
 
-    @api.v7
-    def is_zero(self, cr, uid, currency, amount):
-        return Currency.is_zero(currency, amount)
-
-    @api.v8
+    @api.multi
     def is_zero(self, amount):
         """Returns true if ``amount`` is small enough to be treated as
            zero according to current currency's rounding rules.
@@ -157,20 +145,7 @@ class Currency(models.Model):
             amount = to_currency.round(from_amount * rate) if round else from_amount * rate
         return amount
 
-    @api.v7
-    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount,
-                round=True, context=None):
-        context = context or {}
-        if not from_currency_id:
-            from_currency_id = to_currency_id
-        if not to_currency_id:
-            to_currency_id = from_currency_id
-        xc = self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
-        from_currency = (xc[0].id == from_currency_id and xc[0]) or xc[1]
-        to_currency = (xc[0].id == to_currency_id and xc[0]) or xc[1]
-        return self._compute(cr, uid, from_currency, to_currency, from_amount, round, context)
-
-    @api.v8
+    @api.multi
     def compute(self, from_amount, to_currency, round=True):
         """ Convert `from_amount` from currency `self` to `to_currency`. """
         self, to_currency = self or to_currency, to_currency or self
