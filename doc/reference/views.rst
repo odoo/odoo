@@ -117,6 +117,9 @@ how the matched node should be altered:
       its ``name`` is removed from the matched node. If no such attribute
       exists, an error is raised
 
+For ``replace`` specs, content of a spec node containing exactly the string
+``$0`` will be replace by the matching node, allowing wraping.
+
 A view's specs are applied sequentially.
 
 .. _reference/views/list:
