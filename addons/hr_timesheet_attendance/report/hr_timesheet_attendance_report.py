@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class TimesheetAttendance(models.Model):
@@ -14,8 +14,9 @@ class TimesheetAttendance(models.Model):
     total_attendance = fields.Float()
     total_difference = fields.Float()
 
-    def init(self, cr):
-        cr.execute("""CREATE OR REPLACE VIEW %s AS (
+    @api.model_cr
+    def init(self):
+        self._cr.execute("""CREATE OR REPLACE VIEW %s AS (
             SELECT
                 max(id) AS id,
                 t.user_id,
