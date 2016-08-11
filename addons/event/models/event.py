@@ -367,9 +367,9 @@ class EventRegistration(models.Model):
             contact_id = self.partner_id.address_get().get('contact', False)
             if contact_id:
                 contact = self.env['res.partner'].browse(contact_id)
-                self.name = self.name or contact.name
-                self.email = self.email or contact.email
-                self.phone = self.phone or contact.phone
+                self.name = contact.name or self.name
+                self.email = contact.email or self.email
+                self.phone = contact.phone or self.phone
 
     @api.multi
     def message_get_suggested_recipients(self):
