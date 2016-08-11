@@ -170,8 +170,8 @@ class procurement_order(osv.osv):
         calendar_obj = self.pool.get("resource.calendar")
         att_obj = self.pool.get("resource.calendar.attendance")
         group = False
-        context = context or {}
-        context['no_round_hours'] = True
+        new_context = context.copy() or {}
+        new_context['no_round_hours'] = True
         date = False
         now_date = datetime.utcnow()
         res_intervals = []
@@ -181,12 +181,12 @@ class procurement_order(osv.osv):
             else:
                 new_date = datetime.utcnow()
             # TDE note: I bet accessing interval[2] will crash, no ? this code seems very louche
-            intervals = calendar_obj._schedule_days(cr, uid, orderpoint.purchase_calendar_id.id, 1, new_date, compute_leaves=True, context=context)
+            intervals = calendar_obj._schedule_days(cr, uid, orderpoint.purchase_calendar_id.id, 1, new_date, compute_leaves=True, context=new_context)
             for interval in intervals:
                 # If last execution date, interval should start after it in order not to execute the same orderpoint twice
                 # TODO: Make the interval a little bigger
                 if (orderpoint.last_execution_date and (interval[0] > new_date and interval[0] < now_date)) or (not orderpoint.last_execution_date and interval[0] < now_date and interval[1] > now_date):
-                    group = att_obj.browse(cr, uid, interval[2], context=context).group_id.id
+                    group = att_obj.browse(cr, uid, interval[2], context=new_context).group_id.id
                     date = interval[1]
                     res_intervals += [(date, group), ]
         else:
