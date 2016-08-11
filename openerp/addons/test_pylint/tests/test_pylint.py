@@ -23,6 +23,7 @@ class TestPyLint(TransactionCase):
 
     ENABLED_CODES = [
         'W0123',  # eval used
+        'W0101',  # unreachable code
     ]
 
     def _skip_test(self, reason):

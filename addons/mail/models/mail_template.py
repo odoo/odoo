@@ -361,7 +361,6 @@ class MailTemplate(models.Model):
             except Exception:
                 _logger.info("Failed to render template %r using values %r" % (template, variables), exc_info=True)
                 raise UserError(_("Failed to render template %r using values %r")% (template, variables))
-                render_result = u""
             if render_result == u"False":
                 render_result = u""
             results[res_id] = render_result
