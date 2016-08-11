@@ -59,20 +59,10 @@ class CalendarController(http.Controller):
             return response
 
     # Function used, in RPC to check every 5 minutes, if notification to do for an event or not
-    @http.route('/calendar/notify', type='json', auth="none")
+    @http.route('/calendar/notify', type='json', auth="user")
     def notify(self):
-        registry = request.registry
-        uid = request.session.uid
-        context = request.session.context
-        with registry.cursor() as cr:
-            res = registry.get("calendar.alarm_manager").get_next_notif(cr, uid, context=context)
-            return res
+        return request.env['calendar.alarm_manager'].get_next_notif()
 
-    @http.route('/calendar/notify_ack', type='json', auth="none")
+    @http.route('/calendar/notify_ack', type='json', auth="user")
     def notify_ack(self, type=''):
-        registry = request.registry
-        uid = request.session.uid
-        context = request.session.context
-        with registry.cursor() as cr:
-            res = registry.get("res.partner")._set_calendar_last_notif_ack(cr, uid, context=context)
-            return res
+        return request.env['res.partner']._set_calendar_last_notif_ack()

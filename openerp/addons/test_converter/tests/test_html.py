@@ -1,9 +1,11 @@
-# -*- encoding: utf-8 -*-
-import os
-import datetime
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.tests import common
-from openerp.tools import html_escape as e
+import datetime
+import os
+
+from odoo.tests import common
+from odoo.tools import html_escape as e
 
 directory = os.path.dirname(__file__)
 
@@ -12,7 +14,7 @@ class TestExport(common.TransactionCase):
 
     def setUp(self):
         super(TestExport, self).setUp()
-        self.Model = self.registry(self._model)
+        self.Model = self.env[self._model]
 
     def get_field(self, name):
         return self.Model._fields[name]
@@ -20,24 +22,28 @@ class TestExport(common.TransactionCase):
     def get_converter(self, name, type=None):
         field = self.get_field(name)
 
-        for postfix in type, field.type, '':
+        for postfix in (type, field.type, ''):
             fs = ['ir', 'qweb', 'field']
-            if postfix is None: continue
-            if postfix: fs.append(postfix)
-
+            if postfix is None:
+                continue
+            if postfix:
+                fs.append(postfix)
             try:
-                model = self.registry('.'.join(fs))
+                model = self.env['.'.join(fs)]
                 break
-            except KeyError: pass
+            except KeyError:
+                pass
 
         def converter(value, options=None, context=None):
-            record = self.Model.new(self.cr, self.uid, {name: value}, context=context)
-            return model.record_to_html(
-                self.cr, self.uid, record, name, options or {}, context=context)
+            context = context or {}
+            record = self.Model.with_context(context).new({name: value})
+            return model.with_context(context).record_to_html(record, name, options or {})
         return converter
+
 
 class TestBasicExport(TestExport):
     _model = 'test_converter.test_model'
+
 
 class TestCharExport(TestBasicExport):
     def test_char(self):
@@ -49,6 +55,7 @@ class TestCharExport(TestBasicExport):
         value = converter("foo<bar>")
         self.assertEqual(value, "foo&lt;bar&gt;")
 
+
 class TestIntegerExport(TestBasicExport):
     def test_integer(self):
         converter = self.get_converter('integer')
@@ -56,12 +63,11 @@ class TestIntegerExport(TestBasicExport):
         value = converter(42)
         self.assertEqual(value, "42")
 
+
 class TestFloatExport(TestBasicExport):
     def setUp(self):
         super(TestFloatExport, self).setUp()
-        self.registry('res.lang').write(self.cr, self.uid, [1], {
-            'grouping': '[3,0]'
-        })
+        self.env['res.lang'].browse(1).write({'grouping': '[3,0]'})
 
     def test_float(self):
         converter = self.get_converter('float')
@@ -87,27 +93,25 @@ class TestFloatExport(TestBasicExport):
         value = converter(42.01234)
         self.assertEqual(value, '42.01')
 
+
 class TestCurrencyExport(TestExport):
     _model = 'test_converter.monetary'
 
     def setUp(self):
         super(TestCurrencyExport, self).setUp()
-        self.Currency = self.registry('res.currency')
+        self.Currency = self.env['res.currency']
         self.base = self.create(self.Currency, name="Source", symbol=u'source')
 
-    def create(self, model, context=None, **values):
-        return model.browse(
-            self.cr, self.uid,
-            model.create(self.cr, self.uid, values, context=context),
-            context=context)
+    def create(self, model, **values):
+        return model.create(values)
 
     def convert(self, obj, dest):
-        converter = self.registry('ir.qweb.field.monetary')
+        converter = self.env['ir.qweb.field.monetary']
         options = {
             'widget': 'monetary',
             'display_currency': dest,
         }
-        return converter.record_to_html(self.cr, self.uid, obj, 'value', options)
+        return converter.record_to_html(obj, 'value', options)
 
     def test_currency_post(self):
         currency = self.create(self.Currency, name="Test", symbol=u"test")
@@ -153,6 +157,7 @@ class TestCurrencyExport(TestExport):
                 symbol=currency.symbol.encode('utf-8')
             ),)
 
+
 class TestTextExport(TestBasicExport):
     def test_text(self):
         converter = self.get_converter('text')
@@ -188,26 +193,28 @@ class TestTextExport(TestBasicExport):
         fldkjsfhs &lt;i style=&quot;color: red&quot;&gt;&lt;a href=&quot;http://spamspam.com&quot;&gt;fldskjh&lt;/a&gt;&lt;/i&gt;<br>
         """)
 
+
 class TestMany2OneExport(TestBasicExport):
     def test_many2one(self):
-        Sub = self.registry('test_converter.test_model.sub')
+        Sub = self.env['test_converter.test_model.sub']
         converter = self.get_converter('many2one')
 
-        value = converter(Sub.create(self.cr, self.uid, {'name': "Foo"}))
+        value = converter(Sub.create({'name': "Foo"}).id)
         self.assertEqual(value, "Foo")
 
-        value = converter(Sub.create(self.cr, self.uid, {'name': "Fo<b>o</b>"}))
+        value = converter(Sub.create({'name': "Fo<b>o</b>"}).id)
         self.assertEqual(value, "Fo&lt;b&gt;o&lt;/b&gt;")
+
 
 class TestBinaryExport(TestBasicExport):
     def test_image(self):
-        converter = self.registry('ir.qweb.field.image')
+        converter = self.env['ir.qweb.field.image']
 
         with open(os.path.join(directory, 'test_vectors', 'image'), 'rb') as f:
             content = f.read()
 
         encoded_content = content.encode('base64')
-        value = converter.value_to_html(self.cr, self.uid, encoded_content, {})
+        value = converter.value_to_html(encoded_content, {})
 
         self.assertEqual(
             value, '<img src="data:image/jpeg;base64,%s">' % (
@@ -218,15 +225,14 @@ class TestBinaryExport(TestBasicExport):
             content = f.read()
 
         with self.assertRaises(ValueError):
-            converter.value_to_html(
-                self.cr, self.uid, 'binary', content.encode('base64'), {})
+            converter.value_to_html(content.encode('base64'), {})
 
         with open(os.path.join(directory, 'test_vectors', 'pptx'), 'rb') as f:
             content = f.read()
 
         with self.assertRaises(ValueError):
-            converter.value_to_html(
-                self.cr, self.uid, 'binary', content.encode('base64'), {})
+            converter.value_to_html(content.encode('base64'), {})
+
 
 class TestSelectionExport(TestBasicExport):
     def test_selection(self):
@@ -238,6 +244,7 @@ class TestSelectionExport(TestBasicExport):
         value = converter('C')
         self.assertEqual(value, u"Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?")
 
+
 class TestHTMLExport(TestBasicExport):
     def test_html(self):
         converter = self.get_converter('html')
@@ -246,14 +253,12 @@ class TestHTMLExport(TestBasicExport):
         value = converter(input)
         self.assertEqual(value, input)
 
+
 class TestDatetimeExport(TestBasicExport):
     def setUp(self):
         super(TestDatetimeExport, self).setUp()
         # set user tz to known value
-        Users = self.registry('res.users')
-        Users.write(self.cr, self.uid, self.uid, {
-            'tz': 'Pacific/Niue'
-        }, context=None)
+        self.env.user.write({'tz': 'Pacific/Niue'})
 
     def test_date(self):
         converter = self.get_converter('date')
@@ -287,11 +292,12 @@ class TestDatetimeExport(TestBasicExport):
             'March 2'
         )
 
+
 class TestDurationExport(TestBasicExport):
     def setUp(self):
         super(TestDurationExport, self).setUp()
         # needs to have lang installed otherwise falls back on en_US
-        self.registry('res.lang').load_lang(self.cr, self.uid, 'fr_FR')
+        self.env['res.lang'].load_lang('fr_FR')
 
     def test_negative(self):
         converter = self.get_converter('float', 'duration')
@@ -323,6 +329,7 @@ class TestDurationExport(TestBasicExport):
         result = converter(72, {'unit': 'second'}, {'lang': 'fr_FR'})
         self.assertEqual(result, u"1 minute 12 secondes")
 
+
 class TestRelativeDatetime(TestBasicExport):
     # not sure how a test based on "current time" should be tested. Even less
     # so as it would mostly be a test of babel...
@@ -330,7 +337,7 @@ class TestRelativeDatetime(TestBasicExport):
     def setUp(self):
         super(TestRelativeDatetime, self).setUp()
         # needs to have lang installed otherwise falls back on en_US
-        self.registry('res.lang').load_lang(self.cr, self.uid, 'fr_FR')
+        self.env['res.lang'].load_lang('fr_FR')
 
     def test_basic(self):
         converter = self.get_converter('datetime', 'relative')

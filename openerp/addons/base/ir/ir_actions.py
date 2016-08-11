@@ -12,7 +12,7 @@ import odoo
 from odoo import api, fields, models, tools, workflow, _
 from odoo.exceptions import MissingError, UserError, ValidationError
 from odoo.report.report_sxw import report_sxw, report_rml
-from odoo.tools.safe_eval import safe_eval as eval, test_python_expr
+from odoo.tools.safe_eval import safe_eval, test_python_expr
 
 _logger = logging.getLogger(__name__)
 
@@ -795,7 +795,7 @@ class IrActionsServer(models.Model):
 
     @api.model
     def run_action_code_multi(self, action, eval_context=None):
-        eval(action.code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
+        safe_eval(action.code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
         if 'action' in eval_context:
             return eval_context['action']
 
@@ -848,7 +848,7 @@ class IrActionsServer(models.Model):
             ref_id = action.ref_object.id
         elif action.use_write == 'expression':
             model = action.crud_model_id.model
-            ref = eval(action.write_expression, eval_context)
+            ref = safe_eval(action.write_expression, eval_context)
             if isinstance(ref, models.BaseModel):
                 ref_id = ref.id
             else:
@@ -897,7 +897,7 @@ class IrActionsServer(models.Model):
 
         :param action: the current server action
         :type action: browse record
-        :returns: dict -- evaluation context given to (safe_)eval """
+        :returns: dict -- evaluation context given to (safe_)safe_eval """
         def log(message, level="info"):
             self._cr.execute("""
                 INSERT INTO ir_logging(create_date, create_uid, type, dbname, name, level, message, path, line, func)
@@ -961,7 +961,7 @@ class IrActionsServer(models.Model):
                 # Void (aka False) conditions are considered as True
                 condition = True
             if hasattr(self, 'run_action_%s_multi' % action.state):
-                expr = eval(str(condition), eval_context)
+                expr = safe_eval(str(condition), eval_context)
                 if not expr:
                     continue
                 # call the multi method
@@ -976,7 +976,7 @@ class IrActionsServer(models.Model):
                     # run context dedicated to a particular active_id
                     run_self = self.with_context(active_ids=[active_id], active_id=active_id)
                     eval_context["context"] = run_self._context
-                    expr = eval(str(condition), eval_context)
+                    expr = safe_eval(str(condition), eval_context)
                     if not expr:
                         continue
                     # call the single method related to the action: run_action_<STATE>
@@ -1004,7 +1004,7 @@ class IrServerObjectLines(models.Model):
         for line in self:
             expr = line.value
             if line.type == 'equation':
-                expr = eval(line.value, eval_context)
+                expr = safe_eval(line.value, eval_context)
             elif line.col1.ttype in ['many2one', 'integer']:
                 try:
                     expr = int(line.value)
@@ -1077,7 +1077,7 @@ class IrActionsTodo(models.Model):
         result.setdefault('context', '{}')
 
         # Open a specific record when res_id is provided in the context
-        ctx = eval(result['context'], {'user': self.env.user})
+        ctx = safe_eval(result['context'], {'user': self.env.user})
         if ctx.get('res_id'):
             result['res_id'] = ctx.pop('res_id')
 
@@ -1145,7 +1145,7 @@ class IrActionsActClient(models.Model):
     def _compute_params(self):
         self_bin = self.with_context(bin_size=False, bin_size_params_store=False)
         for record, record_bin in zip(self, self_bin):
-            record.params = record_bin.params_store and eval(record_bin.params_store, {'uid': self._uid})
+            record.params = record_bin.params_store and safe_eval(record_bin.params_store, {'uid': self._uid})
 
     def _inverse_params(self):
         for record in self:

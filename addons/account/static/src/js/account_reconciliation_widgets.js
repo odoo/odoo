@@ -1,5 +1,3 @@
-/*global openerp:false */
-
 odoo.define('account.reconciliation', function (require) {
 "use strict";
 

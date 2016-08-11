@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import logging
 
 from email.header import decode_header
 from email.utils import formataddr
-import logging
 
-from openerp import _, api, fields, models, SUPERUSER_ID
-from openerp import tools
-from openerp.exceptions import UserError, AccessError
-from openerp.osv import expression
+from odoo import _, api, fields, models, SUPERUSER_ID, tools
+from odoo.exceptions import UserError, AccessError
+from odoo.osv import expression
 
 
 _logger = logging.getLogger(__name__)
@@ -408,10 +409,11 @@ class Message(models.Model):
     # mail_message internals
     #------------------------------------------------------
 
-    def init(self, cr):
-        cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'mail_message_model_res_id_idx'""")
-        if not cr.fetchone():
-            cr.execute("""CREATE INDEX mail_message_model_res_id_idx ON mail_message (model, res_id)""")
+    @api.model_cr
+    def init(self):
+        self._cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'mail_message_model_res_id_idx'""")
+        if not self._cr.fetchone():
+            self._cr.execute("""CREATE INDEX mail_message_model_res_id_idx ON mail_message (model, res_id)""")
 
     @api.model
     def _find_allowed_model_wise(self, doc_model, doc_dict):

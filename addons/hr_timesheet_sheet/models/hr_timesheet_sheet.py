@@ -62,9 +62,9 @@ class HrTimesheetSheet(models.Model):
         ('confirm', 'Waiting Approval'),
         ('done', 'Approved')], default='new', track_visibility='onchange',
         string='Status', required=True, readonly=True, index=True,
-        help=' * The \'Open\' status is used when a user is encoding a new and unconfirmed timesheet. \
-            \n* The \'Waiting Approval\' status is used to confirm the timesheet by user. \
-            \n* The \'Approved\' status is used when the users timesheet is accepted by his/her senior.')
+        help=' * The \'Open\' status is used when a user is encoding a new and unconfirmed timesheet. '
+             '\n* The \'Waiting Approval\' status is used to confirm the timesheet by user. '
+             '\n* The \'Approved\' status is used when the users timesheet is accepted by his/her senior.')
     account_ids = fields.One2many('hr_timesheet_sheet.sheet.account', 'sheet_id', string='Analytic accounts', readonly=True)
     company_id = fields.Many2one('res.company', string='Company')
     department_id = fields.Many2one('hr.department', string='Department',
@@ -75,11 +75,13 @@ class HrTimesheetSheet(models.Model):
         for sheet in self:
             new_user_id = forced_user_id or sheet.user_id and sheet.user_id.id
             if new_user_id:
-                self.env.cr.execute('SELECT id \
-                    FROM hr_timesheet_sheet_sheet \
-                    WHERE (date_from <= %s and %s <= date_to) \
-                        AND user_id=%s \
-                        AND id <> %s', (sheet.date_to, sheet.date_from, new_user_id, sheet.id))
+                self.env.cr.execute('''
+                    SELECT id
+                    FROM hr_timesheet_sheet_sheet
+                    WHERE (date_from <= %s and %s <= date_to)
+                        AND user_id=%s
+                        AND id <> %s''',
+                    (sheet.date_to, sheet.date_from, new_user_id, sheet.id))
                 if any(self.env.cr.fetchall()):
                     raise ValidationError('You cannot have 2 timesheets that overlap!\nPlease use the menu \'My Current Timesheet\' to avoid this problem.')
 

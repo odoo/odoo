@@ -104,8 +104,9 @@ class hr_timesheet_sheet_sheet_day(models.Model):
         'hr_timesheet_sheet.sheet': ['attendances_ids', 'timesheet_ids'],
     }
 
-    def init(self, cr):
-        cr.execute("""create or replace view %s as
+    @api.model_cr
+    def init(self):
+        self._cr.execute("""create or replace view %s as
             SELECT
                 id,
                 name,

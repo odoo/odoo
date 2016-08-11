@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api
+from odoo import models, fields
 
 
 class Challenge(models.Model):
     _inherit = 'gamification.challenge'
 
     category = fields.Selection(selection_add=[('forum', 'Website / Forum')])
+
 
 class Badge(models.Model):
     _inherit = 'gamification.badge'

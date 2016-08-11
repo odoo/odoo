@@ -303,7 +303,7 @@
                             </div>
                             <label for="mailing_model" string="Recipients"/>
                             <div>
-                                <field name="mailing_model" widget="radio" style="margin-bottom: 8px"/>
+                                <field name="mailing_model" widget="radio" options="{'horizontal': true}"/>
 
                                 <field name="mailing_domain" widget="char_domain"
                                     placeholder="Select recipients"
@@ -317,10 +317,6 @@
                                         placeholder="Select mailing lists..." class="oe_inline"/>
                                 </div>
                             </div>
-                            <label for="attachment_ids"/>
-                            <div>
-                                <field name="attachment_ids"  widget="many2many_binary" string="Attach a file" class="oe_inline"/>
-                            </div>
                         </group>
                         <notebook>
                             <page string="Mail Body">
@@ -329,6 +325,10 @@
                             <page string="Options">
                                 <group>
                                     <group string="Mailing">
+                                        <label for="attachment_ids"/>
+                                        <div>
+                                            <field name="attachment_ids"  widget="many2many_binary" string="Attach a file" class="oe_inline"/>
+                                        </div>
                                         <field name="keep_archives" groups="base.group_no_one"/>
                                         <label for="reply_to"/>
                                         <div>

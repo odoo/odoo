@@ -1,32 +1,39 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import time
 
-import openerp
+from openerp import models, api
 
-class m(openerp.osv.osv.Model):
+class m(models.Model):
     """ This model exposes a few methods that will consume between 'almost no
         resource' and 'a lot of resource'.
     """
     _name = 'test.limits.model'
 
-    def consume_nothing(self, cr, uid, context=None):
+    @api.model
+    def consume_nothing(self):
         return True
 
-    def consume_memory(self, cr, uid, size, context=None):
+    @api.model
+    def consume_memory(self, size):
         l = [0] * size
         return True
 
-    def leak_memory(self, cr, uid, size, context=None):
+    @api.model
+    def leak_memory(self, size):
         if not hasattr(self, 'l'):
-            self.l = []
+            type(self).l = []
         self.l.append([0] * size)
         return True
 
-    def consume_time(self, cr, uid, seconds, context=None):
+    @api.model
+    def consume_time(self, seconds):
         time.sleep(seconds)
         return True
 
-    def consume_cpu_time(self, cr, uid, seconds, context=None):
+    @api.model
+    def consume_cpu_time(self, seconds):
         t0 = time.clock()
         t1 = time.clock()
         while t1 - t0 < seconds:

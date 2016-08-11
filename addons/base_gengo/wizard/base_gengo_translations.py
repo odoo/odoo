@@ -7,7 +7,7 @@ import time
 import uuid
 
 from odoo import api, fields, models, tools, _
-from openerp.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 

@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ BASE_VERSION = odoo.modules.load_information_from_description_file('base')['vers
 
 
 def str2tuple(s):
-    return eval('tuple(%s)' % (s or ''))
+    return safe_eval('tuple(%s)' % (s or ''))
 
 _intervalTypes = {
     'work_days': lambda interval: relativedelta(days=interval),

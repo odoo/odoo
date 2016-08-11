@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from openerp.tests import common
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.tests import common
 
 class TestBasicInheritance(common.TransactionCase):
     def test_extend_fields(self):

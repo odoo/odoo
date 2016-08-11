@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import time
-from openerp import api, models, _
-from openerp.tools import float_is_zero
+from odoo import api, models, _
+from odoo.tools import float_is_zero
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -190,8 +190,8 @@ class ReportAgedPartnerBalance(models.AbstractModel):
 
         return res, total, lines
 
-    @api.multi
-    def render_html(self, data):
+    @api.model
+    def render_html(self, docids, data=None):
         total = []
         model = self.env.context.get('active_model')
         docs = self.env[model].browse(self.env.context.get('active_id'))

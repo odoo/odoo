@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from openerp import api, fields, models, _
-from openerp.osv import expression
-from openerp.tools import float_is_zero
-from openerp.tools import float_compare, float_round
-from openerp.tools.misc import formatLang
-from openerp.exceptions import UserError, ValidationError
+from odoo import api, fields, models, _
+from odoo.osv import expression
+from odoo.tools import float_is_zero
+from odoo.tools import float_compare, float_round
+from odoo.tools.misc import formatLang
+from odoo.exceptions import UserError, ValidationError
 
 import time
 import math
@@ -769,19 +769,18 @@ class AccountBankStatementLine(models.Model):
             'amount_currency': amount_currency,
         }
 
-    @api.v7
-    def process_reconciliations(self, cr, uid, ids, data, context=None):
+    @api.multi
+    def process_reconciliations(self, data):
         """ Handles data sent from the bank statement reconciliation widget (and can otherwise serve as an old-API bridge)
 
             :param list of dicts data: must contains the keys 'counterpart_aml_dicts', 'payment_aml_ids' and 'new_aml_dicts',
                 whose value is the same as described in process_reconciliation except that ids are used instead of recordsets.
         """
-        aml_obj = self.pool['account.move.line']
-        for id, datum in zip(ids, data):
-            st_line = self.browse(cr, uid, id, context)
-            payment_aml_rec = aml_obj.browse(cr, uid, datum.get('payment_aml_ids', []), context)
+        AccountMoveLine = self.env['account.move.line']
+        for st_line, datum in zip(self, data):
+            payment_aml_rec = AccountMoveLine.browse(datum.get('payment_aml_ids', []))
             for aml_dict in datum.get('counterpart_aml_dicts', []):
-                aml_dict['move_line'] = aml_obj.browse(cr, uid, aml_dict['counterpart_aml_id'], context)
+                aml_dict['move_line'] = AccountMoveLine.browse(aml_dict['counterpart_aml_id'])
                 del aml_dict['counterpart_aml_id']
             st_line.process_reconciliation(datum.get('counterpart_aml_dicts', []), payment_aml_rec, datum.get('new_aml_dicts', []))
 

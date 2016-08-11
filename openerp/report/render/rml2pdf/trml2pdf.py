@@ -17,7 +17,7 @@ from lxml import etree
 import base64
 from distutils.version import LooseVersion
 from reportlab.platypus.doctemplate import ActionFlowable
-from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.safe_eval import safe_eval
 from reportlab.lib.units import inch,cm,mm
 from openerp.tools.misc import file_open
 from reportlab.pdfbase import pdfmetrics
@@ -478,7 +478,7 @@ class _rml_canvas(object):
                 if self.localcontext:
                     res = utils._regex.findall(newtext)
                     for key in res:
-                        newtext = eval(key, {}, self.localcontext) or ''
+                        newtext = safe_eval(key, {}, self.localcontext) or ''
                 image_data = None
                 if newtext:
                     image_data = base64.decodestring(newtext)

@@ -43,7 +43,7 @@ class MailThread(models.AbstractModel):
                     bounced_thread_id = stat.res_id
                 _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail from mail %s, model: %s, thread_id: %s',
                              email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id)
-                if bounced_model and bounced_model in self.pool and hasattr(self.env[bounced_model], 'message_receive_bounce') and bounced_thread_id:
+                if bounced_model and bounced_model in self.env and hasattr(self.env[bounced_model], 'message_receive_bounce') and bounced_thread_id:
                     self.env[bounced_model].browse(bounced_thread_id).message_receive_bounce(mail_id=bounced_mail_id)
                 return False
 

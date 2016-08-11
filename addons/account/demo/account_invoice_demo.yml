@@ -152,9 +152,9 @@
               'move_id': ref('account.demo_opening_move'),
               'name': 'Opening Entry',
               'debit': 13447,
-              'account_id': fixed_asset_account_id[0]}, 'opening_line_2')
+              'account_id': fixed_asset_account_id}, 'opening_line_2')
           self.with_context({'check_move_validity': False})._update('account.move.line', 'account', {
               'move_id': ref('account.demo_opening_move'),
               'name': 'Opening Entry',
               'credit': 18550,
-              'account_id': equity_account_id[0]}, 'opening_line_3')
+              'account_id': equity_account_id}, 'opening_line_3')

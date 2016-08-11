@@ -2,7 +2,7 @@
 <odoo>
 <template id="report_saleorder_validity_date" inherit_id="sale.report_saleorder_document">
     <xpath expr="//div[@class='page']/div[@id='informations']" position="inside">
-        <div t-if="doc.validity_date" class="col-xs-3">
+        <div t-if="doc.validity_date and doc.state in ['draft', 'sent']" class="col-xs-3">
             <strong>Expiration Date:</strong>
             <p t-field="doc.validity_date"/>
         </div>

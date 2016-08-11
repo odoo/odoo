@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import fields, models, tools
+from odoo import api, fields, models, tools
 
 
 class ReportEventRegistrationQuestions(models.Model):
@@ -12,10 +13,11 @@ class ReportEventRegistrationQuestions(models.Model):
     answer_id = fields.Many2one(comodel_name='event.answer', string='Answer')
     event_id = fields.Many2one(comodel_name='event.event', string='Event')
 
-    def init(self, cr):
+    @api.model_cr
+    def init(self):
         """ Event Question main report """
-        tools.drop_view_if_exists(cr, 'event_question_report')
-        cr.execute(""" CREATE VIEW event_question_report AS (
+        tools.drop_view_if_exists(self._cr, 'event_question_report')
+        self._cr.execute(""" CREATE VIEW event_question_report AS (
             SELECT
                 att_answer.id as id,
                 att_answer.event_registration_id as attendee_id,

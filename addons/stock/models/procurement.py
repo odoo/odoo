@@ -10,8 +10,6 @@ from odoo import api, fields, models, registry, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
 
-import openerp
-
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'

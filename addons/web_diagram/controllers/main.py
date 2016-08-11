@@ -4,7 +4,7 @@
 import odoo
 import odoo.http as http
 
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 
 class DiagramView(http.Controller):
@@ -99,11 +99,11 @@ class DiagramView(http.Controller):
                 options={}
             )
             for color, expr in bgcolors.items():
-                if eval(expr, act):
+                if safe_eval(expr, act):
                     n['color'] = color
 
             for shape, expr in shapes.items():
-                if eval(expr, act):
+                if safe_eval(expr, act):
                     n['shape'] = shape
 
             for i, fld in enumerate(visible_node_fields):

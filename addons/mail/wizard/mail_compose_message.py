@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import re
 
-from openerp import _, api, fields, models, SUPERUSER_ID
-from openerp import tools
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import _, api, fields, models, SUPERUSER_ID, tools
+from odoo.tools.safe_eval import safe_eval
 
 
 # main mako-like expression pattern
@@ -230,7 +230,7 @@ class MailComposer(models.TransientModel):
                 ActiveModel = ActiveModel.with_context(mail_notify_force_send=False, mail_create_nosubscribe=True)
             # wizard works in batch mode: [res_id] or active_ids or active_domain
             if mass_mode and wizard.use_active_domain and wizard.model:
-                res_ids = self.env[wizard.model].search(eval(wizard.active_domain)).ids
+                res_ids = self.env[wizard.model].search(safe_eval(wizard.active_domain)).ids
             elif mass_mode and wizard.model and self._context.get('active_ids'):
                 res_ids = self._context['active_ids']
             else:

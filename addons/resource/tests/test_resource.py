@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta, date
-
 import babel.dates
+
+from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
 
 from odoo.fields import Datetime
 from odoo.tools import float_compare
 from odoo.addons.resource.tests.common import TestResourceCommon
-
-from openerp.tests import TransactionCase
+from odoo.tests import TransactionCase
 
 
 class TestResource(TestResourceCommon):

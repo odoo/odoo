@@ -68,7 +68,9 @@
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
-                                <th t-if="has_serial_number"><strong>Lot/Serial Number</strong></th>
+                                <th name="lot_serial" t-if="has_serial_number">
+                                    <span class="pull-left">Lot/Serial Number</span>
+                                </th>
                                 <th class="text-center"><strong>Ordered Quantity</strong></th>
                                 <th t-if="any([pack_operation.state == 'done' for pack_operation in o.pack_operation_ids])" class="text-right">
                                         <strong>Delivered Quantity</strong>
@@ -93,7 +95,7 @@
                                                         <span t-field="packlot.lot_name"/>
                                                     </t>
                                                 </td>
-                                                <td>
+                                                <td name="lot_qty">
                                                     <span t-field="packlot.qty"/>
                                                 </td>
                                             </tr>

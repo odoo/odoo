@@ -128,28 +128,29 @@ class HrEmployee(models.Model):
             if attendance:
                 attendance.check_out = action_date
             else:
-                raise exceptions.UserError(_('Cannot perform check out on %(empl_name)s, could not find corresponding check in. \
-                    Your attendances have probably been modified manually by human resources.') % {'empl_name': self.name, })
+                raise exceptions.UserError(_('Cannot perform check out on %(empl_name)s, could not find corresponding check in. '
+                    'Your attendances have probably been modified manually by human resources.') % {'empl_name': self.name, })
             return attendance
 
-    def _init_column(self, cr, column_name, context=None):
+    @api.model_cr_context
+    def _init_column(self, column_name):
         """ Initialize the value of the given column for existing rows.
             Overridden here because we need to have different default values
             for barcode and pin for every employee.
         """
         if column_name not in ["barcode", "pin"]:
-            super(HrEmployee, self)._init_column(cr, column_name, context=context)
+            super(HrEmployee, self)._init_column(column_name)
         else:
             default_compute = self._defaults.get(column_name)
 
             query = 'SELECT id FROM "%s" WHERE "%s" is NULL' % (
                 self._table, column_name)
-            cr.execute(query)
-            employee_ids = cr.fetchall()
+            self.env.cr.execute(query)
+            employee_ids = self.env.cr.fetchall()
 
             for employee_id in employee_ids:
-                default_value = default_compute(self, cr, SUPERUSER_ID, context)
+                default_value = default_compute(self)
 
                 query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %s' % (
                     self._table, column_name, employee_id[0])
-                cr.execute(query, (default_value,))
+                self.env.cr.execute(query, (default_value,))

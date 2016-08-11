@@ -2,12 +2,12 @@
 
 import time
 from collections import OrderedDict
-from openerp import api, fields, models, _
-from openerp.osv import expression
-from openerp.exceptions import RedirectWarning, UserError, ValidationError
-from openerp.tools.misc import formatLang
-from openerp.tools import float_is_zero, float_compare
-from openerp.tools.safe_eval import safe_eval
+from odoo import api, fields, models, _
+from odoo.osv import expression
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
+from odoo.tools.misc import formatLang
+from odoo.tools import float_is_zero, float_compare
+from odoo.tools.safe_eval import safe_eval
 from lxml import etree
 
 #----------------------------------------------------------
@@ -633,13 +633,7 @@ class AccountMoveLine(models.Model):
             target_currency = account.currency_id or account.company_id.currency_id
         return lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency)
 
-    @api.v7
-    def prepare_move_lines_for_reconciliation_widget(self, cr, uid, line_ids, target_currency_id=False, context=None):
-        recs = self.browse(cr, uid, line_ids, context)
-        target_currency = target_currency_id and self.pool.get('res.currency').browse(cr, uid, target_currency_id, context=context) or False
-        return AccountMoveLine.prepare_move_lines_for_reconciliation_widget(recs, target_currency=target_currency)
-
-    @api.v8
+    @api.multi
     def prepare_move_lines_for_reconciliation_widget(self, target_currency=False, target_date=False):
         """ Returns move lines formatted for the manual/bank reconciliation widget
 
@@ -712,8 +706,8 @@ class AccountMoveLine(models.Model):
             ret.append(ret_line)
         return ret
 
-    @api.v7
-    def process_reconciliations(self, cr, uid, data, context=None):
+    @api.model
+    def process_reconciliations(self, data):
         """ Used to validate a batch of reconciliations in a single call
             :param data: list of dicts containing:
                 - 'type': either 'partner' or 'account'
@@ -723,14 +717,14 @@ class AccountMoveLine(models.Model):
         """
         for datum in data:
             if len(datum['mv_line_ids']) >= 1 or len(datum['mv_line_ids']) + len(datum['new_mv_line_dicts']) >= 2:
-                self.process_reconciliation(cr, uid, datum['mv_line_ids'], datum['new_mv_line_dicts'], context=context)
+                self.process_reconciliation(datum['mv_line_ids'], datum['new_mv_line_dicts'])
 
             if datum['type'] == 'partner':
-                partners = self.pool['res.partner'].browse(cr, uid, datum['id'], context=context)
-                self.pool['res.partner'].mark_as_reconciled(cr, uid, partners.ids, context=context)
+                partners = self.env['res.partner'].browse(datum['id'])
+                partners.mark_as_reconciled()
             if datum['type'] == 'account':
-                accounts = self.pool['account.account'].browse(cr, uid, datum['id'], context=context)
-                self.pool['account.account'].mark_as_reconciled(cr, uid, accounts.ids, context=context)
+                accounts = self.env['account.account'].browse(datum['id'])
+                accounts.mark_as_reconciled()
 
     @api.multi
     def process_reconciliation(self, new_mv_line_dicts):
@@ -1035,7 +1029,6 @@ class AccountMoveLine(models.Model):
         if not move_id:
             if not vals.get('move_id', False):
                 if journal.sequence_id:
-                    #name = self.pool.get('ir.sequence').next_by_id(cr, uid, journal.sequence_id.id)
                     v = {
                         'date': vals.get('date', time.strftime('%Y-%m-%d')),
                         'journal_id': context['journal_id']
@@ -1299,8 +1292,7 @@ class AccountMoveLine(models.Model):
 
     @api.multi
     def open_reconcile_view(self):
-        model, action_id = self.pool['ir.model.data'].get_object_reference(self._cr, self._uid, 'account', "action_account_moves_all_a")
-        action = self.pool[model].read(self._cr, self._uid, action_id, context=self._context)
+        [action] = self.env.ref('account.action_account_moves_all_a').read()
         ids = []
         for aml in self:
             if aml.account_id.reconcile:

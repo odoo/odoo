@@ -4,8 +4,9 @@
 from psycopg2 import OperationalError
 
 from odoo import api, fields, models, registry, _
-import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
+from odoo.exceptions import UserError
+
+import odoo.addons.decimal_precision as dp
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
 
@@ -71,7 +72,8 @@ class ProcurementRule(models.Model):
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company')
 
-    def _get_action(self, cr, uid, context=None):
+    @api.model
+    def _get_action(self):
         return []
 
 

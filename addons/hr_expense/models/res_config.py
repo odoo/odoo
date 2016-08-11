@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models
-from openerp import SUPERUSER_ID
+
 
 class HrExpenseConfigSettings(models.TransientModel):
     _name = 'hr.expense.config.settings'

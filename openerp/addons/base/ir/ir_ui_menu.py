@@ -9,7 +9,7 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.modules import get_module_resource
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 MENU_ITEM_SEPARATOR = "/"
 NUMBER_PARENS = re.compile(r"\(([0-9]+)\)")
@@ -195,7 +195,7 @@ class IrUiMenu(models.Model):
                 with tools.ignore(Exception):
                     # use magical UnquoteEvalContext to ignore undefined client-side variables such as `active_id`
                     eval_ctx = tools.UnquoteEvalContext(self._context)
-                    ctx = eval(menu.action.context, locals_dict=eval_ctx, nocopy=True) or {}
+                    ctx = safe_eval(menu.action.context, locals_dict=eval_ctx, nocopy=True) or {}
             menu_refs = ctx.get('needaction_menu_ref')
             if menu_refs:
                 if not isinstance(menu_refs, list):
@@ -217,9 +217,9 @@ class IrUiMenu(models.Model):
                     if model._needaction:
                         if menu.action.type == 'ir.actions.act_window':
                             eval_context = self.env['ir.actions.act_window']._get_eval_context()
-                            dom = eval(menu.action.domain or '[]', eval_context)
+                            dom = safe_eval(menu.action.domain or '[]', eval_context)
                         else:
-                            dom = eval(menu.action.params_store or '{}', {'uid': self._uid}).get('domain')
+                            dom = safe_eval(menu.action.params_store or '{}', {'uid': self._uid}).get('domain')
                         res[menu.id]['needaction_enabled'] = model._needaction
                         res[menu.id]['needaction_counter'] = model._needaction_count(dom)
         return res

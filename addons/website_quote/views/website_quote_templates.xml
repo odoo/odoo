@@ -202,7 +202,7 @@
                           <hr class="mt0 mb0"/>
                           <t t-call="website_quote.navigation_menu"/>
                           <hr class="mt0 mb0"/>
-                          <div t-if="order_valid" class="text-center">
+                          <div t-if="order_valid and quotation.state in ['draft', 'sent']" class="text-center">
                               <input type="hidden" t-att-value="quotation.validity_date" id="validity_date"/>
                               <div class="mt8" t-if="days_valid &gt; 0">
                                   <strong>This offer expires in</strong>
@@ -505,7 +505,7 @@
                       <span t-field="quotation.date_order"/>
                   </div>
                   <div class="clearfix"/>
-                  <div t-if="quotation.validity_date">
+                  <div t-if="quotation.validity_date and quotation.state in ['draft', 'sent']">
                     <label class="col-sm-5 col-xs-5 text-right">Expiration Date:</label>
                     <div class="col-sm-7 col-xs-7">
                         <span t-field="quotation.validity_date"/>

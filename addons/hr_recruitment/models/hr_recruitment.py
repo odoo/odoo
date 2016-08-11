@@ -3,9 +3,9 @@
 
 from datetime import datetime
 
-from openerp import api, fields, models, tools
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
+from odoo import api, fields, models, tools
+from odoo.tools.translate import _
+from odoo.exceptions import UserError
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Normal'),
@@ -460,7 +460,7 @@ class Applicant(models.Model):
         self.write({'active': True, 'stage_id': default_stage_id})
 
 
-class applicant_category(models.Model):
+class ApplicantCategory(models.Model):
     _name = "hr.applicant.category"
     _description = "Category of applicant"
 

@@ -11,7 +11,7 @@
           #Check if property exists for stock account journal exists
           PropertyObj = self.env['ir.property']
           properties = PropertyObj.search([('name', '=', 'property_stock_journal'), ('company_id', '=', company_id)])
-          AccountJournal = self.pool.get('account.journal')
+          AccountJournal = self.env['account.journal']
 
           #If not, check if you can find a journal that is already there with the same name, otherwise create one
           if not properties:
