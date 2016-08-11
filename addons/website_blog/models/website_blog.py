@@ -107,7 +107,7 @@ class BlogPost(models.Model):
     active = fields.Boolean('Active', default=True)
     cover_properties = fields.Text(
         'Cover Properties',
-        default='{"background-image": "none", "background-color": "oe_none", "opacity": "0.6", "resize_class": ""}')
+        default='{"background-image": "none", "background-color": "oe_black", "opacity": "0.2", "resize_class": ""}')
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, ondelete='cascade')
     tag_ids = fields.Many2many('blog.tag', string='Tags')
     content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
