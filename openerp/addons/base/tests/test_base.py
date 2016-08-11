@@ -425,6 +425,14 @@ class TestPartnerRecursion(TransactionCase):
             self.p2.write({'child_ids': [(1, self.p3.id, {'parent_id': p3b.id}),
                                          (1, p3b.id, {'parent_id': self.p3.id})]})
 
+    def test_105_res_partner_recursion_multi_update_on_constraints(self):
+        """ In constraints case, writes on multiple ids of partners must not trigger a recursive infinite loop """
+        cr, uid, p1, p2, p3 = self.cr, self.uid, self.p1, self.p2, self.p3
+        # Update parent_id with p1 record for p1 Id, trigger partner recursion error that is right.
+        # ex: self.assertRaises(ValidationError, self.res_partner.write, cr, uid, [p1,p2,p3], {'parent_id': p1})
+        # Update parent_id with p2/p3 record for p2/p3 Id, trigger a recursive infinite loop.
+        self.assertRaises(ValidationError, self.res_partner.write, cr, uid, [p1,p2,p3], {'parent_id': p2})
+
     def test_110_res_partner_recursion_multi_update(self):
         """ multi-write on several partners in same hierarchy must not trigger a false cycle detection """
         ps = self.p1 + self.p2 + self.p3
