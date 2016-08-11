@@ -220,9 +220,12 @@ var FieldTextHtml = widget.extend({
         this.$translate = $();
         return def;
     },
+    get_datarecord: function() {
+        return this.view.get_fields_values();
+    },
     get_url: function (_attr) {
         var src = this.options.editor_url || "/web_editor/field/html";
-        var datarecord = this.view.get_fields_values();
+        var datarecord = this.get_datarecord();
 
         var attr = {
             'model': this.view.model,
@@ -269,7 +272,6 @@ var FieldTextHtml = widget.extend({
 
         delete datarecord[this.name];
         src += "&datarecord="+ encodeURIComponent(JSON.stringify(datarecord));
-
         return src;
     },
     initialize_content: function() {
@@ -383,5 +385,10 @@ var FieldTextHtml = widget.extend({
 core.form_widget_registry
     .add('html', FieldTextHtmlSimple)
     .add('html_frame', FieldTextHtml);
+
+return {
+    FieldTextHtmlSimple: FieldTextHtmlSimple,
+    FieldTextHtml: FieldTextHtml,
+};
 
 });
