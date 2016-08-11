@@ -1,17 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_journal
-# 
-# Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# 	* sale_journal
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-02-23 04:22+0000\n"
-"Last-Translator: fanha99 <fanha99@hotmail.com>\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
+"POT-Creation-Date: 2014-09-10 06:46+0000\n"
+"PO-Revision-Date: 2014-09-10 13:50+0700\n"
+"Last-Translator: Leo Tran <leo.tran@tvtmarine.com>\n"
+"Language-Team: T.V.T Marine Automation (aka TVTMA) <support@ma.tvtmarine."
+"com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,7 +20,7 @@ msgstr ""
 #. module: sale_journal
 #: field:sale_journal.invoice.type,active:0
 msgid "Active"
-msgstr "Có hiệu lực"
+msgstr "Hiệu lực"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,create_uid:0
@@ -31,12 +30,12 @@ msgstr "Tạo bởi"
 #. module: sale_journal
 #: field:sale_journal.invoice.type,create_date:0
 msgid "Created on"
-msgstr "Tạo trên"
+msgstr "Tạo vào"
 
 #. module: sale_journal
 #: help:sale.order,invoice_type_id:0
 msgid "Generate invoice based on the selected option."
-msgstr "Tạo hóa đơn dựa trên tùy chọn đã chọn."
+msgstr "Tạo hoá đơn dựa trên tùy chọn đã chọn."
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -53,7 +52,9 @@ msgstr "ID"
 msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
-msgstr "Nếu bỏ đánh dấu trường 'Hiệu lực', nó sẽ cho phép bạn ẩn loại hóa đơn mà không cần xóa bỏ nó."
+msgstr ""
+"Nếu bỏ đánh dấu trường 'Hiệu lực', nó sẽ cho phép bạn ẩn kiểu hoá đơn mà "
+"không cần xóa bỏ nó."
 
 #. module: sale_journal
 #: view:sale.order:sale_journal.view_sales_order_search
@@ -64,37 +65,37 @@ msgstr "Nếu bỏ đánh dấu trường 'Hiệu lực', nó sẽ cho phép b�
 #: view:stock.picking:sale_journal.view_picking_internal_search
 #: field:stock.picking,invoice_type_id:0
 msgid "Invoice Type"
-msgstr "Loại hóa đơn"
+msgstr "Kiểu hoá đơn"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
 #: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
-msgstr "Các loại hóa đơn"
+msgstr "Kiểu hoá đơn"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
 msgid ""
 "Invoice types are used for partners, sales orders and delivery orders. You "
-"can create a specific invoicing journal to group your invoicing according to"
-" your customer's needs: daily, each Wednesday, monthly, etc."
-msgstr "Loại hóa đơn được sử dụng cho đối tác, hợp đồng bán hàng, lệnh giao hàng. Bạn có thể tạo một sổ nhất ký xuất hóa đơn cụ thể để nhóm việc xuất hóa đơn theo nhu cầu của khách hàng: hàng ngày, thứ tư hàng tuần, hàng tháng,..."
+"can create a specific invoicing journal to group your invoicing according to "
+"your customer's needs: daily, each Wednesday, monthly, etc."
+msgstr "Kiểu hoá đơn được sử dụng cho đối tác, hợp đồng bán hàng, lệnh giao hàng. Bạn có thể tạo một sổ nhất ký xuất hoá đơn cụ thể để nhóm việc xuất hoá đơn theo nhu cầu của khách hàng: hàng ngày, thứ tư hàng tuần, hàng tháng,..."
 
 #. module: sale_journal
 #: view:res.partner:sale_journal.view_partner_property_form
 msgid "Invoicing"
-msgstr "Xuất hóa đơn"
+msgstr "Xuất hoá đơn"
 
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Type"
-msgstr "Kiểu xuất hóa đơn"
+msgstr "Kiểu xuất hoá đơn"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
 msgid "Invoicing method"
-msgstr "Phương thức xuất hóa đơn"
+msgstr "Phương thức xuất hoá đơn"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,write_uid:0
@@ -129,7 +130,7 @@ msgstr "Đối tác"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr "Bảng kê hàng xuất kho"
+msgstr "Bảng kê hàng hoá"
 
 #. module: sale_journal
 #: view:res.partner:sale_journal.view_partner_property_form
@@ -144,11 +145,10 @@ msgstr "Đơn hàng"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_move
 msgid "Stock Move"
-msgstr "Stock Move"
+msgstr "Dịch chuyển kho"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid ""
-"This invoicing type will be used, by default, to invoice the current "
-"partner."
-msgstr "Kiểu xuất hóa đơn này sẽ được sử dụng mặc định để xuất hóa đơn cho đối tác hiện tại."
+"This invoicing type will be used, by default, to invoice the current partner."
+msgstr "Kiểu xuất hoá đơn này sẽ được sử dụng mặc định để xuất hoá đơn cho đối tác hiện tại."

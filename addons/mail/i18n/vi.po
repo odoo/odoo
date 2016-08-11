@@ -6,12 +6,12 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-04-22 08:17+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
+"POT-Creation-Date: 2015-11-30 08:20+0000\n"
+"PO-Revision-Date: 2015-11-30 08:20+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,7 +19,19 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:384
+#: code:addons/mail/mail_thread.py:145
+#, python-format
+msgid "%(static_help)s\n"
+"                        <p>\n"
+"                            You could also add a new %(document)s by sending an email to: %(email)s.\n"
+"                        </p>"
+msgstr "%(static_help)s\n"
+"                        <p>\n"
+"                            Bạn cũng có thể tạo mới %(document)s bằng cách gửi một email đến: %(email)s.\n"
+"                        </p>"
+
+#. module: mail
+#: code:addons/mail/mail_thread.py:388
 #, python-format
 msgid "%s created"
 msgstr "%s đã được tạo"
@@ -42,44 +54,42 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:156
 #, python-format
 msgid "(no email address)"
-msgstr ""
+msgstr "(không có địa chỉ email)"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:44
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
-msgstr ""
+msgstr "<div><p>Xin chào,</p><p>%s mời bạn theo dõi %s: %s.<p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:47
 #, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
+msgid "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
 msgstr "<div><p>Xin chào,</p><p>%s mời bạn theo dõi tài liệu mới.</p></div>"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:134
+#: code:addons/mail/mail_thread.py:137
 #, python-format
-msgid ""
-"<p class='oe_view_nocontent_create'>\n"
-"                            Click here to add new %(document)s or send an email to: <a href='mailto:%(email)s'>%(email)s</a>\n"
-"                        </p>\n"
-"                        %(static_help)s"
-msgstr ""
+msgid "<p class='oe_view_nocontent_create'>\n"
+"                                Click here to add new %(document)s or send an email to: %(email)s.\n"
+"                            </p>\n"
+"                            %(static_help)s"
+msgstr "<p class='oe_view_nocontent_create'>\n"
+"                                Bấm để tạo mới %(document)s hoặc gửi một email đến: %(email)s.\n"
+"                            </p>\n"
+"                            %(static_help)s"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:145
+#: code:addons/mail/mail_thread.py:153
 #, python-format
-msgid ""
-"<p class='oe_view_nocontent_create'>Click here to add new "
-"%(document)s</p>%(static_help)s"
-msgstr ""
+msgid "<p class='oe_view_nocontent_create'>Click here to add new %(document)s</p>%(static_help)s"
+msgstr "<p class='oe_view_nocontent_create'>Bấm để tạo mới %(document)s</p>%(static_help)s"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_inbox_feeds
-msgid ""
-"<p>\n"
+msgid "<p>\n"
 "                    <b>Good Job!</b> Your inbox is empty.\n"
 "                </p><p>\n"
 "                    Your inbox contains private messages or emails sent to you\n"
@@ -87,89 +97,110 @@ msgid ""
 "                    follow.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n"
+"                    <b>Tốt!</b> Hộp thư đến của bạn trống không.\n"
+"                </p><p>\n"
+"                    Hộp thư đến của bạn chứa các tin cá nhân của bạn hoặc email được gửi cho bạn\n"
+"                    cũng như các thông tin liên quan đến các tài liệu hay những người mà bạn dõi theo\n"
+"                    (follow).\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_to_me_feeds
-msgid ""
-"<p>\n"
+msgid "<p>\n"
 "                    <b>No private message.</b>\n"
 "                </p><p>\n"
 "                    This list contains messages sent to you.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n"
+"                    <b>Không có thông điệp cá nhân nào được gửi đến bạn.</b>\n"
+"                </p><p>\n"
+"                    Đây là nơi lưu trữ các thông điệp mà được gửi đến bạn.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_star_feeds
-msgid ""
-"<p>\n"
+msgid "<p>\n"
 "                    <b>No todo.</b>\n"
 "                </p><p>\n"
 "                    When you process messages in your inbox, you can mark some\n"
 "                    as <i>todo</i>. From this menu, you can process all your todo.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n"
+"                    <b>Không có todo.</b>\n"
+"                </p><p>\n"
+"                    Khi bạn xử lý các thông điệp trong hộp thư đến, bạn có thể đánh dấu\n"
+"                    các tin thành <i>todo</i>. Từ menu todo, bạn có thể xử lý các công việc cần giải quyết (todo).\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_archives_feeds
-msgid ""
-"<p>\n"
+msgid "<p>\n"
 "                    No message found and no message sent yet.\n"
 "                </p><p>\n"
 "                    Click on the top-right icon to compose a message. This\n"
 "                    message will be sent by email if it's an internal contact.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n"
+"                    No message found and no message sent yet.\n"
+"                </p><p>\n"
+"                    Click on the top-right icon to compose a message. This\n"
+"                    message will be sent by email if it's an internal contact.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_group_feeds
-msgid ""
-"<p>\n"
+msgid "<p>\n"
 "                    No message in this group.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n"
+"                    Không có thảo luận nào trong Nhóm này.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: help:mail.alias,alias_defaults:0
-msgid ""
-"A Python dictionary that will be evaluated to provide default values when "
-"creating new records for this alias."
+msgid "A Python dictionary that will be evaluated to provide default values when creating new records for this alias."
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_message.py:763
+#: code:addons/mail/mail_message.py:766
 #, python-format
 msgid "Access Denied"
-msgstr "Từ chối truy cập"
+msgstr "Truy cập bị từ chối"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_groups
 msgid "Access Groups"
-msgstr "Access Groups"
+msgstr "Nhóm truy cập"
 
 #. module: mail
 #: help:mail.message.subtype,default:0
 msgid "Activated by default when subscribing."
-msgstr ""
+msgstr "Được kích hoạt mặc định khi đăng ký nhận tin"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
 msgid "Active"
-msgstr "Có hiệu lực"
+msgstr "Hiệu lực"
 
 #. module: mail
 #: field:mail.compose.message,active_domain:0
 msgid "Active domain"
-msgstr ""
+msgstr "Miền được kích hoạt"
 
 #. module: mail
 #: view:mail.wizard.invite:mail.mail_wizard_invite_form
 msgid "Add Followers"
-msgstr "Thêm theo dõi"
+msgstr "Thêm Người dõi theo"
 
 #. module: mail
 #. openerp-web
@@ -182,19 +213,19 @@ msgstr "Thêm một ghi chú nội bộ, cái mà sẽ không được gửi cho
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 #: view:mail.wizard.invite:mail.mail_wizard_invite_form
 msgid "Add contacts to notify..."
-msgstr ""
+msgstr "Thêm các Liên hệ để thông báo..."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail_followers.xml:28
 #, python-format
 msgid "Add others"
-msgstr "Thêm"
+msgstr "Thêm người khác"
 
 #. module: mail
 #: field:mail.compose.message,partner_ids:0
 msgid "Additional Contacts"
-msgstr ""
+msgstr "Các Liên hệ bổ sung"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form
@@ -203,15 +234,16 @@ msgstr "Nâng cao"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
-#: view:mail.alias:mail.view_mail_alias_tree field:mail.group,alias_id:0
+#: view:mail.alias:mail.view_mail_alias_tree
+#: field:mail.group,alias_id:0
 #: field:res.users,alias_id:0
 msgid "Alias"
-msgstr "Định danh"
+msgstr "Bí danh"
 
 #. module: mail
 #: view:res.users:mail.view_users_form_mail
 msgid "Alias Accepts Emails From"
-msgstr ""
+msgstr "Bí danh Chấp thuận email từ"
 
 #. module: mail
 #: field:mail.alias,alias_contact:0
@@ -221,17 +253,17 @@ msgstr ""
 #. module: mail
 #: field:base.config.settings,alias_domain:0
 msgid "Alias Domain"
-msgstr "Tên miền bí danh"
+msgstr "Miền Bí danh"
 
 #. module: mail
 #: field:mail.alias,alias_name:0
 msgid "Alias Name"
-msgstr ""
+msgstr "Tên Bí danh"
 
 #. module: mail
 #: field:mail.alias,alias_domain:0
 msgid "Alias domain"
-msgstr ""
+msgstr "Miền Bí danh"
 
 #. module: mail
 #: field:mail.alias,alias_model_id:0
@@ -247,14 +279,14 @@ msgstr ""
 #. module: mail
 #: selection:res.partner,notify_email:0
 msgid "All Messages"
-msgstr ""
+msgstr "Tất cả thông điệp"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
-msgid ""
-"All records matching your current search filter will be mailed,\n"
+msgid "All records matching your current search filter will be mailed,\n"
 "                                    not only the ids selected in the list view."
-msgstr ""
+msgstr "Tất cả các bản ghi khớp với điều kiện lọc của bạn sẽ được gửi email\n"
+"                                    chứ không chỉ các ID được chọn trong giao diện kiểu danh mục này."
 
 #. module: mail
 #. openerp-web
@@ -266,10 +298,8 @@ msgstr "Và"
 #. module: mail
 #: help:mail.compose.message,no_auto_thread:0
 #: help:mail.message,no_auto_thread:0
-msgid ""
-"Answers do not go in the original document' discussion thread. This has an "
-"impact on the generated message-id."
-msgstr "Các câu trả lời không về luồng thảo luận của tài liệu gốc. Điều này có ảnh hưởng đến message-id được sinh ra."
+msgid "Answers do not go in the original document' discussion thread. This has an impact on the generated message-id."
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -282,7 +312,7 @@ msgstr "Áp dụng"
 #: model:ir.actions.client,name:mail.action_mail_archives_feeds
 #: model:ir.ui.menu,name:mail.mail_archivesfeeds
 msgid "Archives"
-msgstr ""
+msgstr "Lưu trữ"
 
 #. module: mail
 #. openerp-web
@@ -298,38 +328,39 @@ msgstr "Đính kèm tập tin"
 
 #. module: mail
 #: field:mail.compose.message,attachment_ids:0
-#: view:mail.mail:mail.view_mail_form field:mail.message,attachment_ids:0
+#: view:mail.mail:mail.view_mail_form
+#: field:mail.message,attachment_ids:0
 msgid "Attachments"
-msgstr "Các đính kèm"
+msgstr "Đính kèm"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Partners"
-msgstr ""
+msgstr "Các đối tác đã xác thực"
 
 #. module: mail
-#: field:mail.compose.message,author_id:0 view:mail.mail:mail.view_mail_search
+#: field:mail.compose.message,author_id:0
+#: view:mail.mail:mail.view_mail_search
 #: field:mail.message,author_id:0
 msgid "Author"
 msgstr "Tác giả"
 
 #. module: mail
-#: help:mail.compose.message,author_id:0 help:mail.message,author_id:0
-msgid ""
-"Author of the message. If not set, email_from may hold an email address that"
-" did not match any partner."
-msgstr "Tác giả của thông điệp. Nếu không đặt, trường email_from có thể chứa địa chỉ email mà không khớp với bất kỳ đối tác nào."
+#: help:mail.compose.message,author_id:0
+#: help:mail.message,author_id:0
+msgid "Author of the message. If not set, email_from may hold an email address that did not match any partner."
+msgstr ""
 
 #. module: mail
 #: field:mail.compose.message,author_avatar:0
 #: field:mail.message,author_avatar:0
 msgid "Author's Avatar"
-msgstr "Avatar của Tác giả"
+msgstr ""
 
 #. module: mail
 #: field:mail.group,group_public_id:0
 msgid "Authorized Group"
-msgstr ""
+msgstr "Nhóm được xác thực"
 
 #. module: mail
 #: field:mail.mail,auto_delete:0
@@ -339,27 +370,18 @@ msgstr "Tự động xóa"
 #. module: mail
 #: field:mail.group,group_ids:0
 msgid "Auto Subscription"
-msgstr ""
+msgstr "Tự động Đăng ký theo dõi"
 
 #. module: mail
 #: view:mail.message.subtype:mail.view_mail_message_subtype_form
 msgid "Auto subscription"
-msgstr ""
+msgstr "Tự động đăng ký theo dõi"
 
 #. module: mail
-#: help:mail.compose.message,body:0 help:mail.message,body:0
+#: help:mail.compose.message,body:0
+#: help:mail.message,body:0
 msgid "Automatically sanitized HTML contents"
-msgstr "Nội dung HTML được làm sạch tự động"
-
-#. module: mail
-#: model:mail.group,name:mail.group_best_sales_practices
-msgid "Best Sales Practices"
-msgstr ""
-
-#. module: mail
-#: model:mail.group,name:mail.group_board
-msgid "Board meetings"
-msgstr ""
+msgstr "Tự động làm sạch nội dung HTML"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form
@@ -379,7 +401,7 @@ msgstr "Hủy"
 #. module: mail
 #: view:mail.mail:mail.view_mail_tree
 msgid "Cancel Email"
-msgstr ""
+msgstr "Hủy email"
 
 #. module: mail
 #: selection:mail.mail,state:0
@@ -389,37 +411,39 @@ msgstr "Đã hủy"
 #. module: mail
 #: help:mail.mail,email_cc:0
 msgid "Carbon copy message recipients"
-msgstr ""
+msgstr "Carbon copy message recipients"
 
 #. module: mail
 #: field:mail.mail,email_cc:0
 msgid "Cc"
+msgstr "CC"
+
+#. module: mail
+#: field:mail.compose.message,child_ids:0
+#: field:mail.message,child_ids:0
+msgid "Child Messages"
 msgstr ""
 
 #. module: mail
-#: field:mail.compose.message,child_ids:0 field:mail.message,child_ids:0
-msgid "Child Messages"
-msgstr "Các thông điệp con"
-
-#. module: mail
-#: selection:mail.compose.message,type:0 view:mail.mail:mail.view_mail_search
+#: selection:mail.compose.message,type:0
+#: view:mail.mail:mail.view_mail_search
 #: selection:mail.message,type:0
 msgid "Comment"
-msgstr "Ghi chú"
+msgstr "Bình luận"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:1980
+#: code:addons/mail/static/src/js/mail.js:1982
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Compose Email"
-msgstr "Soạn thư mới"
+msgstr "Soạn Email"
 
 #. module: mail
 #: field:mail.compose.message,composition_mode:0
 msgid "Composition mode"
-msgstr ""
+msgstr "Chế độ soạn thảo"
 
 #. module: mail
 #: field:mail.notification,partner_id:0
@@ -434,60 +458,71 @@ msgstr "Nội dung"
 #. module: mail
 #: field:ir.attachment,file_type:0
 msgid "Content Type"
-msgstr ""
+msgstr "Kiểu Nội dung"
 
 #. module: mail
-#: field:mail.compose.message,body:0 field:mail.message,body:0
+#: field:mail.compose.message,body:0
+#: field:mail.message,body:0
 msgid "Contents"
 msgstr "Nội dung"
 
 #. module: mail
-#: field:mail.alias,create_uid:0 field:mail.compose.message,create_uid:0
-#: field:mail.group,create_uid:0 field:mail.mail,create_uid:0
-#: field:mail.message,create_uid:0 field:mail.message.subtype,create_uid:0
+#: field:mail.alias,create_uid:0
+#: field:mail.compose.message,create_uid:0
+#: field:mail.group,create_uid:0
+#: field:mail.mail,create_uid:0
+#: field:mail.message,create_uid:0
+#: field:mail.message.subtype,create_uid:0
 #: field:mail.wizard.invite,create_uid:0
 msgid "Created by"
 msgstr "Tạo bởi"
 
 #. module: mail
-#: field:mail.alias,create_date:0 field:mail.compose.message,create_date:0
-#: field:mail.group,create_date:0 field:mail.mail,create_date:0
-#: field:mail.message,create_date:0 field:mail.message.subtype,create_date:0
+#: field:mail.alias,create_date:0
+#: field:mail.compose.message,create_date:0
+#: field:mail.group,create_date:0
+#: field:mail.mail,create_date:0
+#: field:mail.message,create_date:0
+#: field:mail.message.subtype,create_date:0
 #: field:mail.wizard.invite,create_date:0
 msgid "Created on"
-msgstr "Tạo trên"
+msgstr "Tạo vào"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
 msgid "Creation Month"
-msgstr "Tháng tạo"
+msgstr "Tháng Tạo"
 
 #. module: mail
-#: help:mail.compose.message,starred:0 help:mail.message,starred:0
+#: help:mail.compose.message,starred:0
+#: help:mail.message,starred:0
 msgid "Current user has a starred notification linked to this message"
-msgstr "Người dùng hiện hành có một thông báo chưa đánh sao liên kết với thông điệp này"
+msgstr "Người dùng hiện hành có một thông báo được gắn sao liên kết đến thông điệp này"
 
 #. module: mail
-#: help:mail.compose.message,to_read:0 help:mail.message,to_read:0
+#: help:mail.compose.message,to_read:0
+#: help:mail.message,to_read:0
 msgid "Current user has an unread notification linked to this message"
-msgstr "Người dùng hiện hành có một thông báo chưa đọc được liên kết với thông điệp này"
+msgstr "Người dùng hiện hành có một thông báo chưa đọc liên kết đến thông điệp này"
 
 #. module: mail
 #: code:addons/mail/res_partner.py:31
 #, python-format
 msgid "Customers"
-msgstr "Các khách hàng"
+msgstr "Khách hàng"
 
 #. module: mail
-#: field:mail.compose.message,date:0 field:mail.message,date:0
+#: field:mail.compose.message,date:0
+#: field:mail.message,date:0
 msgid "Date"
 msgstr "Ngày"
 
 #. module: mail
-#: help:mail.group,message_last_post:0 help:mail.thread,message_last_post:0
+#: help:mail.group,message_last_post:0
+#: help:mail.thread,message_last_post:0
 #: help:res.partner,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "Ngày gần nhất của thông điệp được vào sổ trên bản ghi này."
+msgstr ""
 
 #. module: mail
 #: field:mail.message.subtype,default:0
@@ -497,7 +532,7 @@ msgstr "Mặc định"
 #. module: mail
 #: field:mail.alias,alias_defaults:0
 msgid "Default Values"
-msgstr ""
+msgstr "Giá trị mặc định"
 
 #. module: mail
 #. openerp-web
@@ -521,20 +556,18 @@ msgstr "Mô tả"
 
 #. module: mail
 #: help:mail.message.subtype,description:0
-msgid ""
-"Description that will be added in the message posted for this subtype. If "
-"void, the name will be added instead."
+msgid "Description that will be added in the message posted for this subtype. If void, the name will be added instead."
 msgstr ""
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_mail_group_feeds
 msgid "Discussion Group"
-msgstr ""
+msgstr "Nhóm Thảo luận"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_group
 msgid "Discussion group"
-msgstr ""
+msgstr "Nhóm Thảo luận"
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
@@ -544,11 +577,11 @@ msgstr "Thảo luận"
 #. module: mail
 #: field:res.users,display_groups_suggestions:0
 msgid "Display Groups Suggestions"
-msgstr ""
+msgstr "Hiện thị Gợi ý các Nhóm"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:1035
+#: code:addons/mail/static/src/js/mail.js:1038
 #, python-format
 msgid "Do you really want to delete this message?"
 msgstr "Bạn có chắc muốn xóa tin nhắn này?"
@@ -556,21 +589,21 @@ msgstr "Bạn có chắc muốn xóa tin nhắn này?"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
 msgid "Document Followers"
-msgstr ""
+msgstr "Người dõi theo Tài liệu"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:253
 #, python-format
 msgid "Done"
-msgstr "Hoàn tất"
+msgstr "Hoàn thành"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/mail_followers.js:100
 #, python-format
 msgid "Edit Subscription of "
-msgstr "Sửa đổi các đăng ký nhận tin của"
+msgstr "Sửa đổi các đăng ký nhận tin của "
 
 #. module: mail
 #. openerp-web
@@ -580,25 +613,26 @@ msgid "Edit subscription"
 msgstr "Sửa đổi các đăng ký nhận tin"
 
 #. module: mail
-#: selection:mail.compose.message,type:0 view:mail.mail:mail.view_mail_search
+#: selection:mail.compose.message,type:0
+#: view:mail.mail:mail.view_mail_search
 #: selection:mail.message,type:0
 msgid "Email"
-msgstr "Thư điện tử"
+msgstr "Email"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
 msgid "Email Alias"
-msgstr "Email định danh"
+msgstr "Bí danh Email"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
 msgid "Email Aliases"
-msgstr ""
+msgstr "Bí danh Email"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
 msgid "Email Search"
-msgstr ""
+msgstr "Tìm Email"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
@@ -607,16 +641,13 @@ msgstr "Email Thread"
 
 #. module: mail
 #: help:res.users,alias_id:0
-msgid ""
-"Email address internally associated with this user. Incoming emails will "
-"appear in the user's notifications."
+msgid "Email address internally associated with this user. Incoming emails will appear in the user's notifications."
 msgstr ""
 
 #. module: mail
-#: help:mail.compose.message,email_from:0 help:mail.message,email_from:0
-msgid ""
-"Email address of the sender. This field is set when no matching partner is "
-"found for incoming emails."
+#: help:mail.compose.message,email_from:0
+#: help:mail.message,email_from:0
+msgid "Email address of the sender. This field is set when no matching partner is found for incoming emails."
 msgstr "Địa chỉ email người gửi. Trường này được sử dụng khi không tìm thấy đối tác có địa chỉ email khớp với địa chỉ email trong email đến"
 
 #. module: mail
@@ -627,7 +658,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Đồ thuật soạn thảo email"
+msgstr "Đồ thuật soạn email"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -645,16 +676,16 @@ msgstr ""
 #: model:ir.ui.menu,name:mail.menu_mail_mail
 #: view:mail.mail:mail.view_mail_tree
 msgid "Emails"
-msgstr "Thư điện tử"
+msgstr "Emails"
 
 #. module: mail
-#: code:addons/mail/update.py:91
+#: code:addons/mail/update.py:93
 #, python-format
 msgid "Error"
 msgstr "Lỗi"
 
 #. module: mail
-#: code:addons/mail/update.py:91
+#: code:addons/mail/update.py:93
 #, python-format
 msgid "Error during communication with the publisher warranty server."
 msgstr ""
@@ -672,7 +703,7 @@ msgstr "Mọi người"
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
 msgid "Extended Filters..."
-msgstr "Bộ lọc mở rộng..."
+msgstr ""
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -681,10 +712,7 @@ msgstr "Thất bại"
 
 #. module: mail
 #: help:mail.message.subtype,relation_field:0
-msgid ""
-"Field used to link the related model to the subtype model when using "
-"automatic subscription on a related document. The field is used to compute "
-"getattr(related_document.relation_field)."
+msgid "Field used to link the related model to the subtype model when using automatic subscription on a related document. The field is used to compute getattr(related_document.relation_field)."
 msgstr ""
 
 #. module: mail
@@ -710,7 +738,7 @@ msgstr "Theo dõi"
 #: field:res.partner,message_follower_ids:0
 #, python-format
 msgid "Followers"
-msgstr "Người theo dõi"
+msgstr "Người dõi theo"
 
 #. module: mail
 #: view:mail.followers:mail.view_mail_subscription_form
@@ -749,7 +777,8 @@ msgid "Following"
 msgstr "Đang theo dõi"
 
 #. module: mail
-#: field:mail.compose.message,email_from:0 field:mail.message,email_from:0
+#: field:mail.compose.message,email_from:0
+#: field:mail.message,email_from:0
 msgid "From"
 msgstr "Từ"
 
@@ -757,7 +786,7 @@ msgstr "Từ"
 #: code:addons/mail/res_users.py:75
 #, python-format
 msgid "Go to the configuration panel"
-msgstr "Đi đến bảng cấu hình"
+msgstr ""
 
 #. module: mail
 #: view:mail.group:mail.view_group_search
@@ -774,10 +803,11 @@ msgstr "Nhóm theo"
 #. module: mail
 #: view:mail.group:mail.view_group_form
 msgid "Group Form"
-msgstr ""
+msgstr "Group Form"
 
 #. module: mail
-#: view:mail.group:mail.view_group_form view:mail.group:mail.view_group_tree
+#: view:mail.group:mail.view_group_form
+#: view:mail.group:mail.view_group_tree
 msgid "Group Name"
 msgstr "Tên nhóm"
 
@@ -787,17 +817,13 @@ msgid "Groups"
 msgstr "Nhóm"
 
 #. module: mail
-#: model:mail.group,name:mail.group_hr_policies
-msgid "HR Policies"
-msgstr "Chính sách Nhân sự"
-
-#. module: mail
 #: view:mail.message:mail.view_message_search
 msgid "Has attachments"
 msgstr "Chứa đính kèm"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form field:mail.mail,headers:0
+#: view:mail.mail:mail.view_mail_form
+#: field:mail.mail,headers:0
 msgid "Headers"
 msgstr ""
 
@@ -812,66 +838,66 @@ msgid "Hide the subtype in the follower options"
 msgstr ""
 
 #. module: mail
-#: help:mail.group,message_summary:0 help:mail.thread,message_summary:0
+#: help:mail.group,message_summary:0
+#: help:mail.thread,message_summary:0
 #: help:res.partner,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr ""
 
 #. module: mail
-#: field:mail.alias,id:0 field:mail.compose.message,id:0
-#: field:mail.followers,id:0 field:mail.group,id:0 field:mail.mail,id:0
-#: field:mail.message,id:0 field:mail.message.subtype,id:0
-#: field:mail.notification,id:0 field:mail.thread,id:0
-#: field:mail.wizard.invite,id:0 field:publisher_warranty.contract,id:0
+#: field:mail.alias,id:0
+#: field:mail.compose.message,id:0
+#: field:mail.followers,id:0
+#: field:mail.group,id:0
+#: field:mail.mail,id:0
+#: field:mail.message,id:0
+#: field:mail.message.subtype,id:0
+#: field:mail.notification,id:0
+#: field:mail.thread,id:0
+#: field:mail.wizard.invite,id:0
+#: field:publisher_warranty.contract,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: mail
 #: help:mail.alias,alias_parent_thread_id:0
-msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
-msgstr ""
+msgid "ID of the parent record holding the alias (example: project holding the task creation alias)"
+msgstr "ID of the parent record holding the alias (example: project holding the task creation alias)"
 
 #. module: mail
-#: help:mail.followers,res_id:0 help:mail.wizard.invite,res_id:0
+#: help:mail.followers,res_id:0
+#: help:mail.wizard.invite,res_id:0
 msgid "Id of the followed resource"
 msgstr ""
 
 #. module: mail
-#: help:mail.group,message_unread:0 help:mail.thread,message_unread:0
+#: help:mail.group,message_unread:0
+#: help:mail.thread,message_unread:0
 #: help:res.partner,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "If checked new messages require your attention."
+msgstr ""
 
 #. module: mail
 #: help:mail.wizard.invite,send_mail:0
-msgid ""
-"If checked, the partners will receive an email warning they have been added "
-"in the document's followers."
+msgid "If checked, the partners will receive an email warning they have been added in the document's followers."
 msgstr ""
 
 #. module: mail
 #: help:base.config.settings,alias_domain:0
-msgid ""
-"If you have setup a catch-all email domain redirected to the Odoo server, "
-"enter the domain name here."
-msgstr ""
+msgid "If you have setup a catch-all email domain redirected to the Odoo server, enter the domain name here."
+msgstr "Nếu bạn đã thiết lập một miền email catch-all để chuyển hướng email về Odoo, hay nhập tên miền đó vào đây."
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
-msgid ""
-"If you want to work only with selected ids, please uncheck the\n"
+msgid "If you want to work only with selected ids, please uncheck the\n"
 "                                list header checkbox."
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_alias.py:144
+#: code:addons/mail/mail_alias.py:145
 #, python-format
 msgid "Inactive Alias"
-msgstr ""
+msgstr "Chưa thiết lập"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_mail_inbox_feeds
@@ -880,28 +906,27 @@ msgid "Inbox"
 msgstr "Hộp thư đến"
 
 #. module: mail
-#: help:mail.compose.message,parent_id:0 help:mail.message,parent_id:0
+#: help:mail.compose.message,parent_id:0
+#: help:mail.message,parent_id:0
 msgid "Initial thread message."
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_message.py:177
+#: code:addons/mail/mail_message.py:179
 #, python-format
 msgid "Invalid Action!"
 msgstr "Hành động không hợp lệ!"
 
 #. module: mail
 #: constraint:mail.alias:0
-msgid ""
-"Invalid expression, it must be a literal python dictionary definition e.g. "
-"\"{'field': 'value'}\""
+msgid "Invalid expression, it must be a literal python dictionary definition e.g. \"{'field': 'value'}\""
 msgstr ""
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:97
 #, python-format
 msgid "Invitation to follow %s: %s"
-msgstr ""
+msgstr "Lời mời theo dõi %s: %s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -911,14 +936,14 @@ msgstr ""
 #. module: mail
 #: field:mail.mail,notification:0
 msgid "Is Notification"
-msgstr ""
+msgstr "Là một Thông báo"
 
 #. module: mail
 #: field:mail.group,message_is_follower:0
 #: field:mail.thread,message_is_follower:0
 #: field:res.partner,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Là một Người dõi theo"
+msgstr "Là một người dõi theo"
 
 #. module: mail
 #. openerp-web
@@ -935,44 +960,50 @@ msgid "Join a group"
 msgstr "Tham gia Nhóm"
 
 #. module: mail
-#: field:mail.group,message_last_post:0 field:mail.thread,message_last_post:0
+#: field:mail.group,message_last_post:0
+#: field:mail.thread,message_last_post:0
 #: field:res.partner,message_last_post:0
 msgid "Last Message Date"
-msgstr "Ngày thông điệp gần nhất"
+msgstr "Last Message Date"
 
 #. module: mail
-#: field:mail.alias,write_uid:0 field:mail.compose.message,write_uid:0
-#: field:mail.group,write_uid:0 field:mail.mail,write_uid:0
-#: field:mail.message,write_uid:0 field:mail.message.subtype,write_uid:0
+#: field:mail.alias,write_uid:0
+#: field:mail.compose.message,write_uid:0
+#: field:mail.group,write_uid:0
+#: field:mail.mail,write_uid:0
+#: field:mail.message,write_uid:0
+#: field:mail.message.subtype,write_uid:0
 #: field:mail.wizard.invite,write_uid:0
 msgid "Last Updated by"
 msgstr "Cập nhật lần cuối bởi"
 
 #. module: mail
-#: field:mail.alias,write_date:0 field:mail.compose.message,write_date:0
-#: field:mail.group,write_date:0 field:mail.mail,write_date:0
-#: field:mail.message,write_date:0 field:mail.message.subtype,write_date:0
+#: field:mail.alias,write_date:0
+#: field:mail.compose.message,write_date:0
+#: field:mail.group,write_date:0
+#: field:mail.mail,write_date:0
+#: field:mail.message,write_date:0
+#: field:mail.message.subtype,write_date:0
 #: field:mail.wizard.invite,write_date:0
 msgid "Last Updated on"
 msgstr "Cập nhật lần cuối"
 
 #. module: mail
 #: help:mail.wizard.invite,partner_ids:0
-msgid ""
-"List of partners that will be added as follower of the current document."
-msgstr ""
+msgid "List of partners that will be added as follower of the current document."
+msgstr "Danh sách đối tác sẽ được thêm vào như những Người theo dõi của tài liệu này"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log a note for this document. No notification will be sent"
-msgstr ""
+msgstr "Ghi lại một ghi chú cho tài liệu này. Sẽ không có thông báo nào được gửi đi."
 
 #. module: mail
 #: field:mail.compose.message,is_log:0
 msgid "Log an Internal Note"
-msgstr "Tạo ghi chú nội bộ"
+msgstr "Ghi chú nội bộ"
 
 #. module: mail
 #. openerp-web
@@ -980,92 +1011,85 @@ msgstr "Tạo ghi chú nội bộ"
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log an internal note"
-msgstr "Tạo ghi chú nội bộ"
+msgstr "Ghi chú nội bộ"
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:340
+#: code:addons/mail/mail_mail.py:348
 #, python-format
 msgid "Mail Delivery Failed"
-msgstr "Lỗi gửi mail"
+msgstr "Gửi mail không thành công"
 
 #. module: mail
 #: field:ir.ui.menu,mail_group_id:0
 msgid "Mail Group"
-msgstr ""
+msgstr "Nhóm gửi Thư"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.action_mail_redirect
 msgid "Mail Redirection (Document / Inbox)"
-msgstr ""
+msgstr "Mail Redirection (Document / Inbox)"
 
 #. module: mail
 #: help:mail.mail,notification:0
 msgid "Mail has been created to notify people of an existing mail.message"
-msgstr ""
+msgstr "Mail has been created to notify people of an existing mail.message"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:257
 #, python-format
 msgid "Mark as Todo"
-msgstr "Đánh dầu là cần làm"
+msgstr "Đánh dấu là Việc cần làm"
 
 #. module: mail
 #: field:mail.group,image_medium:0
 msgid "Medium-sized photo"
-msgstr "Ảnh cỡ trung"
+msgstr "Ảnh cỡ vừa"
 
 #. module: mail
 #: help:mail.group,image_medium:0
-msgid ""
-"Medium-sized photo of the group. It is automatically resized as a 128x128px "
-"image, with aspect ratio preserved. Use this field in form views or some "
-"kanban views."
-msgstr ""
+msgid "Medium-sized photo of the group. It is automatically resized as a 128x128px image, with aspect ratio preserved. Use this field in form views or some kanban views."
+msgstr "Hình cỡ vừa đại diện cho nhóm. Hình sẽ tự động được chỉnh về kích cỡ 128x128px với tỷ lệ giữ nguyên. Sử dụng trường này ở giao diện kiểu form hoặc kiểu Kanban."
 
 #. module: mail
 #: help:mail.group,group_ids:0
-msgid ""
-"Members of those groups will automatically added as followers. Note that "
-"they will be able to manage their subscription manually if necessary."
-msgstr ""
+msgid "Members of those groups will automatically added as followers. Note that they will be able to manage their subscription manually if necessary."
+msgstr "Thành viên của những nhóm này sẽ tự động được thêm vào danh sách người theo dõi. Lưu ý rằng họ có thể tự quản lý việc theo dõi của họ nếu cần."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
-#: field:mail.mail,mail_message_id:0 view:mail.message:mail.view_message_form
-#: field:mail.notification,message_id:0 field:mail.wizard.invite,message:0
+#: field:mail.mail,mail_message_id:0
+#: view:mail.message:mail.view_message_form
+#: field:mail.notification,message_id:0
+#: field:mail.wizard.invite,message:0
 msgid "Message"
 msgstr "Thông điệp"
 
 #. module: mail
-#: field:mail.compose.message,record_name:0 field:mail.message,record_name:0
+#: field:mail.compose.message,record_name:0
+#: field:mail.message,record_name:0
 msgid "Message Record Name"
-msgstr "Tên bản ghi thông điệp"
+msgstr "Message Record Name"
 
 #. module: mail
 #: field:mail.message.subtype,name:0
 msgid "Message Type"
-msgstr ""
+msgstr "Kiểu thông điệp"
 
 #. module: mail
 #: help:mail.mail,email_to:0
 msgid "Message recipients (emails)"
-msgstr ""
+msgstr "Message recipients (emails)"
 
 #. module: mail
 #: help:mail.mail,references:0
 msgid "Message references, such as identifiers of previous messages"
-msgstr ""
+msgstr "Message references, such as identifiers of previous messages"
 
 #. module: mail
 #: help:mail.message.subtype,name:0
-msgid ""
-"Message subtype gives a more precise type on the message, especially for "
-"system notifications. For example, it can be a notification related to a new"
-" record (New), or to a stage change in a process (Stage change). Message "
-"subtypes allow to precisely tune the notifications the user want to receive "
-"on its wall."
-msgstr ""
+msgid "Message subtype gives a more precise type on the message, especially for system notifications. For example, it can be a notification related to a new record (New), or to a stage change in a process (Stage change). Message subtypes allow to precisely tune the notifications the user want to receive on its wall."
+msgstr "Message subtype gives a more precise type on the message, especially for system notifications. For example, it can be a notification related to a new record (New), or to a stage change in a process (Stage change). Message subtypes allow to precisely tune the notifications the user want to receive on its wall."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
@@ -1074,52 +1098,54 @@ msgstr ""
 
 #. module: mail
 #: help:mail.followers,subtype_ids:0
-msgid ""
-"Message subtypes followed, meaning subtypes that will be pushed onto the "
-"user's Wall."
+msgid "Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall."
 msgstr ""
 
 #. module: mail
-#: help:mail.compose.message,type:0 help:mail.message,type:0
-msgid ""
-"Message type: email for email message, notification for system message, "
-"comment for other messages such as user replies"
-msgstr "Kiểu thông điệp: email đối với thông điệp bằng email, thông báo đối với các thông điệp hệ thống, bình luận đối với các loại thông điệp khác (ví dụ: phản hồi của người dùng)"
+#: help:mail.compose.message,type:0
+#: help:mail.message,type:0
+msgid "Message type: email for email message, notification for system message, comment for other messages such as user replies"
+msgstr "Message type: email for email message, notification for system message, comment for other messages such as user replies"
 
 #. module: mail
-#: help:mail.compose.message,message_id:0 help:mail.message,message_id:0
+#: help:mail.compose.message,message_id:0
+#: help:mail.message,message_id:0
 msgid "Message unique identifier"
-msgstr ""
+msgstr "Message unique identifier"
 
 #. module: mail
-#: field:mail.compose.message,message_id:0 field:mail.message,message_id:0
+#: field:mail.compose.message,message_id:0
+#: field:mail.message,message_id:0
 msgid "Message-Id"
-msgstr ""
+msgstr "Message-Id"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
-#: model:ir.ui.menu,name:mail.menu_mail_message field:mail.group,message_ids:0
-#: view:mail.message:mail.view_message_tree field:mail.thread,message_ids:0
+#: model:ir.ui.menu,name:mail.menu_mail_message
+#: field:mail.group,message_ids:0
+#: view:mail.message:mail.view_message_tree
+#: field:mail.thread,message_ids:0
 #: field:res.partner,message_ids:0
 msgid "Messages"
-msgstr "Các thông điệp"
+msgstr "Messages"
 
 #. module: mail
 #: view:mail.message:mail.view_message_search
 msgid "Messages Search"
-msgstr ""
+msgstr "Messages Search"
 
 #. module: mail
-#: help:mail.group,message_ids:0 help:mail.thread,message_ids:0
+#: help:mail.group,message_ids:0
+#: help:mail.thread,message_ids:0
 #: help:res.partner,message_ids:0
 msgid "Messages and communication history"
-msgstr "Lịch sử thông điệp và liên lạc"
+msgstr "Messages and communication history"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_feeds
 #: model:ir.ui.menu,name:mail.mail_feeds_main
 msgid "Messaging"
-msgstr ""
+msgstr "Messaging"
 
 #. module: mail
 #: view:res.users:mail.view_users_form_mail
@@ -1130,17 +1156,17 @@ msgstr ""
 #: view:mail.alias:mail.view_mail_alias_search
 #: field:mail.message.subtype,res_model:0
 msgid "Model"
-msgstr "Mô hình"
+msgstr ""
 
 #. module: mail
-#: help:mail.followers,res_model:0 help:mail.wizard.invite,res_model:0
+#: help:mail.followers,res_model:0
+#: help:mail.wizard.invite,res_model:0
 msgid "Model of the followed resource"
 msgstr ""
 
 #. module: mail
 #: help:mail.message.subtype,res_model:0
-msgid ""
-"Model the subtype applies to. If False, this subtype applies to all models."
+msgid "Model the subtype applies to. If False, this subtype applies to all models."
 msgstr ""
 
 #. module: mail
@@ -1153,19 +1179,19 @@ msgstr "Tháng"
 #: code:addons/mail/static/src/xml/mail.xml:255
 #, python-format
 msgid "Move to Inbox"
-msgstr ""
+msgstr "Chuyển vào Hộp thư đến"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:130
 #, python-format
 msgid "My Followers"
-msgstr ""
+msgstr "Những người theo dõi tôi"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_group_root
 msgid "My Groups"
-msgstr ""
+msgstr "Các Nhóm của tôi"
 
 #. module: mail
 #: field:mail.group,name:0
@@ -1173,7 +1199,8 @@ msgid "Name"
 msgstr "Tên"
 
 #. module: mail
-#: help:mail.compose.message,record_name:0 help:mail.message,record_name:0
+#: help:mail.compose.message,record_name:0
+#: help:mail.message,record_name:0
 msgid "Name get of the related document."
 msgstr ""
 
@@ -1183,7 +1210,7 @@ msgid "Never"
 msgstr "Không bao giờ"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:172
+#: code:addons/mail/mail_thread.py:179
 #, python-format
 msgid "New"
 msgstr "Mới"
@@ -1200,18 +1227,18 @@ msgstr "Không có theo dõi"
 #: code:addons/mail/static/src/xml/mail.xml:217
 #, python-format
 msgid "No messages."
-msgstr ""
+msgstr "Không có thông điệp"
 
 #. module: mail
 #: field:mail.compose.message,no_auto_thread:0
 #: field:mail.message,no_auto_thread:0
 msgid "No threading for answers"
-msgstr ""
+msgstr "No threading for answers"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
 msgid "Notification"
-msgstr ""
+msgstr "Thông báo"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_notifications
@@ -1232,7 +1259,7 @@ msgstr "Các đối tác được thông báo"
 #. module: mail
 #: field:mail.compose.message,notify:0
 msgid "Notify followers"
-msgstr "Thông báo những Người dõi theo"
+msgstr "Thông báo Người theo dõi"
 
 #. module: mail
 #: help:mail.compose.message,notify:0
@@ -1244,24 +1271,23 @@ msgstr ""
 #: code:addons/mail/static/src/js/mail_followers.js:207
 #, python-format
 msgid "One follower"
-msgstr ""
+msgstr "Một Người theo dõi"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
-msgid ""
-"Only the invited followers can read the\n"
+msgid "Only the invited followers can read the\n"
 "                                discussions on this group."
-msgstr ""
+msgstr "Chỉ những người theo dõi được mời mới có thể đọc được thảo luận trong nhóm này."
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
 msgid "Open Document"
-msgstr ""
+msgstr "Open Document"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_client_messaging_menu
 msgid "Open Messaging Menu"
-msgstr ""
+msgstr "Open Messaging Menu"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
@@ -1273,14 +1299,11 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:29
 #, python-format
 msgid "Open the full mail composer"
-msgstr ""
+msgstr "Open the full mail composer"
 
 #. module: mail
 #: help:mail.alias,alias_force_thread_id:0
-msgid ""
-"Optional ID of a thread (record) to which all incoming messages will be "
-"attached, even if they did not reply to it. If set, this will disable the "
-"creation of new records completely."
+msgid "Optional ID of a thread (record) to which all incoming messages will be attached, even if they did not reply to it. If set, this will disable the creation of new records completely."
 msgstr ""
 
 #. module: mail
@@ -1289,35 +1312,37 @@ msgid "Organizer"
 msgstr "Tổ chức"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
+#: view:mail.mail:mail.view_mail_search
+#: selection:mail.mail,state:0
 msgid "Outgoing"
-msgstr "Số lượng ra"
+msgstr "Đi"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "Outgoing Mails"
+msgstr "Thư đi"
 
 #. module: mail
 #: field:mail.compose.message,mail_server_id:0
 #: field:mail.message,mail_server_id:0
 msgid "Outgoing mail server"
-msgstr "Máy chủ gửi email"
+msgstr "Máy chủ gửi thư"
 
 #. module: mail
 #: field:mail.alias,alias_user_id:0
 msgid "Owner"
-msgstr "Chủ sở hữu"
+msgstr "Chủ"
 
 #. module: mail
 #: field:mail.message.subtype,parent_id:0
 msgid "Parent"
-msgstr "Cha"
+msgstr ""
 
 #. module: mail
-#: field:mail.compose.message,parent_id:0 field:mail.message,parent_id:0
+#: field:mail.compose.message,parent_id:0
+#: field:mail.message,parent_id:0
 msgid "Parent Message"
-msgstr ""
+msgstr "Parent Message"
 
 #. module: mail
 #: field:mail.alias,alias_parent_model_id:0
@@ -1327,20 +1352,21 @@ msgstr ""
 #. module: mail
 #: field:mail.alias,alias_parent_thread_id:0
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "Parent Record Thread ID"
 
 #. module: mail
 #: help:mail.alias,alias_parent_model_id:0
-msgid ""
-"Parent model holding the alias. The model holding the alias reference\n"
+msgid "Parent model holding the alias. The model holding the alias reference\n"
 "is not necessarily the model given by alias_model_id\n"
 "(example: project (parent_model) and task (model))"
-msgstr ""
+msgstr "Parent model holding the alias. The model holding the alias reference\n"
+"is not necessarily the model given by alias_model_id\n"
+"(example: project (parent_model) and task (model))"
 
 #. module: mail
 #: help:mail.message.subtype,parent_id:0
 msgid "Parent subtype, used for automatic subscription."
-msgstr ""
+msgstr "Parent subtype, used for automatic subscription."
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -1351,107 +1377,108 @@ msgstr "Đối tác"
 #: code:addons/mail/res_partner.py:51
 #, python-format
 msgid "Partner Profile"
-msgstr ""
+msgstr "Hồ sơ Đối tác"
 
 #. module: mail
 #: help:mail.compose.message,notified_partner_ids:0
 #: help:mail.message,notified_partner_ids:0
-msgid ""
-"Partners that have a notification pushing this message in their mailboxes"
-msgstr "Các đối tác mã sẽ nhận được thông báo khi xuất bản thông điệp này trong hộp thư của họ"
+msgid "Partners that have a notification pushing this message in their mailboxes"
+msgstr "Partners that have a notification pushing this message in their mailboxes"
 
 #. module: mail
 #: help:mail.mail,auto_delete:0
 msgid "Permanently delete this email after sending it, to save space"
-msgstr ""
+msgstr "Xóa vĩnh viễn email này sau khi gửi, để tiết kiệm không gian lưu trữ"
 
 #. module: mail
 #: field:mail.group,image:0
 msgid "Photo"
-msgstr "Ảnh"
+msgstr "Ảnh chụp"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:621
+#: code:addons/mail/static/src/js/mail.js:623
 #, python-format
 msgid "Please complete partner's informations"
-msgstr ""
+msgstr "Vui lòng hoàn thành thông tin đối tác"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/many2many_tags_email.js:63
 #, python-format
 msgid "Please complete partner's informations and Email"
-msgstr ""
+msgstr "Vui lòng hoàn thành thông tin đối tác và email của đối tác"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:224
 #, python-format
 msgid "Please, wait while the file is uploading."
-msgstr ""
+msgstr "Vui lòng đợi khi tập tin đang được tải lên."
 
 #. module: mail
 #: help:mail.alias,alias_contact:0
-msgid ""
-"Policy to post a message on the document using the mailgateway.\n"
+msgid "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document\n"
-msgstr ""
+""
+msgstr "Chính sách cho phép gửi nội dung ở các tài liệu có sử dụng mailgateway này.\n"
+"- mọi người: tất cả mọi người có thể đăng nội dung\n"
+"- đối tác: chỉ các đối tác đã xác thực\n"
+"- người theo dõi: chỉ những người được đưa vào danh mục người theo dõi\n"
+""
 
 #. module: mail
 #: help:res.partner,notify_email:0
-msgid ""
-"Policy to receive emails for new messages pushed to your personal Inbox:\n"
+msgid "Policy to receive emails for new messages pushed to your personal Inbox:\n"
 "- Never: no emails are sent\n"
 "- All Messages: for every notification you receive in your Inbox"
-msgstr ""
+msgstr "Policy to receive emails for new messages pushed to your personal Inbox:\n"
+"- Never: no emails are sent\n"
+"- All Messages: for every notification you receive in your Inbox"
 
 #. module: mail
 #: field:mail.group,public:0
 msgid "Privacy"
-msgstr ""
+msgstr "Tính riêng tư"
 
 #. module: mail
 #: selection:mail.group,public:0
 msgid "Private"
-msgstr ""
+msgstr "Riêng tư"
 
 #. module: mail
 #: selection:mail.group,public:0
 msgid "Public"
-msgstr "Public"
-
-#. module: mail
-#: model:mail.group,name:mail.group_rd
-msgid "R&D"
-msgstr ""
+msgstr "Công cộng"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:191
 #, python-format
 msgid "Re:"
-msgstr ""
+msgstr "V/v:"
 
 #. module: mail
 #: field:mail.notification,is_read:0
 msgid "Read"
-msgstr ""
+msgstr "Đã đọc"
 
 #. module: mail
 #: field:res.partner,notify_email:0
 msgid "Receive Inbox Notifications by Email"
-msgstr ""
+msgstr "Nhận thông báo vào Hộp thư đến bằng Email"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
+#: view:mail.mail:mail.view_mail_search
+#: selection:mail.mail,state:0
 msgid "Received"
 msgstr "Đã nhận"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
-#: field:mail.message,partner_ids:0 field:mail.wizard.invite,partner_ids:0
+#: field:mail.message,partner_ids:0
+#: field:mail.wizard.invite,partner_ids:0
 msgid "Recipients"
 msgstr "Người nhận"
 
@@ -1463,24 +1490,28 @@ msgstr ""
 #. module: mail
 #: field:mail.mail,references:0
 msgid "References"
-msgstr "Các tham chiếu"
+msgstr "Tham chiếu"
 
 #. module: mail
-#: field:mail.compose.message,res_id:0 field:mail.followers,res_id:0
-#: field:mail.message,res_id:0 field:mail.wizard.invite,res_id:0
+#: field:mail.compose.message,res_id:0
+#: field:mail.followers,res_id:0
+#: field:mail.message,res_id:0
+#: field:mail.wizard.invite,res_id:0
 msgid "Related Document ID"
 msgstr "ID tài liệu liên quan"
 
 #. module: mail
-#: field:mail.compose.message,model:0 field:mail.followers,res_model:0
-#: field:mail.message,model:0 field:mail.wizard.invite,res_model:0
+#: field:mail.compose.message,model:0
+#: field:mail.followers,res_model:0
+#: field:mail.message,model:0
+#: field:mail.wizard.invite,res_model:0
 msgid "Related Document Model"
-msgstr ""
+msgstr "Model Tài liệu liên quan"
 
 #. module: mail
 #: field:mail.group,menu_id:0
 msgid "Related Menu"
-msgstr ""
+msgstr "Menu liên quan"
 
 #. module: mail
 #: field:mail.followers,partner_id:0
@@ -1497,7 +1528,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail_followers.xml:41
 #, python-format
 msgid "Remove this follower"
-msgstr ""
+msgstr "Gỡ người này ra khỏi danh mục theo dõi"
 
 #. module: mail
 #. openerp-web
@@ -1505,22 +1536,23 @@ msgstr ""
 #: view:mail.mail:mail.view_mail_form
 #, python-format
 msgid "Reply"
+msgstr "Trả lời"
+
+#. module: mail
+#: help:mail.compose.message,reply_to:0
+#: help:mail.message,reply_to:0
+msgid "Reply email address. Setting the reply_to bypasses the automatic thread creation."
 msgstr ""
 
 #. module: mail
-#: help:mail.compose.message,reply_to:0 help:mail.message,reply_to:0
-msgid ""
-"Reply email address. Setting the reply_to bypasses the automatic thread "
-"creation."
-msgstr ""
-
-#. module: mail
-#: field:mail.compose.message,reply_to:0 field:mail.message,reply_to:0
+#: field:mail.compose.message,reply_to:0
+#: field:mail.message,reply_to:0
 msgid "Reply-To"
 msgstr ""
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form view:mail.mail:mail.view_mail_tree
+#: view:mail.mail:mail.view_mail_form
+#: view:mail.mail:mail.view_mail_tree
 msgid "Retry"
 msgstr "Thử lại"
 
@@ -1537,17 +1569,17 @@ msgstr ""
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
 msgid "Search Alias"
-msgstr ""
+msgstr "Tìm kiếm Bí danh"
 
 #. module: mail
 #: view:mail.group:mail.view_group_search
 msgid "Search Groups"
-msgstr ""
+msgstr "Tìm kiếm Nhóm"
 
 #. module: mail
 #: selection:mail.group,public:0
 msgid "Selected Group Only"
-msgstr ""
+msgstr "Chỉ những Nhóm người dùng được chọn"
 
 #. module: mail
 #. openerp-web
@@ -1560,42 +1592,44 @@ msgstr "Gửi"
 #. module: mail
 #: field:mail.wizard.invite,send_mail:0
 msgid "Send Email"
-msgstr "Gửi email"
+msgstr "Gửi Email"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form view:mail.mail:mail.view_mail_tree
+#: view:mail.mail:mail.view_mail_form
+#: view:mail.mail:mail.view_mail_tree
 msgid "Send Now"
-msgstr ""
+msgstr "Gửi Ngay"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:54
 #, python-format
 msgid "Send a message"
-msgstr "Gửi tin nhắn"
+msgstr "Gửi tin"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:54
 #, python-format
 msgid "Send a message to all followers of the document"
-msgstr ""
+msgstr "Gửi một thông điệp đến tất cả những người đang theo dõi tài liệu này"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
 msgid "Send a message to the group"
-msgstr "Gửi tin nhắn đến nhóm"
+msgstr "Gửi tin đến nhóm"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
+#: view:mail.mail:mail.view_mail_search
+#: selection:mail.mail,state:0
 msgid "Sent"
 msgstr "Đã gửi"
 
 #. module: mail
-#: code:addons/mail/mail_followers.py:155
+#: code:addons/mail/mail_followers.py:158
 #, python-format
 msgid "Sent by %(company)s using %(odoo)s"
-msgstr ""
+msgstr "Gửi bởi %(company)s sử dụng %(odoo)s"
 
 #. module: mail
 #: field:mail.message.subtype,sequence:0
@@ -1607,14 +1641,14 @@ msgstr "Trình tự"
 #: code:addons/mail/static/src/xml/mail.xml:254
 #, python-format
 msgid "Set back to Todo"
-msgstr "Chuyển về lại Cần làm"
+msgstr "Chuyển về lại Todo"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:47
 #, python-format
 msgid "Share with my followers..."
-msgstr "Chia sẻ với những người theo dõi của tôi..."
+msgstr "Chia sẻ với các followers của tôi"
 
 #. module: mail
 #: view:mail.message:mail.view_message_search
@@ -1628,31 +1662,31 @@ msgstr "Ảnh cỡ nhỏ"
 
 #. module: mail
 #: help:mail.group,image_small:0
-msgid ""
-"Small-sized photo of the group. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
-msgstr ""
+msgid "Small-sized photo of the group. It is automatically resized as a 64x64px image, with aspect ratio preserved. Use this field anywhere a small image is required."
+msgstr "Hình cỡ nhỏ đại diện cho nhóm. Hình sẽ tự động được đưa về kích thước 64x64px và giữ nguyên tỷ lệ. Sử dụng trường này bất cứ đâu có yêu cầu hình nhỏ."
 
 #. module: mail
-#: field:mail.compose.message,starred:0 field:mail.message,starred:0
+#: field:mail.compose.message,starred:0
+#: field:mail.message,starred:0
 #: field:mail.notification,starred:0
 msgid "Starred"
-msgstr "Được đánh sao"
+msgstr "Có gắn sao"
 
 #. module: mail
 #: help:mail.notification,starred:0
 msgid "Starred message that goes into the todo mailbox"
-msgstr ""
+msgstr "Thông điệp được gắn sao mà chuyển vào danh mục việc cần làm"
 
 #. module: mail
-#: view:mail.mail:mail.view_mail_form view:mail.mail:mail.view_mail_search
+#: view:mail.mail:mail.view_mail_form
+#: view:mail.mail:mail.view_mail_search
 #: field:mail.mail,state:0
 msgid "Status"
 msgstr "Tình trạng"
 
 #. module: mail
-#: field:mail.compose.message,subject:0 field:mail.message,subject:0
+#: field:mail.compose.message,subject:0
+#: field:mail.message,subject:0
 msgid "Subject"
 msgstr "Chủ đề"
 
@@ -1662,7 +1696,8 @@ msgid "Subject..."
 msgstr "Chủ đề..."
 
 #. module: mail
-#: field:mail.compose.message,subtype_id:0 field:mail.followers,subtype_ids:0
+#: field:mail.compose.message,subtype_id:0
+#: field:mail.followers,subtype_ids:0
 #: field:mail.message,subtype_id:0
 #: view:mail.message.subtype:mail.view_message_subtype_tree
 msgid "Subtype"
@@ -1679,93 +1714,75 @@ msgstr ""
 #: code:addons/mail/static/src/xml/suggestions.xml:16
 #, python-format
 msgid "Suggested Groups"
-msgstr ""
+msgstr "Các Nhóm được gợi ý"
 
 #. module: mail
-#: field:mail.group,message_summary:0 field:mail.thread,message_summary:0
+#: field:mail.group,message_summary:0
+#: field:mail.thread,message_summary:0
 #: field:res.partner,message_summary:0
 msgid "Summary"
 msgstr "Tóm tắt"
 
 #. module: mail
-#: model:mail.group,name:mail.group_support
-msgid "Support"
-msgstr "Hỗ trợ"
-
-#. module: mail
-#: selection:mail.compose.message,type:0 selection:mail.message,type:0
+#: selection:mail.compose.message,type:0
+#: selection:mail.message,type:0
 msgid "System notification"
 msgstr "Thông báo hệ thống"
 
 #. module: mail
 #: help:mail.compose.message,notification_ids:0
 #: help:mail.message,notification_ids:0
-msgid ""
-"Technical field holding the message notifications. Use notified_partner_ids "
-"to access notified partners."
+msgid "Technical field holding the message notifications. Use notified_partner_ids to access notified partners."
 msgstr ""
 
 #. module: mail
 #: help:mail.group,alias_id:0
-msgid ""
-"The email address associated with this group. New emails received will "
-"automatically create new topics."
-msgstr ""
+msgid "The email address associated with this group. New emails received will automatically create new topics."
+msgstr "Địa chỉ email gắn với nhóm này. Email gửi đến địa chỉ này sẽ tự động được chuyển thành các topic mới."
 
 #. module: mail
 #: help:mail.alias,alias_model_id:0
-msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+msgid "The model (Odoo Document Kind) to which this alias corresponds. Any incoming email that does not reply to an existing record will cause the creation of a new record of this model (e.g. a Project Task)"
 msgstr ""
 
 #. module: mail
 #: help:mail.alias,alias_name:0
-msgid ""
-"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
-"<jobs@example.odoo.com>"
-msgstr ""
+msgid "The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>"
+msgstr "The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.erponline.vn>"
 
 #. module: mail
 #: help:mail.alias,alias_user_id:0
-msgid ""
-"The owner of records created upon receiving emails on this alias. If this "
-"field is not set the system will attempt to find the right owner based on "
-"the sender (From) address, or will use the Administrator account if no "
-"system user is found for that address."
-msgstr ""
+msgid "The owner of records created upon receiving emails on this alias. If this field is not set the system will attempt to find the right owner based on the sender (From) address, or will use the Administrator account if no system user is found for that address."
+msgstr "The owner of records created upon receiving emails on this alias. If this field is not set the system will attempt to find the right owner based on the sender (From) address, or will use the Administrator account if no system user is found for that address."
 
 #. module: mail
-#: code:addons/mail/mail_message.py:764
+#: code:addons/mail/mail_message.py:767
 #, python-format
-msgid ""
-"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
+msgid "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr ""
+msgstr "Hành động được yêu cầu không thể thực hiện được vì các giới hạn về bảo mật và phân quyền truy cập dữ liệu. Vui lòng liên lạc với người quản trị hệ thống của bạn để được trợ giúp.\n"
+"\n"
+"(Kiểu tài liệu: %s, Hành động: %s)"
 
 #. module: mail
 #: help:mail.group,image:0
-msgid ""
-"This field holds the image used as photo for the group, limited to "
-"1024x1024px."
-msgstr ""
+msgid "This field holds the image used as photo for the group, limited to 1024x1024px."
+msgstr "Trường này chứa hình được sử dụng đại diện cho nhóm, giới hạn tối đa 1024x1024px."
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
-msgid ""
-"This group is visible by everyone,\n"
+msgid "This group is visible by everyone,\n"
 "                                including your customers if you installed\n"
 "                                the portal module."
-msgstr ""
+msgstr "Nhóm này sẽ được nhìn thấy bởi tất cả mọi người,\n"
+"                                bao gồm cả khách hàng của bạn nếu bạn đã cài đặt\n"
+"                                phân hệ portal."
 
 #. module: mail
 #: help:mail.group,public:0
-msgid ""
-"This group is visible by non members.             Invisible groups can add "
-"members through the invite button."
-msgstr ""
+msgid "This group is visible by non members.             Invisible groups can add members through the invite button."
+msgstr "Nhóm này được thấy bởi những người không phải thành viên của nhóm.             Invisible groups can add members through the invite button."
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -1775,12 +1792,12 @@ msgstr ""
 #. module: mail
 #: field:mail.mail,email_to:0
 msgid "To"
-msgstr "Đến"
+msgstr "Tới"
 
 #. module: mail
 #: field:mail.mail,recipient_ids:0
 msgid "To (Partners)"
-msgstr "Đến (Các đối tác)"
+msgstr "Tới (Các đối tác)"
 
 #. module: mail
 #: view:mail.message:mail.view_message_search
@@ -1788,7 +1805,8 @@ msgid "To Read"
 msgstr "Để đọc sau"
 
 #. module: mail
-#: field:mail.compose.message,to_read:0 field:mail.message,to_read:0
+#: field:mail.compose.message,to_read:0
+#: field:mail.message,to_read:0
 msgid "To read"
 msgstr "Để đọc sau"
 
@@ -1796,37 +1814,37 @@ msgstr "Để đọc sau"
 #: model:ir.actions.client,name:mail.action_mail_star_feeds
 #: model:ir.ui.menu,name:mail.mail_starfeeds
 msgid "To-do"
-msgstr ""
+msgstr "Việc cần làm"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:123
 #, python-format
 msgid "To:"
-msgstr "Đến:"
+msgstr "Tới:"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_mail_to_me_feeds
 #: model:ir.ui.menu,name:mail.mail_tomefeeds
 msgid "To: me"
-msgstr "Đến: tôi"
+msgstr "Tới: tôi"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
 msgid "Topics discussed in this group..."
-msgstr ""
+msgstr "Các chủ đề được thảo luận trong nhóm này..."
 
 #. module: mail
 #: field:mail.compose.message,type:0
-#: view:mail.message:mail.view_message_search field:mail.message,type:0
+#: view:mail.message:mail.view_message_search
+#: field:mail.message,type:0
 msgid "Type"
-msgstr "Loại"
+msgstr "Kiểu"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:177
+#: code:addons/mail/mail_message.py:179
 #, python-format
-msgid ""
-"Unable to send email, please configure the sender's email address or alias."
+msgid "Unable to send email, please configure the sender's email address or alias."
 msgstr "Không thể gửi email, vui lòng cấu hình địa chỉ email người gửi hoặc alias"
 
 #. module: mail
@@ -1839,12 +1857,12 @@ msgstr "Ngừng theo dõi"
 
 #. module: mail
 #: sql_constraint:mail.alias:0
-msgid ""
-"Unfortunately this email alias is already used, please choose a unique one"
+msgid "Unfortunately this email alias is already used, please choose a unique one"
 msgstr "Thật không may, email alias này đã tồn tại và đang được sử dụng. Hãy chọn một alias khác."
 
 #. module: mail
-#: field:mail.group,message_unread:0 field:mail.thread,message_unread:0
+#: field:mail.group,message_unread:0
+#: field:mail.thread,message_unread:0
 #: field:res.partner,message_unread:0
 msgid "Unread Messages"
 msgstr "Tin chưa đọc"
@@ -1859,7 +1877,7 @@ msgstr "Lỗi tải lên"
 #. module: mail
 #: field:mail.compose.message,use_active_domain:0
 msgid "Use active domain"
-msgstr ""
+msgstr "Sử dụng miền đã kích hoạt"
 
 #. module: mail
 #: help:mail.message.subtype,sequence:0
@@ -1868,7 +1886,8 @@ msgstr ""
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
-#: view:mail.mail:mail.view_mail_form view:mail.mail:mail.view_mail_tree
+#: view:mail.mail:mail.view_mail_form
+#: view:mail.mail:mail.view_mail_tree
 msgid "User"
 msgstr "Người dùng"
 
@@ -1885,15 +1904,16 @@ msgid "Users"
 msgstr "Người dùng"
 
 #. module: mail
-#: help:mail.compose.message,vote_user_ids:0 help:mail.message,vote_user_ids:0
+#: help:mail.compose.message,vote_user_ids:0
+#: help:mail.message,vote_user_ids:0
 msgid "Users that voted for this message"
-msgstr "Người dùng bầu chọn cho thông điệp này"
+msgstr "Người dùng đã bầu chọn cho thông điệp này"
 
 #. module: mail
 #: field:mail.compose.message,vote_user_ids:0
 #: field:mail.message,vote_user_ids:0
 msgid "Votes"
-msgstr "Bầu chọn"
+msgstr "Bình chọn"
 
 #. module: mail
 #: code:addons/mail/mail_group.py:174
@@ -1905,19 +1925,19 @@ msgstr "Cảnh báo!"
 #. openerp-web
 #: code:addons/mail/static/src/js/mail_followers.js:141
 #, python-format
-msgid ""
-"Warning! \n"
+msgid "Warning! \n"
 " %s won't be notified of any email or discussion on this document. Do you really want to remove him from the followers ?"
-msgstr ""
+msgstr "Cảnh báo! \n"
+" %s sẽ không nhận được bất kỳ email hay các thảo luận liên qua đến tài liệu này. Bạn có chắc muốn gỡ anh ta ra khỏi danh sách người theo dõi?"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/mail_followers.js:330
 #, python-format
-msgid ""
-"Warning! \n"
+msgid "Warning! \n"
 "You won't be notified of any email or discussion on this document. Do you really want to unfollow this document ?"
-msgstr ""
+msgstr "Cảnh báo! \n"
+"Bạn sẽ không nhận được bất kỳ email hay các thảo luận liên qua đến tài liệu này. Bạn có chắc muốn ngừng theo dõi tài liệu này?"
 
 #. module: mail
 #: help:mail.compose.message,is_log:0
@@ -1927,57 +1947,56 @@ msgstr ""
 #. module: mail
 #: model:mail.group,name:mail.group_all_employees
 msgid "Whole Company"
-msgstr ""
+msgstr "Toàn công ty"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/mail.js:374
 #, python-format
-msgid ""
-"You are currently composing a message, your message will be discarded.\n"
+msgid "You are currently composing a message, your message will be discarded.\n"
 "\n"
 "Are you sure you want to leave this page ?"
-msgstr ""
+msgstr "Bạn đang soạn dở một thông điệp, thông điệp dở dang này sẽ bị mất.\n"
+"\n"
+"Bạn có chắc chắn muốn rời trang này?"
 
 #. module: mail
 #: code:addons/mail/res_users.py:74
 #, python-format
-msgid ""
-"You cannot create a new user from here.\n"
+msgid "You cannot create a new user from here.\n"
 " To create new user please go to configuration panel."
-msgstr ""
+msgstr "Không thể tạo người dùng mới từ đây.\n"
+" Để tạo người dùng mới, hay đến bảng cấu hình người dùng."
 
 #. module: mail
 #: code:addons/mail/mail_group.py:174
 #, python-format
-msgid ""
-"You cannot delete those groups, as the Whole Company group is required by "
-"other modules."
-msgstr ""
+msgid "You cannot delete those groups, as the Whole Company group is required by other modules."
+msgstr "Bạn không được xóa Nhóm khi chúng được sử dụng bởi các module khác"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:171
+#: code:addons/mail/mail_thread.py:178
 #, python-format
 msgid "You have %d unread messages"
 msgstr "Bạn có %d tin chưa đọc"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:171
+#: code:addons/mail/mail_thread.py:178
 #, python-format
 msgid "You have one unread message"
 msgstr "Bạn có một tin chưa đọc"
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:160
+#: code:addons/mail/mail_mail.py:162
 #, python-format
 msgid "about"
 msgstr "liên quan đến"
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:160
+#: code:addons/mail/mail_mail.py:162
 #, python-format
 msgid "access"
-msgstr ""
+msgstr "truy cập"
 
 #. module: mail
 #. openerp-web
@@ -1990,7 +2009,7 @@ msgstr "và"
 #. module: mail
 #: view:mail.mail:mail.view_mail_form
 msgid "by"
-msgstr ""
+msgstr "bởi"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:115
@@ -2003,7 +2022,7 @@ msgstr "tài liệu"
 #: code:addons/mail/static/src/js/mail_followers.js:209
 #, python-format
 msgid "followers"
-msgstr "theo dõi"
+msgstr "người theo dõi"
 
 #. module: mail
 #. openerp-web
@@ -2043,20 +2062,20 @@ msgstr "thêm nữa."
 #. module: mail
 #: view:base.config.settings:mail.view_general_configuration_mail_alias_domain
 msgid "mycompany.odoo.com"
-msgstr ""
+msgstr "congtytoi.erponline.vn"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:312
 #, python-format
 msgid "notified"
-msgstr "đã thông báo"
+msgstr "đã được thông báo"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 #: view:mail.mail:mail.view_mail_form
 msgid "on"
-msgstr "on"
+msgstr "vào"
 
 #. module: mail
 #. openerp-web
@@ -2072,7 +2091,7 @@ msgstr "hoặc"
 #: code:addons/mail/static/src/xml/mail.xml:146
 #, python-format
 msgid "others..."
-msgstr ""
+msgstr "khác..."
 
 #. module: mail
 #. openerp-web
@@ -2117,7 +2136,7 @@ msgstr "các bản ghi được chọn"
 #: code:addons/mail/static/src/xml/mail.xml:297
 #, python-format
 msgid "to"
-msgstr "đến"
+msgstr "tới"
 
 #. module: mail
 #. openerp-web
@@ -2142,7 +2161,8 @@ msgid "uploading"
 msgstr "đang tải lên"
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:162
+#: code:addons/mail/mail_mail.py:164
 #, python-format
 msgid "your messages"
 msgstr "tin của bạn"
+

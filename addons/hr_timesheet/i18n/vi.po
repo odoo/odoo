@@ -1,38 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_timesheet
-# 
-# Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+#	* hr_timesheet
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-12-29 08:13+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
+"POT-Creation-Date: 2015-11-15 10:47+0000\n"
+"PO-Revision-Date: 2015-11-15 10:47+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: \n"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
 msgid "(Keep empty for current time)"
-msgstr ""
+msgstr "(Để trống cho thời gian hiện tại)"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
 msgid "(local time on the server side)"
-msgstr ""
+msgstr "(local time on the server side)"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
+msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to record activities.\n"
 "              </p><p>\n"
 "                You can register and track your workings hours by project every\n"
@@ -41,12 +37,19 @@ msgid ""
 "                customers if required.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n"
+"                Bấm để ghi nhận các hoạt động.\n"
+"              </p><p>\n"
+"                Bạn có thể đăng ký và theo dõi giờ làm việc hàng ngày theo dự án\n"
+"                Mỗi thời gian sử dụng trên một dự án sẽ được coi là một chi phí\n"
+"                trong kế toán quản trị/hợp đồng và có thể xuất lại hoá đơn cho\n"
+"                khách hàng nếu có nhu cầu.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
-msgid ""
-"<p>\n"
+msgid "<p>\n"
 "                No activity yet on this contract.\n"
 "              </p><p>\n"
 "                In Odoo, contracts and projects are implemented using\n"
@@ -62,10 +65,26 @@ msgid ""
 "                on expenses (e.g. reinvoicing of travel costs).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n"
+"                No activity yet on this contract.\n"
+"              </p><p>\n"
+"                In Odoo, contracts and projects are implemented using\n"
+"                analytic account. So, you can track costs and revenues to analyse\n"
+"                your margins easily.\n"
+"              </p><p>\n"
+"                Costs will be created automatically when you register supplier\n"
+"                invoices, expenses or timesheets.\n"
+"              </p><p>\n"
+"                Revenues will be created automatically when you create customer\n"
+"                invoices. Customer invoices can be created based on sale orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                on expenses (e.g. reinvoicing of travel costs).\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
-#: selection:hr.sign.in.project,state:0 selection:hr.sign.out.project,state:0
+#: selection:hr.sign.in.project,state:0
+#: selection:hr.sign.out.project,state:0
 msgid "Absent"
 msgstr "Vắng mặt"
 
@@ -78,22 +97,22 @@ msgstr "Kế toán"
 #: field:hr.timesheet.report,account_id:0
 #: model:ir.model,name:hr_timesheet.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Tài khoản KTQT"
+msgstr "Tài khoản quản trị"
 
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
 msgid "Analytic Journal"
-msgstr "Analytic Journal"
+msgstr "Sổ nhật ký quản trị"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic Line"
-msgstr "Analytic Line"
+msgstr "Phát sinh quản trị"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Analytic account"
-msgstr "Tài khoản phân tích"
+msgstr "Tài khoản quản trị"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -110,20 +129,18 @@ msgstr "Thay đổi công việc"
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:176
 #, python-format
-msgid ""
-"Changing the date will let this entry appear in the timesheet of the new "
-"date."
-msgstr ""
+msgid "Changing the date will let this entry appear in the timesheet of the new date."
+msgstr "Changing the date will let this entry appear in the timesheet of the new date."
 
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr ""
+msgstr "Đánh dấu trường này nếu dự án này quản lý bảng chấm công"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
 msgid "Closing Date"
-msgstr "Ngày đóng cửa"
+msgstr "Ngày đóng"
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
@@ -134,17 +151,17 @@ msgstr "Công ty"
 #. module: hr_timesheet
 #: field:hr.timesheet.report,cost:0
 msgid "Cost"
-msgstr "Giá"
+msgstr "Chi phí"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:hr_timesheet.account_analytic_account_timesheet_form
 msgid "Cost/Revenue"
-msgstr ""
+msgstr "Chi phí/Doanh thu"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
 msgid "Costs & Revenues"
-msgstr ""
+msgstr "Chi phí & Doanh thu"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,create_uid:0
@@ -158,80 +175,73 @@ msgstr "Tạo bởi"
 #: field:hr.sign.in.project,create_date:0
 #: field:hr.sign.out.project,create_date:0
 msgid "Created on"
-msgstr "Tạo trên"
+msgstr "Tạo vào"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
 #: field:hr.sign.out.project,server_date:0
 msgid "Current Date"
-msgstr ""
+msgstr "Ngày hiện tại"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,state:0 field:hr.sign.out.project,state:0
+#: field:hr.sign.in.project,state:0
+#: field:hr.sign.out.project,state:0
 msgid "Current Status"
-msgstr ""
+msgstr "Tình trạng hiện tại"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,date:0
 msgid "Date"
-msgstr "Ngày"
+msgstr "Ngày tháng"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
 msgid "Define your Analytic Structure"
-msgstr ""
+msgstr "Định nghĩa cấu trúc quản trị"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,name:0
 msgid "Description"
-msgstr "Mô tả"
+msgstr "Miêu tả"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
 msgid "Duration"
-msgstr "Thời lượng"
+msgstr "Khoảng thời gian"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 msgid "Employee"
-msgstr "Người lao động"
+msgstr "Nhân viên"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,emp_id:0 field:hr.sign.out.project,emp_id:0
+#: field:hr.sign.in.project,emp_id:0
+#: field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
-msgstr ""
+msgstr "Mã nhân viên"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:152
 #, python-format
-msgid ""
-"Employee is not created for this user. Please create one from configuration "
-"panel."
-msgstr ""
+msgid "Employee is not created for this user. Please create one from configuration panel."
+msgstr "Employee is not created for this user. Please create one from configuration panel."
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,name:0 field:hr.sign.out.project,name:0
+#: field:hr.sign.in.project,name:0
+#: field:hr.sign.out.project,name:0
 msgid "Employee's Name"
-msgstr ""
+msgstr "Tên nhân viên"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
-msgid ""
-"Employees can encode their time spent on the different projects they are "
-"assigned on. A  project is an analytic account and the time spent on a "
-"project generates costs on the analytic account. This feature allows to "
-"record at the same time the attendance and the timesheet."
-msgstr ""
+msgid "Employees can encode their time spent on the different projects they are assigned on. A  project is an analytic account and the time spent on a project generates costs on the analytic account. This feature allows to record at the same time the attendance and the timesheet."
+msgstr "Nhân viên có thể nhập thời gian mà họ sử dụng trên các dự án khác nhau mà họ tham gia. Một dự án là một tài khoản quản trị và thời gian sử dụng trên dự án đó tạo thành chi phí trên một tài khoản quản trị."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
-msgid ""
-"Employees can encode their time spent on the different projects. A project "
-"is an analytic account and the time spent on a project generate costs on the"
-" analytic account. This feature allows to record at the same time the "
-"attendance and the timesheet."
-msgstr ""
+msgid "Employees can encode their time spent on the different projects. A project is an analytic account and the time spent on a project generate costs on the analytic account. This feature allows to record at the same time the attendance and the timesheet."
+msgstr "Nhân viên có thể nhập thời gian mà họ sử dụng trên các dự án khác nhau mà họ tham gia. Một dự án là một tài khoản quản trị và thời gian sử dụng trên dự án đó tạo thành chi phí trên một tài khoản quản trị."
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
@@ -241,7 +251,7 @@ msgstr "Bộ lọc mở rộng..."
 #. module: hr_timesheet
 #: field:hr.timesheet.report,general_account_id:0
 msgid "General Account"
-msgstr "Tài khoản Tổng"
+msgstr "Tài khoản kế toán tài chính"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
@@ -263,7 +273,7 @@ msgstr "Nhóm theo"
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group by month of date"
-msgstr ""
+msgstr "Nhóm theo tháng của ngày"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,id:0 field:hr.sign.in.project,id:0
@@ -273,10 +283,8 @@ msgstr "ID"
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
-msgid ""
-"If you want to reinvoice working time of employees, link this employee to a "
-"service to determinate the cost price of the job."
-msgstr ""
+msgid "If you want to reinvoice working time of employees, link this employee to a service to determinate the cost price of the job."
+msgstr "Nếu bạn muốn xuất lại hoá đơn thời gian làm việc của nhân viên, liên kết nhân viên này với một sản phẩm dịch vụ để xác định chi phí của công việc."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -290,7 +298,8 @@ msgstr "Sổ nhật ký"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,write_uid:0
-#: field:hr.sign.in.project,write_uid:0 field:hr.sign.out.project,write_uid:0
+#: field:hr.sign.in.project,write_uid:0
+#: field:hr.sign.out.project,write_uid:0
 msgid "Last Updated by"
 msgstr "Cập nhật lần cuối bởi"
 
@@ -304,7 +313,7 @@ msgstr "Cập nhật lần cuối"
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
 msgid "Minimum Analytic Amount"
-msgstr ""
+msgstr "Minimum Analytic Amount"
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
@@ -314,26 +323,26 @@ msgstr "Tháng"
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:189
 #, python-format
-msgid ""
-"No 'Analytic Journal' is defined for employee %s \n"
+msgid "No 'Analytic Journal' is defined for employee %s \n"
 "Define an employee for the selected user and assign an 'Analytic Journal'!"
-msgstr ""
+msgstr "Không có 'Sổ nhật ký quản trị' được định nghĩa cho nhân viên %s \n"
+"Xác định một nhân viên cho người dùng đã chọn và gán một 'Sổ nhật ký quản trị'!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:191
 #, python-format
-msgid ""
-"No analytic account is defined on the project.\n"
+msgid "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
-msgstr ""
+msgstr "Không có tài khoản quản trị được định nghĩa trên dự án.\n"
+"Vui lòng thiết lập một tài khoản hoặc bạn không thể tự động điền dữ liệu vào bảng chấm công."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:158
 #, python-format
-msgid ""
-"No analytic journal defined for '%s'.\n"
+msgid "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
-msgstr ""
+msgstr "Không có sổ nhật ký quản trị được định nghĩa cho '%s'.\n"
+"Bạn phải gán một sổ nhật ký quản trị trên form nhân viên."
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
@@ -344,47 +353,49 @@ msgstr "Đối tác"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
 #, python-format
 msgid "Please define cost unit for this employee."
-msgstr ""
+msgstr "Vui lòng xác định đơn vị chi phí cho nhân viên này."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:131
 #, python-format
 msgid "Please define employee for your user."
-msgstr ""
+msgstr "Vui lòng định nghĩa nhân viên cho tài khoản sử dụng của bạn."
 
 #. module: hr_timesheet
-#: selection:hr.sign.in.project,state:0 selection:hr.sign.out.project,state:0
+#: selection:hr.sign.in.project,state:0
+#: selection:hr.sign.out.project,state:0
 msgid "Present"
-msgstr "Có mặt"
+msgstr "Hiện tại"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
-#: field:hr.employee,product_id:0 field:hr.timesheet.report,product_id:0
+#: field:hr.employee,product_id:0
+#: field:hr.timesheet.report,product_id:0
 msgid "Product"
 msgstr "Sản phẩm"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,account_id:0
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "Tài khoản quản trị / Dự án"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
 msgid "Sign In By Project"
-msgstr ""
+msgstr "Sign In By Project"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
 msgid "Sign In/Out by Project"
-msgstr ""
+msgstr "Sign In/Out by Project"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
 msgid "Sign Out By Project"
-msgstr ""
+msgstr "Sign Out By Project"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -396,13 +407,13 @@ msgstr "Đăng nhập"
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
 #, python-format
 msgid "Sign in / Sign out"
-msgstr ""
+msgstr "Đăng nhập / Thoát"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
 msgid "Sign in / Sign out by Project"
-msgstr "Đăng nhập / Đăng xuất theo dự án"
+msgstr "Sign in / Sign out by Project"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -410,7 +421,8 @@ msgid "Start Working"
 msgstr "Bắt đầu làm việc"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,date:0 field:hr.sign.out.project,date_start:0
+#: field:hr.sign.in.project,date:0
+#: field:hr.sign.out.project,date_start:0
 msgid "Starting Date"
 msgstr "Ngày bắt đầu"
 
@@ -422,7 +434,7 @@ msgstr "Ngừng làm việc"
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "This Month"
-msgstr ""
+msgstr "Tháng này"
 
 #. module: hr_timesheet
 #: field:hr.timesheet.report,quantity:0
@@ -436,13 +448,13 @@ msgstr "Thời gian"
 #: model:ir.model,name:hr_timesheet.model_hr_timesheet_report
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_reports
 msgid "Timesheet"
-msgstr ""
+msgstr "Chấm công"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_accounts_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheet_accounts
 msgid "Timesheet Accounts"
-msgstr ""
+msgstr "Tài khoản chấm công"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -450,61 +462,61 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Timesheet Activities"
-msgstr ""
+msgstr "Hoạt động chấm công"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_report_all
 msgid "Timesheet Analysis"
-msgstr ""
+msgstr "Timesheet Analysis"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr "Dòng chấm công"
+msgstr "Chi tiết chấm công"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Month"
-msgstr ""
+msgstr "Timesheet Month"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Month"
-msgstr ""
+msgstr "Chấm công theo tháng"
 
 #. module: hr_timesheet
 #: field:account.analytic.account,use_timesheets:0
 #: view:hr.employee:hr_timesheet.hr_timesheet_employee_extd_form
 msgid "Timesheets"
-msgstr "Bảng chấm công"
+msgstr "Chấm công"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
 msgid "Total cost"
-msgstr ""
+msgstr "Tổng chi phí"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
 msgid "Total time"
-msgstr ""
+msgstr "Tổng thời gian"
 
 #. module: hr_timesheet
 #: field:hr.employee,uom_id:0
 msgid "Unit of Measure"
-msgstr "Đơn vị đo"
+msgstr "Đơn vị đo lường"
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 #: field:hr.timesheet.report,user_id:0
 msgid "User"
-msgstr "Người sử dụng"
+msgstr "Người dùng"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:176
 #, python-format
 msgid "User Alert!"
-msgstr ""
+msgstr "Cảnh báo Người dùng!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
@@ -516,7 +528,7 @@ msgstr "Lỗi người dùng!"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Users"
-msgstr "Các người dùng"
+msgstr "Người dùng"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:158
@@ -529,20 +541,17 @@ msgstr "Cảnh báo!"
 #. module: hr_timesheet
 #: field:hr.sign.out.project,info:0
 msgid "Work Description"
-msgstr ""
+msgstr "Miêu tả công việc"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
 msgid "Work done in the last period"
-msgstr ""
+msgstr "Công việc đã làm trong chu kỳ gần nhất"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
-msgid ""
-"You should create an analytic account structure depending on your needs to "
-"analyse costs and revenues. In Odoo, analytic accounts are also used to "
-"track customer contracts."
-msgstr ""
+msgid "You should create an analytic account structure depending on your needs to analyse costs and revenues. In Odoo, analytic accounts are also used to track customer contracts."
+msgstr "Bạn nên tạo một cấu trúc tài khoản quản trị theo nhu cầu của bạn để có thể phân tích chi phí và doanh thu một cách hiệu quả. Trong Odoo ERPOnline, các tài khoản quản trị cũng được sử dụng để theo dõi các hợp đồng với khách hàng của bạn."
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
@@ -555,3 +564,4 @@ msgstr "tháng"
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
 msgid "or"
 msgstr "hoặc"
+

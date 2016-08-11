@@ -1,28 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_forum
-# 
-# Translators:
-# fanha99 <fanha99@hotmail.com>, 2015
-# sao sang <saosangmo@yahoo.com>, 2015
+#	* website_forum
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-12-29 08:13+0000\n"
-"Last-Translator: fanha99 <fanha99@hotmail.com>\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
+"POT-Creation-Date: 2016-06-17 12:03+0000\n"
+"PO-Revision-Date: 2016-06-17 12:03+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: \n"
 
 #. module: website_forum
 #: model:email.template,body_html:website_forum.validation_email
-msgid ""
-"\n"
+msgid "\n"
 "<p>\n"
 "    Hello ${object.name},\n"
 "</p>\n"
@@ -44,22 +39,43 @@ msgid ""
 "${object.company_id.email or ''}\n"
 "${object.company_id.phone or ''}\n"
 "</pre>"
-msgstr ""
+msgstr "\n"
+"<p>\n"
+"    Xin chào ${object.name},\n"
+"</p>\n"
+"<p>\n"
+"    Bạn được mời thẩm định địa chỉ email của bạn để có thể truy cập đến Diễn đàn \"${object.company_id.name}\".\n"
+"</p>\n"
+"<p>\n"
+"    Để thẩm định email, vui lòng bấm vào link sau đây:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${ctx.get('token_url')}\">Thẩm định tài khoản của tôi cho Diễn đàn \"${object.company_id.name}\"</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"    Cám ơn,\n"
+"</p>\n"
+"<pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"</pre>"
 
 #. module: website_forum
 #: model:email.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr "${object.company_id.name} tính hợp lệ của diễn đàn"
+msgstr "Thẩm định - Diễn đàn ${object.company_id.name}"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "&times;"
-msgstr "&times;"
+msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "(only one answer per question is allowed)"
-msgstr ""
+msgstr "(mỗi câu hỏi chỉ cho phép một đáp án)"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
@@ -69,7 +85,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "- no need to answer the same question twice. Also, please"
-msgstr "- không cần trả lời 2 lần câu hỏi tương tự. Mặt khác, xin hãy"
+msgstr "- không cần trả lời 2 lần cho cùng một câu hỏi. Đồng thời, vui lòng"
 
 #. module: website_forum
 #: selection:forum.post.vote,vote:0
@@ -77,40 +93,35 @@ msgid "-1"
 msgstr "-1"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:374
+#: code:addons/website_forum/models/forum.py:378
 #, python-format
-msgid ""
-"<p>A new answer for <i>%s</i> has been posted. <a "
-"href=\"%s/forum/%s/question/%s\">Click here to access the post.</a></p>"
-msgstr ""
+msgid "<p>A new answer for <i>%s</i> has been posted. <a href=\"%s/forum/%s/question/%s\">Click here to access the post.</a></p>"
+msgstr "<p>Một câu trả lời mới cho <i>%s</i> đã được đăng. <a href=\"%s/forum/%s/question/%s\">Bấm vào đây để truy cập bài.</a></p>"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:380
+#: code:addons/website_forum/models/forum.py:384
 #, python-format
-msgid ""
-"<p>A new question <i>%s</i> has been asked on %s. <a "
-"href=\"%s/forum/%s/question/%s\">Click here to access the question.</a></p>"
-msgstr ""
+msgid "<p>A new question <i>%s</i> has been asked on %s. <a href=\"%s/forum/%s/question/%s\">Click here to access the question.</a></p>"
+msgstr "<p>Một câu hỏi mới <i>%s</i> đã được hỏi trên %s. <a href=\"%s/forum/%s/question/%s\">Bấm đề xem câu hỏi.</a></p>"
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
-msgid ""
-"<p>This community is for professionals and enthusiasts of our products and "
-"services.</p>"
+msgid "<p>This community is for professionals and enthusiasts of our products and services.</p>"
 msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.tag
-msgid ""
-"A tag is a label that categorizes your question with other,\n"
+msgid "A tag is a label that categorizes your question with other,\n"
 "            similar questions. Using the right tags makes it easier for\n"
 "            others to find and answer your question."
-msgstr ""
+msgstr "Tag là một nhãn để phân loại câu hỏi của bạn với các câu hỏi\n"
+"            tương tự khác. Sử dụng tag đúng cách sẽ làm cho người khác\n"
+"            dễ dàng tìm thấy nội dung và câu trả lời của bạn hơn."
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "About This Forum"
-msgstr ""
+msgstr "Về Diễn đàn này"
 
 #. module: website_forum
 #: field:forum.forum,karma_answer_accept_own:0
@@ -120,22 +131,23 @@ msgstr ""
 #. module: website_forum
 #: field:forum.forum,karma_answer_accept_all:0
 msgid "Accept an answer to all questions"
-msgstr ""
+msgstr "Chấp thuận một câu trả lời cho tất cả câu hỏi"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accept:0
 msgid "Accepting an answer"
-msgstr ""
+msgstr "Chấp thuận một câu trả lời"
 
 #. module: website_forum
-#: field:forum.post,active:0 selection:forum.post,state:0
+#: field:forum.post,active:0
+#: selection:forum.post,state:0
 msgid "Active"
-msgstr "Có hiệu lực"
+msgstr "Hiệu lực"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Activity"
-msgstr ""
+msgstr "Hoạt động"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -145,78 +157,84 @@ msgstr "Tất cả"
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "Answer"
-msgstr ""
+msgstr "Trả lời"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:411
+#: code:addons/website_forum/models/forum.py:423
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
 msgid "Answer Edited"
-msgstr ""
+msgstr "Trả lời được sửa"
 
 #. module: website_forum
 #: field:forum.forum,karma_answer:0
 msgid "Answer a question"
-msgstr ""
+msgstr "Trả lời một câu hỏi"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accepted:0
 msgid "Answer accepted"
-msgstr ""
+msgstr "Câu trả lời được chấp thuận"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_downvote:0
 msgid "Answer downvoted"
-msgstr ""
+msgstr "Answer downvoted"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_flagged:0
 msgid "Answer flagged"
-msgstr ""
+msgstr "Trả lời bị gắn cờ"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_upvote:0
 msgid "Answer upvoted"
-msgstr ""
+msgstr "Câu trả lời được upvote"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Answered on"
-msgstr ""
+msgstr "Đã trả lời vào"
 
 #. module: website_forum
-#: field:forum.post,child_count:0 field:forum.post,child_ids:0
+#: field:forum.post,child_count:0
+#: field:forum.post,child_ids:0
 #: view:website:website_forum.display_post
 #: view:website:website_forum.user_detail_full
 msgid "Answers"
-msgstr "Các câu trả lời"
+msgstr "Trả lời"
 
 #. module: website_forum
-#: view:website:website_forum.header field:forum.forum,karma_ask:0
+#: view:website:website_forum.header
 msgid "Ask a Question"
-msgstr ""
+msgstr "Đặt một Câu hỏi"
+
+#. module: website_forum
+#: field:forum.forum,karma_ask:0
+msgid "Ask a question"
+msgstr "Đặt một câu hỏi"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Ask your Question"
-msgstr ""
+msgstr "Hỏi Câu hỏi của bạn"
 
 #. module: website_forum
 #: field:forum.post,create_date:0
 #: view:website:website_forum.post_description_full
 msgid "Asked on"
-msgstr ""
+msgstr "Đã hỏi vào"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Asked:"
-msgstr ""
+msgstr "Đã hỏi:"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_new:0
 msgid "Asking a question"
-msgstr ""
+msgstr "Đặt một câu hỏi"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -226,77 +244,79 @@ msgstr "Tác giả"
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_1
 msgid "Autobiographer"
-msgstr ""
+msgstr "Người viết tự truyện"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Back to"
-msgstr ""
+msgstr "Quay về"
 
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "Badge \""
-msgstr ""
+msgstr "Huy chương \""
 
 #. module: website_forum
-#: field:res.users,badge_ids:0 view:website:website_forum.badge
+#: field:res.users,badge_ids:0
+#: view:website:website_forum.badge
 #: view:website:website_forum.header
 #: view:website:website_forum.user_detail_full
 msgid "Badges"
-msgstr ""
+msgstr "Huy chương"
 
 #. module: website_forum
 #: view:website:website_forum.badge
-msgid ""
-"Besides gaining reputation with your questions and answers,\n"
+msgid "Besides gaining reputation with your questions and answers,\n"
 "            you receive badges for being especially helpful. Badges\n"
 "            appear on your profile page, and your posts."
-msgstr ""
+msgstr "Bên cạnh việc gia tăng uy tín bằng các câu hỏi và câu trả lời,\n"
+"            bạn nhận được các huy chương vì sự giúp đỡ đặc biệt đối với cộng đồng.\n"
+"            Các huy chương sẽ được xuất hiện ở trang hồ sơ cũng như bài viết của bạn."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Biography"
-msgstr ""
+msgstr "Tiểu sử"
 
 #. module: website_forum
 #: field:forum.post,can_accept:0
 msgid "Can Accept"
-msgstr ""
+msgstr "Có thể Chấp thuận"
 
 #. module: website_forum
 #: field:forum.post,can_answer:0
 msgid "Can Answer"
-msgstr ""
+msgstr "Có thể Trả lời"
 
 #. module: website_forum
 #: field:forum.post,can_ask:0
 msgid "Can Ask"
-msgstr ""
+msgstr "Có thể Hỏi"
 
 #. module: website_forum
 #: field:forum.post,can_close:0
 msgid "Can Close"
-msgstr ""
+msgstr "Có thể Đóng"
 
 #. module: website_forum
 #: field:forum.post,can_comment:0
 msgid "Can Comment"
-msgstr ""
+msgstr "Có thể Bình luận"
 
 #. module: website_forum
 #: field:forum.post,can_comment_convert:0
 msgid "Can Convert to Comment"
-msgstr ""
+msgstr "Có thể Chuyển đổi thành Bình luận"
 
 #. module: website_forum
 #: field:forum.post,can_downvote:0
 msgid "Can Downvote"
-msgstr ""
+msgstr "Có thể Downvote"
 
 #. module: website_forum
 #: field:forum.post,can_edit:0
 msgid "Can Edit"
-msgstr ""
+msgstr "Có thể Sửa"
 
 #. module: website_forum
 #: field:forum.post,can_unlink:0
@@ -306,7 +326,12 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,can_upvote:0
 msgid "Can Upvote"
-msgstr ""
+msgstr "Có thể Upvote"
+
+#. module: website_forum
+#: field:forum.post,can_view:0
+msgid "Can View"
+msgstr "Có thể Xem"
 
 #. module: website_forum
 #: field:forum.forum,karma_retag:0
@@ -316,6 +341,11 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.user_badges
 msgid "Check available badges"
+msgstr "Kiểm tra các huy chương khả dụng"
+
+#. module: website_forum
+#: help:res.users,speaker:0
+msgid "Check this box if this contact is a speaker."
 msgstr ""
 
 #. module: website_forum
@@ -327,19 +357,17 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "City"
-msgstr "TP thuộc Tỉnh/Quận/Huyện"
+msgstr "Thành phố"
 
 #. module: website_forum
 #: view:website:website_forum.header
-msgid ""
-"Click here to send a verification email allowing you to participate to the "
-"forum."
-msgstr ""
+msgid "Click here to send a verification email allowing you to participate to the forum."
+msgstr "Bấm vào đây để gửi một email thẩm định cho phép bạn tham gia vào Diễn đàn."
 
 #. module: website_forum
 #: field:forum.forum,karma_editor_clickable_link:0
 msgid "Clickable links (Editor)"
-msgstr ""
+msgstr "Link có thể click được (Trình soạn thảo)"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -349,70 +377,70 @@ msgstr "Đóng"
 #. module: website_forum
 #: field:forum.forum,karma_close_all:0
 msgid "Close all posts"
-msgstr "Đóng mọi bài viết"
+msgstr "Đóng tất cả các bài"
 
 #. module: website_forum
 #: field:forum.forum,karma_close_own:0
 msgid "Close its own posts"
-msgstr "Đóng mọi bài của nó"
+msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Close question"
-msgstr "Đóng câu hỏi"
+msgstr ""
 
 #. module: website_forum
 #: field:forum.post,closed_uid:0
 msgid "Closed by"
-msgstr "Đóng bởi"
+msgstr "Được đóng bởi"
 
 #. module: website_forum
 #: field:forum.post,closed_date:0
 msgid "Closed on"
-msgstr "Đóng lúc"
+msgstr "Được đóng vào"
 
 #. module: website_forum
 #: view:website:website_forum.display_post_answer
 #: view:website:website_forum.post_description_full
 msgid "Comment"
-msgstr "Ghi chú"
+msgstr "Bình luận"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_all:0
 msgid "Comment all posts"
-msgstr "Bình luận mọi bài viết"
+msgstr "Bình luận tất cả các bài"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_own:0
 msgid "Comment its own posts"
-msgstr "Bình luận bài của chính nó"
+msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.post_comment
 msgid "Comment this post..."
-msgstr "Bình luận bài này..."
+msgstr "Bình luận nội dung này..."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_2
 #: model:gamification.challenge,name:website_forum.challenge_commentator
 #: model:gamification.goal.definition,name:website_forum.definition_commentator
 msgid "Commentator"
-msgstr "Người bình luận"
+msgstr "Người bình"
 
 #. module: website_forum
 #: view:website:website_forum.display_post_answer
 msgid "Comments"
-msgstr "Các bình luận"
+msgstr "Bình luận"
 
 #. module: website_forum
 #: help:forum.post,website_message_ids:0
 msgid "Comments on forum post"
-msgstr "Lời bình trên bài viết diễn đàn"
+msgstr "Comments on forum post"
 
 #. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_configure_profile
 msgid "Complete own biography"
-msgstr "Hoàn thành tiểu sử của mình"
+msgstr "Hoàn thành Tiểu sử của chính bạn"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_configure_profile
@@ -421,10 +449,8 @@ msgstr "Đã hoàn thành tiểu sử của mình"
 
 #. module: website_forum
 #: view:website:website_forum.header
-msgid ""
-"Congratulations! Your email has just been validated. You may now participate"
-" to our forums."
-msgstr "Chúc mừng! Email của bạn vừa được xác thực. Bạn có thể tham gia diễn đàn của chúng tôi."
+msgid "Congratulations! Your email has just been validated. You may now participate to our forums."
+msgstr "Chúc mừng! Email của bạn đã được thẩm định. Giờ bạn có thể tham gia vào diễn đàn của chúng tôi."
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -435,7 +461,7 @@ msgstr "Nội dung"
 #. module: website_forum
 #: field:forum.forum,karma_comment_convert_all:0
 msgid "Convert all answers to comments and vice versa"
-msgstr "Chuyển mọi câu trả lời "
+msgstr "Chuyển tất cả câu trả lời thành bình luận và ngược lại"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_convert_own:0
@@ -463,17 +489,20 @@ msgid "Create Date"
 msgstr "Ngày tạo"
 
 #. module: website_forum
-#: field:forum.forum,create_uid:0 field:forum.post,create_uid:0
-#: field:forum.post.reason,create_uid:0 field:forum.post.vote,create_uid:0
+#: field:forum.forum,create_uid:0
+#: field:forum.post,create_uid:0
+#: field:forum.post.reason,create_uid:0
+#: field:forum.post.vote,create_uid:0
 #: field:forum.tag,create_uid:0
 msgid "Created by"
-msgstr "Tạo bởi"
+msgstr "Được tạo bởi"
 
 #. module: website_forum
-#: field:forum.forum,create_date:0 field:forum.post.reason,create_date:0
+#: field:forum.forum,create_date:0
+#: field:forum.post.reason,create_date:0
 #: field:forum.tag,create_date:0
 msgid "Created on"
-msgstr "Tạo trên"
+msgstr "Được tạo vào"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_4
@@ -489,14 +518,15 @@ msgid "Critic"
 msgstr ""
 
 #. module: website_forum
-#: help:forum.forum,message_last_post:0 help:forum.post,message_last_post:0
+#: help:forum.forum,message_last_post:0
+#: help:forum.post,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "Ngày gần nhất của thông điệp được vào sổ trên bản ghi này."
+msgstr "Ngày của thông điệp gần nhất được ghi nhận trên một bản ghi"
 
 #. module: website_forum
 #: field:forum.forum,karma_unlink_all:0
 msgid "Delete all posts"
-msgstr ""
+msgstr "Xoá tất cả các bài"
 
 #. module: website_forum
 #: field:forum.forum,karma_unlink_own:0
@@ -516,29 +546,38 @@ msgid "Disciplined"
 msgstr ""
 
 #. module: website_forum
+#: field:forum.forum,display_name:0
+#: field:forum.post,display_name:0
+#: field:forum.post.reason,display_name:0
+#: field:forum.post.vote,display_name:0
+#: field:forum.tag,display_name:0
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: website_forum
 #: field:forum.forum,karma_downvote:0
 msgid "Downvote"
-msgstr ""
+msgstr "Downvote"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Edit Profile"
-msgstr ""
+msgstr "Sửa Hồ sơ"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Edit Your Bio"
-msgstr ""
+msgstr "Sửa Tiểu sử của bạn"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Edit Your Previous Answer"
-msgstr ""
+msgstr "Sửa câu trả lời trước của bạn"
 
 #. module: website_forum
 #: field:forum.forum,karma_edit_all:0
 msgid "Edit all posts"
-msgstr ""
+msgstr "Sửa tất cả các bài"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
@@ -565,7 +604,7 @@ msgstr ""
 #: model:gamification.challenge,name:website_forum.challenge_editor
 #: model:gamification.goal.definition,name:website_forum.definition_editor
 msgid "Editor"
-msgstr ""
+msgstr "Trình soạn thảo"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -582,13 +621,13 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Enter your Question"
-msgstr ""
+msgstr "Điền Câu hỏi của bạn"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
 #: model:gamification.challenge,name:website_forum.challenge_famous_question
 msgid "Famous Question"
-msgstr ""
+msgstr "Câu hỏi Nổi tiếng"
 
 #. module: website_forum
 #: field:forum.post,favourite_count:0
@@ -599,63 +638,64 @@ msgstr ""
 #: model:gamification.badge,name:website_forum.badge_q_5
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
 msgid "Favorite Question"
-msgstr ""
+msgstr "Câu hỏi được ưu thích"
 
 #. module: website_forum
 #: field:forum.post,favourite_ids:0
 msgid "Favourite"
-msgstr ""
+msgstr "Được ưa thích"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_1
 msgid "Favourite Question (1)"
-msgstr ""
+msgstr "Câu hỏi được ưa thích (1)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_stellar_question_25
 msgid "Favourite Question (25)"
-msgstr ""
+msgstr "Câu hỏi được ưa thích (25)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_5
 msgid "Favourite Question (5)"
-msgstr ""
+msgstr "Câu hỏi được ưa thích (5)"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Favourite Questions"
-msgstr ""
+msgstr "Câu hỏi được ưa thích"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Filter on"
-msgstr ""
+msgstr "Lọc theo"
 
 #. module: website_forum
 #: field:forum.forum,karma_flag:0
 msgid "Flag a post as offensive"
-msgstr ""
+msgstr "Gắn cờ một bài vì có tính công kích"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Followed"
-msgstr ""
+msgstr "Lượt dõi theo"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Followed Questions"
-msgstr ""
+msgstr "Câu hỏi được dõi theo"
 
 #. module: website_forum
 #: field:forum.forum,message_follower_ids:0
 #: field:forum.post,message_follower_ids:0
 msgid "Followers"
-msgstr "Người theo dõi"
+msgstr "Người dõi theo"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 #: view:forum.post:website_forum.view_forum_post_search
-#: field:forum.post,forum_id:0 field:forum.post.vote,forum_id:0
+#: field:forum.post,forum_id:0
+#: field:forum.post.vote,forum_id:0
 #: field:forum.tag,forum_id:0
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
@@ -666,53 +706,54 @@ msgstr "Diễn đàn"
 #. module: website_forum
 #: field:gamification.badge,level:0
 msgid "Forum Badge Level"
-msgstr ""
+msgstr "Cấp độ Huân chương Diễn đàn"
 
 #. module: website_forum
 #: view:res.users:website_forum.view_users_form_forum
 msgid "Forum Karma"
-msgstr ""
+msgstr "Karma Diễn đàn"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_form
 #: model:ir.model,name:website_forum.model_forum_post
 msgid "Forum Post"
-msgstr ""
+msgstr "Bài viết"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_list
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
 msgid "Forum Posts"
-msgstr ""
+msgstr "Bài viết"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_list
 #: model:ir.actions.act_window,name:website_forum.action_forum_forum
 #: model:ir.model,name:website_forum.model_forum_forum
-#: model:ir.ui.menu,name:website_forum.menu_forum view:website:website.layout
+#: model:ir.ui.menu,name:website_forum.menu_forum
+#: view:website:website.layout
 msgid "Forums"
-msgstr ""
+msgstr "Diễn đàn"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
 msgid "Gamification badge"
-msgstr ""
+msgstr "Huy chương Gamification"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
 msgid "Gamification challenge"
-msgstr ""
+msgstr "Thử thách Gamification"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_3
 #: model:gamification.challenge,name:website_forum.challenge_good_answer
 msgid "Good Answer"
-msgstr "Trả lời hay"
+msgstr "Câu trả lời hay"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_good_answer
 msgid "Good Answer (6)"
-msgstr "Trả lời hay (6)"
+msgstr "Câu trả lời hay (6)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_9
@@ -724,18 +765,18 @@ msgstr "Câu hỏi hay"
 #: model:gamification.badge,name:website_forum.badge_a_4
 #: model:gamification.challenge,name:website_forum.challenge_great_answer
 msgid "Great Answer"
-msgstr "Câu trả lời xuất s"
+msgstr "Câu trả lời Tuyệt vời"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_great_answer
 msgid "Great Answer (15)"
-msgstr "Câu trả lời xuất sắc (15)"
+msgstr "Câu trả lời Tuyệt vời (15)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_10
 #: model:gamification.challenge,name:website_forum.challenge_great_question
 msgid "Great Question"
-msgstr "Câu hỏi xuất sắc"
+msgstr "Câu hỏi Tuyệt vời"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -745,7 +786,7 @@ msgstr "Nhóm theo"
 #. module: website_forum
 #: field:forum.forum,faq:0
 msgid "Guidelines"
-msgstr ""
+msgstr "Hướng dẫn"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_6
@@ -774,27 +815,29 @@ msgid "Help"
 msgstr "Trợ giúp"
 
 #. module: website_forum
-#: help:forum.forum,message_summary:0 help:forum.post,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
+#: help:forum.forum,message_summary:0
+#: help:forum.post,message_summary:0
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,id:0 field:forum.post,id:0 field:forum.post.reason,id:0
-#: field:forum.post.vote,id:0 field:forum.tag,id:0
+#: field:forum.forum,id:0
+#: field:forum.post,id:0
+#: field:forum.post.reason,id:0
+#: field:forum.post.vote,id:0
+#: field:forum.tag,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: website_forum
-#: help:forum.forum,message_unread:0 help:forum.post,message_unread:0
+#: help:forum.forum,message_unread:0
+#: help:forum.post,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
 
 #. module: website_forum
 #: view:website:website_forum.close_question
-msgid ""
-"If you close this question, it will be hidden for most users. Only\n"
+msgid "If you close this question, it will be hidden for most users. Only\n"
 "            users having a high karma can see closed questions to moderate\n"
 "            them."
 msgstr ""
@@ -808,15 +851,16 @@ msgstr ""
 #: field:forum.forum,message_is_follower:0
 #: field:forum.post,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Là một Người dõi theo"
+msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "It appears your email has not been verified."
-msgstr ""
+msgstr "Có vẻ như email của bạn chưa được thẩm định."
 
 #. module: website_forum
-#: field:res.users,karma:0 view:website:website_forum.user_detail_full
+#: field:res.users,karma:0
+#: view:website:website_forum.user_detail_full
 msgid "Karma"
 msgstr ""
 
@@ -878,34 +922,48 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Keep Informed"
-msgstr ""
+msgstr "Giữ liên lạc"
 
 #. module: website_forum
-#: field:forum.forum,message_last_post:0 field:forum.post,message_last_post:0
+#: field:forum.forum,message_last_post:0
+#: field:forum.post,message_last_post:0
 msgid "Last Message Date"
-msgstr "Ngày thông điệp gần nhất"
+msgstr "Ngày thông điệp cuối cùng"
 
 #. module: website_forum
-#: field:forum.forum,write_uid:0 field:forum.post.reason,write_uid:0
-#: field:forum.post.vote,write_uid:0 field:forum.tag,write_uid:0
+#: field:forum.forum,__last_update:0
+#: field:forum.post,__last_update:0
+#: field:forum.post.reason,__last_update:0
+#: field:forum.post.vote,__last_update:0
+#: field:forum.tag,__last_update:0
+msgid "Last Modified on"
+msgstr "Sửa lần cuối"
+
+#. module: website_forum
+#: field:forum.forum,write_uid:0
+#: field:forum.post.reason,write_uid:0
+#: field:forum.post.vote,write_uid:0
+#: field:forum.tag,write_uid:0
 msgid "Last Updated by"
 msgstr "Cập nhật lần cuối bởi"
 
 #. module: website_forum
-#: field:forum.forum,write_date:0 field:forum.post.reason,write_date:0
-#: field:forum.post.vote,write_date:0 field:forum.tag,write_date:0
+#: field:forum.forum,write_date:0
+#: field:forum.post.reason,write_date:0
+#: field:forum.post.vote,write_date:0
+#: field:forum.tag,write_date:0
 msgid "Last Updated on"
 msgstr "Cập nhật lần cuối"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Last activity date"
-msgstr ""
+msgstr "Ngày hoạt động gần nhất"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Last updated:"
-msgstr ""
+msgstr "Cập nhật cuối:"
 
 #. module: website_forum
 #: field:forum.forum,karma_editor_link_files:0
@@ -913,42 +971,45 @@ msgid "Linking files (Editor)"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,message_ids:0 field:forum.post,message_ids:0
+#: field:forum.forum,message_ids:0
+#: field:forum.post,message_ids:0
 msgid "Messages"
-msgstr "Các thông điệp"
+msgstr "Thông điệp"
 
 #. module: website_forum
-#: help:forum.forum,message_ids:0 help:forum.post,message_ids:0
+#: help:forum.forum,message_ids:0
+#: help:forum.post,message_ids:0
 msgid "Messages and communication history"
-msgstr "Lịch sử thông điệp và liên lạc"
+msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Most answered"
-msgstr ""
+msgstr "Trả lời nhiều nhất"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Most voted"
-msgstr ""
+msgstr "Bầu chọn nhiều nhất"
 
 #. module: website_forum
 #: field:forum.post,user_favourite:0
 msgid "My Favourite"
-msgstr ""
+msgstr "My Favourite"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "My Profile"
-msgstr ""
+msgstr "Hồ sơ của tôi"
 
 #. module: website_forum
 #: field:forum.post,user_vote:0
 msgid "My Vote"
-msgstr ""
+msgstr "Bầu chọn của tôi"
 
 #. module: website_forum
-#: field:forum.forum,name:0 view:forum.post:website_forum.view_forum_post_form
+#: field:forum.forum,name:0
+#: view:forum.post:website_forum.view_forum_post_form
 #: field:forum.tag,name:0
 msgid "Name"
 msgstr "Tên"
@@ -958,7 +1019,7 @@ msgstr "Tên"
 #: model:mail.message.subtype,name:website_forum.mt_answer_new
 #: model:mail.message.subtype,name:website_forum.mt_forum_answer_new
 msgid "New Answer"
-msgstr "Đăng câu trả lời"
+msgstr "Đáp án mới"
 
 #. module: website_forum
 #. openerp-web
@@ -966,14 +1027,14 @@ msgstr "Đăng câu trả lời"
 #: view:website:website.layout
 #, python-format
 msgid "New Forum"
-msgstr "Tạo diễn đàn"
+msgstr "Diễn đàn Mới"
 
 #. module: website_forum
 #: model:mail.message.subtype,description:website_forum.mt_question_new
 #: model:mail.message.subtype,name:website_forum.mt_forum_question_new
 #: model:mail.message.subtype,name:website_forum.mt_question_new
 msgid "New Question"
-msgstr "Đăng câu hỏi"
+msgstr "Câu hỏi mới"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -984,17 +1045,17 @@ msgstr "Mới nhất"
 #: model:gamification.badge,name:website_forum.badge_a_2
 #: model:gamification.challenge,name:website_forum.challenge_nice_answer
 msgid "Nice Answer"
-msgstr "Câu trả lời tốt"
+msgstr "Câu trả lời hay"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_nice_answer
 msgid "Nice Answer (4)"
-msgstr "Câu trả lời tốt (4)"
+msgstr "Câu trả lời hay (4)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_8
 msgid "Nice Quesiotn"
-msgstr "Câu hỏi tốt"
+msgstr ""
 
 #. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_nice_question
@@ -1004,48 +1065,48 @@ msgstr "Câu hỏi tốt"
 #. module: website_forum
 #: view:website:website_forum.user_badges
 msgid "No badge yet!"
-msgstr ""
+msgstr "Chưa có huy chương nào!"
 
 #. module: website_forum
 #: view:website:website_forum.user_votes
 msgid "No vote given by you yet!"
-msgstr ""
+msgstr "Chưa ai bầu chọn cho bạn cả!"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_2
 #: model:gamification.challenge,name:website_forum.challenge_notable_question
 msgid "Notable Question"
-msgstr ""
+msgstr "Câu hỏi đáng chú ý"
 
 #. module: website_forum
 #: field:forum.tag,posts_count:0
 msgid "Number of Posts"
-msgstr ""
+msgstr "Số bài"
 
 #. module: website_forum
 #: field:forum.post,views:0
 msgid "Number of Views"
-msgstr ""
+msgstr "Lượt xem"
 
 #. module: website_forum
 #: field:res.users,bronze_badge:0
 msgid "Number of bronze badges"
-msgstr ""
+msgstr "Số lượng huy chương đồng"
 
 #. module: website_forum
 #: field:res.users,gold_badge:0
 msgid "Number of gold badges"
-msgstr ""
+msgstr "Số lượng huy chương vàng"
 
 #. module: website_forum
 #: field:res.users,silver_badge:0
 msgid "Number of silver badges"
-msgstr ""
+msgstr "Số lượng huy chương bạc"
 
 #. module: website_forum
 #: selection:forum.post,state:0
 msgid "Offensive"
-msgstr ""
+msgstr "Có tính công kích"
 
 #. module: website_forum
 #: view:website:website_forum.forum_all
@@ -1062,12 +1123,12 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "People"
-msgstr ""
+msgstr "Thành viên"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Please enter a descriptive question (should finish by a '?')"
-msgstr ""
+msgstr "Vui lòng nhập một câu hỏi có tính mô tả (nên kết thúc bằng dấu '?')"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
@@ -1076,10 +1137,8 @@ msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
-msgid ""
-"Please enter a valid email address in order to receive notifications from "
-"answers or comments."
-msgstr ""
+msgid "Please enter a valid email address in order to receive notifications from answers or comments."
+msgstr "Hãy nhập một địa chỉ email hợp lệ để nhận thông báo từ các câu trả lời và bình luận."
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
@@ -1095,37 +1154,38 @@ msgstr ""
 #: model:gamification.badge,name:website_forum.badge_q_1
 #: model:gamification.challenge,name:website_forum.challenge_popular_question
 msgid "Popular Question"
-msgstr ""
+msgstr "Câu hỏi Phổ biến"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_popular_question
 msgid "Popular Question (150)"
-msgstr ""
+msgstr "Câu hỏi Phổ biến (150)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_notable_question
 msgid "Popular Question (250)"
-msgstr ""
+msgstr "Câu hỏi Phổ biến (250)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_famous_question
 msgid "Popular Question (500)"
-msgstr ""
+msgstr "Câu hỏi Phổ biến (500)"
 
 #. module: website_forum
-#: field:forum.post.vote,post_id:0 view:website:website_forum.post_comment
+#: field:forum.post.vote,post_id:0
+#: view:website:website_forum.post_comment
 msgid "Post"
-msgstr "Vào sổ"
+msgstr "Đăng"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
 msgid "Post Closing Reason"
-msgstr ""
+msgstr "Lý do đóng bài"
 
 #. module: website_forum
 #: field:forum.post,website_message_ids:0
 msgid "Post Messages"
-msgstr ""
+msgstr "Gửi Thông điệp"
 
 #. module: website_forum
 #: field:forum.post.reason,name:0
@@ -1135,23 +1195,23 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "Post Your Answer"
-msgstr ""
+msgstr "Đăng Trả lời của Bạn"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Post Your Question"
-msgstr ""
+msgstr "Đăng câu hỏi của bạn"
 
 #. module: website_forum
 #: field:forum.tag,post_ids:0
 #: model:ir.ui.menu,name:website_forum.menu_forum_posts
 msgid "Posts"
-msgstr ""
+msgstr "Bài viết"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Public profile"
-msgstr ""
+msgstr "Hồ sơ công cộng"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_25
@@ -1171,12 +1231,12 @@ msgid "Question"
 msgstr "Câu hỏi"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:414
+#: code:addons/website_forum/models/forum.py:426
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
 msgid "Question Edited"
-msgstr ""
+msgstr "Câu hỏi bị sửa"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_downvote:0
@@ -1186,7 +1246,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.404
 msgid "Question not found!"
-msgstr ""
+msgstr "Không tìm thấy câu hỏi!"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1201,29 +1261,30 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Question:"
-msgstr ""
+msgstr "Câu hỏi:"
 
 #. module: website_forum
-#: view:website:website_forum.forum_index view:website:website_forum.header
+#: view:website:website_forum.forum_index
+#: view:website:website_forum.header
 #: view:website:website_forum.user_detail_full
 msgid "Questions"
 msgstr "Câu hỏi"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:376
+#: code:addons/website_forum/models/forum.py:380
 #, python-format
 msgid "Re: %s"
-msgstr ""
+msgstr "V/v: %s"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Read Guidelines"
-msgstr ""
+msgstr "Đọc Hướng dẫn"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Real name"
-msgstr ""
+msgstr "Tên thật"
 
 #. module: website_forum
 #: field:forum.post,closed_reason_id:0
@@ -1233,12 +1294,13 @@ msgstr "Lý do"
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Reason:"
-msgstr ""
+msgstr "Lý do:"
 
 #. module: website_forum
-#: view:website:website_forum.404 view:website:website_forum.private_profile
+#: view:website:website_forum.404
+#: view:website:website_forum.private_profile
 msgid "Return to the question list."
-msgstr ""
+msgstr "Về danh mục câu hỏi."
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
@@ -1250,7 +1312,7 @@ msgstr "Lưu"
 #: model:gamification.challenge,name:website_forum.challenge_scholar
 #: model:gamification.goal.definition,name:website_forum.definition_scholar
 msgid "Scholar"
-msgstr ""
+msgstr "Học giả"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1260,35 +1322,35 @@ msgstr "Tìm kiếm"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Search a question..."
-msgstr ""
+msgstr "Tìm một câu hỏi..."
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
 msgid "Search in Post"
-msgstr ""
+msgstr "Tìm trong bài"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Seen:"
-msgstr ""
+msgstr "Được thấy:"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_8
 #: model:gamification.challenge,name:website_forum.challenge_self_learner
 #: model:gamification.goal.definition,name:website_forum.definition_self_learner
 msgid "Self-Learner"
-msgstr ""
+msgstr "Tự học"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 #: view:forum.post:website_forum.view_forum_post_form
 msgid "Send a message to the group"
-msgstr "Gửi tin nhắn đến nhóm"
+msgstr "Gửi một tin nhắn đến nhóm"
 
 #. module: website_forum
 #: view:website:website_forum.404
 msgid "Sorry, this question is not available anymore."
-msgstr ""
+msgstr "Rất tiếc, câu hỏi này không còn khả dụng nữa."
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -1296,9 +1358,14 @@ msgid "Sort by"
 msgstr "Xếp theo"
 
 #. module: website_forum
+#: field:res.users,speaker:0
+msgid "Speaker"
+msgstr "Diễn giả"
+
+#. module: website_forum
 #: view:website:website_forum.header
 msgid "Stats"
-msgstr ""
+msgstr "Thống kê"
 
 #. module: website_forum
 #: field:forum.post,state:0
@@ -1309,16 +1376,17 @@ msgstr "Tình trạng"
 #: model:gamification.badge,name:website_forum.badge_q_6
 #: model:gamification.challenge,name:website_forum.challenge_stellar_question_25
 msgid "Stellar Question"
-msgstr ""
+msgstr "Câu hỏi xuất sắc"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_7
 #: model:gamification.challenge,name:website_forum.challenge_student
 msgid "Student"
-msgstr ""
+msgstr "Sinh viên"
 
 #. module: website_forum
-#: field:forum.forum,message_summary:0 field:forum.post,message_summary:0
+#: field:forum.forum,message_summary:0
+#: field:forum.post,message_summary:0
 msgid "Summary"
 msgstr "Tóm tắt"
 
@@ -1327,33 +1395,36 @@ msgstr "Tóm tắt"
 #: model:gamification.challenge,name:website_forum.challenge_supporter
 #: model:gamification.goal.definition,name:website_forum.definition_supporter
 msgid "Supporter"
-msgstr ""
+msgstr "Chuyên viên hỗ trợ"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
 msgid "Tag"
-msgstr "Từ khóa"
+msgstr ""
 
 #. module: website_forum
-#: field:forum.post,tag_ids:0 view:website:website_forum.ask_question
-#: view:website:website_forum.edit_post view:website:website_forum.forum_index
-#: view:website:website_forum.header view:website:website_forum.tag
+#: field:forum.post,tag_ids:0
+#: view:website:website_forum.ask_question
+#: view:website:website_forum.edit_post
+#: view:website:website_forum.forum_index
+#: view:website:website_forum.header
+#: view:website:website_forum.tag
 msgid "Tags"
-msgstr "Các từ khóa"
+msgstr ""
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_32
 #: model:gamification.challenge,name:website_forum.challenge_taxonomist
 #: model:gamification.goal.definition,name:website_forum.definition_taxonomist
 msgid "Taxonomist"
-msgstr ""
+msgstr "Nhà phân loại"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_1
 #: model:gamification.challenge,name:website_forum.challenge_teacher
 #: model:gamification.goal.definition,name:website_forum.definition_teacher
 msgid "Teacher"
-msgstr ""
+msgstr "Giáo viên"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
@@ -1368,12 +1439,12 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.private_profile
 msgid "This profile is private!"
-msgstr ""
+msgstr "Hồ sơ này mang tính riêng tư!"
 
 #. module: website_forum
 #: field:forum.post,name:0
 msgid "Title"
-msgstr "Danh xưng"
+msgstr "Tiêu đề"
 
 #. module: website_forum
 #: field:forum.post.vote,recipient_id:0
@@ -1388,7 +1459,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Unanswered"
-msgstr ""
+msgstr "Chưa trả lời"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_unlink_all:0
@@ -1401,9 +1472,10 @@ msgid "Unlink its own comments"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,message_unread:0 field:forum.post,message_unread:0
+#: field:forum.forum,message_unread:0
+#: field:forum.post,message_unread:0
 msgid "Unread Messages"
-msgstr "Tin chưa đọc"
+msgstr "Thông điệp chưa đọc"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -1413,12 +1485,12 @@ msgstr "Cập nhật"
 #. module: website_forum
 #: field:forum.post,write_date:0
 msgid "Update on"
-msgstr ""
+msgstr "Cập nhật vào"
 
 #. module: website_forum
 #: field:forum.post,write_uid:0
 msgid "Updated by"
-msgstr ""
+msgstr "Cập nhật bởi"
 
 #. module: website_forum
 #: field:forum.forum,karma_upvote:0
@@ -1448,27 +1520,27 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post.vote,user_id:0
 msgid "User"
-msgstr "Người sử dụng"
+msgstr "Thành viên"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_res_users
 msgid "Users"
-msgstr "Người dùng"
+msgstr "Thành viên"
 
 #. module: website_forum
 #: field:forum.post,is_correct:0
 msgid "Valid Answer"
-msgstr ""
+msgstr "Câu trả lời hợp lệ"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "View Your Badges"
-msgstr ""
+msgstr "Xem các Huy chương của bạn"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Views"
-msgstr ""
+msgstr "Lượt xem"
 
 #. module: website_forum
 #: field:forum.post.vote,vote:0
@@ -1477,7 +1549,8 @@ msgid "Vote"
 msgstr "Bầu chọn"
 
 #. module: website_forum
-#: field:forum.post,vote_count:0 field:forum.post,vote_ids:0
+#: field:forum.post,vote_count:0
+#: field:forum.post,vote_ids:0
 #: view:website:website_forum.user_detail_full
 msgid "Votes"
 msgstr "Bầu chọn"
@@ -1513,26 +1586,27 @@ msgstr ""
 
 #. module: website_forum
 #: field:forum.forum,website_meta_title:0
-#: field:forum.post,website_meta_title:0 field:forum.tag,website_meta_title:0
+#: field:forum.post,website_meta_title:0
+#: field:forum.tag,website_meta_title:0
 msgid "Website meta title"
 msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "Your answer"
-msgstr ""
+msgstr "Câu trả lời của bạn"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_description_full
 msgid "[Closed]"
-msgstr ""
+msgstr "[Đã đóng]"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_description_full
 msgid "[Deleted]"
-msgstr ""
+msgstr "[Đã xóa]"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
@@ -1542,64 +1616,64 @@ msgstr "và"
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "answers"
-msgstr ""
+msgstr "trả lời"
 
 #. module: website_forum
-#: view:website:website_forum.badge view:website:website_forum.user_badges
+#: view:website:website_forum.badge
+#: view:website:website_forum.user_badges
 msgid "awarded users"
-msgstr ""
+msgstr "thành viên được trao thưởng"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "back to question"
-msgstr ""
+msgstr "quay về câu hỏi"
 
 #. module: website_forum
 #: view:website:website_forum.users
 msgid "badges:"
-msgstr ""
+msgstr "huy chương:"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
-msgid ""
-"be clear and concise, avoid unnecessary introductions (Hi, ... Thanks...)"
-msgstr ""
+msgid "be clear and concise, avoid unnecessary introductions (Hi, ... Thanks...)"
+msgstr "hãy rõ ràng và xúc tích, tránh những lời giới thiệu không cần thiết (vd: Hi, ... Thanks...)"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "bio"
-msgstr ""
+msgstr "tiểu sử"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "bronze"
-msgstr ""
+msgstr "đồng"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_description_full
 msgid "by"
-msgstr ""
+msgstr "bởi"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "by activity date"
-msgstr ""
+msgstr "theo ngày hoạt động"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "by creation date"
-msgstr ""
+msgstr "theo ngày tạo"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "by most answered"
-msgstr ""
+msgstr "theo được trả lời nhiều nhất"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "by most voted"
-msgstr ""
+msgstr "theo được bầu chọn nhiều nhất"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_7
@@ -1614,27 +1688,27 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "don't forget to vote"
-msgstr ""
+msgstr "đừng quên bầu chọn"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
 msgid "duplicate question"
-msgstr ""
+msgstr "câu hỏi bị đúp"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "follower(s)"
-msgstr ""
+msgstr "người theo dõi"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "for reason:"
-msgstr ""
+msgstr "vì lý do:"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "gold"
-msgstr ""
+msgstr "vàng"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
@@ -1649,39 +1723,39 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "last connection"
-msgstr ""
+msgstr "kết nối lần cuối"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "location"
-msgstr ""
+msgstr "địa điểm"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "member since"
-msgstr ""
+msgstr "thành viên từ"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
 msgid "not a real question"
-msgstr ""
+msgstr "not a real question"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_6
 msgid "not relevant or out dated"
-msgstr ""
+msgstr "không liên quan hoặc đã lỗi thời"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_2
 msgid "off-topic or not relevant"
-msgstr ""
+msgstr "lạc đề hoặc không liên quan"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_comment
 #: view:website:website_forum.post_description_full
 msgid "on"
-msgstr "trên"
+msgstr "vào"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
@@ -1691,12 +1765,12 @@ msgstr "hoặc"
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "please, try to make your question interesting to others"
-msgstr ""
+msgstr "please, try to make your question interesting to others"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "profile"
-msgstr ""
+msgstr "hồ sơ"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
@@ -1706,57 +1780,57 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "received this badge:"
-msgstr ""
+msgstr "đã nhận huy chương này:"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "revise your answers"
-msgstr ""
+msgstr "sửa câu trả lời của bạn"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "silver"
-msgstr ""
+msgstr "bạc"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_8
 msgid "spam or advertising"
-msgstr ""
+msgstr "spam hoặc quảng cáo"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "stats"
-msgstr ""
+msgstr "thống kê"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "time"
-msgstr ""
+msgstr "lần"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "times"
-msgstr ""
+msgstr "lần"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_9
 msgid "too localized"
-msgstr ""
+msgstr "quá cục bộ"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_3
 msgid "too subjective and argumentative"
-msgstr ""
+msgstr "quá chủ quan và có thể gây tranh cãi"
 
 #. module: website_forum
 #: field:forum.post,self_reply:0
 msgid "unknown"
-msgstr "chưa rõ"
+msgstr "không xác định"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "use the commenting tool."
-msgstr "sử dụng công cụ bình luận"
+msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.badge_user
@@ -1774,22 +1848,25 @@ msgid "views"
 msgstr "lượt xem"
 
 #. module: website_forum
-#: view:website:website_forum.display_post view:website:website_forum.vote
+#: view:website:website_forum.display_post
+#: view:website:website_forum.vote
 msgid "vote"
 msgstr "bầu chọn"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
-#: view:website:website_forum.user_detail_full view:website:website_forum.vote
+#: view:website:website_forum.user_detail_full
+#: view:website:website_forum.vote
 msgid "votes"
 msgstr "bầu chọn"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "website"
-msgstr "Trang web"
+msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "with"
 msgstr "với"
+

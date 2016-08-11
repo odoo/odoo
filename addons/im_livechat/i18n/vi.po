@@ -32,11 +32,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Bấm để khởi tạo một kênh chat trực tuyến.\n"
+"              </p><p>\n"
+"                Bạn có thể tạo nhiều kênh cho mỗi website mà bạn muốn tích\n"
+"                hợp widget chat trực tuyến, cho phép khách đến website có\n"
+"                thể nói chuyện với các operator của bạn theo thời gian thực.\n"
+"              </p><p>\n"
+"                Mỗi kênh có một URL riêng mà bạn có thể gửi qua email đến khách\n"
+"                hàng của bạn để họ có thể chat với bạn.\n"
+"              </p>\n"
+"            "
 
 #. module: im_livechat
 #: field:im_chat.session,anonymous_name:0
 msgid "Anonymous Name"
-msgstr ""
+msgstr "Tên Nặc danh"
 
 #. module: im_livechat
 #: field:im_livechat.channel,are_you_inside:0
@@ -56,7 +67,7 @@ msgstr "Tên kênh"
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.support_channels
 msgid "Channels"
-msgstr "Kênh"
+msgstr "Các Kênh"
 
 #. module: im_livechat
 #: field:im_livechat.channel,input_placeholder:0
@@ -68,18 +79,18 @@ msgstr ""
 #: code:addons/im_livechat/static/src/js/im_livechat.js:85
 #, python-format
 msgid "Chat with one of our collaborators"
-msgstr ""
+msgstr "Chat với một trong số các cộng tác viên của chúng tôi."
 
 #. module: im_livechat
 #: field:im_chat.session,fullname:0
 msgid "Complete name"
-msgstr ""
+msgstr "Tên đầy đủ"
 
 #. module: im_livechat
 #: view:im_livechat.channel:im_livechat.support_channel_form
 msgid ""
 "Copy and paste this code into your website, within the &lt;head&gt; tag:"
-msgstr ""
+msgstr "Copy và Paste đoạn mã này vào website của bạn, ở bên trong thẻ &lt;head&gt;"
 
 #. module: im_livechat
 #: field:im_livechat.channel,create_uid:0
@@ -89,7 +100,7 @@ msgstr "Tạo bởi"
 #. module: im_livechat
 #: field:im_livechat.channel,create_date:0
 msgid "Created on"
-msgstr "Tạo trên"
+msgstr "Tạo vào"
 
 #. module: im_livechat
 #: view:im_chat.message:im_livechat.im_message_search
@@ -103,6 +114,9 @@ msgid ""
 " Then go to Settings > Website Settings and select the Live Chat Channel you"
 " want to add on your website."
 msgstr ""
+"Đối với website được xây dựng bằng Odoo CMS, vui lòng cài phân hệ website_livechat."
+" Sau đó di chuyển đến trình đơn Thiết lập > Thiết lập Website và chọn một kênh Live Chat"
+" mà bạn muốn đưa lên website."
 
 #. module: im_livechat
 #: view:im_chat.message:im_livechat.im_message_search
@@ -121,12 +135,12 @@ msgstr "Lịch sử"
 #: code:addons/im_livechat/static/src/js/im_livechat.js:87
 #, python-format
 msgid "How may I help you?"
-msgstr ""
+msgstr "Tôi có thể giúp gì bạn?"
 
 #. module: im_livechat
 #: view:im_livechat.channel:im_livechat.support_channel_form
 msgid "How to use the Live Chat widget?"
-msgstr ""
+msgstr "Sử dụng Live Chat widget thế nào?"
 
 #. module: im_livechat
 #: field:im_livechat.channel,id:0
@@ -136,12 +150,12 @@ msgstr "ID"
 #. module: im_livechat
 #: view:im_livechat.channel:im_livechat.support_channel_kanban
 msgid "Join"
-msgstr ""
+msgstr "Tham gia"
 
 #. module: im_livechat
 #: view:im_livechat.channel:im_livechat.support_channel_form
 msgid "Join Channel"
-msgstr ""
+msgstr "Tham gia Kênh"
 
 #. module: im_livechat
 #: field:im_livechat.channel,write_uid:0
@@ -156,7 +170,7 @@ msgstr "Cập nhật lần cuối"
 #. module: im_livechat
 #: view:im_livechat.channel:im_livechat.support_channel_form
 msgid "Leave Channel"
-msgstr ""
+msgstr "Rời Kênh"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.im_livechat
@@ -166,7 +180,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.action_support_channels
 msgid "Live Chat Channels"
-msgstr ""
+msgstr "Kênh Live Chat"
 
 #. module: im_livechat
 #: view:website:im_livechat.support_page
@@ -204,7 +218,7 @@ msgstr ""
 #. module: im_livechat
 #: view:im_chat.message:im_livechat.im_message_search
 msgid "My Sessions"
-msgstr ""
+msgstr "Phiên của tôi"
 
 #. module: im_livechat
 #. openerp-web
@@ -213,6 +227,7 @@ msgstr ""
 msgid ""
 "None of our collaborators seems to be available, please try again later."
 msgstr ""
+"Dường như các cộng tác viên của chúng tôi không online, hãy thử lại sau."
 
 #. module: im_livechat
 #: view:website:im_livechat.support_page
@@ -252,12 +267,12 @@ msgstr ""
 #. module: im_livechat
 #: view:im_chat.message:im_livechat.im_message_search
 msgid "Search history"
-msgstr ""
+msgstr "Tìm kiếm lịch sử"
 
 #. module: im_livechat
 #: view:im_chat.message:im_livechat.im_message_search
 msgid "Session"
-msgstr ""
+msgstr "Phiên"
 
 #. module: im_livechat
 #: field:im_livechat.channel,image_small:0
@@ -275,7 +290,7 @@ msgstr ""
 #. module: im_livechat
 #: view:im_livechat.channel:im_livechat.support_channel_form
 msgid "Support Channels"
-msgstr ""
+msgstr "Kênh hỗ trợ"
 
 #. module: im_livechat
 #: view:im_livechat.channel:im_livechat.support_channel_form
@@ -285,17 +300,17 @@ msgstr "Kiểm thử"
 #. module: im_livechat
 #: field:im_livechat.channel,button_text:0
 msgid "Text of the Button"
-msgstr ""
+msgstr "Chữ trên Nút"
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.group_im_livechat_manager
 msgid "The user will be able to delete support channels."
-msgstr ""
+msgstr "Người dùng sẽ có khả năng xóa kênh hỗ trợ"
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.group_im_livechat
 msgid "The user will be able to join support channels."
-msgstr ""
+msgstr "Người dùng sẽ có khả năng tham gia kênh hỗ trợ"
 
 #. module: im_livechat
 #: help:im_livechat.channel,image:0
@@ -310,11 +325,12 @@ msgid ""
 "This is an automated 'welcome' message that your visitor will see when they "
 "initiate a new chat session."
 msgstr ""
+"Đây là một thông điệp chào mừng tự động mà khách vào website sẽ thấy khi họ khởi tạo một phiên chat."
 
 #. module: im_livechat
 #: model:res.groups,name:im_livechat.group_im_livechat
 msgid "User"
-msgstr "Người sử dụng"
+msgstr "Người dùng"
 
 #. module: im_livechat
 #: field:im_livechat.channel,user_ids:0
@@ -326,29 +342,29 @@ msgstr "Người dùng"
 #: code:addons/im_livechat/static/src/js/im_livechat.js:88
 #, python-format
 msgid "Visitor"
-msgstr ""
+msgstr "Khách"
 
 #. module: im_livechat
 #: field:im_livechat.channel,web_page:0
 msgid "Web Page"
-msgstr ""
+msgstr "Trang web"
 
 #. module: im_livechat
 #: field:im_livechat.channel,default_message:0
 msgid "Welcome Message"
-msgstr ""
+msgstr "Thông điệp chào mừng"
 
 #. module: im_livechat
 #: view:im_livechat.channel:im_livechat.support_channel_form
 msgid "e.g. Hello, how may I help you?"
-msgstr ""
+msgstr "vd: Xin chào, tôi có thể giúp gì bạn?"
 
 #. module: im_livechat
 #: view:im_livechat.channel:im_livechat.support_channel_form
 msgid "e.g. YourWebsite.com"
-msgstr ""
+msgstr "vd: tencongty.com"
 
 #. module: im_livechat
 #: view:im_livechat.channel:im_livechat.support_channel_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
-msgstr ""
+msgstr "hoặc sao chép url và gửi nó qua email cho khách hàng hay nhà cung cấp của bạn:"

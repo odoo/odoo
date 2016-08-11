@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-25 13:43+0000\n"
-"PO-Revision-Date: 2016-03-26 08:57+0000\n"
+"POT-Creation-Date: 2015-01-21 14:09+0000\n"
+"PO-Revision-Date: 2015-08-01 06:30+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
 "MIME-Version: 1.0\n"
@@ -95,11 +95,89 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
+"\n"
+"    <p>Xin chào ${object.partner_id.name},</p>\n"
+"\n"
+"    <p>Đính kèm là ${object.state in ('draft', 'sent') and 'Báo giá' or 'Đơn hàng'} từ ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>THAM KHẢO</strong><br />\n"
+"       &nbsp;&nbsp;Số: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Tổng giá trị: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Ngày: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Nguồn gốc: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Tham chiếu của bạn: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Liên hệ: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <% set signup_url = object.get_signup_url() %>\n"
+"    % if signup_url:\n"
+"    <p>\n"
+"    Bạn có thể truy cập ${object.state in ('draft', 'sent') and 'Báo giá' or 'Đơn hàng'} này và thanh toán trực tuyến qua Cổng giao dịch Khách hàng của chúng tôi:\n"
+"    </p>\n"
+"        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"           href=\"${signup_url}\">Xem ${object.state in ('draft', 'sent') and 'Báo giá' or 'Đơn hàng'}</a>\n"
+"    % endif\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>Bạn cũng có thể thanh toán trực tuyến bằng Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>Nếu bạn có bất kỳ câu hỏi nào, xin đừng ngần ngại liên hệ với chúng tôi.</p>\n"
+"    <p>Cám ơn bạn đã lựa chọn ${object.company_id.name or 'chúng tôi'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        % endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "! You can"
-msgstr ""
+msgstr "! Bạn có thể"
 
 #. module: website_quote
 #: model:email.template,report_name:website_quote.email_template_edi_sale
@@ -114,18 +192,20 @@ msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Báo giá' or 'Đơn hàng'} (Ref ${object.name or 'n/a' })"
 
 #. module: website_quote
 #: view:website:website_quote.optional_products
 #: view:website:website_quote.pricing
 msgid "% discount"
-msgstr ""
+msgstr "% chiết khấu"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 #: view:website:website_quote.so_template
 msgid "&times;"
-msgstr "&times;"
+msgstr ""
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -133,6 +213,8 @@ msgid ""
 ",\n"
 "                                  for an amount of"
 msgstr ""
+",\n"
+"                                  cho số tiền"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -609,12 +691,12 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.quotation_toolbar
 msgid "Accept"
-msgstr ""
+msgstr "Chấp thuận"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Accept Order"
-msgstr ""
+msgstr "Chấp thuận Đặt hàng"
 
 #. module: website_quote
 #: model:product.template,name:website_quote.product_product_quote_3_product_template
@@ -626,17 +708,17 @@ msgstr ""
 #. module: website_quote
 #: field:sale.order,amount_undiscounted:0
 msgid "Amount Before Discount"
-msgstr ""
+msgstr "Tổng trước Chiết khấu"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Ask Changes"
-msgstr ""
+msgstr "Yêu cầu thay đổi"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Bill To:"
-msgstr ""
+msgstr "Xuất hoá đơn đến:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -651,17 +733,17 @@ msgstr "Làm sạch"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Contact us"
-msgstr ""
+msgstr "Liên hệ"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Contact us for new quote."
-msgstr ""
+msgstr "Liên hệ để lấy báo giá mới."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Contact us to get a new quote."
-msgstr ""
+msgstr "Liên hệ với chúng tôi để lấy báo giá mới."
 
 #. module: website_quote
 #: field:sale.order.option,create_uid:0 field:sale.quote.line,create_uid:0
@@ -674,12 +756,12 @@ msgstr "Tạo bởi"
 #: field:sale.quote.option,create_date:0
 #: field:sale.quote.template,create_date:0
 msgid "Created on"
-msgstr "Tạo trên"
+msgstr "Tạo vào"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Customer:"
-msgstr ""
+msgstr "Khách hàng:"
 
 #. module: website_quote
 #: field:sale.order,website_description:0 field:sale.order.option,name:0
@@ -693,12 +775,12 @@ msgstr "Mô tả"
 #. module: website_quote
 #: field:product.template,quote_description:0
 msgid "Description for the quote"
-msgstr ""
+msgstr "Mô tả cho báo giá"
 
 #. module: website_quote
 #: field:product.template,website_description:0
 msgid "Description for the website"
-msgstr ""
+msgstr "Mô tả cho website"
 
 #. module: website_quote
 #: field:sale.order.option,discount:0 field:sale.quote.line,discount:0
@@ -709,7 +791,7 @@ msgstr "Chiết khấu (%)"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Draw your signature"
-msgstr ""
+msgstr "\"Vẽ\" Chữ ký của bạn"
 
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
@@ -719,24 +801,24 @@ msgstr "Sửa mẫu"
 #. module: website_quote
 #: field:sale.order,validity_date:0
 msgid "Expiry Date"
-msgstr ""
+msgstr "Ngày hết hạn"
 
 #. module: website_quote
 #: view:website:sale.report_saleorder_document
 msgid "Expiry Date:"
-msgstr ""
+msgstr "Ngày hết hạn:"
 
 #. module: website_quote
 #: view:website:website_quote.quotation_toolbar
 msgid "Feedback"
-msgstr ""
+msgstr "Phản hồi"
 
 #. module: website_quote
 #: model:product.template,name:website_quote.product_product_quote_1_product_template
 #: model:product.template,name:website_quote.product_template_quote_1
 #: model:sale.quote.line,name:website_quote.website_sale_order_line_1
 msgid "Functional Training"
-msgstr ""
+msgstr "Tập huấn chức năng"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -759,6 +841,7 @@ msgid ""
 "I agree that by signing this proposal, I\n"
 "                                  accept it on the behalf of"
 msgstr ""
+"Bằng việc ký vào báo giá này, tôi chấp thuận các điều khoản của nó thay mặt cho"
 
 #. module: website_quote
 #: field:sale.order.option,id:0 field:sale.quote.line,id:0
@@ -769,12 +852,12 @@ msgstr "ID"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Incl. tax)"
-msgstr ""
+msgstr "bao gồm thuế)"
 
 #. module: website_quote
 #: view:website:website_quote.navigation_menu
 msgid "Introduction"
-msgstr ""
+msgstr "Đầu trang"
 
 #. module: website_quote
 #: field:sale.order.option,write_uid:0 field:sale.quote.line,write_uid:0
@@ -826,17 +909,17 @@ msgstr ""
 #. module: website_quote
 #: field:sale.quote.option,website_description:0
 msgid "Option Description"
-msgstr ""
+msgstr "Mô tả tùy chọn"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
 msgid "Optional Product:"
-msgstr ""
+msgstr "Sản phẩm tùy chọn:"
 
 #. module: website_quote
 #: view:sale.order:website_quote.sale_order_form_quote
 msgid "Optional Products & Services"
-msgstr ""
+msgstr "Sản phẩm & Dịch vụ tùy chọn:"
 
 #. module: website_quote
 #: field:sale.order,options:0 field:sale.order.line,option_line_id:0
@@ -853,7 +936,7 @@ msgstr "Options"
 #: code:addons/website_quote/controllers/main.py:69
 #, python-format
 msgid "Order signed by %s"
-msgstr ""
+msgstr "Đơn đặt hàng ký bởi"
 
 #. module: website_quote
 #: view:website:website_quote.optional_products
@@ -864,7 +947,7 @@ msgstr "Giá"
 #. module: website_quote
 #: view:website:website_quote.pricing
 msgid "Pricing"
-msgstr ""
+msgstr "Chi tiết Giá"
 
 #. module: website_quote
 #: field:sale.order.option,product_id:0 field:sale.quote.line,product_id:0
@@ -875,7 +958,7 @@ msgstr "Sản phẩm"
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_product_template
 msgid "Product Template"
-msgstr "Product Template"
+msgstr "Mẫu sản phẩm"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -897,39 +980,39 @@ msgstr "Số lượng"
 #. module: website_quote
 #: field:sale.quote.template,name:0
 msgid "Quotation Template"
-msgstr ""
+msgstr "Mẫu Báo giá"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_line
 msgid "Quotation Template Lines"
-msgstr ""
+msgstr "Dòng trong Mẫu Báo giá"
 
 #. module: website_quote
 #: field:sale.quote.line,quote_id:0 field:sale.quote.option,template_id:0
 msgid "Quotation Template Reference"
-msgstr ""
+msgstr "Tham chiếu Mẫu Báo giá"
 
 #. module: website_quote
 #: model:ir.actions.act_window,name:website_quote.action_sale_quotation_template
 #: model:ir.ui.menu,name:website_quote.menu_sale_quote_template
 msgid "Quotation Templates"
-msgstr ""
+msgstr "Mẫu Báo giá"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:47
 #, python-format
 msgid "Quotation viewed by customer"
-msgstr ""
+msgstr "Báo giá được xem bởi khách hàng"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Quote Date:"
-msgstr ""
+msgstr "Ngày Báo giá:"
 
 #. module: website_quote
 #: field:sale.quote.template,number_of_days:0
 msgid "Quote Duration"
-msgstr ""
+msgstr "Hạn Báo giá"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_option
@@ -939,65 +1022,65 @@ msgstr ""
 #. module: website_quote
 #: field:sale.order,template_id:0
 msgid "Quote Template"
-msgstr ""
+msgstr "Mẫu Báo giá"
 
 #. module: website_quote
 #: field:sale.quote.template,quote_line:0
 msgid "Quote Template Lines"
-msgstr ""
+msgstr "Chi tiết Mẫu Báo giá"
 
 #. module: website_quote
 #: view:website:website_quote.quotation_toolbar
 #: view:website:website_quote.so_quotation
 msgid "Reject"
-msgstr ""
+msgstr "Từ chối"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Reject This Quote"
-msgstr ""
+msgstr "Từ chối Báo giá này"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_option
 msgid "Sale Options"
-msgstr ""
+msgstr "Tùy chọn bán"
 
 #. module: website_quote
 #: field:sale.order.option,order_id:0
 msgid "Sale Order Reference"
-msgstr ""
+msgstr "Tham chiếu đơn hàng"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_template
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Sale Quotation Template"
-msgstr ""
+msgstr "Mẫu báo giá"
 
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_tree
 msgid "Sale Quote Template"
-msgstr ""
+msgstr "Mẫu báo giá"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order
 msgid "Sales Order"
-msgstr "Đơn hàng"
+msgstr "Đơn đặt hàng"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "dòng hảng của đơn hàng bán"
+msgstr "Dòng hàng của Đơn hàng bán"
 
 #. module: website_quote
 #: view:sale.order:website_quote.sale_order_form_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Sales Quote Template Lines"
-msgstr ""
+msgstr "Dòng hàng của Mẫu Báo giá"
 
 #. module: website_quote
 #: field:sale.order,access_token:0
 msgid "Security Token"
-msgstr ""
+msgstr "Token an ninh"
 
 #. module: website_quote
 #: view:website:website_quote.chatter
@@ -1007,28 +1090,28 @@ msgstr "Gửi"
 #. module: website_quote
 #: view:website:website_quote.chatter
 msgid "Send us a note..."
-msgstr ""
+msgstr "Gửi ghi chú / yêu cầu cho chúng tôi..."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Ship To:"
-msgstr ""
+msgstr "Giao đến"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Sign Order"
-msgstr ""
+msgstr "Ký đơn hàng"
 
 #. module: website_quote
 #: view:website:website_quote.pricing
 msgid "Subtotal:"
-msgstr ""
+msgstr "Tổng phụ"
 
 #. module: website_quote
 #: view:sale.order:website_quote.sale_order_form_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Suggested Products"
-msgstr ""
+msgstr "Sản phẩm khuyên dùng"
 
 #. module: website_quote
 #: view:website:website_quote.pricing
@@ -1045,7 +1128,7 @@ msgstr "Các loại thuế:"
 #: model:product.template,name:website_quote.product_template_quote_2
 #: model:sale.quote.line,name:website_quote.website_sale_order_line_2
 msgid "Technical Training"
-msgstr ""
+msgstr "Tập huấn kỹ thuật"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1053,6 +1136,7 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
+"Hãy cho chúng tôi biết tại sao bạn từ chối báo giá này. Điều này sẽ giúp chúng tôi cải thiện sản phẩm / dịch vụ của chúng tôi."
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -1062,32 +1146,27 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.pricing view:website:website_quote.so_template
 msgid "Terms & Conditions"
-msgstr ""
+msgstr "Điều khoản & Điều kiện"
 
 #. module: website_quote
 #: field:sale.quote.template,note:0
 msgid "Terms and conditions"
-msgstr "Điều khoản và điều kiện"
+msgstr "Điều khoản và Điều kiện"
 
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Terms and conditions..."
-msgstr "Điều khoản và điều kiện..."
+msgstr "Điều khoản và Điều kiện..."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "This offer expired!"
-msgstr ""
+msgstr "Chào hàng này đã hết hạn!"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "This offer expires in"
-msgstr ""
-
-#. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "This order has already been"
-msgstr ""
+msgstr "Chào hàng này sẽ hết hạn trong"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1095,21 +1174,22 @@ msgid ""
 "This order has been validated. Thanks for your trust\n"
 "                          and do not hesitate to"
 msgstr ""
+"Đơn đặt hàng này đã được thẩm định. Cám ơn sự tin tưởng của bạn và đừng ngần ngại"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "This quotation has been canceled."
-msgstr ""
+msgstr "Báo giá này đã bị hủy bỏ."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "This quotation has been rejected."
-msgstr ""
+msgstr "Báo giá này đã bị từ chối."
 
 #. module: website_quote
 #: view:website:website_quote.so_template
 msgid "Titles with style"
-msgstr ""
+msgstr "Tiêu đề có phong cách"
 
 #. module: website_quote
 #: view:website:website_quote.pricing
@@ -1126,58 +1206,52 @@ msgstr "Đơn giá"
 #: field:sale.order.option,uom_id:0 field:sale.quote.line,product_uom_id:0
 #: field:sale.quote.option,uom_id:0
 msgid "Unit of Measure "
-msgstr "Đơn vị tính "
+msgstr "Đơn vị đo lường"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Update Quote"
-msgstr ""
+msgstr "Cập nhật Báo giá"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Validate Order"
-msgstr ""
+msgstr "Xác nhận báo giá"
 
 #. module: website_quote
 #: view:sale.order:website_quote.sale_order_form_quote
 msgid "View Quotation"
-msgstr ""
+msgstr "Xem Báo giá"
 
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Website Description"
-msgstr ""
-
-#. module: website_quote
-#: code:addons/website_quote/controllers/main.py:148
-#, python-format
-msgid "You cannot add options to a confirmed order."
-msgstr ""
+msgstr "Mô tả Website"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Contact:"
-msgstr ""
+msgstr "Liên hệ:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Name:"
-msgstr ""
+msgstr "Tên bạn:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Order"
-msgstr ""
+msgstr "Đơn hàng của bạn"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Quotation"
-msgstr ""
+msgstr "Báo giá của bạn"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Reference:"
-msgstr "Tham chiểu của bạn:"
+msgstr "Tham chiếu của bạn:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1187,12 +1261,12 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your feedback....."
-msgstr ""
+msgstr "Phản hồi của bạn..."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your message has been successfully sent!"
-msgstr ""
+msgstr "Thông điệp của bạn đã được gửi thành công!"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -1201,18 +1275,13 @@ msgstr "và"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
-msgid "cancelled"
-msgstr ""
-
-#. module: website_quote
-#: view:website:website_quote.so_quotation
 msgid "contact us"
-msgstr ""
+msgstr "liên hệ"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "day"
-msgstr ""
+msgstr "ngày"
 
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
@@ -1235,7 +1304,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.chatter
 msgid "on"
-msgstr "on"
+msgstr ""
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1249,16 +1318,12 @@ msgid ""
 "                                will appear on all quotations using this\n"
 "                                template."
 msgstr ""
+"nội dung này sẽ xuất hiện trên tất cả báo giá sử dụng mẫu này."
 
 #. module: website_quote
 #: field:sale.order.option,line_id:0
 msgid "unknown"
-msgstr "unknown"
-
-#. module: website_quote
-#: view:website:website_quote.so_quotation
-msgid "validated"
-msgstr ""
+msgstr "không xác định"
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -1266,8 +1331,10 @@ msgid ""
 "will be used to generate the\n"
 "                                table of content automatically."
 msgstr ""
+"sẽ được sử dụng để tạo bảng\n"
+"                                mục lục một cách tự động."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "with payment terms:"
-msgstr ""
+msgstr "với điều khoản thanh toán:"

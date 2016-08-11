@@ -8,10 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-12-29 08:13+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
+"POT-Creation-Date: 2014-09-13 09:34+0000\n"
+"PO-Revision-Date: 2014-09-13 16:51+0700\n"
+"Last-Translator: David Tran <david.tran@ma.tvtmarine.com>\n"
+"Language-Team: T.V.T Marine Automation (aka TVTMA) <support@ma.tvtmarine."
+"com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -32,6 +33,15 @@ msgid ""
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
 "* When order is completely processed that time it is set in 'Finished' status."
 msgstr ""
+"* Khi một hoạt động sản xuất được tạo, nó được thiết lập là 'Dự thảo'.\n"
+"* Khi người dùng thiết lập hoat động sản xuất với chế độ bắt đầu, nó sẽ được "
+"thiết lập là 'Đang thực hiện'.\n"
+"* Khi hoạt động sản xuất đang trong chế độ chạy, trong suốt thời gian đó, "
+"nếu người dùng dừng hoặc thay đổi thứ tự thì nó sẽ được thiết lập là 'Đang "
+"chờ'.\n"
+"* Khi người dùng hủy một hoạt động sản xuất, nó sẽ được thiết lập là 'Hủy "
+"bỏ'.\n"
+"* Khi người dùng hoàn thành tiến trình nó sẽ được thiết lập là 'Kết thúc'."
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
@@ -47,6 +57,15 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Bấm để tạo mới một hoạt động sản xuất.\n"
+"          </p><p>\n"
+"            Để sản xuất hoặc lắp ráp sản phẩm, sử dụng nguyên liệu thô và "
+"thành phẩm\n"
+"            Bạn cũng phải xử lý các hoạt động sản xuất. Các hoạt động sản "
+"xuất.\n"
+"          </p>\n"
+"        "
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
@@ -63,16 +82,30 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Bấm để thêm mới hoạt động sản xuất. \n"
+"          </p><p>\n"
+"            Hoạt động sản xuất là một danh sách các hoạt động cần thực hiện "
+"trên từng\n"
+"            lệnh sản xuất. Khi bạn bắt đầu một hoặt động sản xuất đầu tiên "
+"của một\n"
+"            lệnh sản xuất, lệnh sản xuất đó sẽ được động được đánh dấu là đã "
+"bắt đầu\n"
+"            Khi bạn kết thúc hoạt động cuối cùng của một lệnh sản xuất, lệnh "
+"sản xuất đó\n"
+"            tự động được hoàn thành và sản phẩm liên quan được sản xuất.\n"
+"          </p>\n"
+"        "
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Actual Production Date"
-msgstr ""
+msgstr "Ngày sản xuất thực tế"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation:mrp_operations.operation_calendar_view
 msgid "Calendar View"
-msgstr "Calendar View"
+msgstr "Giao diện kiểu Lịch"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -82,19 +115,19 @@ msgstr "Hủy bỏ"
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Cancel Order"
-msgstr "Hủy Đơn hàng"
+msgstr "Hủy hoạt động"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Canceled"
-msgstr ""
+msgstr "Đã hủy"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Cancelled"
-msgstr "Đã hủy bỏ"
+msgstr "Đã hủy"
 
 #. module: mrp_operations
 #: help:mrp.production,allow_reorder:0
@@ -102,11 +135,13 @@ msgid ""
 "Check this to be able to move independently all production orders, without "
 "moving dependent ones."
 msgstr ""
+"Đánh dấu để có thể dịch chuyển một cách độc lập tất cả lệnh sản xuất mà "
+"không dịch chuyễn lệnh sản xuất phụ thuộc."
 
 #. module: mrp_operations
 #: field:stock.move,move_dest_id_lines:0
 msgid "Children Moves"
-msgstr ""
+msgstr "Children Moves"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,code_id:0
@@ -117,7 +152,12 @@ msgstr "Mã"
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
 msgid "Confirmed Work Orders"
-msgstr ""
+msgstr "Hoạt động sản xuất được xác nhận"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Current"
+msgstr "Hiện tại"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,create_uid:0
@@ -126,25 +166,24 @@ msgid "Created by"
 msgstr "Tạo bởi"
 
 #. module: mrp_operations
-#: field:mrp_operations.operation,create_date:0
-#: field:mrp_operations.operation.code,create_date:0
-msgid "Created on"
-msgstr "Tạo trên"
-
-#. module: mrp_operations
-#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
-msgid "Current"
-msgstr ""
-
-#. module: mrp_operations
-#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_current_production
-msgid "Current Production"
-msgstr ""
-
-#. module: mrp_operations
 #: field:mrp.workorder,date:0
 msgid "Date"
-msgstr "Ngày"
+msgstr "Ngày tháng"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Date Planned (day)"
+msgstr "Ngày dự kiến (ngày)"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Date Planned (month)"
+msgstr "Ngày dự kiến (tháng)"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Date Planned (year)"
+msgstr "Ngày dự kiến (năm)"
 
 #. module: mrp_operations
 #: field:mrp.workorder,delay:0
@@ -156,7 +195,7 @@ msgstr "Chậm trễ"
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Done"
-msgstr "Hoàn tất"
+msgstr "Hoàn thành"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -164,12 +203,12 @@ msgstr "Hoàn tất"
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "Draft"
-msgstr "Nháp"
+msgstr "Dự thảo"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Duration"
-msgstr "Thời lượng"
+msgstr "Khoảng thời gian"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_finished:0
@@ -191,7 +230,7 @@ msgstr "Lỗi!"
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Finish Order"
-msgstr ""
+msgstr "Kết thúc hoạt động"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
@@ -200,17 +239,17 @@ msgstr ""
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "Finished"
-msgstr ""
+msgstr "Kết thúc"
 
 #. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
 msgid "Free Serialisation"
-msgstr ""
+msgstr "Free Serialisation"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
 msgid "Future Work Orders"
-msgstr ""
+msgstr "Hoạt đông sản xuất tương lai"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -221,7 +260,7 @@ msgstr "Nhóm theo"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.graph_in_hrs_workcenter
 msgid "Hours by Work Center"
-msgstr ""
+msgstr "Giờ theo Năng lực sản xuất"
 
 #. module: mrp_operations
 #: field:mrp.workorder,id:0 field:mrp_operations.operation,id:0
@@ -247,6 +286,8 @@ msgstr "Đang thực hiện"
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
 msgstr ""
+"Để Kết thúc một hoạt động, nó phải trong trạng thái Bắt đầu "
+"hoặc Bắt đầu lại"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:445
@@ -254,12 +295,15 @@ msgstr ""
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
 msgstr ""
+"Để Tạm dừng một hoạt động, nó phải trong trạng thái Bắt đầu "
+"hoặc Bắt đầu lại!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:449
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
 msgstr ""
+"Để khôi phục lại hoạt động, nó phải trong trạng thái Tạm dừng!"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -267,7 +311,7 @@ msgid "Information"
 msgstr "Thông tin"
 
 #. module: mrp_operations
-#: field:mrp_operations.operation,write_uid:0
+#: view:mrp.production.workcenter.line:0
 #: field:mrp_operations.operation.code,write_uid:0
 msgid "Last Updated by"
 msgstr "Cập nhật lần cuối bởi"
@@ -281,7 +325,7 @@ msgstr "Cập nhật lần cuối"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Late"
-msgstr "Trễ"
+msgstr "Muộn"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_production
@@ -292,28 +336,28 @@ msgstr "Lệnh sản xuất"
 #: code:addons/mrp_operations/mrp_operations.py:122
 #, python-format
 msgid "Manufacturing order cannot be started in state \"%s\"!"
-msgstr ""
+msgstr "Lệnh sản xuất không thể được bắt đầu trong trạng thái \"%s\"!"
 
 #. module: mrp_operations
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 msgid "Month Planned"
-msgstr ""
+msgstr "Tháng dự kiến"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:461
 #, python-format
 msgid "No operation to cancel."
-msgstr ""
+msgstr "Không có hoạt đồng cần hủy bỏ"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
 msgid "Operation Codes"
-msgstr ""
+msgstr "Mã hoạt động"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation.code,name:0
 msgid "Operation Name"
-msgstr "Tên Thao tác"
+msgstr "Tên hoạt động"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:441
@@ -322,47 +366,48 @@ msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
 "operation."
 msgstr ""
+"Hoạt động đã được bắt đầu! Bạn có thể Tạm dừng/Kết thúc/Hủy bỏ hoạt động."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:457
 #, python-format
 msgid "Operation is Already Cancelled!"
-msgstr ""
+msgstr "Hoạt động đã bị hủy rồi!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:464
 #, python-format
 msgid "Operation is already finished!"
-msgstr ""
+msgstr "Hoạt động đã kết thúc!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:434
 #, python-format
 msgid "Operation is not started yet!"
-msgstr ""
+msgstr "Hoạt động chưa bắt đầu!"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
 #: view:mrp.production.workcenter.line:mrp_operations.workcenter_line_calendar
 #: view:mrp.production.workcenter.line:mrp_operations.workcenter_line_gantt
 msgid "Operations"
-msgstr "Thao tác"
+msgstr "Hoạt động"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,order_date:0
 msgid "Order Date"
-msgstr "Ngày đặt hàng"
+msgstr "Ngày Đặt"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,state:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Pause"
-msgstr ""
+msgstr "Tạm dừng"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Pause Work Order"
-msgstr ""
+msgstr "Tạm dừng Hoạt động"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
@@ -371,17 +416,27 @@ msgstr ""
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 #: selection:mrp.production.workcenter.line,state:0
 msgid "Pending"
-msgstr "Pending"
+msgstr "Đang treo"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Planned Date"
-msgstr "Planned Date"
+msgstr "Ngày dự kiến"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Planned Day"
+msgstr "Ngày dự kiến"
 
 #. module: mrp_operations
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 msgid "Planned Month"
-msgstr ""
+msgstr "Tháng dự kiến"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Planned Year"
+msgstr "Năm dự kiến"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,product:0
@@ -398,7 +453,7 @@ msgstr "Số lượng sản phẩm"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Product to Produce"
-msgstr ""
+msgstr "Sản phẩm chờ sản xuất"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -406,43 +461,38 @@ msgstr ""
 #: field:mrp.workorder,production_id:0
 #: field:mrp_operations.operation,production_id:0
 msgid "Production"
-msgstr "Production"
+msgstr "Sản xuất"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation:mrp_operations.mrp_production_operation_tree_view
 msgid "Production Operation"
-msgstr ""
+msgstr "Hoạt động sản xuất"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation.code:mrp_operations.mrp_production_code_form_view
 #: view:mrp_operations.operation.code:mrp_operations.mrp_production_code_tree_view
 msgid "Production Operation Code"
-msgstr ""
+msgstr "Mã hoạt động sản xuất"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,production_state:0
 msgid "Production Status"
-msgstr ""
+msgstr "Trạng thái hoạt động sản xuất"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Production Workcenter"
-msgstr ""
+msgstr "Năng lực sản xuất"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Production started late"
-msgstr "Sản xuất được bắt đầu muộn"
+msgstr "Sản xuất bắt đầu muộn"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,qty:0
 msgid "Qty"
-msgstr "SL"
-
-#. module: mrp_operations
-#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_quantity_produced
-msgid "Quantity Produced"
-msgstr ""
+msgstr "Số lượng"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -455,27 +505,27 @@ msgstr "Sẵn sàng sản xuất"
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Resume"
-msgstr ""
+msgstr "Khôi phục"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Resume Work Order"
-msgstr ""
+msgstr "Khôi phục lại hoạt động sản xuất"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_planned:0
 msgid "Scheduled Date"
-msgstr "Ngày dự kiến"
+msgstr "Ngày ấn định"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "Ngày ấn định theo tháng"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Scheduled Month"
-msgstr "Tháng ấn định sẵn"
+msgstr "Tháng ấn định"
 
 #. module: mrp_operations
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
@@ -485,19 +535,19 @@ msgstr "Tìm kiếm"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Search Work Orders"
-msgstr ""
+msgstr "Tìm kiếm hoạt động sản xuất"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Set Draft"
-msgstr ""
+msgstr "Thiết lập Dự thảo"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Set to Draft"
-msgstr "Set to Draft"
+msgstr "Thiết lập thành Dự thảo"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:434
@@ -506,7 +556,7 @@ msgstr "Set to Draft"
 #: code:addons/mrp_operations/mrp_operations.py:457
 #, python-format
 msgid "Sorry!"
-msgstr ""
+msgstr "Rất tiếc!"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
@@ -514,7 +564,7 @@ msgstr ""
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Start"
-msgstr "Khởi động"
+msgstr "Bắt đầu"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_start:0
@@ -535,12 +585,11 @@ msgstr ""
 #. module: mrp_operations
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 msgid "Started"
-msgstr "Đã khởi động"
+msgstr "Đã Bắt đầu"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
-#: field:mrp.production.workcenter.line,state:0
-#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+#: view:mrp.production.workcenter.line:0
+#: field:mrp.production.workcenter.line,state:0 view:mrp.workorder:0
 #: field:mrp.workorder,state:0
 #: field:mrp_operations.operation.code,start_stop:0
 msgid "Status"
@@ -549,17 +598,18 @@ msgstr "Tình trạng"
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_stock_move
 msgid "Stock Move"
-msgstr "Stock Move"
+msgstr "Dịch chuyển kho"
 
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,delay:0
 msgid "The elapsed time between operation start and stop in this Work Center"
 msgstr ""
+"Thời gian trôi qua giữa thời điểm bắt đầu và kết thúc hoạt động sản xuất"
 
 #. module: mrp_operations
 #: field:mrp.workorder,total_cycles:0
 msgid "Total Cycles"
-msgstr "Tổng số vòng đời"
+msgstr "Tổng số Chu kỳ"
 
 #. module: mrp_operations
 #: field:mrp.workorder,total_hours:0
@@ -569,12 +619,12 @@ msgstr "Tổng số giờ"
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,uom:0
 msgid "Unit of Measure"
-msgstr "Đơn vị đo"
+msgstr "Đơn vị đo lường"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Waiting Goods"
-msgstr ""
+msgstr "Chờ hàng hóa"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -582,33 +632,33 @@ msgstr ""
 #: field:mrp.workorder,workcenter_id:0
 #: field:mrp_operations.operation,workcenter_id:0
 msgid "Work Center"
-msgstr ""
+msgstr "Hoạt động sản xuất"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
 msgid "Work Centers"
-msgstr ""
+msgstr "Năng lực sản xuất"
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
 msgid "Work Centers Barcode"
-msgstr ""
+msgstr "Mã vạch Năng lực Sản xuất"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
 #: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
 msgid "Work Order"
-msgstr ""
+msgstr "Hoạt động sản xuất"
 
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
 msgid "Work Order Analysis"
-msgstr ""
+msgstr "Phân tích Hoạt động sản xuất"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_workorder
 msgid "Work Order Report"
-msgstr ""
+msgstr "Báo cáo Hoạt động sản xuất"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -618,22 +668,22 @@ msgstr ""
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_graph
 msgid "Work Orders"
-msgstr ""
+msgstr "Hoạt động sản xuất"
 
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
 msgid "Work Orders By Resource"
-msgstr ""
+msgstr "Hoạt động sản xuất theo Nguồn lực"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
 msgid "Work Orders Planning"
-msgstr ""
+msgstr "Kế hoạch Hoạt động sản xuất"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,delay:0
 msgid "Working Hours"
-msgstr "Giờ làm việc"
+msgstr "Lịch làm việc"
 
 #. module: mrp_operations
 #: model:ir.filters,name:mrp_operations.filter_mrp_workorder_workload

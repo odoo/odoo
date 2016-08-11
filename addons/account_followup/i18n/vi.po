@@ -1,17 +1,16 @@
-# Translation of Odoo Server.
+# Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-# * account_followup
-# 
-# Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# 	* account_followup
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-12-29 08:13+0000\n"
-"Last-Translator: fanha99 <fanha99@hotmail.com>\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
+"POT-Creation-Date: 2014-09-08 03:27+0000\n"
+"PO-Revision-Date: 2014-09-08 13:54+0700\n"
+"Last-Translator: Leo Tran <leo.tran@tvtmarine.com>\n"
+"Language-Team: T.V.T Marine Automation (aka TVTMA) <support@ma.tvtmarine."
+"com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -50,6 +49,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
+"\n"
+"    <p>Xin chào ${object.name},</p>\n"
+"    <p>\n"
+"    Dường như bạn vẫn chưa thanh toán các khoản dưới đây cho chúng tôi. Vui lòng\n"
+"thực hiện việc thanh toán trong vòng 8 ngày.\n"
+"\n"
+"Nếu bạn đã thực hiện việc thanh toán rồi, vui lòng bỏ qua email này\n"
+"Nếu bạn có bất cứ yêu cầu hay câu hỏi, đừng ngần ngại liên hệ với bộ phận kế toán của chúng tôi.  \n"
+"\n"
+"    </p>\n"
+"<br/>\n"
+"Trân trọng,\n"
+"<br/>\n"
+"   <br/>\n"
+"${user.name}\n"
+"\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level2
@@ -81,6 +108,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Xin chào ${object.name},</p>\n"
+"    <p>\n"
+"    Despite several reminders, your account is still not settled.\n"
+"Unless full payment is made in next 8 days, legal action for the recovery of "
+"the debt will be taken without\n"
+"further notice.\n"
+"I trust that this action will prove unnecessary and details of due payments "
+"is printed below.\n"
+"In case of any queries concerning this matter, do not hesitate to contact "
+"our accounting department.\n"
+"</p>\n"
+"<br/>\n"
+"Best Regards,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_default
@@ -109,6 +167,33 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Xin chào ${object.name},</p>\n"
+"    <p>\n"
+"    Exception made if there was a mistake of ours, it seems that the "
+"following amount stays unpaid. Please, take\n"
+"appropriate measures in order to carry out this payment in the next 8 days.\n"
+"Would your payment have been carried out after this mail was sent, please "
+"ignore this message. Do not hesitate to\n"
+"contact our accounting department.\n"
+"    </p>\n"
+"<br/>\n"
+"Trân trọng,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"<br/>\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level1
@@ -143,6 +228,42 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Dear ${object.name},</p>\n"
+"   <p>\n"
+"    We are disappointed to see that despite sending a reminder, that your "
+"account is now seriously overdue.\n"
+"It is essential that immediate payment is made, otherwise we will have to "
+"consider placing a stop on your account\n"
+"which means that we will no longer be able to supply your company with "
+"(goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the "
+"next 8 days.\n"
+"If there is a problem with paying invoice that we are not aware of, do not "
+"hesitate to contact our accounting\n"
+"department. so that we can resolve the matter quickly.\n"
+"Details of due payments is printed below.\n"
+" </p>\n"
+"<br/>\n"
+"Best Regards,\n"
+"    \n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"    \n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -160,25 +281,21 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
-
-#. module: account_followup
-#: model:account_followup.followup.line,description:account_followup.demo_followup_line4
-#: model:account_followup.followup.line,description:account_followup.demo_followup_line5
-msgid ""
 "\n"
 "Dear %(partner_name)s,\n"
 "\n"
 "Despite several reminders, your account is still not settled.\n"
 "\n"
-"Unless full payment is made in next 8 days, then legal action for the recovery of the debt will be taken without further notice.\n"
+"Unless full payment is made in next 8 days, then legal action for the "
+"recovery of the debt will be taken without further notice.\n"
 "\n"
-"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
+"I trust that this action will prove unnecessary and details of due payments "
+"is printed below.\n"
 "\n"
-"In case of any queries concerning this matter, do not hesitate to contact our accounting department.\n"
+"In case of any queries concerning this matter, do not hesitate to contact "
+"our accounting department.\n"
 "\n"
 "Best Regards,\n"
-"            "
-msgstr ""
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
@@ -186,12 +303,28 @@ msgid ""
 "\n"
 "Dear %(partner_name)s,\n"
 "\n"
-"Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
+"Exception made if there was a mistake of ours, it seems that the following "
+"amount stays unpaid. Please, take appropriate measures in order to carry out "
+"this payment in the next 8 days.\n"
 "\n"
-"Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department.  \n"
+"Would your payment have been carried out after this mail was sent, please "
+"ignore this message. Do not hesitate to contact our accounting "
+"department.  \n"
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Exception made if there was a mistake of ours, it seems that the following "
+"amount stays unpaid. Please, take appropriate measures in order to carry out "
+"this payment in the next 8 days.\n"
+"\n"
+"Would your payment have been carried out after this mail was sent, please "
+"ignore this message. Do not hesitate to contact our accounting "
+"department.  \n"
+"\n"
+"Best Regards,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -199,53 +332,78 @@ msgid ""
 "\n"
 "Dear %(partner_name)s,\n"
 "\n"
-"We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.\n"
+"We are disappointed to see that despite sending a reminder, that your "
+"account is now seriously overdue.\n"
 "\n"
-"It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account which means that we will no longer be able to supply your company with (goods/services).\n"
-"Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
+"It is essential that immediate payment is made, otherwise we will have to "
+"consider placing a stop on your account which means that we will no longer "
+"be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the "
+"next 8 days.\n"
 "\n"
-"If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting department, so that we can resolve the matter quickly.\n"
+"If there is a problem with paying invoice that we are not aware of, do not "
+"hesitate to contact our accounting department, so that we can resolve the "
+"matter quickly.\n"
 "\n"
 "Details of due payments is printed below.\n"
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"We are disappointed to see that despite sending a reminder, that your "
+"account is now seriously overdue.\n"
+"\n"
+"It is essential that immediate payment is made, otherwise we will have to "
+"consider placing a stop on your account which means that we will no longer "
+"be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the "
+"next 8 days.\n"
+"\n"
+"If there is a problem with paying invoice that we are not aware of, do not "
+"hesitate to contact our accounting department, so that we can resolve the "
+"matter quickly.\n"
+"\n"
+"Details of due payments is printed below.\n"
+"\n"
+"Best Regards,\n"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:174
 #, python-format
 msgid " email(s) sent"
-msgstr ""
+msgstr " thư đã gửi"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:176
 #, python-format
 msgid " email(s) should have been sent, but "
-msgstr ""
+msgstr " thư đã được gửi nhưng"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:176
 #, python-format
 msgid " had unknown email address(es)"
-msgstr ""
+msgstr " địa chỉ thư không xác định"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:177
 #, python-format
 msgid " letter(s) in report"
-msgstr ""
+msgstr " thư trên báo cáo"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:177
 #, python-format
 msgid " manual action(s) assigned:"
-msgstr ""
+msgstr " hành động thủ công được gán:"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:171
 #, python-format
 msgid " will be sent"
-msgstr ""
+msgstr " sẽ được gửi"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -253,7 +411,7 @@ msgstr ""
 #: model:email.template,subject:account_followup.email_template_account_followup_level1
 #: model:email.template,subject:account_followup.email_template_account_followup_level2
 msgid "${user.company_id.name} Payment Reminder"
-msgstr ""
+msgstr "${user.company_id.name} Nhắc nhở thanh toán"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
@@ -263,20 +421,20 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "%(date)s"
-msgstr ""
+msgstr "%(date)s"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "%(partner_name)s"
-msgstr ""
+msgstr "%(partner_name)s"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "%(user_signature)s"
-msgstr ""
+msgstr "%(user_signature)s"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:234
+#: code:addons/account_followup/wizard/account_followup_print.py:227
 #, python-format
 msgid "%s partners have no credits and as such the action is cleared"
 msgstr ""
@@ -287,26 +445,28 @@ msgid ""
 ", the latest payment follow-up\n"
 "                            was:"
 msgstr ""
+", the latest payment follow-up\n"
+"                            was:"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid ": Current Date"
-msgstr ""
+msgstr ": Ngày hiện tại"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid ": Partner Name"
-msgstr ""
+msgstr ": Tên đối tác"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid ": User Name"
-msgstr ""
+msgstr ": Tên người dùng"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid ": User's Company Name"
-msgstr ""
+msgstr ": Tên công ty người dùng"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -320,16 +480,26 @@ msgid ""
 "              </p>\n"
 "          "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Bấm để định nghĩa cấp độ theo dõi và hành động liên "
+"quan.\n"
+"              </p><p>\n"
+"                Đối với mỗi bước, chỉ ra hành động được thực hiện và trì "
+"hoãn tính theo ngày. Nó có khả năng\n"
+"                để sử dụng in và mẫu thư điện tử để gửi thộng điệp cụ thể "
+"tời khách hàng\n"
+"              </p>\n"
+"          "
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow-up"
-msgstr ""
+msgstr "Tài khoản theo dõi"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Account Move line"
-msgstr ""
+msgstr "Phát sinh KT"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -339,51 +509,53 @@ msgstr "Kế toán"
 #. module: account_followup
 #: field:account_followup.followup.line,manual_action_note:0
 msgid "Action To Do"
-msgstr "Cần thực hiện"
+msgstr "Hành động cần thực hiện"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Action to be taken e.g. Give a phonecall, Check if it's paid, ..."
 msgstr ""
+"Hành động cần thực hiện, ví dụ: Nhân một cuộc gọi, Đánh dấu nếu nó được "
+"thanh toán, ..."
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "After"
-msgstr ""
+msgstr "Sau"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:260
 #: view:website:account_followup.report_followup
 #, python-format
 msgid "Amount"
-msgstr "Giá trị"
+msgstr "Tổng tiền"
 
 #. module: account_followup
 #: field:res.partner,payment_amount_due:0
 msgid "Amount Due"
-msgstr ""
+msgstr "Tổng tiền đến hạn"
 
 #. module: account_followup
 #: field:res.partner,payment_amount_overdue:0
 msgid "Amount Overdue"
-msgstr ""
+msgstr "Tổng tiền quá hạn"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:281
 #, python-format
 msgid "Amount due"
-msgstr ""
+msgstr "Tổng tiền đến hạn"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:160
 #, python-format
 msgid "Anybody"
-msgstr ""
+msgstr "Bất kỳ người nào"
 
 #. module: account_followup
 #: field:account_followup.followup.line,manual_action_responsible_id:0
 msgid "Assign a Responsible"
-msgstr ""
+msgstr "Giao cho một người phụ trách"
 
 #. module: account_followup
 #: field:account.move.line,result:0 field:account_followup.stat,balance:0
@@ -394,7 +566,7 @@ msgstr "Số dư"
 #. module: account_followup
 #: view:account_followup.stat.by.partner:account_followup.account_followup_stat_by_partner_search
 msgid "Balance > 0"
-msgstr ""
+msgstr "Số dư > 0"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -403,6 +575,10 @@ msgid ""
 "                            customer. You can check \"No Follow-up\" in\n"
 "                            order to exclude it from the next follow-up actions."
 msgstr ""
+"Dưới đây là lịch sửa giao dịch của khách hàng này.\n"
+"                            Bạn có thể đánh dấu \"Không theo dõi\" để loại\n"
+"                            loại trừ nó từ hành động theo dõi tiếp "
+"theo."
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -416,14 +592,13 @@ msgstr "Hủy bỏ"
 
 #. module: account_followup
 #: help:account_followup.print,test_print:0
-msgid ""
-"Check if you want to print follow-ups without changing follow-up level."
-msgstr ""
+msgid "Check if you want to print follow-ups without changing follow-up level."
+msgstr "Đánh dấu nếu bạn muốn in theo dõi mà không thay đổi cấp độ theo dõi."
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Click to mark the action as done."
-msgstr ""
+msgstr "Bấm để đánh dấu hành động này đã hoàn thành."
 
 #. module: account_followup
 #: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
@@ -441,7 +616,7 @@ msgstr "Công ty"
 #. module: account_followup
 #: view:account.config.settings:account_followup.view_account_config_settings_inherit
 msgid "Configure your follow-up levels"
-msgstr ""
+msgstr "Cấu hình cấp độ theo dõi"
 
 #. module: account_followup
 #: field:account_followup.followup,create_uid:0
@@ -457,7 +632,7 @@ msgstr "Tạo bởi"
 #: field:account_followup.print,create_date:0
 #: field:account_followup.sending.results,create_date:0
 msgid "Created on"
-msgstr "Tạo trên"
+msgstr "Tạo vào"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -465,14 +640,14 @@ msgid "Credit"
 msgstr "Bên có"
 
 #. module: account_followup
-#: view:res.partner:account_followup.customer_followup_tree
+#: view:res.partner:0
 msgid "Customer Followup"
-msgstr ""
+msgstr "Theo dõi thanh toán của Khách hàng"
 
 #. module: account_followup
 #: field:res.partner,payment_note:0
 msgid "Customer Payment Promise"
-msgstr ""
+msgstr "Thỏa thuận thanh toán của Khách hàng"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
@@ -487,7 +662,7 @@ msgstr "Ngày:"
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
 msgid "Days of the follow-up levels must be different"
-msgstr ""
+msgstr "Ngày của các cấp độ theo dõi phải khác nhau"
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -500,12 +675,12 @@ msgstr "Nợ"
 #: view:website:account_followup.report_followup
 #, python-format
 msgid "Description"
-msgstr "Mô tả"
+msgstr "Miêu tả"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_s
 msgid "Do Manual Follow-Ups"
-msgstr ""
+msgstr "Thực hiện theo dõi thủ công"
 
 #. module: account_followup
 #: help:account_followup.print,partner_lang:0
@@ -513,19 +688,21 @@ msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
 msgstr ""
+"Do not change message text, if you want to send email in partner language, "
+"or configure from company"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
 msgid "Document: Customer account statement"
-msgstr "Document: Customer account statement"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
 msgid "Download Letters"
-msgstr ""
+msgstr "Tải thư về"
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:259
+#: code:addons/account_followup/account_followup.py:256
 #, python-format
 msgid "Due Date"
 msgstr "Ngày đến hạn"
@@ -533,28 +710,30 @@ msgstr "Ngày đến hạn"
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Due Days"
-msgstr ""
+msgstr "Ngày đến hạn"
 
 #. module: account_followup
 #: field:account_followup.print,email_body:0
 msgid "Email Body"
-msgstr ""
+msgstr "Nội dung thư"
 
 #. module: account_followup
 #: field:account_followup.print,email_subject:0
 msgid "Email Subject"
-msgstr "Tiêu đề Thư điện tử"
+msgstr "Tiêu đề thư"
 
 #. module: account_followup
 #: field:account_followup.followup.line,email_template_id:0
 msgid "Email Template"
-msgstr "Mẫu Email"
+msgstr "Mẫu thư điện tử"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:216
 #, python-format
 msgid "Email not sent because of email address of partner not filled in"
 msgstr ""
+"Không gửi được thư bởi vì trường địa chỉ thư điện tử của đối tác không có dữ "
+"liệu"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:313
@@ -568,28 +747,28 @@ msgstr "Lỗi!"
 #: field:account_followup.stat,date_move:0
 #: field:account_followup.stat.by.partner,date_move:0
 msgid "First move"
-msgstr ""
+msgstr "First move"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
 #: field:account_followup.stat,followup_id:0
 msgid "Follow Ups"
-msgstr ""
+msgstr "Theo dõi"
 
 #. module: account_followup
 #: field:account_followup.print,followup_id:0
 msgid "Follow-Up"
-msgstr "Theo dõi tiếp"
+msgstr "Theo dõi"
 
 #. module: account_followup
 #: field:account_followup.followup.line,name:0
 msgid "Follow-Up Action"
-msgstr ""
+msgstr "Hành động theo dõi"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-Ups Analysis"
-msgstr ""
+msgstr "Phân tích theo dõi"
 
 #. module: account_followup
 #: view:account_followup.followup:account_followup.view_account_followup_followup_form
@@ -598,92 +777,92 @@ msgstr ""
 #: model:ir.ui.menu,name:account_followup.account_followup_main_menu
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Follow-up"
-msgstr "Theo sát"
+msgstr "Theo dõi"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-up Criteria"
-msgstr ""
+msgstr "Tiêu chí theo dõi"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Follow-up Entries with period in current year"
-msgstr ""
+msgstr "Bút toán theo dõi với kỳ kế toán trong năm hiện tại"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Follow-up Level"
-msgstr ""
+msgstr "Cấp độ theo dõi"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-up Levels"
-msgstr ""
+msgstr "Cấp độ theo dõi"
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.action_report_followup
 msgid "Follow-up Report"
-msgstr ""
+msgstr "Báo cáo theo dõi"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 #: field:res.partner,payment_responsible_id:0
 msgid "Follow-up Responsible"
-msgstr ""
+msgstr "Người phụ trách theo dõi"
 
 #. module: account_followup
 #: field:account_followup.print,date:0
 msgid "Follow-up Sending Date"
-msgstr ""
+msgstr "Ngày gửi"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Follow-up Statistics"
-msgstr ""
+msgstr "Thống kê theo dõi"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Follow-up Statistics by Partner"
-msgstr ""
+msgstr "Thống kê theo dõi theo đối tác"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_tree
 msgid "Follow-up Steps"
-msgstr ""
+msgstr "Các bước theo dõi"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:171
 #, python-format
 msgid "Follow-up letter of "
-msgstr ""
+msgstr "Thư nhắc nhở thanh toán của "
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_graph
 msgid "Follow-up lines"
-msgstr ""
+msgstr "Follow-up lines"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
 msgid "Follow-ups Sent"
-msgstr ""
+msgstr "Theo dõi đã gửi"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Follow-ups To Do"
-msgstr ""
+msgstr "Theo dõi cần làm"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Followup Level"
-msgstr ""
+msgstr "Cấp độ theo dõi"
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr ""
+msgstr "Gives the sequence order when displaying a list of follow-up lines."
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
@@ -697,6 +876,8 @@ msgid ""
 "He said the problem was temporary and promised to pay 50% before 15th of "
 "May, balance before 1st of July."
 msgstr ""
+"Khách hàng hứa sẽ trả trước 50 vào ngày 15/05 và thanh toán nốt số tiền còn "
+"lại vào ngày 1/6."
 
 #. module: account_followup
 #: field:account_followup.followup,id:0
@@ -714,29 +895,31 @@ msgid ""
 "If not specified by the latest follow-up level, it will send from the "
 "default email template"
 msgstr ""
+"If not specified by the latest follow-up level, it will send from the "
+"default email template"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Including journal entries marked as a litigation"
-msgstr ""
+msgstr "Bao gồm bút toán được đánh dấu là cần theo dõi"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:256
 #: view:website:account_followup.report_followup
 #, python-format
 msgid "Invoice Date"
-msgstr "Ngày Hóa đơn"
+msgstr "Ngày Hoá đơn"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:258
 #, python-format
 msgid "Invoices Reminder"
-msgstr ""
+msgstr "Nhắc nhở thanh toán"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
-msgstr "Phát sinh"
+msgstr "Phát sinh KT"
 
 #. module: account_followup
 #: field:account_followup.followup,write_uid:0
@@ -763,17 +946,17 @@ msgstr ""
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr ""
+msgstr "Theo dõi gần nhất"
 
 #. module: account_followup
 #: field:res.partner,latest_followup_date:0
 msgid "Latest Follow-up Date"
-msgstr ""
+msgstr "Ngày theo dõi gần nhất"
 
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id:0
 msgid "Latest Follow-up Level"
-msgstr ""
+msgstr "Cấp độ theo dõi gần nhất"
 
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id_without_lit:0
@@ -781,51 +964,51 @@ msgid "Latest Follow-up Level without litigation"
 msgstr ""
 
 #. module: account_followup
-#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+#: view:account_followup.stat:0
 msgid "Latest Follow-up Month"
-msgstr ""
+msgstr "Tháng theo dõi gần nhất"
 
 #. module: account_followup
 #: help:res.partner,latest_followup_date:0
 msgid "Latest date that the follow-up level of the partner was changed"
-msgstr ""
+msgstr "Ngày gần nhất mà Cấp độ theo dõi của dối tác được thay đổi"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest follow-up"
-msgstr ""
+msgstr "Theo dõi gần nhất"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
 msgid "Latest followup"
-msgstr ""
+msgstr "Theo dõi gần nhất"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
 msgid "Li."
-msgstr ""
+msgstr "Li."
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:261
 #, python-format
 msgid "Lit."
-msgstr ""
+msgstr "Lit."
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Litigation"
-msgstr ""
+msgstr "Tranh chấp"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 #: field:account_followup.followup.line,manual_action:0
 msgid "Manual Action"
-msgstr ""
+msgstr "Hành động thủ công"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_customer_followup
 msgid "Manual Follow-Ups"
-msgstr ""
+msgstr "Theo dõi thủ công"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
@@ -835,18 +1018,18 @@ msgstr "Ngày đáo hạn"
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr ""
+msgstr "Cấp độ theo dõi cao nhất"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_customer_my_followup
 #: model:ir.ui.menu,name:account_followup.menu_sale_followup
 msgid "My Follow-Ups"
-msgstr ""
+msgstr "Theo dõi của tôi"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "My Follow-ups"
-msgstr ""
+msgstr "Theo dõi của tôi"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -861,27 +1044,27 @@ msgstr ""
 #. module: account_followup
 #: field:res.partner,payment_next_action:0
 msgid "Next Action"
-msgstr "Hành động kế tiếp"
+msgstr "Hành động tiếp theo"
 
 #. module: account_followup
 #: field:res.partner,payment_next_action_date:0
 msgid "Next Action Date"
-msgstr "Ngày Hành động Kế tiếp"
+msgstr "Ngày hành động tiếp theo"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "No Responsible"
-msgstr ""
+msgstr "Không có ai phụ trách"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Not Litigation"
-msgstr ""
+msgstr "Không tranh chấp"
 
 #. module: account_followup
 #: sql_constraint:account_followup.followup:0
 msgid "Only one follow-up per company is allowed"
-msgstr ""
+msgstr "Chỉ một theo dõi trên công ty được phép"
 
 #. module: account_followup
 #: help:res.partner,payment_responsible_id:0
@@ -889,6 +1072,7 @@ msgid ""
 "Optionally you can assign a user to this field, which will make him "
 "responsible for the action."
 msgstr ""
+"Bạn có thể gán người dùng vào trường này, người phụ trách hành động này"
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
@@ -901,75 +1085,75 @@ msgstr "Đối tác"
 #. module: account_followup
 #: view:account.move.line:account_followup.account_move_line_partner_tree
 msgid "Partner entries"
-msgstr ""
+msgstr "Bút toán đối tác"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:account_followup.account_followup_stat_by_partner_search
 #: view:account_followup.stat.by.partner:account_followup.account_followup_stat_by_partner_tree
 msgid "Partner to Remind"
-msgstr ""
+msgstr "Đối tác cần nhắc nhở"
 
 #. module: account_followup
 #: field:account_followup.print,partner_ids:0
 msgid "Partners"
-msgstr "Các đối tác"
+msgstr "Đối tác"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Partners with Overdue Credits"
-msgstr ""
+msgstr "Đối tác vượt hạn mức tín dụng"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_finance_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Payment Follow-up"
-msgstr ""
+msgstr "Theo dõi thanh toán"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 msgid "Payment Follow-ups"
-msgstr ""
+msgstr "Theo dõi thanh toán"
 
 #. module: account_followup
 #: help:res.partner,payment_note:0
 msgid "Payment Note"
-msgstr ""
+msgstr "Ghi chú thanh toán"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
 msgid "Period"
-msgstr "Chu kỳ"
+msgstr "Kỳ kế toán"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_print
 msgid "Print Follow-up & Send Mail to Customers"
-msgstr ""
+msgstr "In theo dõi & Gửi thư cho Khách hàng"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Print Overdue Payments"
-msgstr ""
+msgstr "In thanh toán quá hạn"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Print overdue payments report independent of follow-up line"
-msgstr ""
+msgstr "In thanh toán quá hạn báo cáo độc lập với chi tiết theo dõi"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
 msgid "Printed Message"
-msgstr ""
+msgstr "Thông điệp đã in"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:314
 #, python-format
 msgid "Printed overdue payments report"
-msgstr ""
+msgstr "Báo cáo thanh toán quá hạn đã in"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
 msgid "Reconcile Invoices & Payments"
-msgstr ""
+msgstr "Đối soát Thanh toán & Hoá đơn"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
@@ -985,17 +1169,17 @@ msgstr "Tham chiếu"
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Responsible of credit collection"
-msgstr ""
+msgstr "Chịu trách nhiệm thu nợ"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_sending_results
 msgid "Results from the sending of the different letters and emails"
-msgstr ""
+msgstr "Kết quả từ việc gửi thư và email khác nhau"
 
 #. module: account_followup
 #: view:account_followup.followup:account_followup.view_account_followup_filter
 msgid "Search Follow-up"
-msgstr ""
+msgstr "Tìm kiếm theo dõi"
 
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
@@ -1005,55 +1189,55 @@ msgstr "Tìm kiếm Đối tác"
 #. module: account_followup
 #: field:account_followup.print,email_conf:0
 msgid "Send Email Confirmation"
-msgstr ""
+msgstr "Gửi Xác nhận bằng Email"
 
 #. module: account_followup
 #: field:account_followup.print,partner_lang:0
 msgid "Send Email in Partner Language"
-msgstr ""
+msgstr "Gửi email theo ngôn ngữ đối tác"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print
 msgid "Send Follow-Ups"
-msgstr ""
+msgstr "Gửi theo dõi"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send Letters and Emails"
-msgstr ""
+msgstr "Gửi thư và email"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:241
+#: code:addons/account_followup/wizard/account_followup_print.py:234
 #, python-format
 msgid "Send Letters and Emails: Actions Summary"
-msgstr ""
+msgstr "Gửi thư và Email: Miêu tả hành động"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Send Overdue Email"
-msgstr ""
+msgstr "Gửi email quá hạn"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 #: field:account_followup.followup.line,send_letter:0
 msgid "Send a Letter"
-msgstr ""
+msgstr "Gửi một bức thư"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 #: field:account_followup.followup.line,send_email:0
 msgid "Send an Email"
-msgstr ""
+msgstr "Gửi một email"
 
 #. module: account_followup
 #: view:account_followup.print:account_followup.view_account_followup_print
 msgid "Send emails and generate letters"
-msgstr ""
+msgstr "Gửi email và tạo thư"
 
 #. module: account_followup
 #: view:account_followup.print:account_followup.view_account_followup_print
 msgid "Send follow-ups"
-msgstr ""
+msgstr "Gửi theo dõi"
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -1068,30 +1252,32 @@ msgstr "Tóm tắt"
 #. module: account_followup
 #: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
 msgid "Summary of actions"
-msgstr ""
+msgstr "Tóm tắc hành động"
 
 #. module: account_followup
 #: field:account_followup.print,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "Test Print"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "The"
-msgstr ""
+msgstr "The"
 
 #. module: account_followup
 #: code:addons/account_followup/report/account_followup_print.py:82
 #, python-format
 msgid ""
-"The followup plan defined for the current company does not have any followup"
-" action."
+"The followup plan defined for the current company does not have any followup "
+"action."
 msgstr ""
+"Kế hoạch theo dõi được định gnghĩa cho công ty hiện tại không có bất kỳ hành "
+"động theo dõi nào."
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id:0
 msgid "The maximum follow-up level"
-msgstr ""
+msgstr "Cấp độ theo dõi cao nhất"
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id_without_lit:0
@@ -1099,6 +1285,8 @@ msgid ""
 "The maximum follow-up level without taking into account the account move "
 "lines with litigation"
 msgstr ""
+"The maximum follow-up level without taking into account the account move "
+"lines with litigation"
 
 #. module: account_followup
 #: help:account_followup.followup.line,delay:0
@@ -1107,6 +1295,9 @@ msgid ""
 "the reminder.  Could be negative if you want to send a polite alert "
 "beforehand."
 msgstr ""
+"The number of days after the due date of the invoice to wait before sending "
+"the reminder.  Could be negative if you want to send a polite alert "
+"beforehand."
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:313
@@ -1115,12 +1306,14 @@ msgid ""
 "The partner does not have any accounting entries to print in the overdue "
 "report for the current company."
 msgstr ""
+"Đối tác không có bất kỳ một bút toán nào để tin trong báo cáo quá hạn cho "
+"công ty hiện tại."
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:319
 #, python-format
 msgid "There is no followup plan defined for the current company."
-msgstr ""
+msgstr "Không có kế hoạch theo dõi được định nghĩa cho công ty hiện tại."
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
@@ -1133,11 +1326,15 @@ msgid ""
 "This action will send follow-up emails, print the letters and\n"
 "                        set the manual actions per customer, according to the follow-up levels defined."
 msgstr ""
+"Hành động này sẽ gửi email, in thư theo dõi và thiết lập hành động thủ công "
+"cho khách hàng\n"
+"                        tùy thuộc vào Cấp độ theo dõi được định nghĩa."
 
 #. module: account_followup
 #: help:account_followup.print,date:0
 msgid "This field allow you to select a forecast date to plan your follow-ups"
 msgstr ""
+"Trường này cho phép bạn lựa chọn một ngày dự kiến để lên kế hoạch theo dõi"
 
 #. module: account_followup
 #: help:res.partner,payment_next_action:0
@@ -1145,6 +1342,8 @@ msgid ""
 "This is the next action to be taken.  It will automatically be set when the "
 "partner gets a follow-up level that requires a manual action. "
 msgstr ""
+"Đây là hành động tiếp theo được thực hiện. Nó sẽ được thiết lập tự động khi "
+"đối tác nhận một Cấp độ theo dõi mà yêu cầu một hành động thủ công "
 
 #. module: account_followup
 #: help:res.partner,payment_next_action_date:0
@@ -1154,6 +1353,10 @@ msgid ""
 "action. Can be practical to set manually e.g. to see if he keeps his "
 "promises."
 msgstr ""
+"This is when the manual follow-up is needed. The date will be set to the "
+"current date when the partner gets a follow-up level that requires a manual "
+"action. Can be practical to set manually e.g. to see if he keeps his "
+"promises."
 
 #. module: account_followup
 #: view:account_followup.followup:account_followup.view_account_followup_followup_form
@@ -1161,12 +1364,24 @@ msgid ""
 "To remind customers of paying their invoices, you can\n"
 "                        define different actions depending on how severely\n"
 "                        overdue the customer is. These actions are bundled\n"
-"                        into follow-up levels that are triggered when the due\n"
+"                        into follow-up levels that are triggered when the "
+"due\n"
 "                        date of an invoice has passed a certain\n"
-"                        number of days. If there are other overdue invoices for the \n"
+"                        number of days. If there are other overdue invoices "
+"for the \n"
 "                        same customer, the actions of the most \n"
 "                        overdue invoice will be executed."
 msgstr ""
+"Để nhắc nhở khách hàng thanh toán hoá đơn, bạn có thể\n"
+"                        định nghĩa các hành động phụ thuộc vào mức độ quá "
+"hạn của khách hàng \n"
+"                        Các hành động này được đóng gói thành các Cấp độ "
+"theo dõi\n"
+"                        mà được kích hoạt khi ngày đến hạn của hoá đơn vượt "
+"quá\n"
+"                        một số ngày nhất định. Nếu có các hoá đơn quá hạn "
+"khác trên cùng một khách hàng\n"
+"                        hành động quá hạn nhất sẽ được chạy."
 
 #. module: account_followup
 #: view:account.move.line:account_followup.account_move_line_partner_tree
@@ -1181,17 +1396,17 @@ msgstr "Tổng nợ"
 #. module: account_followup
 #: view:website:account_followup.report_followup
 msgid "Total:"
-msgstr "Tổng cộng:"
+msgstr "Tổng:"
 
 #. module: account_followup
 #: help:account_followup.followup.line,send_letter:0
 msgid "When processing, it will print a letter"
-msgstr ""
+msgstr "Trong quá trình xử lý, nó sẽ in một bức thư"
 
 #. module: account_followup
 #: help:account_followup.followup.line,send_email:0
 msgid "When processing, it will send an email"
-msgstr ""
+msgstr "Trong quá trình xử lý, nó sẽ gửi một email"
 
 #. module: account_followup
 #: help:account_followup.followup.line,manual_action:0
@@ -1199,21 +1414,31 @@ msgid ""
 "When processing, it will set the manual action to be taken for that "
 "customer. "
 msgstr ""
+"Trong quá trình xử lý, Odoo sẽ thiết lập hành động thủ công cần thực hiện cho "
+"khách hàng đó."
 
 #. module: account_followup
 #: field:res.partner,payment_earliest_due_date:0
 msgid "Worst Due Date"
-msgstr ""
+msgstr "Ngày quá hạn nhất"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid ""
 "Write here the introduction in the letter,\n"
-"                            according to the level of the follow-up. You can\n"
+"                            according to the level of the follow-up. You "
+"can\n"
 "                            use the following keywords in the text. Don't\n"
-"                            forget to translate in all languages you installed\n"
+"                            forget to translate in all languages you "
+"installed\n"
 "                            using to top right icon."
 msgstr ""
+"Giới thiệu trong thư tùy thuộc vào Cấp độ theo dõi.\n"
+"                            Bạn có thể sử dụng các từ khóa sau trong nội "
+"dung\n"
+"                            Đừng quên dịch theo ngôn ngữ mà bạn đã cài đặt "
+"bằng cách\n"
+"                            sử dụng biểu tượng trên cùng bên tay phải."
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:291
@@ -1221,6 +1446,8 @@ msgstr ""
 msgid ""
 "You became responsible to do the next action for the payment follow-up of"
 msgstr ""
+"Bạn trở thành người phụ trách để thực hiện hành động tiếp theo cho việc theo "
+"dõi thanh toán của"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
@@ -1228,16 +1455,23 @@ msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
 msgstr ""
+"Miêu tả của bạn không hợp lệ, sử dụng đúng quy tắc hoặc %% nếu bạn muốn sử "
+"dụng ký tự phần trăm."
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_config_settings
+msgid "account.config.settings"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "days overdue, do the following actions:"
-msgstr ""
+msgstr "ngày quá hạn, thực hiện hành động sau:"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "e.g. Call the customer, check if it's paid, ..."
-msgstr ""
+msgstr "ví dụ: Gọi cho khách hàng, kiểm tra xem đã thanh toán chưa, ..."
 
 #. module: account_followup
 #: view:account_followup.print:account_followup.view_account_followup_print
@@ -1245,12 +1479,17 @@ msgid "or"
 msgstr "hoặc"
 
 #. module: account_followup
+#: model:ir.model,name:account_followup.model_report_account_followup_report_followup
+msgid "report.account_followup.report_followup"
+msgstr ""
+
+#. module: account_followup
 #: field:account_followup.print,company_id:0
 #: field:res.partner,unreconciled_aml_ids:0
 msgid "unknown"
-msgstr "chưa biết"
+msgstr "không biết"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "⇾ Mark as Done"
-msgstr ""
+msgstr "⇾ Đánh dấu là Hoàn thành"

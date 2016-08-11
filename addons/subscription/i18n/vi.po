@@ -1,17 +1,15 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * subscription
-# 
-# Translators:
-# fanha99 <fanha99@hotmail.com>, 2015
+#	* subscription
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-12-29 08:15+0000\n"
-"Last-Translator: fanha99 <fanha99@hotmail.com>\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
+"POT-Creation-Date: 2015-03-31 14:29+0000\n"
+"PO-Revision-Date: 2015-03-31 14:29+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,7 +20,7 @@ msgstr ""
 #: field:subscription.document,active:0
 #: field:subscription.subscription,active:0
 msgid "Active"
-msgstr "Có hiệu lực"
+msgstr "Đã kích hoạt"
 
 #. module: subscription
 #: field:subscription.document,create_uid:0
@@ -30,7 +28,7 @@ msgstr "Có hiệu lực"
 #: field:subscription.subscription,create_uid:0
 #: field:subscription.subscription.history,create_uid:0
 msgid "Created by"
-msgstr "Tạo bởi"
+msgstr "Được tạo bởi"
 
 #. module: subscription
 #: field:subscription.document,create_date:0
@@ -38,17 +36,17 @@ msgstr "Tạo bởi"
 #: field:subscription.subscription,create_date:0
 #: field:subscription.subscription.history,create_date:0
 msgid "Created on"
-msgstr "Tạo trên"
+msgstr "Được tạo vào"
 
 #. module: subscription
 #: field:subscription.subscription,cron_id:0
 msgid "Cron Job"
-msgstr ""
+msgstr "Cron Job"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
 msgid "Current Date"
-msgstr ""
+msgstr "Ngày hiện hành"
 
 #. module: subscription
 #: field:subscription.subscription.history,date:0
@@ -68,18 +66,18 @@ msgstr "Giá trị mặc định"
 #. module: subscription
 #: help:subscription.document.fields,value:0
 msgid "Default value is considered for field when new document is generated."
-msgstr ""
+msgstr "Default value is considered for field when new document is generated."
 
 #. module: subscription
 #: help:subscription.subscription,note:0
 msgid "Description or Summary of Subscription"
-msgstr ""
+msgstr "Description or Summary of Subscription"
 
 #. module: subscription
 #: view:subscription.subscription:subscription.view_subscription_form
 #: field:subscription.subscription,doc_lines:0
 msgid "Documents created"
-msgstr ""
+msgstr "Documents created"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -100,22 +98,22 @@ msgstr "Lỗi!"
 #. module: subscription
 #: selection:subscription.document.fields,value:0
 msgid "False"
-msgstr "Sai"
+msgstr ""
 
 #. module: subscription
 #: field:subscription.document.fields,field:0
 msgid "Field"
-msgstr "Trường"
+msgstr ""
 
 #. module: subscription
 #: field:subscription.document,field_ids:0
 msgid "Fields"
-msgstr "Các trường"
+msgstr "Các Trường"
 
 #. module: subscription
 #: field:subscription.subscription,date_init:0
 msgid "First Date"
-msgstr ""
+msgstr "Ngày đầu"
 
 #. module: subscription
 #: view:subscription.subscription:subscription.view_subscription_filter
@@ -123,7 +121,8 @@ msgid "Group By"
 msgstr "Nhóm theo"
 
 #. module: subscription
-#: field:subscription.document,id:0 field:subscription.document.fields,id:0
+#: field:subscription.document,id:0
+#: field:subscription.document.fields,id:0
 #: field:subscription.subscription,id:0
 #: field:subscription.subscription.history,id:0
 msgid "ID"
@@ -131,33 +130,29 @@ msgstr "ID"
 
 #. module: subscription
 #: help:subscription.document,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the "
-"subscription document without removing it."
-msgstr ""
+msgid "If the active field is set to False, it will allow you to hide the subscription document without removing it."
+msgstr "If the active field is set to False, it will allow you to hide the subscription document without removing it."
 
 #. module: subscription
 #: help:subscription.subscription,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the "
-"subscription without removing it."
-msgstr ""
+msgid "If the active field is set to False, it will allow you to hide the subscription without removing it."
+msgstr "If the active field is set to False, it will allow you to hide the subscription without removing it."
 
 #. module: subscription
 #: view:subscription.subscription:subscription.view_subscription_form
 #: field:subscription.subscription,notes:0
 msgid "Internal Notes"
-msgstr "Lưu ý nội bộ"
+msgstr "Ghi chú nội bộ"
 
 #. module: subscription
 #: field:subscription.subscription,interval_number:0
 msgid "Interval Qty"
-msgstr ""
+msgstr "Số Khoảng thời gian"
 
 #. module: subscription
 #: field:subscription.subscription,interval_type:0
 msgid "Interval Unit"
-msgstr "Đơn vị nội bộ"
+msgstr "Đơn vị Khoảng thời gian"
 
 #. module: subscription
 #: field:subscription.document,write_uid:0
@@ -181,7 +176,8 @@ msgid "Months"
 msgstr "Tháng"
 
 #. module: subscription
-#: field:subscription.document,name:0 field:subscription.subscription,name:0
+#: field:subscription.document,name:0
+#: field:subscription.subscription,name:0
 msgid "Name"
 msgstr "Tên"
 
@@ -189,12 +185,12 @@ msgstr "Tên"
 #: view:subscription.subscription:subscription.view_subscription_form
 #: field:subscription.subscription,note:0
 msgid "Notes"
-msgstr "Các ghi chú"
+msgstr "Ghi chú"
 
 #. module: subscription
 #: field:subscription.subscription,exec_init:0
 msgid "Number of documents"
-msgstr ""
+msgstr "Số lượng tài liệu"
 
 #. module: subscription
 #: field:subscription.document,model:0
@@ -210,10 +206,10 @@ msgstr "Đối tác"
 #. module: subscription
 #: code:addons/subscription/subscription.py:118
 #, python-format
-msgid ""
-"Please provide another source document.\n"
+msgid "Please provide another source document.\n"
 "This one does not exist!"
-msgstr ""
+msgstr "Please provide another source document.\n"
+"This one does not exist!"
 
 #. module: subscription
 #: view:subscription.subscription:subscription.view_subscription_form
@@ -230,13 +226,13 @@ msgstr "Tài liệu định kỳ"
 #: model:ir.actions.act_window,name:subscription.action_document_form
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
 msgid "Recurring Types"
-msgstr ""
+msgstr "Kiểu định kỳ"
 
 #. module: subscription
 #: view:subscription.subscription:subscription.view_subscription_filter
 #: selection:subscription.subscription,state:0
 msgid "Running"
-msgstr "Đang chạy"
+msgstr "Đang hoạt động"
 
 #. module: subscription
 #: help:subscription.subscription,cron_id:0
@@ -257,18 +253,18 @@ msgstr "Đặt về Dự thảo"
 #: field:subscription.subscription,doc_source:0
 #: field:subscription.subscription.history,document_id:0
 msgid "Source Document"
-msgstr "Tài liệu gốc"
+msgstr "Tài liệu Nguồn"
 
 #. module: subscription
 #: view:subscription.subscription:subscription.view_subscription_filter
 #: field:subscription.subscription,state:0
 msgid "Status"
-msgstr "Trạng thái"
+msgstr "Tình trạng"
 
 #. module: subscription
 #: view:subscription.subscription:subscription.view_subscription_form
 msgid "Stop"
-msgstr ""
+msgstr "Dừng"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription
@@ -319,13 +315,12 @@ msgstr ""
 #: view:subscription.subscription:subscription.view_subscription_filter
 #: field:subscription.subscription,user_id:0
 msgid "User"
-msgstr "Người sử dụng"
+msgstr "Người dùng"
 
 #. module: subscription
 #: help:subscription.subscription,doc_source:0
-msgid ""
-"User can choose the source document on which he wants to create documents"
-msgstr ""
+msgid "User can choose the source document on which he wants to create documents"
+msgstr "Người dùng có thể chọn lựa tài liệu nguồn để từ đó tạo ra một tài liệu mới"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -343,3 +338,4 @@ msgstr ""
 #, python-format
 msgid "You cannot delete an active subscription!"
 msgstr ""
+

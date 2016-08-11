@@ -1,16 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * purchase_requisition
-# 
-# Translators:
+# 	* purchase_requisition
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-12-29 08:13+0000\n"
-"Last-Translator: fanha99 <fanha99@hotmail.com>\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
+"POT-Creation-Date: 2014-09-10 08:48+0000\n"
+"PO-Revision-Date: 2014-09-10 16:12+0700\n"
+"Last-Translator: Leo Tran <leo.tran@tvtmarine.com>\n"
+"Language-Team: T.V.T Marine Automation (aka TVTMA) <support@ma.tvtmarine."
+"com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -30,7 +30,20 @@ msgid ""
 "            compare them and you can validate some and cancel others.\n"
 "          </p>\n"
 "        "
-msgstr "<p class=\"oe_view_nocontent_create\">\n            Nhấp chuột để bắt đầu một tiến trình đấu thầu mới. \n          </p><p>\n            Một cuộc đấu thầu là một thủ tục để tạo ra chào hàng cạnh tranh\n            từ nhiều nhà thầu khác nhau. Trong một cuộc đấu thầu, bạn có thể ghi nhận\n            sản phẩm mà mình cần mua và sẽ xuất hiện trong quá trình tạo RFQ cho\n            nhà cung cấp. Kho các nhà thầu đăng ký, bạn có thể xem xét và so sánh chúng\n            và bạn có thể xác nhận một vài cái và hủy bỏ một vài cái.\n          </p>\n        "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Bấm để bắt đầu một tiến trình đấu thầu mới. \n"
+"          </p><p>\n"
+"            Một cuộc đấu thầu là một thủ tục để tạo ra chào hàng cạnh tranh\n"
+"            từ nhiều nhà thầu khác nhau. Trong một cuộc đấu thầu, bạn có thể "
+"ghi nhận\n"
+"            sản phẩm mà mình cần mua và sẽ xuất hiện trong quá trình tạo RFQ "
+"cho\n"
+"            nhà cung cấp. Kho các nhà thầu đăng ký, bạn có thể xem xét và so "
+"sánh chúng\n"
+"            và bạn có thể xác nhận một vài cái và hủy bỏ một vài cái.\n"
+"          </p>\n"
+"        "
 
 #. module: purchase_requisition
 #: field:purchase.requisition,account_analytic_id:0
@@ -69,6 +82,7 @@ msgid "Bid Submission Deadline"
 msgstr "Hạn chào thầu"
 
 #. module: purchase_requisition
+#: view:False:0
 #: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
 #: field:product.template,purchase_requisition:0
 #: field:purchase.order,requisition_id:0
@@ -76,7 +90,6 @@ msgstr "Hạn chào thầu"
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_tree
 #: field:purchase.requisition.line,requisition_id:0
-#: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Call for Bids"
 msgstr "Mời thầu"
 
@@ -88,12 +101,12 @@ msgstr "Tham chiếu mời thầu"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Bids in negotiation"
-msgstr ""
+msgstr "Mời thầu đang đàm phán"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Bids where bids are closed"
-msgstr "Mời thầu những hồ sơ thầu đã đóng"
+msgstr "Mời thầu mà đã đóng"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
@@ -137,13 +150,13 @@ msgstr "Đã hủy"
 #, python-format
 msgid ""
 "Cancelled by the call for bids associated to this request for quotation."
-msgstr "Bị hủy bởi một cuộc mời thầu liên quan tới yêu cầu chào giá này."
+msgstr "Bị hủy bởi một cuộc mời thầu liên quan tới yêu cầu báo giá này."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:85
 #, python-format
 msgid "Cancelled by the tender associated to this quotation."
-msgstr "Bị hủy bởi một cuộc mời thầu liên quan tới yêu cầu chào giá này."
+msgstr "Bị hủy bởi một cuộc mời thầu liên quan tới yêu cầu báo giá này."
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_bid_line_qty
@@ -161,7 +174,8 @@ msgstr "Thay đổi số lượng"
 msgid ""
 "Check this box to generate Call for Bids instead of generating requests for "
 "quotation from procurement."
-msgstr "Đánh dấu để tạo Mời thầu thay vì tạo yêu cầu chào giá từ chức năng mua sắm."
+msgstr ""
+"Đánh dấu để tạo Mời thầu thay vì tạo yêu cầu báo giá từ chức năng Mua sắm / Cung ứng."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
@@ -214,9 +228,10 @@ msgstr "Đã xác nhận"
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
 msgid "Create Request for Quotation"
-msgstr "Tạo Yêu cầu chào giá"
+msgstr "Tạo Yêu cầu báo giá"
 
 #. module: purchase_requisition
+#: view:False:0
 #: field:bid.line.qty,create_uid:0 field:purchase.requisition,create_uid:0
 #: field:purchase.requisition.line,create_uid:0
 #: field:purchase.requisition.partner,create_uid:0
@@ -228,7 +243,7 @@ msgstr "Tạo bởi"
 #: field:purchase.requisition.line,create_date:0
 #: field:purchase.requisition.partner,create_date:0
 msgid "Created on"
-msgstr "Tạo trên"
+msgstr "Tạo vào"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
@@ -320,13 +335,6 @@ msgid "Last Updated by"
 msgstr "Cập nhật lần cuối bởi"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,write_date:0 field:purchase.requisition,write_date:0
-#: field:purchase.requisition.line,write_date:0
-#: field:purchase.requisition.partner,write_date:0
-msgid "Last Updated on"
-msgstr "Cập nhật lần cuối"
-
-#. module: purchase_requisition
 #: field:procurement.order,requisition_id:0
 msgid "Latest Requisition"
 msgstr "Yêu cầu gần nhất"
@@ -349,7 +357,7 @@ msgstr "Lịch sử thông điệp và liên lạc"
 #. module: purchase_requisition
 #: field:purchase.requisition,multiple_rfq_per_supplier:0
 msgid "Multiple RFQ per supplier"
-msgstr "Nhiều Yêu cầu chào giá trên nhà cung cấp"
+msgstr "Nhiều Yêu cầu báo giá trên nhà cung cấp"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
@@ -374,7 +382,7 @@ msgstr "Ngày đặt hàng"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Ordering Date"
-msgstr ""
+msgstr "Ngày đặt hàng"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -384,13 +392,13 @@ msgstr "PO được tạo"
 #. module: purchase_requisition
 #: field:purchase.requisition,picking_type_id:0
 msgid "Picking Type"
-msgstr "Loại giao nhận"
+msgstr "Kiểu giao nhận"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_procurement_order
 #: field:purchase.requisition,procurement_id:0
 msgid "Procurement"
-msgstr ""
+msgstr "Mua sắm / Cung ứng"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_id:0
@@ -400,17 +408,17 @@ msgstr "Sản phẩm"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Mẫu sản phẩm"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_uom_id:0
 msgid "Product Unit of Measure"
-msgstr "Đơn vị đo lường sản phẩm"
+msgstr "Đơn vị đo lường"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Product UoM"
-msgstr "Đơn vị đo lường sản phẩm"
+msgstr "Đơn vị đo lường"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -517,17 +525,17 @@ msgstr "Tham chiếu"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Request a Quotation"
-msgstr "Yêu cầu chào giá"
+msgstr "Yêu cầu báo giá"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Requests for Quotation"
-msgstr "Yêu cầu chào giá"
+msgstr "Yêu cầu báo giá"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Requests for Quotation Details"
-msgstr "Chi tiết Yêu cầu chào giá"
+msgstr "Chi tiết Yêu cầu báo giá"
 
 #. module: purchase_requisition
 #: view:purchase.order:purchase_requisition.purchase_order_search_inherit
@@ -582,7 +590,11 @@ msgstr "Chỉ chọn một RFQ (độc quyền)"
 msgid ""
 "Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
 "Select multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
-msgstr "Chỉ chọn một RFQ (độc quyền):  Khi xác nhận một đơn hàng, nó sẽ hủy bỏ các đơn hàng còn lại.\nChọn nhiều RFQ:  Nó cho phép có nhiều đơn hàng. Khi xác nhận đơn hàng, nó sẽ không hủy các đơn hàng còn lại"
+msgstr ""
+"Chỉ chọn một RFQ (độc quyền):  Khi xác nhận một đơn hàng, nó sẽ hủy bỏ các "
+"đơn hàng còn lại.\n"
+"Chọn nhiều RFQ:  Nó cho phép có nhiều đơn hàng. Khi xác nhận đơn hàng, nó sẽ "
+"không hủy các đơn hàng còn lại"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
@@ -610,6 +622,11 @@ msgid "Source:"
 msgstr "Nguồn:"
 
 #. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Start Month"
+msgstr "Tháng bắt đầu"
+
+#. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 #: field:purchase.requisition,state:0
 msgid "Status"
@@ -632,7 +649,9 @@ msgstr "Nhà cung cấp"
 msgid ""
 "Technical field for not loosing the initial information about the quantity "
 "proposed in the bid"
-msgstr "Technical field for not loosing the initial information about the quantity proposed in the bid"
+msgstr ""
+"Technical field for not loosing the initial information about the quantity "
+"proposed in the bid"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -667,12 +686,12 @@ msgstr "Người dùng"
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "View Products Lines"
-msgstr "View Products Lines"
+msgstr "Xem các dòng sản phẩm"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "View RFQs/Bids"
-msgstr "View RFQs/Bids"
+msgstr "Xem RFQs/Bids"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,warehouse_id:0
@@ -688,16 +707,6 @@ msgid "Warning!"
 msgstr "Cảnh báo!"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,website_message_ids:0
-msgid "Website Messages"
-msgstr "Thông điệp Website"
-
-#. module: purchase_requisition
-#: help:purchase.requisition,website_message_ids:0
-msgid "Website communication history"
-msgstr "Lịch sử thông tin liên lạc website"
-
-#. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:240
 #, python-format
 msgid "You have already generate the purchase order(s)."
@@ -709,7 +718,9 @@ msgstr "Bạn đã tạo đơn hàng."
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
-msgstr "Bạn đã có một đơn hàng %s cho đối tác này, bạn phải hủy đơn hàng này để tạo một yêu cầu chào giá mới."
+msgstr ""
+"Bạn đã có một đơn hàng %s cho đối tác này, bạn phải hủy đơn hàng này để tạo "
+"một yêu cầu báo giá mới."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:249
@@ -720,12 +731,12 @@ msgstr "You have no line selected for buying."
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. OP0025"
-msgstr "e.g. OP0025"
+msgstr "vd: OP0025"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
-msgstr "e.g. PO0025"
+msgstr "vd: PO0025"
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty

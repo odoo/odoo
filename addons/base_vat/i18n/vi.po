@@ -39,13 +39,13 @@ msgstr "Lỗi!"
 msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
-msgstr ""
+msgstr "Nếu đánh dấu kiểm, Mã số thuế GTGT của đối tác sẽ được thẩm định tự động thông của dịch vụ VIES của EU. Cần cẩn thận vì chức năng này chỉ có tác dụng với các đối tác ở EU."
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:130
 #, python-format
 msgid "Importing VAT Number [%s] is not valid !"
-msgstr ""
+msgstr "Mã số thuế [%s] không hợp lệ!"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -59,6 +59,8 @@ msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
+"Mã số thuế GTGT [%s] của đối tác [%s] dường như không hợp lệ. \n"
+"Lưu ý: định dạng được mong đợi là %s"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:152
@@ -67,13 +69,15 @@ msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
+"Mã số thuế GTGT [%s] của đối tác [%s] hoặc không hợp lệ khi thẩm định với dịch vụ VIES VAT "
+"hoặc không đúng định dạng mong đợi (%s)"
 
 #. module: base_vat
 #: field:res.company,vat_check_vies:0
 msgid "VIES VAT Check"
-msgstr ""
+msgstr "Kiểm tra Mã VAT với VIES"
 
 #. module: base_vat
 #: view:res.partner:base_vat.view_partner_form
 msgid "e.g. BE0477472701"
-msgstr ""
+msgstr "vd: BE0477472701"

@@ -1,16 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * stock_landed_costs
-# 
-# Translators:
+# 	* stock_landed_costs
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-12-29 08:13+0000\n"
-"Last-Translator: fanha99 <fanha99@hotmail.com>\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
+"POT-Creation-Date: 2014-09-11 10:29+0000\n"
+"PO-Revision-Date: 2014-09-11 17:38+0700\n"
+"Last-Translator: Leo Tran <leo.tran@tvtmarine.com>\n"
+"Language-Team: T.V.T Marine Automation (aka TVTMA) <support@ma.tvtmarine."
+"com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -31,7 +31,11 @@ msgid ""
 "                    Click to create a new landed cost.\n"
 "                </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    Nhấp chuột để tạo mới một landed cost.\n                </p>\n            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Bấm để tạo mới một landed cost.\n"
+"                </p>\n"
+"            "
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
@@ -40,7 +44,11 @@ msgid ""
 "                Click to define a new kind of landed cost.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Nhấp chuột để tạo mới kiểu landed cost.\n              </p>\n            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Bấm để tạo mới kiểu landed cost.\n"
+"              </p>\n"
+"            "
 
 #. module: stock_landed_costs
 #: field:stock.landed.cost.lines,account_id:0
@@ -55,7 +63,7 @@ msgstr "Sổ nhật ký"
 #. module: stock_landed_costs
 #: field:stock.valuation.adjustment.lines,additional_landed_cost:0
 msgid "Additional Landed Cost"
-msgstr ""
+msgstr "Landed Cost Thêm"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -84,7 +92,7 @@ msgstr "Theo khối lượng"
 #. module: stock_landed_costs
 #: field:product.template,landed_cost_ok:0
 msgid "Can constitute a landed cost"
-msgstr ""
+msgstr "Có thể coi là landed cost"
 
 #. module: stock_landed_costs
 #: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_form
@@ -100,11 +108,6 @@ msgstr "Đã hủy"
 #: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_form
 msgid "Compute"
 msgstr "Tính toán"
-
-#. module: stock_landed_costs
-#: field:stock.landed.cost.lines,price_unit:0
-msgid "Cost"
-msgstr "Giá"
 
 #. module: stock_landed_costs
 #: field:stock.valuation.adjustment.lines,cost_line_id:0
@@ -129,7 +132,7 @@ msgstr "Tạo bởi"
 #: field:stock.landed.cost.lines,create_date:0
 #: field:stock.valuation.adjustment.lines,create_date:0
 msgid "Created on"
-msgstr "Tạo trên"
+msgstr "Tạo vào"
 
 #. module: stock_landed_costs
 #: field:stock.landed.cost,date:0
@@ -160,6 +163,11 @@ msgid "Draft"
 msgstr "Dự thảo"
 
 #. module: stock_landed_costs
+#: selection:stock.valuation.adjustment.lines,flag:0
+msgid "Duplicate"
+msgstr "Sao chép"
+
+#. module: stock_landed_costs
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "Equal"
@@ -177,6 +185,11 @@ msgstr "Lỗi!"
 #: field:stock.valuation.adjustment.lines,final_cost:0
 msgid "Final Cost"
 msgstr "Chi phí cuối cùng"
+
+#. module: stock_landed_costs
+#: field:stock.valuation.adjustment.lines,flag:0
+msgid "Flag"
+msgstr ""
 
 #. module: stock_landed_costs
 #: field:stock.landed.cost,message_follower_ids:0
@@ -204,12 +217,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
-
-#. module: stock_landed_costs
-#: field:stock.landed.cost,id:0 field:stock.landed.cost.lines,id:0
-#: field:stock.valuation.adjustment.lines,id:0
-msgid "ID"
-msgstr "ID"
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
 
 #. module: stock_landed_costs
 #: help:stock.landed.cost,message_unread:0
@@ -245,7 +254,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
 msgid "Landed Cost Type"
-msgstr ""
+msgstr "Kiểu landed cost"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
@@ -261,7 +270,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
-msgstr ""
+msgstr "Landed cost được xác nhận"
 
 #. module: stock_landed_costs
 #: field:stock.landed.cost,message_last_post:0
@@ -304,12 +313,17 @@ msgid "Name"
 msgstr "Tên"
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost,picking_ids:0
-msgid "Pickings"
-msgstr ""
+#: selection:stock.valuation.adjustment.lines,flag:0
+msgid "Original"
+msgstr "Nguồn gốc"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:112
+#: field:stock.landed.cost,picking_ids:0
+msgid "Pickings"
+msgstr "Giao nhận"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/stock_landed_costs.py:122
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr "Vui lòng cấu hình tài khoản chi phí kho cho sản phẩm: %s."
@@ -358,19 +372,19 @@ msgid "State"
 msgstr "Trạng thái"
 
 #. module: stock_landed_costs
-#: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_search
+#: view:stock.landed.cost:0
 msgid "Status"
 msgstr "Tình trạng"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
 msgid "Stock Landed Cost"
-msgstr ""
+msgstr "Phí nhập kho"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Lines"
-msgstr ""
+msgstr "Chi tiết phí nhập kho"
 
 #. module: stock_landed_costs
 #: field:stock.valuation.adjustment.lines,move_id:0
@@ -380,7 +394,7 @@ msgstr "Dịch chuyển kho"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Stock Valuation Adjustment Lines"
-msgstr ""
+msgstr "Stock Valuation Adjustment Lines"
 
 #. module: stock_landed_costs
 #: field:stock.landed.cost,message_summary:0
@@ -396,11 +410,19 @@ msgid ""
 " time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
 msgstr ""
+"Picking được chọn không chứa bất cứ dịch chuyển nào mà có thể tương tác bởi landed cost."
+" Landed cost chỉ khả dụng đối với các sản phẩm được cấu hình định giá tự động (tạo bút toán kế toán tự động khi xuất/nhập kho)"
+" sử dụng phương thức giá vốn 'Giá Thực tế'."
 
 #. module: stock_landed_costs
 #: field:stock.landed.cost,amount_total:0
 msgid "Total"
 msgstr "Tổng"
+
+#. module: stock_landed_costs
+#: field:stock.landed.cost.lines,price_unit:0
+msgid "Unit Price"
+msgstr "Đơn giá"
 
 #. module: stock_landed_costs
 #: field:stock.landed.cost,message_unread:0
@@ -416,7 +438,7 @@ msgstr "Xác nhận"
 #: view:stock.landed.cost:stock_landed_costs.view_stock_landed_cost_form
 #: field:stock.landed.cost,valuation_adjustment_lines:0
 msgid "Valuation Adjustments"
-msgstr ""
+msgstr "Điều chỉnh định giá"
 
 #. module: stock_landed_costs
 #: field:stock.valuation.adjustment.lines,volume:0
@@ -442,7 +464,7 @@ msgstr "Trọng lượng"
 #: code:addons/stock_landed_costs/stock_landed_costs.py:192
 #, python-format
 msgid "You cannot validate a landed cost which has no valid valuation lines."
-msgstr ""
+msgstr "Bạn không thể xác nhận một landed cost mà không có dòng nào."
 
 #. module: stock_landed_costs
 #: view:product.product:stock_landed_costs.view_stock_landed_cost_type_form

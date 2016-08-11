@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-12-29 08:13+0000\n"
+"PO-Revision-Date: 2015-07-17 08:07+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
 "MIME-Version: 1.0\n"
@@ -30,27 +30,36 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Bấm để Xuất/Nhập theo lô/đợt (Picking Wave). \n"
+"              </p><p>\n"
+"                Mục đích của picking waves là để nhóm các hoạt động xuất/nhập kho mà có thể \n"
+"                (cần phải) được thực hiện cùng nhau để tăng hiệu quả.\n"
+"                It may also be useful to assign jobs (one person = one wave) or\n"
+"                help the timing management of operations (tasks to be done at 1pm).\n"
+"              </p>\n"
+"            "
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
 msgid "Add pickings to a picking wave"
-msgstr ""
+msgstr "Thêm Xuất/Nhập vào Đợt này"
 
 #. module: stock_picking_wave
 #: view:stock.picking.to.wave:stock_picking_wave.picking_to_wave_form
 msgid "Add pickings to wave"
-msgstr ""
+msgstr "Thêm Xuất/Nhập vào Đợt này"
 
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,name:stock_picking_wave.action_picking_to_wave
 #: model:ir.actions.act_window,name:stock_picking_wave.picking_to_wave_act
 msgid "Add to Wave"
-msgstr ""
+msgstr "Thêm vào Đợt"
 
 #. module: stock_picking_wave
 #: view:stock.picking.to.wave:stock_picking_wave.picking_to_wave_form
 msgid "Add to wave"
-msgstr ""
+msgstr "Thêm vào Đợt"
 
 #. module: stock_picking_wave
 #: view:stock.picking.to.wave:stock_picking_wave.picking_to_wave_form
@@ -88,7 +97,7 @@ msgstr "Tạo bởi"
 #: field:stock.picking.to.wave,create_date:0
 #: field:stock.picking.wave,create_date:0
 msgid "Created on"
-msgstr "Tạo trên"
+msgstr "Tạo vào"
 
 #. module: stock_picking_wave
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
@@ -99,7 +108,7 @@ msgstr "Hoàn tất"
 #. module: stock_picking_wave
 #: selection:stock.picking.wave,state:0
 msgid "Draft"
-msgstr "Nháp"
+msgstr "Dự thảo"
 
 #. module: stock_picking_wave
 #: model:product.category,name:stock_picking_wave.product_category_dry
@@ -115,7 +124,7 @@ msgstr "Lỗi!"
 #. module: stock_picking_wave
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
 msgid "Force availability"
-msgstr ""
+msgstr "Cưỡng bức khả dụng"
 
 #. module: stock_picking_wave
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
@@ -179,24 +188,24 @@ msgstr ""
 #: code:addons/stock_picking_wave/stock_picking_wave.py:40
 #, python-format
 msgid "Nothing to print."
-msgstr ""
+msgstr "Không có gì để in."
 
 #. module: stock_picking_wave
 #: help:stock.picking.wave,user_id:0
 msgid "Person responsible for this wave"
-msgstr ""
+msgstr "Cá nhận chịu trách nhiệm cho đợt xuất/nhập này."
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking
 msgid "Picking List"
-msgstr "Bảng kê hàng xuất kho"
+msgstr "Bảng kê hàng hóa"
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: field:stock.picking,wave_id:0 field:stock.picking.to.wave,wave_id:0
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
 msgid "Picking Wave"
-msgstr ""
+msgstr "Xuất/Nhật theo Đợt"
 
 #. module: stock_picking_wave
 #: field:stock.picking.wave,name:0
@@ -207,12 +216,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock_picking_wave.action_picking_wave
 #: model:ir.ui.menu,name:stock_picking_wave.menu_action_picking_wave
 msgid "Picking Waves"
-msgstr ""
+msgstr "Xuất/Nhật theo Đợt"
 
 #. module: stock_picking_wave
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
 msgid "Picking Waves not finished"
-msgstr ""
+msgstr "Xuất/Nhật theo Đợt chưa hoàn thành"
 
 #. module: stock_picking_wave
 #: help:stock.picking,wave_id:0
@@ -223,12 +232,12 @@ msgstr ""
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
 #: field:stock.picking.wave,picking_ids:0
 msgid "Pickings"
-msgstr "Pickings"
+msgstr "Giao nhận"
 
 #. module: stock_picking_wave
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
 msgid "Print all pickings"
-msgstr ""
+msgstr "In tất cả phiếu xuất/nhập kho"
 
 #. module: stock_picking_wave
 #: field:stock.picking.wave,user_id:0
@@ -238,7 +247,7 @@ msgstr "Chịu trách nhiệm"
 #. module: stock_picking_wave
 #: selection:stock.picking.wave,state:0
 msgid "Running"
-msgstr "Running"
+msgstr "Đang chạy"
 
 #. module: stock_picking_wave
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter

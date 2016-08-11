@@ -77,5 +77,6 @@ Main Features
         'static/src/xml/announcement.xml',
         'static/src/xml/suggestions.xml',
     ],
+    'auto_install': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
