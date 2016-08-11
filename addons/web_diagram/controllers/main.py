@@ -36,10 +36,9 @@ class DiagramView(http.Controller):
                     shape_colour, shape_color_state = shape_spec.split(':')
                     shapes[shape_colour] = shape_color_state
 
-        ir_view = req.session.model('ir.ui.view')
-        graphs = ir_view.graph_get(
-            int(id), model, node, connector, src_node, des_node, label,
-            (140, 180), req.session.context)
+        ir_view = http.request.env['ir.ui.view']
+        graphs = ir_view.graph_get(int(id), model, node, connector, src_node,
+                                   des_node, label, (140, 180))
         nodes = graphs['nodes']
         transitions = graphs['transitions']
         isolate_nodes = {}
@@ -59,10 +58,9 @@ class DiagramView(http.Controller):
                 's_id': transitions[tr][0],
                 'd_id': transitions[tr][1]
             })
-        connector_tr = req.session.model(connector)
-        connector_ids = connector_tr.search([('id', 'in', list_tr)], context=req.session.context)
 
-        data_connectors =connector_tr.read(connector_ids, connector_fields, req.session.context)
+        connector_model = http.request.env[connector]
+        data_connectors = connector_model.search([('id', 'in', list_tr)]).read(connector_fields)
 
         for tr in data_connectors:
             transition_id = str(tr['id'])
@@ -78,12 +76,11 @@ class DiagramView(http.Controller):
             for i, fld in enumerate(connector_fields):
                 t['options'][connector_fields_string[i]] = tr[fld]
 
-        fields = req.session.model('ir.model.fields')
-        field_ids = fields.search([('model', '=', model), ('relation', '=', node)], context=req.session.context)
-        field_data = fields.read(field_ids, ['relation_field'], req.session.context)
-        node_act = req.session.model(node)
-        search_acts = node_act.search([(field_data[0]['relation_field'], '=', id)], context=req.session.context)
-        data_acts = node_act.read(search_acts, invisible_node_fields + visible_node_fields, req.session.context)
+        fields = http.request.env['ir.model.fields']
+        field = fields.search([('model', '=', model), ('relation', '=', node)])
+        node_act = http.request.env[node]
+        search_acts = node_act.search([(field.relation_field, '=', id)])
+        data_acts = search_acts.read(invisible_node_fields + visible_node_fields)
 
         for act in data_acts:
             n = nodes.get(str(act['id']))
@@ -109,7 +106,7 @@ class DiagramView(http.Controller):
             for i, fld in enumerate(visible_node_fields):
                 n['options'][node_fields_string[i]] = act[fld]
 
-        _id, name = req.session.model(model).name_get([id], req.session.context)[0]
+        _id, name = http.request.env[model].browse([id]).name_get()[0]
         return dict(nodes=nodes,
                     conn=connectors,
                     name=name,

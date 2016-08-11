@@ -29,19 +29,18 @@ class TestHasGroup(TransactionCase):
             'groups_id': [(4, group0, 0)]
         })
 
-    def test_old_api(self):
-        Users = self.registry['res.users']
-
+    def test_env_uid(self):
+        Users = self.env['res.users'].sudo(self.test_user)
         self.assertTrue(
-            Users.has_group(self.cr, self.test_user.id, self.group0),
+            Users.has_group(self.group0),
             "the test user should belong to group0"
         )
         self.assertFalse(
-            Users.has_group(self.cr, self.test_user.id, self.group1),
+            Users.has_group(self.group1),
             "the test user should *not* belong to group1"
         )
 
-    def test_new_api(self):
+    def test_record(self):
         self.assertTrue(
             self.test_user.has_group(self.group0),
             "the test user should belong to group0",

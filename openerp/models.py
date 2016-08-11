@@ -44,7 +44,6 @@ import openerp
 from . import SUPERUSER_ID
 from . import api
 from . import tools
-from .api import Environment
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_property, ormcache, Collector, LastOrderedSet, OrderedSet
@@ -1086,14 +1085,12 @@ class BaseModel(object):
 
         # old-style constraint methods
         trans = self.env['ir.translation']
-        cr, uid, context = self.env.args
-        ids = self.ids
         errors = []
-        for fun, msg, names in self._constraints:
+        for func, msg, names in self._constraints:
             try:
-                # validation must be context-independent; call ``fun`` without context
+                # validation must be context-independent; call ``func`` without context
                 valid = names and not (set(names) & field_names)
-                valid = valid or fun(self._model, cr, uid, ids)
+                valid = valid or func(self)
                 extra_error = None
             except Exception, e:
                 _logger.debug('Exception while validating constraint', exc_info=True)
@@ -1101,7 +1098,7 @@ class BaseModel(object):
                 extra_error = tools.ustr(e)
             if not valid:
                 if callable(msg):
-                    res_msg = msg(self._model, cr, uid, ids, context=context)
+                    res_msg = msg(self)
                     if isinstance(res_msg, tuple):
                         template, params = res_msg
                         res_msg = template % params
@@ -4789,13 +4786,6 @@ class BaseModel(object):
         prefetch[cls._name].update(ids)
         return records
 
-    @api.v7
-    def browse(self, cr, uid, arg=None, context=None):
-        ids = _normalize_ids(arg)
-        #assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
-        return self._browse(ids, Environment(cr, uid, context or {}))
-
-    @api.v8
     def browse(self, arg=None, prefetch=None):
         """ browse([ids]) -> records
 
@@ -5411,12 +5401,8 @@ class BaseModel(object):
             field_vars = RawRecord(self)
             params = safe_eval("[%s]" % params, global_vars, field_vars, nocopy=True)
 
-            # call onchange method with context when possible
-            args = (self._cr, self._uid, self._origin.ids) + tuple(params)
-            try:
-                method_res = getattr(self._model, method)(*args, context=self._context)
-            except TypeError:
-                method_res = getattr(self._model, method)(*args)
+            # invoke onchange method
+            method_res = getattr(self._origin, method)(*params)
             process(method_res)
 
     @api.multi

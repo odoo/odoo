@@ -1639,9 +1639,6 @@ class Selection(Field):
     }
 
     def __init__(self, selection=Default, string=Default, **kwargs):
-        if callable(selection):
-            from openerp import api
-            selection = api.expected(api.model, selection)
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
     @property
