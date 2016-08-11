@@ -292,11 +292,15 @@ class website_slides(http.Controller):
 
     @http.route(['/slides/add_slide'], type='json', auth='user', methods=['POST'], website=True)
     def create_slide(self, *args, **post):
-        payload = request.httprequest.content_length
         # payload is total request content size so it's not exact size of file.
         # already add client validation this is for double check if client alter.
-        if (payload / 1024 / 1024 > 15):
-            return {'error': _('File is too big. File size cannot exceed 15MB')}
+        max_payload = self.max_size()
+        if request.httprequest.content_length / 1024 / 1024 > max_payload:
+            return {
+                'error':
+                    _('File is too big. File size cannot exceed %dMiB.') %
+                    max_payload,
+            }
 
         values = dict((fname, post[fname]) for fname in [
             'name', 'url', 'tag_ids', 'slide_type', 'channel_id',
@@ -320,6 +324,18 @@ class website_slides(http.Controller):
             _logger.error(e)
             return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e.message}
         return {'url': "/slides/slide/%s" % (slide_id.id)}
+
+    @http.route("/slides/max_size", type="json", auth="public", website=True)
+    def max_size(self):
+        """Let the client to know the max allowed size for slides.
+
+        :return float:
+            Maximum request payload allowed, in MiB.
+        """
+        return float(
+            request.env["ir.config_parameter"].sudo().get_param(
+                "website_slides.max_payload",
+                15))
 
     # --------------------------------------------------
     # EMBED IN THIRD PARTY WEBSITES
