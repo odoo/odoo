@@ -98,7 +98,7 @@
                             </div>
                         </div>
                     </group>
-                    <group string="Accounting &amp; Finance">
+                    <group string="Accounting &amp; Finance" name="accounting">
                         <label for="id" string="Options"/>
                         <div name="account_config">
                             <div>
@@ -258,6 +258,19 @@
                     <group name="analytic_account_purchase" invisible="1">
                         <label for="id" string="Purchase"/>
                     </group>
+                    <group name="followup" position="before">
+                        <field name="use_anglo_saxon"/>
+                        <field name="bank_account_code_prefix" groups="base.group_no_one"/>
+                        <field name="cash_account_code_prefix" groups="base.group_no_one"/>
+                        <field name="code_digits" groups="base.group_no_one"/>
+                        <field name="tax_calculation_rounding_method" groups="base.group_no_one"/>
+                    </group>
+                    <group string="Overdue Payments" name="followup">
+                        <field name="overdue_msg"/>
+                    </group>
+                    <div>
+                        <span>(*) This configuration value is related to the company you're logged in.</span>
+                    </div>
                 </form>
             </field>
         </record>

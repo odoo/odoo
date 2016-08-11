@@ -140,22 +140,4 @@
             </field>
         </record>
 
-        <!--
-            Company inheritancy
-        -->
-
-        <record id="hr_timesheet_sheet_company" model="ir.ui.view">
-            <field name="name">res.company.sheet</field>
-            <field name="model">res.company</field>
-            <field name="inherit_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_company"/>
-            <field name="arch" type="xml">
-                <div class="o_hr_timesheet_sheet_timesheet_range" position="after">
-                    <div>
-                        <label for="timesheet_max_difference"/>
-                        <field name="timesheet_max_difference" required="1" class="oe_inline"/>
-                    </div>
-                </div>
-            </field>
-        </record>
-
 </odoo>

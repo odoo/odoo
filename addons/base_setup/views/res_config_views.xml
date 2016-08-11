@@ -13,6 +13,7 @@
                     <div>
                         <label string="You will find more options in your company details: address for the header and footer, overdue payments texts, etc."/>
                         <button type="object" name="open_company" string="Configure your company data" icon="fa-cogs" class="oe_inline oe_link"/>
+                        <field name="company_id" invisible="1"/>
                     </div>
                     <group>
                         <label for="id" string="Email" name="email_label"/>
@@ -109,6 +110,47 @@
                             </div>
                         </div>
                     </group>
+                    <group string="Report Configuration" name="report">
+                        <label for="custom_footer"/>
+                        <div>
+                            <field name="custom_footer" class="oe_inline"/>                                
+                        </div>
+                        <label for="rml_footer"/>
+                        <div>
+                            <field name="rml_footer" class="oe_inline"/>                                
+                        </div>
+                        <label for="rml_footer_readonly"/>
+                        <div>
+                            <field name="rml_footer_readonly" class="oe_inline"/>                                
+                        </div>
+                    </group>
+                    <group string="RML Report Configuration" groups="base.group_no_one">
+                        <button name="%(base.preview_rml_report)d" string="Preview RML Report" type="action" colspan="2"/>
+                        <label for="rml_paper_format"/>
+                        <div>
+                            <field name="rml_paper_format" class="oe_inline"/>                                
+                        </div>
+                        <label for="font"/>
+                        <div>
+                            <field name="font" class="oe_inline"/>
+                            <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link"/>
+                        </div>
+                        <label for="rml_header"/>
+                        <div>
+                            <field name="rml_header"/>                                
+                        </div>
+                        <label for="rml_header2"/>
+                        <div>
+                            <field name="rml_header2"/>                                
+                        </div>
+                        <label for="rml_header3"/>
+                        <div>
+                            <field name="rml_header3"/>                                
+                        </div>
+                    </group>
+                    <div name="company_dependent_settings_message">
+                        <span>(*) This configuration value is related to the company you're logged in.</span>
+                    </div>
                 </form>
             </field>
         </record>

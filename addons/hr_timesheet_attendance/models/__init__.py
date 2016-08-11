@@ -4,3 +4,4 @@
 import hr_attendance
 import hr_timesheet_sheet
 import res_company
+import project_config_settings

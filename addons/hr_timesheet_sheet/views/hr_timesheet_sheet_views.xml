@@ -192,31 +192,6 @@
         <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="menu_hr_to_approve"
              sequence="11" groups="base.group_hr_user"/>
 
-
-        <!--
-            Company inheritancy
-        -->
-
-        <record id="hr_timesheet_sheet_company" model="ir.ui.view">
-            <field name="name">res.company.sheet</field>
-            <field name="model">res.company</field>
-            <field name="inherit_id" ref="base.view_company_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//group[@name='account_grp']" position="after">
-                    <group name="timesheets_grp" string="Timesheets">
-                        <div class="o_hr_timesheet_sheet_timesheet_range">
-                            <label for="timesheet_range"/>
-                            <field name="timesheet_range" required="1" class="oe_inline"/>
-                        </div>
-                        <!-- <div>
-                            <label for="timesheet_max_difference"/>
-                            <field name="timesheet_max_difference" required="1" class="oe_inline"/>
-                        </div> -->
-                    </group>
-                </xpath>
-            </field>
-        </record>
-
         <!--
             account.analytic.line inheritancy
         -->

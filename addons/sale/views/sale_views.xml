@@ -631,20 +631,6 @@
         </record>
 
 
-
-        <record model="ir.ui.view" id="view_company_inherit_form2">
-            <field name="name">res.company.form.inherit</field>
-            <field name="inherit_id" ref="base.view_company_form"/>
-            <field name="model">res.company</field>
-            <field name="arch" type="xml">
-                <xpath expr="//group[@name='account_grp']" position="after">
-                    <group name="sale_grp" string="Sales">
-                        <field name="sale_note" nolabel="1" placeholder="Default terms &amp; conditions..."/>
-                    </group>
-                </xpath>
-            </field>
-        </record>
-
         <!-- Update account invoice search view!-->
         <record id="account_invoice_groupby_inherit" model="ir.ui.view">
             <field name="name">account.invoice.groupby</field>

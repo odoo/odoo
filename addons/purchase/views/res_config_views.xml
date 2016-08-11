@@ -9,6 +9,16 @@
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
+                    <group string="Logistics">
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="company_currency_id" invisible="1"/>
+                            <field name="po_lead"/>
+                            <field name="po_lock" widget="radio"/>
+                            <field name="po_double_validation" widget="radio"/>
+                            <field name="po_double_validation_amount" attrs="{'invisible': [('po_double_validation', '=', 'one_step')]}"/>
+                        </group>
+                    </group>
                     <group string="Purchase Order">
                         <field name="group_product_variant" widget="radio"/>
                         <field name="group_uom" widget="radio"/>
@@ -20,6 +30,9 @@
                     <group string="Location &amp; Warehouse">
                         <field name="module_stock_dropshipping" widget="radio"/>
                     </group>
+                    <div>
+                        <span>(*) This configuration value is related to the company you're logged in.</span>
+                    </div>
                 </form>
             </field>
         </record>

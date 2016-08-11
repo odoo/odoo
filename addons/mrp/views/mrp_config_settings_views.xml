@@ -10,6 +10,10 @@
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
+                    <group string="Logistics" name="logistics">
+                        <field name="company_id" invisible="1"/>
+                        <field name="manufacturing_lead"/>
+                    </group>
                     <group string="Manufacturing Order">
                         <field name="group_product_variant" widget="radio"/>
                         <field name="module_mrp_byproduct" widget="radio"/>

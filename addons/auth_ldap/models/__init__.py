@@ -3,3 +3,4 @@
 import res_company
 import res_company_ldap
 import res_users
+import auth_ldap_config_settings
