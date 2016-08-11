@@ -968,7 +968,7 @@ class task(osv.osv):
                 'remaining_hours': delegate_data['planned_hours_me'],
                 'planned_hours': delegate_data['planned_hours_me'] + (task.effective_hours or 0.0),
                 'name': newname,
-            }, context=context)
+            })
             delegated_tasks[task.id] = delegated_task_id
         return delegated_tasks
 
