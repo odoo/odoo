@@ -111,8 +111,8 @@ return core.Class.extend({
         } else {
             $trigger = $(tip.trigger);
         }
-        $trigger = $trigger.filter(':visible').first();
-        var extra_trigger = tip.extra_trigger ? $(tip.extra_trigger).filter(':visible').length : true;
+        $trigger = get_first_visible_element($trigger);
+        var extra_trigger = tip.extra_trigger ? get_first_visible_element($(tip.extra_trigger)).length : true;
         var triggered = $trigger.length && extra_trigger;
         if (triggered) {
             if (!tip.widget) {
@@ -122,6 +122,22 @@ return core.Class.extend({
             }
         } else {
             this._deactivate_tip(tip);
+        }
+
+        function get_first_visible_element($elements) {
+            for (var i = 0 ; i < $elements.length ; i++) {
+                var $elem = $elements.eq(i);
+                if ($elem.is(":visible")) {
+                    var $i = $elem;
+                    while ($i.css("visibility") !== "hidden") {
+                        $i = $i.parent();
+                        if ($i.is("html")) {
+                            return $elem;
+                        }
+                    }
+                }
+            }
+            return $();
         }
     },
     _activate_tip: function(tip, tour_name, $anchor) {
