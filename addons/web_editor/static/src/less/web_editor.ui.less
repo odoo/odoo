@@ -87,43 +87,13 @@ html[lang] > body.editor_enable{
     #snippets_menu {
         .o-flex(0, 0, auto);
         height: @odoo-navbar-height;
+        line-height: @odoo-navbar-height;
         margin: 0;
         padding: 0;
         background: @o-we-color-dark;
-        list-style-type: none;
-        li {
-            display: block;
-            float: left;
-            width: 25%;
-            height: 100%;
-
-            a {
-                display: block;
-                width: 100%;
-                height: 100%;
-                .o-flex-display();
-                .o-align-items(center);
-                .o-justify-content(center);
-                text-decoration: none!important;
-
-                i {
-                    font-size: 20px;
-                    color: #999999;
-                    + i {
-                        color: white;
-                    }
-                }
-            }
-
-            &.active, &:hover {
-                a i {
-                    color: white;
-                    + i {
-                        color: @odoo-brand-primary;
-                    }
-                }
-            }
-        }
+        text-align: center;
+        font-size: 20px;
+        color: white;
     }
 
     #o_scroll {

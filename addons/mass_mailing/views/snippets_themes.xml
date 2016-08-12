@@ -1,45 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="email_designer_snippets" inherit_id="web_editor.snippets" primary="True">
-    <xpath expr="//ul[@id='snippets_menu']" position="replace">
-        <ul id="snippets_menu">
-            <li class="active">
-                <a href="#email_designer_default_headers" class="scroll-link">
-                    <span class="fa-stack fa-lg">
-                        <i class="fa fa-square fa-stack-2x fa-inverse"></i>
-                        <i class="fa fa-align-justify fa-stack-1x" style="margin-top: -0.15em; height: 0.9em; display: inline-block; overflow: hidden;"></i>
-                        <i class="fa fa-arrow-up fa-stack-1x text-muted" style="margin-top: 0.25em; display: inline-block; font-size: 0.6em;"></i>
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a href="#email_designer_default_body" class="scroll-link">
-                    <span class="fa-stack fa-lg">
-                        <i class="fa fa-square fa-stack-2x fa-inverse"></i>
-                        <i class="fa fa-align-left fa-stack-1x" style="margin-top: 0.05em;"></i>
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a href="#email_designer_default_extra" class="scroll-link">
-                    <span class="fa-stack fa-lg">
-                        <i class="fa fa-square fa-stack-2x fa-inverse"></i>
-                        <i class="fa fa-align-left fa-stack-1x" style="display: inline-block; height: 0.93em; margin-top: 0.3em; overflow: hidden;"></i>
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a href="#email_designer_default_footer" class="scroll-link">
-                    <span class="fa-stack fa-lg">
-                        <i class="fa fa-square fa-stack-2x fa-inverse"></i>
-                        <i class="fa fa-align-justify fa-stack-1x" style=" margin-top: 0.7em; height: 0.9em; display: inline-block; overflow: hidden;"></i>
-                        <i class="fa fa-arrow-down fa-stack-1x text-muted" style="display: inline-block; font-size: 0.6em; margin-top: -0.15em;"></i>
-                    </span>
-                </a>
-            </li>
-        </ul>
-    </xpath>
-
     <xpath expr="//div[@id='o_scroll']" position="replace">
         <div id="o_scroll">
             <div id="email_designer_default_headers" class="o_panel">
@@ -311,7 +272,7 @@
                                             <span class="fa fa-check fa-3x"></span>
                                             &amp;nbsp;
                                             <p style="margin:0;font-size:24px;font-weight:bold">Step 1</p>
-                                            <p style="margin:0">    
+                                            <p style="margin:0">
                                                 We need you to update your account information. If there is ever a problem with your account, this information will make it easier for you to log back in.
                                             </p>
                                         </td>
@@ -484,10 +445,10 @@
                                             <td valign="middle" align="right" style="font-size:12px;padding:20px;text-align:center">
                                                 &amp;nbsp;
                                                 <t t-if="website">
-                                                    <a style="color:inherit" href="/page/contactus">Contact Us</a> | 
-                                                    <a style="color:inherit" t-att-href="(website.social_facebook) or '#'">Facebook</a> | 
-                                                    <a style="color:inherit" t-att-href="(website.social_twitter) or '#'">Twitter</a> | 
-                                                    <a style="color:inherit" href="#">Support</a> | 
+                                                    <a style="color:inherit" href="/page/contactus">Contact Us</a> |
+                                                    <a style="color:inherit" t-att-href="(website.social_facebook) or '#'">Facebook</a> |
+                                                    <a style="color:inherit" t-att-href="(website.social_twitter) or '#'">Twitter</a> |
+                                                    <a style="color:inherit" href="#">Support</a> |
                                                 </t>
                                                 <a href="/unsubscribe_from_list" style="color:inherit">Unsubscribe</a>
                                                 &amp;nbsp;
