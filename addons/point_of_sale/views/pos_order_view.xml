@@ -4,7 +4,7 @@
         <field name="name">pos.order.form</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <form string="Point of Sale Orders">
+            <form string="Point of Sale Orders" create="0">
                 <header>
                     <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" states="draft" context="{'pos_session_id' : session_id}"/>
                     <button name="action_pos_order_invoice" string="Invoice" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
@@ -123,7 +123,7 @@
         <field name="name">pos.order.tree</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <tree string="POS Orders" decoration-info="state == 'draft'" decoration-muted="state in ('done','cancel')">
+            <tree string="POS Orders" decoration-info="state == 'draft'" decoration-muted="state in ('done','cancel')" create="0">
                 <field name="name"/>
                 <field name="pos_reference"/>
                 <field name="partner_id"/>

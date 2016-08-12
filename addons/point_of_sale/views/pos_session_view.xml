@@ -11,7 +11,7 @@
         <field name="name">pos.session.form.view</field>
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
-            <form string="Point of Sale Session">
+            <form string="Point of Sale Session" create="0">
                 <header>
                     <button name="action_pos_session_open" type="object" string="Open Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}" class="oe_highlight"/>
@@ -133,7 +133,7 @@
         <field name="name">pos.session.tree.view</field>
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
-            <tree string="Point of Sale Session">
+            <tree string="Point of Sale Session" create="0">
                 <field name="config_id" />
                 <field name="name" />
                 <field name="user_id" />
