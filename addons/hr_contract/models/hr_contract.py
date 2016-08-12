@@ -23,7 +23,7 @@ class Employee(models.Model):
         """ get the lastest contract """
         Contract = self.env['hr.contract']
         for employee in self:
-            employee.contract_id = Contract.search([('employee_id', '=', employee.id)], order='date_start', limit=1)
+            employee.contract_id = Contract.search([('employee_id', '=', employee.id)], order='date_start desc', limit=1)
 
     def _compute_contracts_count(self):
         # read_group as sudo, since contract count is displayed on form view
