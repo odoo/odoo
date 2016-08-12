@@ -194,7 +194,7 @@ class WebsiteEventController(http.Controller):
     def get_formated_date(self, event):
         start_date = fields.Datetime.from_string(event.date_begin).date()
         end_date = fields.Datetime.from_string(event.date_end).date()
-        month = babel.dates.get_month_names('abbreviated', locale=self.env.context.get('lang', 'en_US'))[start_date.month]
+        month = babel.dates.get_month_names('abbreviated', locale=request.env.context.get('lang', 'en_US'))[start_date.month]
         return ('%s %s%s') % (month, start_date.strftime("%e"), (end_date != start_date and ("-"+end_date.strftime("%e")) or ""))
 
     @http.route('/event/get_country_event_list', type='http', auth='public', website=True)
