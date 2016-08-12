@@ -40,7 +40,7 @@ tour.register('project_tour', {
 }, {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_kanban_project_tasks .o_kanban_group:nth-child(2)',
-    content: _t("Now that the project is setup, <b>create a few tasks</b>."),
+    content: _t("Now that the project is set up, <b>create a few tasks</b>."),
     position: "right"
 }, {
     trigger: ".o_kanban_group:first-child .o_kanban_record:last-child",
