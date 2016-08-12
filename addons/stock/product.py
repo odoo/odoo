@@ -3,10 +3,19 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.tools.safe_eval import safe_eval as eval
 import openerp.addons.decimal_precision as dp
 from openerp.tools.float_utils import float_round
 from openerp.exceptions import UserError
+import operator as py_operator
+
+OPERATORS = {
+    '<': py_operator.lt,
+    '>': py_operator.gt,
+    '<=': py_operator.le,
+    '>=': py_operator.ge,
+    '==': py_operator.eq,
+    '!=': py_operator.ne
+}
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -186,7 +195,7 @@ class product_product(osv.osv):
                 if product_ids:
                     #TODO: Still optimization possible when searching virtual quantities
                     for element in self.browse(cr, uid, product_ids, context=context):
-                        if eval(str(element[field]) + operator + str(value)):
+                        if OPERATORS[operator](element[field], value)
                             ids.append(element.id)
                     res.append(('id', 'in', ids))
         return res
@@ -202,7 +211,7 @@ class product_product(osv.osv):
         domain_quant += self._get_domain_locations(cr, uid, [], context=context)[0]
         quants = self.pool.get('stock.quant').read_group(cr, uid, domain_quant, ['product_id', 'qty'], ['product_id'], context=context)
         quants = dict(map(lambda x: (x['product_id'][0], x['qty']), quants))
-        quants = dict((k, v) for k, v in quants.iteritems() if eval(str(v) + operator + str(value)))
+        quants = dict((k, v) for k, v in quants.iteritems() if OPERATORS[operator](v, value))
         return(list(quants))
 
     def _product_available_text(self, cr, uid, ids, field_names=None, arg=False, context=None):
