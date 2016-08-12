@@ -48,7 +48,7 @@
                     <img class="img pull-left img-circle" t-attf-src="/web/image/res.partner/#{user_id.partner_id.id}/image_small/50x50" style="width: 50px; margin-right: 10px;"/>
                     <div class="pull-left mb32" style="width: 75%%">
                         <textarea rows="4" name="message" class="form-control" placeholder="Write a message..."></textarea>
-                        <input type='hidden' name="res_model" t-att-value="object._model"/>
+                        <input type='hidden' name="res_model" t-att-value="object._name"/>
                         <input type='hidden' name="res_id" t-att-value="object.id"/>
                         <input type='hidden' name="token" t-att-value="token" t-if="token"/>
                         <input type='hidden' name="sha_in" t-att-value="sha_in" t-if="sha_in"/>

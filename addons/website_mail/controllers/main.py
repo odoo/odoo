@@ -16,7 +16,7 @@ def object_shasign(record=False, res_model='', res_id=None, **kw):
     shasign = False
     timestamp = int(time())
     if record:
-        shasign = sha1('%s%s%s%s' % (record._model, record.id, secret, timestamp)).hexdigest()
+        shasign = sha1('%s%s%s%s' % (record._name, record.id, secret, timestamp)).hexdigest()
     elif res_model and res_id:
         shasign = sha1('%s%s%s%s' % (res_model, res_id, secret, timestamp)).hexdigest()
     return (shasign, timestamp)

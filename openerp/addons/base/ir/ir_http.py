@@ -297,7 +297,7 @@ class IrHttp(models.AbstractModel):
             elif module_resource_path:
                 filename = os.path.basename(module_resource_path)
             else:
-                filename = "%s-%s-%s" % (obj._model._name, obj.id, field)
+                filename = "%s-%s-%s" % (obj._name, obj.id, field)
 
         # mimetype
         mimetype = 'mimetype' in obj and obj.mimetype or False
