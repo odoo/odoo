@@ -7,20 +7,17 @@
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
 }
 
-.oe_hr_attendance_form_status {
-    height: .6em;
-    width: .6em;
-    border-radius: 50%;
+.oe_hr_attendance_status {
+    font-size: 1.2em;
     margin-right: .3em;
     display: inline-block;
+    color: @odoo-brand-secondary;
 
-    background-color: @odoo-brand-secondary;
-
-    &.oe_hr_attendance_form_status_green {
-        background-color: @brand-success;
+    &.oe_hr_attendance_status_green {
+        color: @brand-success;
     }
-    &.oe_hr_attendance_form_status_red {
-        background-color: @brand-danger;
+    &.oe_hr_attendance_status_red {
+        color: @brand-danger;
     }
 }
 
