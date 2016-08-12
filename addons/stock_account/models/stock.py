@@ -282,7 +282,7 @@ class StockMove(models.Model):
             if self.location_id.usage == 'customer' and self.origin_returned_move_id:
                 debit_value = self.origin_returned_move_id.price_unit * qty
                 credit_value = debit_value
-        partner_id = (self.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(self.picking_id.partner_id).id) or False
+        partner_id = (self.picking_id.partner_id and self.env['res.partner']._find_accounting_partner(self.picking_id.partner_id).id) or False
         debit_line_vals = {
             'name': self.name,
             'product_id': self.product_id.id,

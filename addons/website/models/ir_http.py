@@ -309,7 +309,7 @@ class Http(models.AbstractModel):
         obj = None
         if xmlid:
             obj = env.ref(xmlid, False)
-        elif id and model in self.pool:
+        elif id and model in env:
             obj = env[model].browse(int(id))
         if obj and 'website_published' in obj._fields:
             if env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
