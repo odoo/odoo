@@ -27,7 +27,7 @@ tour.register('project_tour', {
         actions.auto(".modal:visible .btn.btn-primary");
     },
 }, {
-    trigger: '.o_project_kanban .o_kanban_record:last-child',
+    trigger: '.o_project_kanban .o_kanban_record:first-child',
     content: _t('Click on the card to <b>go to your project</b> and start organizing tasks.'),
     position: 'right',
     run: function (actions) {
