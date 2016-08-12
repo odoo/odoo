@@ -282,6 +282,7 @@ class res_currency_rate(osv.osv):
     }
     _defaults = {
         'name': lambda *a: time.strftime('%Y-%m-%d 00:00:00'),
+        'company_id': lambda s, cr, uid, ctx=None: s.pool['res.users']._get_company(cr, uid, context=ctx)
     }
     _order = "name desc"
 
