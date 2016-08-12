@@ -343,7 +343,7 @@ class AccountChartTemplate(models.Model):
         # also create an entry in ir_model_data to have an xmlid for the newly created record
         # xmlid is the concatenation of company_id and template_xml_id
         ir_model_data = self.env['ir.model.data']
-        template_xmlid = ir_model_data.search([('model', '=', str(template._model)), ('res_id', '=', template.id)])
+        template_xmlid = ir_model_data.search([('model', '=', template._name), ('res_id', '=', template.id)])
         new_xml_id = str(company.id)+'_'+template_xmlid.name
         return ir_model_data._update(model, template_xmlid.module, vals, xml_id=new_xml_id, store=True, noupdate=True, mode='init', res_id=False)
 
