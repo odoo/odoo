@@ -977,11 +977,7 @@ data.Editor = Class.extend({
             self.styles[option].start();
             self.styles[option].__order = i++;
         });
-        if ($ul.children().length > 1) {
-            $ul.append($("<li/>", {"class": "divider"}));
-        } else {
-            $ul.empty();
-        }
+        $ul.append($("<li/>", {"class": "divider"}));
 
         var $parents = this.$target.parents();
         _.each($parents, function (parent) {
@@ -1000,9 +996,6 @@ data.Editor = Class.extend({
             this.$overlay.find(".oe_snippet_move, .oe_snippet_clone").addClass('hidden');
         }
 
-        if ($ul.children().length) {
-            $styles.removeClass("hidden");
-        }
         this.$overlay.find('[data-toggle="dropdown"]').dropdown();
     },
 
@@ -1120,7 +1113,9 @@ data.Editor = Class.extend({
         var do_action = (focus ? _do_action_focus : _do_action_blur);
 
         // Attach own and parent options on the current overlay
-        var $headers = this.$overlay.find(".oe_options ul:first .dropdown-header:data(editor)");
+        var $style_button = this.$overlay.find(".oe_options");
+        var $ul = $style_button.find("ul:first");
+        var $headers = $ul.find(".dropdown-header:data(editor)");
         _.each($headers, function (el) {
             var $el = $(el);
             var styles = _.values($el.data("editor").styles);
@@ -1133,6 +1128,7 @@ data.Editor = Class.extend({
         });
 
         // Activate the overlay
+        $style_button.toggleClass("hidden", $ul.children(":not(.dropdown-header):not(.divider):not(.hidden)").length === 0);
         this.$overlay.toggleClass("oe_active", !!focus);
 
         function _do_action_focus(style, $dest) {
