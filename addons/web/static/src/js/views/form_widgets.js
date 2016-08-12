@@ -1530,6 +1530,10 @@ var FieldStatus = common.AbstractField.extend({
             return;
         }
         var val;
+        var ul = $li.parent('ul');
+        if (ul.attr('disabled'))
+            return;
+        ul.attr('disabled', true);
         if (this.field.type == "many2one") {
             val = parseInt($li.data("id"), 10);
         }
@@ -1547,6 +1551,7 @@ var FieldStatus = common.AbstractField.extend({
                     var change = {};
                     change[self.name] = val;
                     self.view.dataset.write(self.view.datarecord.id, change).done(function() {
+                        ul.removeAttr('disabled');
                         self.view.reload();
                     });
                 });
