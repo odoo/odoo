@@ -158,22 +158,11 @@ data.Class = Widget.extend({
     compute_snippet_templates: function (html) {
         var self = this;
         var $html = $(html);
-        var $ul = $html.siblings("ul");
         var $scroll = $html.siblings("#o_scroll");
 
         if (!$scroll.length) {
             throw new Error("Wrong snippets xml definition");
         }
-
-        $ul.children().tooltip({
-            delay: { "show": 500, "hide": 100 },
-            container: 'body',
-            title: function () {
-                return (navigator.appVersion.indexOf('Mac') > -1 ? 'CMD' : 'CTRL')+'+SHIFT+'+($(this).index()+1);
-            },
-            trigger: 'hover',
-            placement: 'top'
-        }).on('click', function () {$(this).tooltip('hide');});
 
         // t-snippet
         $html.find('[data-oe-type="snippet"]').each(function () {
@@ -295,29 +284,6 @@ data.Class = Widget.extend({
         $html.find('.o_not_editable').attr("contentEditable", false);
 
         this.$el.html($html);
-
-        // animate for list of snippet blocks
-        this.$el.on('click', '.scroll-link', function (event) {
-            event.preventDefault();
-            var targetOffset =  $($(this).attr("href")).position().top - $ul.outerHeight() + $scroll[0].scrollTop;
-            $scroll.animate({'scrollTop': targetOffset}, 750);
-        });
-        $scroll.on('scroll', function () {
-            var middle = $scroll.height()/4;
-            var $li = $ul.find("a").parent().removeClass('active');
-            var last;
-            for (var k=0; k<$li.length; k++) {
-                var li = $($li[k]);
-                if (!li.data('target')) {
-                    li.data('target', $($("a", li).attr("href")));
-                }
-                if (li.data('target').position().top > middle) {
-                    break;
-                }
-                last = $li[k];
-            }
-            $(last).addClass("active");
-        });
 
         self.make_snippet_draggable(self.$snippets);
         this.associate_snippet_names(this.$snippets);
