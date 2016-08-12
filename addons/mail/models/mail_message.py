@@ -656,7 +656,7 @@ class Message(models.Model):
             SUPERUSER_ID, to be sure to have the record name correctly stored. """
         model = values.get('model', self.env.context.get('default_model'))
         res_id = values.get('res_id', self.env.context.get('default_res_id'))
-        if not model or not res_id or model not in self.pool:
+        if not model or not res_id or model not in self.env:
             return False
         return self.env[model].sudo().browse(res_id).name_get()[0][1]
 

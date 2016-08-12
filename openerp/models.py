@@ -772,15 +772,15 @@ class BaseModel(object):
             elif field['ttype'] in ('selection', 'reference'):
                 attrs['selection'] = safe_eval(field['selection'])
             elif field['ttype'] == 'many2one':
-                if partial and field['relation'] not in self.pool:
+                if partial and field['relation'] not in self.env:
                     continue
                 attrs['comodel_name'] = field['relation']
                 attrs['ondelete'] = field['on_delete']
                 attrs['domain'] = safe_eval(field['domain']) if field['domain'] else None
             elif field['ttype'] == 'one2many':
                 if partial and not (
-                    field['relation'] in self.pool and (
-                        field['relation_field'] in self.pool[field['relation']]._fields or
+                    field['relation'] in self.env and (
+                        field['relation_field'] in self.env[field['relation']]._fields or
                         field['relation_field'] in self.pool.get_manual_fields(self._cr, field['relation'])
                 )):
                     continue
@@ -788,7 +788,7 @@ class BaseModel(object):
                 attrs['inverse_name'] = field['relation_field']
                 attrs['domain'] = safe_eval(field['domain']) if field['domain'] else None
             elif field['ttype'] == 'many2many':
-                if partial and field['relation'] not in self.pool:
+                if partial and field['relation'] not in self.env:
                     continue
                 attrs['comodel_name'] = field['relation']
                 rel, col1, col2 = self.env['ir.model.fields']._custom_many2many_names(field['model'], field['relation'])
@@ -2211,7 +2211,7 @@ class BaseModel(object):
         :param query: query object on which the JOIN should be added
         """
         inherits_field = current_model._inherits[parent_model_name]
-        parent_model = self.pool[parent_model_name]
+        parent_model = self.env[parent_model_name]
         parent_alias, parent_alias_statement = query.add_join((current_model._table, parent_model._table, inherits_field, 'id', inherits_field), implicit=True)
         return parent_alias
 
@@ -2684,7 +2684,7 @@ class BaseModel(object):
                                 _schema.debug(msg, self._table, name, column._type)
 
                             if isinstance(column, fields.many2one) or (isinstance(column, fields.function) and column._type == 'many2one' and column.store):
-                                dest_model = self.pool[column._obj]
+                                dest_model = self.env[column._obj]
                                 if dest_model._auto and dest_model._table != 'ir_actions':
                                     self._m2o_fix_foreign_key(self._table, name, dest_model, column.ondelete)
 

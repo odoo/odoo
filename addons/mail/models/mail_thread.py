@@ -786,8 +786,7 @@ class MailThread(models.AbstractModel):
     def message_capable_models(self):
         """ Used by the plugin addon, based for plugin_outlook and others. """
         ret_dict = {}
-        for model_name in self.pool.obj_list():
-            model = self.pool[model_name]
+        for model_name, model in self.env.iteritems():
             if hasattr(model, "message_process") and hasattr(model, "message_post"):
                 ret_dict[model_name] = model._description
         return ret_dict
@@ -846,9 +845,9 @@ class MailThread(models.AbstractModel):
                          message_id, route, message)
 
         # Wrong model
-        if model and model not in self.pool:
+        if model and model not in self.env:
             if assert_model:
-                assert model in self.pool, 'Routing: unknown target model %s' % model
+                assert model in self.env, 'Routing: unknown target model %s' % model
             _warn('unknown target model %s' % model)
             return ()
 
@@ -1025,7 +1024,7 @@ class MailThread(models.AbstractModel):
             # do not match forwarded emails from another OpenERP system (thread_id collision!)
             if local_hostname == reply_hostname:
                 thread_id, model = reply_thread_id, reply_model
-                if thread_id and model in self.pool:
+                if thread_id and model in self.env:
                     record = self.env[model].browse(thread_id)
                     compat_mail_msg_ids = MailMessage.search([
                         ('message_id', '=', False),

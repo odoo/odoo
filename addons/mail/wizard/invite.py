@@ -18,7 +18,7 @@ class Invite(models.TransientModel):
         if self._context.get('mail_invite_follower_channel_only'):
             result['send_mail'] = False
         if 'message' in fields and model and res_id:
-            model_name = self.env['ir.model'].search([('model', '=', self.pool[model]._name)]).name_get()[0][1]
+            model_name = self.env['ir.model'].search([('model', '=', model)]).name_get()[0][1]
             document_name = self.env[model].browse(res_id).name_get()[0][1]
             message = _('<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>') % (user_name, model_name, document_name)
             result['message'] = message

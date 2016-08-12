@@ -391,7 +391,7 @@ class IrValues(models.Model):
             if not value:
                 continue                # skip if undefined
             action_model, action_id = value.split(',')
-            if action_model not in self.pool:
+            if action_model not in self.env:
                 continue                # unknown model? skip it!
             action = self.env[action_model].browse(int(action_id))
             actions.append((id, name, action))
