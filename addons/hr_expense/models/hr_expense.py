@@ -159,6 +159,7 @@ class HrExpense(models.Model):
             'amount_currency': line['price'] > 0 and abs(line.get('amount_currency')) or -abs(line.get('amount_currency')),
             'currency_id': line.get('currency_id'),
             'tax_line_id': line.get('tax_line_id'),
+            'tax_ids': line.get('tax_ids'),
             'ref': line.get('ref'),
             'quantity': line.get('quantity',1.00),
             'product_id': line.get('product_id'),
@@ -288,7 +289,7 @@ class HrExpense(models.Model):
             # Calculate tax lines and adjust base line
             taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id)
             account_move[-1]['price'] = taxes['total_excluded']
-            account_move[-1]['tax_ids'] = expense.tax_ids
+            account_move[-1]['tax_ids'] = expense.tax_ids.ids
             for tax in taxes['taxes']:
                 account_move.append({
                     'type': 'tax',
