@@ -19,7 +19,7 @@ class BaseUpdateTranslations(models.TransientModel):
     @api.model
     def _default_language(self):
         if self._context.get('active_model') == 'res.lang':
-            lang = self.env['res.lang'].browse(self._context.get('active_id'))
+            lang = self.env['res.lang'].search([('id','=',self._context.get('active_id')), ('active', '=', True), ('translatable', '=', True)])
             return lang.code
         return False
 
