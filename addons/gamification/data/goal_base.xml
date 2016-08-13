@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<openerp>
+<odoo>
     <!-- Mail template is done in a NOUPDATE block
          so users can freely customize/delete them -->
     <data noupdate="1">
@@ -152,7 +151,7 @@
             <field name="name">Mail Group Following</field>
             <field name="description">Follow mail.channels to receive news</field>
             <field name="computation_mode">python</field>
-            <field name="compute_code">result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)</field>
+            <field name="compute_code">result = env['mail.followers'].search_count([('res_model', '=', 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])</field>
             <field name="action_id" eval="ref('mail.mail_channel_action_view')" />
         </record>
 
@@ -163,7 +162,7 @@
             <field name="period">once</field>
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
-            <field name="user_domain" eval="[('groups_id', '=', ref('base.group_user'))]" />
+            <field name="user_domain" eval="str([('groups_id', '=', ref('base.group_user'))])" />
             <field name="state">inprogress</field>
             <field name="category">other</field>
         </record>
@@ -173,7 +172,7 @@
             <field name="period">once</field>
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
-            <field name="user_domain" eval="[('groups_id', '=', ref('base.group_erp_manager'))]" />
+            <field name="user_domain" eval="str([('groups_id', '=', ref('base.group_erp_manager'))])" />
             <field name="state">inprogress</field>
             <field name="category">other</field>
         </record>
@@ -202,4 +201,4 @@
         </record>
     </data>
 
-</openerp>
+</odoo>

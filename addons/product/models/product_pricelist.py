@@ -325,19 +325,19 @@ class PricelistItem(models.Model):
     base_pricelist_id = fields.Many2one('product.pricelist', 'Other Pricelist')
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', index=True, ondelete='cascade')
     price_surcharge = fields.Float(
-        'Price Surcharge', digits_compute=dp.get_precision('Product Price'),
+        'Price Surcharge', digits=dp.get_precision('Product Price'),
         help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.')
     price_discount = fields.Float('Price Discount', default=0, digits=(16, 2))
     price_round = fields.Float(
-        'Price Rounding', digits_compute=dp.get_precision('Product Price'),
+        'Price Rounding', digits=dp.get_precision('Product Price'),
         help="Sets the price so that it is a multiple of this value.\n"
              "Rounding is applied after the discount and before the surcharge.\n"
              "To have prices that end in 9.99, set rounding 10, surcharge -0.01")
     price_min_margin = fields.Float(
-        'Min. Price Margin', digits_compute=dp.get_precision('Product Price'),
+        'Min. Price Margin', digits=dp.get_precision('Product Price'),
         help='Specify the minimum amount of margin over the base price.')
     price_max_margin = fields.Float(
-        'Max. Price Margin', digits_compute=dp.get_precision('Product Price'),
+        'Max. Price Margin', digits=dp.get_precision('Product Price'),
         help='Specify the maximum amount of margin over the base price.')
     company_id = fields.Many2one(
         'res.company', 'Company',
@@ -351,7 +351,7 @@ class PricelistItem(models.Model):
         ('fixed', 'Fix Price'),
         ('percentage', 'Percentage (discount)'),
         ('formula', 'Formula')], index=True, default='fixed')
-    fixed_price = fields.Float('Fixed Price', digits_compute=dp.get_precision('Product Price'))
+    fixed_price = fields.Float('Fixed Price', digits=dp.get_precision('Product Price'))
     percent_price = fields.Float('Percentage Price')
     # functional fields used for usability purposes
     name = fields.Char(

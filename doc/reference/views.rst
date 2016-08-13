@@ -1041,7 +1041,7 @@ take the following attributes:
   .. warning::
       The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
       not a valid value
-``consolidation_label``
+``string``
   string to display next to the consolidation value, if not specified, the label
   of the consolidation field will be used
 ``fold_last_level``

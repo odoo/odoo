@@ -258,7 +258,7 @@ class WebsiteSale(http.Controller):
         }
         if category:
             values['main_object'] = category
-        return request.website.render("website_sale.products", values)
+        return request.render("website_sale.products", values)
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):
@@ -307,7 +307,7 @@ class WebsiteSale(http.Controller):
             'rating_message_values': rating_message_values,
             'rating_product': rating_product
         }
-        return request.website.render("website_sale.product", values)
+        return request.render("website_sale.product", values)
 
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
     def pricelist_change(self, pl_id, **post):
@@ -347,12 +347,12 @@ class WebsiteSale(http.Controller):
             values['suggested_products'] = _order._cart_accessories()
 
         if post.get('type') == 'popover':
-            return request.website.render("website_sale.cart_popover", values)
+            return request.render("website_sale.cart_popover", values)
 
         if post.get('code_not_available'):
             values['code_not_available'] = post.get('code_not_available')
 
-        return request.website.render("website_sale.cart", values)
+        return request.render("website_sale.cart", values)
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True, csrf=False)
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
@@ -377,7 +377,7 @@ class WebsiteSale(http.Controller):
         value['cart_quantity'] = order.cart_quantity
         from_currency = order.company_id.currency_id
         to_currency = order.pricelist_id.currency_id
-        value['website_sale.cart_lines'] = request.website._render("website_sale.cart_lines", {
+        value['website_sale.cart_lines'] = request.env['ir.ui.view'].render_template("website_sale.cart_lines", {
             'website_sale_order': order,
             'compute_currency': lambda price: from_currency.compute(price, to_currency),
             'suggested_products': order.with_context(pricelist=order.pricelist_id.id)._cart_accessories()
@@ -594,7 +594,7 @@ class WebsiteSale(http.Controller):
             'error': errors,
             'callback': kw.get('callback'),
         }
-        return request.website.render("website_sale.address", render_values)
+        return request.render("website_sale.address", render_values)
 
     @http.route(['/shop/checkout'], type='http', auth="public", website=True)
     def checkout(self, **post):
@@ -612,7 +612,7 @@ class WebsiteSale(http.Controller):
         # Avoid useless rendering if called in ajax
         if post.get('xhr'):
             return 'ok'
-        return request.website.render("website_sale.checkout", values)
+        return request.render("website_sale.checkout", values)
 
     @http.route(['/shop/confirm_order'], type='http', auth="public", website=True)
     def confirm_order(self, **post):
@@ -665,7 +665,7 @@ class WebsiteSale(http.Controller):
 
         values.update(request.env['sale.order']._get_website_data(order))
 
-        return request.website.render("website_sale.extra_info", values)
+        return request.render("website_sale.extra_info", values)
 
     # ------------------------------------------------------
     # Payment
@@ -721,7 +721,7 @@ class WebsiteSale(http.Controller):
                 acquirer.button = acquirer_button
                 values['acquirers'].append(acquirer)
 
-        return request.website.render("website_sale.payment", values)
+        return request.render("website_sale.payment", values)
 
     @http.route(['/shop/payment/transaction/<int:acquirer_id>'], type='json', auth="public", website=True)
     def payment_transaction(self, acquirer_id):
@@ -808,7 +808,7 @@ class WebsiteSale(http.Controller):
                     'tx_post_msg': tx.acquirer_id.post_msg or None
                 })
 
-        return {'recall': flag, 'message': request.website._render("website_sale.order_state_message", values)}
+        return {'recall': flag, 'message': request.env['ir.ui.view'].render_template("website_sale.order_state_message", values)}
 
     @http.route('/shop/payment/validate', type='http', auth="public", website=True)
     def payment_validate(self, transaction_id=None, sale_order_id=None, **post):
@@ -859,7 +859,7 @@ class WebsiteSale(http.Controller):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
             order = request.env['sale.order'].sudo().browse(sale_order_id)
-            return request.website.render("website_sale.confirmation", {'order': order})
+            return request.render("website_sale.confirmation", {'order': order})
         else:
             return request.redirect('/shop')
 

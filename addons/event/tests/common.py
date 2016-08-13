@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from dateutil.relativedelta import relativedelta
-
-from openerp import fields
-from openerp.tests import common
+from odoo.tests import common
 
 
 class TestEventCommon(common.TransactionCase):

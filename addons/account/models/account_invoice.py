@@ -5,13 +5,13 @@ from lxml import etree
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp import api, fields, models, _
-from openerp.tools import float_is_zero, float_compare
-from openerp.tools.misc import formatLang
+from odoo import api, fields, models, _
+from odoo.tools import float_is_zero, float_compare
+from odoo.tools.misc import formatLang
 
-from openerp.exceptions import UserError, RedirectWarning, ValidationError
+from odoo.exceptions import UserError, RedirectWarning, ValidationError
 
-import openerp.addons.decimal_precision as dp
+import odoo.addons.decimal_precision as dp
 
 # mapping invoice type to journal type
 TYPE2JOURNAL = {
@@ -585,17 +585,17 @@ class AccountInvoice(models.Model):
             line_to_reconcile += inv.move_id.line_ids.filtered(lambda r: not r.reconciled and r.account_id.internal_type in ('payable', 'receivable'))
         return (line_to_reconcile + payment_line).reconcile(writeoff_acc_id, writeoff_journal_id)
 
-    @api.v7
-    def assign_outstanding_credit(self, cr, uid, id, credit_aml_id, context=None):
-        credit_aml = self.pool.get('account.move.line').browse(cr, uid, credit_aml_id, context=context)
-        inv = self.browse(cr, uid, id, context=context)
-        if not credit_aml.currency_id and inv.currency_id != inv.company_id.currency_id:
+    @api.multi
+    def assign_outstanding_credit(self, credit_aml_id):
+        self.ensure_one()
+        credit_aml = self.env['account.move.line'].browse(credit_aml_id)
+        if not credit_aml.currency_id and self.currency_id != self.company_id.currency_id:
             credit_aml.with_context(allow_amount_currency=True).write({
-                'amount_currency': inv.company_id.currency_id.with_context(date=credit_aml.date).compute(credit_aml.balance, inv.currency_id),
-                'currency_id': inv.currency_id.id})
+                'amount_currency': self.company_id.currency_id.with_context(date=credit_aml.date).compute(credit_aml.balance, self.currency_id),
+                'currency_id': self.currency_id.id})
         if credit_aml.payment_id:
             credit_aml.payment_id.write({'invoice_ids': [(4, id, None)]})
-        return inv.register_payment(credit_aml)
+        return self.register_payment(credit_aml)
 
     @api.multi
     def action_date_assign(self):
@@ -998,7 +998,7 @@ class AccountInvoice(models.Model):
             new_invoices += refund_invoice
         return new_invoices
 
-    @api.v8
+    @api.multi
     def pay_and_reconcile(self, pay_journal, pay_amount=None, date=None, writeoff_acc=None):
         """ Create and post an account.payment for the invoice self, which creates a journal entry that reconciles the invoice.
 
@@ -1032,13 +1032,6 @@ class AccountInvoice(models.Model):
             'writeoff_account_id': writeoff_acc and writeoff_acc.id or False,
         })
         payment.post()
-
-    @api.v7
-    def pay_and_reconcile(self, cr, uid, ids, pay_journal_id, pay_amount=None, date=None, writeoff_acc_id=None, context=None):
-        recs = self.browse(cr, uid, ids, context)
-        pay_journal = self.pool.get('account.journal').browse(cr, uid, pay_journal_id, context=context)
-        writeoff_acc = self.pool.get('account.account').browse(cr, uid, writeoff_acc_id, context=context)
-        return AccountInvoice.pay_and_reconcile(recs, pay_journal, pay_amount, date, writeoff_acc)
 
     @api.multi
     def _track_subtype(self, init_values):

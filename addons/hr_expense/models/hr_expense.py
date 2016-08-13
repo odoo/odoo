@@ -6,7 +6,8 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import email_split
-import openerp.addons.decimal_precision as dp
+
+import odoo.addons.decimal_precision as dp
 
 
 class HrExpense(models.Model):

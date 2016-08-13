@@ -12,16 +12,16 @@ odoo.define("website.tour.banner", function (require) {
             url: "/",
         }, [{
             trigger: "a[data-action=edit]",
-            content: _t("Every page of your website can be modified through the <b>Edit</b> button."),
+            content: _t("<b>Click Edit</b> to start designing your homepage."),
             position: "bottom",
         }, {
             trigger: "#snippet_structure .oe_snippet:eq(1) .oe_snippet_thumbnail",
-            content: _t("Drag the Cover block and drop it in your page."),
+            content: _t("Drag the <i>Cover</i> block and drop it in your page."),
             position: "bottom",
             run: "drag_and_drop",
         }, {
             trigger: "#wrapwrap .s_text_block_image_fw h2",
-            content: _t("Click in the title text and start editing it."),
+            content: _t("<b>Click on a text</b> to start editing it. <i>It's that easy to edit your content!</i>"),
             position: "left",
             width: 150,
             run: "text",
@@ -42,11 +42,11 @@ odoo.define("website.tour.banner", function (require) {
             position: "bottom",
         }, {
             trigger: "a[data-action=show-mobile-preview]",
-            content: _t("Well done, you created your homepage.<br/>Let's check how your homepage looks like on mobile devices."),
+            content: _t("Good Job! You created your first page. Let's check how this page looks like on <b>mobile devices</b>."),
             position: "bottom",
         }, {
             trigger: ".modal-dialog:has(#mobile-viewport) button[data-dismiss=modal]",
-            content: _t("Scroll to check rendering and then close the mobile preview."),
+            content: _t("After having checked how it looks on mobile, <b>close the preview</b>."),
             position: "right",
         }, {
             trigger: "#oe_main_menu_navbar a[data-action=new_page]",

@@ -1,15 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import time
-import math
-
-from openerp.osv import expression
-from openerp.tools.float_utils import float_round as round
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.exceptions import AccessError, UserError, ValidationError
-import openerp.addons.decimal_precision as dp
-from openerp import api, fields, models, _
-from openerp import SUPERUSER_ID
+from odoo.exceptions import AccessError
+from odoo import api, fields, models, _
+from odoo import SUPERUSER_ID
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -18,7 +11,11 @@ def migrate_set_tags_and_taxes_updatable(cr, registry, module):
     ''' This is a utility function used to manually set the flag noupdate to False on tags and account tax templates on localization modules
     that need migration (for example in case of VAT report improvements)
     '''
-    xml_record_ids = registry['ir.model.data'].search(cr, SUPERUSER_ID, [('model', 'in', ['account.tax.template', 'account.account.tag']), ('module', 'like', module)])
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    xml_record_ids = env['ir.model.data'].search([
+        ('model', 'in', ['account.tax.template', 'account.account.tag']),
+        ('module', 'like', module)
+    ]).ids
     if xml_record_ids:
         cr.execute("update ir_model_data set noupdate = 'f' where id in %s", (tuple(xml_record_ids),))
 
@@ -29,12 +26,20 @@ def migrate_tags_on_taxes(cr, registry):
     Note: This unusual decision has been made in order to help the improvement of VAT reports on version 9.0, to have them more flexible
     and working out of the box when people are creating/using new taxes.
     '''
-    xml_record_ids = registry['ir.model.data'].search(cr, SUPERUSER_ID, [('model', '=', 'account.tax.template'), ('module', 'like', 'l10n_%')])
-    tax_template_ids = [x['res_id'] for x in registry['ir.model.data'].read(cr, SUPERUSER_ID, xml_record_ids, ['res_id'])]
-    for tax_template in registry['account.tax.template'].browse(cr, SUPERUSER_ID, tax_template_ids):
-        tax_id = registry['account.tax'].search(cr, SUPERUSER_ID, [('name', '=', tax_template.name), ('type_tax_use', '=', tax_template.type_tax_use), ('description', '=', tax_template.description)])
-        if len(tax_id) == 1:
-            registry['account.tax'].write(cr, SUPERUSER_ID, tax_id, {'tag_ids': [(6,0,[x.id for x in tax_template.tag_ids])]})
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    xml_records = env['ir.model.data'].search([
+        ('model', '=', 'account.tax.template'),
+        ('module', 'like', 'l10n_%')
+    ])
+    tax_template_ids = [x['res_id'] for x in xml_records.sudo().read(['res_id'])]
+    for tax_template in env['account.tax.template'].browse(tax_template_ids):
+        tax_id = env['account.tax'].search([
+            ('name', '=', tax_template.name),
+            ('type_tax_use', '=', tax_template.type_tax_use),
+            ('description', '=', tax_template.description)
+        ])
+        if len(tax_id.ids) == 1:
+            tax_id.sudo().write({'tag_ids': [(6, 0, [tax_template.tag_ids.ids])]})
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard

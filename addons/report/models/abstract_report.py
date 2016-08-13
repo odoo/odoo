@@ -10,8 +10,8 @@ class AbstractReport(models.AbstractModel):
     _template = None
     _wrapped_report_class = None
 
-    @api.multi
-    def render_html(self, data=None):
+    @api.model
+    def render_html(self, docids, data=None):
         context = dict(self.env.context or {})
 
         # If the key 'landscape' is present in data['form'], passing it into the context
@@ -27,9 +27,9 @@ class AbstractReport(models.AbstractModel):
             # If no context is set (for instance, during test execution), build one
             model = self.env['report']._get_report_from_name(self._template).model
             objects_model = self.env[model]
-            objects = objects_model.with_context(context).browse(self.ids)
+            objects = objects_model.with_context(context).browse(docids)
             context['active_model'] = model
-            context['active_ids'] = self.ids
+            context['active_ids'] = docids
 
         # Generate the old style report
         wrapped_report = self.with_context(context)._wrapped_report_class(self.env.cr, self.env.uid, '', context=self.env.context)

@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
-from openerp import models, fields, api, osv
+from odoo import models, fields, api
 
 
 # We just create a new model
 class Unit(models.Model):
     _name = 'test.unit'
 
-    _columns = {
-        'name': osv.fields.char('Name', required=True),
-        'state': osv.fields.selection([('a', 'A'), ('b', 'B')],
-                                      string='State'),
-    }
-
+    name = fields.Char('Name', required=True)
+    state = fields.Selection([('a', 'A'), ('b', 'B')], string='State')
     surname = fields.Char(compute='_compute_surname')
 
     @api.one

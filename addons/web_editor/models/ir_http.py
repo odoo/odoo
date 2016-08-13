@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import orm
-from openerp.http import request
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import models
+from odoo.http import request
 
 
-class ir_http(orm.AbstractModel):
+class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
     def _dispatch(self):
@@ -13,4 +15,4 @@ class ir_http(orm.AbstractModel):
             request.context['edit_translations'] = True
         if request.context.get('lang') != "en_US" and 'translatable' not in request.context:
             request.context['translatable'] = True
-        return super(ir_http, self)._dispatch()
+        return super(IrHttp, self)._dispatch()

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from email.utils import formataddr
-
-from .common import TestMail
-from openerp.tools import mute_logger
 import socket
+
+from odoo.addons.mail.tests.common import TestMail
+from odoo.tools import mute_logger
+
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}

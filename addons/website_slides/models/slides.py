@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from PIL import Image
+from urllib import urlencode
+from urlparse import urlparse
 
 import datetime
 import io
 import json
-from PIL import Image
 import re
-from urllib import urlencode
 import urllib2
-from urlparse import urlparse
 
-from openerp import api, fields, models, SUPERUSER_ID, _
-from openerp.tools import image
-from openerp.tools.translate import html_translate
-from openerp.exceptions import Warning
-from openerp.addons.website.models.website import slug
+from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.tools import image
+from odoo.tools.translate import html_translate
+from odoo.exceptions import Warning
+from odoo.addons.website.models.website import slug
 
 
 class Channel(models.Model):
@@ -142,11 +144,11 @@ class Channel(models.Model):
 
     @api.multi
     @api.depends('name')
-    def _website_url(self, name, arg):
-        res = super(Channel, self)._website_url(name, arg)
+    def _compute_website_url(self):
+        super(Channel, self)._compute_website_url()
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        res.update({(channel.id, '%s/slides/%s' % (base_url, slug(channel))) for channel in self})
-        return res
+        for channel in self:
+            channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
     @api.onchange('visibility')
     def change_visibility(self):
@@ -346,17 +348,16 @@ class Slide(models.Model):
 
     @api.multi
     @api.depends('name')
-    def _website_url(self, name, arg):
-        res = super(Slide, self)._website_url(name, arg)
+    def _compute_website_url(self):
+        super(Slide, self)._compute_website_url()
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        #link_tracker is not in dependencies, so use it to shorten url only if installed.
-        if self.env.registry.get('link.tracker'):
-            LinkTracker = self.env['link.tracker']
-            res.update({(slide.id, LinkTracker.sudo().create({'url': '%s/slides/slide/%s' % (base_url, slug(slide))}).short_url) for slide in self})
-        else:
-            res.update({(slide.id, '%s/slides/slide/%s' % (base_url, slug(slide))) for slide in self})
-        return res
-
+        for slide in self:
+            #link_tracker is not in dependencies, so use it to shorten url only if installed.
+            if self.env.registry.get('link.tracker'):
+                url = self.env['link.tracker'].sudo().create({'url': '%s/slides/slide/%s' % (base_url, slug(slide))}).short_url
+            else:
+                url = '%s/slides/slide/%s' % (base_url, slug(slide))
+            slide.website_url = url
 
     @api.model
     def create(self, values):

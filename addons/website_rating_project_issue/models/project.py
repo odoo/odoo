@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from openerp import api, fields, models
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import api, models
 
 
 class Project(models.Model):
@@ -19,8 +21,7 @@ class Project(models.Model):
         }
 
     @api.multi
-    def _website_url(self, field_name, arg):
-        res = dict()
+    def _compute_website_url(self):
+        super(Project, self)._compute_website_url()
         for project in self:
-            res[project.id] = "/project/rating/%s" % project.id
-        return res
+            project.website_url = "/project/rating/%s" % project.id

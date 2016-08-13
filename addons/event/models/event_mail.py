@@ -3,7 +3,7 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp import api, fields, models, tools
+from odoo import api, fields, models, tools
 
 
 _INTERVALS = {

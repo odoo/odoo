@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from psycopg2 import IntegrityError
-from openerp.addons.mail.tests.common import TestMail
+
+from odoo.addons.mail.tests.common import TestMail
 
 
 class TestMailFollowers(TestMail):

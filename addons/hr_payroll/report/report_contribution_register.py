@@ -27,8 +27,8 @@ class ContributionRegisterReport(models.AbstractModel):
             result[line.register_id.id] += line
         return result
 
-    @api.multi
-    def render_html(self, data=None):
+    @api.model
+    def render_html(self, docids, data=None):
         register_ids = self.env.context.get('active_ids', [])
         contrib_registers = self.env['hr.contribution.register'].browse(register_ids)
         date_from = data['form'].get('date_from', fields.Date.today())

@@ -4,7 +4,7 @@
 import openerp
 from openerp.report.interface import report_int
 import openerp.tools as tools
-from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.safe_eval import safe_eval
 from lxml  import etree
 from openerp.report import render, report_sxw
 import locale
@@ -25,7 +25,7 @@ class report_printscreen_list(report_int):
         result = []
         for node in root_node:
             field_name = node.get('name')
-            if not eval(str(node.attrib.get('invisible',False)),{'context':self.context}):
+            if not safe_eval(str(node.attrib.get('invisible',False)),{'context':self.context}):
                 if node.tag == 'field':
                     if field_name in self.groupby:
                         continue

@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
     'name': 'Barcode Scanner Hardware Driver',
-    'version': '1.0',
     'category': 'Point of Sale',
     'sequence': 6,
     'summary': 'Hardware Driver for Barcode Scanners',
@@ -20,8 +18,4 @@ point of sale module.
 """,
     'depends': ['hw_proxy'],
     'external_dependencies': {'python': ['evdev']},
-    'test': [
-    ],
-    'installable': True,
-    'auto_install': False,
 }

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import time
-from openerp import api, fields, models
+from odoo import api, fields, models
 
 
 class ReportOverdue(models.AbstractModel):
@@ -30,8 +30,8 @@ class ReportOverdue(models.AbstractModel):
             res[row.pop('partner_id')].append(row)
         return res
 
-    @api.multi
-    def render_html(self, data):
+    @api.model
+    def render_html(self, docids, data=None):
         totals = {}
         lines = self._get_account_move_lines(self.ids)
         lines_to_display = {}

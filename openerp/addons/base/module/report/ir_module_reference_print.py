@@ -24,13 +24,13 @@ class IrModelReferenceReport(models.AbstractModel):
             return sorted(self.env[model].fields_get(fnames).iteritems())
         return []
 
-    @api.multi
-    def render_html(self, data=None):
+    @api.model
+    def render_html(self, docids, data=None):
         Report = self.env['report']
         report = Report._get_report_from_name('base.report_irmodulereference')
-        selected_modules = self.env['ir.module.module'].browse(self.ids)
+        selected_modules = self.env['ir.module.module'].browse(docids)
         docargs = {
-            'doc_ids': self.ids,
+            'doc_ids': docids,
             'doc_model': report.model,
             'docs': selected_modules,
             'findobj': self._object_find,

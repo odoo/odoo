@@ -40,7 +40,7 @@ tour.register('project_tour', {
 }, {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_kanban_project_tasks .o_kanban_group:nth-child(2)',
-    content: _t("Now that the project is setup, <b>create a few tasks</b>."),
+    content: _t("Now that the project is set up, <b>create a few tasks</b>."),
     position: "right"
 }, {
     trigger: ".o_kanban_group:first-child .o_kanban_record:last-child",
@@ -94,7 +94,7 @@ tour.STEPS.MENU_MORE, {
     position: "bottom"
 }, {
     trigger: ".o_web_settings_dashboard textarea#user_emails",
-    content: _t("<b>Invite collegues</b> via email.<br/><i>Enter one email per line.</i>"),
+    content: _t("<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"),
     position: "right"
 }]);
 

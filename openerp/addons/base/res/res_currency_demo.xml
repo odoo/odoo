@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <!-- The Following currency rates are considered as on 1st Jan,2010 against EUR. -->
         <record forcecreate="0" id="rateUSD" model="res.currency.rate">
@@ -445,13 +445,6 @@
             <field name="rate">48.09</field>
         </record>
 
-        <!-- East Timor -->
-        <record forcecreate="0" id="rateTPE" model="res.currency.rate">
-            <field name="currency_id" ref="TPE" />
-            <field name="name">2010-01-01</field>
-            <field name="rate">1.2535</field>
-        </record>
-
         <record forcecreate="0" id="rateECS" model="res.currency.rate">
             <field name="currency_id" ref="ECS" />
             <field name="name">2010-01-01</field>
@@ -516,12 +509,6 @@
             <field name="currency_id" ref="GNF" />
             <field name="name">2010-01-01</field>
             <field name="rate">8835.85</field>
-        </record>
-
-        <record forcecreate="0" id="rateGWP" model="res.currency.rate">
-            <field name="currency_id" ref="GWP" />
-            <field name="name">2010-01-01</field>
-            <field name="rate">659.30</field>
         </record>
 
         <record forcecreate="0" id="rateGYD" model="res.currency.rate">
@@ -848,10 +835,10 @@
             <field name="rate">1947.06815</field>
         </record>
 
-        <record forcecreate="0" id="rateTJR" model="res.currency.rate">
-            <field name="currency_id" ref="TJR" />
+        <record forcecreate="0" id="rateTJS" model="res.currency.rate">
+            <field name="currency_id" ref="TJS" />
             <field name="name">2010-01-01</field>
-            <field name="rate">5.95</field>
+            <field name="rate">6.15</field>
         </record>
 
         <record forcecreate="0" id="rateTWD" model="res.currency.rate">
@@ -1028,12 +1015,6 @@
             <field name="rate">30.1263029</field>
         </record>
 
-        <record forcecreate="0" id="rateSIT" model="res.currency.rate">
-            <field name="currency_id" ref="SIT" />
-            <field name="name">2010-01-01</field>
-            <field name="rate">239.64</field>
-        </record>
-
         <record forcecreate="0" id="rateYUM" model="res.currency.rate">
             <field name="currency_id" ref="YUM" />
             <field name="name">2010-01-01</field>
@@ -1047,4 +1028,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

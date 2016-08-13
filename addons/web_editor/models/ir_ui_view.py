@@ -1,40 +1,33 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import copy
-import openerp
-from openerp.exceptions import AccessError
-from openerp.osv import osv
 from lxml import etree, html
-from openerp import api
+
+from odoo.exceptions import AccessError
+from odoo import api, models
 
 
-class view(osv.osv):
+class IrUiView(models.Model):
     _inherit = 'ir.ui.view'
 
-    @api.cr_uid_ids_context
-    def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
-        if isinstance(id_or_xml_id, list):
-            id_or_xml_id = id_or_xml_id[0]
-        if not values:
-            values = {}
-        if values.get('editable'):
+    @api.multi
+    def render(self, values=None, engine='ir.qweb'):
+        if values and values.get('editable'):
             try:
-                if not isinstance(id_or_xml_id, (int, long)):
-                    if '.' not in id_or_xml_id:
-                        raise ValueError('Invalid template id: %r' % (id_or_xml_id,))
-                    id_or_xml_id = self.get_view_id(cr, uid, id_or_xml_id, context=context)
-                self.check_access_rights(cr, uid, 'write')
-                self.check_access_rule(cr, uid, [id_or_xml_id], 'write', context=context)
-
+                self.check_access_rights('write')
+                self.check_access_rule('write')
             except AccessError:
                 values['editable'] = False
 
-        return super(view, self).render(cr, uid, id_or_xml_id, values=values, engine=engine, context=context)
+        return super(IrUiView, self).render(values=values, engine=engine)
 
     #------------------------------------------------------
     # Save from html
     #------------------------------------------------------
 
-    def extract_embedded_fields(self, cr, uid, arch, context=None):
+    @api.model
+    def extract_embedded_fields(self, arch):
         return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
 
     @api.model
@@ -62,12 +55,12 @@ class view(osv.osv):
         return etree.tostring(
             arch_no_whitespace, encoding='unicode', pretty_print=True)
 
-    def replace_arch_section(self, cr, uid, view_id, section_xpath, replacement, context=None):
+    @api.multi
+    def replace_arch_section(self, section_xpath, replacement):
         # the root of the arch section shouldn't actually be replaced as it's
         # not really editable itself, only the content truly is editable.
-
-        [view] = self.browse(cr, uid, [view_id], context=context)
-        arch = etree.fromstring(view.arch.encode('utf-8'))
+        self.ensure_one()
+        arch = etree.fromstring(self.arch.encode('utf-8'))
         # => get the replacement root
         if not section_xpath:
             root = arch
@@ -84,7 +77,8 @@ class view(osv.osv):
 
         return arch
 
-    def to_field_ref(self, cr, uid, el, context=None):
+    @api.model
+    def to_field_ref(self, el):
         # filter out meta-information inserted in the document
         attributes = dict((k, v) for k, v in el.items()
                           if not k.startswith('data-oe-'))
@@ -94,34 +88,28 @@ class view(osv.osv):
         out.tail = el.tail
         return out
 
-    def save(self, cr, uid, res_id, value, xpath=None, context=None):
+    @api.multi
+    def save(self, value, xpath=None):
         """ Update a view section. The view section may embed fields to write
 
-        :param str model:
-        :param int res_id:
         :param str xpath: valid xpath to the tag to replace
         """
-        res_id = int(res_id)
-
         arch_section = html.fromstring(
             value, parser=html.HTMLParser(encoding='utf-8'))
 
         if xpath is None:
             # value is an embedded field on its own, not a view section
-            self.save_embedded_field(cr, uid, arch_section, context=context)
+            self.save_embedded_field(arch_section)
             return
 
-        for el in self.extract_embedded_fields(cr, uid, arch_section, context=context):
-            self.save_embedded_field(cr, uid, el, context=context)
+        for el in self.extract_embedded_fields(arch_section):
+            self.save_embedded_field(el)
 
             # transform embedded field back to t-field
-            el.getparent().replace(el, self.to_field_ref(cr, uid, el, context=context))
+            el.getparent().replace(el, self.to_field_ref(el))
 
-        arch = self.replace_arch_section(cr, uid, res_id, xpath, arch_section, context=context)
-        self.write(cr, uid, res_id, {
-            'arch': self._pretty_arch(arch)
-        }, context=context)
+        for view in self:
+            arch = view.replace_arch_section(xpath, arch_section)
+            view.write({'arch': view._pretty_arch(arch)})
 
-        view = self.browse(cr, openerp.SUPERUSER_ID, res_id, context=context)
-        if view.model_data_id:
-            view.model_data_id.write({'noupdate': True})
+        self.sudo().mapped('model_data_id').write({'noupdate': True})

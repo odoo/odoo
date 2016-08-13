@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import openerp
-from openerp import SUPERUSER_ID
-from openerp.addons.web import http
-from openerp.addons.website.models.website import unslug
-from openerp.tools.translate import _
-from openerp.addons.web.http import request
 import werkzeug.urls
+
+from odoo import http
+from odoo.addons.website.models.website import unslug
+from odoo.tools.translate import _
+from odoo.http import request
 
 
 class WebsiteCustomer(http.Controller):
@@ -96,7 +95,7 @@ class WebsiteCustomer(http.Controller):
             'tag': tag,
             'tags': tags,
         }
-        return request.website.render("website_customer.index", values)
+        return request.render("website_customer.index", values)
 
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/customers/<partner_id>'], type='http', auth="public", website=True)
@@ -107,5 +106,5 @@ class WebsiteCustomer(http.Controller):
             if partner.exists() and partner.website_published:
                 values = {}
                 values['main_object'] = values['partner'] = partner
-                return request.website.render("website_customer.details", values)
+                return request.render("website_customer.details", values)
         return self.customers(**post)

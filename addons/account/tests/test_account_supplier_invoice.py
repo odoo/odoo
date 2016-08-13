@@ -1,5 +1,5 @@
-from openerp.addons.account.tests.account_test_classes import AccountingTestCase
-from openerp.exceptions import Warning
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.exceptions import Warning
 
 class TestAccountSupplierInvoice(AccountingTestCase):
 

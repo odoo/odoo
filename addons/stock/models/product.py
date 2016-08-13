@@ -4,7 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 from odoo.tools.float_utils import float_round
 
 
@@ -238,7 +238,7 @@ class Product(models.Model):
         # TODO: Still optimization possible when searching virtual quantities
         ids = []
         for product in self.search([]):
-            if eval(str(product[field]) + operator + str(value)):
+            if safe_eval(str(product[field]) + operator + str(value)):
                 ids.append(product.id)
         return [('id', 'in', ids)]
 
@@ -261,7 +261,7 @@ class Product(models.Model):
             domain_quant.append(('package_id', '=', package_id))
         quants_groupby = self.env['stock.quant'].read_group(domain_quant, ['product_id', 'qty'], ['product_id'])
         for quant in quants_groupby:
-            if eval('%s %s %s' % (quant['qty'], operator, value)):
+            if safe_eval('%s %s %s' % (quant['qty'], operator, value)):
                 product_ids.add(quant['product_id'][0])
         return list(product_ids)
 

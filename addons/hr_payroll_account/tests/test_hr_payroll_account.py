@@ -5,9 +5,8 @@ import time
 
 from datetime import datetime, timedelta
 from dateutil import relativedelta
-from odoo import fields, tools
 
-from openerp.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo import fields, tools
 from odoo.modules.module import get_module_resource
 from odoo.tests import common
 
@@ -15,7 +14,8 @@ from odoo.tests import common
 class TestHrPayrollAccount(common.TransactionCase):
 
     def _load(self, module, *args):
-        tools.convert_file(self.cr, 'hr_payroll_account',
+        tools.convert_file(
+            self.cr, 'hr_payroll_account',
             get_module_resource(module, *args), {}, 'init', False, 'test', self.registry._assertion_report)
 
     def setUp(self):

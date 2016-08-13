@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.mail.tests.common import TestMail
+from odoo import api
+from odoo.addons.mail.tests.common import TestMail
 
 
 class TestTracking(TestMail):
@@ -64,15 +65,15 @@ class TestTracking(TestMail):
             'res_id': mt_group_public_unset.id
         })
 
-        def _track_subtype(self, cr, uid, ids, init_values, context=None):
-            record = self.browse(cr, uid, ids[0], context=context)
-            if 'public' in init_values and record.public == 'private':
+        @api.multi
+        def _track_subtype(self, init_values):
+            if 'public' in init_values and self.public == 'private':
                 return 'mail.mt_private'
-            elif 'name' in init_values and record.name == 'supername':
+            elif 'name' in init_values and self.name == 'supername':
                 return 'mail.mt_name_supername'
-            elif 'group_public_id' in init_values and record.group_public_id:
+            elif 'group_public_id' in init_values and self.group_public_id:
                 return 'mail.mt_group_public_set'
-            elif 'group_public_id' in init_values and not record.group_public_id:
+            elif 'group_public_id' in init_values and not self.group_public_id:
                 return 'mail.mt_group_public_unset'
             return False
         self.registry('mail.channel')._patch_method('_track_subtype', _track_subtype)

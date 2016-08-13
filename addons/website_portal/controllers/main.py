@@ -53,7 +53,7 @@ class website_account(http.Controller):
     @http.route(['/my', '/my/home'], type='http', auth="public", website=True)
     def account(self, **kw):
         values = self._prepare_portal_layout_values()
-        return request.website.render("website_portal.portal_my_home", values)
+        return request.render("website_portal.portal_my_home", values)
 
     @http.route(['/my/account'], type='http', auth='user', website=True)
     def details(self, redirect=None, **post):
@@ -86,7 +86,7 @@ class website_account(http.Controller):
             'redirect': redirect,
         })
 
-        return request.website.render("website_portal.details", values)
+        return request.render("website_portal.details", values)
 
     def details_form_validate(self, data):
         error = dict()

@@ -25,7 +25,7 @@ tour.register('mail_tour', [{
     position: "bottom",
 }, {
     trigger: '.o_mail_chat .o_mail_chat_sidebar .o_add[data-type="dm"]',
-    content: _t("<p><b>Chat with collegues</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"),
+    content: _t("<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"),
     position: 'bottom',
 }]);
 

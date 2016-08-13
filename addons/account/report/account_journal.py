@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import time
-from openerp import api, models
+from odoo import api, models
 
 
 class ReportJournal(models.AbstractModel):
@@ -93,8 +93,8 @@ class ReportJournal(models.AbstractModel):
     def _get_query_get_clause(self, data):
         return self.env['account.move.line'].with_context(data['form'].get('used_context', {}))._query_get()
 
-    @api.multi
-    def render_html(self, data):
+    @api.model
+    def render_html(self, docids, data=None):
         target_move = data['form'].get('target_move', 'all')
         sort_selection = data['form'].get('sort_selection', 'date')
 

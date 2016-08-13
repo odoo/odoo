@@ -52,7 +52,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 cr.commit()
             else:
                 cr.rollback()
-                # avoid keeping stale xml_id, etc. in cache 
+                # avoid keeping stale xml_id, etc. in cache
                 openerp.modules.registry.RegistryManager.clear_caches(cr.dbname)
 
 
@@ -186,7 +186,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     ir_http = registry['ir.http']
                     if hasattr(ir_http, '_routing_map'):
                         # Force routing map to be rebuilt between each module test suite
-                        del(ir_http._routing_map)
+                        del(type(ir_http)._routing_map)
                     report.record_result(openerp.modules.module.run_unit_tests(module_name, cr.dbname))
 
             processed_modules.append(package.name)
@@ -268,7 +268,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
 
-        # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps) 
+        # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps)
         graph = openerp.modules.graph.Graph()
         graph.add_module(cr, 'base', force)
         if not graph:

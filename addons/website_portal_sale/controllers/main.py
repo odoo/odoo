@@ -77,7 +77,7 @@ class website_account(website_account):
             'archive_groups': archive_groups,
             'default_url': '/my/quotes',
         })
-        return request.website.render("website_portal_sale.portal_my_quotations", values)
+        return request.render("website_portal_sale.portal_my_quotations", values)
 
     @http.route(['/my/orders', '/my/orders/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_orders(self, page=1, date_begin=None, date_end=None, **kw):
@@ -114,7 +114,7 @@ class website_account(website_account):
             'archive_groups': archive_groups,
             'default_url': '/my/orders',
         })
-        return request.website.render("website_portal_sale.portal_my_orders", values)
+        return request.render("website_portal_sale.portal_my_orders", values)
 
     @http.route(['/my/orders/<int:order>'], type='http', auth="user", website=True)
     def orders_followup(self, order=None, **kw):
@@ -123,9 +123,9 @@ class website_account(website_account):
             order.check_access_rights('read')
             order.check_access_rule('read')
         except AccessError:
-            return request.website.render("website.403")
+            return request.render("website.403")
         order_invoice_lines = {il.product_id.id: il.invoice_id for il in order.invoice_ids.mapped('invoice_line_ids')}
-        return request.website.render("website_portal_sale.orders_followup", {
+        return request.render("website_portal_sale.orders_followup", {
             'order': order.sudo(),
             'order_invoice_lines': order_invoice_lines,
         })
@@ -168,7 +168,7 @@ class website_account(website_account):
             'archive_groups': archive_groups,
             'default_url': '/my/invoices',
         })
-        return request.website.render("website_portal_sale.portal_my_invoices", values)
+        return request.render("website_portal_sale.portal_my_invoices", values)
 
     def details_form_validate(self, data):
         error, error_message = super(website_account, self).details_form_validate(data)

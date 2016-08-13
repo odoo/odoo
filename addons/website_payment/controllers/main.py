@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from openerp import http
-from openerp.http import request
-from openerp.tools.translate import _
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import http, _
+from odoo.http import request
 
 
-class website_payment(http.Controller):
+class WebsitePayment(http.Controller):
     @http.route(['/my/payment_method'], type='http', auth="user", website=True)
     def payment_method(self):
         acquirers = list(request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False)]))
@@ -16,8 +17,8 @@ class website_payment(http.Controller):
             'acquirers': acquirers
         }
         for acquirer in acquirers:
-            acquirer.form = acquirer.sudo()._registration_render(request.env.user.partner_id.id, {'error': {}, 'error_message': [], 'return_url': '/my/payment_method', 'json': False, 'bootstrap_formatting': True})[0]
-        return request.website.render("website_payment.pay_methods", values)
+            acquirer.form = acquirer.sudo()._registration_render(request.env.user.partner_id.id, {'error': {}, 'error_message': [], 'return_url': '/my/payment_method', 'json': False, 'bootstrap_formatting': True})
+        return request.render("website_payment.pay_methods", values)
 
     @http.route(['/website_payment/delete/'], methods=['POST'], type='http', auth="user", website=True)
     def delete(self, delete_pm_id=None):
@@ -54,7 +55,7 @@ class website_payment(http.Controller):
             'amount': float(amount),
             'payment_form': payment_form,
         }
-        return request.website.render('website_payment.pay', values)
+        return request.render('website_payment.pay', values)
 
     @http.route(['/website_payment/transaction'], type='json', auth="public", website=True)
     def transaction(self, reference, amount, currency_id, acquirer_id):
@@ -78,6 +79,6 @@ class website_payment(http.Controller):
             tx = request.env['payment.transaction'].browse(tx_id)
             status = (tx.state == 'done' and 'success') or 'danger'
             message = (tx.state == 'done' and 'Your payment was successful! It may take some time to be validated on our end.') or 'OOps! There was a problem with your payment.'
-            return request.website.render('website_payment.confirm', {'tx': tx, 'status': status, 'message': message})
+            return request.render('website_payment.confirm', {'tx': tx, 'status': status, 'message': message})
         else:
             return request.redirect('/my/home')

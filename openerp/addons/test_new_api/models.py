@@ -2,78 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-from openerp.exceptions import AccessError
 
-##############################################################################
-#
-#    OLD API
-#
-##############################################################################
-from openerp.osv import osv, fields
-
-
-class Alpha(osv.Model):
-    _name = 'test_new_api.alpha'
-    _columns = {
-        'name': fields.char(),
-    }
-
-class Bravo(osv.Model):
-    _name = 'test_new_api.bravo'
-    _columns = {
-        'alpha_id': fields.many2one('test_new_api.alpha'),
-        # a related field with a non-trivial path
-        'alpha_name': fields.related('alpha_id', 'name', type='char'),
-        # a related field with a single field
-        'related_alpha_id': fields.related('alpha_id', type='many2one', obj='test_new_api.alpha'),
-        # a related field with a single field that is also a related field!
-        'related_related_alpha_id': fields.related('related_alpha_id', type='many2one', obj='test_new_api.alpha'),
-    }
-
-
-class TestFunctionCounter(osv.Model):
-    _name = 'test_old_api.function_counter'
-
-    def _compute_cnt(self, cr, uid, ids, fname, arg, context=None):
-        res = {}
-        for cnt in self.browse(cr, uid, ids, context=context):
-            res[cnt.id] = cnt.access and cnt.cnt + 1 or 0
-        return res
-
-    _columns = {
-        'access': fields.datetime('Datetime Field'),
-        'cnt': fields.function(
-            _compute_cnt, type='integer', string='Function Field', store=True),
-    }
-
-
-class TestFunctionNoInfiniteRecursion(osv.Model):
-    _name = 'test_old_api.function_noinfiniterecursion'
-
-    def _compute_f1(self, cr, uid, ids, fname, arg, context=None):
-        res = {}
-        for tf in self.browse(cr, uid, ids, context=context):
-            res[tf.id] = 'create' in tf.f0 and 'create' or 'write'
-        cntobj = self.pool['test_old_api.function_counter']
-        cnt_id = self.pool['ir.model.data'].xmlid_to_res_id(
-            cr, uid, 'test_new_api.c1')
-        cntobj.write(
-            cr, uid, cnt_id, {'access': datetime.datetime.now()},
-            context=context)
-        return res
-
-    _columns = {
-        'f0': fields.char('Char Field'),
-        'f1': fields.function(
-            _compute_f1, type='char', string='Function Field', store=True),
-    }
-
-##############################################################################
-#
-#    NEW API
-#
-##############################################################################
 from openerp import models, fields, api, _
+from openerp.exceptions import AccessError
 
 
 class Category(models.Model):
@@ -116,6 +47,7 @@ class Category(models.Model):
         if self.search_count([('id', 'in', self._ids), ('name', '=', 'NOACCESS')]):
             raise AccessError('Sorry')
         return super(Category, self).read(fields=fields, load=load)
+
 
 class Discussion(models.Model):
     _name = 'test_new_api.discussion'
@@ -221,6 +153,7 @@ class EmailMessage(models.Model):
                               required=True, ondelete='cascade')
     email_to = fields.Char('To')
 
+
 class Multi(models.Model):
     """ Model for testing multiple onchange methods in cascade that modify a
         one2many field several times.
@@ -314,6 +247,15 @@ class Bar(models.Model):
             bar.foo = self.env['test_new_api.foo'].search([('name', '=', bar.name)], limit=1)
 
 
+class Related(models.Model):
+    _name = 'test_new_api.related'
+
+    name = fields.Char()
+    # related fields with a single field
+    related_name = fields.Char(related='name')
+    related_related_name = fields.Char(related='related_name')
+
+
 class ComputeInverse(models.Model):
     _name = 'test_new_api.compute.inverse'
 
@@ -332,3 +274,9 @@ class ComputeInverse(models.Model):
         self.counts['inverse'] += 1
         for record in self:
             record.foo = record.bar
+
+
+class CompanyDependent(models.Model):
+    _name = 'test_new_api.company'
+
+    foo = fields.Char(company_dependent=True)

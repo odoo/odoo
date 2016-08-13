@@ -19,11 +19,11 @@ var FormPresenceIndicator = form_common.AbstractField.extend({
         return this._super();
     },
     render_value: function() {
-        this.$('.oe_hr_attendance_form_status').toggleClass("oe_hr_attendance_form_status_green", this.get_value() == 'checked_in');
-        this.$('.oe_hr_attendance_form_status').toggleClass("oe_hr_attendance_form_status_red", this.get_value() == 'checked_out');
+        this.$('.oe_hr_attendance_status').toggleClass("oe_hr_attendance_status_green", this.get_value() == 'checked_in');
+        this.$('.oe_hr_attendance_status').toggleClass("oe_hr_attendance_status_red", this.get_value() == 'checked_out');
     },
     display_field: function() {
-        this.$el.html(QWeb.render("FormPresenceIndicator"));
+        this.$el.html(QWeb.render("PresenceIndicator"));
     },
 });
 
@@ -38,11 +38,11 @@ var KanbanPresenceIndicator = kanban_widgets.AbstractField.extend({
         return this._super();
     },
     render_value: function() {
-        this.$('.oe_kanban_status').toggleClass("oe_kanban_status_green", this.field.raw_value == 'checked_in');
-        this.$('.oe_kanban_status').toggleClass("oe_kanban_status_red", this.field.raw_value == 'checked_out');
+        this.$('.oe_hr_attendance_status').toggleClass("oe_hr_attendance_status_green", this.field.raw_value == 'checked_in');
+        this.$('.oe_hr_attendance_status').toggleClass("oe_hr_attendance_status_red", this.field.raw_value == 'checked_out');
     },
     display_field: function() {
-        this.$el.html(QWeb.render("KanbanPresenceIndicator"));
+        this.$el.html(QWeb.render("PresenceIndicator"));
     },
 });
 

@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import json
 
-from openerp import api, models
+from odoo import api, models
 
 
 class WebsitePlanner(models.Model):

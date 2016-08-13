@@ -47,7 +47,7 @@ class CampaignAnalysis(models.Model):
     def _compute_total_cost(self):
         for analysis in self:
             wi_count = self.env['marketing.campaign.workitem'].search_count([('segment_id.campaign_id', '=', analysis.campaign_id.id)])
-            analysis.total_cost = analysis.activity.variable_cost + ((analysis.campaign_id.fixed_cost or 1.00) / wi_count)
+            analysis.total_cost = analysis.activity_id.variable_cost + ((analysis.campaign_id.fixed_cost or 1.00) / wi_count)
 
     @api.model_cr
     def init(self):

@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 import urlparse
 import time
 
 import lxml.html
 
-import openerp
+import odoo
 import re
 
 _logger = logging.getLogger(__name__)
 
-class Crawler(openerp.tests.HttpCase):
-    """ Test suite crawling an openerp CMS instance and checking that all
+
+class Crawler(odoo.tests.HttpCase):
+    """ Test suite crawling an Odoo CMS instance and checking that all
     internal links lead to a 200 response.
 
     If a username and a password are provided, authenticates the user before
@@ -22,7 +25,7 @@ class Crawler(openerp.tests.HttpCase):
     post_install = True
 
     def crawl(self, url, seen=None, msg=''):
-        if seen == None:
+        if seen is None:
             seen = set()
 
         url_slug = re.sub(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", '/<slug>/', url)
@@ -35,7 +38,7 @@ class Crawler(openerp.tests.HttpCase):
         _logger.info("%s %s", msg, url)
         r = self.url_open(url)
         code = r.getcode()
-        self.assertIn( code, xrange(200, 300), "%s Fetching %s returned error response (%d)" % (msg, url, code))
+        self.assertIn(code, xrange(200, 300), "%s Fetching %s returned error response (%d)" % (msg, url, code))
 
         if r.info().gettype() == 'text/html':
             doc = lxml.html.fromstring(r.read())
@@ -64,7 +67,6 @@ class Crawler(openerp.tests.HttpCase):
                 self.crawl(href, seen, msg)
         return seen
 
-
     def test_10_crawl_public(self):
         t0 = time.time()
         t0_sql = self.registry.test_cr.sql_log_count
@@ -72,7 +74,7 @@ class Crawler(openerp.tests.HttpCase):
         count = len(seen)
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
-        _logger.log(25, "public crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request, ", count, duration, sql, duration/count, float(sql)/count)
+        _logger.log(25, "public crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request, ", count, duration, sql, duration / count, float(sql) / count)
 
     def test_20_crawl_demo(self):
         t0 = time.time()
@@ -82,7 +84,7 @@ class Crawler(openerp.tests.HttpCase):
         count = len(seen)
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
-        _logger.log(25, "demo crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration/count, float(sql)/count)
+        _logger.log(25, "demo crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)
 
     def test_30_crawl_admin(self):
         t0 = time.time()
@@ -92,4 +94,4 @@ class Crawler(openerp.tests.HttpCase):
         count = len(seen)
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
-        _logger.log(25, "admin crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration/count, float(sql)/count)
+        _logger.log(25, "admin crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)

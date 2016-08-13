@@ -86,12 +86,6 @@ class TestORM(TransactionCase):
         result = partner.read()
         self.assertIsInstance(result, list)
 
-        # special cases for the old API only
-        result = self.registry('res.partner').read(self.cr, self.uid, [partner.id])
-        self.assertIsInstance(result, list)
-        result = self.registry('res.partner').read(self.cr, self.uid, partner.id)
-        self.assertIsInstance(result, dict)
-
     @mute_logger('openerp.models')
     def test_search_read(self):
         partner = self.env['res.partner']

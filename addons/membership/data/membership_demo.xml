@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Demo Data for Memberships  -->
+    <record id="product.membership_0" model="product.product">
+        <field name="membership">True</field>
+        <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
+        <field eval="time.strftime('%Y-12-31')" name="membership_date_to"/>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="product.membership_1" model="product.product">
+        <field name="membership">True</field>
+        <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
+        <field eval="time.strftime('%Y-12-31')" name="membership_date_to"/>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="product.membership_2" model="product.product">
+        <field name="membership">True</field>
+        <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
+        <field eval="time.strftime('%Y-12-31')" name="membership_date_to"/>
+        <field name="active" eval="True"/>
+    </record>
+
+</odoo>

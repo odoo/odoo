@@ -67,7 +67,7 @@ class CrossoveredBudgetLines(models.Model):
     _name = "crossovered.budget.lines"
     _description = "Budget Line"
 
-    crossovered_budget_id = fields.Many2one('crossovered.budget', 'Budget', ondelete='cascade', select=True, required=True)
+    crossovered_budget_id = fields.Many2one('crossovered.budget', 'Budget', ondelete='cascade', index=True, required=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     general_budget_id = fields.Many2one('account.budget.post', 'Budgetary Position', required=True)
     date_from = fields.Date('Start Date', required=True)

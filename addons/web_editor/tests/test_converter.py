@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import textwrap
 import unittest
 
 from lxml import etree, html
 from lxml.builder import E
 
-from openerp.tests import common
-from openerp.addons.web_editor.models.ir_qweb import html_to_text
+from odoo.tests import common
+from odoo.addons.web_editor.models.ir_qweb import html_to_text
 
 
 class TestHTMLToText(unittest.TestCase):

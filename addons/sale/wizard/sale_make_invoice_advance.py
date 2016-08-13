@@ -1,10 +1,12 @@
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 
-from openerp import api, fields, models, _
-import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
+from odoo import api, fields, models, _
+import odoo.addons.decimal_precision as dp
+from odoo.exceptions import UserError
+
 
 class SaleAdvancePaymentInv(models.TransientModel):
     _name = "sale.advance.payment.inv"
@@ -42,11 +44,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
         ('percentage', 'Down payment (percentage)'),
         ('fixed', 'Down payment (fixed amount)')
         ], string='What do you want to invoice?', default=_get_advance_payment_method, required=True)
-    product_id = fields.Many2one('product.product', string='Down Payment Product', domain=[('type', '=', 'service')],\
+    product_id = fields.Many2one('product.product', string='Down Payment Product', domain=[('type', '=', 'service')],
         default=_default_product_id)
     count = fields.Integer(default=_count, string='# of Orders')
     amount = fields.Float('Down Payment Amount', digits=dp.get_precision('Account'), help="The amount to be invoiced in advance, taxes excluded.")
-    deposit_account_id = fields.Many2one("account.account", string="Income Account", domain=[('deprecated', '=', False)],\
+    deposit_account_id = fields.Many2one("account.account", string="Income Account", domain=[('deprecated', '=', False)],
         help="Account used for deposits", default=_default_deposit_account_id)
     deposit_taxes_id = fields.Many2many("account.tax", string="Customer Taxes", help="Taxes used for deposits", default=_default_deposit_taxes_id)
 
@@ -70,8 +72,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
             account_id = order.fiscal_position_id.map_account(prop_id)
         if not account_id:
             raise UserError(
-                _('There is no income account defined for this product: "%s". You may have to install a chart of account from Accounting app, settings menu.') % \
-                    (self.product_id.name,))
+                _('There is no income account defined for this product: "%s". You may have to install a chart of account from Accounting app, settings menu.') %
+                (self.product_id.name,))
 
         if self.amount <= 0.00:
             raise UserError(_('The value of the down payment amount must be positive.'))

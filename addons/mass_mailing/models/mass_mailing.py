@@ -6,7 +6,7 @@ import random
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 
 
 class MassMailingTag(models.Model):
@@ -456,7 +456,6 @@ class MassMailing(models.Model):
         """ Override read_group to always display all states. """
         if groupby and groupby[0] == "state":
             # Default result structure
-            # states = self._get_state_list(cr, uid, context=context)
             states = [('draft', _('Draft')), ('in_queue', _('In Queue')), ('sending', _('Sending')), ('done', _('Sent'))]
             read_group_all_states = [{
                 '__context': {'group_by': groupby[1:]},
@@ -541,7 +540,7 @@ class MassMailing(models.Model):
 
     def get_recipients(self):
         if self.mailing_domain:
-            domain = eval(self.mailing_domain)
+            domain = safe_eval(self.mailing_domain)
             res_ids = self.env[self.mailing_model].search(domain).ids
         else:
             res_ids = []

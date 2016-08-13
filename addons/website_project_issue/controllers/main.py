@@ -3,13 +3,12 @@
 
 from collections import OrderedDict
 
-from openerp import http, _
-from openerp.addons.website_portal.controllers.main import website_account
-from openerp.http import request
+from odoo import http, _
+from odoo.addons.website_portal.controllers.main import website_account
+from odoo.http import request
 
 
 class WebsiteAccount(website_account):
-
 
     def _prepare_portal_layout_values(self):
         values = super(WebsiteAccount, self)._prepare_portal_layout_values()
@@ -75,9 +74,9 @@ class WebsiteAccount(website_account):
             'default_url': '/my/issues',
             'pager': pager
         })
-        return request.website.render("website_project_issue.my_issues", values)
+        return request.render("website_project_issue.my_issues", values)
 
     @http.route(['/my/issues/<int:issue_id>'], type='http', auth="user", website=True)
     def my_issues_issue(self, issue_id=None, **kw):
         issue = request.env['project.issue'].browse(issue_id)
-        return request.website.render("website_project_issue.my_issues_issue", {'issue': issue})
+        return request.render("website_project_issue.my_issues_issue", {'issue': issue})

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Online Proposals',
     'category': 'Website',
@@ -11,12 +13,13 @@ Odoo Sale Quote Roller
         """,
     'depends': ['website', 'sale', 'mail', 'payment', 'website_portal_sale', 'website_mail'],
     'data': [
-        'quotation_report.xml',
-        'views/website_quotation.xml',
-        'views/website_quotation_backend.xml',
-        'views/report_saleorder.xml',
-        'views/report_quotation.xml',
         'data/website_quotation_data.xml',
+        'report/sale_order_reports.xml',
+        'report/sale_order_templates.xml',
+        'report/website_quote_templates.xml',
+        'views/sale_order_views.xml',
+        'views/sale_quote_views.xml',
+        'views/website_quote_templates.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [

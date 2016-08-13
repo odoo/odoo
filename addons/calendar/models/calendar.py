@@ -127,7 +127,7 @@ class Attendee(models.Model):
     def _send_mail_to_attendees(self, template_xmlid, force_send=False):
         """ Send mail for event invitation to event attendees.
             :param template_xmlid: xml id of the email template to use to send the invitation
-            :param force_send: If set to True, email will be sent to user himself. Usefull for alert, ...
+            :param force_send: if set to True, the mail(s) will be sent immediately (instead of the next queue processing)
         """
         res = False
 
@@ -639,6 +639,14 @@ class Meeting(models.Model):
             display_time = _("%s at %s To\n %s at %s (%s)") % (date_str, time_str, date_deadline.strftime(format_date), date_deadline.strftime(format_time), timezone)
         return display_time
 
+    def _get_duration(self, start, stop):
+        """ Get the duration value between the 2 given dates. """
+        diff = fields.Datetime.from_string(stop) - fields.Datetime.from_string(start)
+        if diff:
+            duration = float(diff.days) * 24 + (float(diff.seconds) / 3600)
+            return round(duration, 2)
+        return 0.0
+
     name = fields.Char('Meeting Subject', required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, track_visibility='onchange', default='draft')
 
@@ -748,17 +756,14 @@ class Meeting(models.Model):
                 meeting.stop_date = meeting.stop
                 meeting.stop_datetime = False
 
-                meeting.duration = 0
+                meeting.duration = 0.0
             else:
                 meeting.start_date = False
                 meeting.start_datetime = meeting.start
                 meeting.stop_date = False
                 meeting.stop_datetime = meeting.stop
 
-                diff = fields.Datetime.from_string(meeting.stop) - fields.Datetime.from_string(meeting.start)
-                if diff:
-                    duration = float(diff.days) * 24 + (float(diff.seconds) / 3600)
-                    meeting.duration = round(duration, 2)
+                meeting.duration = self._get_duration(meeting.start, meeting.stop)
 
     @api.multi
     def _inverse_dates(self):
@@ -925,7 +930,7 @@ class Meeting(models.Model):
 
             attendees_to_remove = self.env["calendar.attendee"]
             if partners_to_remove:
-                attendees_to_remove = self.env["calendar.attendee"].search([('partner_id', 'in', partners_to_remove.ids), ('event_id', '=', meeting.id)]).ids
+                attendees_to_remove = self.env["calendar.attendee"].search([('partner_id', 'in', partners_to_remove.ids), ('event_id', '=', meeting.id)])
                 attendees_to_remove.unlink()
 
             result[meeting.id] = {
@@ -1320,6 +1325,9 @@ class Meeting(models.Model):
 
     @api.multi
     def write(self, values):
+        # compute duration, only if start and stop are modified
+        if not 'duration' in values and 'start' in values and 'stop' in values:
+            values['duration'] = self._get_duration(values['start'], values['stop'])
         # process events one by one
         for meeting in self:
             # special write of complex IDS
@@ -1339,7 +1347,7 @@ class Meeting(models.Model):
                 else:
                     data = meeting.read(['start', 'stop', 'rrule', 'duration'])[0]
                     if data.get('rrule'):
-                        new_ids = meeting.with_context(dont_notify=True)._detach_one_event(values).ids  # to prevent multiple notify_next_alarm
+                        new_ids = meeting.with_context(dont_notify=True).detach_recurring_event(values).ids  # to prevent multiple notify_next_alarm
 
             new_meetings = self.browse(new_ids)
             real_meetings = self.browse(real_ids)
@@ -1364,7 +1372,7 @@ class Meeting(models.Model):
                     partners_to_notify = meeting.partner_ids.ids
                     event_attendees_changes = attendees_create and attendees_create[real_ids[0]]
                     if event_attendees_changes:
-                        partners_to_notify.update(event_attendees_changes['removed_partners'].ids)
+                        partners_to_notify.append(event_attendees_changes['removed_partners'].ids)
                     self.env['calendar.alarm_manager'].notify_next_alarm(partners_to_notify)
 
             if (values.get('start_date') or values.get('start_datetime')) and values.get('active', True):
@@ -1383,6 +1391,10 @@ class Meeting(models.Model):
     def create(self, values):
         if not 'user_id' in values:  # Else bug with quick_create when we are filter on an other user
             values['user_id'] = self.env.user.id
+
+        # compute duration, if not given
+        if not 'duration' in values:
+            values['duration'] = self._get_duration(values['start'], values['stop'])
 
         meeting = super(Meeting, self).create(values)
 

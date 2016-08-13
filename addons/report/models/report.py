@@ -6,8 +6,8 @@ from odoo.exceptions import AccessError
 from odoo.sql_db import TestCursor
 from odoo.tools import config
 from odoo.tools.misc import find_in_path
-from odoo.addons.web.http import request
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.http import request
+from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
 
 import base64
@@ -125,8 +125,9 @@ class Report(models.Model):
         # Otherwise, fallback on the generic html rendering.
         report_model_name = 'report.%s' % report_name
         report_model = self.env.get(report_model_name)
+
         if report_model is not None:
-            return report_model.render_html(data=data)
+            return report_model.render_html(docids, data=data)
         else:
             report = self._get_report_from_name(report_name)
             docs = self.env[report.model].browse(docids)
@@ -326,7 +327,7 @@ class Report(models.Model):
 
     @api.model
     def _attachment_filename(self, records, report):
-        return dict((record.id, eval(report.attachment, {'object': record, 'time': time})) for record in records)
+        return dict((record.id, safe_eval(report.attachment, {'object': record, 'time': time})) for record in records)
 
     @api.model
     def _attachment_stored(self, records, report, filenames=None):

@@ -206,13 +206,8 @@ class Users(models.Model):
     share = fields.Boolean(compute='_compute_share', compute_sudo=True, string='Share User', store=True,
          help="External user with limited access, created only for the purpose of sharing data.")
     companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies", default=_companies_count)
-    
-    @api.v7
-    def _get_company(self, cr, uid, context=None, uid2=False):
-        user = self.browse(cr, uid, uid2 or uid, context=context)
-        return Users._get_company(user).id
 
-    @api.v8
+    @api.model
     def _get_company(self):
         return self.env.user.company_id
 
@@ -281,12 +276,7 @@ class Users(models.Model):
         if any(user.company_ids and user.company_id not in user.company_ids for user in self):
             raise ValidationError(_('The chosen company is not in the allowed companies for this user'))
 
-    @api.v7
-    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        result = Users.read(self.browse(cr, uid, ids, context), fields, load=load)
-        return result if isinstance(ids, list) else (bool(result) and result[0])
-
-    @api.v8
+    @api.multi
     def read(self, fields=None, load='_classic_read'):
         if fields and self == self.env.user:
             for key in fields:
@@ -535,11 +525,7 @@ class Users(models.Model):
             'target': 'new',
         }
 
-    @api.v7
-    def has_group(self, cr, uid, group_ext_id):
-        return self._has_group(cr, uid, group_ext_id)
-
-    @api.v8
+    @api.model
     def has_group(self, group_ext_id):
         # use singleton's id if called on a non-empty recordset, otherwise
         # context uid
@@ -840,12 +826,7 @@ class UsersView(models.Model):
         self._add_reified_groups(group_fields, values)
         return values
 
-    @api.v7
-    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        result = UsersView.read(self.browse(cr, uid, ids, context), fields, load=load)
-        return result if isinstance(ids, list) else (bool(result) and result[0])
-
-    @api.v8
+    @api.multi
     def read(self, fields=None, load='_classic_read'):
         # determine whether reified groups fields are required, and which ones
         fields1 = fields or self.fields_get().keys()

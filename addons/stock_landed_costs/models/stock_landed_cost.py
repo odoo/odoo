@@ -242,7 +242,7 @@ class LandedCostLine(models.Model):
         'stock.landed.cost', 'Landed Cost',
         required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', 'Product', required=True)
-    price_unit = fields.Float('Cost', digits_compute=dp.get_precision('Product Price'), required=True)
+    price_unit = fields.Float('Cost', digits=dp.get_precision('Product Price'), required=True)
     split_method = fields.Selection(product.SPLIT_METHOD, string='Split Method', required=True)
     account_id = fields.Many2one(
         'account.account', 'Account',
@@ -273,21 +273,21 @@ class AdjustmentLines(models.Model):
     product_id = fields.Many2one('product.product', 'Product', required=True)
     quantity = fields.Float(
         'Quantity', default=1.0,
-        digits_compute=dp.get_precision('Product Unit of Measure'), required=True)
+        digits=dp.get_precision('Product Unit of Measure'), required=True)
     weight = fields.Float(
         'Weight', default=1.0,
-        digits_compute=dp.get_precision('Product Unit of Measure'))
+        digits=dp.get_precision('Product Unit of Measure'))
     volume = fields.Float(
         'Volume', default=1.0,
-        digits_compute=dp.get_precision('Product Unit of Measure'))
+        digits=dp.get_precision('Product Unit of Measure'))
     former_cost = fields.Float(
-        'Former Cost', digits_compute=dp.get_precision('Product Price'))
+        'Former Cost', digits=dp.get_precision('Product Price'))
     former_cost_per_unit = fields.Float(
         'Former Cost(Per Unit)', compute='_compute_former_cost_per_unit',
         digits=0, store=True)
     additional_landed_cost = fields.Float(
         'Additional Landed Cost',
-        digits_compute=dp.get_precision('Product Price'))
+        digits=dp.get_precision('Product Price'))
     final_cost = fields.Float(
         'Final Cost', compute='_compute_final_cost',
         digits=0, store=True)

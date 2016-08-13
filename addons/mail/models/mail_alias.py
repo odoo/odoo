@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 import re
 import unicodedata
 
-from openerp import _, api, fields, models, SUPERUSER_ID
-from openerp.exceptions import ValidationError
-from openerp.modules.registry import RegistryManager
-from openerp.tools import ustr
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
+from odoo.tools import ustr
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -94,7 +94,7 @@ class Alias(models.Model):
     @api.constrains('alias_defaults')
     def _check_alias_defaults(self):
         try:
-            dict(eval(self.alias_defaults))
+            dict(safe_eval(self.alias_defaults))
         except Exception:
             raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
 
@@ -232,9 +232,10 @@ class AliasMixin(models.AbstractModel):
         aliases.unlink()
         return res
 
-    def _init_column(self, cr, name, context=None):
+    @api.model_cr_context
+    def _init_column(self, name):
         """ Create aliases for existing rows. """
-        super(AliasMixin, self)._init_column(cr, name, context=context)
+        super(AliasMixin, self)._init_column(name)
         if name != 'alias_id':
             return
 
@@ -242,13 +243,13 @@ class AliasMixin(models.AbstractModel):
             'alias_model_name': self.get_alias_model_name({}),
             'alias_parent_model_name': self._name,
         }
-        alias_model = self.pool['mail.alias'].browse(cr, SUPERUSER_ID, [], alias_ctx)
+        alias_model = self.env['mail.alias'].sudo().with_context(alias_ctx).browse([])
 
         child_ctx = {
             'active_test': False,       # retrieve all records
             'prefetch_fields': False,   # do not prefetch fields on records
         }
-        child_model = self.browse(cr, SUPERUSER_ID, [], child_ctx)
+        child_model = self.sudo().with_context(child_ctx).browse([])
 
         for record in child_model.search([('alias_id', '=', False)]):
             # create the alias, and link it to the current record
