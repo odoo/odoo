@@ -9,6 +9,7 @@
 # Davor Bojkić <davor.bojkic@storm.hr>, 2015-2016
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2015
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015-2016
+# Jasmina Otročak <jasmina@uvid.hr>, 2016
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
 # Matija Pildek <matija.pildek@storm.hr>, 2016
 # Stjepan Lovasić <stjepan.lovasic@storm.hr>, 2015
@@ -18,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-07-01 12:12+0000\n"
-"Last-Translator: Davor Bojkić <davor.bojkic@storm.hr>\n"
+"PO-Revision-Date: 2016-08-12 14:36+0000\n"
+"Last-Translator: Jasmina Otročak <jasmina@uvid.hr>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,7 +84,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n<p>Pozdrav ${object.partner_id.name},</p>\n<p>Za Vas je dostupan novi račun: </p>\n\n<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n&nbsp;&nbsp;<strong>REFERENCA</strong><br />\n&nbsp;&nbsp;Broj računa: <strong>${object.number}</strong><br />\n&nbsp;&nbsp;Ukupan iznos računa: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n&nbsp;&nbsp;Datum računa: ${object.date_invoice}<br />\n% if object.origin:\n&nbsp;&nbsp;Narudžba: ${object.origin}<br />\n% endif\n% if object.user_id:\n&nbsp;&nbsp;Vaši podaci: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n% endif\n</p> \n\n% if object.paypal_url:\n<br/>\n<p>Možete platiti koristeći Paypal:</p>\n<a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n<img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n</a>\n% endif\n\n<br/>\n<p>Ako imate bilo kakvih pitanja slobodno nam se javite.</p>\n<p>Hvala što ste odabrali ${object.company_id.name or 'us'}!</p>\n<br/>\n<br/>\n<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n<strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n</div>\n<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n</span>\n% if object.company_id.phone:\n<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\nPhone:&nbsp; ${object.company_id.phone}\n</div>\n% endif\n% if object.company_id.website:\n<div>\nWeb :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n</div>\n%endif\n<p></p>\n</div>\n</div>"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -275,7 +276,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Customer follow-up</strong>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n<strong>Praćenje kupaca</strong>\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -717,7 +718,7 @@ msgid ""
 "                payments on a daily basis. You can enter the coins that are in\n"
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
-msgstr ""
+msgstr "Blagajna Vam omogućuje upravljanje gotovinom.\nNa jednostavan način možete pratiti plaćanja gotovinom na dnevnoj bazi.\nUnesite saldo blagajne i knjižite uplate i isplate."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1206
@@ -743,26 +744,26 @@ msgid ""
 "A bank statement is a summary of all financial transactions\n"
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
-msgstr ""
+msgstr "Izvod banke je zbroj svih financijskih transakcija\ntokom zadanog vremenskog perioda.\nIzvod banke dobivate od svoje banke."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account."
-msgstr ""
+msgstr "Stavka izvoda banke je financijska transakcija preko žiro računa."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
 msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
-msgstr ""
+msgstr "Knjiženja se sastoje od stavaka koje mogu biti dugovne ili potražne."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
 msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
-msgstr ""
+msgstr "Dnevnik se koristi za praćenje transakcija za \nsvakodnevne računovodstvene podatke."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -818,7 +819,7 @@ msgid ""
 "A typical company may use one journal per payment method (cash,\n"
 "                bank accounts, checks), one purchase journal, one sale journal\n"
 "                and one for miscellaneous information."
-msgstr ""
+msgstr "Tvrtka može koristiti po jedan dnevnik za svaku metodu plaćanja (gotovina,\ntransakcijski račun, čekovi), jedan dnevnik za nabavu, jedan dnevnik za prodaju\ni jedan za razne informacije."
 
 #. module: account
 #. openerp-web
@@ -850,17 +851,17 @@ msgstr "Bruto bilanca"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Account Balances"
-msgstr ""
+msgstr "Saldo konta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_cashbox
 msgid "Account Bank Statement Cashbox Details"
-msgstr ""
+msgstr "Detalji blagajne izvoda banke"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_closebalance
 msgid "Account Bank Statement closing balance"
-msgstr ""
+msgstr "Završni saldo izvoda banke"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
@@ -918,7 +919,7 @@ msgstr "Mapiranje konta"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Account Move Reversal"
-msgstr ""
+msgstr "Povrat knjiženja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_acc_name
@@ -1008,7 +1009,7 @@ msgstr "Predložak konta"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_valuation_account_id
 #: model:ir.model.fields,field_description:account.field_res_company_property_stock_valuation_account_id
 msgid "Account Template for Stock Valuation"
-msgstr ""
+msgstr "Prijedlog konta za vrednovanje zalihe"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_template_form
@@ -1070,7 +1071,7 @@ msgstr "Zatvaranje stavke glavne knjige (otpis)"
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account move reversal"
-msgstr ""
+msgstr "Povrat knjiženja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_src_id
@@ -1089,7 +1090,7 @@ msgstr "Oznaka konta"
 msgid ""
 "Account that will be set on invoice tax lines for invoices. Leave empty to "
 "use the expense account."
-msgstr ""
+msgstr "Konto koji će se postaviti na stavke poreza na računima. Ostavite prazno za konto troškova."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_refund_account_id
@@ -1097,7 +1098,7 @@ msgstr ""
 msgid ""
 "Account that will be set on invoice tax lines for refunds. Leave empty to "
 "use the expense account."
-msgstr ""
+msgstr "Konto koji će se postaviti na stavke poreza na računima povrata. Ostavite prazno za konto troškova."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_dest_id
@@ -1293,7 +1294,7 @@ msgid ""
 "then calculates a table of credit balance by start Date. So if you request "
 "an interval of 30 days Odoo generates an analysis of creditors for the past "
 "month, past two months, and so on."
-msgstr ""
+msgstr "Struktura IOS-a partnera je detaljan izvještaj potraživanja po intervalima. Kada se otvara izvještaj, Odoo vas traži naziv tvrtke, početni datum i trajanje intervala po kojem želite analizu (u danima). Odoo nakon toga izračunava tablicu salda potraživanja po početnom datumu. Ako želite interval od 30 dana Odoo generira analizu potraživanja za zadnji mjesec, zadnja dva mjeseca, itd... "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -1388,7 +1389,7 @@ msgstr "Sve odabrane stavke dnevnika će biti potvrđene i objavljene. Nećete b
 msgid ""
 "All the account entries lines must be processed in order to close the "
 "statement."
-msgstr ""
+msgstr "Sve stavke knjiženja moraju biti završene kako bi mogli zatvoriti izvod."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_update_posted
@@ -1478,7 +1479,7 @@ msgstr "Potpisan iznos"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile_amount
 msgid "Amount concerned by this matching. Assumed to be always positive"
-msgstr ""
+msgstr "Iznos obuhvaćen ovim zatvaranjem. Pretpostavka je da je uvijek pozitivan."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_amount_currency
@@ -1520,7 +1521,7 @@ msgid ""
 "                balance sheet and the income statement (profit and loss\n"
 "                account). The annual accounts of a company are required by law\n"
 "                to disclose a certain amount of information."
-msgstr ""
+msgstr "Konto je dio glavne knjige koji omogućuje\nbilježenje dugovnih i potražnih transakcija.\nTvrtke prikazuju godišnji promet u dva glavna djela:\nBruto bilancom i Računom dobiti ili gubitka.\nGodišnji prometi tvrtke su zakonski određeni\nkako bi se vidjele određene informacije o poslovanju."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -1530,7 +1531,7 @@ msgid ""
 "                the process for the annual closing. Reports such as the Balance\n"
 "                Sheet and the Profit and Loss report use the category\n"
 "                (profit/loss or balance sheet)."
-msgstr ""
+msgstr "Vrsta konta se koristi za određivanje načina na koji se koristi\nu svakom dnevniku. Različita vrsta konta određuje proces godišnjeg zatvaranja.\nIzvještaji kao što su Bilanca i Račun doobiti ili gubitka koriste kategoriju konta.\n(Prihod/rashod ili Bilanca)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -1650,7 +1651,7 @@ msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr ""
+msgstr "Upravljanje dugotrajnom imovinom: Upravljanje imovinom koja je u vlasništvu tvrtke ili osobe. Omogućuje praćenje amortizacije na toj imovini i odmah kreira knjiženje za stavke amortizacije.\n\n-Ovo instalira modul account_asset. Ako ne označite ovu kučicu, moći ćete fakturirati i bilježiti plaćanja, ali nećete moći koristiti ostale računovodstvene stavke (temeljnice, kontni plan, ... ) "
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1802,7 +1803,7 @@ msgstr "Bankovne naknade"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_yodlee
 msgid "Bank Interface - Sync your bank feeds automatically"
-msgstr ""
+msgstr "Sučelje banke - automatska sinkronizacija"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_bank_journal_ids
@@ -1824,12 +1825,12 @@ msgstr "Zatvaranje izvoda banke"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_operation_template_tree
 msgid "Bank Reconciliation Move Presets"
-msgstr ""
+msgstr "Zadane postavke zatvaranja izvoda banke"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_operation_template_search
 msgid "Bank Reconciliation Move preset"
-msgstr ""
+msgstr "Zadana postavka zatvaranja izvoda banke"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -1858,7 +1859,7 @@ msgstr "Izvodi banke"
 #. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "Bank Synchronization"
-msgstr ""
+msgstr "Sinkronizacija banke"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
@@ -1883,7 +1884,7 @@ msgstr "Banka i blagajna"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_statement_line_id
 msgid "Bank statement line reconciled with this entry"
-msgstr ""
+msgstr "Stavka bankovnog izvoda zatvorena sa ovim knjiženjem"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
@@ -1902,7 +1903,7 @@ msgstr "Bankovni izvadci su potpuno zatvoreni."
 msgid ""
 "Before continuing, you must install the Chart of Account related to your "
 "country (or the generic one if your country is not listed)."
-msgstr ""
+msgstr "Prije nastavka morate instalirati kontni plan za vašu državu (ili opći ako vaša država nije navedena) "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1950,7 +1951,7 @@ msgstr "Računi za plaćanje"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type_include_initial_balance
 msgid "Bring Accounts Balance Forward"
-msgstr ""
+msgstr "Prenesite saldo konta"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -2107,7 +2108,7 @@ msgstr "Nije moguće kreirati neuravnoteženu stavku dnevnika."
 msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
-msgstr ""
+msgstr "Ne postoji kontni plan za ovu tvrtku. Morate ga postaviti.\nPogledajte postavke računovodstva."
 
 #. module: account
 #: code:addons/account/models/account_move.py:281
@@ -2115,7 +2116,7 @@ msgstr ""
 msgid ""
 "Cannot find any account journal of \"%s\" type for this company, You should create one.\n"
 " Please go to Journal Configuration"
-msgstr ""
+msgstr "Za ovu tvrtku ne postoji dnevnik vrste \"%s\".\nPogledajte konfiguraciju dnevnika."
 
 #. module: account
 #: code:addons/account/models/account.py:376
@@ -2128,13 +2129,13 @@ msgstr "Nije moguće kreirati nekorištenu šifru konta."
 #, python-format
 msgid ""
 "Cannot generate an unused journal code. Please fill the 'Shortcode' field."
-msgstr ""
+msgstr "Nije moguće generirati ne korištenu šifru dnevnika. Ispunite polje 'kratka šifra'."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:54
 #, python-format
 msgid "Cannot refund draft/proforma/cancelled invoice."
-msgstr ""
+msgstr "Ne mogu napraviti povrat računa koji je u stanju nacrt/predračun/otkazan."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:56
@@ -2142,7 +2143,7 @@ msgstr ""
 msgid ""
 "Cannot refund invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
-msgstr ""
+msgstr "Nije moguće napraviti povrat računa koji je već zatvoren, račun bi prvo trebao  biti ponovo otvoren. Jedino možete napraviti storno ovog računa."
 
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
@@ -2285,7 +2286,7 @@ msgstr "Provjeri saldo zatvaranja"
 msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
-msgstr ""
+msgstr "Označite ako ovaj konto dopušta zatvaranja."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_expects_chart_of_accounts
@@ -2375,12 +2376,12 @@ msgstr "Kliknite za kreiranje stavke dnevnika."
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
 msgid "Click to create a new cash log."
-msgstr ""
+msgstr "Kliknite za kreiranje novog dnevnika gotovine."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_operation_template
 msgid "Click to create a reconciliation model."
-msgstr ""
+msgstr "Kliknite za kreiranje modela zatvaranja."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -2560,7 +2561,7 @@ msgstr "Sastavi e-poštu"
 msgid ""
 "Compute the counter part accounts of this journal item for this journal "
 "entry. This can be needed in reports."
-msgstr ""
+msgstr "Izračunajte protustavke konta ove temeljnice za ovu stavku. Ovo može biti potrebno u izvještajima.  "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_end
@@ -2586,7 +2587,7 @@ msgstr "Greška kod konfiguracije!"
 msgid ""
 "Configuration error!\n"
 "Could not find any account to create the invoice, are you sure you have a chart of account installed?"
-msgstr ""
+msgstr "Greška!\nNije pronađen niti jedan konto za stvaranje računa, provjerite da li ste instalirali kontni plan."
 
 #. module: account
 #: code:addons/account/models/account.py:259
@@ -2594,7 +2595,7 @@ msgstr ""
 msgid ""
 "Configuration error!\n"
 "The currency of the journal should be the same than the default credit account."
-msgstr ""
+msgstr "Greška u konfiguraciji!\nValuta dnevnika bi trebala biti ista kao ona u predefiniranom potražnom kontu."
 
 #. module: account
 #: code:addons/account/models/account.py:261
@@ -2602,7 +2603,7 @@ msgstr ""
 msgid ""
 "Configuration error!\n"
 "The currency of the journal should be the same than the default debit account."
-msgstr ""
+msgstr "Greška u konfiguraciji!\nValuta dnevnika bi trebala biti ista kao ona u predefiniranom dugovnom kontu."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2658,7 +2659,7 @@ msgstr "Potvrđeno"
 msgid ""
 "Confirming this will create automatically a journal entry with the "
 "difference in the profit/loss account set on the cash journal."
-msgstr ""
+msgstr "Nakon potvrde automatski će se kreirati stavke knjiženja, a razlika prihod/rashod će se knjižiti na konto koji je postavljen u dnevniku gotovine."
 
 #. module: account
 #. openerp-web
@@ -2687,7 +2688,7 @@ msgstr "Ugovori"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Control-Access"
-msgstr ""
+msgstr "Kontrola pristupa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_counterpart
@@ -2734,7 +2735,7 @@ msgstr "Kreiraj dobavljače"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1861
 #, python-format
 msgid "Create Write-off"
-msgstr ""
+msgstr "Kreiraj otpis"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -2745,7 +2746,7 @@ msgstr "Napravi nacrt povrata"
 #: code:addons/account/models/account_journal_dashboard.py:227
 #, python-format
 msgid "Create cash statement"
-msgstr ""
+msgstr "Kreiraj knjiženje gotovine"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:213
@@ -2758,7 +2759,7 @@ msgstr "Kreiraj račun"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:2462
 #, python-format
 msgid "Create writeoff"
-msgstr ""
+msgstr "Kreiraj otpis"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2900,17 +2901,17 @@ msgstr "Potražni iznos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_credit_cash_basis
 msgid "Credit cash basis"
-msgstr ""
+msgstr "Potraživanja po naplati"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr ""
+msgstr "Potražne stavke koje odgovaraju sa ovom stavkom."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_credit_move_id
 msgid "Credit move id"
-msgstr ""
+msgstr "ID potražnog knjiženja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_currency_id
@@ -2989,7 +2990,7 @@ msgstr "Kupac"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Customer Flow"
-msgstr ""
+msgstr "Tok kupca"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -3113,17 +3114,17 @@ msgstr "Dugovni iznos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit_cash_basis
 msgid "Debit cash basis"
-msgstr ""
+msgstr "Dugovanje po naplati"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_matched_debit_ids
 msgid "Debit journal items that are matched with this journal item."
-msgstr ""
+msgstr "Dugovne stavke koje odgovaraju sa ovom stavkom."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_debit_move_id
 msgid "Debit move id"
-msgstr ""
+msgstr "ID dugovnog knjiženja"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -3249,7 +3250,7 @@ msgstr "Detektiraj Automatski"
 msgid ""
 "Determines where the tax is selectable. Note : 'None' means a tax can't be "
 "used by itself, however it can still be used in a group."
-msgstr ""
+msgstr "Određuje gdje se porez može odabrati. Napomena: \"Ništa\" znači da se porez ne može koristiti samostalno, ali može se koristiti u grupi."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_difference
@@ -3397,7 +3398,7 @@ msgstr "Prikaži ovaj bankovni račun u podnožju ispisa dokumenata kao što su 
 msgid ""
 "Document: Customer account statement<br/>\n"
 "                    Date:"
-msgstr ""
+msgstr "Dokument: Otvorene stavke kupca<br/>\nDatum:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3525,7 +3526,7 @@ msgstr "TR"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1508
 #, python-format
 msgid "Efficiency at its finest"
-msgstr ""
+msgstr "Efikasnost na najbolji način"
 
 #. module: account
 #: code:addons/account/models/account_move.py:804
@@ -3546,7 +3547,7 @@ msgstr "Omogući usporedbu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_reports_followup
 msgid "Enable payment followup management"
-msgstr ""
+msgstr "Omogućuje praćenje plaćanja"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3578,12 +3579,12 @@ msgstr "Završni saldo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_end_id
 msgid "Ending Cashbox"
-msgstr ""
+msgstr "Završna blagajna"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Enjoy your Odoo experience,"
-msgstr ""
+msgstr "Uživajte u vašem Odoo doživljaju,"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -3662,7 +3663,7 @@ msgid ""
 "Exchange rates can be automatically updated once a day from <strong>Yahoo "
 "Finance</strong> or the <strong>European Central Bank</strong>. You can "
 "activate this feature in the bottom of the"
-msgstr ""
+msgstr "Tečajevi se mogu automatski ažurirati jednom na dan sa <strong>Yahoo Financija</strong> ili <strong>Europske središnje banke</strong>. Ovu opciju možete uključiti na dnu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_expects_chart_of_accounts
@@ -3702,7 +3703,7 @@ msgstr "Dodatne mogućnosti"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1515
 #, python-format
 msgid "Fast reconciler"
-msgstr ""
+msgstr "Brzo zatvaranje"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3755,12 +3756,12 @@ msgstr "Filter..."
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_general_account_id
 #: model:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "Financial Account"
-msgstr ""
+msgstr "Financijski konto"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report
 msgid "Financial Report"
-msgstr ""
+msgstr "Financijski izvještaj"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_style_overwrite
@@ -3787,7 +3788,7 @@ msgstr "Financijski izvještaj"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "First, register any outstanding customer invoices and vendor bills:"
-msgstr ""
+msgstr "Prvo, potvrdite izlazne i ulazne račune:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
@@ -3945,7 +3946,7 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced from your "
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr ""
+msgstr "Iz ovog izvještaja imate pregled iznosa izdanih računa od strane vaših prodavača. Alat pretrage može se također koristiti za personalizaciju vaših izvještaja i priagođavanje analize vašim potrebama."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -3953,7 +3954,7 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr ""
+msgstr "Iz ovog izvještaja imate pregled iznosa izdanih računa vašem kupcu. Alat pretrage može se također koristiti za personalizaciju vaših ispisa računa i priagođavanje analize vašim potrebama."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_accountant
@@ -4037,7 +4038,7 @@ msgstr "Dohvatite vaše bankovne izvatke i importirajte ih u odoo u .QIF formatu
 msgid ""
 "Get your bank statements from your bank and import them through yodlee.com.\n"
 "-that installs the module account_yodlee."
-msgstr ""
+msgstr "Dohvatite bankovne izvadke i importirajte ih preko Yodlee.com servisa.\n- ovo instalira modul account_yodlee."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_sequence
@@ -4065,7 +4066,7 @@ msgstr "Daje poredak kada prikazuje listu redaka uvjeta plaćanja."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:225
 #, python-format
 msgid "Go to bank statements"
-msgstr ""
+msgstr "Bankovni izvodi"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:447
@@ -4121,7 +4122,7 @@ msgstr "Ima računa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_has_outstanding
 msgid "Has outstanding"
-msgstr ""
+msgstr "Ima otvorene stavke"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_has_unreconciled_entries
@@ -4253,7 +4254,7 @@ msgstr "Ukoliok je označeno, porezi izračinati nakon ovog će biti računati b
 msgid ""
 "If set, the amount computed by this tax will be assigned to the same "
 "analytic account as the invoice line (if any)"
-msgstr ""
+msgstr "Ako je postavljeno, ukupan iznos ovog poreza će se dodijeliti istom analitičkom kontu kao i stavka računa (ako se dodjeljuje)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_active
@@ -4313,14 +4314,14 @@ msgid ""
 "             summed and eventually this total tax amount will be rounded. If you sell with tax included,\n"
 "             you should choose 'Round per line' because you certainly want the sum of your tax-included line\n"
 "             subtotals to be equal to the total amount with taxes."
-msgstr ""
+msgstr "Ukoliko odaberete 'Zaokruži po liniji' : za svaki porez, iznos poreza će prvo biti izračunat i zaokružen po svakoj stavci, i nakon toga svi iznosi će biti zbrojeni do ukupnog iznosa poreza. \nUkoliko odaberete 'Zaokruži globalno' : za svaki porez, iznos poreza će biti izračunat po svakoj stavci, ti iznosi će biti zbrojeni, i eventualno ukupni iznos poreza će biti zaokružen. \nAko vršite prodaju sa uključenim porezom trebali bi odabrati 'Zaokruži po liniji' jer svakako želite da suma uključenih poreza po stavkama odgovara ukupnom iznosu poreza uračunatom u cijenu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_general_ledger_initial_balance
 msgid ""
 "If you selected date, this field allow you to add a row to display the "
 "amount of debit/credit/balance that precedes the filter you've set."
-msgstr ""
+msgstr "Ako ste odabrali datum, ovo polje će vam omogućiti da dodate redak za prikaz iznosa duguje/potražuje/saldo koje prethodi filteru koji ste postavili."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_unreconcile_view
@@ -4352,7 +4353,7 @@ msgstr "Ako koristiti uvjete plaćanja, datum dospijeća će biti automatski izr
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "If you want to be able to send customer statements from Odoo, you must:"
-msgstr ""
+msgstr "Ako želite slati izvode kupaca iz Odoo, morate:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4361,7 +4362,7 @@ msgid ""
 "                        from Odoo, you first need to record all outstanding transactions \n"
 "                        in the payable and receivable accounts. These would be invoices \n"
 "                        that have not been paid or payments that have not been reconciled."
-msgstr ""
+msgstr "Ako želite mogućnost slanja otvorenih stavaka Vašim kupcima\ndirektno iz Odoo, prvo morate proknjižiti sve transakcije\nna dugovnim i potražnim kontima. Na izvještaju otvorenih stavaka\nse vide računi koji nisu plaćeni ili uplate koje nisu zatvorene. "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4393,7 +4394,7 @@ msgstr "Uvoz podataka korištenjem gumba  \"Uvoz\" u gornjem ljevom kutu"
 msgid ""
 "Importing your statements in via a supported file format (QIF, OFX, CODA or "
 "CSV format)"
-msgstr ""
+msgstr "Uvoz bankovnih izvoda u podržanom formatu (QIF, OFX, CODA ili CSV format)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4406,7 +4407,7 @@ msgstr "U Odoo-u,"
 msgid ""
 "In order to delete a bank statement line, you must first cancel it to delete"
 " related journal items."
-msgstr ""
+msgstr "Kako bi izbrisali bankovni izvod, morate ga prvo otkazati kako bi se obrisale sve stavke dnevnika povezane s njim."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:198
@@ -4434,7 +4435,7 @@ msgstr "Kako bi platiti više računa odjednom, svi moraju biti u istoj valuti."
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "In your old accounting software, print a trial balance"
-msgstr ""
+msgstr "Ispišite bruto bilancu iz vašeg starog računovodstvenog programa."
 
 #. module: account
 #: selection:account.payment.method,payment_type:0
@@ -4525,7 +4526,7 @@ msgstr "Međubankovni prelazni konto"
 msgid ""
 "Intermediary account used when moving money from a liquidity account to "
 "another"
-msgstr ""
+msgstr "Prijelazni konto koji se koristi kada se prebacuje novac sa konta likvidnosti na neki drugi konto."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_narration
@@ -4764,7 +4765,7 @@ msgstr "Označava da je račun poslan"
 #, python-format
 msgid ""
 "It is mandatory to specify an account and a journal to create a write-off."
-msgstr ""
+msgstr "Kako bi proknjižili otpis obavezno je navesti konto i dnevnik otpisa."
 
 #. module: account
 #. openerp-web
@@ -4781,14 +4782,14 @@ msgid ""
 "                            data to import and balances to set. If you plan to do so, \n"
 "                            we recommend you start using Odoo for invoicing and payments \n"
 "                            now, and then move all other accounting transactions at a later time."
-msgstr ""
+msgstr "Česta praksa je promjena računovodstvenog programa\nna kraju fiskalne godine. Na taj način imate manje podataka\nza uvoz i salda za uskladu. Ako planirate promijeniti računovodstveni program\nna kraju fiskalne godine naš prijedlog je da krenete koristiti Odoo za fakturiranje\ni plaćanje, a kasnije unesete ostale računovodstvene transakcije. "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "It's recommended that you do not delete any accounts, even if they are not "
 "relevant. Simply make them inactive."
-msgstr ""
+msgstr "Preporuka je da ne brišete konta, čak i ako nisu bitna.\nStavite da su neaktivna."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -4923,7 +4924,7 @@ msgstr "Dnevnik i partner"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Journal invoices with period in current year"
-msgstr ""
+msgstr "Dnevnik računa sa razdobljem u trenutnoj godini"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -5199,7 +5200,7 @@ msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
-msgstr ""
+msgstr "Zadnji put kada je saldo ovog partnera zatvaran. Postavlja se kada se zatvori  saldo partnera ili kada kliknete na gum \"Gotovo\"."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_last_time_entries_checked
@@ -5207,13 +5208,13 @@ msgid ""
 "Last time the invoices & payments matching was performed on this account. It"
 " is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit Or if you click the \"Done\" button."
-msgstr ""
+msgstr "Zadnji put kada je saldo ovog konta zatvaran. Postavlja se kada se zatvori  saldo partnera ili kada kliknete na gum \"Gotovo\"."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_last_time_entries_checked
 #: model:ir.model.fields,field_description:account.field_res_partner_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr ""
+msgstr "Datum zadnjeg zatvaranja stavaka"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5223,33 +5224,33 @@ msgstr "Pravni naziv"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Cost of Sales"
-msgstr ""
+msgstr "Manji troškovi prodaje"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Current Liabilities"
-msgstr ""
+msgstr "Manje obveze"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Expenses"
-msgstr ""
+msgstr "Manje troškova"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Non-Current Liabilities"
-msgstr ""
+msgstr "Manje dugoročne obveze"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Payable Accounts"
-msgstr ""
+msgstr "Manja konta obveza"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:138
 #, python-format
 msgid "Less Payment"
-msgstr ""
+msgstr "Manje plaćanje"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
@@ -5347,20 +5348,20 @@ msgstr "Glavna valuta kompanije"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Manage time &amp; material contracts or fixed-price recurring subscriptions."
-msgstr ""
+msgstr "Upravljanje vremenom&zalihom; ugovori za materijal ili fiksna cijena koja se stalno obnavlja."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Manage your employee expenses, from encoding, to payments and reporting."
-msgstr ""
+msgstr "Upravljanje troškovima Vaših zaposlenika, od šifriranja, do plaća i izvještavanja."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Manage your various fixed assets, such as buildings, machinery, materials, "
 "cars, etc..., and calculate their associated depreciation over time."
-msgstr ""
+msgstr "Upravljajte svojom dugotrajnom imovinom kao što su zgrade, mehanizacija, materijali, auti itd..., te računajte amortizaciju tokom vremena."
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_management_menu
@@ -5387,7 +5388,7 @@ msgstr "Ručni porezi računa"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Manually enter your transactions using our"
-msgstr ""
+msgstr "Ručno unesite transakcije koristeći naš"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -5500,7 +5501,7 @@ msgid ""
 "Most currencies are already created by default. If you plan\n"
 "                        to use some of them, you should check their <strong>Active</strong>\n"
 "                        field."
-msgstr ""
+msgstr "Većina valuta je već kreirana. Ako planirate \nkoristiti neke od njih provjerite njihovo polje <strong>Aktivno</strong>."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -5629,7 +5630,7 @@ msgstr "Ne prati"
 #: code:addons/account/models/account_invoice.py:925
 #, python-format
 msgid "No appropriate payment method enabled on journal %s"
-msgstr ""
+msgstr "Nije omogućena niti jedna metoda plaćanja na dnevniku %s"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -5649,7 +5650,7 @@ msgstr "Nema rezultata koji odgovaraju '"
 msgid ""
 "No users, including Advisers, can edit accounts prior to and inclusive of "
 "this date. Use it for fiscal year locking for example."
-msgstr ""
+msgstr "Niti jedan korisnik ne može urediti dokumente ovog i prethodnih datuma. Npr. Koristite za zaključavanje fiskalne godine."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_code_digits
@@ -5665,12 +5666,12 @@ msgstr "Broj znamenki za šifru konta"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_assets
 msgid "Non-current Assets"
-msgstr ""
+msgstr "Dugotrajne imovine"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_liabilities
 msgid "Non-current Liabilities"
-msgstr ""
+msgstr "Dugoročne obveze"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -5729,7 +5730,7 @@ msgstr "Broj"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Number (Move)"
-msgstr ""
+msgstr "Broj (temeljnice)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_needaction_counter
@@ -5786,14 +5787,14 @@ msgstr "Računovodstvo u Odoo ima mnogo extra značajki:"
 msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or puchase invoice(s)."
-msgstr ""
+msgstr "Odoo Vam omogućuje zatvaranje stavaka izvoda direktno sa\nulaznim ili izlaznim računom(ima)."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
 msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or puchase invoices."
-msgstr ""
+msgstr "Odoo Vam omogućuje zatvaranje stavaka izvoda direktno sa\nulaznim ili izlaznim računima."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -5802,21 +5803,21 @@ msgid ""
 "                document: invoice, refund, vendor payment, bank statements,\n"
 "                etc. So, you should record journal entries manually only/mainly\n"
 "                for miscellaneous operations."
-msgstr ""
+msgstr "Odoo automatski stvara jednu stavku knjiženja po\ndokumentu: Račun, povrat, plaćanje dobavljaču, izvodi banke,\nitd... Ručno ćete morati knjižiti uglavnom za\nopće operacije."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Odoo can manage multiple companies, but we suggest to setup everything for "
 "your first company before configuring the other ones."
-msgstr ""
+msgstr "U Odoo programu možete koristiti više tvrtki, ali preporuka je da postavite sve postavke za prvu tvrtku prije nego krenete na postavke drugih."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Odoo has already preconfigured a few taxes according to your "
 "country.<br/>Simply review them and check if you need more."
-msgstr ""
+msgstr "Odoo ima predefiniranih par poreza prema potrebama vaše države.<br/>Pregledajte ih i provjerite da li ih trebate više."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5824,7 +5825,7 @@ msgid ""
 "Odoo should do most of the reconciliation work automatically, so you'll only"
 " need to review a few of them when a <strong>'Reconcile Items'</strong> "
 "button appears on your Vendor Bills dash."
-msgstr ""
+msgstr "Odoo će odraditi večinu zatvaranja automatski, tako da ćete morati pregledati nekolicinu njih kada se pojavi gumb <strong>'Zatvaranje stavaka'</strong> na radnoj površini ulaznih računa."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -5833,7 +5834,7 @@ msgid ""
 "                collection of customer payments. Your customer receives the\n"
 "                invoice by email and he can pay online and/or import it\n"
 "                in his own system."
-msgstr ""
+msgstr "Elektronsko fakturiranje unutar Odoo programa pojednostavljuje i ubrzava\nplaćanja kupaca.  Kupac zaprima fakturu preko e-maila\ni može izvršiti online plaćanje i/ili uvesti račun\nu svoj sustav."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_confirm_view
@@ -5842,14 +5843,14 @@ msgid ""
 "                        to modify them. The invoices will receive a unique\n"
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
-msgstr ""
+msgstr "Nakon potvrđivanja računa u statusu 'Nacrt' nećete ih više moći\n                        editirati. Računi će dobiti jedinstveni broj te će se \n                        kreirati stavke knjiženja."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Once you have created your chart of accounts, you will need to update your "
 "account balances."
-msgstr ""
+msgstr "Kada ste kreirali svoj kontni plan, morate ažurirati salda na kontima."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5857,7 +5858,7 @@ msgid ""
 "Once your bank accounts are registered, you will be able \n"
 "                        to access your statements from the Accounting Dashboard. \n"
 "                        The available methods for synchronization are as follows."
-msgstr ""
+msgstr "Kada unesete žiro račune, moći ćete \npristupiti izvodima kroz izbornik Računovodstvo.\nDostupne metode za sinkronizaciju su kako slijedi."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5892,7 +5893,7 @@ msgstr "Samo administrator može promijeniti postavke"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1509
 #, python-format
 msgid "Only use the ctrl-enter shortcut to validate reconciliations."
-msgstr ""
+msgstr "Koristite samo kraticu ctrl-enter za potvrdu zatvaranja."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_period_lock_date
@@ -5901,7 +5902,7 @@ msgid ""
 "Only users with the 'Adviser' role can edit accounts prior to and inclusive "
 "of this date. Use it for period locking inside an open fiscal year, for "
 "example."
-msgstr ""
+msgstr "Samo korisnici koji imaju prava pristupa mogu urediti dokumente ovog i prethodnih datuma. Npr. Koristite za zaključavanje perioda unutar tekuće fiskalne godine."
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -5932,7 +5933,7 @@ msgstr "Otvoreni saldo"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cashbox_line_number
 msgid "Opening Unit Numbers"
-msgstr ""
+msgstr "Brojevi otvaranja"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_operation_template_form
@@ -5955,7 +5956,7 @@ msgstr "Neobavezne informacije"
 #: model:ir.model.fields,help:account.field_account_tax_tag_ids
 #: model:ir.model.fields,help:account.field_account_tax_template_tag_ids
 msgid "Optional tags you may want to assign for custom reporting"
-msgstr ""
+msgstr "Proizvoljne oznake koje možete dodijeliti za osobnu prilagodbu izvještaja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_option
@@ -5966,12 +5967,12 @@ msgstr "Opcije"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_payment_id
 msgid "Originator Payment"
-msgstr ""
+msgstr "Početno plaćanje"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_tax_line_id
 msgid "Originator tax"
-msgstr ""
+msgstr "Početni porez"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_other_income
@@ -5989,7 +5990,7 @@ msgstr "Ostale informacije"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:296
 #, python-format
 msgid "OtherAccounts"
-msgstr ""
+msgstr "Ostala konta"
 
 #. module: account
 #: selection:account.payment.method,payment_type:0
@@ -6000,29 +6001,29 @@ msgstr "Izlazni"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_output_categ_id
 #: model:ir.model.fields,field_description:account.field_res_company_property_stock_account_output_categ_id
 msgid "Output Account for Stock Valuation"
-msgstr ""
+msgstr "Konto izlaza za procjenu vrijednosti skladišta"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Outstanding Transactions"
-msgstr ""
+msgstr "Otvorene transakcije"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:108
 #, python-format
 msgid "Outstanding credits"
-msgstr ""
+msgstr "Otvorena potraživanja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_outstanding_credits_debits_widget
 msgid "Outstanding credits debits widget"
-msgstr ""
+msgstr "Dodatak za otvorene stavke"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:111
 #, python-format
 msgid "Outstanding debits"
-msgstr ""
+msgstr "Otvorena dugovanja"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -6043,7 +6044,7 @@ msgstr "Poruka kod prekoračenja roka plaćanja"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue invoices, maturity date passed"
-msgstr ""
+msgstr "Dospjeli računi, datum dospijeća je prošao"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
@@ -6315,7 +6316,7 @@ msgstr "Uvjet plaćanja: Plaćanje odmah"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_payment_id
 msgid "Payment that created this entry"
-msgstr ""
+msgstr "Plaćanja koja su kreirala ovaj zapis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_method_payment_type
@@ -6347,7 +6348,7 @@ msgstr "Usklađivanje plaćanja"
 msgid ""
 "Payments are used to register liquidity movements (send, collect or transfer money).\n"
 "                  You can then process those payments by your own means or by using installed facilities."
-msgstr ""
+msgstr "Plaćanja se koriste za praćenje likvidnosti (plaćanja, naplata ili prijenos novaca).\nPlaćanja možete vršiti ručno ili korištenjem instaliranih opcija. "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6375,7 +6376,7 @@ msgid ""
 "Paypal account (email) for receiving online payments (credit card, etc.)\n"
 "             If you set a paypal account, the customer  will be able to pay your invoices or quotations\n"
 "             with a button \"Pay with  Paypal\" in automated emails or through the Odoo portal."
-msgstr ""
+msgstr "Paypal korisnički račun (e-mail) za primanje online uplata (kreditne kartice, itd...)\nAko postavite paypall korisnički račun, kupci će moći platiti račune ili ponude \nsa gumbom \"Plati putem Paypal\" u automatskoj email poruci preko Odoo portala."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_paypal_account
@@ -6438,7 +6439,7 @@ msgstr "Trajanje perioda (dana)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_plaid
 msgid "Plaid Connector"
-msgstr ""
+msgstr "Priključak"
 
 #. module: account
 #: model:ir.model,name:account.model_web_planner
@@ -6449,13 +6450,13 @@ msgstr "Kalendar"
 #: code:addons/account/wizard/pos_box.py:27
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
-msgstr ""
+msgstr "Provjerite da je polje 'Dnevnik' postavljen na izvodu banke"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:29
 #, python-format
 msgid "Please check that the field 'Transfer Account' is set on the company."
-msgstr ""
+msgstr "Molimo provjerite da li je postavljeno polje 'Konto prijenosa' unutar tvrtke. "
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:662
@@ -6478,27 +6479,27 @@ msgstr "Molimo definirajte brojevni krug dnevnika povezanog sa ovim računom."
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Bank"
-msgstr ""
+msgstr "Dodatna banka"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Fixed Assets"
-msgstr ""
+msgstr "Plus dugotrajna imovina"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Net Profit"
-msgstr ""
+msgstr "Plus neto dobit"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Non-Current Assets"
-msgstr ""
+msgstr "Plus dugotrajna imovina"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Other Income"
-msgstr ""
+msgstr "Plus ostali prihod"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
@@ -6570,7 +6571,7 @@ msgstr "Zadrži predznak"
 #: model:ir.model,name:account.model_account_operation_template
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
-msgstr ""
+msgstr "Prethodno postaviti za stvaranje knjiženja tijekom zatvaranja stavaka"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -6670,7 +6671,7 @@ msgstr "Proforma"
 msgid ""
 "Programmation error : domain_maker_move_line_amount requires comparator '=' "
 "or '<'"
-msgstr ""
+msgstr "Programska pogreška : domain_maker_move_line_amount requires comparator '=' or '<'"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:117
@@ -6678,7 +6679,7 @@ msgstr ""
 msgid ""
 "Programmation error: the expected model for this action is "
 "'account.invoice'. The provided one is '%d'."
-msgstr ""
+msgstr "Programska pogreška: očekivani model za ovu radnju je 'account.invoice'. Model koji sada koristite je '%d'."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:115
@@ -6686,7 +6687,7 @@ msgstr ""
 msgid ""
 "Programmation error: wizard action executed without active_model or "
 "active_ids in context."
-msgstr ""
+msgstr "Pogreška u programiranju: Čarobnjak je izvršio radnju bez active_model ili active_ids u kontekstu."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_form
@@ -6828,7 +6829,7 @@ msgstr "Zatvaranje s otpisom"
 #: code:addons/account/static/src/js/tour_bank_statement_reconciliation.js:11
 #, python-format
 msgid "Reconcile the demo bank statement"
-msgstr ""
+msgstr "Zatvaranje demo izvoda banke"
 
 #. module: account
 #: selection:account.payment,state:0
@@ -6880,7 +6881,7 @@ msgstr "Ubilježi ručno"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Recording invoices"
-msgstr ""
+msgstr "Računi za snimanje"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -6914,14 +6915,14 @@ msgstr "Vezni broj"
 #: model:ir.model.fields,help:account.field_account_invoice_line_origin
 #: model:ir.model.fields,help:account.field_account_invoice_origin
 msgid "Reference of the document that produced this invoice."
-msgstr ""
+msgstr "Oznaka izvornog dokumenta koji je kreirao ovaj račun."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_payment_reference
 msgid ""
 "Reference of the document used to issue this payment. Eg. check number, file"
 " name, etc."
-msgstr ""
+msgstr "Oznaka dokumenta koji je kreirao ovo plaćanje. Npr. broj čeka, naziv dokumenta, itd..."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_name
@@ -6965,7 +6966,7 @@ msgstr "Način storniranja"
 msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
-msgstr ""
+msgstr "Povrat baziran na ovom tipu. Ne možete mijenjati i otkazati ako je račun već zatvoren."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -6998,14 +6999,14 @@ msgstr "Registriaj uplatu za višestruke račune"
 msgid ""
 "Registering outstanding invoices and payments can be a huge undertaking, \n"
 "                        but you can start using Odoo without it by:"
-msgstr ""
+msgstr "Knjiženje otvorenih računa i njihovih plaćanja može biti veliki poduhvat,\nali možete početi koristiti Odoo bez toga po:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Registering payments related to outstanding invoices separately in a "
 "different account (e.g. Account Receivables 2014)"
-msgstr ""
+msgstr "Registriranje plaćanja na različitom kontu povezanih sa otvorenim računima (npr. potražna konta 2014)"
 
 #. module: account
 #: selection:account.account.type,type:0
@@ -7105,7 +7106,7 @@ msgstr "Datum povrata"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "Reverse Entry"
-msgstr ""
+msgstr "Obrnuti unos"
 
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:20
@@ -7113,17 +7114,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_move_reversal
 #, python-format
 msgid "Reverse Moves"
-msgstr ""
+msgstr "Obrnuta knjiženja"
 
 #. module: account
 #: selection:account.financial.report,sign:0
 msgid "Reverse balance sign"
-msgstr ""
+msgstr "Obrnuti predznak"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Review Fiscal Positions"
-msgstr ""
+msgstr "Pregled fiskalnih pozicija"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7143,7 +7144,7 @@ msgstr "Provjerite kontni plan"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Review the list of available currencies (from the"
-msgstr ""
+msgstr "Pretraži listu dostupnih valuta (iz"
 
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
@@ -7204,22 +7205,22 @@ msgstr "Prodavač"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Search Account Journal"
-msgstr ""
+msgstr "Traži dnevnik"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_template_search
 msgid "Search Account Templates"
-msgstr ""
+msgstr "Traži predloške konta"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Search Bank Statements"
-msgstr ""
+msgstr "Traži izvode banke"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_line_search
 msgid "Search Bank Statements Line"
-msgstr ""
+msgstr "Traži redak bankovnog izvoda"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -7244,7 +7245,7 @@ msgstr "Traži temeljnice"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Search Operations"
-msgstr ""
+msgstr "Operacije pretrage"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -7278,12 +7279,12 @@ msgstr "Odaberi partnera"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:234
 #, python-format
 msgid "Select a partner or choose a counterpart"
-msgstr ""
+msgstr "Odaberite partnera ili odaberite protustavku"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line_value
 msgid "Select here the kind of valuation related to this payment term line."
-msgstr ""
+msgstr "Ovdje odaberite vrijednost povezanu sa ovom stavkom plaćanja."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:42
@@ -7291,7 +7292,7 @@ msgstr ""
 msgid ""
 "Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' "
 "or 'Done' state."
-msgstr ""
+msgstr "Odabrane račun(e) nije moguće otkazati jer su već u statusu 'Otkazano' ili 'Potvrđeno'."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:21
@@ -7299,7 +7300,7 @@ msgstr ""
 msgid ""
 "Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-"
 "Forma' state."
-msgstr ""
+msgstr "Odabrani račun(i) ne mogu biti potvrđeni jer nisu u stanju 'Nacrt' ili 'ProForma'."
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -7319,7 +7320,7 @@ msgstr "Pošalji e-mailom"
 msgid ""
 "Sending customer statements (outstanding invoices) manually during the "
 "transition period"
-msgstr ""
+msgstr "Slanje otvorenih stavaka kupcima ručno tijekom prijelaznog perioda. (Otvoreni računi) "
 
 #. module: account
 #: selection:account.payment,state:0
@@ -7366,7 +7367,7 @@ msgid ""
 " wizard that generate Chart of Accounts from templates, this is useful when "
 "you want to generate accounts of this template only when loading its child "
 "template."
-msgstr ""
+msgstr "Isključite ovo ako ne želite da se ovaj predložak aktivno koristi u čarobnjaku koji generira kontni plan iz predložaka. Ovo je vrlo korisno kada želite generirati konta ovog predloška samo iz podređenog predloška."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -7423,12 +7424,12 @@ msgstr "Predznak u izvješćima"
 msgid ""
 "Simplify your cash, checks, or credit cards deposits with an integrated "
 "batch payment function."
-msgstr ""
+msgstr "Pojednostavite praćenje gotovine, čekova i kreditnih kartica sa integriranom funkcijom za skupno plaćanje."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Smallest Text"
-msgstr ""
+msgstr "Najmanji tekst"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_general_ledger_sortby
@@ -7461,7 +7462,7 @@ msgstr "Početni saldo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_start_id
 msgid "Starting Cashbox"
-msgstr ""
+msgstr "Početna blagajna"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
@@ -7478,7 +7479,7 @@ msgstr "Izvod"
 #: code:addons/account/models/account_bank_statement.py:250
 #, python-format
 msgid "Statement %s confirmed, journal items were created."
-msgstr ""
+msgstr "Dokument %s potvrđen, proknjižene su sve stavke dnevnika."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_line_form
@@ -7506,7 +7507,7 @@ msgstr "Statusi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_states_count
 msgid "States count"
-msgstr ""
+msgstr "Broj država"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_state
@@ -7557,7 +7558,7 @@ msgstr "Podigni novac"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1516
 #, python-format
 msgid "Take on average less than 5 seconds to reconcile a transaction."
-msgstr ""
+msgstr "U prosjeku je potrebno manje od 5 sekundi za zatvaranje transakcije."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_target_move
@@ -7750,7 +7751,7 @@ msgstr "Tehničko polje koje sadrži duguje-potražuje vrijednost kako bi mogli 
 msgid ""
 "Technical field holding the debit_cash_basis - credit_cash_basis in order to"
 " open meaningful graph views from reports"
-msgstr ""
+msgstr "Tehničko polje koje sadrži podatke dugovne strane po gotovinskoj osnovi i potražne strane po gotovinskoj osnovi kako bi mogli otvoriti smisleni graf pogled u izvještajima"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_move_name
@@ -7758,19 +7759,19 @@ msgid ""
 "Technical field holding the number given to the invoice, automatically set "
 "when the invoice is validated then stored to set the same number again if "
 "the invoice is cancelled, set to draft and re-validated."
-msgstr ""
+msgstr "Tehničko polje koje sadrži broj dodjeljen računu, automatski se popunjava kada se račun potvrdi i sprema se kako bi isti  račun dobio isti broj ako se račun otkaže, postavi u nacrt i ponovo potvrdi."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_refund_only
 msgid ""
 "Technical field to hide filter_refund in case invoice is partially paid"
-msgstr ""
+msgstr "Polje za skrivanje filtera povrata u slučaju da je faktura djelomično plaćena"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_journal_type
 #: model:ir.model.fields,help:account.field_account_payment_has_invoices
 msgid "Technical field used for usability purposes"
-msgstr ""
+msgstr "Tehničko polje korišteno za upotrebljivost"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_matched_percentage
@@ -7783,7 +7784,7 @@ msgstr "Tehničko polje korišteno u metodi blagajne"
 #: model:ir.model.fields,help:account.field_account_register_payments_payment_method_code
 msgid ""
 "Technical field used to adapt the interface to the payment type selected."
-msgstr ""
+msgstr "Polje koje se koristi za prilagodbu sučelja za odabranu vrstu plaćanja."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_hide_payment_method
@@ -7792,7 +7793,7 @@ msgstr ""
 msgid ""
 "Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
-msgstr ""
+msgstr "Polje sa kojim se skriva metoda plaćanja ako odabrani dnevnik ima samo jednu dostupnu metodu plaćanja, a to je 'ručno'"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_rate_diff_partial_rec_id
@@ -7801,7 +7802,7 @@ msgid ""
 "in case of fluctuation of the currency exchange rate. This is needed when "
 "cancelling the source: it will post the inverse journal entry to cancel that"
 " part too."
-msgstr ""
+msgstr "Polje koje se koristi za praćenje knjiženja koja su nastala tečajnim razlikama. Ovo je potrebno kada se otkazuje izvorni dokument: Kreirati će se obrnuta knjiženja koja će poništiti i dio tečajnih razlika."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_chart_template_id
@@ -7826,7 +7827,7 @@ msgstr "Predložak za fiskalnu poziciju"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_template_transfer_account_id
 msgid "Template transfer account id"
-msgstr ""
+msgstr "Predložak ID prijelaznog konta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -7878,21 +7879,21 @@ msgid ""
 "The 'Internal Type' is used for features available on different types of "
 "accounts: liquidity type is for cash or bank accounts, payable/receivable is"
 " for vendor/customer accounts."
-msgstr ""
+msgstr "'Interni tip' se koristi za značajke dostupne na različitim vrstama konta: Likvidnost je za gotovinu ili žiro račune, dugovna/potražna se koriste za konta dobavljača/kupca."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "The Advisors have full access to the Accounting application, \n"
 "                                        plus access to miscellaneous operations such as salary and asset management."
-msgstr ""
+msgstr "Konzultanti imaju pristup cijeloj aplikaciji za računovodstvo,\ni dodatno imaju pristup raznim drugim operacijama kao što su plaće i upravljanje imovinom."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "The Deposit Ticket module can also be used to settle credit card batch made "
 "of multiple transactions."
-msgstr ""
+msgstr "Modul za depozite se može koristiti za praćenje zbirnih transakcija kreditnih kartica. "
 
 #. module: account
 #: code:addons/account/models/account_move.py:780
@@ -7926,7 +7927,7 @@ msgstr "Iznos izražen u povezanoj valuti konta ukoliko nije ista kao i valuta p
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
 " is debited and negative when account is credited."
-msgstr ""
+msgstr "Iznos iskazan u sekundarnoj valuti mora imati pozitivan predznak kada konto duguje i negativan predznak kada konto potražuje. "
 
 #. module: account
 #: code:addons/account/models/account.py:524
@@ -7934,7 +7935,7 @@ msgstr ""
 msgid ""
 "The application scope of taxes in a group must be either the same as the "
 "group or \"None\"."
-msgstr ""
+msgstr "Obujam poreza u grupi mora biti isti kao grupa ili \"Nijedan\". "
 
 #. module: account
 #: code:addons/account/models/account.py:268
@@ -7947,12 +7948,12 @@ msgstr "Bankovni račun mora pripadati istom poduzeću (%s)."
 #: code:addons/account/models/account_bank_statement.py:786
 #, python-format
 msgid "The bank statement line was already reconciled."
-msgstr ""
+msgstr "Stavka bankovnog izvoda je već zatvorena."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_statement_id
 msgid "The bank statement used for bank reconciliation"
-msgstr ""
+msgstr "Bankovni izvod korišten za zatvaranje banke"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_chart_template_id
@@ -7978,7 +7979,7 @@ msgstr "Šifra konta mora biti jedinstvena unutar poduzeća!"
 #: model:ir.model.fields,help:account.field_account_invoice_commercial_partner_id
 msgid ""
 "The commercial entity that will be used on Journal Entries for this invoice"
-msgstr ""
+msgstr "Zapis koji će se koristiti u temeljnici za ovaj račun"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_currency_id
@@ -7990,7 +7991,7 @@ msgstr "Valuta za usnos stavke"
 msgid ""
 "The discussions with your customer are automatically displayed at\n"
 "                the bottom of each invoice."
-msgstr ""
+msgstr "Komunikacija između Vas i kupca se automatski prikazuje\nna dnu svaku fakture."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:182
@@ -8005,7 +8006,7 @@ msgstr "Završni saldo je netočan!\nOčekivani završni saldo (%s) je različit
 msgid ""
 "The first step is to set up your company information. This is mostly used "
 "for invoicing."
-msgstr ""
+msgstr "Prvi korak je postavljanje informacija tvrtke. Ovo se uglavnom koristi za fakturiranje."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_position_id
@@ -8045,7 +8046,7 @@ msgstr "Vrsta izračuna u zadnjem redu treba biti \"Saldo\" kako bi se osiguralo
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
 msgid "The move of this entry line."
-msgstr ""
+msgstr "Temeljnica"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8053,7 +8054,7 @@ msgid ""
 "The multi-currency option allows you to send or receive invoices \n"
 "                        in difference currencies, set up foreign bank accounts \n"
 "                        and run reports on your foreign financial activities."
-msgstr ""
+msgstr "Opcije za više valuta Vam omogućuje slanje i primanje računa\nu različitim valutama, postavite strane bankovne račune\ni pokrenite izvještaje na stranim financijskim aktivnostima."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_name
@@ -8071,7 +8072,7 @@ msgstr "Opcionalna druga valuta ukoliko je viševalutni zapis."
 msgid ""
 "The optional quantity expressed by this line, eg: number of product sold. "
 "The quantity is not a legal requirement but is very useful for some reports."
-msgstr ""
+msgstr "Opcionalna količina izražena ovom linijom, npr.: broj prodanih komada artikla. Količina je vrlo korisna za neke izvještaje."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_account_id
@@ -8083,7 +8084,7 @@ msgstr "Konto partnera za ovaj račun"
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr ""
+msgstr "Partner ima najmanje jednu stavku za zatvaranje od zadnjeg zatvaranja stavaka."
 
 #. module: account
 #: code:addons/account/models/account_move.py:782
@@ -8091,7 +8092,7 @@ msgstr ""
 msgid ""
 "The partner has to be the same on all lines for receivable and payable "
 "accounts!"
-msgstr ""
+msgstr "Partner mora biti jednak za dugovna i potražna konta!"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_reference
@@ -8109,13 +8110,13 @@ msgstr "Plaćanje nemože biti obrađeno jer račun nije otvoren!"
 msgid ""
 "The residual amount on a journal item expressed in its currency (possibly "
 "not the company currency)."
-msgstr ""
+msgstr "Ostatak iznosa na temeljnici prikazan u valuti knjiženja (moguće da to nije valuta tvrtke)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_amount_residual
 msgid ""
 "The residual amount on a journal item expressed in the company currency."
-msgstr ""
+msgstr "Ostatak iznosa na temeljnici iskazan u valuti tvrtke."
 
 #. module: account
 #: code:addons/account/models/account_move.py:372
@@ -8124,7 +8125,7 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
-msgstr ""
+msgstr "Odabrani konto vaše temeljnice traži sekundarnu valutu. Trebale ukloniti sekundarnu valutu sa konta ili odabrati multivalutni pogled na dnevniku."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1162
@@ -8132,7 +8133,7 @@ msgstr ""
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
 "the product."
-msgstr ""
+msgstr "Odabrana jedinica mjere nije kompatibilna sa jedinicom mjere proizvoda."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_sequence
@@ -8140,7 +8141,7 @@ msgstr ""
 msgid ""
 "The sequence field is used to define order in which the tax lines are "
 "applied."
-msgstr ""
+msgstr "Polje sekvence se koristi za određivanje redoslijeda po kojem će se primjenjivati linije poreza."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:414
@@ -8154,7 +8155,7 @@ msgstr "Brojevni krug za dnevnik %s je neaktivan."
 msgid ""
 "There is no account defined on the journal %s for %s involved in a cash "
 "difference."
-msgstr ""
+msgstr "Na dnevniku %s nije određen konto za %s razliku u gotovini."
 
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:18
@@ -8182,12 +8183,12 @@ msgstr "Eto ga, sve je gotovo!"
 msgid ""
 "These types are defined according to your country. The type contains more "
 "information about the account and its specificities."
-msgstr ""
+msgstr "Ovi su tipovi definirani prema vašoj zemlji. Tip sadržava više informacija o kontu i njegovim specifičnostima."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "These users handle billing specifically."
-msgstr ""
+msgstr "Ovi korisnici upravljaju naplatom."
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:101
@@ -8229,21 +8230,21 @@ msgstr "Ovaj konto će biti korišten na računima za vrednovanje prodaje."
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr ""
+msgstr "Konto obveza prema dobavljačima za ovog partnera, ako je različit od uobičajenog"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_receivable_id
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr ""
+msgstr "Konto potraživanja od kupaca za ovog partnera, ako je različit od uobičajenog"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_budget
 msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n"
 "-This installs the module account_budget."
-msgstr ""
+msgstr "Ovo omogućuje računovođama planiranje budžeta. \nKada se postave glavni budžet i ostali budžeti, menadžeri mogu postaviti planirani iznos na svaki analitički konto.\n-Ovo instalira modul account_budget."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_reports_followup
@@ -8265,7 +8266,7 @@ msgid ""
 "This boolean helps you to choose if you want to propose to the user to encode\n"
 "             the sales and purchase rates or use the usual m2o fields. This last choice assumes that\n"
 "             the set of tax defined for the chosen template is complete"
-msgstr ""
+msgstr "Odaberite da li želite predložiti korisniku da unosi prodajni i nabavni porez ili koristi uobičajena više na jedan polja. Zadnji izbor pretpostavlja da je set poreza definiran u odabranom predlošku potpun."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_complete_tax_set
@@ -8273,7 +8274,7 @@ msgid ""
 "This boolean helps you to choose if you want to propose to the user to "
 "encode the sale and purchase rates or choose from list of taxes. This last "
 "choice assumes that the set of tax defined on this template is complete"
-msgstr ""
+msgstr "Ovaj izbor vam pomaže odlučiti da li želite korisniku predložiti da unosi stope poreza kod nabave i prodaje ili da odabere iz popisa poreza. Ovo drugo podrazumijeva da je set poreza na ovom predlošku potpun."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_wizard_multi_charts_accounts_complete_tax_set
@@ -8282,7 +8283,7 @@ msgid ""
 "encode the sales and purchase rates or use the usual m2o fields. This last "
 "choice assumes that the set of tax defined for the chosen template is "
 "complete"
-msgstr ""
+msgstr "Odaberite da li želite predložiti korisniku da unosi prodajni i nabavni porez ili koristi uobičajena više na jedan polja. Zadnji izbor pretpostavlja da je set poreza definiran u odabranom predlošku potpun."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_expects_chart_of_accounts
@@ -8294,7 +8295,7 @@ msgstr "Ova organizacija ima svoj kontni plan"
 msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
-msgstr ""
+msgstr "Ovo polje sadržava informacije vezane uz sljednosti temeljnica dnevnika."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence_id
@@ -8307,14 +8308,14 @@ msgstr "Ovo polje sadrži informacije povezane sa numeriranjem povrata ovog dnev
 #: model:ir.model.fields,help:account.field_account_operation_template_journal_id
 #: model:ir.model.fields,help:account.field_account_operation_template_second_journal_id
 msgid "This field is ignored in a bank statement reconciliation."
-msgstr ""
+msgstr "Ovo polje se isključuje prilikom zatvaranja izvoda banke."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_date_maturity
 msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
-msgstr ""
+msgstr "Koristi se za salda konti kupaca i dobavljača. Upišite datum valute plaćanja."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_partner_name
@@ -8322,14 +8323,14 @@ msgid ""
 "This field is used to record the third party name when importing bank "
 "statement in electronic format, when the partner doesn't exist yet in the "
 "database (or cannot be found)."
-msgstr ""
+msgstr "Ovo polje se koristi za bilježenje naziva stranke prilikom importa izvoda banke, kada partner nije u bazi (ili ga se ne može pronaći)."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "This guide will help you get started with Odoo Accounting.\n"
 "                        Once you're done, you'll benefit from:"
-msgstr ""
+msgstr "Ovaj vodič će Vam pomoći za početak rada sa Odoo računovodstvom.\nKada ga prođete, imati ćete slijedeće koristi:"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -8377,7 +8378,7 @@ msgid ""
 " allow you to define chart templates that extend another and complete it "
 "with few new accounts (You don't need to define the whole structure that is "
 "common to both several times)."
-msgstr ""
+msgstr "Ova opcionalno polje vam omogućuje da povežete predložak konta na određeni predložak kontnog plana koji se mogu razlikovati od onog kojem njegov nadređeni pripada. To vam omogućava da definirate predloške koji  proširuju druge i upotpunjuju ih sa par novih konta (samo jednom definirate cijelu strukturu koja je zajednička za oba)."
 
 #. module: account
 #. openerp-web
@@ -8386,7 +8387,7 @@ msgstr ""
 msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
 "provides with a neat interface to do so."
-msgstr ""
+msgstr "Ovdje se prikazuju sve transakcije banke koje su za zatvaranje i omogućuje se zatvaranje."
 
 #. module: account
 #. openerp-web
@@ -8431,28 +8432,28 @@ msgid ""
 "This technical field can be used at the statement line creation/import time "
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
-msgstr ""
+msgstr "Ovo polje se može koristiti za dodavanje stavaka izvoda i time izbjegnete proces zatvaranja kasnije. Stavka izvoda će kreirati protustavku ovom kontu"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move
 msgid ""
 "This wizard will validate all journal entries selected. Once journal entries"
 " are validated, you can not update them anymore."
-msgstr ""
+msgstr "Ovaj čarobnjak će proknjižiti sve odabrane temeljnice. Jednom kada se temeljnice proknjiže, više ih nećete moći mijenjati."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_operation_template
 msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
-msgstr ""
+msgstr "Može se koristiti za brzo stvaranje stavaka knjiženja prilikom zatvaranja\nizvoda banke ili konta."
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:20
 #, python-format
 msgid "Tip : Hit ctrl-enter to reconcile all the balanced items in the sheet."
-msgstr ""
+msgstr "Savjet : Pritisnite tipke ctrl-enter za zatvaranje izjednačenih stavaka na stranici."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -8480,13 +8481,13 @@ msgid ""
 "To manage the tax applied when invoicing a Company, Odoo uses the concept of"
 " Fiscal Position: they serve to automatically set the right tax and/or "
 "account according to the customer country and state."
-msgstr ""
+msgstr "Za lakše upravljanje porezima prilikom fakturiranja, Odoo koristi sustav Fiskalnih pozicija: njima se automatski postavlja ispravan porez i/ili konto ovisno o državi kupca.  "
 
 #. module: account
 #: code:addons/account/models/account_move.py:776
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries!"
-msgstr ""
+msgstr "Kako bi zatvorili stavke tvrtka mora biti ista za sve zapise! "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8554,13 +8555,13 @@ msgstr "Ukupno prije poreza"
 #: model:ir.model.fields,help:account.field_account_invoice_line_price_subtotal_signed
 msgid ""
 "Total amount in the currency of the company, negative for credit notes."
-msgstr ""
+msgstr "Ukupan iznos u valuti tvrtke, iznos je sa negativnim predznakom za knjižna odobrenja."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_signed
 msgid ""
 "Total amount in the currency of the invoice, negative for credit notes."
-msgstr ""
+msgstr "Ukupan iznos u valuti računa, iznos je sa negativnim predznakom za knjižna odobrenja."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_credit
@@ -8575,7 +8576,7 @@ msgstr "Ukupni iznos za uplatu ovom dobavljaču."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_total_entry_encoding
 msgid "Total of transaction lines."
-msgstr ""
+msgstr "Ukupan zbroj transakcija."
 
 #. module: account
 #. openerp-web
@@ -8610,7 +8611,7 @@ msgstr "Prijenos u"
 #: code:addons/account/models/account_payment.py:209
 #, python-format
 msgid "Transfer account not defined on the company."
-msgstr ""
+msgstr "Nije definiran prijelazni konto na tvrtki."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:385
@@ -8727,7 +8728,7 @@ msgstr "Otvori stavke"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
 msgid "Unreconcile Entries"
-msgstr ""
+msgstr "Razveži stavke"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_unreconcile_view
@@ -8796,7 +8797,7 @@ msgstr "Koristi skupni depozit"
 msgid ""
 "Use in conjunction with contracts to calculate your monthly revenue for "
 "multi-month contracts."
-msgstr ""
+msgstr "Koristite sa ugovorima da si izračunate mjesečni prihod za ugovore koji se protežu na više mjeseci."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -8805,7 +8806,7 @@ msgid ""
 "                                one. The credit note will be created, validated and reconciled\n"
 "                                with the current invoice. A new, draft, invoice will be created \n"
 "                                so that you can edit it."
-msgstr ""
+msgstr "Koristite ovu opciju ako želite stornirati račun i kreirati novi u istom koraku.\nKreirati će se novi storno dokument koji će zatvoriti ovaj \nračun, te novi račun u statusu 'Nacrt' kojega možete  \nurediti."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -8813,7 +8814,7 @@ msgid ""
 "Use this option if you want to cancel an invoice you should not\n"
 "                                have issued. The credit note will be created, validated and reconciled\n"
 "                                with the invoice. You will not be able to modify the credit note."
-msgstr ""
+msgstr "Ovu opciju koristite ako želite stornirati fakturu koja nije trebala biti napravljena.\nNapraviti će se odobrenje koje će odmah biti potvrđeno i zatvoreno sa\nfakturom. Nećete moći mijenjati odobrenje."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type_include_initial_balance
@@ -8822,7 +8823,7 @@ msgid ""
 "beginning of time instead of from the fiscal year only. Account types that "
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
-msgstr ""
+msgstr "Koristi se u izvještajima kako bi znali da li se stavke ovog dnevnika gledaju od početka umjesto samo za fiskalnu godinu. Vrste konta koja se trebaju svesti na nulu za svaku fiskalnu godinu (npr. troškovi) ne bi trebali imati uključenu ovu opciju."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence
@@ -8849,7 +8850,7 @@ msgstr "Koristi se za knjiženje prihoda kada je završni saldo blagajne različ
 #: model:ir.model.fields,help:account.field_account_partial_reconcile_company_currency_id
 #: model:ir.model.fields,help:account.field_res_partner_currency_id
 msgid "Utility field to express amount currency"
-msgstr ""
+msgstr "Polje u kojem se vidi iznos u valuti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_vat_required
@@ -8876,7 +8877,7 @@ msgstr "Potvrdi knjiženje"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Validate purchase orders and control vendor bills by departments."
-msgstr ""
+msgstr "Potvrda prodajnih naloga i kontrola računa prodavača po odjelima."
 
 #. module: account
 #: selection:account.bank.statement,state:0
@@ -8921,7 +8922,7 @@ msgstr "Ulazni računi"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Vendor Flow"
-msgstr ""
+msgstr "Tijek dobavljača"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:450
@@ -8986,7 +8987,7 @@ msgid ""
 "                                        for you: simply send your Odoo project\n"
 "                                        manager a CSV file containing all your\n"
 "                                        data."
-msgstr ""
+msgstr "Možemo napraviti cijeli proces uvoza podataka\nza Vas: Pošaljite CSV datoteku sa svim podacima\nvašem Odoo voditelju projekta."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8995,12 +8996,12 @@ msgid ""
 "                                        for you: simply send your Odoo project\n"
 "                                        manager a CSV file containing all your\n"
 "                                        products."
-msgstr ""
+msgstr "Možemo napraviti cijeli proces uvoza podataka\nza Vas: Pošaljite CSV datoteku sa svim podacima o proizvodima\nvašem Odoo voditelju projekta."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "We hope this tool helped you implement our accounting application."
-msgstr ""
+msgstr "Nadamo se da Vam je ovaj alat pomogao za implementaciju naše računovodstvene aplikacije."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_website_message_ids
@@ -9024,7 +9025,7 @@ msgstr "Dobrodošli"
 msgid ""
 "When inviting users, you will need to define which access rights they are allowed to have. \n"
 "                        This is done by assigning a role to each user."
-msgstr ""
+msgstr "Kada pozivate nove korisnike, morate definirati koja prava pristupa smiju imati.\nOvo se radi tako da se dodijeli uloga svakom korisniku."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_show_on_dashboard
@@ -9108,21 +9109,21 @@ msgstr "Pokušavate zatvoriti već zatvorene stavke!"
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
-msgstr ""
+msgstr "Možete označiti ovaj okvir kako bi obilježili  stavku temeljnice  kao poveznicu s pripadajućim partnerom."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
 msgid ""
 "You can control the invoice from your vendor according to\n"
 "                what you purchased or received."
-msgstr ""
+msgstr "Možete prekontrolirati fakturu vašeg dobavljača ovisno o\ntome šta ste kupili ili šta vam je dostavljeno."
 
 #. module: account
 #: code:addons/account/models/res_config.py:229
 #, python-format
 msgid ""
 "You can not change a company chart of account once it has been installed"
-msgstr ""
+msgstr "Ne možete mijenjati kontni plan tvrtke kada se jednom instalira"
 
 #. module: account
 #: code:addons/account/models/product.py:51
@@ -9131,7 +9132,7 @@ msgid ""
 "You can not change the unit of measure of a product that has been already "
 "used in an account journal item. If you need to change the unit of measure, "
 "you may deactivate this product."
-msgstr ""
+msgstr "Ne možete mijenjati jedinicu mjere na artiklu koji je korišten u knjiženjima. Ako trebate promijeniti jedinicu mjere, morate artikl deaktivirati."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:297
@@ -9151,7 +9152,7 @@ msgid ""
 "You can set up here the format you want this record to be displayed. If you "
 "leave the automatic formatting, it will be computed based on the financial "
 "reports hierarchy (auto-computed field 'level')."
-msgstr ""
+msgstr "Ovdje možete postaviti format zapisa u kojeg želite prikazati. Ako ostavite a automatskom oblikovanju, biti će izračunat bazirano na financijskim izvještajima hijerarhijski ( automatski izračunato polje nivoa)."
 
 #. module: account
 #: code:addons/account/models/account_move.py:175
@@ -9159,7 +9160,7 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
-msgstr ""
+msgstr "Ne možete dodati/mijenjati stavke na zaključani datum %s. Provjerite postavke tvrtke ili pitajte konzultanta."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:789
@@ -9167,7 +9168,7 @@ msgstr ""
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
-msgstr ""
+msgstr "Ne možete otkazati račun koji je djelomićno plaćen. Morate prvo razvezati stavke zatvaranja."
 
 #. module: account
 #: code:addons/account/models/account.py:162
@@ -9175,7 +9176,7 @@ msgstr ""
 msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
-msgstr ""
+msgstr "Ne možete mijenjati tvrtku vlasnika na kontu koji već sadrži knjiženja."
 
 #. module: account
 #: code:addons/account/models/account_move.py:997
@@ -9189,7 +9190,7 @@ msgstr "Nije oguće mijenjanje poreza, morate obrisati i ponovo unesti stavke."
 msgid ""
 "You cannot create journal items with a secondary currency without filling "
 "both 'currency' and 'amount currency' field."
-msgstr ""
+msgstr "Ne možete kreirati knjiženja sa sekundarnom valutom bez unosa u polja 'valuta' i 'devizni iznos'."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:406
@@ -9198,7 +9199,7 @@ msgid ""
 "You cannot delete an invoice after it has been validated (and received a "
 "number). You can set it back to \"Draft\" state and modify its content, then"
 " re-confirm it."
-msgstr ""
+msgstr "Ne možete obrisati račun nakon što je potvrđen (i dobio je broj). Možete ga vratiti u 'nacrt' i promijeniti njegov sadržaj, zatim ga ponovo potvrditi."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:404
@@ -9206,13 +9207,13 @@ msgstr ""
 msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "refund it instead."
-msgstr ""
+msgstr "Nije moguće pobrisati račun koji nije u statusu nacrt ili otkazan. Možete ga samo stornirati."
 
 #. module: account
 #: code:addons/account/models/account.py:168
 #, python-format
 msgid "You cannot do that on an account that contains journal items."
-msgstr ""
+msgstr "Nije moguće izvršiti ovu radnju na kontu koji ima knjiženja."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1028
@@ -9220,7 +9221,7 @@ msgstr ""
 msgid ""
 "You cannot do this modification on a posted journal entry, you can just change some non legal fields. You must revert the journal entry to cancel it.\n"
 "%s."
-msgstr ""
+msgstr "Ne možete raditi ovu promjenu na knjiženom unosu. Možete samo mijenjati neka sporedna polja ili morate prvo otkazati temeljnicu.\n%s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1030
@@ -9228,7 +9229,7 @@ msgstr ""
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
-msgstr ""
+msgstr "Ne možete vršiti ovu modifikaciju na zatvorenoj stavci. Možete samo mijenjati neka nevažna polja ili morate razvezati stavke.\n%s."
 
 #. module: account
 #: code:addons/account/models/account.py:329
@@ -9236,7 +9237,7 @@ msgstr ""
 msgid ""
 "You cannot empty the account number once set.\n"
 "If you would like to delete the account number, you can do it from the Bank Accounts list."
-msgstr ""
+msgstr "Ne možete izbrisati broj žiro računa kada je jednom unesen.\nAko želite obrisati broj žiro računa, možete to napraviti iz liste žiro računa."
 
 #. module: account
 #: code:addons/account/models/account.py:96
@@ -9244,7 +9245,7 @@ msgstr ""
 msgid ""
 "You cannot have a receivable/payable account that is not reconciliable. "
 "(account code: %s)"
-msgstr ""
+msgstr "Ne možete imati konta dugovanja/potraživanja koja nisu za zatvaranje. (šifra konta: %s)"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:126
@@ -9257,7 +9258,7 @@ msgstr "Ne smijete miješati izlazne i ulazne račune u istom plaćanju."
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1788
 #, python-format
 msgid "You cannot mix items from receivable and payable accounts."
-msgstr ""
+msgstr "Ne možete mijenjati stavke dugovnih i potražnih konta."
 
 #. module: account
 #: code:addons/account/models/account_move.py:143
@@ -9265,13 +9266,13 @@ msgstr ""
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
-msgstr ""
+msgstr "Ne možete mijenjati knjižene stavke ovog dnevnika.\nPrvo je potrebno u dnevniku omogućiti otkazivanje stavaka."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
 #, python-format
 msgid "You cannot put/take money in/out for a bank statement which is closed."
-msgstr ""
+msgstr "Ne možete polagati/dizati novac po izvodu banke koji je zatvoren."
 
 #. module: account
 #: code:addons/account/models/account.py:173
@@ -9294,7 +9295,7 @@ msgstr "Ne možete koristiti zastarjeli konto."
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal."
-msgstr ""
+msgstr "Ne možete koristiti ovaj opći konto u ovom dnevniku. Provjerite tab 'kontola unosa' na povezanom dnevniku."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -9333,7 +9334,7 @@ msgid ""
 "You should configure the 'Exchange Rate Journal' in the accounting settings,"
 " to manage automatically the booking of accounting entries related to "
 "differences between exchange rates."
-msgstr ""
+msgstr "Kako bi automatski knjižili stavke temeljnice vezane za razlike tečaja, trebate konfigurirati 'Dnevnik tečajnih razlika' u računovodstvenim postavkama."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1162
@@ -9342,7 +9343,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "Trebali bi podesiti 'Konto pozitivne tečajne razlike' u postavkama računovodstva, za automatsko knjiženje tečajnih razlika."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1164
@@ -9351,7 +9352,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "Kako bi automatski knjižili stavke temeljnice vezane za razlike tečaja, trebate konfigurirati 'konto tečanih razlika' u postavkama konta."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:49
@@ -9360,7 +9361,7 @@ msgstr ""
 msgid ""
 "You should have defined an 'Internal Transfer Account' in your cash "
 "register's journal!"
-msgstr ""
+msgstr "Morate odrediti 'Prijelazni konto' u dnevniku blagajne!"
 
 #. module: account
 #. openerp-web
@@ -9401,17 +9402,17 @@ msgstr "Vaši proizvodi"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Your Trial Balance (list of accounts and their balances)."
-msgstr ""
+msgstr "Vaša bruto bilanca (popis konta sa njihovim saldima)."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Your company's legal name, tax ID, address, and logo."
-msgstr ""
+msgstr "Naziv Vaše tvrtke, OIB, adresa i logo"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Your outstanding invoices, payments, and undeposited funds."
-msgstr ""
+msgstr "Vaši otvoreni računi, plaćanja i sredstva koja još nisu položena."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
@@ -9522,12 +9523,12 @@ msgstr "prvi)"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "for this customer. You can allocate them to mark this invoice as paid."
-msgstr ""
+msgstr "za ovog kupca. Možete označiti ove fakture kao plaćene."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "for this supplier. You can allocate them to mark this bill as paid."
-msgstr ""
+msgstr "za ovog dobavljača. Možete označiti ove račune kao plaćene."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
