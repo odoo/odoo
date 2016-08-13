@@ -87,8 +87,9 @@ class BaseCase(unittest.TestCase):
     initialized by subclasses.
     """
 
-    def cursor(self):
-        return self.registry.cursor()
+    @staticmethod
+    def cursor(registry):
+        return registry.cursor()
 
     def ref(self, xid):
         """ Returns database ID for the provided :term:`external identifier`,
@@ -145,7 +146,7 @@ class TransactionCase(BaseCase):
     def setUp(self):
         self.registry = RegistryManager.get(get_db_name())
         #: current transaction's cursor
-        self.cr = self.cursor()
+        self.cr = self.cursor(self.registry)
         self.uid = openerp.SUPERUSER_ID
         #: :class:`~openerp.api.Environment` for the current test case
         self.env = api.Environment(self.cr, self.uid, {})
@@ -180,7 +181,7 @@ class SingleTransactionCase(BaseCase):
     @classmethod
     def setUpClass(cls):
         cls.registry = RegistryManager.get(get_db_name())
-        cls.cr = cls.registry.cursor()
+        cls.cr = cls.cursor(cls.registry)
         cls.uid = openerp.SUPERUSER_ID
         cls.env = api.Environment(cls.cr, cls.uid, {})
 
