@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-22 13:00+0000\n"
-"PO-Revision-Date: 2016-08-03 04:06+0000\n"
+"PO-Revision-Date: 2016-08-09 07:32+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -727,7 +727,7 @@ msgstr "子消息"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Choose a template to display its values."
-msgstr "选择一个模板显示其值。"
+msgstr "选择一个模板用来显示它的值。"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
@@ -1215,7 +1215,7 @@ msgstr "失败的"
 #: code:addons/mail/models/mail_template.py:352
 #, python-format
 msgid "Failed to render template %r using values %r"
-msgstr "渲染模板失败 %r, 使用数值 %r"
+msgstr "渲染模板%r失败, 使用值 %r"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_failure_reason
@@ -1505,7 +1505,7 @@ msgstr "仅仅内部的"
 msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
-msgstr "错误的表达式，必须是 python 字典定义，例如： \"{'field': 'value'}\""
+msgstr "错误的表达式，必须是符合文法的python字典定义，例如： \"{'field': 'value'}\""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1607
@@ -1760,7 +1760,7 @@ msgstr "邮件投递失败 "
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_value
 msgid "Mail Tracking Value"
-msgstr "邮件跟踪值"
+msgstr "邮件追踪值"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_notification
@@ -2007,32 +2007,32 @@ msgstr "从不"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_char
 msgid "New Value Char"
-msgstr "字符值"
+msgstr "新字符值"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_datetime
 msgid "New Value Datetime"
-msgstr "时间值"
+msgstr "新日期时间值"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_float
 msgid "New Value Float"
-msgstr "数值"
+msgstr "新浮点值"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_integer
 msgid "New Value Integer"
-msgstr "整数值"
+msgstr "新整数值"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_monetary
 msgid "New Value Monetary"
-msgstr "新价值货币"
+msgstr "新货币值"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_text
 msgid "New Value Text"
-msgstr "文本值"
+msgstr "新文本值"
 
 #. module: mail
 #. openerp-web
@@ -2182,12 +2182,12 @@ msgstr "旧字符值"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_datetime
 msgid "Old Value DateTime"
-msgstr "旧时间值"
+msgstr "旧日期时间值"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_float
 msgid "Old Value Float"
-msgstr "旧数值"
+msgstr "旧浮点值"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_integer
@@ -2197,7 +2197,7 @@ msgstr "旧整数值"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_monetary
 msgid "Old Value Monetary"
-msgstr "旧价值货币"
+msgstr "旧货币值"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_text
@@ -2291,7 +2291,7 @@ msgstr "在发送邮件时可选择的语言代码（ISO 代码）。如果没�
 #: model:ir.model.fields,help:mail.field_email_template_preview_null_value
 #: model:ir.model.fields,help:mail.field_mail_template_null_value
 msgid "Optional value to use if the target field is empty"
-msgstr "如果目标字段为空则使用这个值"
+msgstr "如果目标字段为空则使用此可选值"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
@@ -2319,7 +2319,7 @@ msgstr "发出邮件服务器"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Override author's email"
-msgstr "覆盖作者电子邮件地址"
+msgstr "覆盖作者电子邮件"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_user_id
@@ -2569,7 +2569,7 @@ msgstr "关联字段"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove the contextual action to use this template on related documents"
-msgstr "移除上下文内容，以将模板用于相关的文档。"
+msgstr "移除上下文动作，使用相关单据的模板。"
 
 #. module: mail
 #. openerp-web
@@ -2658,7 +2658,7 @@ msgstr "保存为新模版"
 #: code:addons/mail/static/src/js/chat_window.js:23
 #, python-format
 msgid "Say something"
-msgstr "说点什么..."
+msgstr "说些什么..."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -3068,7 +3068,7 @@ msgstr "今日"
 #: code:addons/mail/static/src/xml/client_action.xml:122
 #, python-format
 msgid "Toggle Channels"
-msgstr "折叠频道"
+msgstr "切换频道"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -3176,7 +3176,7 @@ msgstr "未读信息"
 #: code:addons/mail/static/src/xml/client_action.xml:126
 #, python-format
 msgid "Unstar all"
-msgstr "去掉所有星标"
+msgstr "取消所有星标"
 
 #. module: mail
 #. openerp-web
@@ -3197,7 +3197,7 @@ msgstr "退订"
 #: code:addons/mail/static/src/xml/client_action.xml:127
 #, python-format
 msgid "Unsubscribe from channel"
-msgstr "从频道退订"
+msgstr "退订频道"
 
 #. module: mail
 #. openerp-web
@@ -3294,7 +3294,7 @@ msgstr "谁能关注群组的活动?"
 #: code:addons/mail/static/src/xml/composer.xml:7
 #, python-format
 msgid "Write something..."
-msgstr "写点什么..."
+msgstr "写些什么..."
 
 #. module: mail
 #. openerp-web
@@ -3403,7 +3403,7 @@ msgstr "文档"
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "enable desktop notifications"
-msgstr "开启桌面通知"
+msgstr "启用桌面通知"
 
 #. module: mail
 #. openerp-web
