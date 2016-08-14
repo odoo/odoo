@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-07-13 09:24+0000\n"
+"PO-Revision-Date: 2016-08-12 07:11+0000\n"
 "Last-Translator: RGB Consulting <odoo@rgbconsulting.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -437,7 +437,7 @@ msgstr "Assentaments"
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
+msgstr "Error! No pot crear actius recursius"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:81
@@ -458,7 +458,7 @@ msgstr "General"
 #. module: account_asset
 #: field:asset.asset.report,gross_value:0
 msgid "Gross Amount"
-msgstr ""
+msgstr "Import brut"
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
@@ -494,7 +494,7 @@ msgstr "ID"
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
-msgstr ""
+msgstr "Indica que el primer assentament de depreciació per aquest actiu te que ser fet des de la data de compra en lloc de des de l'1 de gener."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
@@ -509,7 +509,7 @@ msgstr "Línia factura"
 #. module: account_asset
 #: help:account.asset.asset,salvage_value:0
 msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr ""
+msgstr "És l'import que preveu tenir que no pot depreciar"
 
 #. module: account_asset
 #: field:account.asset.category,journal_id:0
@@ -552,14 +552,14 @@ msgstr "Lineal"
 #. module: account_asset
 #: view:asset.modify:account_asset.asset_modify_form
 msgid "Modify"
-msgstr ""
+msgstr "Modificar"
 
 #. module: account_asset
 #: view:asset.modify:account_asset.asset_modify_form
 #: model:ir.actions.act_window,name:account_asset.action_asset_modify
 #: model:ir.model,name:account_asset.model_asset_modify
 msgid "Modify Asset"
-msgstr ""
+msgstr "Modificar actiu"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
@@ -569,7 +569,7 @@ msgstr "Nom"
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
 msgid "Next Period Depreciation"
-msgstr ""
+msgstr "Amortització del següent període"
 
 #. module: account_asset
 #: field:account.asset.asset,note:0 field:account.asset.category,note:0
@@ -594,17 +594,17 @@ msgstr "Notes"
 #: selection:account.asset.history,method_time:0
 #: field:asset.modify,method_number:0
 msgid "Number of Depreciations"
-msgstr ""
+msgstr "Nombre de depreciacions"
 
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "Nombre de mesos en un període"
 
 #. module: account_asset
 #: field:account.asset.asset,parent_id:0
 msgid "Parent Asset"
-msgstr ""
+msgstr "Pare de l'actiu"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
@@ -622,7 +622,7 @@ msgstr "Període"
 #: field:account.asset.history,method_period:0
 #: field:asset.modify,method_period:0
 msgid "Period Length"
-msgstr ""
+msgstr "Longitud del període"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
@@ -634,35 +634,35 @@ msgstr "Fixat"
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
 msgid "Posted Amount"
-msgstr ""
+msgstr "Import asentat"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Posted depreciation lines"
-msgstr ""
+msgstr "Línies d'amortització assentades"
 
 #. module: account_asset
 #: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
-msgstr ""
+msgstr "Temps prorratejat"
 
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
-msgstr ""
+msgstr "La prorrata de temps només es pot utilitzar per al mètode de temps \"nombre d'amortitzacions\"."
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_date:0
 #: field:asset.asset.report,purchase_date:0
 msgid "Purchase Date"
-msgstr ""
+msgstr "Data de compra"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Purchase Month"
-msgstr ""
+msgstr "Mes de compra"
 
 #. module: account_asset
 #: field:asset.modify,name:0
@@ -694,7 +694,7 @@ msgstr "Valor de salvaguarda"
 #. module: account_asset
 #: view:account.asset.category:account_asset.view_account_asset_category_search
 msgid "Search Asset Category"
-msgstr ""
+msgstr "Buscar categoria de l'actiu"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0
@@ -704,7 +704,7 @@ msgstr "Seqüència"
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 msgid "Set to Close"
-msgstr ""
+msgstr "Marcar tancat"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -714,17 +714,17 @@ msgstr "Canvia a esborrany"
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
 msgid "Skip Draft State"
-msgstr ""
+msgstr "Ometre estat esborrany"
 
 #. module: account_asset
 #: help:account.asset.category,method_period:0
 msgid "State here the time between 2 depreciations, in months"
-msgstr ""
+msgstr "Estableixi aquí el temps entre 2 depreciacions, en mesos"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,parent_state:0
 msgid "State of Asset"
-msgstr ""
+msgstr "Estat de l'actiu"
 
 #. module: account_asset
 #: field:account.asset.asset,state:0 field:asset.asset.report,state:0
@@ -734,7 +734,7 @@ msgstr "Estat"
 #. module: account_asset
 #: help:account.asset.asset,method_period:0
 msgid "The amount of time between two depreciations, in months"
-msgstr ""
+msgstr "La quantitat de temps entre dues amortitzacions, en mesos"
 
 #. module: account_asset
 #: help:account.asset.history,method_time:0

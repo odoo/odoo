@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-06-29 13:46+0000\n"
+"PO-Revision-Date: 2016-08-10 11:33+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -234,7 +234,7 @@ msgid ""
 "                    of the products and the supplier invoice.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Denna leverantör saknas inköpsordrar. Klicka för att skapa en ny.\n                </p><p>\n\n                    Offertförfrågan är första steget i inköpsprocessen. När frågan är konverterad till en order, kommer du kunna följa mottagandet av produkter och fakturorna.                </p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
@@ -484,17 +484,17 @@ msgstr "Baserat på inköpsorderrader"
 #: view:purchase.order:purchase.purchase_order_form
 #: selection:purchase.order,state:0
 msgid "Bid Received"
-msgstr ""
+msgstr "Bud mottaget"
 
 #. module: purchase
 #: field:purchase.order,bid_date:0
 msgid "Bid Received On"
-msgstr ""
+msgstr "Bud mottaget vid"
 
 #. module: purchase
 #: field:purchase.order,bid_validity:0
 msgid "Bid Valid Until"
-msgstr ""
+msgstr "Bud giltigt till"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1171 code:addons/purchase/stock.py:192
@@ -773,12 +773,12 @@ msgstr ""
 #: selection:purchase.order,state:0 selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Done"
-msgstr "Done"
+msgstr "Klar"
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
 msgid "Draft"
-msgstr "Preliminär"
+msgstr "Utkast"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -1428,7 +1428,7 @@ msgstr "Granskade produkter"
 msgid ""
 "Provide a double validation mechanism for purchases exceeding minimum amount.\n"
 "-This installs the module purchase_double_validation."
-msgstr ""
+msgstr "Inför en dubbel granskningsmekanism av inköpsorder som överskrider en viss summa.\n- detta installerar modulen module purchase_double_validation."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1666,7 +1666,7 @@ msgstr "Leveransratio"
 #: view:purchase.order:purchase.view_purchase_order_filter
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 msgid "Reference"
-msgstr "Reference"
+msgstr "Referens"
 
 #. module: purchase
 #: field:purchase.report,product_uom:0
@@ -1772,7 +1772,7 @@ msgstr "Skicka OFF per e-post"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Set to Draft"
-msgstr "Set to Draft"
+msgstr "Sätt till utkast"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
@@ -2099,7 +2099,7 @@ msgstr "Väntar på Leverantörsbekräftelse"
 #: model:ir.model,name:purchase.model_stock_warehouse
 #: field:purchase.report,picking_type_id:0
 msgid "Warehouse"
-msgstr "Lagerhus"
+msgstr "Lager"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1114 code:addons/purchase/purchase.py:1130
