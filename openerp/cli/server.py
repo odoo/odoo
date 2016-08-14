@@ -148,9 +148,6 @@ def main(args):
     # bit overkill, but better safe than sorry I guess
     csv.field_size_limit(500 * 1024 * 1024)
 
-    if config["test_file"]:
-        config["test_enable"] = True
-
     if config["translate_out"]:
         export_translation()
         sys.exit(0)
