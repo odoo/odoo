@@ -23,6 +23,7 @@ class MailChatController(openerp.addons.bus.controllers.main.BusController):
             partner_id = request.env.user.partner_id.id
 
             if partner_id:
+                channels = list(channels)       # do not alter original list
                 for mail_channel in request.env['mail.channel'].search([('channel_partner_ids', 'in', [partner_id])]):
                     channels.append((request.db, 'mail.channel', mail_channel.id))
                 # personal and needaction channel
