@@ -410,7 +410,7 @@ class AccountAssetDepreciationLine(models.Model):
             current_currency = line.asset_id.currency_id
             amount = current_currency.compute(line.amount, company_currency)
             sign = (line.asset_id.category_id.journal_id.type == 'purchase' or line.asset_id.category_id.journal_id.type == 'sale' and 1) or -1
-            asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, line.asset_id.method_number)
+            asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, len(line.asset_id.depreciation_line_ids))
             reference = line.asset_id.code
             journal_id = line.asset_id.category_id.journal_id.id
             partner_id = line.asset_id.partner_id.id
@@ -420,8 +420,8 @@ class AccountAssetDepreciationLine(models.Model):
             move_line_1 = {
                 'name': asset_name,
                 'account_id': credit_account,
-                'debit': 0.0,
-                'credit': amount,
+                'debit': 0.0 if amount > 0.0 else -amount,
+                'credit': amount if amount > 0.0 else 0.0,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
@@ -432,8 +432,8 @@ class AccountAssetDepreciationLine(models.Model):
             move_line_2 = {
                 'name': asset_name,
                 'account_id': debit_account,
-                'credit': 0.0,
-                'debit': amount,
+                'credit': 0 if amount > 0.0 else -amount,
+                'debit': amount if amount > 0.0 else 0.0,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
