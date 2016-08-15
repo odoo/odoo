@@ -26,7 +26,6 @@ class ProductTemplate(models.Model):
         string="Sales Return", 
         domain=[('deprecated', '=', False)],
         help="This account will be used for invoices instead of the default one to value sales return for the current product.")
-    property_brand = fields.Char(string="Brand", help="Brand of product",required=True)
 
     @api.multi
     def _get_asset_accounts(self):

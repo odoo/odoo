@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
-    <record id="general_product_template_form_view" model="ir.ui.view">
-      <field name="name">product.template.form.inherit</field>
-      <field name="model">product.template</field>
-      <field name="priority">7</field>
-      <field name="inherit_id" ref="product.product_template_form_view"/>
-      <field name="arch" type="xml">
-        <field name="type" position="before">
-          <field name="property_brand"/>
-        </field>
-      </field>
-    </record>
-    
     <record id="product_template_form_view" model="ir.ui.view">
       <field name="name">product.template.form.inherit</field>
       <field name="model">product.template</field>
