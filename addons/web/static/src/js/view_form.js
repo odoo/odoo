@@ -6163,7 +6163,11 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     on_click_stage: function (ev) {
         var self = this;
         var $li = $(ev.currentTarget);
+        var ul = $li.parent('ul');
         var val;
+        if (ul.attr('disabled'))
+            return;
+        ul.attr('disabled', true);
         if (this.field.type == "many2one") {
             val = parseInt($li.data("id"), 10);
         }
@@ -6175,12 +6179,14 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                this.view.datarecord.id.toString().match(instance.web.BufferedDataSet.virtual_id_regex)) {
                 // don't save, only set value for not-yet-saved many2ones
                 self.set_value(val);
+                ul.removeAttr('disabled');
             }
             else {
                 this.view.recursive_save().done(function() {
                     var change = {};
                     change[self.name] = val;
                     self.view.dataset.write(self.view.datarecord.id, change).done(function() {
+                        ul.removeAttr('disabled');
                         self.view.reload();
                     });
                 });
