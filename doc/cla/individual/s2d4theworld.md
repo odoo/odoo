@@ -1,0 +1,11 @@
+Indonesia, 2016-08-16
+
+I hereby agree to the terms of the Odoo Individual Contributor License
+Agreement v1.0.
+
+I declare that I am authorized and able to make this agreement and sign this
+declaration.
+
+Signed,
+
+Estuda Maharyo Basuki s2d4theworld@gmail.com https://github.com/s2d4theworld
