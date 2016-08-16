@@ -18,14 +18,17 @@ class WebsiteBlog(http.Controller):
     _post_comment_per_page = 10
 
     def nav_list(self, blog=None):
+        dom = blog and [('blog_id', '=', blog.id)] or []
+        if not request.env.user.has_group('base.group_website_designer'):
+            dom += [('post_date', '<=', fields.Datetime.now())]
         groups = request.env['blog.post']._read_group_raw(
-            blog and [('blog_id', '=', blog.id)] or [],
-            ['name', 'create_date'],
-            groupby=["create_date"], orderby="create_date desc")
+            dom,
+            ['name', 'post_date'],
+            groupby=["post_date"], orderby="post_date desc")
         for group in groups:
-            (r, label) = group['create_date']
+            (r, label) = group['post_date']
             start, end = r.split('/')
-            group['create_date'] = label
+            group['post_date'] = label
             group['date_begin'] = fields.Date.to_string(self._to_date(start))
             group['date_end'] = fields.Date.to_string(self._to_date(end))
             group['month'] = self._to_date(start).strftime("%B")
@@ -33,9 +36,6 @@ class WebsiteBlog(http.Controller):
         return {year: [m for m in months] for year, months in itertools.groupby(groups, lambda g: g['year'])}
 
     def _to_date(self, dt):
-        """ create_date is a datetime so start and end are datetime strings,
-        but we just want date strings
-        """
         return fields.Date.from_string(dt)
 
     @http.route([
@@ -57,7 +57,7 @@ class WebsiteBlog(http.Controller):
             page=page,
             step=self._blog_post_per_page,
         )
-        posts = BlogPost.search([], offset=(page-1)*self._blog_post_per_page, limit=self._blog_post_per_page)
+        posts = BlogPost.search([], offset=(page - 1) * self._blog_post_per_page, limit=self._blog_post_per_page)
         blog_url = QueryURL('', ['blog', 'tag'])
         return request.render("website_blog.latest_blogs", {
             'posts': posts,
@@ -104,22 +104,23 @@ class WebsiteBlog(http.Controller):
         if blog:
             domain += [('blog_id', '=', blog.id)]
         if date_begin and date_end:
-            domain += [("create_date", ">=", date_begin), ("create_date", "<=", date_end)]
+            domain += [("post_date", ">=", date_begin), ("post_date", "<=", date_end)]
 
         if request.env.user.has_group('base.group_website_designer'):
-            for group in BlogPost.read_group(domain, ['website_published'], groupby=["website_published"]):
-                if group['website_published']:
-                    published_count = group['website_published_count']
-                else:
-                    unpublished_count = group['website_published_count']
+            count_domain = domain + [("website_published", "=", True), ("post_date", "<=", fields.Datetime.now())]
+            published_count = BlogPost.search_count(count_domain)
+            unpublished_count = BlogPost.search_count(domain) - published_count
+
             if state == "published":
-                domain += [("website_published", "=", True)]
+                domain += [("website_published", "=", True), ("post_date", "<=", fields.Datetime.now())]
             elif state == "unpublished":
-                domain += [("website_published", "=", False)]
+                domain += ['|', ("website_published", "=", False), ("post_date", ">", fields.Datetime.now())]
+        else:
+            domain += [("post_date", "<=", fields.Datetime.now())]
 
         blog_url = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end)
 
-        blog_posts = BlogPost.search(domain, order="published_date desc, create_date desc")
+        blog_posts = BlogPost.search(domain, order="post_date desc")
         pager = request.website.pager(
             url=blog_url(),
             total=len(blog_posts),
@@ -213,8 +214,15 @@ class WebsiteBlog(http.Controller):
         tags = request.env['blog.tag'].search([])
 
         # Find next Post
-        all_post_ids = BlogPost.search([('blog_id', '=', blog.id)]).ids
+        all_post = BlogPost.search([('blog_id', '=', blog.id)])
+        if not request.env.user.has_group('base.group_website_designer'):
+            all_post = all_post.filtered(lambda r: r.post_date <= fields.Datetime.now())
+
+        if blog_post not in all_post:
+            return request.redirect("/blog/%s" % (slug(blog_post.blog_id)))
+
         # should always return at least the current post
+        all_post_ids = all_post.ids
         current_blog_post_index = all_post_ids.index(blog_post.id)
         next_post_id = all_post_ids[0 if current_blog_post_index == len(all_post_ids) - 1 \
                             else current_blog_post_index + 1]
