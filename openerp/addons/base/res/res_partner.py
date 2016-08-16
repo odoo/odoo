@@ -220,6 +220,8 @@ class Partner(models.Model, FormatAddress):
         help="Small-sized image of this contact. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
+    # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
+    self = fields.Many2one(comodel_name=_name, compute='_compute_get_ids')
 
     _sql_constraints = [
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
@@ -241,6 +243,10 @@ class Partner(models.Model, FormatAddress):
     def _compute_contact_address(self):
         for partner in self:
             partner.contact_address = partner._display_address()
+
+    @api.one
+    def _compute_get_ids(self):
+        self.self = self.id
 
     @api.depends('is_company', 'parent_id.commercial_partner_id')
     def _compute_commercial_partner(self):

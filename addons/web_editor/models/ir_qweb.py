@@ -10,7 +10,6 @@ Also, adds methods to convert values back to Odoo models.
 
 import ast
 import cStringIO
-import datetime
 import itertools
 import json
 import logging
@@ -158,10 +157,12 @@ class Contact(models.AbstractModel):
     # helper to call the rendering of contact field
     @api.model
     def get_record_to_html(self, ids, options=None):
-        node = self.record_to_html('record', {
-            'record': self.env['res.partner'].browse(ids[0])},
-            options=options)
-        return node and node.__html__()
+        node = self.record_to_html(
+            self.env['res.partner'].browse(ids[0]),
+            'self',
+            options=options,
+        )
+        return node
 
 
 class Date(models.AbstractModel):
