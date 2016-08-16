@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
-from lxml import html
 import random
 
 from odoo import api, models, fields, _
 from odoo.addons.website.models.website import slug
 from odoo.tools.translate import html_translate
 from odoo.tools import html2plaintext
+
 
 class Blog(models.Model):
     _name = 'blog.blog'
@@ -90,7 +90,7 @@ class BlogPost(models.Model):
     def _compute_ranking(self):
         res = {}
         for blog_post in self:
-            age = datetime.now() - fields.Datetime.from_string(blog_post.create_date)
+            age = datetime.now() - fields.Datetime.from_string(blog_post.post_date)
             res[blog_post.id] = blog_post.visits * (0.5 + random.random()) / max(3, age.days)
         return res
 
@@ -111,7 +111,7 @@ class BlogPost(models.Model):
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, ondelete='cascade')
     tag_ids = fields.Many2many('blog.tag', string='Tags')
     content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
-    teaser = fields.Text('Teaser', compute='_get_teaser', inverse='_set_teaser')
+    teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser')
     teaser_manual = fields.Text(string='Teaser Content')
 
     website_message_ids = fields.One2many(
@@ -124,17 +124,18 @@ class BlogPost(models.Model):
     )
     # creation / update stuff
     create_date = fields.Datetime('Created on', index=True, readonly=True)
+    published_date = fields.Datetime('Published Date')
+    post_date = fields.Datetime('Published date', compute='_compute_post_date', inverse='_set_post_date', store=True)
     create_uid = fields.Many2one('res.users', 'Created by', index=True, readonly=True)
     write_date = fields.Datetime('Last Modified on', index=True, readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
-    published_date = fields.Datetime('Published Date')
     author_avatar = fields.Binary(related='author_id.image_small', string="Avatar")
     visits = fields.Integer('No of Views')
     ranking = fields.Float(compute='_compute_ranking', string='Ranking')
 
     @api.multi
     @api.depends('content', 'teaser_manual')
-    def _get_teaser(self):
+    def _compute_teaser(self):
         for blog_post in self:
             if blog_post.teaser_manual:
                 blog_post.teaser = blog_post.teaser_manual
@@ -146,6 +147,20 @@ class BlogPost(models.Model):
     def _set_teaser(self):
         for blog_post in self:
             blog_post.teaser_manual = blog_post.teaser
+
+    @api.multi
+    @api.depends('create_date', 'published_date')
+    def _compute_post_date(self):
+        for blog_post in self:
+            if blog_post.published_date:
+                blog_post.post_date = blog_post.published_date
+            else:
+                blog_post.post_date = blog_post.create_date
+
+    @api.multi
+    def _set_post_date(self):
+        for blog_post in self:
+            blog_post.published_date = blog_post.post_date
 
     def _check_for_publication(self, vals):
         if vals.get('website_published'):
@@ -167,8 +182,9 @@ class BlogPost(models.Model):
     @api.multi
     def write(self, vals):
         self.ensure_one()
-        if 'website_published' in vals:
-            vals['published_date'] = fields.Datetime.now() if vals['website_published'] else False
+        if 'website_published' in vals and 'published_date' not in vals:
+            if self.published_date <= fields.Datetime.now():
+                vals['published_date'] = vals['website_published'] and fields.Datetime.now()
         result = super(BlogPost, self).write(vals)
         self._check_for_publication(vals)
         return result

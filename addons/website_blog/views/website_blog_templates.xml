@@ -63,7 +63,7 @@
                             </span>
                         </h4>
                         <div class="text-muted">
-                            <span class="fa fa-calendar mr8"> <span t-field="post.create_date"/></span>
+                            <span class="fa fa-calendar mr8"> <span t-field="post.post_date"/></span>
                             <span class="fa fa-folder-open"> In
                                 <a class="mr8" t-attf-href="#{blog_url(blog=post.blog_id)}">
                                 <span t-field="post.blog_id"/>
@@ -143,15 +143,14 @@
                                 "widget": "contact",
                                 "fields": ["name"]
                             }'/>
-                            &#5760; <t t-if="blog_post.published_date"><span t-field="blog_post.published_date" t-options='{"format": "MMMM yyyy"}'/></t>
-                            <t t-if="not blog_post.published_date"><span t-field="blog_post.create_date" t-options='{"format": "MMMM yyyy"}'/></t>
+                            &amp;mdash; <span t-field="blog_post.post_date" t-options='{"format": "MMMM yyyy"}'/>
                             <span t-if="len(blog_post.message_ids) &gt; 0">
-                                &#5760; <t t-esc="len(blog_post.message_ids)"/>
+                                &amp;mdash; <t t-esc="len(blog_post.message_ids)"/>
                                 <t t-if="len(blog_post.message_ids) &lt;= 1" >comment</t>
                                 <t t-if="len(blog_post.message_ids) &gt; 1">comments</t>
                             </span>
                             <span t-if="blog_post.visits &gt; 0">
-                                &#5760; <t t-esc="blog_post.visits"/>
+                                &amp;mdash; <t t-esc="blog_post.visits"/>
                                 <t t-if="blog_post.visits &lt;= 1" >view</t>
                                 <t t-if="blog_post.visits &gt; 1">views</t>
                             </span>
@@ -408,12 +407,12 @@
                 <t t-foreach="nav_list[year]" t-as="months">
                     <t t-if="months['date_begin'] == date">
                         <li class="active">
-                            <a t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
+                            <a t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
                         </li>
                     </t>
                     <t t-else="1">
                         <li>
-                            <a t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
+                            <a t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
                         </li>
                     </t>
                 </t>
