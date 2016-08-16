@@ -61,7 +61,7 @@ class account_analytic_account(osv.osv):
         res = {}
         if context is None:
             context = {}
-        child_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
+        child_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
         for i in child_ids:
             res[i] =  {}
             for n in fields:
