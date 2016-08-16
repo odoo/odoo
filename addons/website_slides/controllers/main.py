@@ -22,7 +22,7 @@ class WebsiteSlides(http.Controller):
     }
 
     def _set_viewed_slide(self, slide, view_mode):
-        slide_key = '%s_%s' % (view_mode, request.session_id)
+        slide_key = '%s_%s' % (view_mode, request.session.sid)
         viewed_slides = request.session.setdefault(slide_key, list())
         if slide.id not in viewed_slides:
             if view_mode == 'slide':
