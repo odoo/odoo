@@ -199,13 +199,17 @@ def _eval_xml(self, node, env):
 class xml_import(object):
 
     @staticmethod
+    def str2bool(value):
+        return value.lower() not in ('0', 'false', 'off')
+
+    @staticmethod
     def nodeattr2bool(node, attr, default=False):
         if not node.get(attr):
             return default
         val = node.get(attr).strip()
         if not val:
             return default
-        return val.lower() not in ('0', 'false', 'off')
+        return self.str2bool(val)
 
     def isnoupdate(self, data_node=None):
         return self.noupdate or (len(data_node) and self.nodeattr2bool(data_node, 'noupdate', False))
@@ -703,7 +707,7 @@ form: module.record_id""" % (xml_id,)
                     elif model._fields[f_name].type in ['float', 'monetary']:
                         f_val = float(f_val)
                     elif model._fields[f_name].type == 'boolean' and isinstance(f_val, basestring):
-                        f_val = f_val.lower() in ['1', 'true', 'yes']
+                        f_val = self.str2bool(f_val)
             res[f_name] = f_val
 
         id = self.env(context=rec_context)['ir.model.data']._update(rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode)
