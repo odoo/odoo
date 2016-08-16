@@ -51,7 +51,7 @@ var Dashboard = Widget.extend({
     },
 
     load_share: function(data){
-        return new DashboardShare(this, {}).replace(this.$('.o_web_settings_dashboard_share'));
+        return new DashboardShare(this, data.share).replace(this.$('.o_web_settings_dashboard_share'));
     },
 
     load_invitations: function(data){
