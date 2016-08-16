@@ -10,12 +10,6 @@ class WebsiteResPartner(models.Model):
 
     website_description = fields.Html('Website Partner Full Description', strip_style=True)
     website_short_description = fields.Text('Website Partner Short Description')
-    # hack to allow using plain browse record in qweb views
-    self = fields.Many2one(comodel_name=_name, compute='_compute_get_ids')
-
-    @api.one
-    def _compute_get_ids(self):
-        self.self = self.id
 
     @api.multi
     def _compute_website_url(self):
