@@ -647,26 +647,6 @@ class AccountBankStatementLine(models.Model):
         if results:
             return self.env['account.move.line'].browse(results[0])
 
-        if not self.partner_id:
-            return self.env['account.move.line']
-
-        add_to_select = ',aml.currency_id, aml.amount_residual_currency, aml.amount_residual '
-        sql_query = self._get_common_sql_query(excluded_ids=excluded_ids, add_to_select=add_to_select) + \
-                " AND aml.reconciled = false AND acc.internal_type = %(internal_type)s \
-                AND "+field+" < %(lesser_amount)s AND "+field+" > %(greater_amount)s \
-                ORDER BY date_maturity asc, aml.id asc LIMIT 5"
-        self.env.cr.execute(sql_query, params)
-        results = self.env.cr.dictfetchall()
-        ret = []
-        total = 0
-        st_line_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
-        for line in results:
-            total += line.get('currency_id') and line.get('amount_residual_currency') or line.get('amount_residual')
-            if float_compare(total, abs(amount), precision_digits=st_line_currency.rounding) == 1:
-                break
-            ret.append(line.get('id'))
-        if ret:
-            return self.env['account.move.line'].browse(ret)
         return self.env['account.move.line']
 
     def _get_move_lines_for_auto_reconcile(self):
