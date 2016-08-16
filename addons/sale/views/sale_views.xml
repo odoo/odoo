@@ -128,7 +128,7 @@
             <field name="model">sale.order</field>
             <field name="priority">4</field>
             <field name="arch" type="xml">
-                <tree string="Quotation" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
+                <tree string="Quotation" class="o_sale_order" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Quotation Number"/>
                     <field name="date_order"/>
@@ -155,7 +155,7 @@
                     <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
                     <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary"/>
                     <button name="action_confirm" states="sent" string="Confirm Sale" class="btn-primary o_sale_confirm" type="object" context="{'show_sale': True}"/>
-                    <button name="action_confirm" states="draft" string="Confirm Sale" type="object" context="{'show_sale': True}"/>
+                    <button name="action_confirm" states="draft" string="Confirm Sale" class="o_sale_confirm" type="object" context="{'show_sale': True}"/>
                     <button name="print_quotation" string="Print" type="object" states="sent,sale"/>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
                     <button name="action_cancel" states="draft,sent,sale" type="object" string="Cancel"/>
@@ -517,10 +517,10 @@
               <p class="oe_view_nocontent_create">
                 Create a Quotation, the first step of a new sale.
               </p><p>
-                Your next actions should flow efficiently: confirm the Quotation 
+                Your next actions should flow efficiently: confirm the Quotation
                 to a Sale Order, then create the Invoice and collect the Payment.
               </p><p>
-                Note that once a Quotation becomes a Sale Order, it will be moved 
+                Note that once a Quotation becomes a Sale Order, it will be moved
                 from the Quotations list to the Sales Order list.
               </p>
             </field>
@@ -753,10 +753,10 @@
               <p class="oe_view_nocontent_create">
                 Create a Quotation, the first step of a new sale.
               </p><p>
-                Your next actions should flow efficiently: confirm the Quotation 
+                Your next actions should flow efficiently: confirm the Quotation
                 to a Sale Order, then create the Invoice and collect the Payment.
               </p><p>
-                Note that once a Quotation becomes a Sale Order, it will be moved 
+                Note that once a Quotation becomes a Sale Order, it will be moved
                 from the Quotations list to the Sales Order list.
               </p>
             </field>
