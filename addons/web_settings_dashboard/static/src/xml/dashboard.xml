@@ -17,6 +17,9 @@
                 <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
                     <div class="text-center o_web_settings_dashboard_share"></div>
                 </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
+                    <div class="text-center o_web_settings_dashboard_about"></div>
+                </div>
             </div>
         </div>
     </t>
@@ -85,7 +88,7 @@
     </t>
     <t t-name="DashboardPlanner">
         <div class="text-center o_web_settings_dashboard_planner">
-            <i class="fa fa-info-circle fa-4x text-muted"></i>
+            <i class="fa fa-check-square-o fa-4x text-muted"></i>
             <div class="o_web_settings_dashboard_header">
                 <span class="o_web_settings_dashboard_planner_overall_progress"><t t-esc="widget.overall_progress"></t></span>%
                 Implementation
@@ -152,6 +155,54 @@
                 <div><img class="img img-responsive" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"'/></div>
                 <div>
                     <a class="btn btn-primary btn-block o_confirm_upgrade" role="button"><strong>Upgrade Now</strong></a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="DashboardAbout">
+        <div class="container-fluid text-center o_web_settings_dashboard_about">
+            <t t-set="server_version" t-value="widget.data.server_version"/>
+            <t t-set="expiration_date" t-value="new moment(widget.data.expiration_date).format('LL')"/>
+            <t t-set="debug" t-value="widget.data.debug"/>
+            <div class="row">
+                <div class="col-sm-offset-2 col-sm-8">
+                    <i class="fa fa-info-circle fa-4x text-muted"></i>
+                    <div class="o_web_settings_dashboard_header">
+                        About Us
+                    </div>
+                    <div class="text-center">
+                        <div class="user-heading">
+                            <h3>
+                                Version <t t-esc="server_version"/>
+                                (Community Edition)
+                            </h3>
+                            <t t-if="expiration_date">
+                                <h5>Database expiration: <t t-esc="expiration_date"/></h5>
+                            </t>
+                        </div>
+                        <div>
+                            <div class="tab-content">
+                                <div id="settings" class="tab-pane active">
+                                    <h4>Copyright © 2004-2015 Odoo S.A.</h4>
+                                    <p>Odoo is a trademark of <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo S.A.</a></p>
+                                    <p>Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/lgpl.html" style="text-decoration: underline;">GNU Lesser General Public License</a></p>
+                                    <p>For more information visit <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo.com</a></p>
+                                    <p>
+                                      <a href="https://www.odoo.com/web/about/facebook"><i class="fa fa-facebook-square fa-3x social-fb"></i></a>
+                                      <a href="https://www.odoo.com/web/about/twitter"><i class="fa fa-twitter-square fa-3x social-tw"></i></a>
+                                      <a href="https://www.odoo.com/web/about/googleplus"><i class="fa fa-google-plus-square fa-3x social-gp"></i></a>
+                                      <a href="https://www.odoo.com/web/about/linkedin"><i class="fa fa-linkedin-square fa-3x social-lk"></i></a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" t-if="!debug">
+                <div class="col-md-12">
+                    <a class="oe_activate_debug_mode pull-right" href="?debug" >Activate the developer mode</a>
                 </div>
             </div>
         </div>
