@@ -6170,8 +6170,9 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                 this.view.recursive_save().done(function() {
                     var change = {};
                     change[self.name] = val;
-                    self.view.dataset.write(self.view.datarecord.id, change).done(function() {
+                    self.view.dataset.write(self.view.datarecord.id, change).always(function() {
                         ul.removeAttr('disabled');
+                    }).done(function() {
                         self.view.reload();
                     });
                 });
