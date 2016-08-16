@@ -702,6 +702,8 @@ form: module.record_id""" % (xml_id,)
                         f_val = int(f_val)
                     elif model._fields[f_name].type in ['float', 'monetary']:
                         f_val = float(f_val)
+                    elif model._fields[f_name].type == 'boolean' and isinstance(f_val, basestring):
+                        f_val = f_val.lower() in ['1', 'true', 'yes']
             res[f_name] = f_val
 
         id = self.env(context=rec_context)['ir.model.data']._update(rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode)
