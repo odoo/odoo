@@ -1276,7 +1276,6 @@
         <ul class="dropdown-menu" role="menu">
             <li><a href="#" data-menu="documentation">Documentation</a></li>
             <li><a href="#" data-menu="support">Support</a></li>
-            <li><a href="#" data-menu="about">About</a></li>
             <li class="divider"/>
             <li><a href="#" data-menu="settings">Preferences</a></li>
             <li><a href="#" data-menu="account">My Odoo.com account</a></li>
@@ -1284,50 +1283,6 @@
         </ul>
     </li>
 </t>
-
-<div t-name="UserMenu.about">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-offset-2 col-sm-8">
-                <div class="text-center">
-                    <img src="/web/static/src/img/logo2.png" alt="Odoo (Formerly OpenERP)" title="Odoo (Formerly OpenERP)" class="img-circle"/>
-                </div>
-                <div class="text-center">
-                    <div class="user-heading">
-                        <h3>
-                            Version <t t-esc="db_info.server_version"/>
-                            (Community Edition)
-                        </h3>
-                        <t t-if="db_info.expiration_date">
-                            <h5>Database expiration: <t t-esc="new moment(db_info.expiration_date).format('LL')"/></h5>
-                        </t>
-                    </div>
-                    <div>
-                        <div class="tab-content">
-                            <div id="settings" class="tab-pane active">
-                                <h4>Copyright © 2004-2015 Odoo S.A.</h4>
-                                <p>Odoo is a trademark of <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo S.A.</a></p>
-                                <p>Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/lgpl.html" style="text-decoration: underline;">GNU Lesser General Public License</a></p>
-                                <p>For more information visit <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo.com</a></p>
-                                <p>
-                                  <a href="https://www.odoo.com/web/about/facebook"><i class="fa fa-facebook-square fa-3x social-fb"></i></a>
-                                  <a href="https://www.odoo.com/web/about/twitter"><i class="fa fa-twitter-square fa-3x social-tw"></i></a>
-                                  <a href="https://www.odoo.com/web/about/googleplus"><i class="fa fa-google-plus-square fa-3x social-gp"></i></a>
-                                  <a href="https://www.odoo.com/web/about/linkedin"><i class="fa fa-linkedin-square fa-3x social-lk"></i></a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row" t-if="!debug">
-            <div class="col-md-12">
-                <a class="oe_activate_debug_mode pull-right" href="?debug" >Activate the developer mode</a>
-            </div>
-        </div>
-    </div>
-</div>
 
 <t t-name="EnterpriseUpgrade">
     <div class="row">
