@@ -23,7 +23,7 @@ class Http(models.AbstractModel):
         display_switch_company_menu = user.has_group('base.group_multi_company') and len(user.company_ids) > 1
         version_info = odoo.service.common.exp_version()
         return {
-            "session_id": request.session_id,
+            "session_id": request.session.sid,
             "uid": request.session.uid,
             "is_admin": request.env.user.has_group('base.group_system'),
             "is_superuser": request.env.user._is_superuser(),

@@ -185,7 +185,6 @@ class WebRequest(object):
     def __init__(self, httprequest):
         self.httprequest = httprequest
         self.httpresponse = None
-        self.httpsession = httprequest.session
         self.disable_db = False
         self.uid = None
         self.endpoint = None
@@ -342,18 +341,6 @@ class WebRequest(object):
         warnings.warn('please use request.registry and request.cr directly', DeprecationWarning)
         yield (self.registry, self.cr)
 
-    @lazy_property
-    def session_id(self):
-        """
-        opaque identifier for the :class:`OpenERPSession` instance of
-        the current request
-
-        .. deprecated:: 8.0
-
-            Use the ``sid`` attribute on :attr:`.session`
-        """
-        return self.session.sid
-
     @property
     def registry(self):
         """
@@ -364,7 +351,7 @@ class WebRequest(object):
 
             use :attr:`.env`
         """
-        return openerp.modules.registry.RegistryManager.get(self.db) if self.db else None
+        return openerp.registry(self.db) if self.db else None
 
     @property
     def db(self):
@@ -373,16 +360,6 @@ class WebRequest(object):
         if the current request uses the ``none`` authentication.
         """
         return self.session.db if not self.disable_db else None
-
-    @lazy_property
-    def httpsession(self):
-        """ HTTP session data
-
-        .. deprecated:: 8.0
-
-            Use :attr:`.session` instead.
-        """
-        return self.session
 
     def csrf_token(self, time_limit=3600):
         """ Generates and returns a CSRF token for the current session
@@ -741,16 +718,6 @@ def to_jsonable(o):
         return tmp
     return ustr(o)
 
-def jsonrequest(f):
-    """ 
-        .. deprecated:: 8.0
-            Use the :func:`~openerp.http.route` decorator instead.
-    """
-    base = f.__name__.lstrip('/')
-    if f.__name__ == "index":
-        base = ""
-    return route([base, base + "/<path:_ignored_path>"], type="json", auth="user", combine=True)(f)
-
 class HttpRequest(WebRequest):
     """ Handler for the ``http`` request type.
 
@@ -894,17 +861,6 @@ more details.
         """
         return werkzeug.exceptions.NotFound(description)
 
-def httprequest(f):
-    """ 
-        .. deprecated:: 8.0
-
-        Use the :func:`~openerp.http.route` decorator instead.
-    """
-    base = f.__name__.lstrip('/')
-    if f.__name__ == "index":
-        base = ""
-    return route([base, base + "/<path:_ignored_path>"], type="http", auth="user", combine=True)(f)
-
 #----------------------------------------------------------
 # Controller and route registration
 #----------------------------------------------------------
@@ -1028,57 +984,6 @@ class AuthenticationError(Exception):
 class SessionExpiredException(Exception):
     pass
 
-class Service(object):
-    """
-        .. deprecated:: 8.0
-            Use :func:`dispatch_rpc` instead.
-    """
-    def __init__(self, session, service_name):
-        self.session = session
-        self.service_name = service_name
-
-    def __getattr__(self, method):
-        def proxy_method(*args):
-            result = dispatch_rpc(self.service_name, method, args)
-            return result
-        return proxy_method
-
-class Model(object):
-    """
-        .. deprecated:: 8.0
-            Use the registry and cursor in :data:`request` instead.
-    """
-    def __init__(self, session, model):
-        self.session = session
-        self.model = model
-        self.proxy = self.session.proxy('object')
-
-    def __getattr__(self, method):
-        self.session.assert_valid()
-        def proxy(*args, **kw):
-            # Can't provide any retro-compatibility for this case, so we check it and raise an Exception
-            # to tell the programmer to adapt his code
-            if not request.db or not request.uid or self.session.db != request.db \
-                or self.session.uid != request.uid:
-                raise Exception("Trying to use Model with badly configured database or user.")
-                
-            if method.startswith('_'):
-                raise Exception("Access denied")
-            mod = request.registry[self.model]
-            meth = getattr(mod, method)
-            # make sure to instantiate an environment
-            cr = request.env.cr
-            result = meth(cr, request.uid, *args, **kw)
-            # reorder read
-            if method == "read":
-                if isinstance(result, list) and len(result) > 0 and "id" in result[0]:
-                    index = {}
-                    for r in result:
-                        index[r['id']] = r
-                    result = [index[x] for x in args[0] if x in index]
-            return result
-        return proxy
-
 class OpenERPSession(werkzeug.contrib.sessions.Session):
     def __init__(self, *args, **kwargs):
         self.inited = False
@@ -1185,110 +1090,6 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             lang = babel.core.LOCALE_ALIASES[lang]
 
         context['lang'] = lang or 'en_US'
-
-    # Deprecated to be removed in 9
-
-    """
-        Damn properties for retro-compatibility. All of that is deprecated,
-        all of that.
-    """
-    @property
-    def _db(self):
-        return self.db
-    @_db.setter
-    def _db(self, value):
-        self.db = value
-    @property
-    def _uid(self):
-        return self.uid
-    @_uid.setter
-    def _uid(self, value):
-        self.uid = value
-    @property
-    def _login(self):
-        return self.login
-    @_login.setter
-    def _login(self, value):
-        self.login = value
-    @property
-    def _password(self):
-        return self.password
-    @_password.setter
-    def _password(self, value):
-        self.password = value
-
-    def send(self, service_name, method, *args):
-        """
-        .. deprecated:: 8.0
-            Use :func:`dispatch_rpc` instead.
-        """
-        return dispatch_rpc(service_name, method, args)
-
-    def proxy(self, service):
-        """
-        .. deprecated:: 8.0
-            Use :func:`dispatch_rpc` instead.
-        """
-        return Service(self, service)
-
-    def assert_valid(self, force=False):
-        """
-        .. deprecated:: 8.0
-            Use :meth:`check_security` instead.
-
-        Ensures this session is valid (logged into the openerp server)
-        """
-        if self.uid and not force:
-            return
-        # TODO use authenticate instead of login
-        self.uid = self.proxy("common").login(self.db, self.login, self.password)
-        if not self.uid:
-            raise AuthenticationError("Authentication failure")
-
-    def ensure_valid(self):
-        """
-        .. deprecated:: 8.0
-            Use :meth:`check_security` instead.
-        """
-        if self.uid:
-            try:
-                self.assert_valid(True)
-            except Exception:
-                self.uid = None
-
-    def execute(self, model, func, *l, **d):
-        """
-        .. deprecated:: 8.0
-            Use the registry and cursor in :data:`request` instead.
-        """
-        model = self.model(model)
-        r = getattr(model, func)(*l, **d)
-        return r
-
-    def exec_workflow(self, model, id, signal):
-        """
-        .. deprecated:: 8.0
-            Use the registry and cursor in :data:`request` instead.
-        """
-        self.assert_valid()
-        r = self.proxy('object').exec_workflow(self.db, self.uid, self.password, model, signal, id)
-        return r
-
-    def model(self, model):
-        """
-        .. deprecated:: 8.0
-            Use the registry and cursor in :data:`request` instead.
-
-        Get an RPC proxy for the object ``model``, bound to this session.
-
-        :param model: an OpenERP model name
-        :type model: str
-        :rtype: a model object
-        """
-        if not self.db:
-            raise SessionExpiredException("Session expired")
-
-        return Model(self, model)
 
     def save_action(self, action):
         """
