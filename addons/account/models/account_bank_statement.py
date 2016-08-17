@@ -296,13 +296,15 @@ class AccountBankStatement(models.Model):
                         WHERE account_id IS NULL AND not exists (select 1 from account_move m where m.statement_line_id = stl.id)
                             AND company_id = %s
                 """
-        sql_query = sql_query + ' AND stl.statement_id IN %s' if statements else sql_query
-        sql_query += ' ORDER BY stl.id'
         params = (self.env.user.company_id.id,)
-        params = params + (tuple(statements.ids),) if statements else params
+        if statements:
+            sql_query += ' AND stl.statement_id IN %s'
+            params += (tuple(statements.ids),)
+        sql_query += ' ORDER BY stl.id'
         self.env.cr.execute(sql_query, params)
         st_lines_left = self.env['account.bank.statement.line'].browse([line.get('id') for line in self.env.cr.dictfetchall()])
 
+        #try to assign partner to bank_statement_line
         stl_to_assign_partner = [stl.id for stl in st_lines_left if not stl.partner_id]
         refs = list(set([st.name for st in st_lines_left if not stl.partner_id]))
         if st_lines_left and stl_to_assign_partner and refs:
@@ -319,9 +321,10 @@ class AccountBankStatement(models.Model):
                                     )
                                 AND aml.ref IN %s
                                 """
-            sql_query = sql_query + 'AND stl.id IN %s' if statements else sql_query
             params = (self.env.user.company_id.id, (st_lines_left[0].journal_id.default_credit_account_id.id, st_lines_left[0].journal_id.default_debit_account_id.id), tuple(refs))
-            params = params + (tuple(stl_to_assign_partner),) if statements else params
+            if statements:
+                sql_query += 'AND stl.id IN %s'
+                params += (tuple(stl_to_assign_partner),)
             self.env.cr.execute(sql_query, params)
             results = self.env.cr.dictfetchall()
             st_line = self.env['account.bank.statement.line']
@@ -587,27 +590,27 @@ class AccountBankStatementLine(models.Model):
 
         return self.env['account.move.line'].search(domain, offset=offset, limit=limit, order="date_maturity asc, id asc")
 
-    def _get_common_sql_query(self, overlook_partner = False, excluded_ids = None, add_to_select = '', add_to_from = ''):
+    def _get_common_sql_query(self, overlook_partner = False, excluded_ids = None, split = False):
         acc_type = "acc.internal_type IN ('payable', 'receivable')" if (self.partner_id or overlook_partner) else "acc.reconcile = true"
-        base_sql_query = """SELECT aml.id """+add_to_select+"""
-                            FROM account_move_line aml
-                                """+add_to_from+"""
-                                JOIN account_account acc ON acc.id = aml.account_id
-                            WHERE aml.company_id = %(company_id)s  
+        select_clause = "SELECT aml.id "
+        from_clause = "FROM account_move_line aml JOIN account_account acc ON acc.id = aml.account_id "
+        where_clause = """WHERE aml.company_id = %(company_id)s  
                                 AND (
                                         (aml.statement_id IS NULL AND aml.account_id IN %(account_payable_receivable)s) 
                                     OR 
                                         ("""+acc_type+""" AND aml.reconciled = false)
-                                    )
-                                """
-        base_sql_query = base_sql_query + ' AND aml.partner_id = %(partner_id)s' if self.partner_id else base_sql_query
-        base_sql_query = base_sql_query + ' AND aml.id NOT IN %(excluded_ids)s' if excluded_ids else base_sql_query
-        return base_sql_query
+                                    )"""
+        where_clause = where_clause + ' AND aml.partner_id = %(partner_id)s' if self.partner_id else where_clause
+        where_clause = where_clause + ' AND aml.id NOT IN %(excluded_ids)s' if excluded_ids else where_clause
+        if split:
+            return select_clause, from_clause, where_clause
+        return select_clause + from_clause + where_clause
 
     def get_reconciliation_proposition(self, excluded_ids=None):
         """ Returns move lines that constitute the best guess to reconcile a statement line
             Note: it only looks for move lines in the same currency as the statement line.
         """
+        self.ensure_one()
         if not excluded_ids:
             excluded_ids = []
         amount = self.amount_currency or self.amount
@@ -621,15 +624,14 @@ class AccountBankStatementLine(models.Model):
                     'partner_id': self.partner_id.id,
                     'excluded_ids': tuple(excluded_ids),
                     'ref': self.name,
-                    'internal_type': 'receivable' if amount > 0 else 'payable',
-                    'lesser_amount': 0 if amount < 0 else amount, 
-                    'greater_amount': 0 if amount > 0 else amount,}
+                    }
         # Look for structured communication match
         if self.name:
             add_to_select = ", CASE WHEN aml.ref = %(ref)s THEN 1 ELSE 2 END as temp_field_order "
-            add_to_from = " JOIN account_move m ON m.id = aml.move_id"
-            sql_query = self._get_common_sql_query(overlook_partner=True, excluded_ids=excluded_ids, add_to_select=add_to_select, add_to_from=add_to_from) + \
-                    " AND (aml.ref= %(ref)s or m.name = %(ref)s) \
+            add_to_from = " JOIN account_move m ON m.id = aml.move_id "
+            select_clause, from_clause, where_clause = self._get_common_sql_query(overlook_partner=True, excluded_ids=excluded_ids, split=True)
+            sql_query = select_clause + add_to_select + from_clause + add_to_from + where_clause
+            sql_query += " AND (aml.ref= %(ref)s or m.name = %(ref)s) \
                     ORDER BY temp_field_order, date_maturity asc, aml.id asc"
             self.env.cr.execute(sql_query, params)
             results = self.env.cr.fetchone()
@@ -671,9 +673,7 @@ class AccountBankStatementLine(models.Model):
                     'amount': float_round(amount, precision_digits=precision),
                     'partner_id': self.partner_id.id,
                     'ref': self.name,
-                    'internal_type': 'receivable' if amount > 0 else 'payable',
-                    'lesser_amount': 0 if amount < 0 else amount, 
-                    'greater_amount': 0 if amount > 0 else amount,}
+                    }
         field = currency and 'amount_residual_currency' or 'amount_residual'
         liquidity_field = currency and 'amount_currency' or amount > 0 and 'debit' or 'credit'
         # Look for structured communication match

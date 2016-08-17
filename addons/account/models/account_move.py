@@ -233,6 +233,10 @@ class AccountMoveLine(models.Model):
     _order = "date desc, id desc"
 
     def init(self, cr):
+        """ change index on partner_id to a multi-column index on (partner_id, ref), the new index will behave in the
+            same way when we search on partner_id, with the addition of being optimal when having a query that will
+            search on partner_id and ref at the same time (which is the case when we open the bank reconciliation widget)
+        """
         cr.execute('DROP INDEX IF EXISTS account_move_line_partner_id_index')
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_partner_id_ref_idx',))
         if not cr.fetchone():
