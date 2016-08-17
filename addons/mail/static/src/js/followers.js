@@ -268,9 +268,11 @@ var Followers = form_common.AbstractField.extend({
         if (this.message_is_follower) {
             this.$('button.o_followers_follow_button').removeClass('o_followers_notfollow').addClass('o_followers_following');
             this.$('.o_subtypes_list > .dropdown-toggle').attr('disabled', false);
+            this.$('.o_followers_actions .dropdown-toggle').addClass('o_followers_following')
         } else {
             this.$('button.o_followers_follow_button').removeClass('o_followers_following').addClass('o_followers_notfollow');
             this.$('.o_subtypes_list > .dropdown-toggle').attr('disabled', true);
+            this.$('.o_followers_actions .dropdown-toggle').removeClass('o_followers_following')
         }
     },
 
