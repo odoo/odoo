@@ -618,7 +618,7 @@ class mail_message(osv.Model):
             - otherwise: remove the id
         """
         # Rules do not apply to administrator
-        if uid == SUPERUSER_ID:
+        if SUPERUSER_ID in (uid, access_rights_uid):
             return super(mail_message, self)._search(
                 cr, uid, args, offset=offset, limit=limit, order=order,
                 context=context, count=count, access_rights_uid=access_rights_uid)
