@@ -1483,7 +1483,7 @@ class procurement_order(osv.osv):
             taxes_ids = procurement.product_id.supplier_taxes_id
             taxes_ids = taxes_ids.filtered(lambda x: x.company_id.id == procurement.company_id.id)
             # It is necessary to have the appropriate fiscal position to get the right tax mapping
-            fp = acc_pos_obj.get_fiscal_position(cr, uid, None, partner.id, context=dict(context, company_id=procurement.company_id.id))
+            fp = acc_pos_obj.get_fiscal_position(cr, uid, procurement.company_id.id, partner.id, context=context)
             if fp:
                 fp = acc_pos_obj.browse(cr, uid, fp, context=context)
             taxes = acc_pos_obj.map_tax(cr, uid, fp, taxes_ids, context=context)
@@ -1689,7 +1689,7 @@ class procurement_order(osv.osv):
             name = seq_obj.next_by_code(cr, uid, 'purchase.order', context=context) or _('PO: %s') % procurement.name
             gpo = procurement.rule_id.group_propagation_option
             group = (gpo == 'fixed' and procurement.rule_id.group_id.id) or (gpo == 'propagate' and procurement.group_id.id) or False
-            fp = acc_pos_obj.get_fiscal_position(cr, uid, None, partner.id, context=dict(context or {}, company_id=procurement.company_id.id))
+            fp = acc_pos_obj.get_fiscal_position(cr, uid, procurement.company_id.id, partner.id, context=context)
             po_vals = {
                 'name': name,
                 'origin': procurement.origin,
