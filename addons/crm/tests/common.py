@@ -18,7 +18,6 @@ class TestCrm(TestMail):
         cls.user_salesman_all = Users.create({
             'name': 'Riton La Chignole',
             'login': 'riton',
-            'alias_name': 'riton',
             'email': 'riton.salesman_all@example.com',
             'groups_id': [(6, 0, [user_group_employee.id, user_group_salesman_all.id])]
         })

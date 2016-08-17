@@ -56,7 +56,6 @@ class TestMail(common.SavepointCase):
         cls.user_employee = Users.create({
             'name': 'Ernest Employee',
             'login': 'ernest',
-            'alias_name': 'ernest',
             'email': 'e.e@example.com',
             'signature': '--\nErnest',
             'notify_email': 'always',
@@ -64,7 +63,6 @@ class TestMail(common.SavepointCase):
         cls.user_public = Users.create({
             'name': 'Bert Tartignole',
             'login': 'bert',
-            'alias_name': 'bert',
             'email': 'b.t@example.com',
             'signature': 'SignBert',
             'notify_email': 'always',
@@ -72,7 +70,6 @@ class TestMail(common.SavepointCase):
         cls.user_portal = Users.create({
             'name': 'Chell Gladys',
             'login': 'chell',
-            'alias_name': 'chell',
             'email': 'chell@gladys.portal',
             'signature': 'SignChell',
             'notify_email': 'always',
