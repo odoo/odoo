@@ -1032,7 +1032,7 @@ class MailThread(models.AbstractModel):
             if mail_messages:
                 model, thread_id = mail_messages.model, mail_messages.res_id
                 if not reply_private:  # TDE note: not sure why private mode as no alias search, copying existing behavior
-                    dest_aliases = Alias.search([('alias_name', '=', email_to_localpart)], limit=1)
+                    dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)], limit=1)
 
                 # TDE Note: compat mode = without context key, why ? because
                 route = self.message_route_verify(
