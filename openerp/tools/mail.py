@@ -413,6 +413,7 @@ command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
 # Typical form of references is <timestamp-openerp-record_id-model_name@domain>
 # group(1) = the record ID ; group(2) = the model (if any) ; group(3) = the domain
 reference_re = re.compile("<.*-open(?:object|erp)-(\\d+)(?:-([\w.]+))?[^>]*@([^>]*)>", re.UNICODE)
+discussion_re = re.compile("<.*-open(?:object|erp)-private[^>]*@([^>]*)>", re.UNICODE)
 
 mail_header_msgid_re = re.compile('<[^<>]+>')
 
@@ -494,14 +495,18 @@ def email_split_and_format(text):
                 if '@' in addr[1]]
 
 def email_references(references):
-    ref_match, model, thread_id, hostname = False, False, False, False
+    ref_match, model, thread_id, hostname, is_private = False, False, False, False, False
     if references:
         ref_match = reference_re.search(references)
     if ref_match:
         model = ref_match.group(2)
         thread_id = int(ref_match.group(1))
         hostname = ref_match.group(3)
-    return (ref_match, model, thread_id, hostname)
+    else:
+        ref_match = discussion_re.search(references)
+        if ref_match:
+            is_private = True
+    return (ref_match, model, thread_id, hostname, is_private)
 
 # was mail_message.decode()
 def decode_smtp_header(smtp_header):
