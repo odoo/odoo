@@ -32,7 +32,9 @@
           var modal  = $(this).parentsUntil('body', '.modal');
           if (modal.hasClass('o_database_backup')) {
             $(modal).modal('hide');
-            $('.list-group').before("<div class='alert alert-info'>The backup may take some time before being ready</div>");
+            if (!$('.alert-backup-long').length) {
+              $('.list-group').before("<div class='alert alert-info alert-backup-long'>The backup may take some time before being ready</div>");              
+            }
           }
       });
   });
