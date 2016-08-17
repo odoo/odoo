@@ -215,7 +215,7 @@ class WebsiteForm(http.Controller):
         # If some attachments didn't match a field on the model,
         # we create a mail.message to link them to the record
         if orphan_attachment_ids:
-            if model.name != 'mail.mail':
+            if model.model != 'mail.mail':
                 values = {
                     'body': _('<p>Attached files : </p>'),
                     'model': model.model,
