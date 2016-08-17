@@ -13,7 +13,6 @@ class TestPortalProjectBase(TestProjectBase):
         self.user_noone = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True}).create({
             'name': 'Noemie NoOne',
             'login': 'noemie',
-            'alias_name': 'noemie',
             'email': 'n.n@example.com',
             'signature': '--\nNoemie',
             'notify_email': 'always',

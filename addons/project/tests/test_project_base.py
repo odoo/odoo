@@ -18,14 +18,12 @@ class TestProjectBase(TestMail):
         cls.user_projectuser = Users.create({
             'name': 'Armande ProjectUser',
             'login': 'Armande',
-            'alias_name': 'armande',
             'email': 'armande.projectuser@example.com',
             'groups_id': [(6, 0, [user_group_employee.id, user_group_project_user.id])]
         })
         cls.user_projectmanager = Users.create({
             'name': 'Bastien ProjectManager',
             'login': 'bastien',
-            'alias_name': 'bastien',
             'email': 'bastien.projectmanager@example.com',
             'groups_id': [(6, 0, [user_group_employee.id, user_group_project_manager.id])]})
 

@@ -35,7 +35,6 @@ class TestForumCommon(common.SavepointCase):
         cls.user_employee = TestUsersEnv.create({
             'name': 'Armande Employee',
             'login': 'Armande',
-            'alias_name': 'armande',
             'email': 'armande.employee@example.com',
             'karma': 0,
             'groups_id': [(6, 0, [group_employee_id])]
@@ -43,7 +42,6 @@ class TestForumCommon(common.SavepointCase):
         cls.user_portal = TestUsersEnv.create({
             'name': 'Beatrice Portal',
             'login': 'Beatrice',
-            'alias_name': 'beatrice',
             'email': 'beatrice.employee@example.com',
             'karma': 0,
             'groups_id': [(6, 0, [group_portal_id])]
@@ -51,7 +49,6 @@ class TestForumCommon(common.SavepointCase):
         cls.user_public = TestUsersEnv.create({
             'name': 'Cedric Public',
             'login': 'Cedric',
-            'alias_name': 'cedric',
             'email': 'cedric.employee@example.com',
             'karma': 0,
             'groups_id': [(6, 0, [group_public_id])]
