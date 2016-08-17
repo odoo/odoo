@@ -937,6 +937,8 @@ class AccountMoveLine(models.Model):
         currency = False
         aml_to_balance_currency = self.env['account.move.line']
         partial_rec_set = self.env['account.partial.reconcile']
+        aml_id = False
+        partial_rec_id = False
         maxdate = None
         for aml in self:
             total_debit += aml.debit
@@ -957,6 +959,7 @@ class AccountMoveLine(models.Model):
             aml_id, partial_rec_id = partial_rec.with_context(skip_full_reconcile_check=True).create_exchange_rate_entry(aml_to_balance_currency, 0.0, total_amount_currency, currency, maxdate)
             self |= aml_id
             partial_rec_set |= partial_rec_id
+            total_amount_currency += aml_id.amount_currency
 
         partial_rec_ids = [x.id for x in list(partial_rec_set)]
         #if the total debit and credit are equal, and the total amount in currency is 0, the reconciliation is full
@@ -966,7 +969,9 @@ class AccountMoveLine(models.Model):
             #in that case, mark the reference on the partial reconciliations and the entries
             self.env['account.full.reconcile'].with_context(check_move_validity=False).create({
                 'partial_reconcile_ids': [(6, 0, partial_rec_ids)],
-                'reconciled_line_ids': [(6, 0, self.ids)]})
+                'reconciled_line_ids': [(6, 0, self.ids)],
+                'exchange_move_id': aml_id.move_id.id if aml_id else False,
+                'exchange_partial_rec_id': partial_rec_id.id if partial_rec_id else False})
 
     @api.multi
     def remove_move_reconcile(self):
@@ -1426,8 +1431,9 @@ class AccountPartialReconcile(models.Model):
     def unlink(self):
         """ When removing a partial reconciliation, also unlink its full reconciliation if it exists """
         to_unlink = self
+        full_to_unlink = self.env['account.full.reconcile']
+        res = True
         if self._context.get('full_rec_lookup', True):
-            full_to_unlink = self.env['account.full.reconcile']
             for rec in self:
                 #exclude partial reconciliations related to an exchange rate entry, because the unlink of the full reconciliation will already do it
                 if self.env['account.full.reconcile'].search([('exchange_partial_rec_id', '=', rec.id)]):
@@ -1435,11 +1441,11 @@ class AccountPartialReconcile(models.Model):
                 #without the deleted partial reconciliations, the full reconciliation won't be full anymore
                 if rec.full_reconcile_id:
                     full_to_unlink |= rec.full_reconcile_id
-            if full_to_unlink:
-                full_to_unlink.unlink()
         if to_unlink:
-            return super(AccountPartialReconcile, to_unlink).unlink()
-        return True
+            res = super(AccountPartialReconcile, to_unlink).unlink()
+        if full_to_unlink:
+            full_to_unlink.unlink()
+        return res
 
 class AccountFullReconcile(models.Model):
     _name = "account.full.reconcile"
@@ -1470,7 +1476,8 @@ class AccountFullReconcile(models.Model):
                 if aml.account_id.reconcile:
                     break
             if aml:
-                if aml.debit:
+                precision = aml.currency_id and aml.currency_id.rounding or aml.company_id.currency_id.rounding
+                if aml.debit or float_compare(aml.amount_currency, 0, precision_rounding=precision) == 1:
                     pair_to_rec = aml | rec.exchange_partial_rec_id.credit_move_id
                 else:
                     pair_to_rec = aml | rec.exchange_partial_rec_id.debit_move_id
