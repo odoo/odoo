@@ -17,7 +17,7 @@ var Dashboard = Widget.extend({
     template: 'DashboardMain',
 
     init: function(parent, data){
-        this.all_dashboards = ['apps', 'invitations', 'planner', 'share', 'about'];
+        this.all_dashboards = ['apps', 'invitations', 'planner', 'share'];
         return this._super.apply(this, arguments);
     },
 
@@ -60,10 +60,6 @@ var Dashboard = Widget.extend({
 
     load_planner: function(data){
         return  new DashboardPlanner(this, data.planner).replace(this.$('.o_web_settings_dashboard_planner'));
-    },
-
-    load_about: function(data){
-        return  new DashboardAbout(this, data.about).replace(this.$('.o_web_settings_dashboard_about'));
     },
 });
 
@@ -302,17 +298,6 @@ var DashboardShare = Widget.extend({
     }
 });
 
-var DashboardAbout = Widget.extend({
-    template: 'DashboardAbout',
-
-    init: function(parent, data){
-        this.data = data;
-        this.parent = parent;
-        return this._super.apply(this, arguments);
-    },
-});
-
-
 core.action_registry.add('web_settings_dashboard.main', Dashboard);
 
 return {
@@ -320,7 +305,6 @@ return {
     DashboardInvitations: DashboardInvitations,
     DashboardPlanner: DashboardPlanner,
     DashboardShare: DashboardShare,
-    DashboardAbout: DashboardAbout,
 };
 
 });
