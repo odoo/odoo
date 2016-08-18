@@ -394,7 +394,7 @@ class Website(models.Model):
     def get_current_website(self):
         domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
         website_id = self._get_current_website_id(domain_name)
-        request.context['website_id'] = website_id
+        request.context = dict(request.context, website_id=website_id)
         return self.browse(website_id)
 
     @tools.cache('domain_name')

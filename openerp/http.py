@@ -47,7 +47,7 @@ import openerp
 from openerp.service.server import memory_info
 from openerp.service import security, model as service_model
 from openerp.tools.func import lazy_property
-from openerp.tools import ustr, consteq
+from openerp.tools import ustr, consteq, frozendict
 
 _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
@@ -186,11 +186,13 @@ class WebRequest(object):
         self.httprequest = httprequest
         self.httpresponse = None
         self.disable_db = False
-        self.uid = None
         self.endpoint = None
         self.endpoint_arguments = None
         self.auth_method = None
         self._cr = None
+        self._uid = None
+        self._context = None
+        self._env = None
 
         # prevents transaction commit, use when you catch an exception during handling
         self._failed = None
@@ -202,43 +204,9 @@ class WebRequest(object):
         if self.session.uid:
             threading.current_thread().uid = self.session.uid
 
-    @lazy_property
-    def env(self):
-        """
-        The :class:`~openerp.api.Environment` bound to current request.
-        Raises a :class:`RuntimeError` if the current requests is not bound
-        to a database.
-        """
-        if not self.db:
-            raise RuntimeError('request not bound to a database')
-        return openerp.api.Environment(self.cr, self.uid, self.context)
-
-    @lazy_property
-    def context(self):
-        """
-        :class:`~collections.Mapping` of context values for the current
-        request
-        """
-        return dict(self.session.context)
-
-    @lazy_property
-    def lang(self):
-        self.session._fix_lang(self.context)
-        return self.context["lang"]
-
-    @lazy_property
-    def session(self):
-        """
-        a :class:`OpenERPSession` holding the HTTP session data for the
-        current http session
-        """
-        return self.httprequest.session
-
     @property
     def cr(self):
-        """
-        :class:`~openerp.sql_db.Cursor` initialized for the current method
-        call.
+        """ :class:`~openerp.sql_db.Cursor` initialized for the current method call.
 
         Accessing the cursor when the current request uses the ``none``
         authentication will raise an exception.
@@ -250,6 +218,48 @@ class WebRequest(object):
         if not self._cr:
             self._cr = self.registry.cursor()
         return self._cr
+
+    @property
+    def uid(self):
+        return self._uid
+
+    @uid.setter
+    def uid(self, val):
+        self._uid = val
+        self._env = None
+
+    @property
+    def context(self):
+        """ :class:`~collections.Mapping` of context values for the current request """
+        if self._context is None:
+            self._context = frozendict(self.session.context)
+        return self._context
+
+    @context.setter
+    def context(self, val):
+        self._context = frozendict(val)
+        self._env = None
+
+    @property
+    def env(self):
+        """ The :class:`~openerp.api.Environment` bound to current request. """
+        if self._env is None:
+            self._env = openerp.api.Environment(self.cr, self.uid, self.context)
+        return self._env
+
+    @lazy_property
+    def lang(self):
+        context = dict(self.context)
+        self.session._fix_lang(context)
+        self.context = context
+        return context["lang"]
+
+    @lazy_property
+    def session(self):
+        """ :class:`OpenERPSession` holding the HTTP session data for the
+        current http session
+        """
+        return self.httprequest.session
 
     def __enter__(self):
         _request_stack.push(self)
@@ -270,11 +280,9 @@ class WebRequest(object):
         # is this needed ?
         arguments = dict((k, v) for k, v in arguments.iteritems()
                          if not k.startswith("_ignored_"))
-
         self.endpoint_arguments = arguments
         self.endpoint = endpoint
         self.auth_method = auth
-
 
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions

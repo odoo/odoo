@@ -55,15 +55,13 @@ class WebsiteEventSaleController(WebsiteEventController):
         return request.redirect("/shop/checkout")
 
     def _add_event(self, event_name="New Event", context=None, **kwargs):
-        if context is None:
-            context = {}
         product = request.env.ref('event_sale.product_product_event', raise_if_not_found=False)
         if product:
-            context['default_event_ticket_ids'] = [[0, 0, {
+            context = dict(context or {}, default_event_ticket_ids=[[0, 0, {
                 'name': _('Registration'),
                 'product_id': product.id,
                 'deadline': False,
                 'seats_max': 1000,
                 'price': 0,
-            }]]
+            }]])
         return super(WebsiteEventSaleController, self)._add_event(event_name, context, **kwargs)
