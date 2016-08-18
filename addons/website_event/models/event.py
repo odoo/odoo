@@ -7,7 +7,6 @@ from odoo.addons.website.models.website import slug
 
 
 class Event(models.Model):
-
     _name = 'event.event'
     _inherit = ['event.event', 'website.seo.metadata', 'website.published.mixin']
 

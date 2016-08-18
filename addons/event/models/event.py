@@ -3,6 +3,7 @@
 import pytz
 
 from odoo import _, api, fields, models
+from odoo.addons.mail.models.mail_template import format_tz
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.translate import html_translate
 
@@ -57,6 +58,16 @@ class EventEvent(models.Model):
             'interval_unit': 'now',
             'interval_type': 'after_sub',
             'template_id': self.env.ref('event.event_subscription')
+        }), (0, 0, {
+            'interval_nbr': 2,
+            'interval_unit': 'days',
+            'interval_type': 'before_event',
+            'template_id': self.env.ref('event.event_reminder')
+        }), (0, 0, {
+            'interval_nbr': 15,
+            'interval_unit': 'days',
+            'interval_type': 'before_event',
+            'template_id': self.env.ref('event.event_reminder')
         })]
 
     # Seats and computation
@@ -367,9 +378,9 @@ class EventRegistration(models.Model):
             contact_id = self.partner_id.address_get().get('contact', False)
             if contact_id:
                 contact = self.env['res.partner'].browse(contact_id)
-                self.name = self.name or contact.name
-                self.email = self.email or contact.email
-                self.phone = self.phone or contact.phone
+                self.name = contact.name or self.name
+                self.email = contact.email or self.email
+                self.phone = contact.phone or self.phone
 
     @api.multi
     def message_get_suggested_recipients(self):
@@ -410,3 +421,23 @@ class EventRegistration(models.Model):
             'target': 'new',
             'context': ctx,
         }
+
+    @api.multi
+    def get_date_range_str(self):
+        self.ensure_one()
+        today = fields.Datetime.from_string(fields.Datetime.now())
+        event_date = fields.Datetime.from_string(self.event_begin_date)
+
+        if today.month == event_date.month:
+            if event_date.day == today.day:
+                return _('Today')
+            elif event_date.day - today.day == 1:
+                return _('Tomorrow')
+            elif event_date.isocalendar()[1] == today.isocalendar()[1]:
+                return _('This week')
+            else:
+                return _('This month')
+        elif event_date.month - today.month == 1:
+            return _('Next month')
+        else:
+            return format_tz(self.event_begin_date, tz='UTC', format='%Y%m%dT%H%M%SZ')
