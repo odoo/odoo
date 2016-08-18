@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Events Organisation',
-    'version': '0.1',
+    'name': 'Events Organization',
+    'version': '1.0',
     'website': 'https://www.odoo.com/page/events',
     'category': 'Marketing',
     'summary': 'Trainings, Conferences, Meetings, Exhibitions, Registrations',
@@ -9,13 +9,13 @@
 Organization and management of Events.
 ======================================
 
-The event module allows you to efficiently organise events and all related tasks: planification, registration tracking,
+The event module allows you to efficiently organize events and all related tasks: planning, registration tracking,
 attendances, etc.
 
 Key Features
 ------------
 * Manage your Events and Registrations
-* Use emails to automatically confirm and send acknowledgements for any event registration
+* Use emails to automatically confirm and send acknowledgments for any event registration
 """,
     'depends': ['base_setup', 'mail', 'report'],
     'data': [

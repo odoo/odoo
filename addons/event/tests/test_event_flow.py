@@ -4,7 +4,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo.addons.event.tests.common import TestEventCommon
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, AccessError
 from odoo.tools import mute_logger
 
 
@@ -13,7 +13,10 @@ class TestEventFlow(TestEventCommon):
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_00_basic_event_auto_confirm(self):
         """ Basic event management with auto confirmation """
-        self.env['ir.values'].set_default('event.config.settings', 'auto_confirmation', True)
+        event_config = self.env['event.config.settings'].sudo(self.user_eventmanager).create({
+            'auto_confirmation': 1
+        })
+        event_config.execute()
 
         # EventUser creates a new event: ok
         test_event = self.Event.sudo(self.user_eventmanager).create({
@@ -87,3 +90,31 @@ class TestEventFlow(TestEventCommon):
         self.assertEqual(
             test_reg1.state, 'draft',
             'Event: new registration should not be confirmed with auto_confirmation parameter being False')
+
+    def test_event_access_rights(self):
+        # EventManager required to create or update events
+        with self.assertRaises(AccessError):
+            self.Event.sudo(self.user_eventuser).create({
+                'name': 'TestEvent',
+                'date_begin': datetime.datetime.now() + relativedelta(days=-1),
+                'date_end': datetime.datetime.now() + relativedelta(days=1),
+                'seats_max': 10,
+            })
+        with self.assertRaises(AccessError):
+            self.event_0.sudo(self.user_eventuser).write({
+                'name': 'TestEvent Modified',
+            })
+
+        # Settings access rights required to enable some features
+        self.user_eventmanager.write({'groups_id': [
+            (3, self.env.ref('base.group_system').id),
+            (4, self.env.ref('base.group_erp_manager').id)
+        ]})
+        with self.assertRaises(AccessError):
+            event_config = self.env['event.config.settings'].sudo(self.user_eventmanager).create({
+                'auto_confirmation': 1
+            })
+            event_config.execute()
+
+    def test_event_data(self):
+        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'Tomorrow')
