@@ -29,5 +29,16 @@ Leave Management (keep track of employee leaves), Expense Management (manage emp
             <field name="image" eval="obj(ref('base.partner_root')).image" model="res.partner"/>
         </record>
 
+        <record id="mail_template_data_unknown_employee_email_address" model="mail.template">
+            <field name="name">HR: unknown employee bounce</field>
+            <field name="subject">Your document has not been created</field>
+            <field name="email_from">${user.email}</field>
+            <field name="email_to">${ctx['email_to']|safe}</field>
+            <field name="lang">${user.lang}</field>
+            <field name="model_id" ref="base.model_ir_module_module"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" ><![CDATA[Your document has not been created because your email address is not recognized. Please send emails with the email address recorded on your employee information, or contact your HR manager.]]></field>
+        </record>
+
     </data>
 </odoo>
