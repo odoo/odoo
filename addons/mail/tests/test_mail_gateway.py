@@ -512,7 +512,7 @@ class TestMailgateway(TestMail):
 
     @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
     def test_message_process_in_reply_to(self):
-        """ Incoming email using in-rely-to should go into the right destination event with a wrong destination """
+        """ Incoming email using in-rely-to should go into the right destination even with a wrong destination """
         self.format_and_process(
             MAIL_TEMPLATE, email_from='valid.other@gmail.com',
             msg_id='<1198923581.41972151344608186800.JavaMail.diff1@agrolait.com>',
@@ -524,7 +524,7 @@ class TestMailgateway(TestMail):
 
     @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
     def test_message_process_references(self):
-        """ Incoming email using in-rely-to should go into the right destination event with a wrong destination """
+        """ Incoming email using references should go into the right destination even with a wrong destination """
         self.format_and_process(
             MAIL_TEMPLATE, to='erroneous@example.com',
             extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % self.fake_email.message_id,
@@ -700,21 +700,42 @@ class TestMailgateway(TestMail):
         self.assertEqual(msg.needaction_partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
                          'message_post: private discussion: incorrect notified recipients when replying')
 
-        # Do bert forward it to an alias
-        msg = self.env['mail.message'].browse(msg1.id)
+    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models', 'openerp.addons.mail.models.mail_mail')
+    def test_forward_parent_id(self):
+        msg = self.group_pigs.sudo(self.user_employee).message_post(no_auto_thread=True, subtype='mail.mt_comment')
+        self.assertNotIn(msg.model, msg.message_id)
+        self.assertNotIn('-%d-' % msg.res_id, msg.message_id)
+        self.assertIn('reply_to', msg.message_id)
+
         # forward it to a new thread AND an existing thread
-        for i, to in enumerate(['groups', 'public']):
-            fw_msg_id = '<THIS.IS.A.FW.MESSAGE.%d@bert.fr>' % (i,)
-            fw_message = MAIL_TEMPLATE.format(to='%s@example.com' % (to,),
-                                              cc='',
-                                              subject='FW: Re: 1',
-                                              email_from='b.t@example.com',
-                                              extra='References: %s' % msg.message_id,
-                                              msg_id=fw_msg_id)
-            self.env['mail.thread'].message_process(None, fw_message)
+        fw_msg_id = '<THIS.IS.A.FW.MESSAGE.1@bert.fr>'
+        fw_message = MAIL_TEMPLATE.format(to='groups@example.com',
+                                          cc='',
+                                          subject='FW: Re: 1',
+                                          email_from='b.t@example.com',
+                                          extra='In-Reply-To: %s' % msg.message_id,
+                                          msg_id=fw_msg_id)
+        self.env['mail.thread'].message_process(None, fw_message)
+        msg_fw = self.env['mail.message'].search([('message_id', '=', fw_msg_id)])
+        self.assertEqual(len(msg_fw), 1)
+        channel = self.env['mail.channel'].search([('name', "=", msg_fw.subject)])
+        self.assertEqual(len(channel), 1)
+        self.assertEqual(msg_fw.model, 'mail.channel')
+        self.assertFalse(msg_fw.parent_id)
+        self.assertTrue(msg_fw.res_id == channel.id)
 
-            msg_fw = self.env['mail.message'].search([('message_id', '=', fw_msg_id)])
-            self.assertEqual(len(msg_fw), 1)
-
-            self.assertEqual(msg_fw.model, 'mail.channel')
-            self.assertFalse(msg_fw.parent_id)
+        fw_msg_id = '<THIS.IS.A.FW.MESSAGE.2@bert.fr>'
+        fw_message = MAIL_TEMPLATE.format(to='public@example.com',
+                                          cc='',
+                                          subject='FW: Re: 2',
+                                          email_from='b.t@example.com',
+                                          extra='In-Reply-To: %s' % msg.message_id,
+                                          msg_id=fw_msg_id)
+        self.env['mail.thread'].message_process(None, fw_message)
+        msg_fw = self.env['mail.message'].search([('message_id', '=', fw_msg_id)])
+        self.assertEqual(len(msg_fw), 1)
+        channel = self.env['mail.channel'].search([('name', "=", msg_fw.subject)])
+        self.assertEqual(len(channel), 0)
+        self.assertEqual(msg_fw.model, 'mail.channel')
+        self.assertFalse(msg_fw.parent_id)
+        self.assertTrue(msg_fw.res_id == self.group_public.id)
