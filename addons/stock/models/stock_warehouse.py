@@ -133,7 +133,7 @@ class Warehouse(models.Model):
         if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
             resupply_whs = self.resolve_2many_commands('resupply_wh_ids', vals['resupply_wh_ids'])
             new_resupply_whs = self.browse([wh['id'] for wh in resupply_whs])
-            old_resupply_whs = {(warehouse.id, warehouse.resupply_wh_ids) for warehouse in warehouses}
+            old_resupply_whs = {warehouse.id: warehouse.resupply_wh_ids for warehouse in warehouses}
 
         if 'default_resupply_wh_id' in vals:
             if vals.get('default_resupply_wh_id') and any(vals['default_resupply_wh_id'] == warehouse.id for warehouse in warehouses):
