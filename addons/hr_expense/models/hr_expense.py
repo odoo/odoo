@@ -289,7 +289,6 @@ class HrExpense(models.Model):
     def message_new(self, msg_dict, custom_values=None):
         if custom_values is None:
             custom_values = {}
-
         # Retrieve the email address from the email field. The string is constructed like
         # 'foo <bar>'. We will extract 'bar' from this
         email_address = email_split(msg_dict.get('email_from', False))[0]
@@ -300,11 +299,6 @@ class HrExpense(models.Model):
         employee = self.env['hr.employee'].search([('work_email', 'ilike', email_address)], limit=1)
         if not employee:
             employee = self.env['hr.employee'].search([('user_id.email', 'ilike', email_address)], limit=1)
-        if not employee:
-            access = self.env['ir.config_parameter'].get_param("hr_expense.email.gateway") or 'open'
-            if access == 'open':
-                # Open access is mostly used during the on boarding flow, should not be used in production
-                employee = self.env['hr.employee'].search([('user_id','<>',False)], limit=1)
         if not employee:
             # Send back an email to explain why the expense has not been created
             mail_template = self.env.ref('hr_expense.mail_template_data_expense_unknown_email_address')
