@@ -25,6 +25,7 @@ from dateutil.relativedelta import relativedelta
 
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
+from openerp.tools import float_compare
 from openerp.tools.translate import _
 
 class account_asset_category(osv.osv):
@@ -408,13 +409,14 @@ class account_asset_depreciation_line(osv.osv):
             move_id = move_obj.create(cr, uid, move_vals, context=context)
             journal_id = line.asset_id.category_id.journal_id.id
             partner_id = line.asset_id.partner_id.id
+            prec = self.pool['decimal.precision'].precision_get(cr, uid, 'Account')
             move_line_obj.create(cr, uid, {
                 'name': asset_name,
                 'ref': reference,
                 'move_id': move_id,
                 'account_id': line.asset_id.category_id.account_depreciation_id.id,
-                'debit': 0.0,
-                'credit': amount,
+                'debit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
+                'credit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
@@ -427,8 +429,8 @@ class account_asset_depreciation_line(osv.osv):
                 'ref': reference,
                 'move_id': move_id,
                 'account_id': line.asset_id.category_id.account_expense_depreciation_id.id,
-                'credit': 0.0,
-                'debit': amount,
+                'credit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
+                'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
