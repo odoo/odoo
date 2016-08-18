@@ -178,8 +178,6 @@ class WebsiteEventController(http.Controller):
         return request.redirect("/event/%s/register?enable_editor=1" % slug(event))
 
     def _add_event(self, event_name=None, context=None, **kwargs):
-        if context is None:
-            context = {}
         if not event_name:
             event_name = _("New Event")
         date_begin = datetime.today() + timedelta(days=(14))
@@ -189,7 +187,7 @@ class WebsiteEventController(http.Controller):
             'date_end': fields.Date.to_string((date_begin + timedelta(days=(1)))),
             'seats_available': 1000,
         }
-        return request.env['event.event'].with_context(context).create(vals)
+        return request.env['event.event'].with_context(context or {}).create(vals)
 
     def get_formated_date(self, event):
         start_date = fields.Datetime.from_string(event.date_begin).date()

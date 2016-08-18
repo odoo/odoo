@@ -205,7 +205,7 @@ class WebsiteSale(http.Controller):
         else:
             pricelist = request.env['product.pricelist'].browse(pricelist_context['pricelist'])
 
-        request.env = request.env(context=dict(request.env.context, pricelist=pricelist.id, partner=request.env.user.partner_id))
+        request.context = dict(request.context, pricelist=pricelist.id, partner=request.env.user.partner_id)
 
         url = "/shop"
         if search:

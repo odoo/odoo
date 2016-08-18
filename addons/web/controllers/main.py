@@ -1102,14 +1102,14 @@ class Action(http.Controller):
 
         base_action = Actions.browse([action_id]).read(['type'])
         if base_action:
-            ctx = request.context
+            ctx = dict(request.context)
             action_type = base_action[0]['type']
             if action_type == 'ir.actions.report.xml':
                 ctx.update({'bin_size': True})
             if additional_context:
                 ctx.update(additional_context)
-            env = request.env(context=ctx)
-            action = env[action_type].browse([action_id]).read()
+            request.context = ctx
+            action = request.env[action_type].browse([action_id]).read()
             if action:
                 value = clean_action(action[0])
         return value

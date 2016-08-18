@@ -154,7 +154,8 @@ class Http(models.AbstractModel):
 
             request.redirect = lambda url, code=302: werkzeug.utils.redirect(url_for(url), code)
             request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
-            request.context['website_id'] = request.website.id
+            context = dict(request.context)
+            context['website_id'] = request.website.id
             langs = [lg[0] for lg in request.website.get_languages()]
             path = request.httprequest.path.split('/')
             if first_pass:
@@ -166,7 +167,7 @@ class Http(models.AbstractModel):
 
                 is_a_bot = self.is_a_bot()
 
-                request.lang = request.context['lang'] = nearest_lang or preferred_lang
+                request.lang = context['lang'] = nearest_lang or preferred_lang
                 # if lang in url but not the displayed or default language --> change or remove
                 # or no lang in url, and lang to dispay not the default language --> add lang
                 # and not a POST request
@@ -182,17 +183,20 @@ class Http(models.AbstractModel):
                     path = '/'.join(path) or '/'
                     redirect = request.redirect(path + '?' + request.httprequest.query_string)
                     redirect.set_cookie('website_lang', request.lang)
+                    request.context = context
                     return redirect
                 elif url_lang:
                     request.uid = None
                     path.pop(1)
+                    request.context = context
                     return self.reroute('/'.join(path) or '/')
             if path[1] == request.website.default_lang_code:
-                request.context['edit_translations'] = False
-            if not request.context.get('tz'):
-                request.context['tz'] = request.session.get('geoip', {}).get('time_zone')
+                context['edit_translations'] = False
+            if not context.get('tz'):
+                context['tz'] = request.session.get('geoip', {}).get('time_zone')
             # bind modified context
-            request.website = request.website.with_context(request.context)
+            request.context = context
+            request.website = request.website.with_context(context)
 
         # removed cache for auth public
         request.cache_save = False
