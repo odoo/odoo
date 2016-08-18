@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product
-# 
+#
 # Translators:
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
@@ -9,15 +9,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-14 10:10+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
@@ -31,19 +32,19 @@ msgid "# of Product Variants"
 msgstr "# Varijanti proizvoda"
 
 #. module: product
-#: code:addons/product/pricelist.py:288
+#: code:addons/product/pricelist.py:372
 #, python-format
 msgid "%s %% discount"
 msgstr "%s %% popust"
 
 #. module: product
-#: code:addons/product/pricelist.py:290
+#: code:addons/product/pricelist.py:374
 #, python-format
 msgid "%s %% discount and %s surcharge"
 msgstr "%s %% popust i %s naplate"
 
 #. module: product
-#: code:addons/product/product.py:710 code:addons/product/product.py:1134
+#: code:addons/product/product.py:716
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -61,7 +62,11 @@ msgid ""
 "Processor AMD 8-Core\n"
 "512MB RAM\n"
 "HDD SH-1"
-msgstr "17\" LCD Monitor\nProcessor AMD 8-Core\n512MB RAM\nHDD SH-1"
+msgstr ""
+"17\" LCD Monitor\n"
+"Processor AMD 8-Core\n"
+"512MB RAM\n"
+"HDD SH-1"
 
 #. module: product
 #: model:product.product,description:product.product_product_25
@@ -71,17 +76,11 @@ msgid ""
 "4GB RAM\n"
 "Standard-1294P Processor\n"
 "QWERTY keyboard"
-msgstr "17\" Monitor\n4GB RAM\nStandard-1294P Processor\nQWERTY keyboard"
-
-#. module: product
-#: model:product.product,description:product.product_product_26
-#: model:product.template,description:product.product_product_26_product_template
-msgid ""
+msgstr ""
 "17\" Monitor\n"
-"6GB RAM\n"
-"Hi-Speed 234Q Processor\n"
+"4GB RAM\n"
+"Standard-1294P Processor\n"
 "QWERTY keyboard"
-msgstr "17\" Monitor\n6GB RAM\nHi-Speed 234Q Processor\nQWERTY keyboard"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -98,13 +97,13 @@ msgid ""
 "                1TB hard drive\n"
 "                Intel Iris Pro graphics\n"
 "            "
-msgstr "2.7GHz quad-core Intel Core i5\nTurbo Boost up to 3.2GHz\n8GB (two 4GB) memory\n1TB hard drive\nIntel Iris Pro graphics\n            "
-
-#. module: product
-#: model:product.product,name:product.product_product_52
-#: model:product.template,name:product.product_product_52_product_template
-msgid "30m RJ45 wire"
-msgstr "30m RJ45 wire"
+msgstr ""
+"2.7GHz quad-core Intel Core i5\n"
+"Turbo Boost up to 3.2GHz\n"
+"8GB (two 4GB) memory\n"
+"1TB hard drive\n"
+"Intel Iris Pro graphics\n"
+"            "
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -124,7 +123,10 @@ msgid ""
 "7.9‑inch (diagonal) LED-backlit, 128Gb\n"
 "Dual-core A5 with quad-core graphics\n"
 "FaceTime HD Camera, 1.2 MP Photos"
-msgstr "7.9‑inch (diagonal) LED-backlit, 128Gb\nDual-core A5 with quad-core graphics\nFaceTime HD Camera, 1.2 MP Photos"
+msgstr ""
+"7.9‑inch (diagonal) LED-backlit, 128Gb\n"
+"Dual-core A5 with quad-core graphics\n"
+"FaceTime HD Camera, 1.2 MP Photos"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -133,17 +135,20 @@ msgid "75 percent less reflection."
 msgstr "75 posto manje refleksije."
 
 #. module: product
-#: model:product.product,name:product.product_product_51
-#: model:product.template,name:product.product_product_51_product_template
-msgid "8-port Switch"
-msgstr "8-port Switch"
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
 msgid ""
-"<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Public Price  -  </span>\n"
-"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
-msgstr "<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Javna cijena  -  </span>\n<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Cjenik ostalo -  </span>"
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Public Price  "
+"-  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', "
+"'standard_price')]}\">Cost  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', "
+"'pricelist')]}\">Other Pricelist  -  </span>"
+msgstr ""
+"<span attrs=\"{'invisible':[('base', 'not in', "
+"('list_price','standard_price'))]}\">Javna cijena  -  </span>\n"
+"<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Cjenik ostalo -  "
+"</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -174,12 +179,16 @@ msgstr "<strong>Ispisano</strong>:<br/>"
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid ""
 "<strong>Warning</strong>: adding or deleting attributes\n"
-"                            will delete and recreate existing variants and lead\n"
+"                            will delete and recreate existing variants and "
+"lead\n"
 "                            to the loss of their possible customizations."
-msgstr "<strong>Upozorenje</strong>: dodavanje ili brisanje svojstva\nće obrisati i rekreirati postojeće varijante i dovesti do\ngubitka njihove moguće prilagodbe."
+msgstr ""
+"<strong>Upozorenje</strong>: dodavanje ili brisanje svojstva\n"
+"će obrisati i rekreirati postojeće varijante i dovesti do\n"
+"gubitka njihove moguće prilagodbe."
 
 #. module: product
-#: code:addons/product/product.py:977 sql_constraint:product.product:0
+#: code:addons/product/product.py:1011 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr "Barkod se može dodijeliti samo jednom proizvodu!"
@@ -203,8 +212,8 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_description_sale
 #: model:ir.model.fields,help:product.field_product_template_description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sale Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
 
@@ -229,14 +238,17 @@ msgstr ""
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
-msgstr "Precizan opis proizvoda, koristi se samo u svrhu internog informiranja."
+msgstr ""
+"Precizan opis proizvoda, koristi se samo u svrhu internog informiranja."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "A price list contains rules to be evaluated in order to compute\n"
 "                the sales price of the products."
-msgstr "Cjenik sadrži pravila koja treba vrednovati kako bi izračunali\nprodajnu cijenu proizvoda."
+msgstr ""
+"Cjenik sadrži pravila koja treba vrednovati kako bi izračunali\n"
+"prodajnu cijenu proizvoda."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -250,16 +262,13 @@ msgstr "Zaslon dostojan iPada."
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
-"About the size of a credit card — and just 5.4 mm thin — iPod nano is the thinnest iPod ever made.\n"
-"                                    The 2.5-inch Multi-Touch display is nearly twice as big as the display on the previous iPod nano,\n"
-"                                    so you can see more of the music, photos, and videos you love."
+"About the size of a credit card — and just 5.4 mm thin — iPod nano is the "
+"thinnest iPod ever made.\n"
+"                                    The 2.5-inch Multi-Touch display is "
+"nearly twice as big as the display on the previous iPod nano,\n"
+"                                    so you can see more of the music, "
+"photos, and videos you love."
 msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_needaction
-#: model:ir.model.fields,field_description:product.field_product_template_message_needaction
-msgid "Action Needed"
-msgstr "Potrebna dodatna radnja"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
@@ -275,7 +284,7 @@ msgid "All"
 msgstr "Sve"
 
 #. module: product
-#: code:addons/product/pricelist.py:283
+#: code:addons/product/pricelist.py:367
 #, python-format
 msgid "All Products"
 msgstr "Svi proizvodi"
@@ -286,17 +295,11 @@ msgid "All general settings about this product are managed on"
 msgstr "Svim općim postavkama proizvoda upravlja se na"
 
 #. module: product
-#: model:product.product,description:product.product_product_37
-#: model:product.template,description:product.product_product_37_product_template
-msgid "All in one hi-speed printer with fax and scanner."
-msgstr ""
-
-#. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid ""
-"And at the Apple Online Store, you can configure your iMac with an even more"
-" powerful Intel Core i7 processor, up to 3.5GHz."
+"And at the Apple Online Store, you can configure your iMac with an even more "
+"powerful Intel Core i7 processor, up to 3.5GHz."
 msgstr ""
 
 #. module: product
@@ -324,6 +327,7 @@ msgid "Apple Wireless Keyboard"
 msgstr "Apple bežična tipkovnica"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Applicable On"
 msgstr "Primjenjiv na"
@@ -392,9 +396,10 @@ msgstr "Pomoćni ulaz za prijenosne uređaje"
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
-msgid ""
-"Auxiliary port lets you connect other audio sources, like an MP3 player"
-msgstr "Pomoćni priključak omogućuje spajanje drugih audio izvora, kao što su MP3 player"
+msgid "Auxiliary port lets you connect other audio sources, like an MP3 player"
+msgstr ""
+"Pomoćni priključak omogućuje spajanje drugih audio izvora, kao što su MP3 "
+"player"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_barcode
@@ -415,9 +420,10 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_list_price
 #: model:ir.model.fields,help:product.field_product_template_list_price
 msgid ""
-"Base price to compute the customer price. Sometimes called the catalog "
-"price."
-msgstr "Osnovna cijena za izračuna cijene za kupca, Ponekad se naziva kataloška cijena."
+"Base price to compute the customer price. Sometimes called the catalog price."
+msgstr ""
+"Osnovna cijena za izračuna cijene za kupca, Ponekad se naziva kataloška "
+"cijena."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_base
@@ -425,9 +431,16 @@ msgid "Based on"
 msgstr "Prema"
 
 #. module: product
-#: model:product.product,name:product.product_product_57
-#: model:product.template,name:product.product_product_57_product_template
+#: model:product.product,name:product.consu_delivery_03
+#: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Basic Computer"
+msgstr "Osnovno računalo"
+
+#. module: product
+#: model:product.product,name:product.membership_2
+#: model:product.template,name:product.membership_2_product_template
+#, fuzzy
+msgid "Basic Membership"
 msgstr "Osnovno računalo"
 
 #. module: product
@@ -461,18 +474,6 @@ msgstr "Veće od referentne jedinice mjere"
 #: model:product.attribute.value,name:product.product_attribute_value_4
 msgid "Black"
 msgstr "Crna"
-
-#. module: product
-#: model:product.product,name:product.product_product_35
-#: model:product.template,name:product.product_product_35_product_template
-msgid "Blank CD"
-msgstr "Prazan CD"
-
-#. module: product
-#: model:product.product,name:product.product_product_36
-#: model:product.template,name:product.product_product_36_product_template
-msgid "Blank DVD-RW"
-msgstr "Prazan DVD-RW"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -511,8 +512,10 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
-"                                    The smooth anodized aluminum design makes iPod nano feel as good as it sounds.\n"
-"                                    And iPod nano wouldn’t be iPod nano without gorgeous, hard-to-choose-from color."
+"                                    The smooth anodized aluminum design "
+"makes iPod nano feel as good as it sounds.\n"
+"                                    And iPod nano wouldn’t be iPod nano "
+"without gorgeous, hard-to-choose-from color."
 msgstr ""
 
 #. module: product
@@ -520,7 +523,9 @@ msgstr ""
 msgid ""
 "By unchecking the active field you can disable a unit of measure without "
 "deleting it."
-msgstr "Odznačavanjem polja \"aktivan\" možete deaktivirati jedinicu mjere bez da je obrišete."
+msgstr ""
+"Odznačavanjem polja \"aktivan\" možete deaktivirati jedinicu mjere bez da je "
+"obrišete."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
@@ -557,7 +562,7 @@ msgid "Category name"
 msgstr "Naziv kategorije"
 
 #. module: product
-#: code:addons/product/pricelist.py:277
+#: code:addons/product/pricelist.py:361
 #, python-format
 msgid "Category: %s"
 msgstr "Kategorija: %s"
@@ -579,7 +584,8 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "Charging cradle recharges the battery and serves as a convenient\n"
-"                                    home base for your speaker, and it lets you play while it charges."
+"                                    home base for your speaker, and it lets "
+"you play while it charges."
 msgstr ""
 
 #. module: product
@@ -639,7 +645,15 @@ msgid ""
 "Ultrafast wireless\n"
 "iOS7\n"
 "            "
-msgstr "Color: White\nCapacity: 16GB\nConnectivity: Wifi\nBeautiful 7.9-inch display\nOver 375,000 apps\nUltrafast wireless\niOS7\n            "
+msgstr ""
+"Color: White\n"
+"Capacity: 16GB\n"
+"Connectivity: Wifi\n"
+"Beautiful 7.9-inch display\n"
+"Over 375,000 apps\n"
+"Ultrafast wireless\n"
+"iOS7\n"
+"            "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -683,7 +697,7 @@ msgid "Computers"
 msgstr "Računala"
 
 #. module: product
-#: code:addons/product/product.py:460
+#: code:addons/product/product.py:474
 #, python-format
 msgid "Consumable"
 msgstr ""
@@ -693,15 +707,20 @@ msgstr ""
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr "Konverzija jedinica mjere može se vršiti samo za jedinice mjere koje pripadaju istoj kategoriji. Konverzija će se izvršiti temeljem omjera jedinica mjere."
+msgstr ""
+"Konverzija jedinica mjere može se vršiti samo za jedinice mjere koje "
+"pripadaju istoj kategoriji. Konverzija će se izvršiti temeljem omjera "
+"jedinica mjere."
 
 #. module: product
-#: code:addons/product/product.py:119
+#: code:addons/product/product.py:122
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr "Konverzija između JM Proizvoda %s i zadane JM %s nije moguća jer te dvije pripadaju u različite kategorije!"
+msgstr ""
+"Konverzija između JM Proizvoda %s i zadane JM %s nije moguća jer te dvije "
+"pripadaju u različite kategorije!"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_cost
@@ -714,8 +733,8 @@ msgstr "Trošak"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
 msgid ""
-"Cost of the product template used for standard stock valuation in accounting"
-" and used as a base price on purchase orders. Expressed in the default unit "
+"Cost of the product template used for standard stock valuation in accounting "
+"and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
 msgstr ""
 
@@ -723,6 +742,12 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_template_standard_price
 msgid "Cost of the product, in the default unit of measure of the product."
 msgstr "Trošak proizvoda, u zadanoj jedinici mjere proizvoda."
+
+#. module: product
+#: model:product.product,name:product.service_delivery
+#: model:product.template,name:product.service_delivery_product_template
+msgid "Cost-plus Contract"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_uid
@@ -767,8 +792,8 @@ msgstr "Datum kreiranja"
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid ""
 "Creating such a stunningly thin design took some equally stunning feats of "
-"technological innovation. We refined,re-imagined,or re-engineered everything"
-" about iMac from the inside out. The result is an advanced, elegant all-in-"
+"technological innovation. We refined,re-imagined,or re-engineered everything "
+"about iMac from the inside out. The result is an advanced, elegant all-in-"
 "one computer that’s as much a work of art as it is state of the art."
 msgstr ""
 
@@ -806,8 +831,8 @@ msgid "Customer ref"
 msgstr "Šifra kupca"
 
 #. module: product
-#: model:product.product,name:product.product_product_46
-#: model:product.template,name:product.product_product_46_product_template
+#: model:product.product,name:product.product_delivery_02
+#: model:product.template,name:product.product_delivery_02_product_template
 msgid "Datacard"
 msgstr "Datacard"
 
@@ -815,12 +840,6 @@ msgstr "Datacard"
 #: model:ir.model.fields,field_description:product.field_product_price_history_datetime
 msgid "Date"
 msgstr "Datum"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_last_post
-#: model:ir.model.fields,help:product.field_product_template_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum zadnjeg zapisa"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_day
@@ -839,18 +858,14 @@ msgstr "Predefinirana JM za sve funkcije zalihe."
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr "Predefinirana jedinica mjere za korištenje u narudžbama. Mora biti jednake kategorije kao i predefinirana jedinica mjere."
+msgstr ""
+"Predefinirana jedinica mjere za korištenje u narudžbama. Mora biti jednake "
+"kategorije kao i predefinirana jedinica mjere."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_delay
 msgid "Delivery Lead Time"
 msgstr "Glavno vrijeme dostave"
-
-#. module: product
-#: model:product.product,name:product.product_product_49
-#: model:product.template,name:product.product_product_49_product_template
-msgid "Dell Inspiron Laptop without OS"
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description
@@ -875,18 +890,6 @@ msgstr "Opis za dobavljače"
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Design. The thinnest iPod ever."
 msgstr "Dizajn. Najtanji iPod ikada."
-
-#. module: product
-#: model:product.product,name:product.product_product_55
-#: model:product.template,name:product.product_product_55_product_template
-msgid "Desktop Computer Table"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_56
-#: model:product.template,name:product.product_product_56_product_template
-msgid "Desktop Lamp"
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_sequence
@@ -925,18 +928,21 @@ msgid "Dozen(s)"
 msgstr ""
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_57
-#: model:product.template,description_sale:product.product_product_57_product_template
+#: model:product.product,description_sale:product.consu_delivery_03
+#: model:product.template,description_sale:product.consu_delivery_03_product_template
 msgid ""
 "Dvorak keyboard \n"
 "            left-handed mouse"
-msgstr "Dvorak tipkovnica\nmiš za ljevake"
+msgstr ""
+"Dvorak tipkovnica\n"
+"miš za ljevake"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "Each rule include a set of applicability criteria (date range,\n"
-"                product category...) and a computation that easily helps to achieve\n"
+"                product category...) and a computation that easily helps to "
+"achieve\n"
 "                any kind of pricing."
 msgstr ""
 
@@ -958,25 +964,25 @@ msgid "End date for this vendor price"
 msgstr "Datum završetka ove cijene dobavljača"
 
 #. module: product
-#: selection:product.template,state:0
-msgid "End of Lifecycle"
-msgstr "Kraj životnog ciklusa"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
 msgid "Ending valid for the pricelist item validation"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_54
-#: model:product.template,name:product.product_product_54_product_template
-msgid "Ergonomic Mouse"
-msgstr "Ergonomski miš"
-
-#. module: product
 #: constraint:product.category:0
 msgid "Error ! You cannot create recursive categories."
 msgstr "Greška! Nemožete kreirati rekurzivne kategorije."
+
+#. module: product
+#: constraint:product.attribute.line:0
+msgid "Error ! You cannot use this attribute with the following value."
+msgstr ""
+
+#. module: product
+#: constraint:product.product:0
+msgid ""
+"Error! It is not allowed to choose more than one value for a given attribute."
+msgstr ""
 
 #. module: product
 #: constraint:product.pricelist.item:0
@@ -988,37 +994,47 @@ msgstr "Greška! Minimalna marža bi trebala biti manja od  maksimalne marže."
 msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
-msgstr "Greška! nemožete dodijeliti Glavni cjenik kao Dugi cjenik u Stavkama cjenika!"
+msgstr ""
+"Greška! nemožete dodijeliti Glavni cjenik kao Dugi cjenik u Stavkama cjenika!"
 
 #. module: product
 #: constraint:res.currency:0
 msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
-msgstr "Greška! Nije oguće definirati faktor zaokruživaja za glavnu valutu organizacije koja je manja od decimalne preciznosti 'Konta'"
+msgstr ""
+"Greška! Nije oguće definirati faktor zaokruživaja za glavnu valutu "
+"organizacije koja je manja od decimalne preciznosti 'Konta'"
 
 #. module: product
 #: constraint:decimal.precision:0
 msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
-msgstr "Greška! Nije moguće definirati decimalnu preciznost Konta kao veću od faktora zaokruživanja za glavnu valutu organizacije"
+msgstr ""
+"Greška! Nije moguće definirati decimalnu preciznost Konta kao veću od "
+"faktora zaokruživanja za glavnu valutu organizacije"
 
 #. module: product
 #: constraint:product.template:0
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
-msgstr "Greška! Zadana jedinica mjere i nabavna jedinica mjere moraju biti u istoj kategoriji."
+msgstr ""
+"Greška! Zadana jedinica mjere i nabavna jedinica mjere moraju biti u istoj "
+"kategoriji."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Everything you love about iPad — the beautiful\n"
-"                                    screen, fast Colors are vivid and text is sharp on the iPad mini display.\n"
-"                                    But what really makes it stand out is its size. At 7.9 inches,\n"
-"                                    it’s perfectly sized to deliver an experience every bit as big as iPad."
+"                                    screen, fast Colors are vivid and text "
+"is sharp on the iPad mini display.\n"
+"                                    But what really makes it stand out is "
+"its size. At 7.9 inches,\n"
+"                                    it’s perfectly sized to deliver an "
+"experience every bit as big as iPad."
 msgstr ""
 
 #. module: product
@@ -1032,10 +1048,14 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid ""
 "Everything you love about iPad — the beautiful\n"
-"                                    screen, fast and fluid performance, FaceTime and\n"
-"                                    iSight cameras, thousands of amazing apps, 10-hour\n"
-"                                    battery life* — is everything you’ll love about\n"
-"                                    iPad mini, too. And you can hold it in one hand."
+"                                    screen, fast and fluid performance, "
+"FaceTime and\n"
+"                                    iSight cameras, thousands of amazing "
+"apps, 10-hour\n"
+"                                    battery life* — is everything you’ll "
+"love about\n"
+"                                    iPad mini, too. And you can hold it in "
+"one hand."
 msgstr ""
 
 #. module: product
@@ -1043,9 +1063,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Everything you love about iPad — the beautiful screen,\n"
-"                                        fast and fluid performance, FaceTime and iSight cameras, \n"
-"                                        thousands of amazing apps, 10-hour battery life* — is everything\n"
-"                                        you’ll love about iPad mini, too. And you can hold it in one hand."
+"                                        fast and fluid performance, FaceTime "
+"and iSight cameras, \n"
+"                                        thousands of amazing apps, 10-hour "
+"battery life* — is everything\n"
+"                                        you’ll love about iPad mini, too. "
+"And you can hold it in one hand."
 msgstr ""
 
 #. module: product
@@ -1055,14 +1078,14 @@ msgid "Example of product to invoice based on delivery."
 msgstr "Primjer proizvoda za račune na temelju isporuke."
 
 #. module: product
-#: model:product.product,description:product.product_product_0
-#: model:product.template,description:product.product_product_0_product_template
+#: model:product.product,description:product.service_order_01
+#: model:product.template,description:product.service_order_01_product_template
 msgid "Example of product to invoice on order."
 msgstr "Pimjer proizvoda za račune na temelju narudžbe."
 
 #. module: product
-#: model:product.product,description:product.product_product_1b
-#: model:product.template,description:product.product_product_1b_product_template
+#: model:product.product,description:product.service_cost_01
+#: model:product.template,description:product.service_cost_01_product_template
 msgid "Example of products to invoice based on cost."
 msgstr "Primjer proizvoda za račune na temelju troškova."
 
@@ -1079,20 +1102,14 @@ msgid "Explicit rule name for this pricelist line."
 msgstr "Naziv eksplicitnog pravila za ovu stavku cjenika."
 
 #. module: product
-#: model:product.product,name:product.product_product_1b
-#: model:product.template,name:product.product_product_1b_product_template
+#: model:product.product,name:product.service_cost_01
+#: model:product.template,name:product.service_cost_01_product_template
 msgid "External Audit"
 msgstr "Vanjska revizija"
 
 #. module: product
 #: model:product.public.category,name:product.External_Hard_Drive
 msgid "External Hard Drive"
-msgstr "Vanjski tvrdi disk"
-
-#. module: product
-#: model:product.product,name:product.product_product_28
-#: model:product.template,name:product.product_product_28_product_template
-msgid "External Hard disk"
 msgstr "Vanjski tvrdi disk"
 
 #. module: product
@@ -1112,27 +1129,10 @@ msgid "Fixed Price"
 msgstr "Fiksna cijena"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_follower_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_follower_ids
-msgid "Followers"
-msgstr "Pratitelji"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_channel_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Pratitelji (Kanali)"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_partner_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Pratitelji (Partneri)"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_min_quantity
 msgid ""
-"For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
 
@@ -1161,12 +1161,6 @@ msgid "Friendly to the environment."
 msgstr "Prijateljski prema okolišu."
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_44
-#: model:product.template,description_sale:product.product_product_44_product_template
-msgid "Full featured image editing software."
-msgstr ""
-
-#. module: product
 #: model:product.product,name:product.product_product_1
 #: model:product.template,name:product.product_product_1_product_template
 msgid "GAP Analysis Service"
@@ -1191,15 +1185,20 @@ msgstr "Genius. Tvoj osobni DJ."
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
-msgstr "Različiti načini pakiranja za artikl. Ovo nema utjecaja na skladišne dokumente i u pravilo se koristi uz EDI modul (ako ga koristite)."
+msgstr ""
+"Različiti načini pakiranja za artikl. Ovo nema utjecaja na skladišne "
+"dokumente i u pravilo se koristi uz EDI modul (ako ga koristite)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_sequence
 msgid ""
-"Gives the order in which the pricelist items will be checked. The evaluation"
-" gives highest priority to lowest sequence and stops as soon as a matching "
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
-msgstr "Određuje redoslijed kojim će se odabirati stavke cjenika. Najviši prioritet ima najmanja sekvenca te provjera prestaje čim je prvo pravilo/stavka cjenika zadovoljena."
+msgstr ""
+"Određuje redoslijed kojim će se odabirati stavke cjenika. Najviši prioritet "
+"ima najmanja sekvenca te provjera prestaje čim je prvo pravilo/stavka "
+"cjenika zadovoljena."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_sequence
@@ -1218,9 +1217,9 @@ msgid "Global"
 msgstr "Globalno"
 
 #. module: product
-#: model:product.product,name:product.product_product_44
-#: model:product.template,name:product.product_product_44_product_template
-msgid "GrapWorks Software"
+#: model:product.product,name:product.membership_0
+#: model:product.template,name:product.membership_0_product_template
+msgid "Gold Membership"
 msgstr ""
 
 #. module: product
@@ -1230,35 +1229,10 @@ msgid "Graphics Card"
 msgstr "Grafička kartica"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_weight
-#: model:ir.model.fields,field_description:product.field_product_template_weight
-msgid "Gross Weight"
-msgstr "Bruto težina"
-
-#. module: product
 #: model:product.product,name:product.product_product_17
 #: model:product.template,name:product.product_product_17_product_template
 msgid "HDD SH-1"
 msgstr "HDD SH-1"
-
-#. module: product
-#: model:product.product,name:product.product_product_18
-#: model:product.template,name:product.product_product_18_product_template
-msgid "HDD SH-2 (mto)"
-msgstr "HDD SH-2 (mto)"
-
-#. module: product
-#: model:product.product,name:product.product_product_19
-#: model:product.template,name:product.product_product_19_product_template
-msgid "HDD on Demand"
-msgstr "HDD Na zahtjev"
-
-#. module: product
-#: model:product.product,description:product.product_product_32
-#: model:product.template,description:product.product_product_32_product_template
-msgid ""
-"Hands free headset for laptop PC with in-line microphone and headphone plug."
-msgstr ""
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1272,24 +1246,6 @@ msgstr ""
 #: model:product.public.category,name:product.Headset
 msgid "Headset"
 msgstr "Slušalice"
-
-#. module: product
-#: model:product.product,name:product.product_product_33
-#: model:product.template,name:product.product_product_33_product_template
-msgid "Headset USB"
-msgstr "USB slušalice"
-
-#. module: product
-#: model:product.product,description:product.product_product_33
-#: model:product.template,description:product.product_product_33_product_template
-msgid "Headset for laptop PC with USB connector."
-msgstr "Slušalice za laptop sa usb konektorom"
-
-#. module: product
-#: model:product.product,name:product.product_product_32
-#: model:product.template,name:product.product_product_32_product_template
-msgid "Headset standard"
-msgstr "Obične slučalice"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -1307,7 +1263,11 @@ msgid ""
 "Width:  39.6 mm\n"
 "Depth:  5.4 mm\n"
 "Weight: 31 grams"
-msgstr "Visina: 76.5 mm\nŠirina:  39.6 mm\nDubina:  5.4 mm\nTežina: 31 grams"
+msgstr ""
+"Visina: 76.5 mm\n"
+"Širina:  39.6 mm\n"
+"Dubina:  5.4 mm\n"
+"Težina: 31 grams"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1333,16 +1293,20 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor_inv
 msgid ""
-"How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n"
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor
 msgid ""
-"How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n"
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
-msgstr "Koliko je ova jedinica veća ili manja od referentne JM za ovu kategoriju:\n1 * (referentna jedinica) = omjer * (ova jedinica)"
+msgstr ""
+"Koliko je ova jedinica veća ili manja od referentne JM za ovu kategoriju:\n"
+"1 * (referentna jedinica) = omjer * (ova jedinica)"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1373,18 +1337,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_unread
-#: model:ir.model.fields,help:product.field_product_template_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_needaction
-#: model:ir.model.fields,help:product.field_product_template_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ako je označeno, nove poruke zahtijevaju vašu pažnju."
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "If it's made for iPad, it's made for iPad mini."
@@ -1411,8 +1363,8 @@ msgstr "Slika"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image
 msgid ""
-"Image of the product variant (Big-sized image of product template if false)."
-" It is automatically resized as a 1024x1024px image, with aspect ratio "
+"Image of the product variant (Big-sized image of product template if false). "
+"It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
 
@@ -1431,11 +1383,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: selection:product.template,state:0
-msgid "In Development"
-msgstr "U razvoju"
-
-#. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Individually calibrated for true-to-life color."
@@ -1447,18 +1394,15 @@ msgid "Information about a product vendor"
 msgstr "Informacije o dobavljaču proizvoda"
 
 #. module: product
-#: model:product.product,name:product.product_product_38
-#: model:product.template,name:product.product_product_38_product_template
-msgid "Ink Cartridge"
-msgstr "Ink Cartridge"
-
-#. module: product
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid ""
-"Inside each earpiece is a stainless steel mesh cap that protects the precision acoustic\n"
-"                                    components from dust and debris. You can remove the caps for cleaning or replace\n"
-"                                    them with an extra set that’s included in the box."
+"Inside each earpiece is a stainless steel mesh cap that protects the "
+"precision acoustic\n"
+"                                    components from dust and debris. You can "
+"remove the caps for cleaning or replace\n"
+"                                    them with an extra set that’s included "
+"in the box."
 msgstr ""
 
 #. module: product
@@ -1489,12 +1433,6 @@ msgstr "Interna šifra proizvoda koja se koristi za identifikaciju artikla."
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
 msgstr "Inventura"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_is_follower
-#: model:ir.model.fields,field_description:product.field_product_template_message_is_follower
-msgid "Is Follower"
-msgstr "Je pratitelj"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
@@ -1532,21 +1470,9 @@ msgid "Laptop E5023"
 msgstr "Laptop E5023"
 
 #. module: product
-#: model:product.product,name:product.product_product_26
-#: model:product.template,name:product.product_product_26_product_template
-msgid "Laptop S3450"
-msgstr "Laptop S3450"
-
-#. module: product
 #: model:product.public.category,name:product.laptops
 msgid "Laptops"
 msgstr "Laptopi"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_last_post
-#: model:ir.model.fields,field_description:product.field_product_template_message_last_post
-msgid "Last Message Date"
-msgstr "Datum zadnje poruke"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute___last_update
@@ -1630,19 +1556,13 @@ msgid "Lines"
 msgstr "Stavke"
 
 #. module: product
-#: model:product.product,name:product.product_product_50
-#: model:product.template,name:product.product_product_50_product_template
-msgid "Linutop"
-msgstr "Linutop"
-
-#. module: product
 #: model:product.uom,name:product.product_uom_litre
 msgid "Liter(s)"
 msgstr "Litra(e)"
 
 #. module: product
-#: model:product.product,name:product.product_product_58
-#: model:product.template,name:product.product_product_58_product_template
+#: model:product.product,name:product.consu_delivery_02
+#: model:product.template,name:product.consu_delivery_02_product_template
 msgid "Little server"
 msgstr ""
 
@@ -1713,18 +1633,6 @@ msgid "Memory"
 msgstr "Memorija"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_ids
-msgid "Messages"
-msgstr "Poruke"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_ids
-#: model:ir.model.fields,help:product.field_product_template_message_ids
-msgid "Messages and communication history"
-msgstr "Poruke i povijest"
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min. Margin"
 msgstr "Min. marža"
@@ -1757,12 +1665,6 @@ msgid "More features."
 msgstr "Dodatne mogućnosti."
 
 #. module: product
-#: model:product.product,name:product.product_product_21
-#: model:product.template,name:product.product_product_21_product_template
-msgid "Motherboard A20Z7"
-msgstr "Matična ploča A20Z7"
-
-#. module: product
 #: model:product.product,name:product.product_product_20
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Motherboard I9P57"
@@ -1779,12 +1681,6 @@ msgstr "Miš, optički"
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Mouse, Wireless"
 msgstr "Miš, bežični"
-
-#. module: product
-#: model:product.product,name:product.product_product_31
-#: model:product.template,name:product.product_product_31_product_template
-msgid "Multimedia Speakers"
-msgstr "Multimedijski zvučnici"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1816,7 +1712,7 @@ msgid "New Price ="
 msgstr "Nova cijena ="
 
 #. module: product
-#: selection:product.category,type:0 selection:product.template,state:0
+#: selection:product.category,type:0
 msgid "Normal"
 msgstr "Normalni"
 
@@ -1824,49 +1720,6 @@ msgstr "Normalni"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Notes"
 msgstr "Bilješke"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_needaction_counter
-#: model:ir.model.fields,field_description:product.field_product_template_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Broj akcija"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_needaction_counter
-#: model:ir.model.fields,help:product.field_product_template_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Broj poruka koje zahtijevaju aktivnost"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_unread_counter
-#: model:ir.model.fields,help:product.field_product_template_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Broj nepročitanih poruka"
-
-#. module: product
-#: selection:product.template,state:0
-msgid "Obsolete"
-msgstr "Zastarjelo"
-
-#. module: product
-#: model:product.product,description_sale:product.product_product_42
-#: model:product.template,description_sale:product.product_product_42_product_template
-msgid ""
-"Office Editing Software with word processing, spreadsheets, presentations, "
-"graphics, and databases..."
-msgstr "Uredski programi koji uključuju obradu teksta, proračunskih tablica, prezentacija, grafika i baza..."
-
-#. module: product
-#: model:product.product,name:product.product_product_42
-#: model:product.template,name:product.product_product_42_product_template
-msgid "Office Suite"
-msgstr "Skup uredskih programa"
-
-#. module: product
-#: model:product.product,description:product.product_product_19
-#: model:product.template,description:product.product_product_19_product_template
-msgid "On demand hard-disk having capacity based on requirement."
-msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -1919,18 +1772,6 @@ msgid "Pen Drive"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_29
-#: model:product.template,name:product.product_product_29_product_template
-msgid "Pen drive, SP-2"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_30
-#: model:product.template,name:product.product_product_30_product_template
-msgid "Pen drive, SP-4"
-msgstr ""
-
-#. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
 msgstr "Postotak (popust)"
@@ -1963,14 +1804,14 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid ""
-"Powered by fourth-generation Intel Core processors, this iMac is the fastest"
-" yet. Every model in the lineup comes standard with a quad-core Intel Core "
-"i5 processor, starting at 2.7GHz and topping out at 3.4GHz."
+"Powered by fourth-generation Intel Core processors, this iMac is the fastest "
+"yet. Every model in the lineup comes standard with a quad-core Intel Core i5 "
+"processor, starting at 2.7GHz and topping out at 3.4GHz."
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_0
-#: model:product.template,name:product.product_product_0_product_template
+#: model:product.product,name:product.service_order_01
+#: model:product.template,name:product.service_order_01_product_template
 msgid "Prepaid Consulting"
 msgstr "Unaprijed plaćeno savjetovanje"
 
@@ -1979,6 +1820,7 @@ msgstr "Unaprijed plaćeno savjetovanje"
 #: model:ir.model.fields,field_description:product.field_product_product_price
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_price
 #: model:ir.model.fields,field_description:product.field_product_template_price
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2056,6 +1898,7 @@ msgstr "Cjenik predmeta odnosi se na odabranu opciju"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_ids
 #: model:ir.model.fields,field_description:product.field_product_product_item_ids
 #: model:ir.model.fields,field_description:product.field_product_template_item_ids
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
@@ -2105,18 +1948,6 @@ msgstr "Ispiši"
 #: model:product.public.category,name:product.printer
 msgid "Printer"
 msgstr "Pisač"
-
-#. module: product
-#: model:product.product,name:product.product_product_37
-#: model:product.template,name:product.product_product_37_product_template
-msgid "Printer, All-in-one"
-msgstr "Printer, sve u jednom"
-
-#. module: product
-#: model:product.product,name:product.product_product_23
-#: model:product.template,name:product.product_product_23_product_template
-msgid "Processor AMD 8-Core"
-msgstr "Processor AMD 8-Core"
 
 #. module: product
 #: model:product.product,name:product.product_product_22
@@ -2264,7 +2095,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:817
+#: code:addons/product/product.py:824
 #, python-format
 msgid "Products: "
 msgstr "Proizvodi: "
@@ -2328,18 +2159,6 @@ msgid "Quantity-5"
 msgstr "Količina-5"
 
 #. module: product
-#: model:product.product,name:product.product_product_14
-#: model:product.template,name:product.product_product_14_product_template
-msgid "RAM SR2 (kit)"
-msgstr "RAM SR2 (kit)"
-
-#. module: product
-#: model:product.product,name:product.product_product_15
-#: model:product.template,name:product.product_product_15_product_template
-msgid "RAM SR3"
-msgstr "RAM SR3"
-
-#. module: product
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "RAM SR5"
@@ -2371,9 +2190,12 @@ msgstr "Desni roditelj"
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Right from the start, apps made for iPad also work with iPad mini.\n"
-"                                    They’re immersive, full-screen apps that let you do almost anything\n"
-"                                    you can imagine. And with automatic updates,\n"
-"                                    you're always getting the best experience possible."
+"                                    They’re immersive, full-screen apps that "
+"let you do almost anything\n"
+"                                    you can imagine. And with automatic "
+"updates,\n"
+"                                    you're always getting the best "
+"experience possible."
 msgstr ""
 
 #. module: product
@@ -2387,8 +2209,10 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid ""
 "Right from the start, there’s a lot to love about\n"
-"                                    iPad. It’s simple yet powerful. Thin and light yet\n"
-"                                    full-featured. It can do just about everything and\n"
+"                                    iPad. It’s simple yet powerful. Thin and "
+"light yet\n"
+"                                    full-featured. It can do just about "
+"everything and\n"
 "                                    be just about anything."
 msgstr ""
 
@@ -2397,9 +2221,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Right from the start, there’s a lot to love about iPad.\n"
-"                                   It’s simple yet powerful. Thin and light yet full-\n"
-"                                   featured. It can do just about everything and be just\n"
-"                                   about anything.And because it’s so easy to use, it’s\n"
+"                                   It’s simple yet powerful. Thin and light "
+"yet full-\n"
+"                                   featured. It can do just about everything "
+"and be just\n"
+"                                   about anything.And because it’s so easy "
+"to use, it’s\n"
 "                                   easy to love."
 msgstr ""
 
@@ -2412,12 +2239,6 @@ msgstr "Metoda zaokruživanja"
 #: model:ir.model.fields,field_description:product.field_product_uom_rounding
 msgid "Rounding Precision"
 msgstr "Točnost zaokruživanja"
-
-#. module: product
-#: model:product.product,name:product.product_product_45
-#: model:product.template,name:product.product_product_45_product_template
-msgid "Router R430"
-msgstr "Router R430"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2464,11 +2285,16 @@ msgstr "Prodajni cjenici"
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "Say you’re listening to a song you love and you want to stay in the mood.\n"
-"                                        Just tap Genius. It finds other songs on iPod nano that go great together\n"
-"                                        and makes a Genius playlist for you. For more song combinations\n"
-"                                        you wouldn’t have thought of yourself, create Genius Mixes in iTunes\n"
-"                                        and sync the ones you like to iPod nano. Then tap Genius Mixes and\n"
-"                                        rediscover songs you haven’t heard in a while — or find music you forgot you even had."
+"                                        Just tap Genius. It finds other "
+"songs on iPod nano that go great together\n"
+"                                        and makes a Genius playlist for you. "
+"For more song combinations\n"
+"                                        you wouldn’t have thought of "
+"yourself, create Genius Mixes in iTunes\n"
+"                                        and sync the ones you like to iPod "
+"nano. Then tap Genius Mixes and\n"
+"                                        rediscover songs you haven’t heard "
+"in a while — or find music you forgot you even had."
 msgstr ""
 
 #. module: product
@@ -2495,14 +2321,14 @@ msgid "Sequence"
 msgstr "Sekvenca"
 
 #. module: product
-#: model:product.product,name:product.product_product_59
+#: model:product.product,name:product.consu_delivery_01
 #: model:product.public.category,name:product.server
-#: model:product.template,name:product.product_product_59_product_template
+#: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Server"
 msgstr "Poslužitelj"
 
 #. module: product
-#: code:addons/product/product.py:460
+#: code:addons/product/product.py:474
 #, python-format
 msgid "Service"
 msgstr ""
@@ -2520,7 +2346,11 @@ msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr "Postavlja cijenu kao višestruku vrijednost ove vrijednosti.\nZaokruživanje se izvršava nakon izračuna popusta i prije dodatka na cijenu.\nZa dobivanje cijene koja završava na 9.99 postavite zaokruživanje na 10, a dodatak na cijenu -0.01"
+msgstr ""
+"Postavlja cijenu kao višestruku vrijednost ove vrijednosti.\n"
+"Zaokruživanje se izvršava nakon izračuna popusta i prije dodatka na cijenu.\n"
+"Za dobivanje cijene koja završava na 9.99 postavite zaokruživanje na 10, a "
+"dodatak na cijenu -0.01"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
@@ -2531,8 +2361,16 @@ msgstr "Dijeli proizvode sa svim poduzećima"
 #: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
 msgid ""
 "Share your product to all companies defined in your instance.\n"
-" * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
+" * Checked : Product are visible for every company, even if a company is "
+"defined on the partner.\n"
+" * Unchecked : Each company can see only its product (product where company "
+"is defined). Product not related to a company are visible for all companies."
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.membership_1
+#: model:product.template,name:product.membership_1_product_template
+msgid "Silver Membership"
 msgstr ""
 
 #. module: product
@@ -2551,8 +2389,8 @@ msgstr "Slika male veličine"
 #: model:ir.model.fields,help:product.field_product_template_image_small
 msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 
 #. module: product
@@ -2584,14 +2422,19 @@ msgstr "Zvučnici"
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
-msgstr "Upišite kategoriju proizvoda ako se ovo pravilo odnosi samo na proizvode koji pripadaju toj kategoriji ili podređenim kategorijama. Ako ne, onda ostavite prazno."
+msgstr ""
+"Upišite kategoriju proizvoda ako se ovo pravilo odnosi samo na proizvode "
+"koji pripadaju toj kategoriji ili podređenim kategorijama. Ako ne, onda "
+"ostavite prazno."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_id
 msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
-msgstr "Odredite proizvod ako se ovo pravilo odnosi na jedan proizvod inače ostavite prazno."
+msgstr ""
+"Odredite proizvod ako se ovo pravilo odnosi na jedan proizvod inače ostavite "
+"prazno."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_tmpl_id
@@ -2611,7 +2454,9 @@ msgstr "Proizvod može biti odabran na prodajnom nalogu."
 msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
-msgstr "Odredite fiksni iznos za dodati ili oduzeti(ukoliko je iznos negativan) iznosu sa ukalkuliranim popustom."
+msgstr ""
+"Odredite fiksni iznos za dodati ili oduzeti(ukoliko je iznos negativan) "
+"iznosu sa ukalkuliranim popustom."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_max_margin
@@ -2640,12 +2485,6 @@ msgid "Starting date for the pricelist item validation"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_state
-#: model:ir.model.fields,field_description:product.field_product_template_state
-msgid "Status"
-msgstr "Status"
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Supplier Pricelist"
 msgstr "Cjenik dobavljača"
@@ -2657,8 +2496,8 @@ msgid "Support Contract (on timesheet)"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_47
-#: model:product.template,name:product.product_product_47_product_template
+#: model:product.product,name:product.product_delivery_01
+#: model:product.template,name:product.product_delivery_01_product_template
 msgid "Switch, 24 ports"
 msgstr ""
 
@@ -2677,9 +2516,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "Tap to play your favorite songs. Or entire albums.\n"
-"                                    Or everything by one artist. You can even browse by genres or composers.\n"
-"                                    Flip through your music: Album art looks great on the bigger screen.\n"
-"                                    Or to keep things fresh, give iPod nano a shake and it shuffles to a different song in your music library."
+"                                    Or everything by one artist. You can "
+"even browse by genres or composers.\n"
+"                                    Flip through your music: Album art looks "
+"great on the bigger screen.\n"
+"                                    Or to keep things fresh, give iPod nano "
+"a shake and it shuffles to a different song in your music library."
 msgstr ""
 
 #. module: product
@@ -2691,11 +2533,16 @@ msgstr "Naziv predloška"
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid ""
-"The Apple In-Ear Headphones deliver a truly immersive sound experience by drastically\n"
-"                                    reducing unwanted outside noises. The soft, silicone ear tips fit snugly and comfortably\n"
-"                                    in your ear, creating a seal that isolates your music from your surroundings.\n"
-"                                    Three different sizes of ear tips are included so you can find a perfect fit for each ear.\n"
-"                                    Also included are a convenient carrying case for the ear tips and a cable-control case\n"
+"The Apple In-Ear Headphones deliver a truly immersive sound experience by "
+"drastically\n"
+"                                    reducing unwanted outside noises. The "
+"soft, silicone ear tips fit snugly and comfortably\n"
+"                                    in your ear, creating a seal that "
+"isolates your music from your surroundings.\n"
+"                                    Three different sizes of ear tips are "
+"included so you can find a perfect fit for each ear.\n"
+"                                    Also included are a convenient carrying "
+"case for the ear tips and a cable-control case\n"
 "                                    for the headphones themselves."
 msgstr ""
 
@@ -2703,9 +2550,12 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
-"The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. Its ultra-compact size fits in the \n"
-"                                    palm of your hand, yet gives you full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
-"                                    full-featured. It can do just about everything and\n"
+"The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. Its "
+"ultra-compact size fits in the \n"
+"                                    palm of your hand, yet gives you full, "
+"natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
+"                                    full-featured. It can do just about "
+"everything and\n"
 "                                    experience music just about anywhere."
 msgstr ""
 
@@ -2714,9 +2564,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "The SoundLink® Mini speaker is small and light enough\n"
-"                                        to tuck into your bag. It weighs in at just 1.5 pounds.\n"
-"                                        Its low profile lets you place it almost anywhere and\n"
-"                                        provides a low center of gravity that makes it nearly\n"
+"                                        to tuck into your bag. It weighs in "
+"at just 1.5 pounds.\n"
+"                                        Its low profile lets you place it "
+"almost anywhere and\n"
+"                                        provides a low center of gravity "
+"that makes it nearly\n"
 "                                        impossible to tip over."
 msgstr ""
 
@@ -2769,8 +2622,10 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_9_product_template
 msgid ""
 "The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
-"                                    which makes it compatible with iPad. And you’re free to type wherever\n"
-"                                    you like — with the keyboard in front of your iPad or on your lap."
+"                                    which makes it compatible with iPad. And "
+"you’re free to type wherever\n"
+"                                    you like — with the keyboard in front of "
+"your iPad or on your lap."
 msgstr ""
 
 #. module: product
@@ -2782,11 +2637,12 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:329
+#: code:addons/product/product.py:332
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
-"You are trying to delete an attribute value with a reference on a product variant."
+"You are trying to delete an attribute value with a reference on a product "
+"variant."
 msgstr ""
 
 #. module: product
@@ -2815,8 +2671,10 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
-"The rechargeable lithium-ion battery delivers up to seven hours of playtime.\n"
-"                                    And at home, you can listen even longer—the charging cradle lets\n"
+"The rechargeable lithium-ion battery delivers up to seven hours of "
+"playtime.\n"
+"                                    And at home, you can listen even longer—"
+"the charging cradle lets\n"
 "                                    you listen while it charges."
 msgstr ""
 
@@ -2833,9 +2691,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "The speaker has a range of about 30 feet, so you can enjoy\n"
-"                                    the sound you want without wires. It pairs easily with your\n"
-"                                    smartphone, iPad® or other Bluetooth device.\n"
-"                                    And it remembers the most recent six devices you've used,\n"
+"                                    the sound you want without wires. It "
+"pairs easily with your\n"
+"                                    smartphone, iPad® or other Bluetooth "
+"device.\n"
+"                                    And it remembers the most recent six "
+"devices you've used,\n"
 "                                    so reconnecting is even simpler."
 msgstr ""
 
@@ -2880,10 +2741,14 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
-"There’s another way to get a good mix of music on iPod: Let Genius do the work.\n"
-"                                        Activate Genius in iTunes on your computer, and it automatically finds songs that sound\n"
-"                                        great together. Then it creates Genius Mixes, which you can easily sync to your iPod.\n"
-"                                        It’s the perfect way to rediscover songs you haven’t listened to in forever."
+"There’s another way to get a good mix of music on iPod: Let Genius do the "
+"work.\n"
+"                                        Activate Genius in iTunes on your "
+"computer, and it automatically finds songs that sound\n"
+"                                        great together. Then it creates "
+"Genius Mixes, which you can easily sync to your iPod.\n"
+"                                        It’s the perfect way to rediscover "
+"songs you haven’t listened to in forever."
 msgstr ""
 
 #. module: product
@@ -2899,8 +2764,8 @@ msgstr "Ovo dolazi iz matičnog kartona proizvoda."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_variant
 msgid ""
-"This field holds the image used as image for the product variant, limited to"
-" 1024x1024px."
+"This field holds the image used as image for the product variant, limited to "
+"1024x1024px."
 msgstr ""
 
 #. module: product
@@ -2908,7 +2773,9 @@ msgstr ""
 msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
-msgstr "Ovo polje sliku koja se koristi kao slika proizvoda, ograničeno na 1024x1024px."
+msgstr ""
+"Ovo polje sliku koja se koristi kao slika proizvoda, ograničeno na "
+"1024x1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_qty
@@ -2935,7 +2802,9 @@ msgstr ""
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr "Ovaj cjenik će se koristiti, umjesto predefiniranog, za prodaju trenutnom partneru"
+msgstr ""
+"Ovaj cjenik će se koristiti, umjesto predefiniranog, za prodaju trenutnom "
+"partneru"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
@@ -2952,12 +2821,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_39
-#: model:product.template,name:product.product_product_39_product_template
-msgid "Toner Cartridge"
-msgstr "Toner Cartridge"
-
-#. module: product
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Two is better than one."
@@ -2967,18 +2830,6 @@ msgstr "Dva je bolje nego jedan."
 #: model:ir.model.fields,field_description:product.field_product_uom_uom_type
 msgid "Type"
 msgstr "Tip"
-
-#. module: product
-#: model:product.product,name:product.product_product_53
-#: model:product.template,name:product.product_product_53_product_template
-msgid "TypeMatrix Dvorak Keyboard"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_48
-#: model:product.template,name:product.product_product_48_product_template
-msgid "USB Adapter"
-msgstr "USB Adapter"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -3047,7 +2898,8 @@ msgstr "Kategorije jedinica mjere"
 msgid ""
 "Units of measure belonging to the same category can be\n"
 "                converted between each others. For example, in the category\n"
-"                <i>'Time'</i>, you will have the following units of measure:\n"
+"                <i>'Time'</i>, you will have the following units of "
+"measure:\n"
 "                Hours, Days."
 msgstr ""
 
@@ -3062,24 +2914,17 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid ""
 "Unlike many small headphones, each earpiece of the Apple In-Ear Headphones\n"
-"                                    contains two separate high-performance drivers — a woofer to handle bass and\n"
-"                                    mid-range sounds and a tweeter for high-frequency audio. These dedicated\n"
-"                                    drivers help ensure accurate, detailed sound across the entire sonic spectrum.\n"
-"                                    The result: you’re immersed in the music and hear details you never knew existed.\n"
-"                                    Even when listening to an old favorite, you may feel like you’re hearing it for the first time."
+"                                    contains two separate high-performance "
+"drivers — a woofer to handle bass and\n"
+"                                    mid-range sounds and a tweeter for high-"
+"frequency audio. These dedicated\n"
+"                                    drivers help ensure accurate, detailed "
+"sound across the entire sonic spectrum.\n"
+"                                    The result: you’re immersed in the music "
+"and hear details you never knew existed.\n"
+"                                    Even when listening to an old favorite, "
+"you may feel like you’re hearing it for the first time."
 msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_unread
-#: model:ir.model.fields,field_description:product.field_product_template_message_unread
-msgid "Unread Messages"
-msgstr "Nepročitane poruke"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_unread_counter
-#: model:ir.model.fields,field_description:product.field_product_template_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Brojač nepročitanih poruka"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3131,9 +2976,7 @@ msgid "Variants"
 msgstr "Inačice"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_name
-#: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
 msgstr "Dobavljač"
@@ -3165,6 +3008,8 @@ msgid "Vendor of this product"
 msgstr "Prodavač ovog proizvoda"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_seller_ids
+#: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendors"
 msgstr "Dobavljači"
@@ -3177,6 +3022,7 @@ msgstr "Prikaz"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_volume
 #: model:ir.model.fields,field_description:product.field_product_template_volume
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:product.uom.categ,name:product.product_uom_categ_vol
 msgid "Volume"
 msgstr "Volumen"
@@ -3201,13 +3047,8 @@ msgid "Warranty"
 msgstr "Jamstvo"
 
 #. module: product
-#: model:product.product,name:product.product_product_34
-#: model:product.template,name:product.product_product_34_product_template
-msgid "Webcam"
-msgstr "Web kamera"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.model.fields,field_description:product.field_product_product_weight
+#: model:ir.model.fields,field_description:product.field_product_template_weight
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
 msgstr "Težina"
@@ -3228,8 +3069,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
 msgid ""
-"When this field is filled in, the vendor data will only apply to the "
-"variant."
+"When this field is filled in, the vendor data will only apply to the variant."
 msgstr ""
 
 #. module: product
@@ -3257,24 +3097,14 @@ msgid "Wi-Fi"
 msgstr "Wi-Fi"
 
 #. module: product
-#: model:product.product,name:product.product_product_40
-#: model:product.template,name:product.product_product_40_product_template
-msgid "Windows 7 Professional"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_41
-#: model:product.template,name:product.product_product_41_product_template
-msgid "Windows Home Server 2011"
-msgstr ""
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "With advanced Wi‑Fi that’s up to twice as fast as\n"
-"                                   any previous-generation iPad and access to fast\n"
-"                                   cellular data networks around the world, iPad mini\n"
+"                                   any previous-generation iPad and access "
+"to fast\n"
+"                                   cellular data networks around the world, "
+"iPad mini\n"
 "                                   lets you download content, stream video,\n"
 "                                   and browse the web at amazing speeds."
 msgstr ""
@@ -3312,7 +3142,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_template_action
 msgid ""
 "You must define a product for everything you sell, whether it's a physical "
-"product, a consumable or a service you offer to  customers."
+"product, a consumable or a service you offer to customers."
 msgstr ""
 
 #. module: product
@@ -3322,15 +3152,19 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "You probably have multiple playlists in iTunes on your computer.\n"
-"                                        One for your commute. One for the gym. Sync those playlists\n"
-"                                        to iPod, and you can play the perfect mix for whatever\n"
-"                                        mood strikes you. VoiceOver tells you the name of each playlist,\n"
-"                                        so it’s easy to switch between them and find the one you want without looking."
+"                                        One for your commute. One for the "
+"gym. Sync those playlists\n"
+"                                        to iPod, and you can play the "
+"perfect mix for whatever\n"
+"                                        mood strikes you. VoiceOver tells "
+"you the name of each playlist,\n"
+"                                        so it’s easy to switch between them "
+"and find the one you want without looking."
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_43
-#: model:product.template,name:product.product_product_43_product_template
+#: model:product.product,name:product.product_order_01
+#: model:product.template,name:product.product_order_01_product_template
 msgid "Zed+ Antivirus"
 msgstr "Zed+ Antivirus"
 
@@ -3433,8 +3267,10 @@ msgstr "iPod"
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "iTunes on your Mac or PC makes it easy to load up\n"
-"                                        your iPod. Just choose the playlists, audiobooks,\n"
-"                                        podcasts, and other audio files you want, then sync."
+"                                        your iPod. Just choose the "
+"playlists, audiobooks,\n"
+"                                        podcasts, and other audio files you "
+"want, then sync."
 msgstr ""
 
 #. module: product
@@ -3498,20 +3334,24 @@ msgid "qt"
 msgstr ""
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_58
-#: model:product.template,description_sale:product.product_product_58_product_template
+#: model:product.product,description_sale:product.consu_delivery_02
+#: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid ""
 "raid 1 \n"
 "            512ECC ram"
-msgstr "raid 1\n512ECC ram"
+msgstr ""
+"raid 1\n"
+"512ECC ram"
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_59
-#: model:product.template,description_sale:product.product_product_59_product_template
+#: model:product.product,description_sale:product.consu_delivery_01
+#: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid ""
 "raid 10 \n"
 "            2048ECC ram"
-msgstr "raid 10 \n2048ECC ram"
+msgstr ""
+"raid 10 \n"
+"2048ECC ram"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist
@@ -3538,3 +3378,159 @@ msgstr "za"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "nepoznato"
+
+#~ msgid ""
+#~ "17\" Monitor\n"
+#~ "6GB RAM\n"
+#~ "Hi-Speed 234Q Processor\n"
+#~ "QWERTY keyboard"
+#~ msgstr ""
+#~ "17\" Monitor\n"
+#~ "6GB RAM\n"
+#~ "Hi-Speed 234Q Processor\n"
+#~ "QWERTY keyboard"
+
+#~ msgid "30m RJ45 wire"
+#~ msgstr "30m RJ45 wire"
+
+#~ msgid "8-port Switch"
+#~ msgstr "8-port Switch"
+
+#~ msgid "Action Needed"
+#~ msgstr "Potrebna dodatna radnja"
+
+#~ msgid "Blank CD"
+#~ msgstr "Prazan CD"
+
+#~ msgid "Blank DVD-RW"
+#~ msgstr "Prazan DVD-RW"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Datum zadnjeg zapisa"
+
+#~ msgid "End of Lifecycle"
+#~ msgstr "Kraj životnog ciklusa"
+
+#~ msgid "Ergonomic Mouse"
+#~ msgstr "Ergonomski miš"
+
+#~ msgid "External Hard disk"
+#~ msgstr "Vanjski tvrdi disk"
+
+#~ msgid "Followers"
+#~ msgstr "Pratitelji"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Pratitelji (Kanali)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Pratitelji (Partneri)"
+
+#~ msgid "Gross Weight"
+#~ msgstr "Bruto težina"
+
+#~ msgid "HDD SH-2 (mto)"
+#~ msgstr "HDD SH-2 (mto)"
+
+#~ msgid "HDD on Demand"
+#~ msgstr "HDD Na zahtjev"
+
+#~ msgid "Headset USB"
+#~ msgstr "USB slušalice"
+
+#~ msgid "Headset for laptop PC with USB connector."
+#~ msgstr "Slušalice za laptop sa usb konektorom"
+
+#~ msgid "Headset standard"
+#~ msgstr "Obične slučalice"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Ako je označeno, nove poruke zahtijevaju vašu pažnju."
+
+#~ msgid "In Development"
+#~ msgstr "U razvoju"
+
+#~ msgid "Ink Cartridge"
+#~ msgstr "Ink Cartridge"
+
+#~ msgid "Is Follower"
+#~ msgstr "Je pratitelj"
+
+#~ msgid "Laptop S3450"
+#~ msgstr "Laptop S3450"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Datum zadnje poruke"
+
+#~ msgid "Linutop"
+#~ msgstr "Linutop"
+
+#~ msgid "Messages"
+#~ msgstr "Poruke"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Poruke i povijest"
+
+#~ msgid "Motherboard A20Z7"
+#~ msgstr "Matična ploča A20Z7"
+
+#~ msgid "Multimedia Speakers"
+#~ msgstr "Multimedijski zvučnici"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Broj akcija"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Broj poruka koje zahtijevaju aktivnost"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Broj nepročitanih poruka"
+
+#~ msgid "Obsolete"
+#~ msgstr "Zastarjelo"
+
+#~ msgid ""
+#~ "Office Editing Software with word processing, spreadsheets, "
+#~ "presentations, graphics, and databases..."
+#~ msgstr ""
+#~ "Uredski programi koji uključuju obradu teksta, proračunskih tablica, "
+#~ "prezentacija, grafika i baza..."
+
+#~ msgid "Office Suite"
+#~ msgstr "Skup uredskih programa"
+
+#~ msgid "Printer, All-in-one"
+#~ msgstr "Printer, sve u jednom"
+
+#~ msgid "Processor AMD 8-Core"
+#~ msgstr "Processor AMD 8-Core"
+
+#~ msgid "RAM SR2 (kit)"
+#~ msgstr "RAM SR2 (kit)"
+
+#~ msgid "RAM SR3"
+#~ msgstr "RAM SR3"
+
+#~ msgid "Router R430"
+#~ msgstr "Router R430"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "Toner Cartridge"
+#~ msgstr "Toner Cartridge"
+
+#~ msgid "USB Adapter"
+#~ msgstr "USB Adapter"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Nepročitane poruke"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Brojač nepročitanih poruka"
+
+#~ msgid "Webcam"
+#~ msgstr "Web kamera"

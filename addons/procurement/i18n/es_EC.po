@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * procurement
-# 
+#
 # Translators:
 # Luis Triana <luistriana.28@gmail.com>, 2015
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2016
@@ -9,29 +9,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-12 18:04+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
-"Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
+"Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
+"language/es_EC/)\n"
+"Language: es_EC\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_EC\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"<b>Procurement Orders</b> represent the need for a certain quantity of "
-"products, at a given time, in a given location."
-msgstr "<b>Órdenes de Compras</b>representan la necesidad de una cierta cantidad de productos, en un momento dado, en un lugar determinado ."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"<b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
-"                <br>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc..."
-msgstr "<b>Ordenes de ventas </b> son una fuente típica de pedidos de Compra (pero son documentos distintos).\n<br> En función de los parámetros de reposición y la configuración del producto, el sistema de adquisiciones intentará satisfacer la necesidad mediante la reserva de productos desde inventario, pedidos de productos desde el fabricante, o generando una orden de producción, etc ..."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
@@ -40,7 +27,12 @@ msgid ""
 "fulfill a procurement. Some exceptions will resolve themselves "
 "automatically, but others require manual intervention (those are identified "
 "by a specific error message in the chatter)."
-msgstr "Una <b> Excepción de Adquisiciones </b > se produce cuando el sistema no puede encontrar la manera de cumplir con una contratación . Algunas excepciones se resolverán automáticamente, pero otros requieren intervención manual (los que se identifican con un mensaje de error específico en la charla)."
+msgstr ""
+"Una <b> Excepción de Adquisiciones </b > se produce cuando el sistema no "
+"puede encontrar la manera de cumplir con una contratación . Algunas "
+"excepciones se resolverán automáticamente, pero otros requieren intervención "
+"manual (los que se identifican con un mensaje de error específico en la "
+"charla)."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -48,20 +40,23 @@ msgstr "Una <b> Excepción de Adquisiciones </b > se produce cuando el sistema n
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "A <b>procurement order</b> is used to record a need for a specific\n"
-"                product at a specific location. Procurement orders are usually\n"
-"                created automatically from <i>sales orders, pull logistic rules or\n"
+"                product at a specific location. Procurement orders are "
+"usually\n"
+"                created automatically from <i>sales orders, pull logistic "
+"rules or\n"
 "                minimum stock rules.</i>"
-msgstr "Una < b> para la contratación </b > se utiliza para registrar la necesidad de un specific\nproducto en una ubicación específica. Órdenes de adquisición son usualmente\ncreado automáticamente a partir de <i>órdenes de venta, descargue reglas de logística o\nreglas del stock mínimo.</i>"
+msgstr ""
+"Una < b> para la contratación </b > se utiliza para registrar la necesidad "
+"de un specific\n"
+"producto en una ubicación específica. Órdenes de adquisición son usualmente\n"
+"creado automáticamente a partir de <i>órdenes de venta, descargue reglas de "
+"logística o\n"
+"reglas del stock mínimo.</i>"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
 msgid "Action"
 msgstr "Acción"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction
-msgid "Action Needed"
-msgstr "Necesaria acción"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
@@ -89,7 +84,7 @@ msgid "Cancelled"
 msgstr "Cancelada"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:139
+#: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
 msgstr "No se puede borrar un abastacimiento que está en estado %s."
@@ -102,17 +97,12 @@ msgstr "Comprobar abastecimiento"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but"
-" can be manually set by the procurement manager to force an unusual "
-"behavior."
-msgstr "Regla escogida para la resolución del abastecimiento. Normalmente escogida por el sistema, pero puede ser establecida manualmente por el gestor de los abastecimientos para forzar un comportamiento no habitual."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"Click to create a Procurement order in exception state, or remove the filter"
-" on the search bar to display all the procurements."
-msgstr "Haz clic aquí para crear una orden de Adquisiciones en el estado de excepción, o quitar el filtro en la barra de búsqueda para mostrar todas las adquisiciones."
+"Chosen rule for the procurement resolution. Usually chosen by the system but "
+"can be manually set by the procurement manager to force an unusual behavior."
+msgstr ""
+"Regla escogida para la resolución del abastecimiento. Normalmente escogida "
+"por el sistema, pero puede ser establecida manualmente por el gestor de los "
+"abastecimientos para forzar un comportamiento no habitual."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -159,13 +149,9 @@ msgid "Created on"
 msgstr "Creado en"
 
 #. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Fecha del último mensaje publicado en el registro."
-
-#. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-msgid "Delivery Method"
+#, fuzzy
+msgid "Delivery Type"
 msgstr "Método entrega"
 
 #. module: procurement
@@ -217,21 +203,6 @@ msgid "Fixed Procurement Group"
 msgstr "Grupo de abastecimiento fijo"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_follower_ids
-msgid "Followers"
-msgstr "Seguidores"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Seguidores (Canales)"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Seguidores (Empresas)"
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Global"
 msgstr "Global"
@@ -256,16 +227,6 @@ msgid "ID"
 msgstr "ID (identificación)"
 
 #. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Si está marcado, hay nuevos mensajes que requieren su atención."
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
 msgstr "Si la ruta es global"
@@ -274,16 +235,6 @@ msgstr "Si la ruta es global"
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr "Si no está marcado, permite ocultar la regla sin eliminarla."
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_is_follower
-msgid "Is Follower"
-msgstr "Es un seguidor"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_last_post
-msgid "Last Message Date"
-msgstr "Fecha del último mensaje"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
@@ -325,14 +276,12 @@ msgid "Logistics"
 msgstr "Logística"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_ids
-msgid "Messages"
-msgstr "Mensajes"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_ids
-msgid "Messages and communication history"
-msgstr "Mensajes e historial de comunicación"
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"Most common exceptions are products to purchase without\n"
+"                having a vendor defined on the product, and products to\n"
+"                manufacture without having a bill of materials."
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -340,7 +289,7 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:206
+#: code:addons/procurement/procurement.py:200
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Ninguna regla casa con este abastecimiento"
@@ -359,21 +308,6 @@ msgstr "No urgente"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Notes"
 msgstr "Notas"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Número de acciones"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Número de mensajes que requieren una acción"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Número de mensajes no leidos"
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
@@ -496,7 +430,9 @@ msgstr "Referencia"
 msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
-msgstr "Referecia del documento que creó este abastecimiento.\nEs rellenado automáticamente por Odoo."
+msgstr ""
+"Referecia del documento que creó este abastecimiento.\n"
+"Es rellenado automáticamente por Odoo."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -577,16 +513,6 @@ msgid "Unit of Measure"
 msgstr "Unidad de medida"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread
-msgid "Unread Messages"
-msgstr "Mensajes sin leer"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Contador de mensajes no leidos"
-
-#. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Urgent"
 msgstr "Urgente"
@@ -597,24 +523,19 @@ msgid "Very Urgent"
 msgstr "Muy urgente"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_website_message_ids
-msgid "Website Messages"
-msgstr "Mensajes del sitio web"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_website_message_ids
-msgid "Website communication history"
-msgstr "Historial de comunicaciones del sitio web"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
+#, fuzzy
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: purchase\n"
+"                creates the necessary operations to fulfill the need: "
+"purchase\n"
 "                order proposition, manufacturing order, etc."
-msgstr "Cuando la orden de compra se confirma , automáticamente\ncrea las operaciones necesarias para fullfil la necesidad de: compra\npropuesta de pedido, orden de producción, etc."
+msgstr ""
+"Cuando la orden de compra se confirma , automáticamente\n"
+"crea las operaciones necesarias para fullfil la necesidad de: compra\n"
+"propuesta de pedido, orden de producción, etc."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
@@ -625,3 +546,87 @@ msgstr "ej. Comprar"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr "Por ejemplo, SO005"
+
+#~ msgid ""
+#~ "<b>Procurement Orders</b> represent the need for a certain quantity of "
+#~ "products, at a given time, in a given location."
+#~ msgstr ""
+#~ "<b>Órdenes de Compras</b>representan la necesidad de una cierta cantidad "
+#~ "de productos, en un momento dado, en un lugar determinado ."
+
+#~ msgid ""
+#~ "<b>Sales Orders</b> are one typical source of Procurement Orders (but "
+#~ "these are distinct documents). \n"
+#~ "                <br>Depending on the procurement parameters and the "
+#~ "product configuration, the procurement engine will attempt to satisfy the "
+#~ "need by reserving products from stock, ordering products from a supplier, "
+#~ "or passing a manufacturing order, etc..."
+#~ msgstr ""
+#~ "<b>Ordenes de ventas </b> son una fuente típica de pedidos de Compra "
+#~ "(pero son documentos distintos).\n"
+#~ "<br> En función de los parámetros de reposición y la configuración del "
+#~ "producto, el sistema de adquisiciones intentará satisfacer la necesidad "
+#~ "mediante la reserva de productos desde inventario, pedidos de productos "
+#~ "desde el fabricante, o generando una orden de producción, etc ..."
+
+#~ msgid "Action Needed"
+#~ msgstr "Necesaria acción"
+
+#~ msgid ""
+#~ "Click to create a Procurement order in exception state, or remove the "
+#~ "filter on the search bar to display all the procurements."
+#~ msgstr ""
+#~ "Haz clic aquí para crear una orden de Adquisiciones en el estado de "
+#~ "excepción, o quitar el filtro en la barra de búsqueda para mostrar todas "
+#~ "las adquisiciones."
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Fecha del último mensaje publicado en el registro."
+
+#~ msgid "Followers"
+#~ msgstr "Seguidores"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Seguidores (Canales)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Seguidores (Empresas)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención."
+
+#~ msgid "Is Follower"
+#~ msgstr "Es un seguidor"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Fecha del último mensaje"
+
+#~ msgid "Messages"
+#~ msgstr "Mensajes"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Mensajes e historial de comunicación"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Número de acciones"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Número de mensajes que requieren una acción"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Número de mensajes no leidos"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Mensajes sin leer"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Contador de mensajes no leidos"
+
+#~ msgid "Website Messages"
+#~ msgstr "Mensajes del sitio web"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historial de comunicaciones del sitio web"

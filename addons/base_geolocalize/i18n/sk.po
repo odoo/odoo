@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_geolocalize
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-02-07 18:29+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: base_geolocalize
@@ -34,12 +34,14 @@ msgid "<span> ;  Long:  </span>"
 msgstr "<span> ; Long: </span>"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:23
-#, python-format
+#: code:addons/base_geolocalize/models/res_partner.py:17
+#, fuzzy, python-format
 msgid ""
-"Cannot contact geolocation servers. Please make sure that your internet "
+"Cannot contact geolocation servers. Please make sure that your Internet "
 "connection is up and running (%s)."
-msgstr "Nemôžno naviazať kontakt s geolokačnými servermi. Prosím uistite sa že vaše internetové pripojenie funguje (%s)."
+msgstr ""
+"Nemôžno naviazať kontakt s geolokačnými servermi. Prosím uistite sa že vaše "
+"internetové pripojenie funguje (%s)."
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_latitude
@@ -47,24 +49,27 @@ msgid "Geo Latitude"
 msgstr "Geo zemepisná šírka"
 
 #. module: base_geolocalize
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_date_localization
-msgid "Geo Localization Date"
-msgstr "Dátum geolokalizácie"
-
-#. module: base_geolocalize
-#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "Geo Localize"
-msgstr "Geolokalizácia"
-
-#. module: base_geolocalize
-#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "Geo Location"
-msgstr "Geolokácia"
-
-#. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_longitude
 msgid "Geo Longitude"
 msgstr "Geo zemepisná dĺžka"
+
+#. module: base_geolocalize
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+#, fuzzy
+msgid "Geolocate"
+msgstr "Geolokácia"
+
+#. module: base_geolocalize
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+#, fuzzy
+msgid "Geolocation"
+msgstr "Geolokácia"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_date_localization
+#, fuzzy
+msgid "Geolocation Date"
+msgstr "Dátum geolokalizácie"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
@@ -75,3 +80,6 @@ msgstr "Partner"
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignation"
 msgstr "Prideľovanie partnera"
+
+#~ msgid "Geo Localize"
+#~ msgstr "Geolokalizácia"

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_voucher
-# 
+#
 # Translators:
 # Grazziano Duarte <g.negocios@outlook.com.br>, 2015
 # Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
@@ -9,24 +9,35 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2015-12-10 01:10+0000\n"
 "Last-Translator: Grazziano Duarte <g.negocios@outlook.com.br>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
+"language/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
-" * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
-" * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"Voucher.\n"
+" * The 'Pro-forma' status is used when the voucher does not have a voucher "
+"number.\n"
+" * The 'Posted' status is used when user create voucher,a voucher number is "
+"generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
-msgstr "* O status 'Rascunho' é usado quando um usuário está codificando uma nova Comprovante.\n* O status 'Pro-forma' é usada quando o comprovante não tem um número de comprovante.\n* O status 'Postado' é usado quando o usuário cria um comprovante, um número de comprovante é gerado e comprovantes são criados na conta.\n* O status 'Cancelado' é usado quando o usuário cancela o comprovante."
+msgstr ""
+"* O status 'Rascunho' é usado quando um usuário está codificando uma nova "
+"Comprovante.\n"
+"* O status 'Pro-forma' é usada quando o comprovante não tem um número de "
+"comprovante.\n"
+"* O status 'Postado' é usado quando o usuário cria um comprovante, um número "
+"de comprovante é gerado e comprovantes são criados na conta.\n"
+"* O status 'Cancelado' é usado quando o usuário cancela o comprovante."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -43,11 +54,6 @@ msgstr "Data da Conta"
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
 msgstr "Comprovante Contábil"
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_needaction
-msgid "Action Needed"
-msgstr "Ação Necessária"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
@@ -96,7 +102,7 @@ msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:144
+#: code:addons/account_voucher/account_voucher.py:147
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Não é possivel excluir comprovante(s) que já foi aberto ou pago."
@@ -116,6 +122,12 @@ msgstr "Clique para registrar um recibo de compra."
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_company_id
 msgid "Company"
 msgstr "Empresa"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
+msgid "Company related to this journal"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
@@ -148,11 +160,6 @@ msgstr "Cliente"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Date"
 msgstr "Data"
-
-#. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Data da ultima mensagem para o registro."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_name
@@ -191,21 +198,6 @@ msgid "Effective date for accounting entries"
 msgstr "Data efetiva dos Lançamentos Contábeis"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_follower_ids
-msgid "Followers"
-msgstr "Seguidores"
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Seguidores (Canais)"
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Seguidores (Parceiros)"
-
-#. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
 msgid "Gives the sequence of this line when displaying the voucher."
 msgstr "Fornece a sequência dessa linha quando exibir a fatura"
@@ -224,31 +216,18 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Se marcado novas mensagens solicitarão sua atenção."
-
-#. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
-msgstr "No caso, temos um problema de arredondamento do imposto, utilize este campo para corrigi-lo"
+msgstr ""
+"No caso, temos um problema de arredondamento do imposto, utilize este campo "
+"para corrigi-lo"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Internal Notes"
 msgstr "Notas Internas"
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_is_follower
-msgid "Is Follower"
-msgstr "É um seguidor"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
@@ -270,11 +249,6 @@ msgid "Journal Items"
 msgstr "Itens do Diário"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_last_post
-msgid "Last Message Date"
-msgstr "Data da última mensagem"
-
-#. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
 msgid "Last Modified on"
@@ -293,16 +267,6 @@ msgid "Last Updated on"
 msgstr "Última atualização em"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_ids
-msgid "Messages"
-msgstr "Mensagens"
-
-#. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_message_ids
-msgid "Messages and communication history"
-msgstr "Histórico de mensagens e comunicação"
-
-#. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
 msgid "Notes"
 msgstr "Notas"
@@ -313,29 +277,9 @@ msgid "Number"
 msgstr "Número"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Número de mensagens que requer uma ação"
-
-#. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Quantidade de mensagens não lidas."
-
-#. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
 msgid "Only for tax excluded from price"
 msgstr "Apenas para impostos excluídos do preço"
-
-#. module: account_voucher
-#: model:ir.actions.client,name:account_voucher.action_client_invoice_menu
-msgid "Open Invoicing Menu"
-msgstr "Abrir Menu de Faturamento"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
@@ -369,13 +313,13 @@ msgid "Payment Reference"
 msgstr "Referencia de Pagamento"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:180
+#: code:addons/account_voucher/account_voucher.py:183
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Por favor ative a sequência no diário selecionado!"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:183
+#: code:addons/account_voucher/account_voucher.py:186
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Por favor defina a sequência no diário."
@@ -545,16 +489,6 @@ msgid "Unit Price"
 msgstr "Preço Unitário"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_unread
-msgid "Unread Messages"
-msgstr "Mensagens não lidas"
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Contador de Mensagens Não Lidas."
-
-#. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Validate"
@@ -565,7 +499,7 @@ msgstr "Validar"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Vendor"
-msgstr ""
+msgstr "Fornecedor"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -573,7 +507,7 @@ msgid "Vendor Voucher"
 msgstr "Comprovante do Fornecedor"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:28
+#: code:addons/account_voucher/account_voucher.py:31
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -610,31 +544,82 @@ msgid "Vouchers Entries"
 msgstr "Lançamentos dos Recibos"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_website_message_ids
-msgid "Website Messages"
-msgstr "Mensagens do Site"
-
-#. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_website_message_ids
-msgid "Website communication history"
-msgstr "Histórico de Comunicação do Site"
-
-#. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
-msgstr "Quando o recibo de compra for confirmado, você pode gravar o\npagamento de fornecedores relacionados a este recibo de compra."
+msgstr ""
+"Quando o recibo de compra for confirmado, você pode gravar o\n"
+"pagamento de fornecedores relacionados a este recibo de compra."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
-msgstr "Quando o recibo de venda é confirmado, você pode gravar o pagamento\nrelacionado do cliente a este recibo de venda."
+msgstr ""
+"Quando o recibo de venda é confirmado, você pode gravar o pagamento\n"
+"relacionado do cliente a este recibo de venda."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:345
+#: code:addons/account_voucher/account_voucher.py:348
 #, python-format
 msgid "You must first select a partner!"
 msgstr "Você precisa primeiro selecinar um parceiro!"
+
+#~ msgid "Action Needed"
+#~ msgstr "Ação Necessária"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data da ultima mensagem para o registro."
+
+#~ msgid "Followers"
+#~ msgstr "Seguidores"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Seguidores (Canais)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Seguidores (Parceiros)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
+
+#~ msgid "Is Follower"
+#~ msgstr "É um seguidor"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data da última mensagem"
+
+#~ msgid "Messages"
+#~ msgstr "Mensagens"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Histórico de mensagens e comunicação"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Número de ações"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Número de mensagens que requer uma ação"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Quantidade de mensagens não lidas."
+
+#~ msgid "Open Invoicing Menu"
+#~ msgstr "Abrir Menu de Faturamento"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Mensagens não lidas"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Contador de Mensagens Não Lidas."
+
+#~ msgid "Website Messages"
+#~ msgstr "Mensagens do Site"
+
+#~ msgid "Website communication history"
+#~ msgstr "Histórico de Comunicação do Site"

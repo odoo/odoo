@@ -1,21 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_sale_delivery
-# 
+#
 # Translators:
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-05-16 12:54+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
@@ -53,19 +59,13 @@ msgstr "شركة الشحن"
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_to_weight
 msgid ""
 "Check if the product should be weighted using the hardware scale integration"
-msgstr "التحقق ما اذا كان المنتج يجب أن يكون وزنه باستخدام التكامل على نطاق الأجهزة "
+msgstr ""
+"التحقق ما اذا كان المنتج يجب أن يكون وزنه باستخدام التكامل على نطاق الأجهزة "
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
 msgstr "تحقق مما إذا كنت تريد أن يظهر هذا المنتج في نقاط البيع"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_purchase_requisition
-msgid ""
-"Check this box to generate Call for Tenders instead of generating requests "
-"for quotation from procurement."
-msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -78,17 +78,22 @@ msgid "Country..."
 msgstr "الدولة..."
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_project_id
+msgid "Create a task under this project on sale order validation."
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
 msgstr "قيمة التسليم"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form
+#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description"
 msgstr "الوصف"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form
+#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on the Online Quotations."
 msgstr ""
 
@@ -106,6 +111,21 @@ msgstr "الوصف لعرض السعر"
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_sequence
 msgid "Determine the display order in the Website E-commerce"
 msgstr "تحديد ترتيب العرض في موقع التجارة الإلكترونية"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_split_method
+msgid ""
+"Equal : Cost will be equally divided.\n"
+"By Quantity : Cost will be divided according to product's quantity.\n"
+"By Current cost : Cost will be divided according to product's current cost.\n"
+"By Weight : Cost will be divided depending on its weight.\n"
+"By Volume : Cost will be divided depending on its volume."
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_attachment_count
+msgid "File"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
@@ -138,12 +158,19 @@ msgid "Message for Sales Order Line"
 msgstr ""
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:127
+#: code:addons/website_sale_delivery/models/sale_order.py:138
 #, python-format
 msgid ""
-"No shipping method is available for your current order and shipping address."
-" Please contact us for more information."
-msgstr "لا توجد طريقة تسليم متوفرة لطلبك الحالي وعنوان شحنك. يرجى الاتصال بنا للحصول على مزيد من المعلومات."
+"No shipping method is available for your current order and shipping address. "
+"Please contact us for more information."
+msgstr ""
+"لا توجد طريقة تسليم متوفرة لطلبك الحالي وعنوان شحنك. يرجى الاتصال بنا للحصول "
+"على مزيد من المعلومات."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_optional_product_ids
+msgid "Optional Products"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_pos_categ_id
@@ -154,6 +181,11 @@ msgstr "فئة نقطة البيع"
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_requisition
 msgid "Procurement"
 msgstr "التوريدات"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_optional_product_ids
+msgid "Products to propose when add to cart."
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_project_id
@@ -210,7 +242,7 @@ msgid "Size Y"
 msgstr "حجم ص"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:126
+#: code:addons/website_sale_delivery/models/sale_order.py:137
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr "آسفون, نحن غير قادرين على شحن طلبك"
@@ -236,11 +268,6 @@ msgid "The amount without tax."
 msgstr "المبلغ دون ضرائب"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_url
-msgid "The full URL to access the document through the website."
-msgstr "الرابط الكامل للوصول إلى المستند من خلال الموقع."
-
-#. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Those categories are used to group similar products for e-commerce."
 msgstr "تستخدم هذه الفئات لتجميع منتجات مماثلة للتجارة الإلكترونية."
@@ -256,24 +283,14 @@ msgid "To Weigh With Scale"
 msgstr "وزن مع النطاق "
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
-msgid "Visible in Website"
-msgstr "مرئي في الموقع"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
-msgid "Website Comments"
-msgstr "تعليقات الموقع"
+#: model:ir.ui.view,arch_db:website_sale_delivery.shipping_tracking
+msgid "Tracking:"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Website Product Category"
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_url
-msgid "Website URL"
-msgstr "رابط الموقع"
+msgstr "التصنيف بالموقع الإلكتروني"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
@@ -289,3 +306,15 @@ msgstr "الكلمات الدلالية بالموقع"
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_title
 msgid "Website meta title"
 msgstr "العنوان الدلالي بالموقع"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "الرابط الكامل للوصول إلى المستند من خلال الموقع."
+
+#~ msgid "Visible in Website"
+#~ msgstr "مرئي في الموقع"
+
+#~ msgid "Website Comments"
+#~ msgstr "تعليقات الموقع"
+
+#~ msgid "Website URL"
+#~ msgstr "رابط الموقع"

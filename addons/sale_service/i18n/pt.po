@@ -1,30 +1,49 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_service
-# 
+#
 # Translators:
+# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-15 00:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2015-10-27 20:00+0000\n"
+"Last-Translator: Ricardo Martins <ricardo.nbs.martins@gmail.com>\n"
+"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
+"pt/)\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_service
-#: model:ir.model,name:sale_service.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Linha analítica"
+#: model:ir.model.fields,field_description:sale_service.field_product_product_available_in_pos
+msgid "Available in the Point of Sale"
+msgstr ""
 
 #. module: sale_service
-#: model:ir.model.fields,field_description:sale_service.field_project_task_type_closed
-msgid "Is a close stage"
+#: model:ir.model.fields,help:sale_service.field_product_product_to_weight
+msgid ""
+"Check if the product should be weighted using the hardware scale integration"
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,help:sale_service.field_product_product_available_in_pos
+msgid "Check if you want this product to appear in the Point of Sale"
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,help:sale_service.field_product_product_project_id
+#: model:ir.model.fields,help:sale_service.field_product_template_project_id
+msgid "Create a task under this project on sale order validation."
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,field_description:sale_service.field_product_product_hs_code
+msgid "HS Code"
 msgstr ""
 
 #. module: sale_service
@@ -33,10 +52,22 @@ msgid "Order Line"
 msgstr "Linha da ordem"
 
 #. module: sale_service
+#: model:ir.model.fields,field_description:sale_service.field_product_product_pos_categ_id
+msgid "Point of Sale Category"
+msgstr ""
+
+#. module: sale_service
 #: model:ir.model,name:sale_service.model_procurement_order
+#: model:ir.model.fields,field_description:sale_service.field_product_product_purchase_requisition
 #: model:ir.model.fields,field_description:sale_service.field_project_task_procurement_id
 msgid "Procurement"
 msgstr "Aquisição"
+
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_product_product
+#, fuzzy
+msgid "Product"
+msgstr "Template Artigo"
 
 #. module: sale_service
 #: model:ir.model,name:sale_service.model_product_template
@@ -44,14 +75,16 @@ msgid "Product Template"
 msgstr "Template Artigo"
 
 #. module: sale_service
+#: model:ir.model.fields,field_description:sale_service.field_product_product_project_id
 #: model:ir.model.fields,field_description:sale_service.field_product_template_project_id
 msgid "Project"
 msgstr "Projeto"
 
 #. module: sale_service
 #: model:ir.model,name:sale_service.model_sale_order
+#: model:ir.ui.view,arch_db:sale_service.view_sale_service_inherit_form2
 msgid "Sales Order"
-msgstr ""
+msgstr "Ordem de Vendas"
 
 #. module: sale_service
 #: model:ir.model,name:sale_service.model_sale_order_line
@@ -60,18 +93,18 @@ msgid "Sales Order Line"
 msgstr "Linha da ordem de venda"
 
 #. module: sale_service
+#: model:ir.model.fields,help:sale_service.field_product_product_hs_code
+msgid "Standardized code for international shipping and goods declaration"
+msgstr ""
+
+#. module: sale_service
 #: model:ir.model,name:sale_service.model_project_task
 #: model:ir.model.fields,field_description:sale_service.field_procurement_order_task_id
 msgid "Task"
 msgstr "Tarefa"
 
 #. module: sale_service
-#: model:ir.model,name:sale_service.model_project_task_type
-msgid "Task Stage"
-msgstr "Etapa da Tarefa"
-
-#. module: sale_service
-#: code:addons/sale_service/models/sale_service.py:92
+#: code:addons/sale_service/models/sale_service.py:88
 #, python-format
 msgid "Task created"
 msgstr "Tarefa Criada"
@@ -80,22 +113,44 @@ msgstr "Tarefa Criada"
 #: model:ir.model.fields,field_description:sale_service.field_sale_order_tasks_count
 #: model:ir.ui.view,arch_db:sale_service.view_order_form_inherit_sale_service
 msgid "Tasks"
-msgstr ""
+msgstr "Tarefas"
 
 #. module: sale_service
 #: model:ir.model.fields,field_description:sale_service.field_sale_order_tasks_ids
 msgid "Tasks associated to this sale"
+msgstr "Tarefas associadas a esta venda"
+
+#. module: sale_service
+#: model:ir.model.fields,help:sale_service.field_product_product_pos_categ_id
+msgid "Those categories are used to group similar products for point of sale."
 msgstr ""
 
 #. module: sale_service
-#: model:ir.model.fields,help:sale_service.field_project_task_type_closed
-msgid "Tasks in this stage are considered as closed."
-msgstr "Tarefas nesta fase são consideradas como fechadas."
+#: model:ir.model.fields,field_description:sale_service.field_product_product_to_weight
+msgid "To Weigh With Scale"
+msgstr ""
 
 #. module: sale_service
-#: code:addons/sale_service/models/sale_service.py:142
+#: code:addons/sale_service/models/sale_service.py:107
 #, python-format
 msgid ""
 "You cannot delete a task related to a Sale Order. You can only archive this "
 "task."
 msgstr ""
+"Não apagar uma tarefa relacionada com a Ordem de Venda. Apenas pode arquivar "
+"a tarefa. "
+
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_account_analytic_line
+#, fuzzy
+msgid "account analytic line"
+msgstr "Linha analítica"
+
+#~ msgid "Is a close stage"
+#~ msgstr "É uma fase fechada"
+
+#~ msgid "Task Stage"
+#~ msgstr "Etapa da Tarefa"
+
+#~ msgid "Tasks in this stage are considered as closed."
+#~ msgstr "Tarefas nesta fase são consideradas como fechadas."

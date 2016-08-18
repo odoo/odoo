@@ -1,20 +1,33 @@
+# #-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_vat
-# 
+#
 # Translators:
+# #-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_vat
+#
+# Translators:
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 16:40+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_vat
@@ -27,13 +40,9 @@ msgstr "公司"
 msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
-msgstr "如勾选了这里，业务伙伴的增值税号会经由欧洲VIES服务机构在线验证，而非仅仅是本地验证编号格式"
-
-#. module: base_vat
-#: code:addons/base_vat/base_vat.py:111
-#, python-format
-msgid "Importing VAT Number [%s] is not valid !"
-msgstr "导入的VAT号码 [%s] 是无效的！"
+msgstr ""
+"如勾选了这里，业务伙伴的增值税号会经由欧洲VIES服务机构在线验证，而非仅仅是本"
+"地验证编号格式"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -46,7 +55,9 @@ msgstr "业务伙伴"
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
-msgstr "这个业务伙伴  [%s] 的VAT号码 [%s]看上去是无效的。 \n备注： 预期的格式为 %s"
+msgstr ""
+"这个业务伙伴  [%s] 的VAT号码 [%s]看上去是无效的。 \n"
+"备注： 预期的格式为 %s"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:127
@@ -54,7 +65,8 @@ msgstr "这个业务伙伴  [%s] 的VAT号码 [%s]看上去是无效的。 \n备
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
-msgstr "这个业务伙伴 [%s] 的VAT号码 [%s] VIES VAT验证依然失效或者格式%s不符合标准."
+msgstr ""
+"这个业务伙伴 [%s] 的VAT号码 [%s] VIES VAT验证依然失效或者格式%s不符合标准."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
@@ -65,3 +77,6 @@ msgstr "VIES增值税号检查"
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "e.g. BE0477472701"
 msgstr "举例: BE0477472701"
+
+#~ msgid "Importing VAT Number [%s] is not valid !"
+#~ msgstr "导入的VAT号码 [%s] 是无效的！"

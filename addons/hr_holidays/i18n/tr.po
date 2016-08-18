@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_holidays
-# 
+#
 # Translators:
 # AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
 # Cem Uygur <cemuygur.beb@gmail.com>, 2016
@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-06-25 20:36+0000\n"
 "Last-Translator: Cem Uygur <cemuygur.beb@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_holidays
@@ -46,7 +46,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:234
-#: code:addons/hr_holidays/hr_holidays.py:356
+#: code:addons/hr_holidays/hr_holidays.py:361
 #, python-format
 msgid "%s on %s"
 msgstr ""
@@ -64,8 +64,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid ""
-"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
-"color:"
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-color:"
 msgstr ""
 
 #. module: hr_holidays
@@ -110,14 +109,14 @@ msgid "Absent Today"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_needaction
-msgid "Action Needed"
-msgstr "Eylem Gerekiyor"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_active
 msgid "Active"
 msgstr "Etkin"
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Active Leaves and Allocations"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -176,7 +175,7 @@ msgid "Allocation Requests to Approve"
 msgstr "Onaylanacak Tahsis İstekleri"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:559
+#: code:addons/hr_holidays/hr_holidays.py:575
 #, python-format
 msgid "Allocation for %s"
 msgstr "Tahsisi %s"
@@ -185,6 +184,12 @@ msgstr "Tahsisi %s"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_allocation_to_approve_count
 msgid "Allocation to Approve"
 msgstr ""
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#, fuzzy
+msgid "Allocations"
+msgstr "Tahsis"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_limit
@@ -266,7 +271,9 @@ msgstr "Personel Etiketi"
 msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee Tag: "
 "Allocation/Request for group of employees in category"
-msgstr "Personele göre: Bireysel Personel için Tahsis/İzin, Personel Etiketine göre: Kategorideki personel grubu için Tahsis/İzin"
+msgstr ""
+"Personele göre: Bireysel Personel için Tahsis/İzin, Personel Etiketine göre: "
+"Kategorideki personel grubu için Tahsis/İzin"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_can_reset
@@ -298,8 +305,12 @@ msgstr "Personel kategorisi"
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_type
 msgid ""
 "Choose 'Leave Request' if someone wants to take an off-day. \n"
-"Choose 'Allocation Request' if you want to increase the number of leaves available for someone"
-msgstr "Birisi bir gün izin almak istiyorsa 'İzin İsteği'ni seçin. \nBirisi için mevcut izin sayısını arttırmak istiyorsanı 'Tahsis İsteği'ni seçin"
+"Choose 'Allocation Request' if you want to increase the number of leaves "
+"available for someone"
+msgstr ""
+"Birisi bir gün izin almak istiyorsa 'İzin İsteği'ni seçin. \n"
+"Birisi için mevcut izin sayısını arttırmak istiyorsanı 'Tahsis İsteği'ni "
+"seçin"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -365,6 +376,12 @@ msgid "Created on"
 msgstr "Oluşturuldu"
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#, fuzzy
+msgid "Current"
+msgstr "Üst"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_current_leave_state
 msgid "Current Leave Status"
 msgstr "Mevcut İzin Durum"
@@ -375,21 +392,12 @@ msgid "Current Leave Type"
 msgstr "Mevcut İzin Türü"
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Current Year Leaves"
-msgstr "Cari Yılda Kullanılan Günler"
-
-#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Dashboard"
 msgstr "Önpanel"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Kayıta işlenmiş son mesajın tarihi."
-
-#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_department
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_department_id
 msgid "Department"
 msgstr "Departmen"
@@ -462,29 +470,16 @@ msgstr "Bitiş Tarihi"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid ""
-"Filters only on allocations and requests that belong to an holiday type that"
-" is 'active' (active field is True)"
-msgstr "Süzgeçler yalnızca 'etkin' türündeki (etkin alanı Doğru) tatillere ait tahsis ve isteklere uygulanır (active field is True)"
+"Filters only on allocations and requests that belong to an holiday type that "
+"is 'active' (active field is True)"
+msgstr ""
+"Süzgeçler yalnızca 'etkin' türündeki (etkin alanı Doğru) tatillere ait "
+"tahsis ve isteklere uygulanır (active field is True)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_manager_id
 msgid "First Approval"
 msgstr "İlk Onay"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_follower_ids
-msgid "Followers"
-msgstr "İzleyiciler"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "İzleyiciler (Kanallar)"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "İzleyiciler (İş ortakları)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_date_from
@@ -514,11 +509,6 @@ msgid "HR Comments"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_department
-msgid "HR Department"
-msgstr "İK Bölüm"
-
-#. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
 msgid "HR Leaves Summary Report By Department"
 msgstr "Bölümlere göre İK İzin Özeti Raporu"
@@ -539,21 +529,12 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
-
-#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_active
 msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
 "type without removing it."
-msgstr "Etkin alanı yanlışa ayarlıysa, izin türünü silmeden gizlemenizi sağlar."
+msgstr ""
+"Etkin alanı yanlışa ayarlıysa, izin türünü silmeden gizlemenizi sağlar."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_limit
@@ -561,22 +542,15 @@ msgid ""
 "If you select this check box, the system allows the employees to take more "
 "leaves than the available ones for this type and will not take them into "
 "account for the \"Remaining Legal Leaves\" defined on the employee form."
-msgstr "Bu onay kutusunu seçerseniz, sistem çalışanları bu tür için mevcut olanlardan daha fazla izin almak ve çalışanların formunda tanımlanan &quot;Kalan Yasal İzinler&quot; dikkate onları almayacağız izin verir."
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_is_follower
-msgid "Is Follower"
-msgstr "Takipçi mi"
+msgstr ""
+"Bu onay kutusunu seçerseniz, sistem çalışanları bu tür için mevcut "
+"olanlardan daha fazla izin almak ve çalışanların formunda tanımlanan &quot;"
+"Kalan Yasal İzinler&quot; dikkate onları almayacağız izin verir."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Ivory"
 msgstr "Fildişi"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_last_post
-msgid "Last Message Date"
-msgstr "Son Mesaj Tarihi"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays___last_update
@@ -682,6 +656,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_approve
 #: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 #: model:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Leaves"
 msgstr "İzinler"
 
@@ -771,17 +746,20 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_confirmed
-msgid "Leaves/Allocations: first approval"
-msgstr ""
+#, fuzzy
+msgid "Leaves/Allocations Confirmed"
+msgstr "Tahsis Modu"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_first_validated
-msgid "Leaves/Allocations: second approval"
-msgstr ""
+#, fuzzy
+msgid "Leaves/Allocations First Approval"
+msgstr "Onaylanacak Tahsis İstekleri"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2015"
+#, fuzzy
+msgid "Legal Leaves 2016"
 msgstr "İzinler"
 
 #. module: hr_holidays
@@ -846,9 +824,9 @@ msgstr "İzin Verilen Ençok İzin - Alınmış İzinler"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_virtual_remaining_leaves
-msgid ""
-"Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
-msgstr "İzin Verilen Ençok İzin - Zaten Alınmış İzinler - Onay Bekleyen İzinler"
+msgid "Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
+msgstr ""
+"İzin Verilen Ençok İzin - Zaten Alınmış İzinler - Onay Bekleyen İzinler"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_meeting_id
@@ -859,16 +837,6 @@ msgstr "Toplantı"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_categ_id
 msgid "Meeting Type"
 msgstr "Toplantı Türü"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_ids
-msgid "Messages"
-msgstr "Mesajlar"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_ids
-msgid "Messages and communication history"
-msgstr "Mesajlar ve iletişim geçmişi"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
@@ -887,13 +855,7 @@ msgid "My Department Leaves"
 msgstr "Departmen İzinlerim"
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "My Leave Requests"
-msgstr "İzin İsteklerim"
-
-#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Leaves"
 msgstr "İzinlerim"
 
@@ -913,11 +875,6 @@ msgid "New"
 msgstr "Yeni"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_needaction_counter
-msgid "Number of Actions"
-msgstr "İşlem Sayısı"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_number_of_days
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_employee
@@ -931,21 +888,13 @@ msgid "Number of Leaves"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Eylem gerektiren mesaj sayısı"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Okunmamış mesaj sayısı"
-
-#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_categ_id
 msgid ""
 "Once a leave is validated, Odoo will create a corresponding meeting of this "
 "type in the calendar."
-msgstr "İzne doğrulandıktan sonra Odoo bu tip karşılık gelen toplantı Takvim içinde oluşturun."
+msgstr ""
+"İzne doğrulandıktan sonra Odoo bu tip karşılık gelen toplantı Takvim içinde "
+"oluşturun."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -955,11 +904,6 @@ msgid ""
 "                type (recuperation, legal holidays, sickness) and the exact\n"
 "                number of open days related to your leave."
 msgstr ""
-
-#. module: hr_holidays
-#: model:ir.actions.client,name:hr_holidays.action_client_hr_holidays_menu
-msgid "Open HR Menu"
-msgstr "İK Menüsünü Aç"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_parent_id
@@ -1115,15 +1059,29 @@ msgstr "Özet"
 msgid ""
 "The employee or employee category of this request is missing. Please make "
 "sure that your user login is linked to an employee."
-msgstr "Çalışan veya çalışan kategori bu istek eksik. Kullanıcı adınız bir çalışana bağlı olduğu dikkat edin."
+msgstr ""
+"Çalışan veya çalışan kategori bu istek eksik. Kullanıcı adınız bir çalışana "
+"bağlı olduğu dikkat edin."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:554
+#: code:addons/hr_holidays/hr_holidays.py:570
 #, python-format
 msgid ""
-"The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
-"You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \\ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field."
-msgstr "'Geçersiz kılmak Limit izin ver' sadece bir izin tipi seçeneği ile zaman arkasında alan 'Kalan yasal izinleri' özelliği yalnızca kullanılabilir unchecked. (%s) bulundu. Aksi halde, üzerinde güncelleştirme yapılması türü bırak karar veremedim gibi güncelleştirme belirsizdir. \nKlasik Menüler ' bırak ' ve 'Ayırma bulunan isteklerini' kullanmayı tercih ' insan kaynakları \\ yaprakları yapılandırma bu alanı kullanmak için izin vermez çalışanlarınızın ayrılmak yaşam yönetmek için."
+"The feature behind the field 'Remaining Legal Leaves' can only be used when "
+"there is only one leave type with the option 'Allow to Override Limit' "
+"unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot "
+"decide on which leave type the update has to be done. \n"
+"You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
+"Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
+"the employees if the configuration does not allow to use this field."
+msgstr ""
+"'Geçersiz kılmak Limit izin ver' sadece bir izin tipi seçeneği ile zaman "
+"arkasında alan 'Kalan yasal izinleri' özelliği yalnızca kullanılabilir "
+"unchecked. (%s) bulundu. Aksi halde, üzerinde güncelleştirme yapılması türü "
+"bırak karar veremedim gibi güncelleştirme belirsizdir. \n"
+"Klasik Menüler ' bırak ' ve 'Ayırma bulunan isteklerini' kullanmayı tercih ' "
+"insan kaynakları \\ yaprakları yapılandırma bu alanı kullanmak için izin "
+"vermez çalışanlarınızın ayrılmak yaşam yönetmek için."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -1135,7 +1093,9 @@ msgstr "Gün sayısı 0'dan büyük olmalıdır."
 msgid ""
 "The number of remaining leaves is not sufficient for this leave type.\n"
 "Please verify also the leaves waiting for validation."
-msgstr "Bu izin türü. \nLütfen onay bekleyen izinleri doğrulayınız."
+msgstr ""
+"Bu izin türü. \n"
+"Lütfen onay bekleyen izinleri doğrulayınız."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:304
@@ -1147,44 +1107,62 @@ msgstr "Başlangıç ​​tarihi bitiş tarihinden anterior olmalıdır."
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_state
 msgid ""
-"The status is set to 'To Submit', when a holiday request is created.            \n"
-"The status is 'To Approve', when holiday request is confirmed by user.            \n"
-"The status is 'Refused', when holiday request is refused by manager.            \n"
+"The status is set to 'To Submit', when a holiday request is "
+"created.            \n"
+"The status is 'To Approve', when holiday request is confirmed by "
+"user.            \n"
+"The status is 'Refused', when holiday request is refused by "
+"manager.            \n"
 "The status is 'Approved', when holiday request is approved by manager."
-msgstr "bir izin isteği oluşturulduğunda, durumu 'gönderim' olarak ayarlanır.            \nbir izin isteği oluşturulduğunda, kullanıcı durumu 'onaylanma' olarak ayarlanır.            \nThe status is 'Refused', when holiday request is refused by manager.            \nThe status is 'Approved', when holiday request is approved by manager."
+msgstr ""
+"bir izin isteği oluşturulduğunda, durumu 'gönderim' olarak "
+"ayarlanır.            \n"
+"bir izin isteği oluşturulduğunda, kullanıcı durumu 'onaylanma' olarak "
+"ayarlanır.            \n"
+"The status is 'Refused', when holiday request is refused by "
+"manager.            \n"
+"The status is 'Approved', when holiday request is approved by manager."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_manager_id
 msgid "This area is automatically filled by the user who validate the leave"
-msgstr "Bu alan otomatik olarak izin doğrulama kullanıcısı tarafından doldurulur"
+msgstr ""
+"Bu alan otomatik olarak izin doğrulama kullanıcısı tarafından doldurulur"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_manager_id2
 msgid ""
 "This area is automaticly filled by the user who validate the leave with "
 "second level (If Leave type need second validation)"
-msgstr "Bu alan (izin tipi doğrulama ikinci varsa) ikinci düzey izni doğrulamak kullanıcı tarafından otomatik olarak doldurulur"
+msgstr ""
+"Bu alan (izin tipi doğrulama ikinci varsa) ikinci düzey izni doğrulamak "
+"kullanıcı tarafından otomatik olarak doldurulur"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_color_name
 msgid ""
 "This color will be used in the leaves summary located in Reporting\\Leaves "
 "by Department."
-msgstr "Bu renk Reporlama sayfalarında bulunan ayrılma özetlerinde departman tarafından kullanılacaktır."
+msgstr ""
+"Bu renk Reporlama sayfalarında bulunan ayrılma özetlerinde departman "
+"tarafından kullanılacaktır."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_leaves_taken
 msgid ""
 "This value is given by the sum of all holidays requests with a negative "
 "value."
-msgstr "Bu değer, negatif olan tüm tatilleri istekleri toplamı ile verilirdeğer"
+msgstr ""
+"Bu değer, negatif olan tüm tatilleri istekleri toplamı ile verilirdeğer"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_max_leaves
 msgid ""
 "This value is given by the sum of all holidays requests with a positive "
 "value."
-msgstr "Bu değer, pozitif bir değer ile tüm izin istekleri toplamı tarafından verilir."
+msgstr ""
+"Bu değer, pozitif bir değer ile tüm izin istekleri toplamı tarafından "
+"verilir."
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -1228,7 +1206,10 @@ msgid ""
 "Total number of legal leaves allocated to this employee, change this value "
 "to create allocation/leave request. Total based on all the leave types "
 "without overriding limit."
-msgstr "Bu çalışana ayrılan yasal izin sayısı, yeni bir izin ya da tahsis oluşturmak için bu değeri değiştirin Toplamı limiti geçersiz kılmadan tüm izin türlerini kapsar."
+msgstr ""
+"Bu çalışana ayrılan yasal izin sayısı, yeni bir izin ya da tahsis oluşturmak "
+"için bu değeri değiştirin Toplamı limiti geçersiz kılmadan tüm izin "
+"türlerini kapsar."
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1241,15 +1222,9 @@ msgid "Unpaid"
 msgstr "Ödenmemiş"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Unread Messages"
 msgstr "Okunmamış Mesajlar"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Okunmamış Mesaj Sayacı"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_remaining_leaves_user_user_id
@@ -1288,23 +1263,6 @@ msgid "Waiting Second Validation"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:554
-#: code:addons/hr_holidays/hr_holidays.py:561
-#, python-format
-msgid "Warning!"
-msgstr "Dikkat!"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_website_message_ids
-msgid "Website Messages"
-msgstr "Websitesi Mesajları"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_website_message_ids
-msgid "Website communication history"
-msgstr "Web Sitesi iletişim geçmişi"
-
-#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Wheat"
 msgstr "Buğday"
@@ -1314,12 +1272,9 @@ msgstr "Buğday"
 msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
 "validation to be approved."
-msgstr "Bu onay kutusu seçildiğinde, bu tip ayırma/izin istekleri onaylanması için ikinci bir doğrulama gerektirir."
-
-#. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Year"
-msgstr "Yıl"
+msgstr ""
+"Bu onay kutusu seçildiğinde, bu tip ayırma/izin istekleri onaylanması için "
+"ikinci bir doğrulama gerektirir."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
@@ -1340,18 +1295,19 @@ msgid "You cannot delete a leave which is in %s state."
 msgstr "%s durumda bir izini silemezsiniz."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:561
+#: code:addons/hr_holidays/hr_holidays.py:577
 #, python-format
 msgid "You cannot reduce validated allocation requests"
 msgstr "Doğrulanmış ayırma isteklerini azaltmak olamaz"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:352
-#: code:addons/hr_holidays/hr_holidays.py:364
+#: code:addons/hr_holidays/hr_holidays.py:357
+#: code:addons/hr_holidays/hr_holidays.py:369
 #, python-format
 msgid ""
 "You cannot set a leave request as '%s'. Contact a human resource manager."
-msgstr "İzin isteği '%s' olarak ayarlanamaz. İnsan kaynakları yöneticisine başvurun."
+msgstr ""
+"İzin isteği '%s' olarak ayarlanamaz. İnsan kaynakları yöneticisine başvurun."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:26
@@ -1384,3 +1340,72 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "to"
 msgstr "to"
+
+#~ msgid "Action Needed"
+#~ msgstr "Eylem Gerekiyor"
+
+#~ msgid "Current Year Leaves"
+#~ msgstr "Cari Yılda Kullanılan Günler"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Kayıta işlenmiş son mesajın tarihi."
+
+#~ msgid "Followers"
+#~ msgstr "İzleyiciler"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "İzleyiciler (Kanallar)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "İzleyiciler (İş ortakları)"
+
+#~ msgid "HR Department"
+#~ msgstr "İK Bölüm"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
+
+#~ msgid "Is Follower"
+#~ msgstr "Takipçi mi"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Son Mesaj Tarihi"
+
+#~ msgid "Messages"
+#~ msgstr "Mesajlar"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Mesajlar ve iletişim geçmişi"
+
+#~ msgid "My Leave Requests"
+#~ msgstr "İzin İsteklerim"
+
+#~ msgid "Number of Actions"
+#~ msgstr "İşlem Sayısı"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Eylem gerektiren mesaj sayısı"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Okunmamış mesaj sayısı"
+
+#~ msgid "Open HR Menu"
+#~ msgstr "İK Menüsünü Aç"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Okunmamış Mesaj Sayacı"
+
+#~ msgid "Warning!"
+#~ msgstr "Dikkat!"
+
+#~ msgid "Website Messages"
+#~ msgstr "Websitesi Mesajları"
+
+#~ msgid "Website communication history"
+#~ msgstr "Web Sitesi iletişim geçmişi"
+
+#~ msgid "Year"
+#~ msgstr "Yıl"

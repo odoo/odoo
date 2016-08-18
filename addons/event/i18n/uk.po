@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event
-# 
+#
 # Translators:
 # Bohdan Lisnenko, 2015-2016
 # Bohdan Lisnenko, 2016
@@ -10,15 +10,63 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:27+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-07-04 09:20+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
+"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
+"uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: event
+#: model:mail.template,body_html:event.event_registration_mail_template_badge
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your inquiry.</p>\n"
+"<p>Here is your badge for the event ${object.event_id.name}.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: event
+#: model:mail.template,body_html:event.event_subscription
+#, fuzzy
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your inquiry.</p>\n"
+"<p>We confirm your subscription to the event <b>${object.event_id.name}</b>. "
+"You will receive emails with practical information.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+"<p>Привіт ${object.name},</p>\n"
+"<p>Ми підтверджуємо, що Вашу заявку на ${object.event_id.name} прийнято.\n"
+"Знайдіть, будь ласка, свій <b>Бейдж</b> прикріплений до цього листа.</p>\n"
+"<p>Дякуємо Вам за участь!</p>\n"
+"<p>Всіх благ</p>"
+
+#. module: event
+#: model:mail.template,body_html:event.event_reminder
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your registration to the event ${object.event_id.name}.</"
+"p>\n"
+"<p>The event will take place at ${object.event_id.address_id.city}\n"
+"% if object.event_id.address_id.street\n"
+", ${object.event_id.address_id.street}\n"
+"% endif\n"
+"from ${object.event_id.date_begin_located} to ${object.event_id."
+"date_end_located}.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_cancel_state
@@ -53,17 +101,22 @@ msgstr "5 інтенсивних днів"
 
 #. module: event
 #: model:event.event,description:event.event_2
+#, fuzzy
 msgid ""
-"<em>(Chamber Works reserves the right to cancel, re-name or re-"
-"locate<br/>the event or change the dates on which it is held.)</em>"
-msgstr "<em>(Chamber Works зберігає за собою право скасовувати, перейменовувати, змінювати місце або час проведення заходу.)</em>"
+"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the "
+"event or change the dates on which it is held.)</em>"
+msgstr ""
+"<em>(Chamber Works зберігає за собою право скасовувати, перейменовувати, "
+"змінювати місце або час проведення заходу.)</em>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid ""
 "<i class=\"fa fa-clock-o\"/>\n"
 "                                        <b>To</b>"
-msgstr "<i class=\"fa fa-clock-o\"/>\n<b>До</b>"
+msgstr ""
+"<i class=\"fa fa-clock-o\"/>\n"
+"<b>До</b>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -80,7 +133,9 @@ msgstr "<i>Ви зможете створювати динамічні стор�
 msgid ""
 "<i>You will be able to develop a full application with backend and user "
 "interface.</i>"
-msgstr "<i>Ви зможете розробляти повноцінні додатки з бек-ендом та персональним інтерфейсом.</i>"
+msgstr ""
+"<i>Ви зможете розробляти повноцінні додатки з бек-ендом та персональним "
+"інтерфейсом.</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -88,7 +143,8 @@ msgstr "<i>Ви зможете розробляти повноцінні дод�
 #: model:event.event,description:event.event_3
 msgid ""
 "<i>You will be able to develop simple dynamic components in HTML pages.</i>"
-msgstr "<i>Ви зможете розробляти прості динамічні компоненти в HTML-сторінках.</i>"
+msgstr ""
+"<i>Ви зможете розробляти прості динамічні компоненти в HTML-сторінках.</i>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -97,74 +153,33 @@ msgid "<i>to</i>"
 msgstr " <i>до</i>"
 
 #. module: event
-#: model:mail.template,body_html:event.event_reminder
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>This is a reminder for ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located} to ${object.event_id.date_end_located}.\n"
-"For any further information please contact our event department.</p>\n"
-"<p>Thank you for your participation!</p>\n"
-"<p>Best regards</p>"
-msgstr "<p>Привіт${object.name},</p>\n<p>Це нагадування про ${object.event_id.name}, Вашу реєстрацію успішно підтверджено. Проведення заплановано з${object.event_id.date_begin_located} по ${object.event_id.date_end_located}.\nЗа більш детальною інформацією зв'яжіться з нашим відділом проведення заходів.</p>\n<p>Дякуємо Вам за участь!</p>\n<p>Всіх благ</p>"
-
-#. module: event
-#: model:mail.template,body_html:event.event_registration_mail_template_badge
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.\n"
-"Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
-"<p>Thank you for your participation!</p>\n"
-"<p>Best regards</p>"
-msgstr "<p>Привіт ${object.name},</p>\n<p>Ми підтверджуємо, що Вашу заявку на ${object.event_id.name} прийнято.\nЗнайдіть, будь ласка, свій <b>Бейдж</b> прикріплений до цього листа.</p>\n<p>Дякуємо Вам за участь!</p>\n<p>Всіх благ</p>"
-
-#. module: event
-#: model:mail.template,body_html:event.event_subscription
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.\n"
-"You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
-"<p>Thank you for your participation!</p>\n"
-"<p>Best regards</p>"
-msgstr "<p>Привіт ${object.name},</p>\n<p>Ми підтверджуємо, що Вашу заявку на ${object.event_id.name} прийнято.\nВи автоматично отримаєте повідомлення з більш фактичною інформацією (план заходу, розклад,..) як тільки подію затвердять.</p>\n<p>Дякуємо Вам за участь!</p>\n<p>Всіх благ</p>"
-
-#. module: event
-#: model:mail.template,body_html:event.event_thanks
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>We would like to thank you for your presence at our event ${object.event_id.name}.\n"
-"<br/><br/>\n"
-"    % if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n"
-"        <strong>The ${object.event_id.organizer_id.name} Team</strong>\n"
-"    % elif object.event_id.organizer_id:\n"
-"        <strong>${object.event_id.organizer_id.name}</strong>\n"
-"    % endif\n"
-"</p>"
-msgstr "<p>Привіт ${object.name},</p>\n<p>Щиро вдячні Вам за відвідання нашого заходу  ${object.event_id.name}.\n<br/><br/>\n% if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n<strong>Команда ${object.event_id.organizer_id.name} </strong>\n% elif object.event_id.organizer_id:\n<strong>${object.event_id.organizer_id.name}</strong>\n% endif\n</p>"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "<small>John Doe, CEO</small>"
-msgstr ""
-
-#. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid ""
-"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" "
+"class=\"oe_read_only\">\n"
 "                                                to \n"
 "                                            </span>"
-msgstr "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\nкому \n</span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" "
+"class=\"oe_read_only\">\n"
+"кому \n"
+"</span>"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
-"developers who need to grasp knowledge of the <strong>business applications "
-"development </strong>process. This course is for new developers or for IT "
-"professionals eager to learn more about technical aspects.</span>"
-msgstr "<span style=\"text-align: -webkit-center; \">Даний курс розрахований на розробників, які хочуть отримати знання щодо процесу <strong>розробки програм для бізнесу </strong>. Це курс для розробників-новачків і професіоналів, які хочуть дізнатися більше про технічні аспекти розробки.</span>"
+"<span style=\"text-align: -webkit-center; \">This course is dedicated "
+"to developers who need to grasp knowledge of the <strong>business "
+"applications development </strong>process. This course is for new developers "
+"or for IT professionals eager to learn more about technical aspects.</span>"
+msgstr ""
+"<span style=\"text-align: -webkit-center; \">Даний курс розрахований на "
+"розробників, які хочуть отримати знання щодо процесу <strong>розробки "
+"програм для бізнесу </strong>. Це курс для розробників-новачків і "
+"професіоналів, які хочуть дізнатися більше про технічні аспекти розробки.</"
+"span>"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -176,8 +191,7 @@ msgstr "Конференція з Бізнес-додатків"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<strong>Having attended this course, participants should be able "
-"to:</strong>"
+"<strong>Having attended this course, participants should be able to:</strong>"
 msgstr "<strong>Відвідавши цей курс, учасники матимуть змогу:</strong>"
 
 #. module: event
@@ -211,12 +225,6 @@ msgstr "<strong>Вимоги:</strong>"
 #: model:event.event,description:event.event_2
 msgid "<strong>Where to find us:</strong>"
 msgstr "<strong>Де нас знайти:</strong>"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_needaction
-#: model:ir.model.fields,field_description:event.field_event_registration_message_needaction
-msgid "Action Needed"
-msgstr "Необхідна дія"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_active
@@ -337,14 +345,15 @@ msgid "Badge Front"
 msgstr "Передня сторона"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
+#, fuzzy
+msgid "Badge Inner Left"
+msgstr "Всередині зліва"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
 msgid "Badge Inner Right"
 msgstr "Всередині зправа"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
-msgid "Badge Innner Left"
-msgstr "Всередині зліва"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -431,7 +440,7 @@ msgid "Click to add a new event."
 msgstr "Натисніть, щоб додати нову подію."
 
 #. module: event
-#: code:addons/event/models/event.py:204
+#: code:addons/event/models/event.py:206
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
 msgstr "Дата завершення не може бути призначеною перед Датою початку."
@@ -445,7 +454,7 @@ msgid "Company"
 msgstr "Компанія"
 
 #. module: event
-#: code:addons/event/models/event.py:397
+#: code:addons/event/models/event.py:402
 #, python-format
 msgid "Compose Email"
 msgstr "Створити лист"
@@ -523,7 +532,8 @@ msgstr "Контакт"
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
-msgid "Controlers and Views"
+#, fuzzy
+msgid "Controllers and Views"
 msgstr "Регулятори і "
 
 #. module: event
@@ -541,9 +551,11 @@ msgstr "Підсумок курсу"
 #. module: event
 #: model:web.tip,description:event.event_tip_1
 msgid ""
-"Create and manage registrations for this event, send emails to attendees and"
-" print identification badges."
-msgstr "Створюйте та керуйте реєстраціями на подію, надсилайте запрошення та друкуйте перепустки"
+"Create and manage registrations for this event, send emails to attendees and "
+"print identification badges."
+msgstr ""
+"Створюйте та керуйте реєстраціями на подію, надсилайте запрошення та "
+"друкуйте перепустки"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
@@ -573,22 +585,16 @@ msgid "Creation Date"
 msgstr "Дата створення"
 
 #. module: event
-#: code:addons/event/models/event.py:378
+#: code:addons/event/models/event.py:379
 #, python-format
 msgid "Customer"
 msgstr "Клієнт"
 
 #. module: event
-#: code:addons/event/models/event.py:376
+#: code:addons/event/models/event.py:381
 #, python-format
 msgid "Customer Email"
 msgstr "Email клієнта"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_last_post
-#: model:ir.model.fields,help:event.field_event_registration_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Дата останнього повідомлення по запису."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -676,8 +682,13 @@ msgstr "Виконано"
 #. module: event
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
+#, fuzzy
 msgid "Draft"
-msgstr "Чернетка"
+msgstr ""
+"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
+"Чорновий\n"
+"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
+"Чернетка"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -897,24 +908,6 @@ msgid "Finish Event"
 msgstr "Завершення заходу"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_follower_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_follower_ids
-msgid "Followers"
-msgstr "Підписники"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_channel_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Підписники (Канали)"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_partner_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Підписники (Партнери)"
-
-#. module: event
 #: model:event.event,description:event.event_2
 msgid "For any additional information, please contact us at"
 msgstr "За додатковою інформацією, зв'яжіться з нами"
@@ -924,7 +917,10 @@ msgstr "За додатковою інформацією, зв'яжіться з
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
-msgstr "На кожну подію, Ви можете визначати максимальну кількість місць для реєстрації (кількість учасників/гостей); вище зазначеної кількості заявки не прийматимуться."
+msgstr ""
+"На кожну подію, Ви можете визначати максимальну кількість місць для "
+"реєстрації (кількість учасників/гостей); вище зазначеної кількості заявки не "
+"прийматимуться."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_min
@@ -932,7 +928,10 @@ msgid ""
 "For each event you can define a minimum reserved seats (number of "
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
-msgstr "На кожну подію, Ви можете вказати мінімальну кількість замовлених місць (кількість учасників/гостей); якщо зазначена кількість не набереться - подію не буде затверджено (натисніть 0, щоб ігнорувати це правило)"
+msgstr ""
+"На кожну подію, Ви можете вказати мінімальну кількість замовлених місць "
+"(кількість учасників/гостей); якщо зазначена кількість не набереться - подію "
+"не буде затверджено (натисніть 0, щоб ігнорувати це правило)"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -983,15 +982,6 @@ msgid "How to Debug"
 msgstr ""
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"I did not expect such a great learning experience. I feel like I can develop"
-" anything now."
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_id
 #: model:ir.model.fields,field_description:event.field_event_confirm_id
 #: model:ir.model.fields,field_description:event.field_event_event_id
@@ -1004,23 +994,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_unread
-#: model:ir.model.fields,help:event.field_event_registration_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_needaction
-#: model:ir.model.fields,help:event.field_event_registration_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event_state
 msgid ""
 "If event is created, the status is 'Draft'. If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the"
-" status is set to 'Done'. If event is cancelled the status is set to "
+"particular dates the status is set to 'Confirmed'. If the event is over, the "
+"status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
 
@@ -1090,31 +1068,23 @@ msgid "Introduction, CRM, Sales Management"
 msgstr "Передмова, CRM, Керування продажами"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_is_follower
-#: model:ir.model.fields,field_description:event.field_event_registration_message_is_follower
-msgid "Is Follower"
-msgstr "Стежить"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_max
 msgid "It will select this default maximum value when you choose this event"
-msgstr "Вибиратиметься це максимальне значення за замовчуванням, при виборі даної події"
+msgstr ""
+"Вибиратиметься це максимальне значення за замовчуванням, при виборі даної "
+"події"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_min
 msgid "It will select this default minimum value when you choose this event"
-msgstr "Вибиратиметься це мінімальне значення за замовчуванням, при виборі даної події"
+msgstr ""
+"Вибиратиметься це мінімальне значення за замовчуванням, при виборі даної "
+"події"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_color
 msgid "Kanban Color Index"
 msgstr "Індекс кольору канбан"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_last_post
-#: model:ir.model.fields,field_description:event.field_event_registration_message_last_post
-msgid "Last Message Date"
-msgstr "Дата останнього повідомлення"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings___last_update
@@ -1229,18 +1199,6 @@ msgid "Maximum Attendees Number"
 msgstr "Максимальна кількість учасників"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_ids
-msgid "Messages"
-msgstr "Повідомлення"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_ids
-#: model:ir.model.fields,help:event.field_event_registration_message_ids
-msgid "Messages and communication history"
-msgstr "Повідомлення та історія бесіди"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
 msgid "Minimum Attendees"
 msgstr "Мінімальна к-ть учасників"
@@ -1283,13 +1241,13 @@ msgid "No mini website per event"
 msgstr "Немає міні-сайтів для події"
 
 #. module: event
-#: code:addons/event/models/event.py:198
+#: code:addons/event/models/event.py:200
 #, python-format
 msgid "No more available seats."
 msgstr "Не залишилося вільних місць."
 
 #. module: event
-#: code:addons/event/models/event.py:298
+#: code:addons/event/models/event.py:300
 #, python-format
 msgid "No more seats available for this event."
 msgstr "Не залишилося вільних місць."
@@ -1298,12 +1256,6 @@ msgstr "Не залишилося вільних місць."
 #: selection:event.config.settings,auto_confirmation:0
 msgid "No validation step on subscription"
 msgstr "Без підтверджувального кроку на підписках"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_needaction_counter
-#: model:ir.model.fields,field_description:event.field_event_registration_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Кількість дій"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_nbevent
@@ -1326,18 +1278,6 @@ msgid "Number of Registrations"
 msgstr "Кількість реєстрацій"
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_needaction_counter
-#: model:ir.model.fields,help:event.field_event_registration_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Кількість повідомлень, які потебують дії"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_unread_counter
-#: model:ir.model.fields,help:event.field_event_registration_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Кількість непрочитаних повідомлень"
-
-#. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
@@ -1355,19 +1295,18 @@ msgstr ""
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid ""
 "Odoo helps you schedule and efficiently organize your events:\n"
-"    track subscriptions and participations, automate the confirmation emails,\n"
+"    track subscriptions and participations, automate the confirmation "
+"emails,\n"
 "    sell tickets, etc."
-msgstr "Odoo допомагає спланувати та ефективно організувати Ваші події:\nвідстежувати підписки та учасників, автоматизувати листи підтвердження,\nпродавати квитки і т.д.."
+msgstr ""
+"Odoo допомагає спланувати та ефективно організувати Ваші події:\n"
+"відстежувати підписки та учасників, автоматизувати листи підтвердження,\n"
+"продавати квитки і т.д.."
 
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Open Days in Los Angeles"
 msgstr "Відкриті дні у Лос-Анджелесі"
-
-#. module: event
-#: model:ir.actions.client,name:event.action_client_event_menu
-msgid "Open Event Menu"
-msgstr "Відкрити меню подій"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
@@ -1391,7 +1330,9 @@ msgstr "Учасник / Ім'я"
 msgid ""
 "Participants are expected to have some knowledge in programming. A basic "
 "knowledge of the Python programming is recommended."
-msgstr "Розраховано на учасників зі знанням азів програмування. Рекомендовано основи мови програмування Python."
+msgstr ""
+"Розраховано на учасників зі знанням азів програмування. Рекомендовано основи "
+"мови програмування Python."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1400,7 +1341,9 @@ msgstr "Розраховано на учасників зі знанням аз�
 msgid ""
 "Participants preferably have a functional knowledge of our software (see "
 "Functional Training)."
-msgstr "Учасники повинні мати навички користування нашим програмним забезпеченням (див. Тренінг з користування)"
+msgstr ""
+"Учасники повинні мати навички користування нашим програмним забезпеченням "
+"(див. Тренінг з користування)"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1432,13 +1375,6 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Python Objects"
-msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Read Great Contents"
 msgstr ""
 
 #. module: event
@@ -1647,7 +1583,7 @@ msgstr "Статус"
 #. module: event
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
-msgstr ""
+msgstr "Підписатися"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_questions
@@ -1660,27 +1596,13 @@ msgid "Technical Training"
 msgstr "Технічна підготовка"
 
 #. module: event
-#: model:mail.template,subject:event.event_thanks
-msgid "Thanks for attending ${object.event_id.name}"
-msgstr "Дякуємо за участь ${object.event_id.name}"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event_reply_to
 msgid ""
-"The email address of the organizer is likely to be put here, with the effect"
-" to be in the 'Reply-To' of the mails sent automatically at event or "
+"The email address of the organizer is likely to be put here, with the effect "
+"to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
 msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"This course help me build my first application within a month. Definetly "
-"worth its price."
-msgstr "Цей курс допоміг мені створити свій перший додаток за місяць. Безсумнівно, вартий своїх грошей."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
@@ -1763,24 +1685,17 @@ msgid "Unlimited"
 msgstr "Необмежено"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_unread
-#: model:ir.model.fields,field_description:event.field_event_registration_message_unread
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
 msgstr "Непрочитані повідомлення"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_unread_counter
-#: model:ir.model.fields,field_description:event.field_event_registration_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Кількість непрочитаних повідомлень"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
 msgid ""
 "Unselect this option to manually manage draft event and draft subscription"
-msgstr "Скасуйте вибір цієї опції, щоб вручну керувати чернетками подій та підписок"
+msgstr ""
+"Скасуйте вибір цієї опції, щоб вручну керувати чернетками подій та підписок"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1807,36 +1722,22 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
-msgstr "Управління складом, Виробництво (MRP-система) &amp; Продаж, Імпорт/Експорт."
+msgstr ""
+"Управління складом, Виробництво (MRP-система) &amp; Продаж, Імпорт/Експорт."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
-msgstr "Попередження: Дана подія не набрала мінімальної кількості учасників. Ви впевнені, що хочете її підтвердити?"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_website_message_ids
-msgid "Website Messages"
-msgstr "Повідомлення з веб-сайту"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_website_message_ids
-msgid "Website communication history"
-msgstr "Історія бесіди на сайті"
+msgstr ""
+"Попередження: Дана подія не набрала мінімальної кількості учасників. Ви "
+"впевнені, що хочете її підтвердити?"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Week(s)"
 msgstr "Тиждень (тижні)"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "What do people say about this course?"
-msgstr "Що кажуть про цей курс?"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1858,15 +1759,17 @@ msgid "Workflows"
 msgstr "Робочі процеси"
 
 #. module: event
-#: code:addons/event/models/event.py:230
+#: code:addons/event/models/event.py:232
 #, python-format
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
-msgstr "Ви вже встановили реєстрацію на цю подію як \"Відвідано\". Будь ласка, зробіть подію чернеткою, якщо ви хочете її скасувати."
+msgstr ""
+"Ви вже встановили реєстрацію на цю подію як \"Відвідано\". Будь ласка, "
+"зробіть подію чернеткою, якщо ви хочете її скасувати."
 
 #. module: event
-#: code:addons/event/models/event.py:355
+#: code:addons/event/models/event.py:357
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
 msgstr "Для цього потрібно дочекатися дня початку події."
@@ -1876,7 +1779,9 @@ msgstr "Для цього потрібно дочекатися дня поча�
 msgid ""
 "You will be able to configure emails, and to schedule them to be "
 "automatically sent to the attendees on subscription and/or attendance"
-msgstr "Ви зможете налаштувати листи та спланувати їх автоматичне надсилання учасникам для підписки та/або запрошення"
+msgstr ""
+"Ви зможете налаштувати листи та спланувати їх автоматичне надсилання "
+"учасникам для підписки та/або запрошення"
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
@@ -1946,3 +1851,133 @@ msgstr ""
 #: model:event.event,description:event.event_3
 msgid "training material."
 msgstr ""
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
+#~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
+#~ "to ${object.event_id.date_end_located}.\n"
+#~ "For any further information please contact our event department.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>Привіт${object.name},</p>\n"
+#~ "<p>Це нагадування про ${object.event_id.name}, Вашу реєстрацію успішно "
+#~ "підтверджено. Проведення заплановано з${object.event_id."
+#~ "date_begin_located} по ${object.event_id.date_end_located}.\n"
+#~ "За більш детальною інформацією зв'яжіться з нашим відділом проведення "
+#~ "заходів.</p>\n"
+#~ "<p>Дякуємо Вам за участь!</p>\n"
+#~ "<p>Всіх благ</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
+#~ "has been recorded.\n"
+#~ "You will automatically receive an email providing you more practical "
+#~ "information (such as the schedule, the agenda...) as soon as the event is "
+#~ "confirmed.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>Привіт ${object.name},</p>\n"
+#~ "<p>Ми підтверджуємо, що Вашу заявку на ${object.event_id.name} прийнято.\n"
+#~ "Ви автоматично отримаєте повідомлення з більш фактичною інформацією (план "
+#~ "заходу, розклад,..) як тільки подію затвердять.</p>\n"
+#~ "<p>Дякуємо Вам за участь!</p>\n"
+#~ "<p>Всіх благ</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We would like to thank you for your presence at our event ${object."
+#~ "event_id.name}.\n"
+#~ "<br/><br/>\n"
+#~ "    % if object.event_id.organizer_id and object.event_id.organizer_id."
+#~ "is_company:\n"
+#~ "        <strong>The ${object.event_id.organizer_id.name} Team</strong>\n"
+#~ "    % elif object.event_id.organizer_id:\n"
+#~ "        <strong>${object.event_id.organizer_id.name}</strong>\n"
+#~ "    % endif\n"
+#~ "</p>"
+#~ msgstr ""
+#~ "<p>Привіт ${object.name},</p>\n"
+#~ "<p>Щиро вдячні Вам за відвідання нашого заходу  ${object.event_id.name}.\n"
+#~ "<br/><br/>\n"
+#~ "% if object.event_id.organizer_id and object.event_id.organizer_id."
+#~ "is_company:\n"
+#~ "<strong>Команда ${object.event_id.organizer_id.name} </strong>\n"
+#~ "% elif object.event_id.organizer_id:\n"
+#~ "<strong>${object.event_id.organizer_id.name}</strong>\n"
+#~ "% endif\n"
+#~ "</p>"
+
+#~ msgid "<small>John Doe, CEO</small>"
+#~ msgstr "<small>John Doe, Генеральний директор</small>"
+
+#~ msgid "Action Needed"
+#~ msgstr "Необхідна дія"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Дата останнього повідомлення по запису."
+
+#~ msgid "Followers"
+#~ msgstr "Підписники"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Підписники (Канали)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Підписники (Партнери)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr ""
+#~ "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
+
+#~ msgid "Is Follower"
+#~ msgstr "Стежить"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Дата останнього повідомлення"
+
+#~ msgid "Messages"
+#~ msgstr "Повідомлення"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Повідомлення та історія бесіди"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Кількість дій"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Кількість повідомлень, які потебують дії"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Кількість непрочитаних повідомлень"
+
+#~ msgid "Open Event Menu"
+#~ msgstr "Відкрити меню подій"
+
+#~ msgid "Thanks for attending ${object.event_id.name}"
+#~ msgstr "Дякуємо за участь ${object.event_id.name}"
+
+#~ msgid ""
+#~ "This course help me build my first application within a month. Definetly "
+#~ "worth its price."
+#~ msgstr ""
+#~ "Цей курс допоміг мені створити свій перший додаток за місяць. "
+#~ "Безсумнівно, вартий своїх грошей."
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Кількість непрочитаних повідомлень"
+
+#~ msgid "Website Messages"
+#~ msgstr "Повідомлення з веб-сайту"
+
+#~ msgid "Website communication history"
+#~ msgstr "Історія бесіди на сайті"
+
+#~ msgid "What do people say about this course?"
+#~ msgstr "Що кажуть про цей курс?"

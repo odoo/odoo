@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * lunch
-# 
+#
 # Translators:
 # Bohdan Lisnenko, 2015-2016
 # Bohdan Lisnenko, 2016
@@ -10,15 +10,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-05-21 10:37+0000\n"
 "Last-Translator: ТАрас <tratatuta@i.ua>\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
+"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
+"uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -40,22 +42,32 @@ msgstr "<strong>Разом</strong>"
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
 msgid ""
 "A cashmove can either be an expense or a payment.<br>\n"
-"                An expense is automatically created at the order receipt.<br>\n"
-"                A payment represents the employee reimbursement to the company."
+"                An expense is automatically created at the order receipt."
+"<br>\n"
+"                A payment represents the employee reimbursement to the "
+"company."
 msgstr ""
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_action_tree
 msgid ""
 "A lunch order is defined by its user, date and order lines.\n"
-"                Each order line corresponds to a product, an additional note and a price.\n"
-"                Before selecting your order lines, don't forget to read the warnings displayed in the reddish area."
+"                Each order line corresponds to a product, an additional note "
+"and a price.\n"
+"                Before selecting your order lines, don't forget to read the "
+"warnings displayed in the reddish area."
 msgstr ""
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
 msgid "A product is defined by its name, category, price and vendor."
 msgstr "Товар визначається за назвою, ціною та постачальником."
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_active
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_active
+msgid "Active"
+msgstr ""
 
 #. module: lunch
 #. openerp-web
@@ -65,7 +77,7 @@ msgid "Add"
 msgstr "Додати"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:251
+#: code:addons/lunch/models/lunch.py:253
 #, python-format
 msgid "Alert"
 msgstr "Тривога"
@@ -80,8 +92,11 @@ msgstr "Застереження"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_alert_action
 msgid ""
-"Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
-"                To create a lunch alert you have to define its recurrency, the time interval during which the alert should be executed and the message to display."
+"Alerts are used to warn employee from possible issues concerning the lunch "
+"orders.\n"
+"                To create a lunch alert you have to define its recurrency, "
+"the time interval during which the alert should be executed and the message "
+"to display."
 msgstr ""
 
 #. module: lunch
@@ -93,6 +108,18 @@ msgstr "Сума"
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_end_hour
 msgid "And"
 msgstr "і"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
+msgid "Archive/Unarchive"
+msgstr ""
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_alert_view_search
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
+#, fuzzy
+msgid "Archived"
+msgstr "Отримано"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_balance_visible
@@ -127,9 +154,11 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_cashmove_amount
 msgid ""
-"Can be positive (payment) or negative (order or payment if user wants to get"
-" his money back)"
-msgstr "Може бути позитивним (оплата) або негативним (замовлення чи оплата, якщо користувач хоче повернути свої гроші)"
+"Can be positive (payment) or negative (order or payment if user wants to get "
+"his money back)"
+msgstr ""
+"Може бути позитивним (оплата) або негативним (замовлення чи оплата, якщо "
+"користувач хоче повернути свої гроші)"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
@@ -295,7 +324,9 @@ msgstr "Платежі працівника"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_order_line_lucky_is_max_budget
 msgid "Enable this option to set a maximal budget for your lucky order."
-msgstr "Увімкніть дану опцію, щоб встановити максимальний бюджет на випадкове \"щасливе\" замовлення."
+msgstr ""
+"Увімкніть дану опцію, щоб встановити максимальний бюджет на випадкове "
+"\"щасливе\" замовлення."
 
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
@@ -350,7 +381,9 @@ msgstr "Тут у Вас є доступ до всіх категорій обі
 msgid ""
 "Here you can see the employees' payment. A payment is a cash move from the "
 "employee to the company."
-msgstr "Тут Ви бачите платежі працівників. Платіж - це передача коштів від працівника - компанії."
+msgstr ""
+"Тут Ви бачите платежі працівників. Платіж - це передача коштів від "
+"працівника - компанії."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -360,8 +393,11 @@ msgstr "Тут Ви бачите сьогоднішні замовлення, в
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
 msgid ""
-"Here you can see your cash moves.<br>A cash moves can be either an expense or a payment.\n"
-"                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
+"Here you can see your cash moves.<br>A cash moves can be either an expense "
+"or a payment.\n"
+"                An expense is automatically created when an order is "
+"received while a payment is a reimbursement to the company encoded by the "
+"manager."
 msgstr ""
 
 #. module: lunch
@@ -386,7 +422,7 @@ msgstr "Сьогодні поскромніше"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id_1805
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id_1894
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_id
 msgid "ID"
 msgstr "ІД"
@@ -446,7 +482,7 @@ msgid "Lunch Alert"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:223
+#: code:addons/lunch/models/lunch.py:224
 #, python-format
 msgid "Lunch Cashmove"
 msgstr ""
@@ -518,7 +554,8 @@ msgstr "Нове замовлення"
 #: code:addons/lunch/wizard/lucky_order.py:37
 #, python-format
 msgid "No product is matching your request. Now you will starve to death."
-msgstr "Жоден товар не відповідає Вашому запиту. Тепер Ви зголоднієте як собака."
+msgstr ""
+"Жоден товар не відповідає Вашому запиту. Тепер Ви зголоднієте як собака."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -816,7 +853,9 @@ msgstr "Середа"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Write the message you want to display during the defined period..."
-msgstr "Напишіть повідомлення, яке буде показуватися протягом визначеного періоду часу..."
+msgstr ""
+"Напишіть повідомлення, яке буде показуватися протягом визначеного періоду "
+"часу..."
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_account
@@ -838,7 +877,8 @@ msgstr "Ваші замовлення"
 #: code:addons/lunch/static/src/xml/lunch.xml:6
 #, python-format
 msgid "Your favorite meals will be created based on your last orders."
-msgstr "Список улюблених страв буде створено на основі Ваших останніх замовлень."
+msgstr ""
+"Список улюблених страв буде створено на основі Ваших останніх замовлень."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_form

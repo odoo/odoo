@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_test
-# 
+#
 # Translators:
 # AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-05-25 08:19+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_test
@@ -23,7 +23,9 @@ msgstr ""
 msgid ""
 "<br/>\n"
 "                        <strong>Description:</strong>"
-msgstr "<br/>\n                        <strong>Açıklama:</strong>"
+msgstr ""
+"<br/>\n"
+"                        <strong>Açıklama:</strong>"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
@@ -50,14 +52,18 @@ msgstr "Etkin"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr "Hareket kalemlerinin denk olduğunu ve aynı tarih ve dönemde olduğunu denetleyin"
+msgstr ""
+"Hareket kalemlerinin denk olduğunu ve aynı tarih ve dönemde olduğunu "
+"denetleyin"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of"
-" statement lines"
-msgstr "Hesap özetinde Kapanış Bakiyesi = Açılış Bakiyesi + hesap özeti kalemleri toplamı olduğunu denetleyin"
+"Check on bank statement that the Closing Balance = Starting Balance + sum of "
+"statement lines"
+msgstr ""
+"Hesap özetinde Kapanış Bakiyesi = Açılış Bakiyesi + hesap özeti kalemleri "
+"toplamı olduğunu denetleyin"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
@@ -69,14 +75,18 @@ msgstr "Ödenmiş/uzlaştırılmış faturaların 'Açık' durumda olmadığın�
 msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
-msgstr "Borç ve Alacak hesaplarını tanımlayan uzlaştırılmış hareket kalemlerinin uzlaştırılmış faturalara ait olduğunu denetleyin"
+msgstr ""
+"Borç ve Alacak hesaplarını tanımlayan uzlaştırılmış hareket kalemlerinin "
+"uzlaştırılmış faturalara ait olduğunu denetleyin"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
-" Payable and Receivable Accounts"
-msgstr "Uzlaştırılmış Satış/Satınalma faturasının Alacak ve Borç Hesaplarında uzlaştırılmış girişler olup olmadığını denetleyin"
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
+"Payable and Receivable Accounts"
+msgstr ""
+"Uzlaştırılmış Satış/Satınalma faturasının Alacak ve Borç Hesaplarında "
+"uzlaştırılmış girişler olup olmadığını denetleyin"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
@@ -96,27 +106,58 @@ msgstr "Kod Yardımı"
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
-"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
+"Code should always set a variable named `result` with the result of your "
+"test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was "
+"succesful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
-"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
+"If the result of your test is a dictionary, you can set a variable named "
+"`column_order` to choose in\n"
 "what order you want to print `result`'s content.\n"
 "\n"
-"Should you need them, you can also use the following variables into your code:\n"
+"Should you need them, you can also use the following variables into your "
+"code:\n"
 "    * cr: cursor to the database\n"
 "    * uid: ID of the current user\n"
 "\n"
-"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
+"In any ways, the code must be legal python statements with correct "
+"indentation (if needed).\n"
 "\n"
 "Example: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
+"= 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
-msgstr "Kod her zaman, testinizin sonucunda ‘sonuç’ olarak adlandırılan bir değişken oluşturmalıdır, bu bir\nliste ya da bir sözlük olabilir. Eğer ‘sonuç’ boş bir listeyse, bu testin başarılı olduğu anlamındadır. Aksi\ntakdirde ‘sonuç’ içinde ne varsa çevirisini yapın ve yazdırın.\n\nTestinizin sonucu bir sözlük ise, ‘sonuç’ içeriğini hangi sırada yazdırmayı seçmeniz için ‘sütun_sırası’\nadıyla bir değişken oluşturmalısınız.\n\nGerekirse kodunuza aşağıdaki değişkenleri de ekleyebilirsiniz:\n    * cr: veritabanı imleçi\n    * uid: geçerli kullanıcı ID\n\nKod her durumda doğru satırbaşı girintisi ile (gerekirse) geçerli piton komutları olmalı.\n\nExample: \n    sql = '''SELECT id, name, ref, date\n             FROM account_move_line \n             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n          '''\n    cr.execute(sql)\n    result = cr.dictfetchall()"
+msgstr ""
+"Kod her zaman, testinizin sonucunda ‘sonuç’ olarak adlandırılan bir değişken "
+"oluşturmalıdır, bu bir\n"
+"liste ya da bir sözlük olabilir. Eğer ‘sonuç’ boş bir listeyse, bu testin "
+"başarılı olduğu anlamındadır. Aksi\n"
+"takdirde ‘sonuç’ içinde ne varsa çevirisini yapın ve yazdırın.\n"
+"\n"
+"Testinizin sonucu bir sözlük ise, ‘sonuç’ içeriğini hangi sırada yazdırmayı "
+"seçmeniz için ‘sütun_sırası’\n"
+"adıyla bir değişken oluşturmalısınız.\n"
+"\n"
+"Gerekirse kodunuza aşağıdaki değişkenleri de ekleyebilirsiniz:\n"
+"    * cr: veritabanı imleçi\n"
+"    * uid: geçerli kullanıcı ID\n"
+"\n"
+"Kod her durumda doğru satırbaşı girintisi ile (gerekirse) geçerli piton "
+"komutları olmalı.\n"
+"\n"
+"Example: \n"
+"    sql = '''SELECT id, name, ref, date\n"
+"             FROM account_move_line \n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
+"= 'view')\n"
+"          '''\n"
+"    cr.execute(sql)\n"
+"    result = cr.dictfetchall()"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
