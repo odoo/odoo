@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_action_rule
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:18+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-10-14 20:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_action_rule
@@ -26,6 +26,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_tree
 msgid "Action Rule"
+msgstr "Aktion regel"
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
+#, fuzzy
+msgid "Action Rule Line Test"
 msgstr "Aktion regel"
 
 #. module: base_action_rule
@@ -118,11 +124,13 @@ msgstr "Oprettelses dato"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_uid
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_uid
 msgid "Created by"
 msgstr "Oprettet af"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_date
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_date
 msgid "Created on"
 msgstr "Oprettet den"
 
@@ -142,7 +150,9 @@ msgid ""
 "Delay after the trigger date.You can put a negative number if you need a "
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
-msgstr "Forsinkelse efter trigger tid. Du kan indsætte negativ antal hvis trigger skal udløses før tidspunkt, f.eks send en påmindelse 15 min. før et møde."
+msgstr ""
+"Forsinkelse efter trigger tid. Du kan indsætte negativ antal hvis trigger "
+"skal udløses før tidspunkt, f.eks send en påmindelse 15 min. før et møde."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
@@ -157,6 +167,7 @@ msgstr "Forsinkelses type"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_display_name
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_display_name
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_display_name
 msgid "Display Name"
 msgstr "Vist navn"
 
@@ -201,6 +212,7 @@ msgstr "Timer"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_id
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_id
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_id
 msgid "ID"
 msgstr "Id"
 
@@ -216,9 +228,9 @@ msgstr ""
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_domain
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_id
 msgid ""
-"If present, this condition must be satisfied before the update of the "
-"record."
-msgstr "Hvis eksisterer, skal denne betingelse være opfyldt før opdatering af post."
+"If present, this condition must be satisfied before the update of the record."
+msgstr ""
+"Hvis eksisterer, skal denne betingelse være opfyldt før opdatering af post."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -228,8 +240,8 @@ msgstr "I gang"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid ""
-"In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
-" the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
+"In this same \"Search\" view, select the menu \"Save Current Filter\", enter "
+"the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
 msgstr ""
 
@@ -246,6 +258,7 @@ msgstr "Sidste aktion"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule___last_update
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test___last_update
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test___last_update
 msgid "Last Modified on"
 msgstr "Sidst ændret den"
 
@@ -256,15 +269,22 @@ msgstr "Seneste afvikling"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_uid
 msgid "Last Updated by"
 msgstr "Sidst opdateret af"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_date
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_date
 msgid "Last Updated on"
 msgstr "Sidst opdateret den"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
+msgid "Lead id"
+msgstr ""
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -280,6 +300,12 @@ msgstr "Model"
 #: selection:base.action.rule,trg_date_range_type:0
 msgid "Months"
 msgstr "Måneder"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_name
+#, fuzzy
+msgid "Name"
+msgstr "Regel Navn"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -408,10 +434,17 @@ msgstr ""
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user may\n"
+"                various screens. Example: a lead created by a specific user "
+"may\n"
 "                be automatically set to a specific sales team, or an\n"
-"                opportunity which still has status pending after 14 days might\n"
+"                opportunity which still has status pending after 14 days "
+"might\n"
 "                trigger an automatic reminder email."
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_user_id
+msgid "User id"
 msgstr ""
 
 #. module: base_action_rule
@@ -426,7 +459,9 @@ msgstr ""
 msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
-msgstr "Hvornår skal regel aktiveres, Hvis den eksisterer, bliver den aktiveret af timer. Hvis den er tom, bliver den aktiveret ved oprettelse og opdatering."
+msgstr ""
+"Hvornår skal regel aktiveres, Hvis den eksisterer, bliver den aktiveret af "
+"timer. Hvis den er tom, bliver den aktiveret ved oprettelse og opdatering."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind
@@ -443,4 +478,9 @@ msgstr "Sat til falsk, reglen vil blive skjult og bliver ikke udført."
 msgid ""
 "You may also use filters instead of choosing records. In order to create a "
 "new filter:"
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
+msgid "unknown"
 msgstr ""

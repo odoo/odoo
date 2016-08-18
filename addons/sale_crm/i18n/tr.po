@@ -1,27 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_crm
-# 
+#
 # Translators:
 # AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-04-24 18:14+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_claim_count
-msgid "# Claims"
-msgstr "# Şikayet"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
@@ -53,17 +48,20 @@ msgstr "<span class=\"o_stat_text\"> Teklif(ler) </span>"
 msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
-msgstr "Üyelik ilişkilendirmek istediğiniz üye. İlişkili üye üyelik durumunu ele alacağız."
+msgstr ""
+"Üyelik ilişkilendirmek istediğiniz üye. İlişkili üye üyelik durumunu ele "
+"alacağız."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
+#, fuzzy
+msgid "Activation"
+msgstr "Teklif"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
 msgid "Associate Member"
 msgstr "Üye"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_campaign_id
-msgid "Campaign"
-msgstr "Kampanya"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
@@ -106,19 +104,26 @@ msgid "Free Member"
 msgstr "Ücretsiz Üye"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_latitude
-msgid "Geo Latitude"
-msgstr "Coğrafi Enlem"
+#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
+msgid ""
+"Gives the probability to assign a lead to this partner. (0 means no "
+"assignation.)"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_localization
-msgid "Geo Localization Date"
-msgstr "Coğrafi Konum Tarihi"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
+msgid "Implementation References"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_longitude
-msgid "Geo Longitude"
-msgstr "Coğ Boylam"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
+msgid "Implemented by"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_account_invoice
+msgid "Invoice"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
@@ -132,10 +137,24 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
-msgstr "Üyelik durumu. \n gösterir-üye olmayan: herhangi bir üyelik. \n uygulanmış değil ortak bir-iptal üye: onun üyeliği. \n iptal etti bir üyesi-eski üye: üye, Üyelik tarihi süresi sona erdi. \n-bekleyen üye: üye kim üyelik için başvuran ve kimin fatura oluşturulması için gidiyor. \n-faturalanan üye: üyesi olan fatura oluşturduğunuz. \n ödeyen üye : Üyelik ücreti ödedi bir üye."
+msgstr ""
+"Üyelik durumu. \n"
+" gösterir-üye olmayan: herhangi bir üyelik. \n"
+" uygulanmış değil ortak bir-iptal üye: onun üyeliği. \n"
+" iptal etti bir üyesi-eski üye: üye, Üyelik tarihi süresi sona erdi. \n"
+"-bekleyen üye: üye kim üyelik için başvuran ve kimin fatura oluşturulması "
+"için gidiyor. \n"
+"-faturalanan üye: üyesi olan fatura oluşturduğunuz. \n"
+" ödeyen üye : Üyelik ücreti ödedi bir üye."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
+msgid "Latest Partner Review"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
@@ -143,14 +162,19 @@ msgid "Lead/Opportunity"
 msgstr "Aday/Fırsat"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
+msgid "Level"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
+msgid "Level Weight"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
 msgstr "Sohbetçiye, siparişin kaynaklandığı fırsattan giriş yap"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_medium_id
-msgid "Medium"
-msgstr "Orta"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
@@ -178,6 +202,11 @@ msgid "New Quotation"
 msgstr "Yeni Teklif"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
+msgid "Next Partner Review"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
 msgid "Number of Quotations"
 msgstr "Teklif Sayısı"
@@ -191,6 +220,12 @@ msgstr "Fırsat"
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
 msgid "Orders"
 msgstr "Siparişler"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
+#, fuzzy
+msgid "Partnership Date"
+msgstr "Üyelik Tarihi İptal"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
@@ -219,11 +254,6 @@ msgid "Select if you want to give free membership."
 msgstr "Eğer ücretsiz üyelik vermek istiyorsanız seçin."
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_source_id
-msgid "Source"
-msgstr "Kaynak"
-
-#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
 msgid "Sum of Orders"
 msgstr "Siparişlerin Toplamı"
@@ -244,37 +274,22 @@ msgid "The price negotiated by the partner"
 msgstr "İş Ortağı tarafından müzakere fiyatı"
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr "Farklı kampanya çabalarınızı izlemenize yardımcı olacak bir isimdir Örn: Sonbahar_Sürüşü, Yılbaşı_Özel"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "Bu teslimat yöntemidir. örn: Postakartı, Eposta yada Reklam Afişi"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_source_id
-msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr "Bu bağlantının kaynağıdır. örn: Arama Motoru, başka alan adı yada bir eposta listesi adı"
-
-#. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
 msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
-msgstr "Bu ortağa gönderdiğiniz mallar için hedef konum olarak, varsayılan yerine bu stok konumu kullanılacaktır"
+msgstr ""
+"Bu ortağa gönderdiğiniz mallar için hedef konum olarak, varsayılan yerine bu "
+"stok konumu kullanılacaktır"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
-msgstr "Mevcut iş ortaktan aldığınız malların kaynak konumu olarak varsayılan yerine bu stok konumu kullanılacaktır"
+msgstr ""
+"Mevcut iş ortaktan aldığınız malların kaynak konumu olarak varsayılan yerine "
+"bu stok konumu kullanılacaktır"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -285,3 +300,41 @@ msgstr "Kullanıcılar"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
 msgstr "Satıcı Konumu"
+
+#~ msgid "# Claims"
+#~ msgstr "# Şikayet"
+
+#~ msgid "Campaign"
+#~ msgstr "Kampanya"
+
+#~ msgid "Geo Latitude"
+#~ msgstr "Coğrafi Enlem"
+
+#~ msgid "Geo Localization Date"
+#~ msgstr "Coğrafi Konum Tarihi"
+
+#~ msgid "Geo Longitude"
+#~ msgstr "Coğ Boylam"
+
+#~ msgid "Medium"
+#~ msgstr "Orta"
+
+#~ msgid "Source"
+#~ msgstr "Kaynak"
+
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "Farklı kampanya çabalarınızı izlemenize yardımcı olacak bir isimdir Örn: "
+#~ "Sonbahar_Sürüşü, Yılbaşı_Özel"
+
+#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+#~ msgstr "Bu teslimat yöntemidir. örn: Postakartı, Eposta yada Reklam Afişi"
+
+#~ msgid ""
+#~ "This is the source of the link Ex: Search Engine, another domain, or name "
+#~ "of email list"
+#~ msgstr ""
+#~ "Bu bağlantının kaynağıdır. örn: Arama Motoru, başka alan adı yada bir "
+#~ "eposta listesi adı"

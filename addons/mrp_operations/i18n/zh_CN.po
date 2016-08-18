@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_operations
-# 
+#
 # Translators:
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
@@ -10,14 +10,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-29 14:17+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
+"language/zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mrp_operations
@@ -29,11 +30,20 @@ msgstr "明细#"
 #: model:ir.model.fields,help:mrp_operations.field_mrp_production_workcenter_line_state
 msgid ""
 "* When a work order is created it is set in 'Draft' status.\n"
-"* When user sets work order in start mode that time it will be set in 'In Progress' status.\n"
-"* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In "
+"Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop "
+"or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
-"* When order is completely processed that time it is set in 'Finished' status."
-msgstr "* 工单被创建时，“草稿“状态。\n* 从工单被用户进入开始模式后，设为”在进行中“模式。\n* 当工单是运行模式，在此期间，如果用户要停止或作出改变，可设置为”挂起“状态。\n* 当用户取消工单，设置为”取消状态“。\n* 从工单被完成的时候开始，设置为”完成“状态。"
+"* When order is completely processed that time it is set in 'Finished' "
+"status."
+msgstr ""
+"* 工单被创建时，“草稿“状态。\n"
+"* 从工单被用户进入开始模式后，设为”在进行中“模式。\n"
+"* 当工单是运行模式，在此期间，如果用户要停止或作出改变，可设置为”挂起“状"
+"态。\n"
+"* 当用户取消工单，设置为”取消状态“。\n"
+"* 从工单被完成的时候开始，设置为”完成“状态。"
 
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -92,7 +102,7 @@ msgstr "点击开始一个新的工单。"
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_code
-#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_id_10488
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_id_10375
 msgid "Code"
 msgstr "代码"
 
@@ -192,6 +202,11 @@ msgid "Future Work Orders"
 msgstr "未开工工票"
 
 #. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_weight
+msgid "Gross Weight"
+msgstr ""
+
+#. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
 #: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
 msgid "Group By"
@@ -222,21 +237,21 @@ msgid "In Progress"
 msgstr "进行中"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:438
+#: code:addons/mrp_operations/mrp_operations.py:473
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
 msgstr "要完成工单，它必须处于开始或重新开始状态。"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:429
+#: code:addons/mrp_operations/mrp_operations.py:464
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
 msgstr "要暂停工单，必须在开始或重启状态。"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:433
+#: code:addons/mrp_operations/mrp_operations.py:468
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
 msgstr "要重启这个工单，必须在暂停状态。"
@@ -271,18 +286,13 @@ msgid "Late"
 msgstr "最近"
 
 #. module: mrp_operations
-#: model:ir.model,name:mrp_operations.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "制造订单"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:105
+#: code:addons/mrp_operations/mrp_operations.py:132
 #, python-format
 msgid "Manufacturing order cannot be started in state \"%s\"!"
 msgstr "生产订单无法开始于状态 \"%s\"!"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:445
+#: code:addons/mrp_operations/mrp_operations.py:480
 #, python-format
 msgid "No operation to cancel."
 msgstr "没有操作被取消"
@@ -298,7 +308,7 @@ msgid "Operation Name"
 msgstr "作业名称"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:425
+#: code:addons/mrp_operations/mrp_operations.py:460
 #, python-format
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
@@ -306,19 +316,19 @@ msgid ""
 msgstr "操作已经开始！你可以 暂停/完成/取消 这个操作。"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:441
+#: code:addons/mrp_operations/mrp_operations.py:476
 #, python-format
 msgid "Operation is Already Cancelled!"
 msgstr "作业早已取消！"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:448
+#: code:addons/mrp_operations/mrp_operations.py:483
 #, python-format
 msgid "Operation is already finished!"
 msgstr "作业早已完成！"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:418
+#: code:addons/mrp_operations/mrp_operations.py:453
 #, python-format
 msgid "Operation is not started yet!"
 msgstr "作业还未开始！"
@@ -393,6 +403,7 @@ msgid "Product to Produce"
 msgstr "待生产的产品"
 
 #. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_production
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_production_id
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_production_id
 #: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -553,11 +564,18 @@ msgstr "工单在这个工作中心从开始到结束的执行周期。"
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
 msgid ""
 "To manufacture or assemble products, and use raw materials and\n"
-"            finished products you must also handle manufacturing operations.\n"
-"            Manufacturing operations are often called Work Orders. The various\n"
+"            finished products you must also handle manufacturing "
+"operations.\n"
+"            Manufacturing operations are often called Work Orders. The "
+"various\n"
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
-msgstr "要生产或者组装产品，使用原料\n完成产品您也必须处理生产操作。\n生产操作经常被叫做工单。\n各种操作对生产成本有不同的影响，\n生产和计划取决于可用的工作量。"
+msgstr ""
+"要生产或者组装产品，使用原料\n"
+"完成产品您也必须处理生产操作。\n"
+"生产操作经常被叫做工单。\n"
+"各种操作对生产成本有不同的影响，\n"
+"生产和计划取决于可用的工作量。"
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_total_cycles
@@ -573,6 +591,11 @@ msgstr "总时数"
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_uom
 msgid "Unit of Measure"
 msgstr "计量单位"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_volume
+msgid "Volume"
+msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -636,9 +659,16 @@ msgid ""
 "            manufacturing order. Once you start the first work order of a\n"
 "            manufacturing order, the manufacturing order is automatically\n"
 "            marked as started. Once you finish the latest operation of a\n"
-"            manufacturing order, the MO is automatically done and the related\n"
+"            manufacturing order, the MO is automatically done and the "
+"related\n"
 "            products are produced."
-msgstr "工单是每个生产订单要被执行的操作列表。\n当您启动生产订单的第一个工单，\n生产订单将被自动标记为启动。\n当您完成了生产订单的最后一个操作，\n生成订单被自动完成并且相关的产品\n被制造完成。"
+msgstr ""
+"工单是每个生产订单要被执行的操作列表。\n"
+"当您启动生产订单的第一个工单，\n"
+"生产订单将被自动标记为启动。\n"
+"当您完成了生产订单的最后一个操作，\n"
+"生成订单被自动完成并且相关的产品\n"
+"被制造完成。"
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_delay
@@ -659,3 +689,6 @@ msgstr "mrp_operations.operation"
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
 msgid "mrp_operations.operation.code"
 msgstr "mrp_operations.operation.code"
+
+#~ msgid "Manufacturing Order"
+#~ msgstr "制造订单"

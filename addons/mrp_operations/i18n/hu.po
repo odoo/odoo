@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_operations
-# 
+#
 # Translators:
 # krnkris, 2015
 # krnkris, 2016
@@ -9,14 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
+"hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_operations
@@ -28,11 +29,25 @@ msgstr "# sorok száma"
 #: model:ir.model.fields,help:mrp_operations.field_mrp_production_workcenter_line_state
 msgid ""
 "* When a work order is created it is set in 'Draft' status.\n"
-"* When user sets work order in start mode that time it will be set in 'In Progress' status.\n"
-"* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In "
+"Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop "
+"or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
-"* When order is completely processed that time it is set in 'Finished' status."
-msgstr "* Ha egy munka megrendelés létre lett hozva akkor az 'Tervezet' állapotú lesz.\n* Ha egy felhasználó elindítás állapotba teszi azt, akkor onnantól kezdve 'Folyamatban' állapotú lesz.\n* Ha a munka megrendelés futtatás módban van, és egy felhasználó meg akarja állítani vagy változtatni kívánja a megrendelést akkor be lehet állítani 'Függő' állapotba.\n* Ha a felhasználó visszavonja a munka megrendelést, akkor az 'Visszavonva' állapotú lesz.\n* Ha a megrendelés a megadott időn belül el lett végezve akkor az 'Befejezve' állapotú lesz."
+"* When order is completely processed that time it is set in 'Finished' "
+"status."
+msgstr ""
+"* Ha egy munka megrendelés létre lett hozva akkor az 'Tervezet' állapotú "
+"lesz.\n"
+"* Ha egy felhasználó elindítás állapotba teszi azt, akkor onnantól kezdve "
+"'Folyamatban' állapotú lesz.\n"
+"* Ha a munka megrendelés futtatás módban van, és egy felhasználó meg akarja "
+"állítani vagy változtatni kívánja a megrendelést akkor be lehet állítani "
+"'Függő' állapotba.\n"
+"* Ha a felhasználó visszavonja a munka megrendelést, akkor az 'Visszavonva' "
+"állapotú lesz.\n"
+"* Ha a megrendelés a megadott időn belül el lett végezve akkor az "
+"'Befejezve' állapotú lesz."
 
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -76,7 +91,9 @@ msgstr "Törölt"
 msgid ""
 "Check this to be able to move independently all production orders, without "
 "moving dependent ones."
-msgstr "Jelölje be ezt, hogy  a termelési megrendeléseken a függetleneket mozgathassa, a kapcsolódók nélkül."
+msgstr ""
+"Jelölje be ezt, hogy  a termelési megrendeléseken a függetleneket "
+"mozgathassa, a kapcsolódók nélkül."
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_stock_move_move_dest_id_lines
@@ -91,7 +108,7 @@ msgstr "Kattintson egy gyártási megrendelési folyamat elindításához."
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_code
-#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_id_10488
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_id_10375
 msgid "Code"
 msgstr "Kód"
 
@@ -191,6 +208,11 @@ msgid "Future Work Orders"
 msgstr "Jövőbeni munka megrendelések"
 
 #. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_weight
+msgid "Gross Weight"
+msgstr ""
+
+#. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
 #: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
 msgid "Group By"
@@ -221,24 +243,30 @@ msgid "In Progress"
 msgstr "Folyamatban"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:438
+#: code:addons/mrp_operations/mrp_operations.py:473
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
-msgstr "A művelet elvégzéséhez, annak Elindított vagy Folytatás állapotúnak kell lennie!"
+msgstr ""
+"A művelet elvégzéséhez, annak Elindított vagy Folytatás állapotúnak kell "
+"lennie!"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:429
+#: code:addons/mrp_operations/mrp_operations.py:464
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
-msgstr "Ahhoz, hogy a művelet megállítsa, annak Elindított vagy folytatás állapotúnak kell lennie!"
+msgstr ""
+"Ahhoz, hogy a művelet megállítsa, annak Elindított vagy folytatás "
+"állapotúnak kell lennie!"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:433
+#: code:addons/mrp_operations/mrp_operations.py:468
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
-msgstr "Ahhoz, hogy a művelet Folytathassa, annak Megállított állapotúnak kell lennie!"
+msgstr ""
+"Ahhoz, hogy a művelet Folytathassa, annak Megállított állapotúnak kell "
+"lennie!"
 
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -270,18 +298,13 @@ msgid "Late"
 msgstr "Később"
 
 #. module: mrp_operations
-#: model:ir.model,name:mrp_operations.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Gyártási utasítás"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:105
+#: code:addons/mrp_operations/mrp_operations.py:132
 #, python-format
 msgid "Manufacturing order cannot be started in state \"%s\"!"
 msgstr "Gyártási utasítás nem lehet elindítani ebben az állapotban \"%s\"!"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:445
+#: code:addons/mrp_operations/mrp_operations.py:480
 #, python-format
 msgid "No operation to cancel."
 msgstr "Nincs visszavonandó művelet."
@@ -297,27 +320,29 @@ msgid "Operation Name"
 msgstr "Művelet neve"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:425
+#: code:addons/mrp_operations/mrp_operations.py:460
 #, python-format
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
 "operation."
-msgstr "A művelet már elindult! Ezt a műveletet meg tudja állítani/végrehajtani/visszavonni."
+msgstr ""
+"A művelet már elindult! Ezt a műveletet meg tudja állítani/végrehajtani/"
+"visszavonni."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:441
+#: code:addons/mrp_operations/mrp_operations.py:476
 #, python-format
 msgid "Operation is Already Cancelled!"
 msgstr "A műveletet már visszavonták!"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:448
+#: code:addons/mrp_operations/mrp_operations.py:483
 #, python-format
 msgid "Operation is already finished!"
 msgstr "A művelet már elvégezve!"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:418
+#: code:addons/mrp_operations/mrp_operations.py:453
 #, python-format
 msgid "Operation is not started yet!"
 msgstr "A művelet még nincs elkezdve!"
@@ -392,6 +417,7 @@ msgid "Product to Produce"
 msgstr "Gyártandó termék"
 
 #. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_production
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_production_id
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_production_id
 #: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -552,11 +578,20 @@ msgstr "A munka állomás elindítása és leállása közt eltelt idő"
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
 msgid ""
 "To manufacture or assemble products, and use raw materials and\n"
-"            finished products you must also handle manufacturing operations.\n"
-"            Manufacturing operations are often called Work Orders. The various\n"
+"            finished products you must also handle manufacturing "
+"operations.\n"
+"            Manufacturing operations are often called Work Orders. The "
+"various\n"
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
-msgstr "Termékek gyártásához és összeszereléséhez, valamint nyersanyagok és késztermékek\n            felhasználásához gyártási műveleteket kell igénybe vennie.\n            Gyártási műveleteket legtöbbször gyártási rendeléseknek nevezzük. A különböző\n            műveletek különbözőképpen hatnak a gyártási és tervezési \n            költségekre az aktuális munkamennyiségtől függően."
+msgstr ""
+"Termékek gyártásához és összeszereléséhez, valamint nyersanyagok és "
+"késztermékek\n"
+"            felhasználásához gyártási műveleteket kell igénybe vennie.\n"
+"            Gyártási műveleteket legtöbbször gyártási rendeléseknek "
+"nevezzük. A különböző\n"
+"            műveletek különbözőképpen hatnak a gyártási és tervezési \n"
+"            költségekre az aktuális munkamennyiségtől függően."
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_total_cycles
@@ -572,6 +607,11 @@ msgstr "Összes óra"
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_uom
 msgid "Unit of Measure"
 msgstr "Mértékegység"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_volume
+msgid "Volume"
+msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -635,9 +675,18 @@ msgid ""
 "            manufacturing order. Once you start the first work order of a\n"
 "            manufacturing order, the manufacturing order is automatically\n"
 "            marked as started. Once you finish the latest operation of a\n"
-"            manufacturing order, the MO is automatically done and the related\n"
+"            manufacturing order, the MO is automatically done and the "
+"related\n"
 "            products are produced."
-msgstr "Gyártási munka megrendelések olyan művelet listák, melyeket minden gyártási megrendelésnél \n            végre kell hajtani. Ha egyszer elkezdte az első gyártási  \n            munka megrendelést, akkor a gyártási megrendelés \n            automatikusan elkezdettként lesz megjelölve. Ha befejezte a \n            legutolsó műveletet a gyártási megrendelésen, a GYM akkor\n            az automatikusan befejezett és az ide vonatkozó termék \n            legyártott."
+msgstr ""
+"Gyártási munka megrendelések olyan művelet listák, melyeket minden gyártási "
+"megrendelésnél \n"
+"            végre kell hajtani. Ha egyszer elkezdte az első gyártási  \n"
+"            munka megrendelést, akkor a gyártási megrendelés \n"
+"            automatikusan elkezdettként lesz megjelölve. Ha befejezte a \n"
+"            legutolsó műveletet a gyártási megrendelésen, a GYM akkor\n"
+"            az automatikusan befejezett és az ide vonatkozó termék \n"
+"            legyártott."
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_delay
@@ -658,3 +707,6 @@ msgstr "mrp_operations.operation"
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
 msgid "mrp_operations.operation.code"
 msgstr "mrp_operations.operation.code"
+
+#~ msgid "Manufacturing Order"
+#~ msgstr "Gyártási utasítás"

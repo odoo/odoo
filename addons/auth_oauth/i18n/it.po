@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_oauth
-# 
+#
 # Translators:
 # Anna Maglia <angiolettachit92@gmail.com>, 2016
 # Paolo Valier, 2016
@@ -9,30 +9,40 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-07-19 14:17+0000\n"
 "Last-Translator: Anna Maglia <angiolettachit92@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+#, fuzzy
 msgid ""
 "<br/>\n"
-"                                    - Ceate a new project<br/>\n"
+"                                    - Create a new project<br/>\n"
 "                                    - Go to Api Access<br/>\n"
 "                                    - Create an oauth client_id<br/>\n"
-"                                    - Edit settings and set both Authorized Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
+"                                    - Edit settings and set both Authorized "
+"Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
 "                                    <br/>\n"
 "                                    Now copy paste the client_id here:"
-msgstr "<br/>ENTER\n- Crea un nuovo progetto<br/>ENTER\n- Accedi ad Api<br/>ENTER\n- Crea un oauth client_id<br/>ENTER\n- Pubblica le impostazioni e imposta sia Authorizzed Redirect URIs che Authorized JavaScript Origins nel tuo hostname.<br/>ENTER\n<br/>ENTER\nAdesso copia e incolla il tuo id qui:"
+msgstr ""
+"<br/>ENTER\n"
+"- Crea un nuovo progetto<br/>ENTER\n"
+"- Accedi ad Api<br/>ENTER\n"
+"- Crea un oauth client_id<br/>ENTER\n"
+"- Pubblica le impostazioni e imposta sia Authorizzed Redirect URIs che "
+"Authorized JavaScript Origins nel tuo hostname.<br/>ENTER\n"
+"<br/>ENTER\n"
+"Adesso copia e incolla il tuo id qui:"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:99
+#: code:addons/auth_oauth/controllers/main.py:98
 #, python-format
 msgid "Access Denied"
 msgstr "Accesso negato"
@@ -106,7 +116,8 @@ msgstr "Creato il"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
-msgid "Currency id"
+#, fuzzy
+msgid "Currency"
 msgstr "ID Valuta"
 
 #. module: auth_oauth
@@ -118,6 +129,11 @@ msgstr "Termine di pagamento cliente"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
 msgid "Data URL"
 msgstr "URL dati"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
+msgid "Degree of trust you have in this debtor"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
@@ -176,7 +192,10 @@ msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
-msgstr "L'ultima volta che l'associazione fatture/pagamenti è stata eseguita per questo partner. E' definita se non ci sono almeno un debito e un credito non riconciliati  o se si clicca sul pulsante \"Fine\"."
+msgstr ""
+"L'ultima volta che l'associazione fatture/pagamenti è stata eseguita per "
+"questo partner. E' definita se non ci sono almeno un debito e un credito non "
+"riconciliati  o se si clicca sul pulsante \"Fine\"."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
@@ -244,7 +263,7 @@ msgid "Scope"
 msgstr "Ambito"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:97
+#: code:addons/auth_oauth/controllers/main.py:96
 #, python-format
 msgid "Sign up is not allowed on this database."
 msgstr "L'accesso non è permesso su questo database"
@@ -253,47 +272,59 @@ msgstr "L'accesso non è permesso su questo database"
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_position_id
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr "La posizione fiscale determina le imposte e i conti usati per il partner."
+msgstr ""
+"La posizione fiscale determina le imposte e i conti usati per il partner."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_has_unreconciled_entries
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr "Il partner ha almento un debito e credito non riconciliati dall'ultima riconciliazione fatture/pagamenti eseguita."
+msgstr ""
+"Il partner ha almento un debito e credito non riconciliati dall'ultima "
+"riconciliazione fatture/pagamenti eseguita."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr "Questo conto verrà usato al posto di quello predefinito per il pagamento del partner corrente"
+msgstr ""
+"Questo conto verrà usato al posto di quello predefinito per il pagamento del "
+"partner corrente"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_receivable_id
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr "Questo conto verrà usato invece del default come conto incassi per il partner corrente"
+msgstr ""
+"Questo conto verrà usato invece del default come conto incassi per il "
+"partner corrente"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_supplier_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
-msgstr "Questa condizione di pagamento sarà usata al posto di quella di default per gli ordini di acquisto e le fatture dei fornitori."
+msgstr ""
+"Questa condizione di pagamento sarà usata al posto di quella di default per "
+"gli ordini di acquisto e le fatture dei fornitori."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr "Questo termine di pagamento verrà usato al posto di quello di default per gli ordini di vendita e le fatture fornitore"
+msgstr ""
+"Questo termine di pagamento verrà usato al posto di quello di default per "
+"gli ordini di vendita e le fatture fornitore"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
-"To setup the signin process with Google, first you have to perform the following steps:<br/>\n"
+"To setup the signin process with Google, first you have to perform the "
+"following steps:<br/>\n"
 "                                    <br/>\n"
 "                                    - Go to the"
 msgstr ""
@@ -344,13 +375,26 @@ msgid "Vendor Payment Term"
 msgstr "Termine di pagamento fornitore"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:101
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:100
 #, python-format
 msgid ""
 "You do not have access to this database or your invitation has expired. "
 "Please ask for an invitation and be sure to follow the link in your "
 "invitation email."
-msgstr "Non avete l'accesso a questo database oppure l'invito è scaduto. Prego chiedere un ulteriore invito e verificate di seguire correttamente il collegamento presente all'interno della mail."
+msgstr ""
+"Non avete l'accesso a questo database oppure l'invito è scaduto. Prego "
+"chiedere un ulteriore invito e verificate di seguire correttamente il "
+"collegamento presente all'interno della mail."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form

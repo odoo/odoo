@@ -1,41 +1,48 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_repair
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2015-12-03 00:21+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/id/)\n"
+"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
+"id/)\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
-msgid ""
-" * The 'Draft' status is set automatically as draft when repair order in draft status.                         \n"
-"* The 'Confirmed' status is set automatically as confirm when repair order in confirm status.                         \n"
-"* The 'Done' status is set automatically when repair order is completed.                        \n"
-"* The 'Cancelled' status is set automatically when user cancel repair order."
-msgstr "* Status 'Draft' diatur secara otomatis sebagai draft saat order perbaikan dalam status rancangan. * Status 'Dikonfirmasi' diatur secara otomatis sebagai konfirmasi ketika pesanan perbaikan dalam status konfirmasi. * Status 'Selesai' diatur secara otomatis ketika pesanan perbaikan selesai. * Status 'Dibatalkan' diatur secara otomatis ketika pengguna membatalkan pesanan perbaikan."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.             \n"
-"* The 'Confirmed' status is used when a user confirms the repair order.             \n"
-"* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.             \n"
-"* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.             \n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"repair order.             \n"
+"* The 'Confirmed' status is used when a user confirms the repair "
+"order.             \n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start "
+"repairing only after repair order is confirmed.             \n"
+"* The 'To be Invoiced' status is used to generate the invoice before or "
+"after repairing done.             \n"
 "* The 'Done' status is set when repairing is completed.            \n"
 "* The 'Cancelled' status is used when user cancel repair order."
-msgstr "* Status 'Draft' digunakan ketika pengguna pengkodean urutan perbaikan baru dan belum dikonfirmasi.\n* Status 'Dikonfirmasi' digunakan ketika pengguna menegaskan agar perbaikan.\n* Status 'Siap Perbaikan' digunakan untuk mulai memperbaiki, pengguna dapat mulai memperbaiki hanya setelah pesanan perbaikan dikonfirmasi.\n* Status 'Untuk Faktur' digunakan untuk menghasilkan faktur sebelum atau setelah memperbaiki yang dilakukan.\n* Status 'Selesai' diatur ketika memperbaiki yang selesai.\n* Status 'Dibatalkan' digunakan ketika pengguna membatalkan pesanan perbaikan."
+msgstr ""
+"* Status 'Draft' digunakan ketika pengguna pengkodean urutan perbaikan baru "
+"dan belum dikonfirmasi.\n"
+"* Status 'Dikonfirmasi' digunakan ketika pengguna menegaskan agar "
+"perbaikan.\n"
+"* Status 'Siap Perbaikan' digunakan untuk mulai memperbaiki, pengguna dapat "
+"mulai memperbaiki hanya setelah pesanan perbaikan dikonfirmasi.\n"
+"* Status 'Untuk Faktur' digunakan untuk menghasilkan faktur sebelum atau "
+"setelah memperbaiki yang dilakukan.\n"
+"* Status 'Selesai' diatur ketika memperbaiki yang selesai.\n"
+"* Status 'Dibatalkan' digunakan ketika pengguna membatalkan pesanan "
+"perbaikan."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -84,6 +91,12 @@ msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#, fuzzy
+msgid "<strong>Shipping address :</strong>"
+msgstr "Alamat pengiriman :"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total Without Taxes</strong>"
 msgstr "<strong>Total tanpa pajak</strong>"
 
@@ -91,11 +104,6 @@ msgstr "<strong>Total tanpa pajak</strong>"
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total</strong>"
 msgstr "<strong>Total</strong>"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_needaction
-msgid "Action Needed"
-msgstr "Tindakan diperlukan"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:24
@@ -184,7 +192,9 @@ msgstr "Ditetapkan"
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr "Tidak bisa menemukan jalur pricelist pencocokan produk ini dan kuantitas. Anda harus mengubah baik produk, kuantitas atau pricelist."
+msgstr ""
+"Tidak bisa menemukan jalur pricelist pencocokan produk ini dan kuantitas. "
+"Anda harus mengubah baik produk, kuantitas atau pricelist."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -220,11 +230,6 @@ msgstr "Dibuat pada"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_id
 msgid "Current Location"
 msgstr "Lokasi saat ini"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Tanggal pesan terakhir diposting pada catatan."
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -289,21 +294,6 @@ msgid "Fees"
 msgstr "Biaya"
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_follower_ids
-msgid "Followers"
-msgstr "Pengikut"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Pengikut (saluran)"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Pengikut (mitra)"
-
-#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Group By"
 msgstr "Dikelompokan berdasarkan .."
@@ -338,20 +328,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
-
-#. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the different\n"
+"                add or replace and record the time you spent on the "
+"different\n"
 "                operations."
 msgstr ""
 
@@ -420,16 +401,6 @@ msgid "Invoicing Address"
 msgstr "Faktur Alamat"
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_is_follower
-msgid "Is Follower"
-msgstr "Adalah pengikut"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_last_post
-msgid "Last Message Date"
-msgstr "Tanggal pesan terakhir"
-
-#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair___last_update
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel___last_update
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee___last_update
@@ -465,16 +436,6 @@ msgstr "Lot"
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
 msgid "Make Invoice"
 msgstr "Membuat Faktur"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_ids
-msgid "Messages"
-msgstr "Pesan"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_ids
-msgid "Messages and communication history"
-msgstr "Pesan dan riwayat komunikasi"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_move_id
@@ -526,21 +487,6 @@ msgstr "Tidak ditemukan baris daftar harga yang valid ! :"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Notes"
 msgstr "Catatan"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Jumlah tindakan"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Jumlah pesan yang memerlukan tindakan"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Jumlah pesan yang belum dibaca"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_operations
@@ -646,11 +592,6 @@ msgid "Ready to Repair"
 msgstr "Siap untuk Perbaikan"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-msgid "Reair Orders"
-msgstr "Pesanan Reair"
-
-#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Recreate Invoice"
 msgstr "Buat faktur ulang"
@@ -690,6 +631,7 @@ msgstr "Perbaikan Orde Referensi"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Repair Orders"
 msgstr "Pesanan perbaikan"
 
@@ -739,7 +681,8 @@ msgstr "Agar perbaikan"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-msgid "Search Reair Orders"
+#, fuzzy
+msgid "Search Repair Orders"
 msgstr "Cari Pesanan Reair"
 
 #. module: mrp_repair
@@ -748,7 +691,11 @@ msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
-msgstr "Memilih 'Sebelum Perbaikan' atau 'Setelah Perbaikan' akan memungkinkan Anda untuk menghasilkan faktur sebelum atau setelah perbaikan dilakukan masing-masing. 'Tidak ada faktur' berarti Anda tidak ingin untuk menghasilkan faktur untuk pesanan ini perbaikan."
+msgstr ""
+"Memilih 'Sebelum Perbaikan' atau 'Setelah Perbaikan' akan memungkinkan Anda "
+"untuk menghasilkan faktur sebelum atau setelah perbaikan dilakukan masing-"
+"masing. 'Tidak ada faktur' berarti Anda tidak ingin untuk menghasilkan "
+"faktur untuk pesanan ini perbaikan."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:272
@@ -760,11 +707,6 @@ msgstr "Nomor seri diperlukan untuk lini operasi dengan produk '%s'"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Set to Draft"
 msgstr "Atur menjadi draft"
-
-#. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "Shipping address :"
-msgstr "Alamat pengiriman :"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
@@ -808,7 +750,9 @@ msgstr "Pajak-pajak"
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr "Unit Produk Ukur Anda memilih memiliki kategori yang berbeda dari dalam bentuk produk."
+msgstr ""
+"Unit Produk Ukur Anda memilih memiliki kategori yang berbeda dari dalam "
+"bentuk produk."
 
 #. module: mrp_repair
 #: sql_constraint:mrp.repair:0
@@ -819,8 +763,16 @@ msgstr "Nama Perbaikan Orde harus unik!"
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "The repair order uses the warranty date on the Serial Number in\n"
-"                order to know if whether the repair should be invoiced to the\n"
+"                order to know if whether the repair should be invoiced to "
+"the\n"
 "                customer or not."
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
+msgid ""
+"The status of a repair line is set automatically to the one of the linked "
+"repair order."
 msgstr ""
 
 #. module: mrp_repair
@@ -828,7 +780,9 @@ msgstr ""
 msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
-msgstr "Operasi ini akan membatalkan proses perbaikan, tetapi tidak akan membatalkan itu Faktur. Apakah Anda ingin melanjutkan?"
+msgstr ""
+"Operasi ini akan membatalkan proses perbaikan, tetapi tidak akan membatalkan "
+"itu Faktur. Apakah Anda ingin melanjutkan?"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_to_invoice
@@ -874,16 +828,6 @@ msgid "Unit of Measure"
 msgstr "Satuan Ukuran"
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_unread
-msgid "Unread Messages"
-msgstr "Pesan Belum Dibaca"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Pesan yang belum dibaca Counter"
-
-#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_untaxed
 msgid "Untaxed Amount"
 msgstr "Jumlah sebelum kena pajak"
@@ -910,16 +854,6 @@ msgid "Warranty Expiration"
 msgstr "Garansi Kadaluarsa"
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_website_message_ids
-msgid "Website Messages"
-msgstr "Pesan situs"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_website_message_ids
-msgid "Website communication history"
-msgstr "Sejarah komunikasi situs"
-
-#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
 msgid "Yes"
 msgstr "Ya"
@@ -936,9 +870,85 @@ msgstr "Anda harus memilih Partner Faktur Alamat dalam bentuk perbaikan!"
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
 "Please set one before choosing a product."
-msgstr "Anda harus memilih pricelist dalam bentuk Perbaikan! Silakan menetapkan satu sebelum memilih produk."
+msgstr ""
+"Anda harus memilih pricelist dalam bentuk Perbaikan! Silakan menetapkan satu "
+"sebelum memilih produk."
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
 msgid "unknown"
 msgstr "tidak diketahui"
+
+#~ msgid ""
+#~ " * The 'Draft' status is set automatically as draft when repair order in "
+#~ "draft status.                         \n"
+#~ "* The 'Confirmed' status is set automatically as confirm when repair "
+#~ "order in confirm status.                         \n"
+#~ "* The 'Done' status is set automatically when repair order is "
+#~ "completed.                        \n"
+#~ "* The 'Cancelled' status is set automatically when user cancel repair "
+#~ "order."
+#~ msgstr ""
+#~ "* Status 'Draft' diatur secara otomatis sebagai draft saat order "
+#~ "perbaikan dalam status rancangan. * Status 'Dikonfirmasi' diatur secara "
+#~ "otomatis sebagai konfirmasi ketika pesanan perbaikan dalam status "
+#~ "konfirmasi. * Status 'Selesai' diatur secara otomatis ketika pesanan "
+#~ "perbaikan selesai. * Status 'Dibatalkan' diatur secara otomatis ketika "
+#~ "pengguna membatalkan pesanan perbaikan."
+
+#~ msgid "Action Needed"
+#~ msgstr "Tindakan diperlukan"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Tanggal pesan terakhir diposting pada catatan."
+
+#~ msgid "Followers"
+#~ msgstr "Pengikut"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Pengikut (saluran)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Pengikut (mitra)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
+
+#~ msgid "Is Follower"
+#~ msgstr "Adalah pengikut"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Tanggal pesan terakhir"
+
+#~ msgid "Messages"
+#~ msgstr "Pesan"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Pesan dan riwayat komunikasi"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Jumlah tindakan"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Jumlah pesan yang memerlukan tindakan"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Jumlah pesan yang belum dibaca"
+
+#~ msgid "Reair Orders"
+#~ msgstr "Pesanan Reair"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Pesan Belum Dibaca"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Pesan yang belum dibaca Counter"
+
+#~ msgid "Website Messages"
+#~ msgstr "Pesan situs"
+
+#~ msgid "Website communication history"
+#~ msgstr "Sejarah komunikasi situs"

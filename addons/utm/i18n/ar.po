@@ -1,21 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * utm
-# 
+#
 # Translators:
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2015-09-30 09:28+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium_active
@@ -24,6 +30,11 @@ msgstr "نشط"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
+#: model:ir.model.fields,field_description:utm.field_account_invoice_campaign_id
+#: model:ir.model.fields,field_description:utm.field_crm_lead_campaign_id
+#: model:ir.model.fields,field_description:utm.field_hr_applicant_campaign_id
+#: model:ir.model.fields,field_description:utm.field_link_tracker_campaign_id
+#: model:ir.model.fields,field_description:utm.field_sale_order_campaign_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_campaign_id
 #: model:ir.ui.view,arch_db:utm.utm_campaign_form
 #: model:ir.ui.view,arch_db:utm.utm_campaign_tree
@@ -92,12 +103,7 @@ msgstr "أنشئ في"
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_display_name
 #: model:ir.model.fields,field_description:utm.field_utm_source_display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: utm
-#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
-msgid "Email Campaign - Products"
-msgstr ""
+msgstr "اسم العرض"
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_services
@@ -156,6 +162,11 @@ msgstr "شريك المراسلة"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
+#: model:ir.model.fields,field_description:utm.field_account_invoice_medium_id
+#: model:ir.model.fields,field_description:utm.field_crm_lead_medium_id
+#: model:ir.model.fields,field_description:utm.field_hr_applicant_medium_id
+#: model:ir.model.fields,field_description:utm.field_link_tracker_medium_id
+#: model:ir.model.fields,field_description:utm.field_sale_order_medium_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_medium_id
 #: model:ir.ui.menu,name:utm.menu_utm_medium
 #: model:ir.ui.view,arch_db:utm.utm_medium_view_tree
@@ -164,6 +175,7 @@ msgid "Medium"
 msgstr "متوسط"
 
 #. module: utm
+#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
 #: model:utm.source,name:utm.utm_source_newsletter
 msgid "Newsletter"
 msgstr "نشرة الأخبار"
@@ -171,7 +183,7 @@ msgstr "نشرة الأخبار"
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_fall_drive
 msgid "Sale"
-msgstr ""
+msgstr "بيع"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_search_engine
@@ -180,6 +192,11 @@ msgstr "محرك البحث"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source
+#: model:ir.model.fields,field_description:utm.field_account_invoice_source_id
+#: model:ir.model.fields,field_description:utm.field_crm_lead_source_id
+#: model:ir.model.fields,field_description:utm.field_hr_applicant_source_id
+#: model:ir.model.fields,field_description:utm.field_link_tracker_source_id
+#: model:ir.model.fields,field_description:utm.field_sale_order_source_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_source_id
 msgid "Source"
 msgstr "الأصل"
@@ -196,22 +213,41 @@ msgid "Sources"
 msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_account_invoice_campaign_id
+#: model:ir.model.fields,help:utm.field_crm_lead_campaign_id
+#: model:ir.model.fields,help:utm.field_hr_applicant_campaign_id
+#: model:ir.model.fields,help:utm.field_link_tracker_campaign_id
+#: model:ir.model.fields,help:utm.field_sale_order_campaign_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_campaign_id
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts "
 "Ex: Fall_Drive, Christmas_Special"
-msgstr "هذا الاسم يساعدك على متابعة عدة حملات، مثل: حملة الأوكازيون، حملة رأس السنة"
+msgstr ""
+"هذا الاسم يساعدك على متابعة عدة حملات، مثل: حملة الأوكازيون، حملة رأس السنة"
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_account_invoice_medium_id
+#: model:ir.model.fields,help:utm.field_crm_lead_medium_id
+#: model:ir.model.fields,help:utm.field_hr_applicant_medium_id
+#: model:ir.model.fields,help:utm.field_link_tracker_medium_id
+#: model:ir.model.fields,help:utm.field_sale_order_medium_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "هذه هي طريقة التوصيل، مثل: بطاقة بريدية، البريد الإلكتروني، أو شريط إعلاني."
+#, fuzzy
+msgid "This is the method of delivery.Ex: Postcard, Email, or Banner Ad"
+msgstr ""
+"هذه هي طريقة التوصيل، مثل: بطاقة بريدية، البريد الإلكتروني، أو شريط إعلاني."
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_account_invoice_source_id
+#: model:ir.model.fields,help:utm.field_crm_lead_source_id
+#: model:ir.model.fields,help:utm.field_hr_applicant_source_id
+#: model:ir.model.fields,help:utm.field_link_tracker_source_id
+#: model:ir.model.fields,help:utm.field_sale_order_source_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_source_id
+#, fuzzy
 msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
+"This is the source of the link Ex:Search Engine, another domain,or name of "
+"email list"
 msgstr "هذا هو مصدر الرابط، مثل: محرك بحث، موقع آخر، اسم قائمة مراسلات."
 
 #. module: utm

@@ -1,25 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_landed_costs
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2015-11-30 09:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/lt/)\n"
+"Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/"
+"lt/)\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
+"%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:126
-#: code:addons/stock_landed_costs/stock_landed_costs.py:130
+#: code:addons/stock_landed_costs/stock_landed_costs.py:127
+#: code:addons/stock_landed_costs/stock_landed_costs.py:131
+#: code:addons/stock_landed_costs/stock_landed_costs.py:147
+#: code:addons/stock_landed_costs/stock_landed_costs.py:151
 #, python-format
 msgid " already out"
 msgstr "Nėra"
@@ -33,11 +37,6 @@ msgstr "Sąskaita"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_account_journal_id
 msgid "Account Journal"
 msgstr "Sąskaitos žurnalas"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_needaction
-msgid "Action Needed"
-msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_additional_landed_cost
@@ -129,11 +128,6 @@ msgid "Date"
 msgstr "Data"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Paskutinė pranešimo publikavimo data šiame įraše."
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_name
 msgid "Description"
@@ -173,24 +167,19 @@ msgid "Equal"
 msgstr "Vienodas"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_product_template_split_method
+msgid ""
+"Equal : Cost will be equally divided.\n"
+"By Quantity : Cost will be divided according to product's quantity.\n"
+"By Current cost : Cost will be divided according to product's current cost.\n"
+"By Weight : Cost will be divided depending on its weight.\n"
+"By Volume : Cost will be divided depending on its volume."
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
 msgid "Final Cost"
 msgstr "Galutinė savikaina"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_follower_ids
-msgid "Followers"
-msgstr "Prenumeratoriai"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_former_cost
@@ -215,24 +204,9 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Jeigu pažymėta, nauji pranešimai reikalaus jūsų dėmesio."
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Information"
 msgstr "Informacija"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_is_follower
-msgid "Is Follower"
-msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_description
@@ -272,14 +246,14 @@ msgid "Landed Costs"
 msgstr "Atvežimo savikainos"
 
 #. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Landed cost are computed based on the purchase unit of measure."
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
 msgstr "Atvežimo savikaina patvirtinta"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_last_post
-msgid "Last Message Date"
-msgstr "Paskutinio pranešimo data"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost___last_update
@@ -303,16 +277,6 @@ msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_ids
-msgid "Messages"
-msgstr "Pranešimai"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_ids
-msgid "Messages and communication history"
-msgstr "Pranešimų ir komunikacijos istorija"
-
-#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Month"
 msgstr "Mėnuo"
@@ -324,22 +288,7 @@ msgid "Name"
 msgstr "Pavadinimas"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Veiksmų skaičius"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Žinučių, kurių prireiks veiksmui skaičius"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Neperskaitytų žinučių skaičius"
-
-#. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:181
+#: code:addons/stock_landed_costs/stock_landed_costs.py:203
 #, python-format
 msgid "Only draft landed costs can be validated"
 msgstr ""
@@ -428,10 +377,14 @@ msgstr "Atsargų įvertinimo koregavimo eilutės"
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
-"landed costs. Landed costs are only possible for products configured in real"
-" time valuation with real price costing method. Please make sure it is the "
+"landed costs. Landed costs are only possible for products configured in real "
+"time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
-msgstr "Pasirinktame važtaraštyje nėra jokių perkėlimų, kad būtų paveikta atvežimo savikainos. Atvežimo savikaina yra tik produktams sukonfigūruotiems įvertinti realiuoju laiku su realios kainos savikainos metodu. Įsitikinkite, kad jis yra, ar pasirinkote tinkamą važtaraštį"
+msgstr ""
+"Pasirinktame važtaraštyje nėra jokių perkėlimų, kad būtų paveikta atvežimo "
+"savikainos. Atvežimo savikaina yra tik produktams sukonfigūruotiems "
+"įvertinti realiuoju laiku su realios kainos savikainos metodu. Įsitikinkite, "
+"kad jis yra, ar pasirinkote tinkamą važtaraštį"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_amount_total
@@ -439,22 +392,12 @@ msgid "Total"
 msgstr "Viso"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_unread
-msgid "Unread Messages"
-msgstr "Neskaityti pranešimai"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Validate"
 msgstr "Patikrinti"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:212
+#: code:addons/stock_landed_costs/stock_landed_costs.py:261
 #, python-format
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
@@ -479,22 +422,12 @@ msgid "Warning!"
 msgstr "Įspėjimas!"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_website_message_ids
-msgid "Website Messages"
-msgstr "Interneto svetainės pranešimai"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_website_message_ids
-msgid "Website communication history"
-msgstr "Interneto svetainės komunikacijos istorija"
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_weight
 msgid "Weight"
 msgstr "Svoris"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:183
+#: code:addons/stock_landed_costs/stock_landed_costs.py:205
 #, python-format
 msgid ""
 "You cannot validate a landed cost which has no valid valuation adjustments "
@@ -510,3 +443,39 @@ msgstr "aprašyti produkto charakteristikas..."
 #: model:ir.model,name:stock_landed_costs.model_purchase_config_settings
 msgid "purchase.config.settings"
 msgstr ""
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Paskutinė pranešimo publikavimo data šiame įraše."
+
+#~ msgid "Followers"
+#~ msgstr "Prenumeratoriai"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Jeigu pažymėta, nauji pranešimai reikalaus jūsų dėmesio."
+
+#~ msgid "Last Message Date"
+#~ msgstr "Paskutinio pranešimo data"
+
+#~ msgid "Messages"
+#~ msgstr "Pranešimai"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Pranešimų ir komunikacijos istorija"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Veiksmų skaičius"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Žinučių, kurių prireiks veiksmui skaičius"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Neperskaitytų žinučių skaičius"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Neskaityti pranešimai"
+
+#~ msgid "Website Messages"
+#~ msgstr "Interneto svetainės pranešimai"
+
+#~ msgid "Website communication history"
+#~ msgstr "Interneto svetainės komunikacijos istorija"

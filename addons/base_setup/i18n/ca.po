@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_setup
-# 
+#
 # Translators:
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-12-03 12:53+0000\n"
 "Last-Translator: Marc Tormo i Bochaca <mtbochaca@gmail.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_setup
@@ -29,6 +29,11 @@ msgid "Allow documents sharing"
 msgstr "Permet compartir documents"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_currency
+msgid "Allow multi currencies"
+msgstr ""
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
 msgstr "Permet als usuaris sincronitzar el seu calendari amb Google Calendar"
@@ -37,6 +42,11 @@ msgstr "Permet als usuaris sincronitzar el seu calendari amb Google Calendar"
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_base_import
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
 msgstr "Permet als usuaris importar dades de fitxers CSV/XLS/XLSX/ODS"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_currency
+msgid "Allows to work in a multi currency environment"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -197,7 +207,7 @@ msgid "Manage Inter Company"
 msgstr "Gestió entre empreses "
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_light_multi_company
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
 msgid "Manage multiple companies"
 msgstr "Gestiona múltiples empreses"
 
@@ -213,10 +223,17 @@ msgstr "Multi companyia"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Multi Currencies"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
-"Once installed, you can configure your API credentials for \"Google "
-"calendar\""
-msgstr "Un cop instal·lat, podeu configurar les credencials de al vostra API per a \"Google Calendar\""
+"Once installed, you can configure your API credentials for \"Google calendar"
+"\""
+msgstr ""
+"Un cop instal·lat, podeu configurar les credencials de al vostra API per a "
+"\"Google Calendar\""
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -247,9 +264,17 @@ msgstr "Compartir socis per a totes les empreses"
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_company_share_partner
 msgid ""
 "Share your partners to all companies defined in your instance.\n"
-" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
-msgstr "Comparteix els teus socis a totes les empreses definides en la instància..\n * Marcat : Els socis són visibles per a totes les companyies, fins i tot si l'empresa està definida al soci.\n * Desmarcat : Cada empresa pot veure només els seus socis (socis, on l'empresa es defineix). Els socis no relacionats amb una empresa són visibles per a totes les empreses."
+" * Checked : Partners are visible for every companies, even if a company is "
+"defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company "
+"is defined). Partners not related to a company are visible for all companies."
+msgstr ""
+"Comparteix els teus socis a totes les empreses definides en la instància..\n"
+" * Marcat : Els socis són visibles per a totes les companyies, fins i tot si "
+"l'empresa està definida al soci.\n"
+" * Desmarcat : Cada empresa pot veure només els seus socis (socis, on "
+"l'empresa es defineix). Els socis no relacionats amb una empresa són "
+"visibles per a totes les empreses."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -280,8 +305,12 @@ msgstr "Això instal·la el mòdul google_docs."
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_inter_company_rules
 msgid ""
 "This installs the module inter_company_rules.\n"
-" Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
-msgstr "Això instal·la el mòdul inter_company_rules.\nConfigura les regles de l'empresa per crear SO/PO quan una de les nostres empreses ven/compra a un altra empresa nostra."
+" Configure company rules to automatically create SO/PO when one of your "
+"company sells/buys to another of your company."
+msgstr ""
+"Això instal·la el mòdul inter_company_rules.\n"
+"Configura les regles de l'empresa per crear SO/PO quan una de les nostres "
+"empreses ven/compra a un altra empresa nostra."
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
@@ -297,32 +326,46 @@ msgstr "Utilitzar un proveïdor d'autenticació extern, entrada amb Google..."
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "When you send a document to a customer\n"
-"                                    (quotation, invoice), your customer will be\n"
-"                                    able to signup to get all his documents,\n"
-"                                    read your company news, check his projects,\n"
+"                                    (quotation, invoice), your customer will "
+"be\n"
+"                                    able to signup to get all his "
+"documents,\n"
+"                                    read your company news, check his "
+"projects,\n"
 "                                    etc."
-msgstr "Quan envieu un document a un client\n(pressupost, factura), serà capaç\nd'inscriure's per rebre tota la resta de documents,\nllegir les noticies de l'empresa, comprovar els seus\nprojectes, etc."
+msgstr ""
+"Quan envieu un document a un client\n"
+"(pressupost, factura), serà capaç\n"
+"d'inscriure's per rebre tota la resta de documents,\n"
+"llegir les noticies de l'empresa, comprovar els seus\n"
+"projectes, etc."
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_light_multi_company
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_company
 msgid ""
-"Work in multi-company environments, with appropriate security access between"
-" companies."
-msgstr "Treballar en entorns multi-empresa, amb l'accés de seguretat adient entre empreses. "
+"Work in multi-company environments, with appropriate security access between "
+"companies."
+msgstr ""
+"Treballar en entorns multi-empresa, amb l'accés de seguretat adient entre "
+"empreses. "
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
 msgid ""
 "You can use this wizard to change the terminologies for customers in the "
 "whole application."
-msgstr "Podeu utilitzar aquest assistent per canviar la terminologia per als clients en tota l'aplicació. "
+msgstr ""
+"Podeu utilitzar aquest assistent per canviar la terminologia per als clients "
+"en tota l'aplicació. "
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "You will find more options in your company details: address for the header "
 "and footer, overdue payments texts, etc."
-msgstr "Podreu trobar més opcions en els detalls de la vostra empresa: direcció per a la capçalera i el peu de pàgina, texts de pagaments endarrerits, etc."
+msgstr ""
+"Podreu trobar més opcions en els detalls de la vostra empresa: direcció per "
+"a la capçalera i el peu de pàgina, texts de pagaments endarrerits, etc."
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_config_settings

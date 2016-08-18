@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-# 
+#
 # Translators:
 # Ana Juaristi <ajuaristio@gmail.com>, 2015
 # Antonio Trueba, 2015-2016
@@ -10,56 +10,87 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-04 20:30+0000\n"
 "Last-Translator: Ivan Nieto <ivan.nieto.sousa@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
 msgid ""
-"            Will be safe_eval with `self` being the current transaction. i.e.:\n"
+"            Will be safe_eval with `self` being the current transaction. i."
+"e.:\n"
 "                self.env['my.model'].payment_validated(self)"
-msgstr "Será safe_eval con `self` actuando como la transacción actual. Por ej.:\nself.env['my.model'].payment_validated(self)"
+msgstr ""
+"Será safe_eval con `self` actuando como la transacción actual. Por ej.:\n"
+"self.env['my.model'].payment_validated(self)"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
-msgid "-It installs the module payment_adyen."
+#, fuzzy
+msgid "-This installs the module payment_adyen."
 msgstr "- Instala el módulo payment_adyen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
-msgid "-It installs the module payment_authorize."
+#, fuzzy
+msgid "-This installs the module payment_authorize."
 msgstr "- Instala el módulo «payment_authorize»."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
-msgid "-It installs the module payment_buckaroo."
+#, fuzzy
+msgid "-This installs the module payment_buckaroo."
 msgstr "- Instala el módulo payment_buckaroo."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
-msgid "-It installs the module payment_ogone."
+#, fuzzy
+msgid "-This installs the module payment_ogone."
 msgstr "- Instala el módulo payment_ogone."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
-msgid "-It installs the module payment_paypal."
+#, fuzzy
+msgid "-This installs the module payment_paypal."
+msgstr "- Instala el módulo payment_paypal."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_sips
+#, fuzzy
+msgid "-This installs the module payment_sips."
 msgstr "- Instala el módulo payment_paypal."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
-msgid "-It installs the module payment_transfer."
+#, fuzzy
+msgid "-This installs the module payment_transfer."
 msgstr "- Instala el módulo «payment_transfer»."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
 msgid "3D Secure HTML"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-danger\">Test</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-success\">Production</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 
 #. module: payment
@@ -117,6 +148,11 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid "At payment with acquirer confirmation"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
+msgid "Authorize.Net"
 msgstr ""
 
 #. module: payment
@@ -264,12 +300,15 @@ msgstr "Cargos"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr "Importe de las comisiones; establecido por el sistema porque depende de la entidad"
+msgstr ""
+"Importe de las comisiones; establecido por el sistema porque depende de la "
+"entidad"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
 msgid "Field used to store error and/or validation messages for information"
-msgstr "Campo usado para guardar los mensajes de error/o validación como información"
+msgstr ""
+"Campo usado para guardar los mensajes de error/o validación como información"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
@@ -488,7 +527,6 @@ msgstr "Transacción de pago"
 #: model:ir.actions.act_window,name:payment.action_payment_tx_ids
 #: model:ir.actions.act_window,name:payment.payment_transaction_action_child
 #: model:ir.model.fields,field_description:payment.field_payment_method_payment_ids
-#: model:ir.ui.menu,name:payment.finance_pay_tx_menu
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
@@ -496,7 +534,6 @@ msgid "Payment Transactions"
 msgstr "Transacciones de pago"
 
 #. module: payment
-#: model:ir.ui.menu,name:payment.finance_payment_menu
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.payment_method_form_view
@@ -542,7 +579,9 @@ msgstr "Referencia"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr "Referencia de la transferencia como se guardar en la base de datos de la entidad"
+msgstr ""
+"Referencia de la transferencia como se guardar en la base de datos de la "
+"entidad"
 
 #. module: payment
 #: constraint:payment.acquirer:0
@@ -561,7 +600,6 @@ msgstr ""
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_method_action
-#: model:ir.ui.menu,name:payment.finance_pay_method_menu
 #: model:ir.ui.menu,name:payment.payment_method_menu
 msgid "Saved Payment Data"
 msgstr ""
@@ -577,6 +615,11 @@ msgid "Server To Server"
 msgstr "Servidor a servidor"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_sips
+msgid "Sips"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
 msgid "Small-sized image"
 msgstr "Imagen pequeña"
@@ -584,9 +627,9 @@ msgstr "Imagen pequeña"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px"
-" image, with aspect ratio preserved. Use this field anywhere a small image "
-"is required."
+"Small-sized image of this provider. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 
 #. module: payment
@@ -618,13 +661,16 @@ msgstr "La referencia de la transacción de pago debe ser única"
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
 msgid ""
 "This field holds the image used for this provider, limited to 1024x1024px"
-msgstr "Este campo contiene la imagen usada para este proveedor, limitada a 1024X1024px"
+msgstr ""
+"Este campo contiene la imagen usada para este proveedor, limitada a "
+"1024X1024px"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is be rendered with qWeb with the following evaluation context:"
+"                                            It is be rendered with qWeb with "
+"the following evaluation context:"
 msgstr ""
 
 #. module: payment
@@ -695,14 +741,17 @@ msgstr "currency: el registro de la moneda de la transacción"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr "partner: el registro del cliente que compra, no necesariamente establecido"
+msgstr ""
+"partner: el registro del cliente que compra, no necesariamente establecido"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr "partner_values: valores específicos sobre el comprador, por ejemplo, viniendo un formulario de envío"
+msgstr ""
+"partner_values: valores específicos sobre el comprador, por ejemplo, "
+"viniendo un formulario de envío"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_method
@@ -725,11 +774,9 @@ msgid "tx_values: transaction values"
 msgstr "tx_values: valores de la transacción"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
-msgid "unknown"
-msgstr "desconocido"
-
-#. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr "user: registro del usuario actual"
+
+#~ msgid "unknown"
+#~ msgstr "desconocido"

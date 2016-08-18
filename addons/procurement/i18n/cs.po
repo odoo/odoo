@@ -1,35 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * procurement
-# 
+#
 # Translators:
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-05-23 12:24+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
+"#-#-#-#-#  cs.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"<b>Procurement Orders</b> represent the need for a certain quantity of "
-"products, at a given time, in a given location."
-msgstr ""
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"<b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
-"                <br>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc..."
-msgstr ""
+"#-#-#-#-#  cs.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
@@ -46,8 +36,10 @@ msgstr ""
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "A <b>procurement order</b> is used to record a need for a specific\n"
-"                product at a specific location. Procurement orders are usually\n"
-"                created automatically from <i>sales orders, pull logistic rules or\n"
+"                product at a specific location. Procurement orders are "
+"usually\n"
+"                created automatically from <i>sales orders, pull logistic "
+"rules or\n"
 "                minimum stock rules.</i>"
 msgstr ""
 
@@ -55,11 +47,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
 msgid "Action"
 msgstr "Akce"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction
-msgid "Action Needed"
-msgstr "Vyžadována akce"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
@@ -87,7 +74,7 @@ msgid "Cancelled"
 msgstr "Zrušeno"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:139
+#: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
 msgstr "Nemohu smazat zásobovací příkazy, které jsou ve stavu %s."
@@ -100,16 +87,8 @@ msgstr ""
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but"
-" can be manually set by the procurement manager to force an unusual "
-"behavior."
-msgstr ""
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"Click to create a Procurement order in exception state, or remove the filter"
-" on the search bar to display all the procurements."
+"Chosen rule for the procurement resolution. Usually chosen by the system but "
+"can be manually set by the procurement manager to force an unusual behavior."
 msgstr ""
 
 #. module: procurement
@@ -157,13 +136,9 @@ msgid "Created on"
 msgstr "Vytvořeno"
 
 #. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum posledního vzkazu u tohoto záznamu."
-
-#. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-msgid "Delivery Method"
+#, fuzzy
+msgid "Delivery Type"
 msgstr "Metoda doručení"
 
 #. module: procurement
@@ -215,21 +190,6 @@ msgid "Fixed Procurement Group"
 msgstr ""
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_follower_ids
-msgid "Followers"
-msgstr "Sledující"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Global"
 msgstr "Globální"
@@ -254,16 +214,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
 msgstr ""
@@ -272,16 +222,6 @@ msgstr ""
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr ""
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_is_follower
-msgid "Is Follower"
-msgstr ""
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_last_post
-msgid "Last Message Date"
-msgstr "Datum posledního vzkazu"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
@@ -323,14 +263,12 @@ msgid "Logistics"
 msgstr "Logistika"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_ids
-msgid "Messages"
-msgstr "Zprávy"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_ids
-msgid "Messages and communication history"
-msgstr "Zprávy a historie komunikace"
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"Most common exceptions are products to purchase without\n"
+"                having a vendor defined on the product, and products to\n"
+"                manufacture without having a bill of materials."
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -338,7 +276,7 @@ msgid "Name"
 msgstr "Název"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:206
+#: code:addons/procurement/procurement.py:200
 #, python-format
 msgid "No rule matching this procurement"
 msgstr ""
@@ -357,21 +295,6 @@ msgstr "Není naléhavé"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Notes"
 msgstr "Poznámky"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread_counter
-msgid "Number of unread messages"
-msgstr ""
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
@@ -423,7 +346,7 @@ msgstr ""
 #: model:ir.model,name:procurement.model_procurement_rule
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Pravidlo zásobování"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_tree
@@ -575,16 +498,6 @@ msgid "Unit of Measure"
 msgstr "Měrná jednotka"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread
-msgid "Unread Messages"
-msgstr "Nepřečtené zprávy"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Počítadlo nepřečtených zpráv"
-
-#. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Urgent"
 msgstr "Naléhavé"
@@ -595,22 +508,13 @@ msgid "Very Urgent"
 msgstr "Velmi naléhavé"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_website_message_ids
-msgid "Website Messages"
-msgstr "Zprávy Webové stránky"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_website_message_ids
-msgid "Website communication history"
-msgstr "Historie komunikace Webové stránky"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: purchase\n"
+"                creates the necessary operations to fulfill the need: "
+"purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
 
@@ -623,3 +527,36 @@ msgstr ""
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr "např. SO005"
+
+#~ msgid "Action Needed"
+#~ msgstr "Vyžadována akce"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Datum posledního vzkazu u tohoto záznamu."
+
+#~ msgid "Followers"
+#~ msgstr "Sledující"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
+
+#~ msgid "Last Message Date"
+#~ msgstr "Datum posledního vzkazu"
+
+#~ msgid "Messages"
+#~ msgstr "Zprávy"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Zprávy a historie komunikace"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Nepřečtené zprávy"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Počítadlo nepřečtených zpráv"
+
+#~ msgid "Website Messages"
+#~ msgstr "Zprávy Webové stránky"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historie komunikace Webové stránky"

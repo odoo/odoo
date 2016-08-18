@@ -1,26 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_picking_wave
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-01-25 08:56+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction
-msgid "Action Needed"
-msgstr ""
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
@@ -83,11 +78,6 @@ msgid "Created on"
 msgstr "작성일"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "레코드에 게시된 최근 메시지의 날짜."
-
-#. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_display_name
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_display_name
 msgid "Display Name"
@@ -103,21 +93,6 @@ msgstr "완료"
 #: selection:stock.picking.wave,state:0
 msgid "Draft"
 msgstr "기안"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_follower_ids
-msgid "Followers"
-msgstr "팔로워"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -144,7 +119,8 @@ msgstr "초코렛 아이스크림"
 #. module: stock_picking_wave
 #: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_choco
 #: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_choco_product_template
-msgid "Ice Cream Chocolate with stucks"
+#, fuzzy
+msgid "Ice Cream Chocolate with sticks"
 msgstr "막대 초코렛 아이스크림"
 
 #. module: stock_picking_wave
@@ -156,29 +132,9 @@ msgid "Ice Cream Vanilla"
 msgstr "바닐라 아이스크림"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_unread
-msgid "If checked new messages require your attention."
-msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 msgid "In Progress"
 msgstr "진행 중"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_is_follower
-msgid "Is Follower"
-msgstr ""
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_last_post
-msgid "Last Message Date"
-msgstr "최근 메시지 날짜"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave___last_update
@@ -204,16 +160,6 @@ msgid "List of picking associated to this wave"
 msgstr "해당 변동에 관련된 출하 목록"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_ids
-msgid "Messages"
-msgstr "메시지"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_ids
-msgid "Messages and communication history"
-msgstr "메시지 및 대화 기록"
-
-#. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_name
 msgid "Name of the picking wave"
 msgstr "출하 변동 이름"
@@ -225,21 +171,6 @@ msgid "Nothing to print."
 msgstr "인쇄할 것이 없습니다."
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_unread_counter
-msgid "Number of unread messages"
-msgstr ""
-
-#. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_user_id
 msgid "Person responsible for this wave"
 msgstr "변동에 책임있는 사람"
@@ -248,7 +179,7 @@ msgstr "변동에 책임있는 사람"
 #: code:addons/stock_picking_wave/stock_picking_wave.py:60
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9563
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -271,7 +202,7 @@ msgid "Picking Waves not finished"
 msgstr "출하 변동 미완료"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9563
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
 msgid "Picking wave associated to this picking"
 msgstr "출하에 관련된 출하 변동"
 
@@ -312,7 +243,9 @@ msgstr "변동 선택"
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
 "availability before setting this wave to done."
-msgstr "일부 출하는 여전히 상품을 기다리고 있습니다. 확인 또는 완료 변동을 설정하기 전에 가용성을 강제화 시키기 바랍니다."
+msgstr ""
+"일부 출하는 여전히 상품을 기다리고 있습니다. 확인 또는 완료 변동을 설정하기 "
+"전에 가용성을 강제화 시키기 바랍니다."
 
 #. module: stock_picking_wave
 #: model:product.product,name:stock_picking_wave.product_product_dry_specu
@@ -347,10 +280,13 @@ msgstr "재고 출하 변동"
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
 msgid ""
-"The Goal of the picking waves is to group operations that may \n"
-"                (needs to) be done together in order to increase their efficiency.\n"
-"                It may also be useful to assign jobs (one person = one wave) or\n"
-"                help the timing management of operations (tasks to be done at 1pm)."
+"The goal of the picking waves is to group operations that may\n"
+"                (needs to) be done together in order to increase their "
+"efficiency.\n"
+"                It may also be useful to assign jobs (one person = one wave) "
+"or\n"
+"                help the timing management of operations (tasks to be done "
+"at 1pm)."
 msgstr ""
 
 #. module: stock_picking_wave
@@ -365,16 +301,6 @@ msgid "Transferred by"
 msgstr ""
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_unread
-msgid "Unread Messages"
-msgstr "읽지 않은 메시지"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 msgid "User"
 msgstr "사용자"
@@ -384,12 +310,29 @@ msgstr "사용자"
 msgid "Wave"
 msgstr "변동"
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_website_message_ids
-msgid "Website Messages"
-msgstr "웹사이트 메시지"
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "레코드에 게시된 최근 메시지의 날짜."
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_website_message_ids
-msgid "Website communication history"
-msgstr "웹사이트 대화 이력"
+#~ msgid "Followers"
+#~ msgstr "팔로워"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
+
+#~ msgid "Last Message Date"
+#~ msgstr "최근 메시지 날짜"
+
+#~ msgid "Messages"
+#~ msgstr "메시지"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "메시지 및 대화 기록"
+
+#~ msgid "Unread Messages"
+#~ msgstr "읽지 않은 메시지"
+
+#~ msgid "Website Messages"
+#~ msgstr "웹사이트 메시지"
+
+#~ msgid "Website communication history"
+#~ msgstr "웹사이트 대화 이력"

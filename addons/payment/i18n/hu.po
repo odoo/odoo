@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-# 
+#
 # Translators:
 # krnkris, 2015
 # krnkris, 2016
@@ -9,57 +9,90 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
+"hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
 msgid ""
-"            Will be safe_eval with `self` being the current transaction. i.e.:\n"
+"            Will be safe_eval with `self` being the current transaction. i."
+"e.:\n"
 "                self.env['my.model'].payment_validated(self)"
-msgstr "            Bizt_ért /safe_eval/ lesz a `saját` jelenlegi tranzakciójával. pl.:\n                self.env['my.model'].payment_validated(self)"
+msgstr ""
+"            Bizt_ért /safe_eval/ lesz a `saját` jelenlegi tranzakciójával. "
+"pl.:\n"
+"                self.env['my.model'].payment_validated(self)"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
-msgid "-It installs the module payment_adyen."
+#, fuzzy
+msgid "-This installs the module payment_adyen."
 msgstr "-Ez a payment_adyen modult telepíti."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
-msgid "-It installs the module payment_authorize."
+#, fuzzy
+msgid "-This installs the module payment_authorize."
 msgstr "-Ez a payment_authorize modult telepíti."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
-msgid "-It installs the module payment_buckaroo."
+#, fuzzy
+msgid "-This installs the module payment_buckaroo."
 msgstr "-Ez a payment_buckaroo modult telepíti."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
-msgid "-It installs the module payment_ogone."
+#, fuzzy
+msgid "-This installs the module payment_ogone."
 msgstr "-Ez a payment_ogone modult telepíti."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
-msgid "-It installs the module payment_paypal."
+#, fuzzy
+msgid "-This installs the module payment_paypal."
+msgstr "-Ez a payment_paypal modult telepíti."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_sips
+#, fuzzy
+msgid "-This installs the module payment_sips."
 msgstr "-Ez a payment_paypal modult telepíti."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
-msgid "-It installs the module payment_transfer."
+#, fuzzy
+msgid "-This installs the module payment_transfer."
 msgstr "-Ez a payment_transfer modult telepít."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
 msgid "3D Secure HTML"
 msgstr "3D Secure biztonsági HTML"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-danger\">Test</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-success\">Production</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
@@ -117,6 +150,11 @@ msgstr "A fizetésnél nem kell igénylői visszaigazolás"
 #: selection:payment.acquirer,auto_confirm:0
 msgid "At payment with acquirer confirmation"
 msgstr "Fizetés igénylői visszaigazolással"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
+msgid "Authorize.Net"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_buckaroo
@@ -263,12 +301,14 @@ msgstr "Díjak"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr "Díjak mennyisége; a rendszer által beállítva, mivel az a lebonyolítótól függ"
+msgstr ""
+"Díjak mennyisége; a rendszer által beállítva, mivel az a lebonyolítótól függ"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
 msgid "Field used to store error and/or validation messages for information"
-msgstr "A mező a hiba és/vagy információ érvényesítési üzenet elmentésére szolgál"
+msgstr ""
+"A mező a hiba és/vagy információ érvényesítési üzenet elmentésére szolgál"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
@@ -364,7 +404,10 @@ msgid ""
 "Medium-sized image of this provider. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "Közepes-méretű képe ennek a szolgáltatónak. Ez automatikusan át lesz méretezve mint egy 128x128px kép, az arányokat megtartva. Használja ezt a mezőt a forma nézetben vagy egyes kanban nézetben."
+msgstr ""
+"Közepes-méretű képe ennek a szolgáltatónak. Ez automatikusan át lesz "
+"méretezve mint egy 128x128px kép, az arányokat megtartva. Használja ezt a "
+"mezőt a forma nézetben vagy egyes kanban nézetben."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
@@ -390,21 +433,27 @@ msgstr "A fizetési művelet végrehajtása közbeni hibákra üzenetet jelez ki
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
-msgstr "A fizetési művelet végrehajtása közbeni megrendelés visszavonásokra üzenetet jelez ki."
+msgstr ""
+"A fizetési művelet végrehajtása közbeni megrendelés visszavonásokra üzenetet "
+"jelez ki."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
 msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
-msgstr "A fizetési művelet végrehajtása után, a megfelelően lefutott megrendelésekre üzenetet jelez ki."
+msgstr ""
+"A fizetési művelet végrehajtása után, a megfelelően lefutott megrendelésekre "
+"üzenetet jelez ki."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
 msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
-msgstr "A fizetési művelet végrehajtása után, ha a megrendelés függőben maradt, üzenetet jelez ki."
+msgstr ""
+"A fizetési művelet végrehajtása után, ha a megrendelés függőben maradt, "
+"üzenetet jelez ki."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -487,7 +536,6 @@ msgstr "Fizetési tranzakció"
 #: model:ir.actions.act_window,name:payment.action_payment_tx_ids
 #: model:ir.actions.act_window,name:payment.payment_transaction_action_child
 #: model:ir.model.fields,field_description:payment.field_payment_method_payment_ids
-#: model:ir.ui.menu,name:payment.finance_pay_tx_menu
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
@@ -495,7 +543,6 @@ msgid "Payment Transactions"
 msgstr "Fizetési tranzakciók"
 
 #. module: payment
-#: model:ir.ui.menu,name:payment.finance_payment_menu
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.payment_method_form_view
@@ -560,7 +607,6 @@ msgstr "S2S űrlap sablon"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_method_action
-#: model:ir.ui.menu,name:payment.finance_pay_method_menu
 #: model:ir.ui.menu,name:payment.payment_method_menu
 msgid "Saved Payment Data"
 msgstr "Elmentett fizetési adatok"
@@ -576,6 +622,11 @@ msgid "Server To Server"
 msgstr "Szervertől szerverhez"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_sips
+msgid "Sips"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
 msgid "Small-sized image"
 msgstr "Kis méretű ábra"
@@ -583,10 +634,13 @@ msgstr "Kis méretű ábra"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px"
-" image, with aspect ratio preserved. Use this field anywhere a small image "
-"is required."
-msgstr "Kis-méretű kép a szolgáltatóról. Automatikusan át lesz alakítva mint 64x64px képpontos kép, az arányt megtartva. Használja ezt a mezőt mindenhol ahol kis képre van szükség."
+"Small-sized image of this provider. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
+msgstr ""
+"Kis-méretű kép a szolgáltatóról. Automatikusan át lesz alakítva mint 64x64px "
+"képpontos kép, az arányt megtartva. Használja ezt a mezőt mindenhol ahol kis "
+"képre van szükség."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
@@ -623,8 +677,13 @@ msgstr "Ez a szolgáltató képét tartalmazza, limitálva 1024x1024px képpontr
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is be rendered with qWeb with the following evaluation context:"
-msgstr "Ez a sablon a lebonyolító gombjaihoz hozzárendeli az összes szükséges értékeket.\n                                    Ez a qWeb használatával rendeli hozzá a következő értékelési összefüggésekkel:"
+"                                            It is be rendered with qWeb with "
+"the following evaluation context:"
+msgstr ""
+"Ez a sablon a lebonyolító gombjaihoz hozzárendeli az összes szükséges "
+"értékeket.\n"
+"                                    Ez a qWeb használatával rendeli hozzá a "
+"következő értékelési összefüggésekkel:"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type
@@ -694,14 +753,17 @@ msgstr "pénznem: a tranzakció pénznemét böngésző rekord"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr "partner: a vásárlói partner böngészési rekord, nem szükséges beállítani"
+msgstr ""
+"partner: a vásárlói partner böngészési rekord, nem szükséges beállítani"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr "partner_values: értéket határoz meg a vásárlóhoz, például egy küldemény űrlapjáról levett"
+msgstr ""
+"partner_values: értéket határoz meg a vásárlóhoz, például egy küldemény "
+"űrlapjáról levett"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_method
@@ -724,11 +786,9 @@ msgid "tx_values: transaction values"
 msgstr "tx_values: tranzakció értékei"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
-msgid "unknown"
-msgstr "ismeretlen"
-
-#. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr "user: jelenlegi felhasználó böngésézsi rekord"
+
+#~ msgid "unknown"
+#~ msgstr "ismeretlen"

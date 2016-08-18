@@ -1,27 +1,44 @@
+# #-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * analytic
-# 
+#
+# Translators:
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
+# #-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * analytic
+#
 # Translators:
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2015
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-07-18 22:30+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+#, fuzzy
 msgid "(Keep empty to open the current situation)"
-msgstr "（現在の状態を開くために空のままとします）"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"(全期間指定の場合は日付を入れないでください)\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"（現在の状態を開くために空のままとします）"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_chart
@@ -31,12 +48,13 @@ msgstr "アカウント分析チャート"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
 msgid "Account Currency"
-msgstr ""
+msgstr "会計通貨"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction
-msgid "Action Needed"
-msgstr "必要なアクション"
+#: selection:account.analytic.account,account_type:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+msgid "Active"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
@@ -75,18 +93,23 @@ msgstr "分析勘定"
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+#, fuzzy
 msgid "Analytic Entries"
-msgstr "分析エントリー"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"分析エントリ\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"分析エントリー"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
+#, fuzzy
 msgid "Analytic Entry"
-msgstr "分析エントリー"
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "分析行"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"分析エントリ\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"分析エントリー"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
@@ -105,13 +128,18 @@ msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,account_type:0
-msgid "Analytic View"
-msgstr "分析ビュー"
+msgid "Archived"
+msgstr ""
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#, fuzzy
 msgid "Associated Partner"
-msgstr "関連パートナ"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"関連取引先\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"関連パートナ"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
@@ -181,8 +209,13 @@ msgstr "作成日"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_credit
+#, fuzzy
 msgid "Credit"
-msgstr "貸方"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"費用\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"貸方"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_currency_id
@@ -200,14 +233,14 @@ msgid "Date"
 msgstr "日付"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "記録上の最後のメッセージが投稿された日"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_debit
+#, fuzzy
 msgid "Debit"
-msgstr "借方"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"収益\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"借方"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_name
@@ -223,24 +256,14 @@ msgid "Display Name"
 msgstr "表示名"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_follower_ids
-msgid "Followers"
-msgstr "フォロワー"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "フォロワー(チャンネル)"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "フォロワー(取引先)"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
+#, fuzzy
 msgid "From"
-msgstr "差出人"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"開始日\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"差出人"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -257,33 +280,14 @@ msgid "ID"
 msgstr "ID"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sale orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_is_follower
-msgid "Is Follower"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_last_post
-msgid "Last Message Date"
-msgstr "最終メッセージ日"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
@@ -310,16 +314,6 @@ msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_ids
-msgid "Messages"
-msgstr "メッセージ"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_ids
-msgid "Messages and communication history"
-msgstr "メッセージと通信履歴"
-
-#. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account."
 msgstr ""
@@ -328,21 +322,6 @@ msgstr ""
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet."
 msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction_counter
-msgid "Number of Actions"
-msgstr "アクションの数"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread_counter
-msgid "Number of unread messages"
-msgstr "未読メッセージ数"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
@@ -370,8 +349,10 @@ msgstr "参照"
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sale orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sale "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 
@@ -384,6 +365,11 @@ msgstr "分析行検索"
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
 msgid "Select the Period for Analysis"
 msgstr "分析期間の選択"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
+msgid "State"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
@@ -403,8 +389,13 @@ msgstr "会社の通貨と等しくない場合は関連するアカウントの
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_to_date
+#, fuzzy
 msgid "To"
-msgstr "宛先"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"終了日\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"宛先"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -412,26 +403,62 @@ msgid "Total"
 msgstr "合計"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
-msgid "Type of Account"
-msgstr "勘定タイプ"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_unread
-msgid "Unread Messages"
-msgstr "未読メッセージ"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "未読メッセージカウンター"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_user_id
 msgid "User"
 msgstr "ユーザ"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+#, fuzzy
+msgid "account analytic line"
+msgstr "アカウント分析チャート"
+
+#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr ""
+
+#~ msgid "Action Needed"
+#~ msgstr "必要なアクション"
+
+#~ msgid "Analytic Line"
+#~ msgstr "分析行"
+
+#~ msgid "Analytic View"
+#~ msgstr "分析ビュー"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "記録上の最後のメッセージが投稿された日"
+
+#~ msgid "Followers"
+#~ msgstr "フォロワー"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "フォロワー(チャンネル)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "フォロワー(取引先)"
+
+#~ msgid "Last Message Date"
+#~ msgstr "最終メッセージ日"
+
+#~ msgid "Messages"
+#~ msgstr "メッセージ"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "メッセージと通信履歴"
+
+#~ msgid "Number of Actions"
+#~ msgstr "アクションの数"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "未読メッセージ数"
+
+#~ msgid "Type of Account"
+#~ msgstr "勘定タイプ"
+
+#~ msgid "Unread Messages"
+#~ msgstr "未読メッセージ"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "未読メッセージカウンター"

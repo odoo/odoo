@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-# 
+#
 # Translators:
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
@@ -9,57 +9,90 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-05-09 07:27+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
 msgid ""
-"            Will be safe_eval with `self` being the current transaction. i.e.:\n"
+"            Will be safe_eval with `self` being the current transaction. i."
+"e.:\n"
 "                self.env['my.model'].payment_validated(self)"
-msgstr "            Will be safe_eval with `self` being the current transaction. i.e.:\n                self.env['my.model'].payment_validated(self)"
+msgstr ""
+"            Will be safe_eval with `self` being the current transaction. i."
+"e.:\n"
+"                self.env['my.model'].payment_validated(self)"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
-msgid "-It installs the module payment_adyen."
+#, fuzzy
+msgid "-This installs the module payment_adyen."
 msgstr "-Instalira modul payment_adyen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
-msgid "-It installs the module payment_authorize."
+#, fuzzy
+msgid "-This installs the module payment_authorize."
 msgstr "-Instalira molud payment_authorize."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
-msgid "-It installs the module payment_buckaroo."
+#, fuzzy
+msgid "-This installs the module payment_buckaroo."
 msgstr "-Instalira modul payment_buckaroo."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
-msgid "-It installs the module payment_ogone."
+#, fuzzy
+msgid "-This installs the module payment_ogone."
 msgstr "-Instalira modul payment_ogone."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
-msgid "-It installs the module payment_paypal."
+#, fuzzy
+msgid "-This installs the module payment_paypal."
+msgstr "-Instalira modul payment_paypal."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_sips
+#, fuzzy
+msgid "-This installs the module payment_sips."
 msgstr "-Instalira modul payment_paypal."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
-msgid "-It installs the module payment_transfer."
+#, fuzzy
+msgid "-This installs the module payment_transfer."
 msgstr "-Instalira modul payment_transfer."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
 msgid "3D Secure HTML"
 msgstr "3D Secure HTML"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-danger\">Test</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-success\">Production</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
@@ -117,6 +150,11 @@ msgstr "Prilikom isplate nisu potrebne potvrde stjecatelja"
 #: selection:payment.acquirer,auto_confirm:0
 msgid "At payment with acquirer confirmation"
 msgstr "Prilikom isplate sa potvrdom stjecatelja"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
+msgid "Authorize.Net"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_buckaroo
@@ -268,7 +306,8 @@ msgstr "Iznos naknade; postavlja sustav jer ovisi o stjecatelju"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
 msgid "Field used to store error and/or validation messages for information"
-msgstr "Polje se koristi za pohranu pogreške i/ili poruke o potvrdi za informacije "
+msgstr ""
+"Polje se koristi za pohranu pogreške i/ili poruke o potvrdi za informacije "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
@@ -397,14 +436,17 @@ msgstr "Poruka se prikazuje ako se narudžba otkaže prilikom postupka plaćanja
 msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
-msgstr "Poruka se prikazuje ako je narudžba uspješno završena nakon postupka plaćanja. "
+msgstr ""
+"Poruka se prikazuje ako je narudžba uspješno završena nakon postupka "
+"plaćanja. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
 msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
-msgstr "Poruka se prikazuje ako je narudžba u stanju čekanja nakon postupka plaćanja."
+msgstr ""
+"Poruka se prikazuje ako je narudžba u stanju čekanja nakon postupka plaćanja."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -487,7 +529,6 @@ msgstr "Transakcija plaćanja"
 #: model:ir.actions.act_window,name:payment.action_payment_tx_ids
 #: model:ir.actions.act_window,name:payment.payment_transaction_action_child
 #: model:ir.model.fields,field_description:payment.field_payment_method_payment_ids
-#: model:ir.ui.menu,name:payment.finance_pay_tx_menu
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
@@ -495,7 +536,6 @@ msgid "Payment Transactions"
 msgstr "Transakcija plaćanja"
 
 #. module: payment
-#: model:ir.ui.menu,name:payment.finance_payment_menu
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.payment_method_form_view
@@ -560,7 +600,6 @@ msgstr "Predložak obrasca S2S"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_method_action
-#: model:ir.ui.menu,name:payment.finance_pay_method_menu
 #: model:ir.ui.menu,name:payment.payment_method_menu
 msgid "Saved Payment Data"
 msgstr "Spremljeni podaci plaćanja"
@@ -576,6 +615,11 @@ msgid "Server To Server"
 msgstr "Poslužitelj do poslužitelja"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_sips
+msgid "Sips"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
 msgid "Small-sized image"
 msgstr "Slika male veličine"
@@ -583,10 +627,12 @@ msgstr "Slika male veličine"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px"
-" image, with aspect ratio preserved. Use this field anywhere a small image "
-"is required."
-msgstr "Mala slika poslužitelja. Automatski je izmjenjena veličina na 64x64px sa očuvanim proporcijama. Koristitie ovo polje svuda gdje se traži mala slika."
+"Small-sized image of this provider. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
+msgstr ""
+"Mala slika poslužitelja. Automatski je izmjenjena veličina na 64x64px sa "
+"očuvanim proporcijama. Koristitie ovo polje svuda gdje se traži mala slika."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
@@ -623,7 +669,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is be rendered with qWeb with the following evaluation context:"
+"                                            It is be rendered with qWeb with "
+"the following evaluation context:"
 msgstr ""
 
 #. module: payment
@@ -724,11 +771,9 @@ msgid "tx_values: transaction values"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
-msgid "unknown"
-msgstr "nepoznato"
-
-#. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr ""
+
+#~ msgid "unknown"
+#~ msgstr "nepoznato"

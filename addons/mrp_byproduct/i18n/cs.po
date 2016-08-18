@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_byproduct
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-08-25 10:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: mrp_byproduct
@@ -63,12 +63,19 @@ msgid ""
 "that the quantity will be computed as    '(quantity of byproduct set on the "
 "BoM / quantity of manufactured product set on the BoM * quantity of "
 "manufactured product in the production order.)'"
-msgstr "Zvolte, jak bude množství polotovarů závislé na výrobních příkazech za použití tohoto kusovníku. 'Pevný' značí situaci, kde je množství polotovarů vždy stejné jako množství zadané v kusovníku, bez ohledu na to, kolik polotovarů je vytvořeno ve výrobním příkazu. Naproti tomu, 'Proměnný' označuje, že množství bude spočítání jako '(množství polotovarů na základě kusovníku / množství výrobků udaných v kusovníku * množství výrobků zadaných ve výrobním příkazu.)'"
+msgstr ""
+"Zvolte, jak bude množství polotovarů závislé na výrobních příkazech za "
+"použití tohoto kusovníku. 'Pevný' značí situaci, kde je množství polotovarů "
+"vždy stejné jako množství zadané v kusovníku, bez ohledu na to, kolik "
+"polotovarů je vytvořeno ve výrobním příkazu. Naproti tomu, 'Proměnný' "
+"označuje, že množství bude spočítání jako '(množství polotovarů na základě "
+"kusovníku / množství výrobků udaných v kusovníku * množství výrobků zadaných "
+"ve výrobním příkazu.)'"
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Zobrazovaný název"
 
 #. module: mrp_byproduct
 #: selection:mrp.subproduct,subproduct_type:0
@@ -96,11 +103,6 @@ msgid "Last Updated on"
 msgstr "Naposled upraveno"
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Výrobní příkaz"
-
-#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
 msgid "Product"
 msgstr "Výrobek"
@@ -114,6 +116,12 @@ msgstr "Množství výrobků"
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom
 msgid "Product Unit of Measure"
 msgstr "Měrná jednotka výrobku"
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_production
+#, fuzzy
+msgid "Production"
+msgstr "Výrobek"
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_subproduct_type
@@ -138,3 +146,6 @@ msgstr "Proměnné"
 #, python-format
 msgid "Warning"
 msgstr "Varování"
+
+#~ msgid "Manufacturing Order"
+#~ msgstr "Výrobní příkaz"

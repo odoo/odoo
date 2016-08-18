@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_service
-# 
+#
 # Translators:
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
 # Viktor Pogrebniak <vp@aifil.ru>, 2016
@@ -9,25 +9,44 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-04-17 23:02+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: sale_service
-#: model:ir.model,name:sale_service.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Позиция аналитики"
+#: model:ir.model.fields,field_description:sale_service.field_product_product_available_in_pos
+msgid "Available in the Point of Sale"
+msgstr ""
 
 #. module: sale_service
-#: model:ir.model.fields,field_description:sale_service.field_project_task_type_closed
-msgid "Is a close stage"
-msgstr "Завершенная стадия"
+#: model:ir.model.fields,help:sale_service.field_product_product_to_weight
+msgid ""
+"Check if the product should be weighted using the hardware scale integration"
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,help:sale_service.field_product_product_available_in_pos
+msgid "Check if you want this product to appear in the Point of Sale"
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,help:sale_service.field_product_product_project_id
+#: model:ir.model.fields,help:sale_service.field_product_template_project_id
+msgid "Create a task under this project on sale order validation."
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,field_description:sale_service.field_product_product_hs_code
+msgid "HS Code"
+msgstr ""
 
 #. module: sale_service
 #: model:ir.ui.view,arch_db:sale_service.view_sale_service_inherit_form2
@@ -35,10 +54,22 @@ msgid "Order Line"
 msgstr "Строка заказа"
 
 #. module: sale_service
+#: model:ir.model.fields,field_description:sale_service.field_product_product_pos_categ_id
+msgid "Point of Sale Category"
+msgstr ""
+
+#. module: sale_service
 #: model:ir.model,name:sale_service.model_procurement_order
+#: model:ir.model.fields,field_description:sale_service.field_product_product_purchase_requisition
 #: model:ir.model.fields,field_description:sale_service.field_project_task_procurement_id
 msgid "Procurement"
 msgstr "Снабжение"
+
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_product_product
+#, fuzzy
+msgid "Product"
+msgstr "Шаблон продукта"
 
 #. module: sale_service
 #: model:ir.model,name:sale_service.model_product_template
@@ -46,12 +77,14 @@ msgid "Product Template"
 msgstr "Шаблон продукта"
 
 #. module: sale_service
+#: model:ir.model.fields,field_description:sale_service.field_product_product_project_id
 #: model:ir.model.fields,field_description:sale_service.field_product_template_project_id
 msgid "Project"
 msgstr "Проект"
 
 #. module: sale_service
 #: model:ir.model,name:sale_service.model_sale_order
+#: model:ir.ui.view,arch_db:sale_service.view_sale_service_inherit_form2
 msgid "Sales Order"
 msgstr "Заказ продаж"
 
@@ -62,18 +95,18 @@ msgid "Sales Order Line"
 msgstr "Позиция заказа на продажу"
 
 #. module: sale_service
+#: model:ir.model.fields,help:sale_service.field_product_product_hs_code
+msgid "Standardized code for international shipping and goods declaration"
+msgstr ""
+
+#. module: sale_service
 #: model:ir.model,name:sale_service.model_project_task
 #: model:ir.model.fields,field_description:sale_service.field_procurement_order_task_id
 msgid "Task"
 msgstr "Задача"
 
 #. module: sale_service
-#: model:ir.model,name:sale_service.model_project_task_type
-msgid "Task Stage"
-msgstr "Стадия задачи"
-
-#. module: sale_service
-#: code:addons/sale_service/models/sale_service.py:92
+#: code:addons/sale_service/models/sale_service.py:88
 #, python-format
 msgid "Task created"
 msgstr "Задача создана"
@@ -90,14 +123,36 @@ msgid "Tasks associated to this sale"
 msgstr "Задачи, связанные с этой продажей"
 
 #. module: sale_service
-#: model:ir.model.fields,help:sale_service.field_project_task_type_closed
-msgid "Tasks in this stage are considered as closed."
-msgstr "Задачи на этой стадии считаются завершенными."
+#: model:ir.model.fields,help:sale_service.field_product_product_pos_categ_id
+msgid "Those categories are used to group similar products for point of sale."
+msgstr ""
 
 #. module: sale_service
-#: code:addons/sale_service/models/sale_service.py:142
+#: model:ir.model.fields,field_description:sale_service.field_product_product_to_weight
+msgid "To Weigh With Scale"
+msgstr ""
+
+#. module: sale_service
+#: code:addons/sale_service/models/sale_service.py:107
 #, python-format
 msgid ""
 "You cannot delete a task related to a Sale Order. You can only archive this "
 "task."
-msgstr "Вы не можете удалить задачу, связанную с заказом. Вы можете только архивировать эту задачу."
+msgstr ""
+"Вы не можете удалить задачу, связанную с заказом. Вы можете только "
+"архивировать эту задачу."
+
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_account_analytic_line
+#, fuzzy
+msgid "account analytic line"
+msgstr "Позиция аналитики"
+
+#~ msgid "Is a close stage"
+#~ msgstr "Завершенная стадия"
+
+#~ msgid "Task Stage"
+#~ msgstr "Стадия задачи"
+
+#~ msgid "Tasks in this stage are considered as closed."
+#~ msgstr "Задачи на этой стадии считаются завершенными."

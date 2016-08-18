@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~10c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2015-10-01 06:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-08-18 14:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,7 +36,7 @@ msgid "Accounting Information"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/wizard/stock_change_standard_price.py:58
+#: code:addons/stock_account/wizard/stock_change_standard_price.py:62
 #, python-format
 msgid "Active ID is not set in Context."
 msgstr ""
@@ -44,11 +44,6 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_group_stock_inventory_valuation
 msgid "Allows to configure inventory valuations on products and product categories."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_asset_category_id
-msgid "Asset Type"
 msgstr ""
 
 #. module: stock_account
@@ -66,6 +61,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Cancel"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:278
+#, python-format
+msgid "Cannot find a stock input account for the product %s. You must define one on the product category, or on the location, before processing this operation."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:280
+#, python-format
+msgid "Cannot find a stock output account for the product %s. You must define one on the product category, or on the location, before processing this operation."
 msgstr ""
 
 #. module: stock_account
@@ -107,8 +114,15 @@ msgid "Company"
 msgstr ""
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Compute from average price"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:351
+#, python-format
+msgid "Configuration error. Please configure the price difference account on the product or its category to process this operation."
 msgstr ""
 
 #. module: stock_account
@@ -121,6 +135,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
 msgid "Costing Method"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
+msgid "Counter-Part Account"
 msgstr ""
 
 #. module: stock_account
@@ -138,11 +157,6 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_date
 msgid "Date"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_deferred_revenue_category_id
-msgid "Deferred Revenue Type"
 msgstr ""
 
 #. module: stock_account
@@ -278,7 +292,8 @@ msgid "Move"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/product.py:124
+#: code:addons/stock_account/product.py:125
+#: code:addons/stock_account/product.py:187
 #, python-format
 msgid "No difference between standard price and new price!"
 msgstr ""
@@ -394,6 +409,12 @@ msgid "Serial Number"
 msgstr ""
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
+#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+msgid "Set standard price"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
 msgid "Source"
 msgstr ""
@@ -415,8 +436,10 @@ msgid "Standard Price"
 msgstr ""
 
 #. module: stock_account
+#: code:addons/stock_account/product.py:138
 #: code:addons/stock_account/product.py:145
-#: code:addons/stock_account/product.py:152
+#: code:addons/stock_account/product.py:199
+#: code:addons/stock_account/product.py:205
 #, python-format
 msgid "Standard Price changed"
 msgstr ""
@@ -444,7 +467,7 @@ msgid "Stock Input Account"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:418
+#: code:addons/stock_account/stock_account.py:464
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
@@ -491,6 +514,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Templates for Account Chart"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:306
+#, python-format
+msgid "The found valuation amount for product %s is zero. Which means there is probably a configuration error. Check the costing method and the standard price"
 msgstr ""
 
 #. module: stock_account
@@ -581,9 +610,15 @@ msgid "Wizard that opens the stock valuation history table"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:275
+#: code:addons/stock_account/stock_account.py:276
 #, python-format
 msgid "You don't have any stock journal defined on your product category, check if you have installed a chart of accounts"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:282
+#, python-format
+msgid "You don't have any stock valuation account defined on your product category. You must define one before processing this operation."
 msgstr ""
 
 #. module: stock_account

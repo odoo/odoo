@@ -1,144 +1,75 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * purchase
-# 
+#
 # Translators:
 # Arek Smagacz <arek.smagacz@gmail.com>, 2015
 # zbik2607 <darek@krokus.com.pl>, 2016
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2015-2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:18+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-07-11 07:32+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-
-#. module: purchase
-#: model:mail.template,body_html:purchase.email_template_edi_purchase_done
-msgid ""
-"\n"
-"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"\n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.partner_ref:\n"
-"       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
-"       % endif\n"
-"       % if object.create_uid:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.create_uid.email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br/>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Witaj ${object.partner_id.name},</p>\n\n    <p>Tutaj jest ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} z ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCJE</strong><br />\n       &nbsp;&nbsp;Numer zamówienia: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Suma zamówienia: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Data zamówienia: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Referencje zamówienia: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;Twoje referencje: ${object.partner_ref}<br />\n       % endif\n       % if object.create_uid:\n       &nbsp;&nbsp;Twój kontakt: <a href=\"mailto:${object.create_uid.email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Jeśli masz jakiekolwiek pytania, nie wahaj się z nami skontaktować.</p>\n    <p>Dziękujemy!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Strona :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+"#-#-#-#-#  pl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"#-#-#-#-#  pl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
+#: model:mail.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<p>Dear\n"
+"% if object.partner_id.is_company and object.child_ids:\n"
+"    ${object.partner_id.child_ids[0].name}\n"
+"% else :\n"
+"    ${object.partner_id.name}\n"
+"% endif\n"
+",</p><p>\n"
+"Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or "
+"'purchase order confirmation'} <strong>${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    with reference: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"amounting <strong>${object.amount_total} ${object.currency_id.name}</"
+"strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
 "\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"\n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;RFQ number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;RFQ date: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;RFQ reference: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.partner_ref:\n"
-"       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
-"       % endif\n"
-"       % if object.create_uid:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.create_uid.email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br/>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Witaj ${object.partner_id.name},</p>\n\n    <p>Tutaj jest ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} z ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCJE</strong><br />\n       &nbsp;&nbsp;RFQ numer: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;RFQ data: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;RFQ referencje: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;Twoje referencje: ${object.partner_ref}<br />\n       % endif\n       % if object.create_uid:\n       &nbsp;&nbsp;Twój kontakt: <a href=\"mailto:${object.create_uid.email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Jeśli masz jakiekolwiek pytania, nie wahaj się z nami skontaktować.</p>\n    <p>Dziękujemy!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Strona :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+"<p>If you have any question, do not hesitate to contact us.</p>\n"
+"<p>Best regards,</p>\n"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_stock_dropshipping
+#, fuzzy
 msgid ""
 "\n"
-"Creates the dropship Route and add more complex tests-This installs the module stock_dropshipping."
-msgstr "\nUtwórz trasę dropship i dodaj więcej skomplikowanych testów-Instaluj moduł stock_dropshipping."
+"Creates the dropship Route and add more complex tests\n"
+"-This installs the module stock_dropshipping."
+msgstr ""
+"\n"
+"Utwórz trasę dropship i dodaj więcej skomplikowanych testów-Instaluj moduł "
+"stock_dropshipping."
 
 #. module: purchase
-#: code:addons/purchase/stock.py:62
+#: code:addons/purchase/stock.py:81
 #, python-format
 msgid " Buy"
 msgstr " Kupno"
@@ -160,7 +91,7 @@ msgid "# of Invoices"
 msgstr "# Faktur"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_nbr
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_nbr_lines
 msgid "# of Lines"
 msgstr "# pozycji"
 
@@ -171,10 +102,6 @@ msgstr "# Zamówień zakupu"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase
-msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name|safe} Zamówienie (Odn. ${object.name or 'n/a' })"
-
-#. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 msgstr "${object.company_id.name} Zamówienie (Odn ${object.name or 'n/a' })"
@@ -248,11 +175,6 @@ msgid "<strong>Your Order Reference</strong>"
 msgstr "<strong>Odnośnik zamówienia</strong>"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_needaction
-msgid "Action Needed"
-msgstr "Wymagana akcja"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
 msgid "Add Purchase Order"
 msgstr "wszystkie zamówienia"
@@ -285,8 +207,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.config.settings,module_purchase_requisition:0
 msgid ""
-"Allow using call for tenders to get quotes from multiple suppliers "
-"(advanced)"
+"Allow using call for tenders to get quotes from multiple suppliers (advanced)"
 msgstr ""
 
 #. module: purchase
@@ -299,11 +220,6 @@ msgstr "Pozwala obliczyć cenę produktu opartą o koszt przeciętny."
 msgid ""
 "Allows you to select and maintain different units of measure for products."
 msgstr "Pozwala wybrać różne jednostki miary dla produktów."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_account_config_settings_group_analytic_account_for_purchases
-msgid "Allows you to specify an analytic account on purchase order lines."
-msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -322,11 +238,6 @@ msgstr "Konto analityczne"
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
 msgstr "Ksiągowość analityczna dla zakupów"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_account_config_settings_group_analytic_account_for_purchases
-msgid "Analytic accounting for purchases"
-msgstr "Księgowość analityczna dla zakupów"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
@@ -371,7 +282,7 @@ msgid "Billed Qty"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:605 code:addons/purchase/stock.py:56
+#: code:addons/purchase/purchase.py:717 code:addons/purchase/stock.py:75
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -395,9 +306,11 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_purchase_requisition
 msgid ""
-"Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products.\n"
-"                    You can configure per product if you directly do a Request for Quotation\n"
-"                    to one vendor or if you want a Call for Tenders to compare offers from several vendors."
+"Calls for tenders are used when you want to generate requests for quotations "
+"to several vendors for a given set of products.\n"
+"You can configure per product if you directly do a Request for Quotation to "
+"one vendor or if you want a Call for Tenders to compare offers from several "
+"vendors."
 msgstr ""
 
 #. module: purchase
@@ -408,7 +321,7 @@ msgid "Can be Purchased"
 msgstr "Może być kupowane"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:621
+#: code:addons/purchase/purchase.py:733
 #, python-format
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
@@ -416,7 +329,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/stock.py:59
+#: code:addons/purchase/stock.py:78
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr ""
@@ -433,7 +346,7 @@ msgid "Cancelled"
 msgstr "Anulowano"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:529
+#: code:addons/purchase/purchase.py:612
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "Nie można usunąć pozycji zamówienia, jeśli jest w stanie '%s'."
@@ -465,14 +378,15 @@ msgid "Click to define a new product."
 msgstr "Kliknij aby zdefiniować nowy produkt."
 
 #. module: purchase
-#: model:web.tip,description:purchase.purchase_tip_1
-msgid "Click to mark products as received."
-msgstr "Kliknij aby zazaczyć odebrane produkty."
-
-#. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid "Click to record a vendor bill related to this purchase."
 msgstr ""
+
+#. module: purchase
+#: model:web.tip,description:purchase.purchase_tip_1
+#, fuzzy
+msgid "Click to scrap products."
+msgstr "Kliknij aby zdefiniować nowy produkt."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
@@ -493,7 +407,7 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:237
+#: code:addons/purchase/purchase.py:254
 #, python-format
 msgid "Compose Email"
 msgstr "Utwórz wiadomość e-mail"
@@ -561,12 +475,7 @@ msgid "Date Approved"
 msgstr "Data aprobowania"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Data ostatniej wiadomości w rekordzie."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_report_date
+#: model:ir.model.fields,help:purchase.field_purchase_report_date_order
 msgid "Date on which this document has been created"
 msgstr "Data utworzenia dokumentu"
 
@@ -617,7 +526,7 @@ msgid "Display Name"
 msgstr "Wyświetlana nazwa "
 
 #. module: purchase
-#: selection:purchase.order,state:0 selection:purchase.report,state:0
+#: selection:purchase.report,state:0
 msgid "Done"
 msgstr "Wykonano"
 
@@ -652,16 +561,17 @@ msgid "Email composition wizard"
 msgstr "Kreator email"
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_survey_mail_compose_message
+#, fuzzy
+msgid "Email composition wizard for Survey"
+msgstr "Kreator email"
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
 msgid ""
 "Encoding help. When selected, the associated purchase order lines are added "
 "to the vendor bill. Several PO can be selected."
 msgstr ""
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-msgid "Expected Date"
-msgstr "Przewidywana data"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -676,21 +586,6 @@ msgid "Fiscal Position"
 msgstr "Obszar podatkowy"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_follower_ids
-msgid "Followers"
-msgstr "Obserwatorzy"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Obserwatorzy (kanały)"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Obserwatorzy (partnerzy)"
-
-#. module: purchase
 #: selection:res.company,po_double_validation:0
 msgid "Get 2 levels of approvals to confirm a purchase order"
 msgstr ""
@@ -698,6 +593,11 @@ msgstr ""
 #. module: purchase
 #: model:web.tip,description:purchase.purchase_tip_3
 msgid "Get all the shipments related to this order."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
+msgid "Gross Weight"
 msgstr ""
 
 #. module: purchase
@@ -728,24 +628,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid ""
-"If a purchase order is done, you cannot modify it manually anymore. You will"
-" not be able to receive invoices anymore for this purchase order."
-msgstr "Kiedy zakup jest gotowy, już nie możesz edytować go ręcznie. Nie będziesz mógł otrzymywać więcej faktur dla tego zamówienia zakupu."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:184
+#: code:addons/purchase/purchase.py:186
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr "Aby usunąć zamówienia zakupu, to musisz je najpierw anulować."
@@ -766,11 +649,6 @@ msgstr "Produkty przychodzące"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Incoming Shipments"
 msgstr "Przyjęcia zewnętrzne"
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_picking_in_search_picking_inherit
-msgid "Incoming Shipments to Invoice"
-msgstr "Przyjęcia do faktur"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_incoterm_id
@@ -826,16 +704,6 @@ msgid "Invoices and Incoming Shipments"
 msgstr "Faktury i przyjęcia zewnętrzne"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_is_follower
-msgid "Is Follower"
-msgstr "Jest obserwatorem"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_last_post
-msgid "Last Message Date"
-msgstr "Data ostatniej wiadomości"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings___last_update
 #: model:ir.model.fields,field_description:purchase.field_purchase_order___last_update
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line___last_update
@@ -868,6 +736,17 @@ msgid "Location & Warehouse"
 msgstr "Strefy i Magazyn"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Lock Bills"
+msgstr "Rachunki od dostawców"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Locked"
+msgstr ""
+
+#. module: purchase
 #: model:res.groups,name:purchase.group_manage_vendor_price
 msgid "Manage Vendor Price"
 msgstr ""
@@ -891,19 +770,9 @@ msgstr "Ręczne faktury"
 #: model:ir.model.fields,help:purchase.field_res_company_po_lead
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for procuring products, they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for procuring products, they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_ids
-msgid "Messages"
-msgstr "Wiadomosći"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_message_ids
-msgid "Messages and communication history"
-msgstr "Wiadomości i historia komunikacji"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
@@ -933,7 +802,7 @@ msgid "No variants on products"
 msgstr "Bez wariantów produktów"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:771
+#: code:addons/purchase/purchase.py:893
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
@@ -955,23 +824,16 @@ msgid "Notes"
 msgstr "Uwagi"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Liczba akcji"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Liczba wiadomości wymagających akcji"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Liczba nieprzeczytanych wiadomości"
-
-#. module: purchase
 #: selection:product.template,purchase_method:0
 msgid "On ordered quantities"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_product_product_purchase_method
+#: model:ir.model.fields,help:purchase.field_product_template_purchase_method
+msgid ""
+"On ordered quantities: Invoice this product based on ordered quantities.\n"
+"On received quantities: Invoice this product based on received quantity."
 msgstr ""
 
 #. module: purchase
@@ -980,14 +842,9 @@ msgid "On received quantities"
 msgstr ""
 
 #. module: purchase
-#: model:ir.actions.client,name:purchase.action_client_purchase_menu
-msgid "Open Purchase Menu"
-msgstr "Otwórz menu Zakupów"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_date_order
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_date_order
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_date_order
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Order Date"
 msgstr "Data zamówienia"
@@ -1114,7 +971,7 @@ msgid "Product Category"
 msgstr "Kategoria Produktu"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_quantity
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_unit_quantity
 msgid "Product Quantity"
 msgstr "Ilość produktu"
 
@@ -1162,11 +1019,6 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation
 msgid "Provide a double validation mechanism for purchases"
-msgstr ""
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_mail_mail_website_published
-msgid "Published"
 msgstr ""
 
 #. module: purchase
@@ -1249,7 +1101,7 @@ msgid "Purchase Orders Statistics"
 msgstr "Statystyka zamówień zakupu"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:530
+#: code:addons/purchase/purchase.py:614
 #, python-format
 msgid "Purchase order line deleted."
 msgstr ""
@@ -1376,8 +1228,8 @@ msgstr "Referencyjna jednostka miary"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_origin
 msgid ""
-"Reference of the document that generated this purchase order request (e.g. a"
-" sale order or an internal procurement request)"
+"Reference of the document that generated this purchase order request (e.g. a "
+"sale order or an internal procurement request)"
 msgstr ""
 
 #. module: purchase
@@ -1447,8 +1299,13 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Set to Done"
-msgstr "Ustaw na wykonane"
+#, fuzzy
+msgid ""
+"Set a purchase order as done if you don't want to receive vendor bills "
+"anymore for this purchase order."
+msgstr ""
+"Kiedy zakup jest gotowy, już nie możesz edytować go ręcznie. Nie będziesz "
+"mógł otrzymywać więcej faktur dla tego zamówienia zakupu."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1473,7 +1330,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.config.settings,group_uom:0
 msgid ""
-"Some products may be sold/puchased in different unit of measures (advanced)"
+"Some products may be sold/puchased in different units of measure (advanced)"
 msgstr ""
 
 #. module: purchase
@@ -1545,7 +1402,8 @@ msgstr "Warunki i postanowienia"
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
 msgid ""
 "The product form contains detailed information to improve the\n"
-"            purchase process: prices, procurement logistics, accounting data,\n"
+"            purchase process: prices, procurement logistics, accounting "
+"data,\n"
 "            available vendors, etc."
 msgstr ""
 
@@ -1561,7 +1419,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
-"                    converted into a purchase order, you will be able to control the receipt\n"
+"                    converted into a purchase order, you will be able to "
+"control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
 
@@ -1571,6 +1430,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
+"To konto będzie stosowane do rejestrowania różnic cenowych między ceną "
+"zakupu a kosztem ceną ewidencyjną."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_property_account_creditor_price_difference
@@ -1578,7 +1439,9 @@ msgstr ""
 msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
-msgstr "To konto będzie stosowane do rejestrowania różnic cenowych między ceną zakupu a kosztem (ceną ewidencyjną)."
+msgstr ""
+"To konto będzie stosowane do rejestrowania różnic cenowych między ceną "
+"zakupu a kosztem (ceną ewidencyjną)."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
@@ -1598,6 +1461,7 @@ msgid "This will determine picking type of incoming shipment"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "To Approve"
 msgstr "Do aprobaty"
@@ -1629,20 +1493,19 @@ msgid "Transfer"
 msgstr "Pobierz"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:283
+#: code:addons/purchase/purchase.py:300
 #, python-format
 msgid ""
-"Unable to cancel purchase order %s as some receptions have already been "
-"done."
+"Unable to cancel purchase order %s as some receptions have already been done."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:286
-#, python-format
+#: code:addons/purchase/purchase.py:303
+#, fuzzy, python-format
 msgid ""
-"Unable to cancel this purchase order.i You must first cancel related vendor "
+"Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
-msgstr ""
+msgstr "Aby usunąć zamówienia zakupu, to musisz je najpierw anulować."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1656,24 +1519,10 @@ msgstr "Kategorie jednostek miary"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_uom
-msgid "Unit of Measures"
-msgstr "Jednostka miary"
-
-#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
 msgstr "Jednostki miary"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_unread
-msgid "Unread Messages"
-msgstr "Nieprzeczytane wiadomości"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Licznik nieprzeczytanych wiadomości"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
@@ -1704,7 +1553,8 @@ msgstr ""
 msgid ""
 "Use this menu to search within your purchase orders by\n"
 "                references, vendor, products, etc. For each purchase order,\n"
-"                you can track the related discussion with the vendor, control\n"
+"                you can track the related discussion with the vendor, "
+"control\n"
 "                the products received and control the vendor bills."
 msgstr ""
 
@@ -1763,8 +1613,8 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_mail_mail_website_published
-msgid "Visible on the website as a comment"
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
+msgid "Volume"
 msgstr ""
 
 #. module: purchase
@@ -1777,16 +1627,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_picking_type_id
 msgid "Warehouse"
 msgstr "Magazyn"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_website_message_ids
-msgid "Website Messages"
-msgstr "Wiadomości"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_website_message_ids
-msgid "Website communication history"
-msgstr "Historia rozmowy"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
@@ -1812,7 +1652,7 @@ msgstr ""
 msgid ""
 "You must define a product for everything you purchase, whether\n"
 "            it's a physical product, a consumable or services you buy to\n"
-"            subcontractants."
+"            subcontractors."
 msgstr ""
 
 #. module: purchase
@@ -1822,16 +1662,368 @@ msgid "You must set a Vendor Location for this partner %s"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_account_config_settings
-msgid "account.config.settings"
-msgstr "account.config.settings"
-
-#. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_settings
 msgid "purchase.config.settings"
 msgstr "purchase.config.settings"
 
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_mail_mail_description
-msgid "unknown"
-msgstr ""
+#~ msgid ""
+#~ "\n"
+#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+#~ "\">\n"
+#~ "\n"
+#~ "    <p>Hello ${object.partner_id.name},</p>\n"
+#~ "\n"
+#~ "    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
+#~ "quotation' or 'purchase order confirmation'} from ${object.company_id."
+#~ "name}: </p>\n"
+#~ "\n"
+#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+#~ "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+#~ "       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object."
+#~ "currency_id.name}</strong><br />\n"
+#~ "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+#~ "       % if object.origin:\n"
+#~ "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+#~ "       % endif\n"
+#~ "       % if object.partner_ref:\n"
+#~ "       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
+#~ "       % endif\n"
+#~ "       % if object.create_uid:\n"
+#~ "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.create_uid."
+#~ "email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</"
+#~ "a>\n"
+#~ "       % endif\n"
+#~ "    </p>\n"
+#~ "\n"
+#~ "    <br/>\n"
+#~ "    <p>If you have any question, do not hesitate to contact us.</p>\n"
+#~ "    <p>Thank you!</p>\n"
+#~ "    <br/>\n"
+#~ "    <br/>\n"
+#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
+#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
+#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
+#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
+#~ "color: #DDD;\">\n"
+#~ "            <strong style=\"text-transform:uppercase;\">${object."
+#~ "company_id.name}</strong></h3>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
+#~ "height: 16px; background-color: #F2F2F2;\">\n"
+#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
+#~ "\">\n"
+#~ "            ${object.company_id.partner_id.sudo()."
+#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
+#~ "safe}\n"
+#~ "        </span>\n"
+#~ "        % if object.company_id.phone:\n"
+#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
+#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
+#~ "                Phone:&nbsp; ${object.company_id.phone}\n"
+#~ "            </div>\n"
+#~ "        % endif\n"
+#~ "        % if object.company_id.website:\n"
+#~ "            <div>\n"
+#~ "                Web :&nbsp;<a href=\"${object.company_id.website}\">"
+#~ "${object.company_id.website}</a>\n"
+#~ "            </div>\n"
+#~ "        %endif\n"
+#~ "        <p></p>\n"
+#~ "    </div>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+#~ "\">\n"
+#~ "\n"
+#~ "    <p>Witaj ${object.partner_id.name},</p>\n"
+#~ "\n"
+#~ "    <p>Tutaj jest ${object.state in ('draft', 'sent') and 'request for "
+#~ "quotation' or 'purchase order confirmation'} z ${object.company_id.name}: "
+#~ "</p>\n"
+#~ "\n"
+#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+#~ "       &nbsp;&nbsp;<strong>REFERENCJE</strong><br />\n"
+#~ "       &nbsp;&nbsp;Numer zamówienia: <strong>${object.name}</strong><br /"
+#~ ">\n"
+#~ "       &nbsp;&nbsp;Suma zamówienia: <strong>${object.amount_total} "
+#~ "${object.currency_id.name}</strong><br />\n"
+#~ "       &nbsp;&nbsp;Data zamówienia: ${object.date_order}<br />\n"
+#~ "       % if object.origin:\n"
+#~ "       &nbsp;&nbsp;Referencje zamówienia: ${object.origin}<br />\n"
+#~ "       % endif\n"
+#~ "       % if object.partner_ref:\n"
+#~ "       &nbsp;&nbsp;Twoje referencje: ${object.partner_ref}<br />\n"
+#~ "       % endif\n"
+#~ "       % if object.create_uid:\n"
+#~ "       &nbsp;&nbsp;Twój kontakt: <a href=\"mailto:${object.create_uid."
+#~ "email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</"
+#~ "a>\n"
+#~ "       % endif\n"
+#~ "    </p>\n"
+#~ "\n"
+#~ "    <br/>\n"
+#~ "    <p>Jeśli masz jakiekolwiek pytania, nie wahaj się z nami skontaktować."
+#~ "</p>\n"
+#~ "    <p>Dziękujemy!</p>\n"
+#~ "    <br/>\n"
+#~ "    <br/>\n"
+#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
+#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
+#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
+#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
+#~ "color: #DDD;\">\n"
+#~ "            <strong style=\"text-transform:uppercase;\">${object."
+#~ "company_id.name}</strong></h3>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
+#~ "height: 16px; background-color: #F2F2F2;\">\n"
+#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
+#~ "\">\n"
+#~ "            ${object.company_id.partner_id.sudo()."
+#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
+#~ "safe}\n"
+#~ "        </span>\n"
+#~ "        % if object.company_id.phone:\n"
+#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
+#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
+#~ "                Telefon:&nbsp; ${object.company_id.phone}\n"
+#~ "            </div>\n"
+#~ "        % endif\n"
+#~ "        % if object.company_id.website:\n"
+#~ "            <div>\n"
+#~ "                Strona :&nbsp;<a href=\"${object.company_id.website}\">"
+#~ "${object.company_id.website}</a>\n"
+#~ "            </div>\n"
+#~ "        %endif\n"
+#~ "        <p></p>\n"
+#~ "    </div>\n"
+#~ "</div>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "\n"
+#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+#~ "\">\n"
+#~ "\n"
+#~ "    <p>Hello ${object.partner_id.name},</p>\n"
+#~ "\n"
+#~ "    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
+#~ "quotation' or 'purchase order confirmation'} from ${object.company_id."
+#~ "name}: </p>\n"
+#~ "\n"
+#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+#~ "       &nbsp;&nbsp;RFQ number: <strong>${object.name}</strong><br />\n"
+#~ "       &nbsp;&nbsp;RFQ date: ${object.date_order}<br />\n"
+#~ "       % if object.origin:\n"
+#~ "       &nbsp;&nbsp;RFQ reference: ${object.origin}<br />\n"
+#~ "       % endif\n"
+#~ "       % if object.partner_ref:\n"
+#~ "       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
+#~ "       % endif\n"
+#~ "       % if object.create_uid:\n"
+#~ "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.create_uid."
+#~ "email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</"
+#~ "a>\n"
+#~ "       % endif\n"
+#~ "    </p>\n"
+#~ "\n"
+#~ "    <br/>\n"
+#~ "    <p>If you have any question, do not hesitate to contact us.</p>\n"
+#~ "    <p>Thank you!</p>\n"
+#~ "    <br/>\n"
+#~ "    <br/>\n"
+#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
+#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
+#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
+#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
+#~ "color: #DDD;\">\n"
+#~ "            <strong style=\"text-transform:uppercase;\">${object."
+#~ "company_id.name}</strong></h3>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
+#~ "height: 16px; background-color: #F2F2F2;\">\n"
+#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
+#~ "\">\n"
+#~ "            ${object.company_id.partner_id.sudo()."
+#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
+#~ "safe}\n"
+#~ "        </span>\n"
+#~ "        % if object.company_id.phone:\n"
+#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
+#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
+#~ "                Phone:&nbsp; ${object.company_id.phone}\n"
+#~ "            </div>\n"
+#~ "        % endif\n"
+#~ "        % if object.company_id.website:\n"
+#~ "            <div>\n"
+#~ "                Web :&nbsp;<a href=\"${object.company_id.website}\">"
+#~ "${object.company_id.website}</a>\n"
+#~ "            </div>\n"
+#~ "        %endif\n"
+#~ "        <p></p>\n"
+#~ "    </div>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+#~ "\">\n"
+#~ "\n"
+#~ "    <p>Witaj ${object.partner_id.name},</p>\n"
+#~ "\n"
+#~ "    <p>Tutaj jest ${object.state in ('draft', 'sent') and 'request for "
+#~ "quotation' or 'purchase order confirmation'} z ${object.company_id.name}: "
+#~ "</p>\n"
+#~ "\n"
+#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+#~ "       &nbsp;&nbsp;<strong>REFERENCJE</strong><br />\n"
+#~ "       &nbsp;&nbsp;RFQ numer: <strong>${object.name}</strong><br />\n"
+#~ "       &nbsp;&nbsp;RFQ data: ${object.date_order}<br />\n"
+#~ "       % if object.origin:\n"
+#~ "       &nbsp;&nbsp;RFQ referencje: ${object.origin}<br />\n"
+#~ "       % endif\n"
+#~ "       % if object.partner_ref:\n"
+#~ "       &nbsp;&nbsp;Twoje referencje: ${object.partner_ref}<br />\n"
+#~ "       % endif\n"
+#~ "       % if object.create_uid:\n"
+#~ "       &nbsp;&nbsp;Twój kontakt: <a href=\"mailto:${object.create_uid."
+#~ "email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</"
+#~ "a>\n"
+#~ "       % endif\n"
+#~ "    </p>\n"
+#~ "\n"
+#~ "    <br/>\n"
+#~ "    <p>Jeśli masz jakiekolwiek pytania, nie wahaj się z nami skontaktować."
+#~ "</p>\n"
+#~ "    <p>Dziękujemy!</p>\n"
+#~ "    <br/>\n"
+#~ "    <br/>\n"
+#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
+#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
+#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
+#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
+#~ "color: #DDD;\">\n"
+#~ "            <strong style=\"text-transform:uppercase;\">${object."
+#~ "company_id.name}</strong></h3>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
+#~ "height: 16px; background-color: #F2F2F2;\">\n"
+#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
+#~ "\">\n"
+#~ "            ${object.company_id.partner_id.sudo()."
+#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
+#~ "safe}\n"
+#~ "        </span>\n"
+#~ "        % if object.company_id.phone:\n"
+#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
+#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
+#~ "                Telefon:&nbsp; ${object.company_id.phone}\n"
+#~ "            </div>\n"
+#~ "        % endif\n"
+#~ "        % if object.company_id.website:\n"
+#~ "            <div>\n"
+#~ "                Strona :&nbsp;<a href=\"${object.company_id.website}\">"
+#~ "${object.company_id.website}</a>\n"
+#~ "            </div>\n"
+#~ "        %endif\n"
+#~ "        <p></p>\n"
+#~ "    </div>\n"
+#~ "</div>\n"
+#~ "            "
+
+#~ msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
+#~ msgstr ""
+#~ "${object.company_id.name|safe} Zamówienie (Odn. ${object.name or 'n/a' })"
+
+#~ msgid "Action Needed"
+#~ msgstr "Wymagana akcja"
+
+#~ msgid "Analytic accounting for purchases"
+#~ msgstr "Księgowość analityczna dla zakupów"
+
+#~ msgid "Click to mark products as received."
+#~ msgstr "Kliknij aby zazaczyć odebrane produkty."
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data ostatniej wiadomości w rekordzie."
+
+#~ msgid "Expected Date"
+#~ msgstr "Przewidywana data"
+
+#~ msgid "Followers"
+#~ msgstr "Obserwatorzy"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Obserwatorzy (kanały)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Obserwatorzy (partnerzy)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
+
+#~ msgid "Incoming Shipments to Invoice"
+#~ msgstr "Przyjęcia do faktur"
+
+#~ msgid "Is Follower"
+#~ msgstr "Jest obserwatorem"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data ostatniej wiadomości"
+
+#~ msgid "Messages"
+#~ msgstr "Wiadomosći"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Wiadomości i historia komunikacji"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Liczba akcji"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Liczba wiadomości wymagających akcji"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Liczba nieprzeczytanych wiadomości"
+
+#~ msgid "Open Purchase Menu"
+#~ msgstr "Otwórz menu Zakupów"
+
+#~ msgid "Set to Done"
+#~ msgstr "Ustaw na wykonane"
+
+#~ msgid "Unit of Measures"
+#~ msgstr "Jednostka miary"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Nieprzeczytane wiadomości"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Licznik nieprzeczytanych wiadomości"
+
+#~ msgid "Website Messages"
+#~ msgstr "Wiadomości"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historia rozmowy"
+
+#~ msgid "account.config.settings"
+#~ msgstr "account.config.settings"
+
+#~ msgid "unknown"
+#~ msgstr "nieznane"

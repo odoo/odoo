@@ -1,28 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_timesheet_sheet
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-13 10:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-14 10:09+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-9/language/kab/)\n"
+"Language: kab\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: kab\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed timesheet.                 \n"
-"* The 'Confirmed' status is used for to confirm the timesheet by user.                 \n"
-"* The 'Done' status is used when users timesheet is accepted by his/her senior."
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"timesheet.                 \n"
+"* The 'Confirmed' status is used for to confirm the timesheet by "
+"user.                 \n"
+"* The 'Done' status is used when users timesheet is accepted by his/her "
+"senior."
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -56,11 +59,6 @@ msgid "Absent"
 msgstr "Ulac-it"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction
-msgid "Action Needed"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #. openerp-web
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:33
 #, python-format
@@ -73,11 +71,6 @@ msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Izirig usliḍ"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_ids
@@ -108,11 +101,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Attendances"
 msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_current_open
-msgid "Cancel"
-msgstr "Sefsex"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -171,22 +159,13 @@ msgid "Date from"
 msgstr "Azemz n tazwara"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Azemz n yizen anegaru iţunefken ɣef ukalas agi"
-
-#. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: selection:res.company,timesheet_range:0
-msgid "Day"
-msgstr "Ass"
-
-#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -247,7 +226,7 @@ msgid "Employees"
 msgstr "Imarisen"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:77
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:85
 #, python-format
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr ""
@@ -258,29 +237,9 @@ msgid "External Timesheet"
 msgstr "Tiferkit n wakud tazɣaṛayt"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_follower_ids
-msgid "Followers"
-msgstr "Imeltaɣen"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
 msgstr "Sdukel s"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-msgid "HR Department"
-msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -296,61 +255,23 @@ msgid "ID"
 msgstr "Asulay"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ma yeṛcem, iznan imaynuten suturen tamuɣli leqqayen."
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
-msgid "Important Messages"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "In Draft"
 msgstr "Deg urewway"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:54
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:64
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:74
 #, python-format
 msgid ""
-"In order to create a timesheet for this employee, you must link him/her to a"
-" user."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:68
-#, python-format
-msgid ""
-"In order to create a timesheet for this employee, you must link the employee"
-" to a product."
+"In order to create a timesheet for this employee, you must link him/her to a "
+"user."
 msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
 msgid "Internal Timesheet"
 msgstr "Tiferkit n wakud tagensant"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_is_follower
-msgid "Is Follower"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_current_open
-msgid "It will open your current timesheet"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_last_post
-msgid "Last Message Date"
-msgstr "Azemz n yizen aneggaru"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -373,32 +294,14 @@ msgid "Last Updated on"
 msgstr "Aleqqem aneggaru di"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_ids
-msgid "Messages"
-msgstr "Iznan"
-
-#. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
 msgid "Month"
 msgstr "Aggur"
 
 #. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_current_open
 msgid "My Timesheet"
 msgstr "Tiferkit-iw n wakud"
-
-#. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
-msgid ""
-"My Timesheet opens your timesheet so that you can book your activities into "
-"the system. From the same form, you can register your attendances (Sign "
-"In/Out) and describe the working hours made on the different projects. At "
-"the end of the period defined in the company, the timesheet is confirmed by "
-"the user and can be validated by his manager. If required, as defined on the"
-" project, you can generate the invoices based on the timesheet."
-msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
@@ -423,30 +326,9 @@ msgid "Note"
 msgstr "Awennit"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread_counter
-msgid "Number of unread messages"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_current_open
 msgid "Open"
 msgstr "Telli"
-
-#. module: hr_timesheet_sheet
-#: model:ir.actions.client,name:hr_timesheet_sheet.action_client_hr_timesheet_sheet_menu
-msgid "Open HR Menu"
-msgstr "Lli umuɣ n Teɣbula timdanin"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:30
@@ -467,7 +349,7 @@ msgid "Periodicity on which you validate your timesheets."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:108
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:116
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f."
@@ -539,7 +421,7 @@ msgid "Summary"
 msgstr "Agzul"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:45
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:55
 #, python-format
 msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
@@ -644,6 +526,7 @@ msgid "Timesheets to Approve"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_hr_to_approve
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "To Approve"
 msgstr "Ad iţuseɣbel"
@@ -686,14 +569,9 @@ msgid "Total Timesheet"
 msgstr "Asemday n tiferkit n wakud"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Unread Messages"
 msgstr "Iznan ur neţwaɣer-ara"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -712,22 +590,12 @@ msgid "Waiting Approval"
 msgstr "Iţraǧu aseɣbel"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_website_message_ids
-msgid "Website Messages"
-msgstr "Iznan n n usmel  Web"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_website_message_ids
-msgid "Website communication history"
-msgstr "Amazray n Taywalt n usmel  Web"
-
-#. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
 msgid "Week"
 msgstr "Dduṛt"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:221
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:230
 #, python-format
 msgid "Week "
 msgstr "Dduṛt "
@@ -738,14 +606,14 @@ msgid "Weekly"
 msgstr "S dduṛt"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:454
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:470
 #, python-format
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:452
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:468
 #, python-format
 msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
@@ -753,25 +621,25 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:231
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:240
 #, python-format
 msgid "You cannot delete a timesheet which have attendance entries."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:229
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:238
 #, python-format
 msgid "You cannot delete a timesheet which is already confirmed."
 msgstr "Tukksa n tferkit n wakud intemen tegdel."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:49
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:59
 #, python-format
 msgid "You cannot duplicate a timesheet."
 msgstr "Ur tezmireḍ ara a tselgeḍ tiferkit n wakud."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:473
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:489
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
@@ -785,7 +653,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:72
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:76
 #, python-format
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
@@ -793,13 +661,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:496
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr "Asnifel n unekcam n tferkit n wakud intemen yegdel"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:353
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:355
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr "Asnifel n unekcam n tferkit n wakud intemen yegdel."
@@ -821,6 +689,12 @@ msgid "You will be able to register your working hours and activities."
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
+#, fuzzy
+msgid "account analytic line"
+msgstr "Izirig usliḍ"
+
+#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
 msgid "hr.timesheet.current.open"
 msgstr ""
@@ -839,3 +713,33 @@ msgstr "ɣer"
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_confirmed
 msgid "waiting approval"
 msgstr ""
+
+#~ msgid "Cancel"
+#~ msgstr "Sefsex"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Azemz n yizen anegaru iţunefken ɣef ukalas agi"
+
+#~ msgid "Day"
+#~ msgstr "Ass"
+
+#~ msgid "Followers"
+#~ msgstr "Imeltaɣen"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ma yeṛcem, iznan imaynuten suturen tamuɣli leqqayen."
+
+#~ msgid "Last Message Date"
+#~ msgstr "Azemz n yizen aneggaru"
+
+#~ msgid "Messages"
+#~ msgstr "Iznan"
+
+#~ msgid "Open HR Menu"
+#~ msgstr "Lli umuɣ n Teɣbula timdanin"
+
+#~ msgid "Website Messages"
+#~ msgstr "Iznan n n usmel  Web"
+
+#~ msgid "Website communication history"
+#~ msgstr "Amazray n Taywalt n usmel  Web"

@@ -1,21 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event_sale
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-11-19 11:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
+"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
+"sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
+"%100==4 ? 2 : 3);\n"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:170
@@ -27,6 +29,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "Uporabi"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+#, fuzzy
+msgid "Asset Type"
+msgstr "Vrsta dogodka"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -60,7 +68,9 @@ msgstr "Izberite dogodek in ta bo avtomatično kreiral beležko za ta dogodek."
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
-msgstr "Izberite vstopnice za dogodek in samodejno se ustvari prijava za te vstopnice na dogodek."
+msgstr ""
+"Izberite vstopnice za dogodek in samodejno se ustvari prijava za te "
+"vstopnice na dogodek."
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_2_product
@@ -83,6 +93,11 @@ msgid "Created on"
 msgstr "Ustvarjeno"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
@@ -96,7 +111,9 @@ msgstr ""
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr "Določa, če naj proizvod avtomatično kreira dogodek ob potrditvi vrstice prodajnega naloga."
+msgstr ""
+"Določa, če naj proizvod avtomatično kreira dogodek ob potrditvi vrstice "
+"prodajnega naloga."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
@@ -324,9 +341,11 @@ msgstr ""
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
 #: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
 msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
-msgstr "Izberite tip dogodka. Če uporabimo ta proizvod v prodajnem nalogu, bodo filtrirani samo dogodki tega tipa."
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
+msgstr ""
+"Izberite tip dogodka. Če uporabimo ta proizvod v prodajnem nalogu, bodo "
+"filtrirani samo dogodki tega tipa."
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

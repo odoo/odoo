@@ -1,22 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_hr_recruitment
-# 
+#
 # Translators:
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-06-27 12:19+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid ""
+"<span class=\"btn btn-primary btn-lg o_website_form_send\">Submit</span>\n"
+"                                <span id=\"o_website_form_result\"/>"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.job_countries
@@ -53,7 +61,9 @@ msgstr "Aplikuj na ofertę"
 msgid ""
 "Click on \"Content\" to define a new job offer or \"Help\" for more "
 "informations."
-msgstr "Kliknij \"Zawartość\" aby zdefiniować nową ofertę pracy lub \"Pomoc\" żeby uzyskać więcej informacji."
+msgstr ""
+"Kliknij \"Zawartość\" aby zdefiniować nową ofertę pracy lub \"Pomoc\" żeby "
+"uzyskać więcej informacji."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
@@ -90,12 +100,15 @@ msgstr "Dołącz do nas i pomóż zrewolucjonizować rynek biznesowy!"
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid ""
 "Join us, we offer you an extraordinary chance to learn, to\n"
-"                                    develop and to be part of an exciting experience and\n"
+"                                    develop and to be part of an exciting "
+"experience and\n"
 "                                    team."
-msgstr "Dołącz do nas, oferujemy niespotykaną szansę na naukę,\nrozwój i ekscytujące doświadczenia w zespole."
+msgstr ""
+"Dołącz do nas, oferujemy niespotykaną szansę na naukę,\n"
+"rozwój i ekscytujące doświadczenia w zespole."
 
 #. module: website_hr_recruitment
-#: code:addons/website_hr_recruitment/controllers/main.py:69
+#: code:addons/website_hr_recruitment/controllers/main.py:74
 #: model:ir.ui.view,arch_db:website_hr_recruitment.content_new_job_offer
 #, python-format
 msgid "New Job Offer"
@@ -132,19 +145,9 @@ msgid "Source of Applicants"
 msgstr "Źródło aplikantów"
 
 #. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
-msgid "Submit"
-msgstr "Wyślij"
-
-#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
 msgid "Thank you!"
 msgstr "Dziękujemy!"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job_website_url
-msgid "The full URL to access the document through the website."
-msgstr "Pełny adres URL dostępu do dokumentu przez stronę."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -157,19 +160,9 @@ msgid "Url Parameters"
 msgstr "parametry url"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_published
-msgid "Visible in Website"
-msgstr "Widoczny na stronie"
-
-#. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
 msgid "Website Recruitment Form"
 msgstr "Formularz rekrutacyjny"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_url
-msgid "Website URL"
-msgstr "Adres strony internetowej"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_description
@@ -177,29 +170,23 @@ msgid "Website description"
 msgstr "Opis strony"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_meta_description
-msgid "Website meta description"
-msgstr "Opis strony - meta"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Słowa kluczowe dla strony - meta"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_meta_title
-msgid "Website meta title"
-msgstr "Tytuł strony - meta"
-
-#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid ""
 "With a small team of smart people, we released the most\n"
-"                                    disruptive enterprise management software in the world.\n"
-"                                    Odoo is fully open source, super easy, full featured\n"
-"                                    (3000+ apps) and its online offer is 3 times cheaper than\n"
-"                                    traditional competitors like SAP and Ms Dynamics."
-msgstr "Z niewielkim zespołem mądrych ludzi tworzymy najbardziej rewolucyjny system do zarządzania firmą na świecie. Odoo jest w pełni wolnym oprogramowaniem, niesamowicie prostym, w pełni funkcjonalnym (3000+ aplikacji) i oferującym dostęp online w cenie trzykrotnie niższej niż konkurencja taka jak SAS czy Ms Dynamics."
+"                                    disruptive enterprise management "
+"software in the world.\n"
+"                                    Odoo is fully open source, super easy, "
+"full featured\n"
+"                                    (3000+ apps) and its online offer is 3 "
+"times cheaper than\n"
+"                                    traditional competitors like SAP and Ms "
+"Dynamics."
+msgstr ""
+"Z niewielkim zespołem mądrych ludzi tworzymy najbardziej rewolucyjny system "
+"do zarządzania firmą na świecie. Odoo jest w pełni wolnym oprogramowaniem, "
+"niesamowicie prostym, w pełni funkcjonalnym (3000+ aplikacji) i oferującym "
+"dostęp online w cenie trzykrotnie niższej niż konkurencja taka jak SAS czy "
+"Ms Dynamics."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -221,7 +208,9 @@ msgstr "twój numer telefonu"
 msgid ""
 "Your job application has been successfully registered,\n"
 "                        we will get back to you soon."
-msgstr "Twoje zgłoszenie zostało pomyślnie zapisane,\n                        wkrótce się do Ciebie odezwiemy."
+msgstr ""
+"Twoje zgłoszenie zostało pomyślnie zapisane,\n"
+"                        wkrótce się do Ciebie odezwiemy."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -242,3 +231,24 @@ msgstr "wolne stanowiska"
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "to contact us"
 msgstr "żeby się z nami skontaktować"
+
+#~ msgid "Submit"
+#~ msgstr "Wyślij"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "Pełny adres URL dostępu do dokumentu przez stronę."
+
+#~ msgid "Visible in Website"
+#~ msgstr "Widoczny na stronie"
+
+#~ msgid "Website URL"
+#~ msgstr "Adres strony internetowej"
+
+#~ msgid "Website meta description"
+#~ msgstr "Opis strony - meta"
+
+#~ msgid "Website meta keywords"
+#~ msgstr "Słowa kluczowe dla strony - meta"
+
+#~ msgid "Website meta title"
+#~ msgstr "Tytuł strony - meta"

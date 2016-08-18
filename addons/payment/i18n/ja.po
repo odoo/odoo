@@ -1,64 +1,90 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-# 
+#
 # Translators:
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-07-30 07:14+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-07-22 08:38+0000\n"
+"Last-Translator: 高木正勝 <masakatsu.takagi@pro-spire.co.jp>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
 msgid ""
-"            Will be safe_eval with `self` being the current transaction. i.e.:\n"
+"            Will be safe_eval with `self` being the current transaction. i."
+"e.:\n"
 "                self.env['my.model'].payment_validated(self)"
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
-msgid "-It installs the module payment_adyen."
+msgid "-This installs the module payment_adyen."
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
-msgid "-It installs the module payment_authorize."
+msgid "-This installs the module payment_authorize."
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
-msgid "-It installs the module payment_buckaroo."
+msgid "-This installs the module payment_buckaroo."
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
-msgid "-It installs the module payment_ogone."
+msgid "-This installs the module payment_ogone."
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
-msgid "-It installs the module payment_paypal."
+msgid "-This installs the module payment_paypal."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_sips
+msgid "-This installs the module payment_sips."
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
-msgid "-It installs the module payment_transfer."
+msgid "-This installs the module payment_transfer."
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
 msgid "3D Secure HTML"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-danger\">Test</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-success\">Production</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 
 #. module: payment
@@ -117,6 +143,11 @@ msgstr "支払時に決済サービスの確認状況にかかわらず確認"
 #: selection:payment.acquirer,auto_confirm:0
 msgid "At payment with acquirer confirmation"
 msgstr "支払時に決済サービスの確認をもって確認"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
+msgid "Authorize.Net"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_buckaroo
@@ -257,8 +288,13 @@ msgstr "エラーメッセージ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
+#, fuzzy
 msgid "Fees"
-msgstr "手数料"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"手数料\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"費用"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
@@ -487,7 +523,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment.action_payment_tx_ids
 #: model:ir.actions.act_window,name:payment.payment_transaction_action_child
 #: model:ir.model.fields,field_description:payment.field_payment_method_payment_ids
-#: model:ir.ui.menu,name:payment.finance_pay_tx_menu
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
@@ -495,7 +530,6 @@ msgid "Payment Transactions"
 msgstr "入金トランザクション"
 
 #. module: payment
-#: model:ir.ui.menu,name:payment.finance_payment_menu
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.payment_method_form_view
@@ -524,8 +558,13 @@ msgstr "電話"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
+#, fuzzy
 msgid "Production"
-msgstr "本番"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"本番\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"製造"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_provider
@@ -560,10 +599,9 @@ msgstr "S2Sフォームテンプレート"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_method_action
-#: model:ir.ui.menu,name:payment.finance_pay_method_menu
 #: model:ir.ui.menu,name:payment.payment_method_menu
 msgid "Saved Payment Data"
-msgstr ""
+msgstr "保存された支払データ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
@@ -576,6 +614,11 @@ msgid "Server To Server"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_sips
+msgid "Sips"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
 msgid "Small-sized image"
 msgstr ""
@@ -583,9 +626,9 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px"
-" image, with aspect ratio preserved. Use this field anywhere a small image "
-"is required."
+"Small-sized image of this provider. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 
 #. module: payment
@@ -623,7 +666,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is be rendered with qWeb with the following evaluation context:"
+"                                            It is be rendered with qWeb with "
+"the following evaluation context:"
 msgstr ""
 
 #. module: payment
@@ -724,11 +768,9 @@ msgid "tx_values: transaction values"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
-msgid "unknown"
-msgstr "不明"
-
-#. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr ""
+
+#~ msgid "unknown"
+#~ msgstr "不明"

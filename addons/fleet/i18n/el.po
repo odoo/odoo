@@ -1,31 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * fleet
-# 
+#
 # Translators:
 # Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:27+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-01-02 22:27+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:373
+#: code:addons/fleet/fleet.py:367
 #, python-format
 msgid "%s %s has been added to the fleet!"
 msgstr ""
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:649
+#: code:addons/fleet/fleet.py:643
 #, python-format
 msgid "%s contract(s) need(s) to be renewed and/or closed!"
 msgstr ""
@@ -69,11 +69,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_acquisition_date
 msgid "Acquisition Date"
 msgstr "Ημερομηνία Απόκτησης"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_needaction
-msgid "Action Needed"
-msgstr "Απαιτείται ενέργεια"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
@@ -490,7 +485,7 @@ msgid "Created on"
 msgstr "Δημιουργήθηκε στις"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2863
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2976
 msgid "Current state of the vehicle"
 msgstr ""
 
@@ -509,11 +504,6 @@ msgid "Date"
 msgstr "Ημερομηνία"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Ημερομηνία του τελευταίου μηνύματος "
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_date
@@ -529,8 +519,8 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_expiration_date
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after"
-" begin date)"
+"Date when the coverage of the contract expirates (by default, one year after "
+"begin date)"
 msgstr ""
 
 #. module: fleet
@@ -585,7 +575,7 @@ msgid "Driver of the vehicle"
 msgstr ""
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:390
+#: code:addons/fleet/fleet.py:384
 #, python-format
 msgid "Driver: from '%s' to '%s'"
 msgstr ""
@@ -658,21 +648,6 @@ msgstr ""
 #: model:ir.ui.menu,name:fleet.menu_root
 msgid "Fleet"
 msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_follower_ids
-msgid "Followers"
-msgstr "Ακόλουθοι"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Ακόλουθοι (Κανάλια)"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Ακόλουθοι (Συνεργάτες)"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_cost_type
@@ -812,7 +787,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_act
 msgid ""
 "Here you can add various odometer entries for all vehicles.\n"
-"                You can also show odometer value for a particular vehicle using\n"
+"                You can also show odometer value for a particular vehicle "
+"using\n"
 "                the search field."
 msgstr ""
 
@@ -839,23 +815,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2812
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2925
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_id
 msgid "ID"
 msgstr "ID"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_29
@@ -922,19 +888,9 @@ msgid "Invoice Reference"
 msgstr "Παραπομπή Τιμολογίου"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_is_follower
-msgid "Is Follower"
-msgstr "Είναι Ακόλουθος"
-
-#. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Kilometers"
 msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_last_post
-msgid "Last Message Date"
-msgstr "Τελευταία ημερομηνία μηνύματος"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_contract_state___last_update
@@ -1000,7 +956,7 @@ msgid "License Plate"
 msgstr ""
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:397
+#: code:addons/fleet/fleet.py:391
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
 msgstr ""
@@ -1093,22 +1049,12 @@ msgid ""
 msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_ids
-msgid "Messages"
-msgstr "Μηνύματα"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_ids
-msgid "Messages and communication history"
-msgstr "Μηνύματα και ιστορικό επικοινωνίας"
-
-#. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Miles"
 msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2845
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2958
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_search
 msgid "Model"
@@ -1137,12 +1083,12 @@ msgid "Model of a vehicle"
 msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2845
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2958
 msgid "Model of the vehicle"
 msgstr ""
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:386
+#: code:addons/fleet/fleet.py:380
 #, python-format
 msgid "Model: from '%s' to '%s'"
 msgstr ""
@@ -1186,8 +1132,8 @@ msgid "No"
 msgstr "Όχι"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:385 code:addons/fleet/fleet.py:389
-#: code:addons/fleet/fleet.py:393 code:addons/fleet/fleet.py:396
+#: code:addons/fleet/fleet.py:379 code:addons/fleet/fleet.py:383
+#: code:addons/fleet/fleet.py:387 code:addons/fleet/fleet.py:390
 #, python-format
 msgid "None"
 msgstr "Κανένα"
@@ -1200,29 +1146,14 @@ msgid "Notes"
 msgstr "Σημειώσεις"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Αριθμός ενεργειών"
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_doors
 msgid "Number of doors of the vehicle"
 msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_seats
 msgid "Number of seats of the vehicle"
 msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_odometer_id
@@ -1309,7 +1240,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs_non_effective
 msgid ""
 "Odoo helps you managing the costs for your different vehicles\n"
-"          Costs are generally created from services and contract and appears here."
+"          Costs are generally created from services and contract and appears "
+"here."
 msgstr ""
 
 #. module: fleet
@@ -1332,11 +1264,6 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_omnium
 msgid "Omnium"
-msgstr ""
-
-#. module: fleet
-#: model:ir.actions.client,name:fleet.action_fleet_menu
-msgid "Open Fleet Menu"
 msgstr ""
 
 #. module: fleet
@@ -1446,7 +1373,7 @@ msgid "Refueling Details"
 msgstr ""
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:720
+#: code:addons/fleet/fleet.py:714
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 #, python-format
@@ -1580,8 +1507,8 @@ msgstr "Μικρού μεγέθους εικόνα"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image_small
 msgid ""
 "Small-sized logo of the brand. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 
 #. module: fleet
@@ -1600,7 +1527,7 @@ msgid "Starter Replacement"
 msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2863
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2976
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_state_tree
 msgid "State"
 msgstr "Κατάσταση"
@@ -1611,7 +1538,7 @@ msgid "State name already exists"
 msgstr ""
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:394
+#: code:addons/fleet/fleet.py:388
 #, python-format
 msgid "State: from '%s' to '%s'"
 msgstr ""
@@ -1775,7 +1702,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2878
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2991
 msgid "Unit"
 msgstr "Μονάδα"
 
@@ -1783,16 +1710,6 @@ msgstr "Μονάδα"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit
 msgid "Unit of the odometer "
 msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_unread
-msgid "Unread Messages"
-msgstr "Αδιάβαστα Μηνύματα"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_sequence
@@ -1963,7 +1880,7 @@ msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_notes
-msgid "Write here all supplementary informations relative to this contract"
+msgid "Write here all supplementary information relative to this contract"
 msgstr ""
 
 #. module: fleet
@@ -2002,7 +1919,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
 msgid ""
 "You will be able to manage your fleet by keeping track of the\n"
-"                contracts, services, fixed and recurring costs, odometers and\n"
+"                contracts, services, fixed and recurring costs, odometers "
+"and\n"
 "                fuel logs associated to each vehicle."
 msgstr ""
 
@@ -2071,3 +1989,51 @@ msgstr ""
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_form
 msgid "show the services logs for this vehicle"
 msgstr ""
+
+#~ msgid "Action Needed"
+#~ msgstr "Απαιτείται ενέργεια"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Ημερομηνία του τελευταίου μηνύματος "
+
+#~ msgid "Followers"
+#~ msgstr "Ακόλουθοι"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Ακόλουθοι (Κανάλια)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Ακόλουθοι (Συνεργάτες)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
+
+#~ msgid "Is Follower"
+#~ msgstr "Είναι Ακόλουθος"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Τελευταία ημερομηνία μηνύματος"
+
+#~ msgid "Messages"
+#~ msgstr "Μηνύματα"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Μηνύματα και ιστορικό επικοινωνίας"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Αριθμός ενεργειών"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Αδιάβαστα Μηνύματα"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"

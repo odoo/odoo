@@ -1,31 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * fleet
-# 
+#
 # Translators:
 # Paulius Sladkevičius <paulius@hbee.eu>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:27+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2015-12-30 15:49+0000\n"
 "Last-Translator: Paulius Sladkevičius <paulius@hbee.eu>\n"
-"Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/lt/)\n"
+"Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/"
+"lt/)\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
+"%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:373
+#: code:addons/fleet/fleet.py:367
 #, python-format
 msgid "%s %s has been added to the fleet!"
 msgstr "%s %s buvo pridėta prie automobilių parko!"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:649
+#: code:addons/fleet/fleet.py:643
 #, python-format
 msgid "%s contract(s) need(s) to be renewed and/or closed!"
 msgstr "%s kontraktas(-ai) turi būti atnaujintas(-ti) arba/ir uždarytas(-ti)!"
@@ -69,11 +71,6 @@ msgstr "Įkrovimas"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_acquisition_date
 msgid "Acquisition Date"
 msgstr "Įsigijimo data"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_needaction
-msgid "Action Needed"
-msgstr ""
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
@@ -233,7 +230,9 @@ msgstr "Pasirinkite, ar sutartis galiojanti ar ne"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type_category
 msgid "Choose wheter the service refer to contracts, vehicle services or both"
-msgstr "Pasirinkite, ar paslauga susijusi su sutartimis, mašinos paslaugomis ar abėjais."
+msgstr ""
+"Pasirinkite, ar paslauga susijusi su sutartimis, mašinos paslaugomis ar "
+"abėjais."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_act
@@ -448,14 +447,19 @@ msgstr "Mokesčiai per mėnesį"
 msgid ""
 "Costs paid at regular intervals, depending on the cost frequency. If the "
 "cost frequency is set to unique, the cost will be logged at the start date"
-msgstr "Mokesčiai mokami reguleriais intervalais, priklausomai nuo mokesčių dažnumo. Jeigu mokesčio dažnumas nustatytas į unikalų, mokesčiai bus užregistruoti periodo pradžios datoje."
+msgstr ""
+"Mokesčiai mokami reguleriais intervalais, priklausomai nuo mokesčių dažnumo. "
+"Jeigu mokesčio dažnumas nustatytas į unikalų, mokesčiai bus užregistruoti "
+"periodo pradžios datoje."
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 msgid ""
 "Create a new contract automatically with all the same informations except "
 "for the date that will start at the end of current contract"
-msgstr "Sukurkite naują sutartį automatiškai su visa ta pačia inforamcija, išskyrus su data, kuri prasidės pasibaigus dabartinei sutarčiai"
+msgstr ""
+"Sukurkite naują sutartį automatiškai su visa ta pačia inforamcija, išskyrus "
+"su data, kuri prasidės pasibaigus dabartinei sutarčiai"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_contract_state_create_uid
@@ -490,7 +494,7 @@ msgid "Created on"
 msgstr "Sukurta"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2863
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2976
 msgid "Current state of the vehicle"
 msgstr "Dabartinė automobilio būsena"
 
@@ -509,11 +513,6 @@ msgid "Date"
 msgstr "Data"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Paskutinė pranešimo publikavimo data šiame įraše."
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_date
@@ -529,8 +528,8 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_expiration_date
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after"
-" begin date)"
+"Date when the coverage of the contract expirates (by default, one year after "
+"begin date)"
 msgstr ""
 
 #. module: fleet
@@ -585,7 +584,7 @@ msgid "Driver of the vehicle"
 msgstr "Automobilio vairuotojas"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:390
+#: code:addons/fleet/fleet.py:384
 #, python-format
 msgid "Driver: from '%s' to '%s'"
 msgstr "Vairuotojas: nuo '%s' iki '%s'"
@@ -658,21 +657,6 @@ msgstr "Išmetimo kolektoriaus keitimas"
 #: model:ir.ui.menu,name:fleet.menu_root
 msgid "Fleet"
 msgstr "Automobilių parkas"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_follower_ids
-msgid "Followers"
-msgstr "Prenumeratoriai"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_cost_type
@@ -812,7 +796,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_act
 msgid ""
 "Here you can add various odometer entries for all vehicles.\n"
-"                You can also show odometer value for a particular vehicle using\n"
+"                You can also show odometer value for a particular vehicle "
+"using\n"
 "                the search field."
 msgstr ""
 
@@ -839,23 +824,13 @@ msgstr "Hibridinis"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2812
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2925
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_id
 msgid "ID"
 msgstr "ID"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Jeigu pažymėta, nauji pranešimai reikalaus jūsų dėmesio."
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_29
@@ -922,19 +897,9 @@ msgid "Invoice Reference"
 msgstr "Sąskaitos faktūros nuoroda"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_is_follower
-msgid "Is Follower"
-msgstr ""
-
-#. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Kilometers"
 msgstr "Kilometrai"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_last_post
-msgid "Last Message Date"
-msgstr "Paskutinio pranešimo data"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_contract_state___last_update
@@ -1000,7 +965,7 @@ msgid "License Plate"
 msgstr "Valstybinis numeris"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:397
+#: code:addons/fleet/fleet.py:391
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
 msgstr "Valstybinis numeris: nuo '%s' iki '%s'"
@@ -1090,17 +1055,10 @@ msgid ""
 "Medium-sized logo of the brand. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
-msgstr "Vidutinio dydžio markės logotipas. Paveiksliuko dydis automatiškai pakeistas į 128x128px paveiksliuką, su išlaikytu kraštinių santykiu. Naudokite šį laukelį formos arba kanban rodinyje."
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_ids
-msgid "Messages"
-msgstr "Pranešimai"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_ids
-msgid "Messages and communication history"
-msgstr "Pranešimų ir komunikacijos istorija"
+msgstr ""
+"Vidutinio dydžio markės logotipas. Paveiksliuko dydis automatiškai pakeistas "
+"į 128x128px paveiksliuką, su išlaikytu kraštinių santykiu. Naudokite šį "
+"laukelį formos arba kanban rodinyje."
 
 #. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
@@ -1108,7 +1066,7 @@ msgid "Miles"
 msgstr "Mylios"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2845
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2958
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_search
 msgid "Model"
@@ -1137,12 +1095,12 @@ msgid "Model of a vehicle"
 msgstr "Automobilio modelis"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2845
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2958
 msgid "Model of the vehicle"
 msgstr "Automobilio modelis"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:386
+#: code:addons/fleet/fleet.py:380
 #, python-format
 msgid "Model: from '%s' to '%s'"
 msgstr "Modelis: nuo '%s' iki '%s'"
@@ -1186,8 +1144,8 @@ msgid "No"
 msgstr "Ne"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:385 code:addons/fleet/fleet.py:389
-#: code:addons/fleet/fleet.py:393 code:addons/fleet/fleet.py:396
+#: code:addons/fleet/fleet.py:379 code:addons/fleet/fleet.py:383
+#: code:addons/fleet/fleet.py:387 code:addons/fleet/fleet.py:390
 #, python-format
 msgid "None"
 msgstr "Nieko"
@@ -1200,29 +1158,14 @@ msgid "Notes"
 msgstr "Pastabos"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Veiksmų skaičius"
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_doors
 msgid "Number of doors of the vehicle"
 msgstr "Automobilio durų skaičius"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Žinučių, kurių prireiks veiksmui skaičius"
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_seats
 msgid "Number of seats of the vehicle"
 msgstr "Automobilio sėdynių skaičius"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Neperskaitytų žinučių skaičius"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_odometer_id
@@ -1309,7 +1252,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs_non_effective
 msgid ""
 "Odoo helps you managing the costs for your different vehicles\n"
-"          Costs are generally created from services and contract and appears here."
+"          Costs are generally created from services and contract and appears "
+"here."
 msgstr ""
 
 #. module: fleet
@@ -1333,11 +1277,6 @@ msgstr "Tepalų siurblio pakeitimas"
 #: model:fleet.service.type,name:fleet.type_contract_omnium
 msgid "Omnium"
 msgstr ""
-
-#. module: fleet
-#: model:ir.actions.client,name:fleet.action_fleet_menu
-msgid "Open Fleet Menu"
-msgstr "Atidaryti automobilių eikštelės meniu"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_16
@@ -1446,7 +1385,7 @@ msgid "Refueling Details"
 msgstr "Degalų papildymo informacija"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:720
+#: code:addons/fleet/fleet.py:714
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 #, python-format
@@ -1580,8 +1519,8 @@ msgstr ""
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image_small
 msgid ""
 "Small-sized logo of the brand. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 
 #. module: fleet
@@ -1600,7 +1539,7 @@ msgid "Starter Replacement"
 msgstr "Starterio pakeitimas"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2863
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2976
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_state_tree
 msgid "State"
 msgstr "Savivaldybė"
@@ -1611,7 +1550,7 @@ msgid "State name already exists"
 msgstr "Būsenos pavadinimas jau egzistuojas"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:394
+#: code:addons/fleet/fleet.py:388
 #, python-format
 msgid "State: from '%s' to '%s'"
 msgstr "Būsena: nuo '%s' iki '%s'"
@@ -1775,7 +1714,7 @@ msgstr "Unikalus numeris, kuris parašytas ant motoro (VIN / SN numeris)"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2878
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2991
 msgid "Unit"
 msgstr "Vienetas"
 
@@ -1783,16 +1722,6 @@ msgstr "Vienetas"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit
 msgid "Unit of the odometer "
 msgstr "Odometro vienetai "
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_unread
-msgid "Unread Messages"
-msgstr "Neskaityti pranešimai"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_sequence
@@ -1963,7 +1892,8 @@ msgstr "Parašykite čia visą informaciją susijusią su šia sutartimi"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_notes
-msgid "Write here all supplementary informations relative to this contract"
+#, fuzzy
+msgid "Write here all supplementary information relative to this contract"
 msgstr "Parašykite čia visas papildomas pastabas susijusias su šia sutartimi"
 
 #. module: fleet
@@ -1974,7 +1904,8 @@ msgstr "Parašykite čia kitą svarbią informaciją"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_form
 msgid "Write here any other information related to the service completed."
-msgstr "Čia parašykite kitą svarbią informaciją susijusią su šia atlikta paslauga."
+msgstr ""
+"Čia parašykite kitą svarbią informaciją susijusią su šia atlikta paslauga."
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_search
@@ -2002,7 +1933,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
 msgid ""
 "You will be able to manage your fleet by keeping track of the\n"
-"                contracts, services, fixed and recurring costs, odometers and\n"
+"                contracts, services, fixed and recurring costs, odometers "
+"and\n"
 "                fuel logs associated to each vehicle."
 msgstr ""
 
@@ -2071,3 +2003,36 @@ msgstr "parodyti šio automobilio odometro žurnalą"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_form
 msgid "show the services logs for this vehicle"
 msgstr "parodyti šio automobilio paslaugų žurnalą"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Paskutinė pranešimo publikavimo data šiame įraše."
+
+#~ msgid "Followers"
+#~ msgstr "Prenumeratoriai"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Jeigu pažymėta, nauji pranešimai reikalaus jūsų dėmesio."
+
+#~ msgid "Last Message Date"
+#~ msgstr "Paskutinio pranešimo data"
+
+#~ msgid "Messages"
+#~ msgstr "Pranešimai"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Pranešimų ir komunikacijos istorija"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Veiksmų skaičius"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Žinučių, kurių prireiks veiksmui skaičius"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Neperskaitytų žinučių skaičius"
+
+#~ msgid "Open Fleet Menu"
+#~ msgstr "Atidaryti automobilių eikštelės meniu"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Neskaityti pranešimai"

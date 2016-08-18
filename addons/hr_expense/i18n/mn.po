@@ -1,30 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_expense
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-02-20 10:40+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
+"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
+"mn/)\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Date:</strong>"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Description:</strong>"
+msgid "<strong>Currency:</strong>"
 msgstr ""
 
 #. module: hr_expense
@@ -34,18 +30,24 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Total</strong>"
+msgid "<strong>Manager:</strong>"
 msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Validated By:</strong>"
+msgid "<strong>Status:</strong>"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction
-msgid "Action Needed"
-msgstr "Үйлдэл Шаардлагатай"
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
+msgid "<strong>Total</strong>"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_id
+#, fuzzy
+msgid "Account"
+msgstr "Шинжилгээний данс"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
@@ -165,11 +167,7 @@ msgid "Date"
 msgstr "Огноо"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
-
-#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_department_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Department"
@@ -286,13 +284,13 @@ msgid "Expenses by Month"
 msgstr "Зардлууд сараар"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:206
+#: code:addons/hr_expense/models/hr_expense.py:209
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:209
+#: code:addons/hr_expense/models/hr_expense.py:212
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -317,21 +315,6 @@ msgid "Expenses to Invoice"
 msgstr "Нэхэмжлэх Зардалууд"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_follower_ids
-msgid "Followers"
-msgstr "Дагагчид"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Дагагчид (Сувагууд)"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Дагагчид (Харилцагчид)"
-
-#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Former Employees"
 msgstr ""
@@ -345,18 +328,13 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
-msgid "Generate Single Accounting Entry"
+msgid "Generate Accounting Entries"
 msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Group By"
 msgstr "Бүлэглэх"
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
-msgid "HR Department"
-msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
@@ -387,21 +365,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг шаардана."
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_is_follower
-msgid "Is Follower"
-msgstr "Дагагч эсэх"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_move_id
 msgid "Journal Entry"
 msgstr "Журналын бичилтүүд"
@@ -410,11 +373,6 @@ msgstr "Журналын бичилтүүд"
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Item"
 msgstr "Журналын бичилт"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_last_post
-msgid "Last Message Date"
-msgstr "Сүүлийн зурвасын огноо"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
@@ -434,16 +392,6 @@ msgstr "Сүүлийн засвар хийсэн"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_date
 msgid "Last Updated on"
 msgstr "Сүүлийн засвар хийсэн огноо"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_ids
-msgid "Messages"
-msgstr "Зурвасууд"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_ids
-msgid "Messages and communication history"
-msgstr "Зурвас болон харилцсан түүх"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all
@@ -478,7 +426,7 @@ msgid "New Mail"
 msgstr "Шинэ Мэйл"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:260
+#: code:addons/hr_expense/models/hr_expense.py:276
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
@@ -486,13 +434,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:231
+#: code:addons/hr_expense/models/hr_expense.py:244
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:227
+#: code:addons/hr_expense/models/hr_expense.py:240
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr ""
@@ -503,24 +451,9 @@ msgid "Notes..."
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Үйлдлийн тоо"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_attachment_number
 msgid "Number of Attachments"
 msgstr ""
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Үйлдэл шаардлагатай зурвасын тоо"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Уншаагүй зурвасын тоо"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense
@@ -528,11 +461,6 @@ msgstr "Уншаагүй зурвасын тоо"
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.actions.client,name:hr_expense.action_client_expense_menu
-msgid "Open Expense Menu"
 msgstr ""
 
 #. module: hr_expense
@@ -546,7 +474,7 @@ msgid "Payment By"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:264
+#: code:addons/hr_expense/models/hr_expense.py:280
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -622,12 +550,13 @@ msgid "Select the lines you want to submit to be reimbursed."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:73
+#: code:addons/hr_expense/models/hr_expense.py:77
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product"
-" Unit of Measure"
-msgstr "Сонгосон хэмжих нэгж нь барааны хэмжих нэгжтэй ижил биш ангилалд байна."
+"Selected Unit of Measure does not belong to the same category as the product "
+"Unit of Measure"
+msgstr ""
+"Сонгосон хэмжих нэгж нь барааны хэмжих нэгжтэй ижил биш ангилалд байна."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -689,7 +618,9 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "This document must be dated and signed for reimbursement."
-msgstr "Мөнгө нөхөн олгохын тулд энэ баримт дээр огноог бөглөж гарын үсэг зурсан байх ёстой"
+msgstr ""
+"Мөнгө нөхөн олгохын тулд энэ баримт дээр огноог бөглөж гарын үсэг зурсан "
+"байх ёстой"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_expense_to_approve
@@ -731,16 +662,6 @@ msgid "Unit of Measure"
 msgstr "Хэмжих нэгж"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread
-msgid "Unread Messages"
-msgstr "Уншаагүй Зурвасууд"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Уншаагүй зурвасын тоолуур"
-
-#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "UoM"
 msgstr ""
@@ -758,44 +679,36 @@ msgid "Waiting Payment"
 msgstr "Төлбөрийг Хүлээсэн"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_website_message_ids
-msgid "Website Messages"
-msgstr "Вебсайтын зурвасууд"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_website_message_ids
-msgid "Website communication history"
-msgstr "Вебсайтын харилцааны түүх"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_state
 msgid ""
 "When the expense request is created the status is 'To Submit'.\n"
-" It is submitted by the employee and request is sent to manager, the status is 'Submitted'.        \n"
+" It is submitted by the employee and request is sent to manager, the status "
+"is 'Submitted'.        \n"
 "If the manager approve it, the status is 'Approved'.\n"
-" If the accountant genrate the accounting entries for the expense request, the status is 'Waiting Payment'."
+" If the accountant genrate the accounting entries for the expense request, "
+"the status is 'Waiting Payment'."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:107
+#: code:addons/hr_expense/models/hr_expense.py:111
 #, python-format
 msgid "You can only delete draft or refused expenses!"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:203
+#: code:addons/hr_expense/models/hr_expense.py:206
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:113
+#: code:addons/hr_expense/models/hr_expense.py:117
 #, python-format
 msgid "You can only submit draft expenses!"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:124
+#: code:addons/hr_expense/models/hr_expense.py:128
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
@@ -812,3 +725,64 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "or"
 msgstr "эсвэл"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
+msgid "report.hr_expense.report_expense"
+msgstr ""
+
+#~ msgid "Action Needed"
+#~ msgstr "Үйлдэл Шаардлагатай"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
+
+#~ msgid "Followers"
+#~ msgstr "Дагагчид"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Дагагчид (Сувагууд)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Дагагчид (Харилцагчид)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr ""
+#~ "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг "
+#~ "шаардана."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
+
+#~ msgid "Is Follower"
+#~ msgstr "Дагагч эсэх"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Сүүлийн зурвасын огноо"
+
+#~ msgid "Messages"
+#~ msgstr "Зурвасууд"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Зурвас болон харилцсан түүх"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Үйлдлийн тоо"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Үйлдэл шаардлагатай зурвасын тоо"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Уншаагүй зурвасын тоо"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Уншаагүй Зурвасууд"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Уншаагүй зурвасын тоолуур"
+
+#~ msgid "Website Messages"
+#~ msgstr "Вебсайтын зурвасууд"
+
+#~ msgid "Website communication history"
+#~ msgstr "Вебсайтын харилцааны түүх"

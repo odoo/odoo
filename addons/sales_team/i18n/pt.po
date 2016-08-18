@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sales_team
-# 
+#
 # Translators:
 # Ricardo Correia <rcorreiavv@gmail.com>, 2015
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2015
@@ -9,14 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2015-11-25 14:39+0000\n"
 "Last-Translator: Ricardo Correia <rcorreiavv@gmail.com>\n"
-"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
+"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
+"pt/)\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sales_team
@@ -61,11 +62,6 @@ msgstr "<span>Relatórios</span>"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>View</span>"
 msgstr "<span>Ver</span>"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction
-msgid "Action Needed"
-msgstr "Ação Necessária"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_active
@@ -142,11 +138,6 @@ msgid "Dashboard"
 msgstr "Painel"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Data da Ultmia Mensagem Inserida no Registo"
-
-#. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
 msgid "Direct Sales"
 msgstr "Vendas Diretas"
@@ -161,22 +152,9 @@ msgstr "Nome a Mostrar"
 msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
-msgstr "Siga este funil de vendas para rastrear automaticamente os eventos associados aos utilizadores desta equipa."
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_follower_ids
-msgid "Followers"
-msgstr "Seguidores"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Seguidores (Canais)"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Seguidores (Parceiros)"
+msgstr ""
+"Siga este funil de vendas para rastrear automaticamente os eventos "
+"associados aos utilizadores desta equipa."
 
 #. module: sales_team
 #. openerp-web
@@ -203,21 +181,13 @@ msgid "ID"
 msgstr "ID"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
-
-#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
 msgid ""
 "If the active field is set to false, it will allow you to hide the sales "
 "team without removing it."
-msgstr "Se o campo ativo é definido como falso, ele permite que oculte a equipa de vendas sem a remover."
+msgstr ""
+"Se o campo ativo é definido como falso, ele permite que oculte a equipa de "
+"vendas sem a remover."
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
@@ -230,16 +200,6 @@ msgstr "Vendas Indirectas"
 #, python-format
 msgid "Invoiced"
 msgstr "Faturado"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_is_follower
-msgid "Is Follower"
-msgstr "É um seguidor"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_last_post
-msgid "Last Message Date"
-msgstr "Data da Última Mensagem"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
@@ -271,16 +231,6 @@ msgid "Meetings"
 msgstr "Reuniões"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_ids
-msgid "Messages"
-msgstr "Mensagens"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_ids
-msgid "Messages and communication history"
-msgstr "Histórico de mensagens e comunicação"
-
-#. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Mais <i class=\"fa fa-caret-down\"/>"
@@ -289,6 +239,15 @@ msgstr "Mais <i class=\"fa fa-caret-down\"/>"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "More Info"
 msgstr "Mais info"
+
+#. module: sales_team
+#. openerp-web
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:44
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
+#, fuzzy, python-format
+msgid "My Pipeline"
+msgstr "O seu canal"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -310,23 +269,8 @@ msgid "Next Actions"
 msgstr "Próximas ações"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Número de Ações"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Número de mensagens que requerem uma ação"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Número de mensagens por ler"
-
-#. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:87
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "Apenas valores inteiros são válidos."
@@ -363,6 +307,13 @@ msgstr "Lista de Preços de Vendas"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_tree
 msgid "Sales Team"
 msgstr "Equipa de vendas"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_res_users_sale_team_id
+msgid ""
+"Sales Team the user is member of. Used to compute the members of a sales "
+"team through the inverse one2many"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_act
@@ -415,11 +366,18 @@ msgid "The code of the sales team must be unique !"
 msgstr "O código da equipa de vendas deve ser único!"
 
 #. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_color
+msgid "The color of the team"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
 msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
 "cases in this sales team"
-msgstr "O endereço de e-mail a colocar no \"Responder-a\" de todos os e-mails enviados por Odoo sobre casos nesta equipa de vendas"
+msgstr ""
+"O endereço de e-mail a colocar no \"Responder-a\" de todos os e-mails "
+"enviados por Odoo sobre casos nesta equipa de vendas"
 
 #. module: sales_team
 #. openerp-web
@@ -433,7 +391,9 @@ msgstr "Este mês"
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr "Esta lista de preços será utilizada, em vez do padrão, para as vendas para o parceiro atual"
+msgstr ""
+"Esta lista de preços será utilizada, em vez do padrão, para as vendas para o "
+"parceiro atual"
 
 #. module: sales_team
 #. openerp-web
@@ -498,16 +458,6 @@ msgid "Today"
 msgstr "Hoje"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_unread
-msgid "Unread Messages"
-msgstr "Mensagens por ler"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Contador de Mensagens por Ler"
-
-#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
@@ -515,7 +465,10 @@ msgid ""
 "Use sales team to organize your different salespersons or\n"
 "                    departments into separate teams. Each team will work in\n"
 "                    its own list of opportunities."
-msgstr "Utilize as equipas de vendas para organizar os seus vendedores ou departamentos em equipas separadas. Cada equipa trabalhará na sua própria lista de oportunidades."
+msgstr ""
+"Utilize as equipas de vendas para organizar os seus vendedores ou "
+"departamentos em equipas separadas. Cada equipa trabalhará na sua própria "
+"lista de oportunidades."
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -530,25 +483,11 @@ msgid "Won in Opportunities"
 msgstr "Ganho nas oportunidades"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_working_hours
-msgid "Working Hours"
-msgstr "Horário de Trabalho"
-
-#. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:87
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
 #, python-format
 msgid "Wrong value entered!"
 msgstr "Valor Introduzido Inválido!"
-
-#. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:44
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
-#, python-format
-msgid "Your Pipeline"
-msgstr "O seu canal"
 
 #. module: sales_team
 #. openerp-web
@@ -563,3 +502,54 @@ msgstr "à espera de fecho"
 #, python-format
 msgid "overdue"
 msgstr "Vencido"
+
+#~ msgid "Action Needed"
+#~ msgstr "Ação Necessária"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data da Ultmia Mensagem Inserida no Registo"
+
+#~ msgid "Followers"
+#~ msgstr "Seguidores"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Seguidores (Canais)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Seguidores (Parceiros)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
+
+#~ msgid "Is Follower"
+#~ msgstr "É um seguidor"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data da Última Mensagem"
+
+#~ msgid "Messages"
+#~ msgstr "Mensagens"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Histórico de mensagens e comunicação"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Número de Ações"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Número de mensagens que requerem uma ação"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Número de mensagens por ler"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Mensagens por ler"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Contador de Mensagens por Ler"
+
+#~ msgid "Working Hours"
+#~ msgstr "Horário de Trabalho"

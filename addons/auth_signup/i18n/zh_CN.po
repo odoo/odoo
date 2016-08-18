@@ -1,67 +1,132 @@
+# #-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_signup
-# 
+#
 # Translators:
 # fausthuang, 2016
 # fausthuang, 2016
 # inddroy inddroy <joe@joe-chow.com>, 2016
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
 # Xia Fajin <xia.fajin@elico-corp.com>, 2015
+# #-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_signup
+#
+# Translators:
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-06 07:13+0000\n"
-"PO-Revision-Date: 2016-06-26 00:55+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: auth_signup
-#: model:mail.template,body_html:auth_signup.set_password_email
-msgid ""
-"\n"
-"                \n"
-"                    <p>\n"
-"                        ${object.name},\n"
-"                    </p>\n"
-"                    <p>\n"
-"                        You have been invited to connect to \"${object.company_id.name}\" in order to get access to your documents in Odoo.\n"
-"                    </p>\n"
-"                    <p>\n"
-"                        To accept the invitation, click on the following link:\n"
-"                    </p>\n"
-"                    <ul>\n"
-"                        <li><a href=\"${object.signup_url}\">Accept invitation to \"${object.company_id.name}\"</a></li>\n"
-"                    </ul>\n"
-"                    <p>\n"
-"                        Thanks,\n"
-"                    </p>\n"
-"                    <pre>\n"
-"--\n"
-"${object.company_id.name or ''}\n"
-"${object.company_id.email or ''}\n"
-"${object.company_id.phone or ''}\n"
-"                    </pre>\n"
-"                \n"
-"            "
-msgstr "\n                \n                    <p>\n                        ${object.name},\n                    </p>\n                    <p>\n                        您被邀请链接到 \"${object.company_id.name}\"为了获取您在 Odoo的文件.\n                    </p>\n                    <p>\n                        接收邀请, 点击下面的链接:\n                    </p>\n                    <ul>\n                        <li><a href=\"${object.signup_url}\">Accept invitation to \"${object.company_id.name}\"</a></li>\n                    </ul>\n                    <p>\n                        谢谢,\n                    </p>\n                    <pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n                    </pre>\n                \n            "
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.reset_password_email
 msgid ""
 "\n"
-"<p>A password reset was requested for the Odoo account linked to this email.</p>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
+"top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px "
+"10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
+"top /100%;color:#777777\">\n"
+"    <p>Dear ${object.name},</p>\n"
+"    <p>A password reset was requested for the Odoo account linked to this "
+"email.</p>\n"
+"    <p>You may change your password by following this link which will remain "
+"valid during 24 hours:</p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-"
+"size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-"
+"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
+"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
+"space: nowrap; background-image: none; background-color: #a24689; border: "
+"1px solid #a24689; border-radius:3px\">Change password</a>\n"
+"    </div>\n"
+"    <p>If you do not expect this, you can safely ignore this email.</p>\n"
+"    <p>Best regards,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; "
+"background: #fff repeat top /100%;color:#777777\">\n"
+"    ${user.signature | safe}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com"
+"\" style=\"text-decoration:none; color: #a24689;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,body_html:auth_signup.set_password_email
+msgid ""
 "\n"
-"<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>, which will remain valid during 24 hours.</p>\n"
-"\n"
-"<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr "\n<p>和这个邮件相关的Odoo账号被要求更改密码.</p>\n\n<p>你可以在以下链接中更改密码<a href=\"${object.signup_url}\">this link</a>, 该信息有效时间24小时.</p>\n\n<p>提示: 如不需要，可以忽略.</p>"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
+"top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px "
+"10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
+"top /100%;color:#777777\">\n"
+"<p>Dear ${object.name},</p>\n"
+"    <p>\n"
+"        You have been invited to connect to \"${object.company_id.name}\" in "
+"order to get access to your documents in Odoo.\n"
+"    </p>\n"
+"    <p>\n"
+"        To accept the invitation, click on the following link:\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"         <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-"
+"size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-"
+"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
+"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
+"space: nowrap; background-image: none; background-color: #a24689; border: "
+"1px solid #a24689; border-radius:3px\">Accept invitation to \"${object."
+"company_id.name}\"</a>\n"
+"    </div>\n"
+"    <p>Best regards,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; "
+"background: #fff repeat top /100%;color:#777777\">\n"
+"    ${user.signature | safe}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com"
+"\" style=\"text-decoration:none; color: #a24689;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
+msgstr ""
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -83,24 +148,29 @@ msgid ""
 msgstr "<strong>包含以下订阅链接的邀请函发出：</strong>"
 
 #. module: auth_signup
+#: selection:res.users,state:0
+msgid "Activated"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
 msgstr "允许外部用户注册"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:64
+#: code:addons/auth_signup/controllers/main.py:61
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "一封包含验证证书以重置您的密码的电子邮件已经发送"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:40
+#: code:addons/auth_signup/controllers/main.py:38
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr "该邮件地址已经被其他注册了"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:115
+#: code:addons/auth_signup/controllers/main.py:111
 #, python-format
 msgid "Authentication Failed."
 msgstr "身份验证失败"
@@ -108,11 +178,16 @@ msgstr "身份验证失败"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 #: model:ir.ui.view,arch_db:auth_signup.signup
+#, fuzzy
 msgid "Back to Login"
-msgstr "返回登录"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"返回登录\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"返回到登录页面"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:277
+#: code:addons/auth_signup/models/res_users.py:135
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr "无法发送邮件：用户 %s 邮件地址为空。"
@@ -128,21 +203,20 @@ msgid "Confirm Password"
 msgstr "确认密码"
 
 #. module: auth_signup
-#: selection:res.users,state:0
-msgid "Connected"
-msgstr "已连接"
-
-#. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:43
+#: code:addons/auth_signup/controllers/main.py:41
 #, python-format
 msgid "Could not create a new account."
 msgstr "不能创建一个新账号"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:66
-#, python-format
+#: code:addons/auth_signup/controllers/main.py:63
+#, fuzzy, python-format
 msgid "Could not reset your password"
-msgstr "无法重置您的密码"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"无法重置您的密码\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"无法重置密码"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
@@ -156,9 +230,13 @@ msgstr "如果不勾选，只有被邀请用户才能注册。"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:91
-#, python-format
+#, fuzzy, python-format
 msgid "Invalid signup token"
-msgstr "密码错误"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"密码错误\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"无效的注册令牌"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -177,8 +255,13 @@ msgstr "密码"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
+#, fuzzy
 msgid "Password reset"
-msgstr "重置密码"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"重置密码\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"密码重置"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -186,10 +269,19 @@ msgid "Reset Password"
 msgstr "重置密码"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:253
-#, python-format
+#: code:addons/auth_signup/models/res_users.py:108
+#, fuzzy, python-format
 msgid "Reset password: invalid username or email"
-msgstr "重置密码:无效的用户名或密码"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"重置密码:无效的用户名或密码\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"重置密码: 用户名或密码无效"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_self
+msgid "Self"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -198,26 +290,19 @@ msgstr "发送密码重置指令"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
+#, fuzzy
 msgid "Send an Invitation Email"
-msgstr "发送一封邀请邮件"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"发送一封邀请邮件\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"发送邀请邮件"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
 msgstr "注册"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
-msgid "Signup Expiration"
-msgstr "注册到期"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
-msgid "Signup Token"
-msgstr "注册令牌（ Token ）"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
@@ -238,6 +323,18 @@ msgid "Signup URL"
 msgstr "注册网址"
 
 #. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
+msgid "Signup expiration"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
+msgid "Signup token"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
 msgid "Status"
 msgstr "状态"
@@ -246,6 +343,11 @@ msgstr "状态"
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr "用作通过注册创建的新用户的模版"
+
+#. module: auth_signup
+#: model:ir.model.fields,help:auth_signup.field_res_users_website_url
+msgid "The full URL to access the document through the website."
+msgstr "通过网站访问单据的完整URL。"
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
@@ -258,6 +360,41 @@ msgid "Users"
 msgstr "用户"
 
 #. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
+msgid "Visible in Website"
+msgstr "在网站可见"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
+msgid "Website Partner Full Description"
+msgstr "网站业务伙伴的详细说明"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
+msgid "Website Partner Short Description"
+msgstr "网站业务伙伴简介"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
+msgid "Website URL"
+msgstr "网站地址"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
+msgid "Website meta description"
+msgstr "网站meta说明"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
+msgid "Website meta keywords"
+msgstr "网站meta关键词"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
+msgid "Website meta title"
+msgstr "网站meta标题"
+
+#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
@@ -265,8 +402,13 @@ msgstr "您的电子邮件"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
+#, fuzzy
 msgid "Your Name"
-msgstr "您的姓名"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"您的姓名\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"你的姓名"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
@@ -277,3 +419,92 @@ msgstr "base.config.settings"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
 msgstr "例如:约翰"
+
+#~ msgid ""
+#~ "\n"
+#~ "                \n"
+#~ "                    <p>\n"
+#~ "                        ${object.name},\n"
+#~ "                    </p>\n"
+#~ "                    <p>\n"
+#~ "                        You have been invited to connect to \"${object."
+#~ "company_id.name}\" in order to get access to your documents in Odoo.\n"
+#~ "                    </p>\n"
+#~ "                    <p>\n"
+#~ "                        To accept the invitation, click on the following "
+#~ "link:\n"
+#~ "                    </p>\n"
+#~ "                    <ul>\n"
+#~ "                        <li><a href=\"${object.signup_url}\">Accept "
+#~ "invitation to \"${object.company_id.name}\"</a></li>\n"
+#~ "                    </ul>\n"
+#~ "                    <p>\n"
+#~ "                        Thanks,\n"
+#~ "                    </p>\n"
+#~ "                    <pre>\n"
+#~ "--\n"
+#~ "${object.company_id.name or ''}\n"
+#~ "${object.company_id.email or ''}\n"
+#~ "${object.company_id.phone or ''}\n"
+#~ "                    </pre>\n"
+#~ "                \n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "                \n"
+#~ "                    <p>\n"
+#~ "                        ${object.name},\n"
+#~ "                    </p>\n"
+#~ "                    <p>\n"
+#~ "                        您被邀请链接到 \"${object.company_id.name}\"为了获"
+#~ "取您在 Odoo的文件.\n"
+#~ "                    </p>\n"
+#~ "                    <p>\n"
+#~ "                        接收邀请, 点击下面的链接:\n"
+#~ "                    </p>\n"
+#~ "                    <ul>\n"
+#~ "                        <li><a href=\"${object.signup_url}\">Accept "
+#~ "invitation to \"${object.company_id.name}\"</a></li>\n"
+#~ "                    </ul>\n"
+#~ "                    <p>\n"
+#~ "                        谢谢,\n"
+#~ "                    </p>\n"
+#~ "                    <pre>\n"
+#~ "--\n"
+#~ "${object.company_id.name or ''}\n"
+#~ "${object.company_id.email or ''}\n"
+#~ "${object.company_id.phone or ''}\n"
+#~ "                    </pre>\n"
+#~ "                \n"
+#~ "            "
+
+#~ msgid ""
+#~ "\n"
+#~ "<p>A password reset was requested for the Odoo account linked to this "
+#~ "email.</p>\n"
+#~ "\n"
+#~ "<p>You may change your password by following <a href=\"${object."
+#~ "signup_url}\">this link</a>, which will remain valid during 24 hours.</"
+#~ "p>\n"
+#~ "\n"
+#~ "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
+#~ msgstr ""
+#~ "\n"
+#~ "<p>和这个邮件相关的Odoo账号被要求更改密码.</p>\n"
+#~ "\n"
+#~ "<p>你可以在以下链接中更改密码<a href=\"${object.signup_url}\">this link</"
+#~ "a>, 该信息有效时间24小时.</p>\n"
+#~ "\n"
+#~ "<p>提示: 如不需要，可以忽略.</p>"
+
+#~ msgid "Connected"
+#~ msgstr "已连接"
+
+#~ msgid "Signup Expiration"
+#~ msgstr "注册到期"
+
+#~ msgid "Signup Token"
+#~ msgstr "注册令牌（ Token ）"
+
+#~ msgid "Confirmed"
+#~ msgstr "已确认"

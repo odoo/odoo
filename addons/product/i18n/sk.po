@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2015-2016
@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-17 06:49+0000\n"
 "Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: product
@@ -31,19 +31,19 @@ msgid "# of Product Variants"
 msgstr "# z variant produktov"
 
 #. module: product
-#: code:addons/product/pricelist.py:288
+#: code:addons/product/pricelist.py:372
 #, python-format
 msgid "%s %% discount"
 msgstr "%s %% zľava"
 
 #. module: product
-#: code:addons/product/pricelist.py:290
+#: code:addons/product/pricelist.py:374
 #, python-format
 msgid "%s %% discount and %s surcharge"
 msgstr "%s %% zľava a %s prirážka"
 
 #. module: product
-#: code:addons/product/product.py:710 code:addons/product/product.py:1134
+#: code:addons/product/product.py:716
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kópia)"
@@ -61,7 +61,11 @@ msgid ""
 "Processor AMD 8-Core\n"
 "512MB RAM\n"
 "HDD SH-1"
-msgstr "17\" LCD Monitor\nProcessor AMD 8-Core\n512MB RAM\nHDD SH-1"
+msgstr ""
+"17\" LCD Monitor\n"
+"Processor AMD 8-Core\n"
+"512MB RAM\n"
+"HDD SH-1"
 
 #. module: product
 #: model:product.product,description:product.product_product_25
@@ -71,17 +75,11 @@ msgid ""
 "4GB RAM\n"
 "Standard-1294P Processor\n"
 "QWERTY keyboard"
-msgstr "17\" Monitor\n4GB RAM\nStandard-1294P Processor\nQWERTY klávesnica"
-
-#. module: product
-#: model:product.product,description:product.product_product_26
-#: model:product.template,description:product.product_product_26_product_template
-msgid ""
+msgstr ""
 "17\" Monitor\n"
-"6GB RAM\n"
-"Hi-Speed 234Q Processor\n"
-"QWERTY keyboard"
-msgstr "17\" Monitor\n6GB RAM\nHi-Speed 234Q Processor\nQWERTY klávesnica"
+"4GB RAM\n"
+"Standard-1294P Processor\n"
+"QWERTY klávesnica"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -98,13 +96,12 @@ msgid ""
 "                1TB hard drive\n"
 "                Intel Iris Pro graphics\n"
 "            "
-msgstr "2.7GHz štvor-jadrový Intel Core i5\nTurbo Boost up to 3.2GHz\n8GB (dve 4GB) pamäť\n1TB pevný disk\nIntel Iris Pro grafika"
-
-#. module: product
-#: model:product.product,name:product.product_product_52
-#: model:product.template,name:product.product_product_52_product_template
-msgid "30m RJ45 wire"
-msgstr "30m RJ45 wire"
+msgstr ""
+"2.7GHz štvor-jadrový Intel Core i5\n"
+"Turbo Boost up to 3.2GHz\n"
+"8GB (dve 4GB) pamäť\n"
+"1TB pevný disk\n"
+"Intel Iris Pro grafika"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -124,7 +121,10 @@ msgid ""
 "7.9‑inch (diagonal) LED-backlit, 128Gb\n"
 "Dual-core A5 with quad-core graphics\n"
 "FaceTime HD Camera, 1.2 MP Photos"
-msgstr "7.9‑palcový LED-backlit, 128Gb\nDual-core A5 with quad-core grafikou\nFaceTime HD Kamera, 1.2 MP Photos"
+msgstr ""
+"7.9‑palcový LED-backlit, 128Gb\n"
+"Dual-core A5 with quad-core grafikou\n"
+"FaceTime HD Kamera, 1.2 MP Photos"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -133,17 +133,20 @@ msgid "75 percent less reflection."
 msgstr "75 percent menej reflexie."
 
 #. module: product
-#: model:product.product,name:product.product_product_51
-#: model:product.template,name:product.product_product_51_product_template
-msgid "8-port Switch"
-msgstr "8-port Switch"
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
 msgid ""
-"<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Public Price  -  </span>\n"
-"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
-msgstr "<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Verejná cena - </span>\n<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Iný cenník - </span>"
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Public Price  "
+"-  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', "
+"'standard_price')]}\">Cost  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', "
+"'pricelist')]}\">Other Pricelist  -  </span>"
+msgstr ""
+"<span attrs=\"{'invisible':[('base', 'not in', "
+"('list_price','standard_price'))]}\">Verejná cena - </span>\n"
+"<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Iný cenník - </"
+"span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -174,12 +177,16 @@ msgstr "<strong>Dátum vytlačenia</strong>:<br/>"
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid ""
 "<strong>Warning</strong>: adding or deleting attributes\n"
-"                            will delete and recreate existing variants and lead\n"
+"                            will delete and recreate existing variants and "
+"lead\n"
 "                            to the loss of their possible customizations."
-msgstr "<strong>Varovanie</strong>: pridanie alebo zmazanie atribútov\nzmaže a prevytvorí existujúce varianty a povedie\nl strate ich možnej úpravy."
+msgstr ""
+"<strong>Varovanie</strong>: pridanie alebo zmazanie atribútov\n"
+"zmaže a prevytvorí existujúce varianty a povedie\n"
+"l strate ich možnej úpravy."
 
 #. module: product
-#: code:addons/product/product.py:977 sql_constraint:product.product:0
+#: code:addons/product/product.py:1011 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr "Čiarový kód môže byť pridelený iba jednému produktu !"
@@ -189,7 +196,9 @@ msgstr "Čiarový kód môže byť pridelený iba jednému produktu !"
 msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
-msgstr "Kategória typu zobrazenia je virtuálna kategória, ktorá môže byť použitá ako nadradená inej kategórii pre vytvorenie hierarchickej štruktúry."
+msgstr ""
+"Kategória typu zobrazenia je virtuálna kategória, ktorá môže byť použitá ako "
+"nadradená inej kategórii pre vytvorenie hierarchickej štruktúry."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_type
@@ -197,16 +206,21 @@ msgstr "Kategória typu zobrazenia je virtuálna kategória, ktorá môže byť 
 msgid ""
 "A consumable is a product for which you don't manage stock, a service is a "
 "non-material product provided by a company or an individual."
-msgstr "Spotrebný materiál je produkt, pre ktorý nespravujete sklad, služba je nemateriálny produkt poskytnutý spoločnosťou alebo jednotlivcom."
+msgstr ""
+"Spotrebný materiál je produkt, pre ktorý nespravujete sklad, služba je "
+"nemateriálny produkt poskytnutý spoločnosťou alebo jednotlivcom."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_sale
 #: model:ir.model.fields,help:product.field_product_template_description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sale Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr "Popis Produktu ktorý chcete odkomunikovať vašim zákazníkom. Tento\npopis bude skopírovaný na každú Preajnú objednávku, Dodaciu objednávku a Zákaznícku Faktúru/Refund"
+msgstr ""
+"Popis Produktu ktorý chcete odkomunikovať vašim zákazníkom. Tento\n"
+"popis bude skopírovaný na každú Preajnú objednávku, Dodaciu objednávku a "
+"Zákaznícku Faktúru/Refund"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_purchase
@@ -215,7 +229,10 @@ msgid ""
 "A description of the Product that you want to communicate to your vendors. "
 "This description will be copied to every Purchase Order, Receipt and Vendor "
 "Bill/Refund."
-msgstr "Popis Produktu ktorý chcete odkomunikovať vašim dodávateľom. Tento\npopis bude skopírovaný na každú Nákupnú objednávku, Potvrdenku a Dodaciu účetnku/Refund."
+msgstr ""
+"Popis Produktu ktorý chcete odkomunikovať vašim dodávateľom. Tento\n"
+"popis bude skopírovaný na každú Nákupnú objednávku, Potvrdenku a Dodaciu "
+"účetnku/Refund."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_9
@@ -236,7 +253,9 @@ msgstr "Precízny popis produktu, používaný iba pre interné informačné ú�
 msgid ""
 "A price list contains rules to be evaluated in order to compute\n"
 "                the sales price of the products."
-msgstr "Cenník obsahuje pravidlá na ohodnotenie , aby sa vypočítala \npredajná cena výrobkov."
+msgstr ""
+"Cenník obsahuje pravidlá na ohodnotenie , aby sa vypočítala \n"
+"predajná cena výrobkov."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -250,16 +269,20 @@ msgstr "Obrazovka hodná iPad-u."
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
-"About the size of a credit card — and just 5.4 mm thin — iPod nano is the thinnest iPod ever made.\n"
-"                                    The 2.5-inch Multi-Touch display is nearly twice as big as the display on the previous iPod nano,\n"
-"                                    so you can see more of the music, photos, and videos you love."
-msgstr "Približne veľkosti kreditnej karty - a iba 5.4 mm tenký - iPod nano je najtenší iPod aký bol\nvyrobený.\n2.5 palcový Multi-dotykový displej je takmer dva razy veľký ako displej na predošlom iPod\nnano,\ntakže môžete vidieť viac hudby, fotiek, a videí ktoré milujete. "
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_needaction
-#: model:ir.model.fields,field_description:product.field_product_template_message_needaction
-msgid "Action Needed"
-msgstr "Potrebná akcia"
+"About the size of a credit card — and just 5.4 mm thin — iPod nano is the "
+"thinnest iPod ever made.\n"
+"                                    The 2.5-inch Multi-Touch display is "
+"nearly twice as big as the display on the previous iPod nano,\n"
+"                                    so you can see more of the music, "
+"photos, and videos you love."
+msgstr ""
+"Približne veľkosti kreditnej karty - a iba 5.4 mm tenký - iPod nano je "
+"najtenší iPod aký bol\n"
+"vyrobený.\n"
+"2.5 palcový Multi-dotykový displej je takmer dva razy veľký ako displej na "
+"predošlom iPod\n"
+"nano,\n"
+"takže môžete vidieť viac hudby, fotiek, a videí ktoré milujete. "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
@@ -275,7 +298,7 @@ msgid "All"
 msgstr "Všetko"
 
 #. module: product
-#: code:addons/product/pricelist.py:283
+#: code:addons/product/pricelist.py:367
 #, python-format
 msgid "All Products"
 msgstr "Všetky produkty"
@@ -286,18 +309,14 @@ msgid "All general settings about this product are managed on"
 msgstr "Všetky všeobecné nastavenia tohto produktu sú spravované na"
 
 #. module: product
-#: model:product.product,description:product.product_product_37
-#: model:product.template,description:product.product_product_37_product_template
-msgid "All in one hi-speed printer with fax and scanner."
-msgstr "Všetko v jednej vysokorýchlostnej tlačiarni s faxom a skenerom."
-
-#. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid ""
-"And at the Apple Online Store, you can configure your iMac with an even more"
-" powerful Intel Core i7 processor, up to 3.5GHz."
-msgstr "A v Apple Online obchode, môžete nakonfigurovať váš iMac s ešte vykonnejším Intel Core i7 procesorom, až do 3.5GHz."
+"And at the Apple Online Store, you can configure your iMac with an even more "
+"powerful Intel Core i7 processor, up to 3.5GHz."
+msgstr ""
+"A v Apple Online obchode, môžete nakonfigurovať váš iMac s ešte vykonnejším "
+"Intel Core i7 procesorom, až do 3.5GHz."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -324,6 +343,7 @@ msgid "Apple Wireless Keyboard"
 msgstr "Apple bezdrôtová klávesnica"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Applicable On"
 msgstr "Použiteľný na"
@@ -392,8 +412,7 @@ msgstr "Aux vstup pre prenosné zariadenia"
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
-msgid ""
-"Auxiliary port lets you connect other audio sources, like an MP3 player"
+msgid "Auxiliary port lets you connect other audio sources, like an MP3 player"
 msgstr "Aux port umožňuje pripojiť ďalšie audio zdroje, ako je MP3 prehrávač"
 
 #. module: product
@@ -409,15 +428,20 @@ msgid ""
 " Public Price: The base price will be the Sale/public Price. \n"
 " Cost Price : The base price will be the cost price. \n"
 " Other Pricelist : Computation of the base price based on another Pricelist."
-msgstr "Základná cena pre výpočet.\nVerejná cena: Základná cena bude predajná / verejná cena.\nCena nákladov: Základná cena bude cenanákladov.\nIný cenník: Výpočet základnej ceny založený na inom cenníku."
+msgstr ""
+"Základná cena pre výpočet.\n"
+"Verejná cena: Základná cena bude predajná / verejná cena.\n"
+"Cena nákladov: Základná cena bude cenanákladov.\n"
+"Iný cenník: Výpočet základnej ceny založený na inom cenníku."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_list_price
 #: model:ir.model.fields,help:product.field_product_template_list_price
 msgid ""
-"Base price to compute the customer price. Sometimes called the catalog "
-"price."
-msgstr "Základná cena pre výpočet spotrebiteľských cien. Niekedy sa nazýva katalógová cena."
+"Base price to compute the customer price. Sometimes called the catalog price."
+msgstr ""
+"Základná cena pre výpočet spotrebiteľských cien. Niekedy sa nazýva "
+"katalógová cena."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_base
@@ -425,9 +449,16 @@ msgid "Based on"
 msgstr "Na základe"
 
 #. module: product
-#: model:product.product,name:product.product_product_57
-#: model:product.template,name:product.product_product_57_product_template
+#: model:product.product,name:product.consu_delivery_03
+#: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Basic Computer"
+msgstr "Basic Computer"
+
+#. module: product
+#: model:product.product,name:product.membership_2
+#: model:product.template,name:product.membership_2_product_template
+#, fuzzy
+msgid "Basic Membership"
 msgstr "Basic Computer"
 
 #. module: product
@@ -461,18 +492,6 @@ msgstr "Väčšia než referenčná jednotka"
 #: model:product.attribute.value,name:product.product_attribute_value_4
 msgid "Black"
 msgstr "Čierna"
-
-#. module: product
-#: model:product.product,name:product.product_product_35
-#: model:product.template,name:product.product_product_35_product_template
-msgid "Blank CD"
-msgstr "Čisté CD"
-
-#. module: product
-#: model:product.product,name:product.product_product_36
-#: model:product.template,name:product.product_product_36_product_template
-msgid "Blank DVD-RW"
-msgstr "Čisté DVD-RW"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -511,16 +530,26 @@ msgstr "Brilliancia na obrazovke. A za ňou."
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
-"                                    The smooth anodized aluminum design makes iPod nano feel as good as it sounds.\n"
-"                                    And iPod nano wouldn’t be iPod nano without gorgeous, hard-to-choose-from color."
-msgstr "Tlačidlá vám umožňujú rýchlo prehrť, pauzovať, meniť skladby, alebo upraviť hlasitosť.\nHladký anodizovaný hliníkový dizajn dáva z iPod nano taký dobrý pocit, ako to aj znie.\nA iPod nano by nemohol byť iPod nano, bez nádherných farieb z ktorých sa ťažko vyberá."
+"                                    The smooth anodized aluminum design "
+"makes iPod nano feel as good as it sounds.\n"
+"                                    And iPod nano wouldn’t be iPod nano "
+"without gorgeous, hard-to-choose-from color."
+msgstr ""
+"Tlačidlá vám umožňujú rýchlo prehrť, pauzovať, meniť skladby, alebo upraviť "
+"hlasitosť.\n"
+"Hladký anodizovaný hliníkový dizajn dáva z iPod nano taký dobrý pocit, ako "
+"to aj znie.\n"
+"A iPod nano by nemohol byť iPod nano, bez nádherných farieb z ktorých sa "
+"ťažko vyberá."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active
 msgid ""
 "By unchecking the active field you can disable a unit of measure without "
 "deleting it."
-msgstr "Po odškrtnutí aktívneho políčka, môžete deaktivoať mernú jednotku bez jej odstránenia."
+msgstr ""
+"Po odškrtnutí aktívneho políčka, môžete deaktivoať mernú jednotku bez jej "
+"odstránenia."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
@@ -557,7 +586,7 @@ msgid "Category name"
 msgstr "Názov kategórie"
 
 #. module: product
-#: code:addons/product/pricelist.py:277
+#: code:addons/product/pricelist.py:361
 #, python-format
 msgid "Category: %s"
 msgstr "Kategória: %s"
@@ -579,8 +608,11 @@ msgstr "Nabíja iPod/iPhone"
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "Charging cradle recharges the battery and serves as a convenient\n"
-"                                    home base for your speaker, and it lets you play while it charges."
-msgstr "Nabíjacie lôžko dobíja batérie a slúži ako pohodlná\ndomovská základňa k reproduktoru, a dovolí vám prehhrávanie popri nabíjaní."
+"                                    home base for your speaker, and it lets "
+"you play while it charges."
+msgstr ""
+"Nabíjacie lôžko dobíja batérie a slúži ako pohodlná\n"
+"domovská základňa k reproduktoru, a dovolí vám prehhrávanie popri nabíjaní."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
@@ -639,7 +671,14 @@ msgid ""
 "Ultrafast wireless\n"
 "iOS7\n"
 "            "
-msgstr "Farba: Biela\nKapacita: 16GB\nKonektivita: Wifi\nNádherný 7.9-palcový displej\nViac než 375,000 aplikácii\nUltrarýchle bezdrôtové\niOS7"
+msgstr ""
+"Farba: Biela\n"
+"Kapacita: 16GB\n"
+"Konektivita: Wifi\n"
+"Nádherný 7.9-palcový displej\n"
+"Viac než 375,000 aplikácii\n"
+"Ultrarýchle bezdrôtové\n"
+"iOS7"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -683,7 +722,7 @@ msgid "Computers"
 msgstr "Počítače"
 
 #. module: product
-#: code:addons/product/product.py:460
+#: code:addons/product/product.py:474
 #, python-format
 msgid "Consumable"
 msgstr "Spotrebný"
@@ -693,15 +732,19 @@ msgstr "Spotrebný"
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr "Ku konverzii medzi mernými jednotkami môže dôjsť len v prípade, že patria do rovnakej kategórie. Konverzia bude spravená na základe pomerov."
+msgstr ""
+"Ku konverzii medzi mernými jednotkami môže dôjsť len v prípade, že patria do "
+"rovnakej kategórie. Konverzia bude spravená na základe pomerov."
 
 #. module: product
-#: code:addons/product/product.py:119
+#: code:addons/product/product.py:122
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr "Konverzia z Mernej jednotky produktu %s na Predvolenú mernú jednotku %s nie je možná pretoźe obe patria do rôznej Kategórie!"
+msgstr ""
+"Konverzia z Mernej jednotky produktu %s na Predvolenú mernú jednotku %s nie "
+"je možná pretoźe obe patria do rôznej Kategórie!"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_cost
@@ -714,15 +757,24 @@ msgstr "Cena"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
 msgid ""
-"Cost of the product template used for standard stock valuation in accounting"
-" and used as a base price on purchase orders. Expressed in the default unit "
+"Cost of the product template used for standard stock valuation in accounting "
+"and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
-msgstr "Cena na šablónu produktu pre štandardné ocenenie sklasu v účtovníctve a používa sa ako základná cena nákupných objednávok. Vyjadrené v predvolených  merných jednotkách produktu."
+msgstr ""
+"Cena na šablónu produktu pre štandardné ocenenie sklasu v účtovníctve a "
+"používa sa ako základná cena nákupných objednávok. Vyjadrené v predvolených  "
+"merných jednotkách produktu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
 msgid "Cost of the product, in the default unit of measure of the product."
 msgstr "Cena produktu, v predvolenej mernej jednotke produktu."
+
+#. module: product
+#: model:product.product,name:product.service_delivery
+#: model:product.template,name:product.service_delivery_product_template
+msgid "Cost-plus Contract"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_uid
@@ -767,10 +819,15 @@ msgstr "Vytvorené"
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid ""
 "Creating such a stunningly thin design took some equally stunning feats of "
-"technological innovation. We refined,re-imagined,or re-engineered everything"
-" about iMac from the inside out. The result is an advanced, elegant all-in-"
+"technological innovation. We refined,re-imagined,or re-engineered everything "
+"about iMac from the inside out. The result is an advanced, elegant all-in-"
 "one computer that’s as much a work of art as it is state of the art."
-msgstr "Vytvorenie takéhoto ohromujúceho tenkého dizajnu vyžadovalo niekoľko rovnako ohromujúcich výkonov technologických inovácií. My sme vylepšili, premysleli, alebo pretvorili všetko o iMacu zvnútra aj zvonku. Výsledkom je moderný, elegantný počítač všetko-v-jednom, ktorý je rovnako dielo umenia , ako je najmodernejší. aj"
+msgstr ""
+"Vytvorenie takéhoto ohromujúceho tenkého dizajnu vyžadovalo niekoľko rovnako "
+"ohromujúcich výkonov technologických inovácií. My sme vylepšili, premysleli, "
+"alebo pretvorili všetko o iMacu zvnútra aj zvonku. Výsledkom je moderný, "
+"elegantný počítač všetko-v-jednom, ktorý je rovnako dielo umenia , ako je "
+"najmodernejší. aj"
 
 #. module: product
 #: model:ir.model,name:product.model_res_currency
@@ -806,8 +863,8 @@ msgid "Customer ref"
 msgstr "Odkaz na zákazníka"
 
 #. module: product
-#: model:product.product,name:product.product_product_46
-#: model:product.template,name:product.product_product_46_product_template
+#: model:product.product,name:product.product_delivery_02
+#: model:product.template,name:product.product_delivery_02_product_template
 msgid "Datacard"
 msgstr "Datakarta"
 
@@ -815,12 +872,6 @@ msgstr "Datakarta"
 #: model:ir.model.fields,field_description:product.field_product_price_history_datetime
 msgid "Date"
 msgstr "Dátum"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_last_post
-#: model:ir.model.fields,help:product.field_product_template_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Dátum poslednej správy zaslanej záznamu."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_day
@@ -839,18 +890,14 @@ msgstr "Predvolená merná jednotka používaná pre všetky skladové operácie
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr "Predvolená Merná jednotka používaná pre nákupné objednávky. Musí byť v rovnakej kategórii ako predvolená merná jednotka."
+msgstr ""
+"Predvolená Merná jednotka používaná pre nákupné objednávky. Musí byť v "
+"rovnakej kategórii ako predvolená merná jednotka."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_delay
 msgid "Delivery Lead Time"
 msgstr "Dni dodania"
-
-#. module: product
-#: model:product.product,name:product.product_product_49
-#: model:product.template,name:product.product_product_49_product_template
-msgid "Dell Inspiron Laptop without OS"
-msgstr "Dell Inspiron Laptop bez OS"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description
@@ -875,18 +922,6 @@ msgstr "Popis pre predajcov"
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Design. The thinnest iPod ever."
 msgstr "Dizajn. Najtenší iPod."
-
-#. module: product
-#: model:product.product,name:product.product_product_55
-#: model:product.template,name:product.product_product_55_product_template
-msgid "Desktop Computer Table"
-msgstr "Stolík stolného počítača"
-
-#. module: product
-#: model:product.product,name:product.product_product_56
-#: model:product.template,name:product.product_product_56_product_template
-msgid "Desktop Lamp"
-msgstr "Stolová lampa"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_sequence
@@ -925,20 +960,26 @@ msgid "Dozen(s)"
 msgstr "Tecet(y)"
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_57
-#: model:product.template,description_sale:product.product_product_57_product_template
+#: model:product.product,description_sale:product.consu_delivery_03
+#: model:product.template,description_sale:product.consu_delivery_03_product_template
 msgid ""
 "Dvorak keyboard \n"
 "            left-handed mouse"
-msgstr "Dvorak klávsnica\nmyš pre ľavákov"
+msgstr ""
+"Dvorak klávsnica\n"
+"myš pre ľavákov"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "Each rule include a set of applicability criteria (date range,\n"
-"                product category...) and a computation that easily helps to achieve\n"
+"                product category...) and a computation that easily helps to "
+"achieve\n"
 "                any kind of pricing."
-msgstr "Každé pravidlo obsahujú sadu kritérií použiteľnosti (časové obdobie,\nkategórie výrobkov ...) a výpočet, ktorý ľahko pomáha dosahovať\nakýkoľvek druh ceny."
+msgstr ""
+"Každé pravidlo obsahujú sadu kritérií použiteľnosti (časové obdobie,\n"
+"kategórie výrobkov ...) a výpočet, ktorý ľahko pomáha dosahovať\n"
+"akýkoľvek druh ceny."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -958,25 +999,25 @@ msgid "End date for this vendor price"
 msgstr "Dátum ukončenia tejto ceny predajcu"
 
 #. module: product
-#: selection:product.template,state:0
-msgid "End of Lifecycle"
-msgstr "Koniec životného cyklu"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
 msgid "Ending valid for the pricelist item validation"
 msgstr "Ukončenie platnosti pre validáciu položky cenníka"
 
 #. module: product
-#: model:product.product,name:product.product_product_54
-#: model:product.template,name:product.product_product_54_product_template
-msgid "Ergonomic Mouse"
-msgstr "Ergonomická myš"
-
-#. module: product
 #: constraint:product.category:0
 msgid "Error ! You cannot create recursive categories."
 msgstr "Chyba! Nemožte vytvoriť rekurzívne kategórie."
+
+#. module: product
+#: constraint:product.attribute.line:0
+msgid "Error ! You cannot use this attribute with the following value."
+msgstr ""
+
+#. module: product
+#: constraint:product.product:0
+msgid ""
+"Error! It is not allowed to choose more than one value for a given attribute."
+msgstr ""
 
 #. module: product
 #: constraint:product.pricelist.item:0
@@ -988,38 +1029,53 @@ msgstr "Chyba! Minimálna marža by mala byť nižšia ako maximálna marža."
 msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
-msgstr "Chyba! Nemôžete prideliť Hlavný cenník ako Iný cnník v Položke cenníka!"
+msgstr ""
+"Chyba! Nemôžete prideliť Hlavný cenník ako Iný cnník v Položke cenníka!"
 
 #. module: product
 #: constraint:res.currency:0
 msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
-msgstr "Chyba! Nemôžete definovať zaokrúhľovací faktor pre hlavnú menu spoločnosti, ktorý je menší ako desatinná presnosť 'Účtu'."
+msgstr ""
+"Chyba! Nemôžete definovať zaokrúhľovací faktor pre hlavnú menu spoločnosti, "
+"ktorý je menší ako desatinná presnosť 'Účtu'."
 
 #. module: product
 #: constraint:decimal.precision:0
 msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
-msgstr "Chyba! Nemôžete definovať desatinnú presnosť 'Účtu' vyššiu ako zaokrúhľovací faktor hlavnej meny spoločnosti."
+msgstr ""
+"Chyba! Nemôžete definovať desatinnú presnosť 'Účtu' vyššiu ako zaokrúhľovací "
+"faktor hlavnej meny spoločnosti."
 
 #. module: product
 #: constraint:product.template:0
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
-msgstr "Chyba: predvolená merná jednotka a nákupná merná jednotka musia byť v rovnakej kategórii."
+msgstr ""
+"Chyba: predvolená merná jednotka a nákupná merná jednotka musia byť v "
+"rovnakej kategórii."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Everything you love about iPad — the beautiful\n"
-"                                    screen, fast Colors are vivid and text is sharp on the iPad mini display.\n"
-"                                    But what really makes it stand out is its size. At 7.9 inches,\n"
-"                                    it’s perfectly sized to deliver an experience every bit as big as iPad."
-msgstr "Všetko kôli čomu milujete iPad - nádherný\ndisplej, rýchle Farby sú živé a text je ostrý na mini displeji iPad-u.\nAle to vďaka čomu skutočne vyniká je jeho veľkosť. S 7.9 palcami,\nJe perfektne dimenzovaný tak, aby dodával zážitok úplne rovnako veľký ako iPad."
+"                                    screen, fast Colors are vivid and text "
+"is sharp on the iPad mini display.\n"
+"                                    But what really makes it stand out is "
+"its size. At 7.9 inches,\n"
+"                                    it’s perfectly sized to deliver an "
+"experience every bit as big as iPad."
+msgstr ""
+"Všetko kôli čomu milujete iPad - nádherný\n"
+"displej, rýchle Farby sú živé a text je ostrý na mini displeji iPad-u.\n"
+"Ale to vďaka čomu skutočne vyniká je jeho veľkosť. S 7.9 palcami,\n"
+"Je perfektne dimenzovaný tak, aby dodával zážitok úplne rovnako veľký ako "
+"iPad."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -1032,21 +1088,37 @@ msgstr "Všetko kôli čomu milujete iPad - nádherný\ndisplej, rýchle Farby s
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid ""
 "Everything you love about iPad — the beautiful\n"
-"                                    screen, fast and fluid performance, FaceTime and\n"
-"                                    iSight cameras, thousands of amazing apps, 10-hour\n"
-"                                    battery life* — is everything you’ll love about\n"
-"                                    iPad mini, too. And you can hold it in one hand."
-msgstr "Všetko čo milujete na iPad-e - nádherný\ndisplej, rýchly a plynulý výkon, FaceTime a\niSight kamery, tisíce úžasných aplikácií, 10 hodinová\nživotnosť batérie* - je všetko čo budete milovať na\niPad mini tiež. A môžete ho držať v jednej ruke."
+"                                    screen, fast and fluid performance, "
+"FaceTime and\n"
+"                                    iSight cameras, thousands of amazing "
+"apps, 10-hour\n"
+"                                    battery life* — is everything you’ll "
+"love about\n"
+"                                    iPad mini, too. And you can hold it in "
+"one hand."
+msgstr ""
+"Všetko čo milujete na iPad-e - nádherný\n"
+"displej, rýchly a plynulý výkon, FaceTime a\n"
+"iSight kamery, tisíce úžasných aplikácií, 10 hodinová\n"
+"životnosť batérie* - je všetko čo budete milovať na\n"
+"iPad mini tiež. A môžete ho držať v jednej ruke."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Everything you love about iPad — the beautiful screen,\n"
-"                                        fast and fluid performance, FaceTime and iSight cameras, \n"
-"                                        thousands of amazing apps, 10-hour battery life* — is everything\n"
-"                                        you’ll love about iPad mini, too. And you can hold it in one hand."
-msgstr "Všetko čo milujete na iPad-e - nádherný displej,\nrýchly a plynulý výkon, FaceTime a iSight kamery,\ntisíce úžasných aplikácií, 10 hodinová životnosť batérie* - je všetko\nčo budete milovať na iPad mini tiež. A môžete ho držať v jednej ruke."
+"                                        fast and fluid performance, FaceTime "
+"and iSight cameras, \n"
+"                                        thousands of amazing apps, 10-hour "
+"battery life* — is everything\n"
+"                                        you’ll love about iPad mini, too. "
+"And you can hold it in one hand."
+msgstr ""
+"Všetko čo milujete na iPad-e - nádherný displej,\n"
+"rýchly a plynulý výkon, FaceTime a iSight kamery,\n"
+"tisíce úžasných aplikácií, 10 hodinová životnosť batérie* - je všetko\n"
+"čo budete milovať na iPad mini tiež. A môžete ho držať v jednej ruke."
 
 #. module: product
 #: model:product.product,description:product.product_product_2
@@ -1055,14 +1127,14 @@ msgid "Example of product to invoice based on delivery."
 msgstr "Príklad produktu na vyfaktúrovanie na základe doručenia."
 
 #. module: product
-#: model:product.product,description:product.product_product_0
-#: model:product.template,description:product.product_product_0_product_template
+#: model:product.product,description:product.service_order_01
+#: model:product.template,description:product.service_order_01_product_template
 msgid "Example of product to invoice on order."
 msgstr "Príklad produktu na vyfaktúrovanie na objednávke."
 
 #. module: product
-#: model:product.product,description:product.product_product_1b
-#: model:product.template,description:product.product_product_1b_product_template
+#: model:product.product,description:product.service_cost_01
+#: model:product.template,description:product.service_cost_01_product_template
 msgid "Example of products to invoice based on cost."
 msgstr "Príklad produktov na vyfaktúrovanie na základe ceny."
 
@@ -1079,20 +1151,14 @@ msgid "Explicit rule name for this pricelist line."
 msgstr "Jednodznačné meno pravidla pre tento riadok cenníka"
 
 #. module: product
-#: model:product.product,name:product.product_product_1b
-#: model:product.template,name:product.product_product_1b_product_template
+#: model:product.product,name:product.service_cost_01
+#: model:product.template,name:product.service_cost_01_product_template
 msgid "External Audit"
 msgstr "Externý audit"
 
 #. module: product
 #: model:product.public.category,name:product.External_Hard_Drive
 msgid "External Hard Drive"
-msgstr "Externý pevný disk"
-
-#. module: product
-#: model:product.product,name:product.product_product_28
-#: model:product.template,name:product.product_product_28_product_template
-msgid "External Hard disk"
 msgstr "Externý pevný disk"
 
 #. module: product
@@ -1112,29 +1178,15 @@ msgid "Fixed Price"
 msgstr "Pevná cena"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_follower_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_follower_ids
-msgid "Followers"
-msgstr "Odberatelia"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_channel_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_partner_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_min_quantity
 msgid ""
-"For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
-msgstr "Pre pravidlo na uplatnenie, kúpené / predané množstvo musí byť väčšie ako alebo rovné minimálnemu množstvu špecifikovanom v tomto poli.\nVyjadrené v predvolených merných jednotkách produktu."
+msgstr ""
+"Pre pravidlo na uplatnenie, kúpené / predané množstvo musí byť väčšie ako "
+"alebo rovné minimálnemu množstvu špecifikovanom v tomto poli.\n"
+"Vyjadrené v predvolených merných jednotkách produktu."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -1152,19 +1204,19 @@ msgid ""
 "Cable length: 1065 mm\n"
 "Weight: 10.2 grams\n"
 "            "
-msgstr "Frekvencia: 5Hz do 21kHz\nOdpor: 23 ohmov\nCitlivosť: 109 dB SPL/mW\nOvládače: dvojsmerná vyvážená armatúra\nDĺžka kábla: 1065 mm\nVáha: 10.2 gramov"
+msgstr ""
+"Frekvencia: 5Hz do 21kHz\n"
+"Odpor: 23 ohmov\n"
+"Citlivosť: 109 dB SPL/mW\n"
+"Ovládače: dvojsmerná vyvážená armatúra\n"
+"Dĺžka kábla: 1065 mm\n"
+"Váha: 10.2 gramov"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Friendly to the environment."
 msgstr "Šetrné k životnému prostrediu."
-
-#. module: product
-#: model:product.product,description_sale:product.product_product_44
-#: model:product.template,description_sale:product.product_product_44_product_template
-msgid "Full featured image editing software."
-msgstr "Plne vybavený software pre úpravu obrázkov."
 
 #. module: product
 #: model:product.product,name:product.product_product_1
@@ -1191,15 +1243,19 @@ msgstr "Genius. Váš osobný DJ."
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
-msgstr "Uvádza rôzne spôsoby, ako baliť rovnaký produkt. To nemá žiadny vplyv na výbery a používa sa predovšetkým ak použijete modul EDI."
+msgstr ""
+"Uvádza rôzne spôsoby, ako baliť rovnaký produkt. To nemá žiadny vplyv na "
+"výbery a používa sa predovšetkým ak použijete modul EDI."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_sequence
 msgid ""
-"Gives the order in which the pricelist items will be checked. The evaluation"
-" gives highest priority to lowest sequence and stops as soon as a matching "
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
-msgstr "Dáva poradie v akom budú položky cenníka skontrolované. Vyhodnotenie dáva najvyššiu prioritu najnižšiu sekvencii a zastaví sa, akonáhle sa nájde zhoda."
+msgstr ""
+"Dáva poradie v akom budú položky cenníka skontrolované. Vyhodnotenie dáva "
+"najvyššiu prioritu najnižšiu sekvencii a zastaví sa, akonáhle sa nájde zhoda."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_sequence
@@ -1218,10 +1274,10 @@ msgid "Global"
 msgstr "Globálny"
 
 #. module: product
-#: model:product.product,name:product.product_product_44
-#: model:product.template,name:product.product_product_44_product_template
-msgid "GrapWorks Software"
-msgstr "GrapWorks softvér"
+#: model:product.product,name:product.membership_0
+#: model:product.template,name:product.membership_0_product_template
+msgid "Gold Membership"
+msgstr ""
 
 #. module: product
 #: model:product.product,name:product.product_product_24
@@ -1230,35 +1286,10 @@ msgid "Graphics Card"
 msgstr "Grafická karta"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_weight
-#: model:ir.model.fields,field_description:product.field_product_template_weight
-msgid "Gross Weight"
-msgstr "Hrubá hmotnosť"
-
-#. module: product
 #: model:product.product,name:product.product_product_17
 #: model:product.template,name:product.product_product_17_product_template
 msgid "HDD SH-1"
 msgstr "HDD SH-1"
-
-#. module: product
-#: model:product.product,name:product.product_product_18
-#: model:product.template,name:product.product_product_18_product_template
-msgid "HDD SH-2 (mto)"
-msgstr "HDD SH-2 (mto)"
-
-#. module: product
-#: model:product.product,name:product.product_product_19
-#: model:product.template,name:product.product_product_19_product_template
-msgid "HDD on Demand"
-msgstr "HDD na požiadanie"
-
-#. module: product
-#: model:product.product,description:product.product_product_32
-#: model:product.template,description:product.product_product_32_product_template
-msgid ""
-"Hands free headset for laptop PC with in-line microphone and headphone plug."
-msgstr "Hands free slúchadlá pre prenosný počítač s inline mikrofónom a slúchadlový konektor."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1272,24 +1303,6 @@ msgstr "Nechajte Genius vyberať hudbu."
 #: model:product.public.category,name:product.Headset
 msgid "Headset"
 msgstr "Headset"
-
-#. module: product
-#: model:product.product,name:product.product_product_33
-#: model:product.template,name:product.product_product_33_product_template
-msgid "Headset USB"
-msgstr "Headset USB"
-
-#. module: product
-#: model:product.product,description:product.product_product_33
-#: model:product.template,description:product.product_product_33_product_template
-msgid "Headset for laptop PC with USB connector."
-msgstr "Headset pre laptop PC s USB konektorom."
-
-#. module: product
-#: model:product.product,name:product.product_product_32
-#: model:product.template,name:product.product_product_32_product_template
-msgid "Headset standard"
-msgstr "Headset štandard"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -1307,7 +1320,11 @@ msgid ""
 "Width:  39.6 mm\n"
 "Depth:  5.4 mm\n"
 "Weight: 31 grams"
-msgstr "Výška: 76.5 mm\nŠírka: 39.6 mm\nHĺbka: 5.4 mm\nVáha: 31 gramov"
+msgstr ""
+"Výška: 76.5 mm\n"
+"Šírka: 39.6 mm\n"
+"Hĺbka: 5.4 mm\n"
+"Váha: 31 gramov"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1328,21 +1345,33 @@ msgid ""
 "making it 75 percent less reflective. And by re-architecting the LCD and "
 "moving it right up against the cover glass. So you see your photos, games, "
 "movies, and everything else in vivid, lifelike detail."
-msgstr "Ako sme urobili už nádherný širokouhlý displej ešte lepšie? Tým, že je o 75 percent menej reflexný. A prearchitektúrovaním LCD a vyvedením ho hneď pod krycie sklo. Takže vidíte vaše fotografie, hry, filmy a všetko ostatné v živom a prirodzenom detaile."
+msgstr ""
+"Ako sme urobili už nádherný širokouhlý displej ešte lepšie? Tým, že je o 75 "
+"percent menej reflexný. A prearchitektúrovaním LCD a vyvedením ho hneď pod "
+"krycie sklo. Takže vidíte vaše fotografie, hry, filmy a všetko ostatné v "
+"živom a prirodzenom detaile."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor_inv
 msgid ""
-"How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n"
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
-msgstr "Koľko ráz je táto merná jednotka väčšia ako referenčná merná jednotka v tejto kategórii:\n1 * (táto jednotka) = pomer * (referenčná jednotka)"
+msgstr ""
+"Koľko ráz je táto merná jednotka väčšia ako referenčná merná jednotka v "
+"tejto kategórii:\n"
+"1 * (táto jednotka) = pomer * (referenčná jednotka)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor
 msgid ""
-"How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n"
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
-msgstr "O koľko väčšia alebo menšia je táto jednotka v porovnaní s referenčnou mernou jednotkou pre túto kategóriu:\n1 * (referenčná jednotka) = pomer * (táto jednotka)"
+msgstr ""
+"O koľko väčšia alebo menšia je táto jednotka v porovnaní s referenčnou "
+"mernou jednotkou pre túto kategóriu:\n"
+"1 * (referenčná jednotka) = pomer * (táto jednotka)"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1373,18 +1402,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_unread
-#: model:ir.model.fields,help:product.field_product_template_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_needaction
-#: model:ir.model.fields,help:product.field_product_template_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "If it's made for iPad, it's made for iPad mini."
@@ -1411,29 +1428,30 @@ msgstr "Obrázok"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image
 msgid ""
-"Image of the product variant (Big-sized image of product template if false)."
-" It is automatically resized as a 1024x1024px image, with aspect ratio "
+"Image of the product variant (Big-sized image of product template if false). "
+"It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr "Obrázok varianty produktu (Veľký obrázok produktovej šablóny ak false). Veľkosť je automaticky zmenená na 1024x1024px obrázok, so zachovaním pomerov strán."
+msgstr ""
+"Obrázok varianty produktu (Veľký obrázok produktovej šablóny ak false). "
+"Veľkosť je automaticky zmenená na 1024x1024px obrázok, so zachovaním pomerov "
+"strán."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr "Obrázok varianty produktu (Stredne veľký obrázok produktovej šablóny ak false). "
+msgstr ""
+"Obrázok varianty produktu (Stredne veľký obrázok produktovej šablóny ak "
+"false). "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr "Obrázok varianty produktu (Malý obrázok produktovej šablóny ak false). "
-
-#. module: product
-#: selection:product.template,state:0
-msgid "In Development"
-msgstr "Vo vývoji"
+msgstr ""
+"Obrázok varianty produktu (Malý obrázok produktovej šablóny ak false). "
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1447,19 +1465,21 @@ msgid "Information about a product vendor"
 msgstr "Informácie o predajcovi produktu"
 
 #. module: product
-#: model:product.product,name:product.product_product_38
-#: model:product.template,name:product.product_product_38_product_template
-msgid "Ink Cartridge"
-msgstr "Atramentová náplň"
-
-#. module: product
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid ""
-"Inside each earpiece is a stainless steel mesh cap that protects the precision acoustic\n"
-"                                    components from dust and debris. You can remove the caps for cleaning or replace\n"
-"                                    them with an extra set that’s included in the box."
-msgstr "Vo vnútri každého slúchadlá je kryt z nerezovej ocele, ktorý chráni precízne akustické\nkomponenty od prachu a nečistôt. Môžete odstrániť kryt pre čistenie alebo výmenu\ns extra sadou, ktorá je obsiahnutá v krabici."
+"Inside each earpiece is a stainless steel mesh cap that protects the "
+"precision acoustic\n"
+"                                    components from dust and debris. You can "
+"remove the caps for cleaning or replace\n"
+"                                    them with an extra set that’s included "
+"in the box."
+msgstr ""
+"Vo vnútri každého slúchadlá je kryt z nerezovej ocele, ktorý chráni precízne "
+"akustické\n"
+"komponenty od prachu a nečistôt. Môžete odstrániť kryt pre čistenie alebo "
+"výmenu\n"
+"s extra sadou, ktorá je obsiahnutá v krabici."
 
 #. module: product
 #: model:product.category,name:product.product_category_2
@@ -1489,12 +1509,6 @@ msgstr "Medzinárodné číslo položky použité pre identifikáciu výrobku"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
 msgstr "Sklad"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_is_follower
-#: model:ir.model.fields,field_description:product.field_product_template_message_is_follower
-msgid "Is Follower"
-msgstr "Je odberateľ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
@@ -1532,21 +1546,9 @@ msgid "Laptop E5023"
 msgstr "Laptop E5023"
 
 #. module: product
-#: model:product.product,name:product.product_product_26
-#: model:product.template,name:product.product_product_26_product_template
-msgid "Laptop S3450"
-msgstr "Laptop S3450"
-
-#. module: product
 #: model:product.public.category,name:product.laptops
 msgid "Laptops"
 msgstr "Laptopy"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_last_post
-#: model:ir.model.fields,field_description:product.field_product_template_message_last_post
-msgid "Last Message Date"
-msgstr "Dátum poslednej správy"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute___last_update
@@ -1612,7 +1614,10 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
-msgstr "Čas dodania v dňoch od potvrdenia objednávky a časom prijatia produktov do vášho skladu. Použite plánovačom na automatický výpočet pri plánovaní objednávok"
+msgstr ""
+"Čas dodania v dňoch od potvrdenia objednávky a časom prijatia produktov do "
+"vášho skladu. Použite plánovačom na automatický výpočet pri plánovaní "
+"objednávok"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_left
@@ -1630,19 +1635,13 @@ msgid "Lines"
 msgstr "Riadky"
 
 #. module: product
-#: model:product.product,name:product.product_product_50
-#: model:product.template,name:product.product_product_50_product_template
-msgid "Linutop"
-msgstr "Linutop"
-
-#. module: product
 #: model:product.uom,name:product.product_uom_litre
 msgid "Liter(s)"
 msgstr "Liter (Litre)"
 
 #. module: product
-#: model:product.product,name:product.product_product_58
-#: model:product.template,name:product.product_product_58_product_template
+#: model:product.product,name:product.consu_delivery_02
+#: model:product.template,name:product.consu_delivery_02_product_template
 msgid "Little server"
 msgstr "Malý server"
 
@@ -1705,24 +1704,16 @@ msgid ""
 "Medium-sized image of the product. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
-msgstr "Stredne veľký obrázok produktu. Veľkosť je automaticky zmenená na 128x128px obrázok, so zachovaním pomeru strán, iba keď obrázok presiahne jednu z tých veľkostí. Použite toto pole v zobrazeniach formulárov alebo niektorých kanban zobrazeniach. "
+msgstr ""
+"Stredne veľký obrázok produktu. Veľkosť je automaticky zmenená na 128x128px "
+"obrázok, so zachovaním pomeru strán, iba keď obrázok presiahne jednu z tých "
+"veľkostí. Použite toto pole v zobrazeniach formulárov alebo niektorých "
+"kanban zobrazeniach. "
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
 msgid "Memory"
 msgstr "Pamäť"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_ids
-msgid "Messages"
-msgstr "Správy"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_ids
-#: model:ir.model.fields,help:product.field_product_template_message_ids
-msgid "Messages and communication history"
-msgstr "Správy a história komunikácie"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1757,12 +1748,6 @@ msgid "More features."
 msgstr "Viac funkcií."
 
 #. module: product
-#: model:product.product,name:product.product_product_21
-#: model:product.template,name:product.product_product_21_product_template
-msgid "Motherboard A20Z7"
-msgstr "Základná doska A20Z7"
-
-#. module: product
 #: model:product.product,name:product.product_product_20
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Motherboard I9P57"
@@ -1779,12 +1764,6 @@ msgstr "Myš, optická"
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Mouse, Wireless"
 msgstr "Myš, bezdrôtová"
-
-#. module: product
-#: model:product.product,name:product.product_product_31
-#: model:product.template,name:product.product_product_31_product_template
-msgid "Multimedia Speakers"
-msgstr "Multimediálne reporoduktory"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1816,7 +1795,7 @@ msgid "New Price ="
 msgstr "Nová cena ="
 
 #. module: product
-#: selection:product.category,type:0 selection:product.template,state:0
+#: selection:product.category,type:0
 msgid "Normal"
 msgstr "Normálna"
 
@@ -1824,49 +1803,6 @@ msgstr "Normálna"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Notes"
 msgstr "Poznámky"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_needaction_counter
-#: model:ir.model.fields,field_description:product.field_product_template_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Počet akcií"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_needaction_counter
-#: model:ir.model.fields,help:product.field_product_template_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Počet správ ktoré vyžadujú akciu"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_unread_counter
-#: model:ir.model.fields,help:product.field_product_template_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Počet neprečítaných správ"
-
-#. module: product
-#: selection:product.template,state:0
-msgid "Obsolete"
-msgstr "Zastaralé"
-
-#. module: product
-#: model:product.product,description_sale:product.product_product_42
-#: model:product.template,description_sale:product.product_product_42_product_template
-msgid ""
-"Office Editing Software with word processing, spreadsheets, presentations, "
-"graphics, and databases..."
-msgstr "Softvér Office Úpravy s ovládaním textového editora, tabuľky, prezentácie, grafiky a databáz ..."
-
-#. module: product
-#: model:product.product,name:product.product_product_42
-#: model:product.template,name:product.product_product_42_product_template
-msgid "Office Suite"
-msgstr "Kancelársky balík"
-
-#. module: product
-#: model:product.product,description:product.product_product_19
-#: model:product.template,description:product.product_product_19_product_template
-msgid "On demand hard-disk having capacity based on requirement."
-msgstr "Na požiadanie pevný disk s kapacitou na základe požiadavky."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -1919,18 +1855,6 @@ msgid "Pen Drive"
 msgstr "Pen Drive"
 
 #. module: product
-#: model:product.product,name:product.product_product_29
-#: model:product.template,name:product.product_product_29_product_template
-msgid "Pen drive, SP-2"
-msgstr "Pen drive, SP-2"
-
-#. module: product
-#: model:product.product,name:product.product_product_30
-#: model:product.template,name:product.product_product_30_product_template
-msgid "Pen drive, SP-4"
-msgstr "Pen drive, SP-4"
-
-#. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
 msgstr "Percentá (zľava)"
@@ -1963,14 +1887,17 @@ msgstr "Hrá tam kde vy"
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid ""
-"Powered by fourth-generation Intel Core processors, this iMac is the fastest"
-" yet. Every model in the lineup comes standard with a quad-core Intel Core "
-"i5 processor, starting at 2.7GHz and topping out at 3.4GHz."
-msgstr "Poháňaný štvrtou generáciou Intel Core procesorov, tento iMac je zatiaľ najrýchlejší. Každý model v zostave je štandardne dodávaný s quad-core i5 procesor Intel Core, začínajúce na 2.7GHz a dosahjúce až 3,4 GHz."
+"Powered by fourth-generation Intel Core processors, this iMac is the fastest "
+"yet. Every model in the lineup comes standard with a quad-core Intel Core i5 "
+"processor, starting at 2.7GHz and topping out at 3.4GHz."
+msgstr ""
+"Poháňaný štvrtou generáciou Intel Core procesorov, tento iMac je zatiaľ "
+"najrýchlejší. Každý model v zostave je štandardne dodávaný s quad-core i5 "
+"procesor Intel Core, začínajúce na 2.7GHz a dosahjúce až 3,4 GHz."
 
 #. module: product
-#: model:product.product,name:product.product_product_0
-#: model:product.template,name:product.product_product_0_product_template
+#: model:product.product,name:product.service_order_01
+#: model:product.template,name:product.service_order_01_product_template
 msgid "Prepaid Consulting"
 msgstr "Predplatené konzultácie"
 
@@ -1979,6 +1906,7 @@ msgstr "Predplatené konzultácie"
 #: model:ir.model.fields,field_description:product.field_product_product_price
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_price
 #: model:ir.model.fields,field_description:product.field_product_template_price
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2005,7 +1933,9 @@ msgstr "Cena extra"
 msgid ""
 "Price Extra: Extra price for the variant with this attribute value on sale "
 "price. eg. 200 price extra, 1000 + 200 = 1200."
-msgstr "Cena Extra: Extra cena pre variant s týmto atribútom hodnoty na predajné ceny. napr. 200 cena extra, 1.000 + 200 = 1200."
+msgstr ""
+"Cena Extra: Extra cena pre variant s týmto atribútom hodnoty na predajné "
+"ceny. napr. 200 cena extra, 1.000 + 200 = 1200."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -2056,6 +1986,7 @@ msgstr "Položka cenníka použiteľná na zvolenej možnosti"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_ids
 #: model:ir.model.fields,field_description:product.field_product_product_item_ids
 #: model:ir.model.fields,field_description:product.field_product_template_item_ids
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
@@ -2105,18 +2036,6 @@ msgstr "Tlač"
 #: model:product.public.category,name:product.printer
 msgid "Printer"
 msgstr "Tlačiareň"
-
-#. module: product
-#: model:product.product,name:product.product_product_37
-#: model:product.template,name:product.product_product_37_product_template
-msgid "Printer, All-in-one"
-msgstr "Tlačiareň, všetko-v-jendom"
-
-#. module: product
-#: model:product.product,name:product.product_product_23
-#: model:product.template,name:product.product_product_23_product_template
-msgid "Processor AMD 8-Core"
-msgstr "Procesor AMD 8-Core"
 
 #. module: product
 #: model:product.product,name:product.product_product_22
@@ -2264,7 +2183,7 @@ msgid "Products your store in the inventory"
 msgstr "Produkty vášho obchodu v sklade"
 
 #. module: product
-#: code:addons/product/product.py:817
+#: code:addons/product/product.py:824
 #, python-format
 msgid "Products: "
 msgstr "Produkty: "
@@ -2328,18 +2247,6 @@ msgid "Quantity-5"
 msgstr "Množstvo-5"
 
 #. module: product
-#: model:product.product,name:product.product_product_14
-#: model:product.template,name:product.product_product_14_product_template
-msgid "RAM SR2 (kit)"
-msgstr "RAM SR2 (súprava)"
-
-#. module: product
-#: model:product.product,name:product.product_product_15
-#: model:product.template,name:product.product_product_15_product_template
-msgid "RAM SR3"
-msgstr "RAM SR3"
-
-#. module: product
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "RAM SR5"
@@ -2371,10 +2278,18 @@ msgstr "Pravý nadradený"
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Right from the start, apps made for iPad also work with iPad mini.\n"
-"                                    They’re immersive, full-screen apps that let you do almost anything\n"
-"                                    you can imagine. And with automatic updates,\n"
-"                                    you're always getting the best experience possible."
-msgstr "Hneď od začiatku, aplikácie vytvorené pre iPad tiež fungujú s iPad mini.\nSú to pôsobivé, celoobrazovkové aplikácie, ktoré vám umožnia urobiť takmer čokoľvek\nčo si viete predstaviť. A s automatickými aktualizáciami,\nvždy dostanete ten najlepší zážitok ako je možné."
+"                                    They’re immersive, full-screen apps that "
+"let you do almost anything\n"
+"                                    you can imagine. And with automatic "
+"updates,\n"
+"                                    you're always getting the best "
+"experience possible."
+msgstr ""
+"Hneď od začiatku, aplikácie vytvorené pre iPad tiež fungujú s iPad mini.\n"
+"Sú to pôsobivé, celoobrazovkové aplikácie, ktoré vám umožnia urobiť takmer "
+"čokoľvek\n"
+"čo si viete predstaviť. A s automatickými aktualizáciami,\n"
+"vždy dostanete ten najlepší zážitok ako je možné."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2387,21 +2302,35 @@ msgstr "Hneď od začiatku, aplikácie vytvorené pre iPad tiež fungujú s iPad
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid ""
 "Right from the start, there’s a lot to love about\n"
-"                                    iPad. It’s simple yet powerful. Thin and light yet\n"
-"                                    full-featured. It can do just about everything and\n"
+"                                    iPad. It’s simple yet powerful. Thin and "
+"light yet\n"
+"                                    full-featured. It can do just about "
+"everything and\n"
 "                                    be just about anything."
-msgstr "Hneď od začiatku, je toho veľa čo sa dá milovať na\niPad-e. Je jednoduchý, ale výkonný. Tenký a ľahký napriek tomu\nplne funkčný. Môže robiť takmer všetko a\nbyť takmer všetko."
+msgstr ""
+"Hneď od začiatku, je toho veľa čo sa dá milovať na\n"
+"iPad-e. Je jednoduchý, ale výkonný. Tenký a ľahký napriek tomu\n"
+"plne funkčný. Môže robiť takmer všetko a\n"
+"byť takmer všetko."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Right from the start, there’s a lot to love about iPad.\n"
-"                                   It’s simple yet powerful. Thin and light yet full-\n"
-"                                   featured. It can do just about everything and be just\n"
-"                                   about anything.And because it’s so easy to use, it’s\n"
+"                                   It’s simple yet powerful. Thin and light "
+"yet full-\n"
+"                                   featured. It can do just about everything "
+"and be just\n"
+"                                   about anything.And because it’s so easy "
+"to use, it’s\n"
 "                                   easy to love."
-msgstr "Hneď od začiatku, je toho veľa čo sa dá milovať na iPad-e. \nJe jednoduchý, ale výkonný. Tenký a ľahký napriek tomu plne \nfunkčný. Môže robiť takmer všetko a byť \ntakmer všetko. A keďže je ľahko použiteľný, je\nľahko milovateľný."
+msgstr ""
+"Hneď od začiatku, je toho veľa čo sa dá milovať na iPad-e. \n"
+"Je jednoduchý, ale výkonný. Tenký a ľahký napriek tomu plne \n"
+"funkčný. Môže robiť takmer všetko a byť \n"
+"takmer všetko. A keďže je ľahko použiteľný, je\n"
+"ľahko milovateľný."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2412,12 +2341,6 @@ msgstr "Metóda zaokrúhlenia"
 #: model:ir.model.fields,field_description:product.field_product_uom_rounding
 msgid "Rounding Precision"
 msgstr "Presnosť zaokrúhľovania"
-
-#. module: product
-#: model:product.product,name:product.product_product_45
-#: model:product.template,name:product.product_product_45_product_template
-msgid "Router R430"
-msgstr "Router R430"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2464,12 +2387,26 @@ msgstr "Predajné cenníky"
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "Say you’re listening to a song you love and you want to stay in the mood.\n"
-"                                        Just tap Genius. It finds other songs on iPod nano that go great together\n"
-"                                        and makes a Genius playlist for you. For more song combinations\n"
-"                                        you wouldn’t have thought of yourself, create Genius Mixes in iTunes\n"
-"                                        and sync the ones you like to iPod nano. Then tap Genius Mixes and\n"
-"                                        rediscover songs you haven’t heard in a while — or find music you forgot you even had."
-msgstr "Povedzme, že počúvate skladbu, ktorú máte radi a chcete zostať v nálade.\nStačí kliknúť Genius. To nájde iné skladby v iPode nano, ktoré idú skvele k sebe\na vyrobí pre vás Genius zoznam. Pre viac kombinácií piesní\nktoré by ste si nevymysleli sami, vytvorte Mixy Genius v iTunes\na synchronizujte tie, ktoré chcete do iPodu nano. Potom kliknite na Genius Mixy a\nznovu objavte skladby ste nepočuli nejakú dobu - alebo objavte hudbu, ktorú ste dokonca zabudli že máte."
+"                                        Just tap Genius. It finds other "
+"songs on iPod nano that go great together\n"
+"                                        and makes a Genius playlist for you. "
+"For more song combinations\n"
+"                                        you wouldn’t have thought of "
+"yourself, create Genius Mixes in iTunes\n"
+"                                        and sync the ones you like to iPod "
+"nano. Then tap Genius Mixes and\n"
+"                                        rediscover songs you haven’t heard "
+"in a while — or find music you forgot you even had."
+msgstr ""
+"Povedzme, že počúvate skladbu, ktorú máte radi a chcete zostať v nálade.\n"
+"Stačí kliknúť Genius. To nájde iné skladby v iPode nano, ktoré idú skvele k "
+"sebe\n"
+"a vyrobí pre vás Genius zoznam. Pre viac kombinácií piesní\n"
+"ktoré by ste si nevymysleli sami, vytvorte Mixy Genius v iTunes\n"
+"a synchronizujte tie, ktoré chcete do iPodu nano. Potom kliknite na Genius "
+"Mixy a\n"
+"znovu objavte skladby ste nepočuli nejakú dobu - alebo objavte hudbu, ktorú "
+"ste dokonca zabudli že máte."
 
 #. module: product
 #: model:product.public.category,name:product.Screen
@@ -2495,14 +2432,14 @@ msgid "Sequence"
 msgstr "Postupnosť"
 
 #. module: product
-#: model:product.product,name:product.product_product_59
+#: model:product.product,name:product.consu_delivery_01
 #: model:product.public.category,name:product.server
-#: model:product.template,name:product.product_product_59_product_template
+#: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Server"
 msgstr "Server"
 
 #. module: product
-#: code:addons/product/product.py:460
+#: code:addons/product/product.py:474
 #, python-format
 msgid "Service"
 msgstr "Služba"
@@ -2520,7 +2457,11 @@ msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr "Nastaví cenu tak, že je násobkom tejto hodnoty.\nZaokrúhľovanie sa aplikuje po zľave a pred príplatkom.\nAk chcete mať ceny, ktoré končia v 9.99, nastavte zaokrúhlenie 10, príplatok -0.01"
+msgstr ""
+"Nastaví cenu tak, že je násobkom tejto hodnoty.\n"
+"Zaokrúhľovanie sa aplikuje po zľave a pred príplatkom.\n"
+"Ak chcete mať ceny, ktoré končia v 9.99, nastavte zaokrúhlenie 10, príplatok "
+"-0.01"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
@@ -2531,9 +2472,23 @@ msgstr "Zdieľať produkt pre všetky spoločnosti"
 #: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
 msgid ""
 "Share your product to all companies defined in your instance.\n"
-" * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
-msgstr "Zdieľajte svoj produkt všetkými spoločnosťsami definovanými v inštancii.\n* Zaškrtnuté : Produkty sú viditeľné pre všetky spoločnosti, aj ked j spoločnosť definovaná na paertnerovi.\n* Nezaškrtnuté : Každá spoločnosť môže vidieť iba svoj produkt (produkt kde je definovaná spoločnosť). Produkty netýkajúce sa spoločnosti sú viditeľné pre všetky spoločnosti."
+" * Checked : Product are visible for every company, even if a company is "
+"defined on the partner.\n"
+" * Unchecked : Each company can see only its product (product where company "
+"is defined). Product not related to a company are visible for all companies."
+msgstr ""
+"Zdieľajte svoj produkt všetkými spoločnosťsami definovanými v inštancii.\n"
+"* Zaškrtnuté : Produkty sú viditeľné pre všetky spoločnosti, aj ked j "
+"spoločnosť definovaná na paertnerovi.\n"
+"* Nezaškrtnuté : Každá spoločnosť môže vidieť iba svoj produkt (produkt kde "
+"je definovaná spoločnosť). Produkty netýkajúce sa spoločnosti sú viditeľné "
+"pre všetky spoločnosti."
+
+#. module: product
+#: model:product.product,name:product.membership_1
+#: model:product.template,name:product.membership_1_product_template
+msgid "Silver Membership"
+msgstr ""
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2551,9 +2506,12 @@ msgstr "Malý obrázok"
 #: model:ir.model.fields,help:product.field_product_template_image_small
 msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
-msgstr "Malý obrázok tohto produktu. Veľkosť je automaticky zmenená na 64x64px obrázok, so zachovaním pomeru strán. Použite toto pole vždy keď je potrebný malý obrázok."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
+msgstr ""
+"Malý obrázok tohto produktu. Veľkosť je automaticky zmenená na 64x64px "
+"obrázok, so zachovaním pomeru strán. Použite toto pole vždy keď je potrebný "
+"malý obrázok."
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -2566,7 +2524,9 @@ msgstr "Menšie než referencia mernej jednotky"
 msgid ""
 "Soft covers are available separately in blue, green or orange. Pick a color "
 "to match your style."
-msgstr "Mäkké obaly sú dostupné samostatne v modrej, zelenej a oranžovej. Zvoľte farbu ktorá bude sedieť vášmu štýlu."
+msgstr ""
+"Mäkké obaly sú dostupné samostatne v modrej, zelenej a oranžovej. Zvoľte "
+"farbu ktorá bude sedieť vášmu štýlu."
 
 #. module: product
 #: model:product.category,name:product.product_category_4
@@ -2584,34 +2544,44 @@ msgstr "Reproduktory"
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
-msgstr "Špecifikujte produktovú kategóriu ak sa toto pravidlo vzťahuje iba na produkty patriace do tejto kategórie, alebo je podradených kategórií. V opačnom prípade nechajte prázdne."
+msgstr ""
+"Špecifikujte produktovú kategóriu ak sa toto pravidlo vzťahuje iba na "
+"produkty patriace do tejto kategórie, alebo je podradených kategórií. V "
+"opačnom prípade nechajte prázdne."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_id
 msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
-msgstr "Špecifikujte produkt ak sa toto pravidlo vzťahuje na jeden produkt. V opačnom prípade nechajte prázdne."
+msgstr ""
+"Špecifikujte produkt ak sa toto pravidlo vzťahuje na jeden produkt. V "
+"opačnom prípade nechajte prázdne."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_tmpl_id
 msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
-msgstr "Špecifikujte šablónu ak sa toto pravidlo vzťahuje na jednu produktovú šablónu. V opačnom prípade nechajte prázdne."
+msgstr ""
+"Špecifikujte šablónu ak sa toto pravidlo vzťahuje na jednu produktovú "
+"šablónu. V opačnom prípade nechajte prázdne."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sale_ok
 #: model:ir.model.fields,help:product.field_product_template_sale_ok
 msgid "Specify if the product can be selected in a sales order line."
-msgstr "Špecifikujte či produkt môže byť zvolený v riadku predajnej objednávky."
+msgstr ""
+"Špecifikujte či produkt môže byť zvolený v riadku predajnej objednávky."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_surcharge
 msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
-msgstr "Špecifikujte fixnú sumu na pridanie alebo odčítanie (ak záporné) k sume vyrátanej so zľavou."
+msgstr ""
+"Špecifikujte fixnú sumu na pridanie alebo odčítanie (ak záporné) k sume "
+"vyrátanej so zľavou."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_max_margin
@@ -2640,12 +2610,6 @@ msgid "Starting date for the pricelist item validation"
 msgstr "Začiatok platnosti pre validáciu položky cenníka"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_state
-#: model:ir.model.fields,field_description:product.field_product_template_state
-msgid "Status"
-msgstr "Stav"
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Supplier Pricelist"
 msgstr "Cenník dodávateľa"
@@ -2657,8 +2621,8 @@ msgid "Support Contract (on timesheet)"
 msgstr "Podporná zmluva (o časovom rozvrhu)"
 
 #. module: product
-#: model:product.product,name:product.product_product_47
-#: model:product.template,name:product.product_product_47_product_template
+#: model:product.product,name:product.product_delivery_01
+#: model:product.template,name:product.product_delivery_01_product_template
 msgid "Switch, 24 ports"
 msgstr "Switch, 24 portov"
 
@@ -2677,10 +2641,20 @@ msgstr "Synchronizujte s tým čo máte v srdci."
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "Tap to play your favorite songs. Or entire albums.\n"
-"                                    Or everything by one artist. You can even browse by genres or composers.\n"
-"                                    Flip through your music: Album art looks great on the bigger screen.\n"
-"                                    Or to keep things fresh, give iPod nano a shake and it shuffles to a different song in your music library."
-msgstr "Poklepte pre prehratie obľúbených piesní. Alebo celých albumov.\nAlebo všetko od jedného umelca. Dokonca môžete prezerať podľa žánrov alebo skladateľov.\nListujte vo vašej hudbe: Album art vyzerá skvele na väčšej obrazovke.\nAlebo pre udržanie vecí čerstvých, potraste iPod nano a náhodne vybere inú pieseň vo vašej\nhudobnej knižnici."
+"                                    Or everything by one artist. You can "
+"even browse by genres or composers.\n"
+"                                    Flip through your music: Album art looks "
+"great on the bigger screen.\n"
+"                                    Or to keep things fresh, give iPod nano "
+"a shake and it shuffles to a different song in your music library."
+msgstr ""
+"Poklepte pre prehratie obľúbených piesní. Alebo celých albumov.\n"
+"Alebo všetko od jedného umelca. Dokonca môžete prezerať podľa žánrov alebo "
+"skladateľov.\n"
+"Listujte vo vašej hudbe: Album art vyzerá skvele na väčšej obrazovke.\n"
+"Alebo pre udržanie vecí čerstvých, potraste iPod nano a náhodne vybere inú "
+"pieseň vo vašej\n"
+"hudobnej knižnici."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_name_template
@@ -2691,34 +2665,65 @@ msgstr "Názov šablóny"
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid ""
-"The Apple In-Ear Headphones deliver a truly immersive sound experience by drastically\n"
-"                                    reducing unwanted outside noises. The soft, silicone ear tips fit snugly and comfortably\n"
-"                                    in your ear, creating a seal that isolates your music from your surroundings.\n"
-"                                    Three different sizes of ear tips are included so you can find a perfect fit for each ear.\n"
-"                                    Also included are a convenient carrying case for the ear tips and a cable-control case\n"
+"The Apple In-Ear Headphones deliver a truly immersive sound experience by "
+"drastically\n"
+"                                    reducing unwanted outside noises. The "
+"soft, silicone ear tips fit snugly and comfortably\n"
+"                                    in your ear, creating a seal that "
+"isolates your music from your surroundings.\n"
+"                                    Three different sizes of ear tips are "
+"included so you can find a perfect fit for each ear.\n"
+"                                    Also included are a convenient carrying "
+"case for the ear tips and a cable-control case\n"
 "                                    for the headphones themselves."
-msgstr "Apple slúchadlá do uší prinášajú skutočne dokonalý zvukový zážitok drastickým\nznížením nežiadúcich vonkajích zvukov. Mäkké, silikónové špičky pevne priliehajú a pohodlne\nsadnú do ucha, vytvárajúc spoj, ktorý izoluje vašu hudbu z vášho okolia.\nTri rôzne veľkosti ušných špičiek sú priložené, takže si môžete nájsť perfektné sadnúce pre každé ucho.\nZahrnuté sú tiež vhodná krabička na špičky do uší a krabička\npre samotné slúchadlá."
+msgstr ""
+"Apple slúchadlá do uší prinášajú skutočne dokonalý zvukový zážitok "
+"drastickým\n"
+"znížením nežiadúcich vonkajích zvukov. Mäkké, silikónové špičky pevne "
+"priliehajú a pohodlne\n"
+"sadnú do ucha, vytvárajúc spoj, ktorý izoluje vašu hudbu z vášho okolia.\n"
+"Tri rôzne veľkosti ušných špičiek sú priložené, takže si môžete nájsť "
+"perfektné sadnúce pre každé ucho.\n"
+"Zahrnuté sú tiež vhodná krabička na špičky do uší a krabička\n"
+"pre samotné slúchadlá."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
-"The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. Its ultra-compact size fits in the \n"
-"                                    palm of your hand, yet gives you full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
-"                                    full-featured. It can do just about everything and\n"
+"The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. Its "
+"ultra-compact size fits in the \n"
+"                                    palm of your hand, yet gives you full, "
+"natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
+"                                    full-featured. It can do just about "
+"everything and\n"
 "                                    experience music just about anywhere."
-msgstr "Bose® SoundLink® mini ja nejmaněí prenosný Bluetooth reproduktor od Bose. Jeho ultrakompaktná veľkosť sa vojde do\ndlane vašej ruky, a zároveň vám dáva plný, prirodzený zvuk bezdrôtovo z vášho iPhone, iPad, alebo iPod-u. Chyťte ho a choďte\ns plnou výbavou. Dokáže to spraviť taker čokoľvek a\nprežite hudbu takmer kdekoľvek."
+msgstr ""
+"Bose® SoundLink® mini ja nejmaněí prenosný Bluetooth reproduktor od Bose. "
+"Jeho ultrakompaktná veľkosť sa vojde do\n"
+"dlane vašej ruky, a zároveň vám dáva plný, prirodzený zvuk bezdrôtovo z "
+"vášho iPhone, iPad, alebo iPod-u. Chyťte ho a choďte\n"
+"s plnou výbavou. Dokáže to spraviť taker čokoľvek a\n"
+"prežite hudbu takmer kdekoľvek."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "The SoundLink® Mini speaker is small and light enough\n"
-"                                        to tuck into your bag. It weighs in at just 1.5 pounds.\n"
-"                                        Its low profile lets you place it almost anywhere and\n"
-"                                        provides a low center of gravity that makes it nearly\n"
+"                                        to tuck into your bag. It weighs in "
+"at just 1.5 pounds.\n"
+"                                        Its low profile lets you place it "
+"almost anywhere and\n"
+"                                        provides a low center of gravity "
+"that makes it nearly\n"
 "                                        impossible to tip over."
-msgstr "SoundLink® Mini reproduktor je dostatočne malý a ľahký\nna zastrčenie do vášho vaku. Váži iba 0.7 kg.\nNízky profil vám umožní umiestniť ho takmer kdekoľvek a\npoksytuje nízke centrum gravitácie, čo takmer úplne \nznemožnuje jeho prevrhnutie."
+msgstr ""
+"SoundLink® Mini reproduktor je dostatočne malý a ľahký\n"
+"na zastrčenie do vášho vaku. Váži iba 0.7 kg.\n"
+"Nízky profil vám umožní umiestniť ho takmer kdekoľvek a\n"
+"poksytuje nízke centrum gravitácie, čo takmer úplne \n"
+"znemožnuje jeho prevrhnutie."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2732,7 +2737,9 @@ msgstr "Vypočítaná cena je vyjadrená v predvolenej mernej jednotke produktu.
 msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
-msgstr "Vypočítané množstvo bude násobok tejto hodnoty. Použite 1.0 pre mernú jednotku ktorá nemôže byť dalej delená, ako je kus."
+msgstr ""
+"Vypočítané množstvo bude násobok tejto hodnoty. Použite 1.0 pre mernú "
+"jednotku ktorá nemôže byť dalej delená, ako je kus."
 
 #. module: product
 #: sql_constraint:product.uom:0
@@ -2769,9 +2776,15 @@ msgstr "Plná iPad skúsenosť."
 #: model:product.template,website_description:product.product_product_9_product_template
 msgid ""
 "The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
-"                                    which makes it compatible with iPad. And you’re free to type wherever\n"
-"                                    you like — with the keyboard in front of your iPad or on your lap."
-msgstr "Neuveriteľne tenká Apple bezdrôtová klávesnica využíva technológiu Bluetooth,\nčím je kompatibilná s iPad-om. A vy môžte písať kdekoľvek\nchcete - pomocou klávesnice na prednej časti vášho iPadu alebo na kolenách."
+"                                    which makes it compatible with iPad. And "
+"you’re free to type wherever\n"
+"                                    you like — with the keyboard in front of "
+"your iPad or on your lap."
+msgstr ""
+"Neuveriteľne tenká Apple bezdrôtová klávesnica využíva technológiu "
+"Bluetooth,\n"
+"čím je kompatibilná s iPad-om. A vy môžte písať kdekoľvek\n"
+"chcete - pomocou klávesnice na prednej časti vášho iPadu alebo na kolenách."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_min_qty
@@ -2779,15 +2792,21 @@ msgid ""
 "The minimal quantity to purchase from this vendor, expressed in the vendor "
 "Product Unit of Measure if not any, in the default unit of measure of the "
 "product otherwise."
-msgstr "Minimálne množstvo na objednanie od tohto predajcu, vyjadrené v produktovej mernej jednotke predajcu ak nejakej, v predvolenej mernej jednotke produktu v opačnom prípade."
+msgstr ""
+"Minimálne množstvo na objednanie od tohto predajcu, vyjadrené v produktovej "
+"mernej jednotke predajcu ak nejakej, v predvolenej mernej jednotke produktu "
+"v opačnom prípade."
 
 #. module: product
-#: code:addons/product/product.py:329
+#: code:addons/product/product.py:332
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
-"You are trying to delete an attribute value with a reference on a product variant."
-msgstr "Operácia nemôže byť dokončená:\nSnažíte sa zmazať atribútnu hodnotu s referenciou na variantu produktu."
+"You are trying to delete an attribute value with a reference on a product "
+"variant."
+msgstr ""
+"Operácia nemôže byť dokončená:\n"
+"Snažíte sa zmazať atribútnu hodnotu s referenciou na variantu produktu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_price
@@ -2802,23 +2821,34 @@ msgid ""
 "The product form contains information to simplify the sale\n"
 "                process: price, notes in the quotation, accounting data,\n"
 "                procurement methods, etc."
-msgstr "Formulár produktu obsahuje informácie pre zjednodušenie predajného\nprocesu: ceny, poznámky v cenovej ponuke, účtovné údaje,\nmetódy obstáravania, atď."
+msgstr ""
+"Formulár produktu obsahuje informácie pre zjednodušenie predajného\n"
+"procesu: ceny, poznámky v cenovej ponuke, účtovné údaje,\n"
+"metódy obstáravania, atď."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
 msgid ""
 "The product form contains information to simplify the sale process: price, "
 "notes in the quotation, accounting data, procurement methods, etc."
-msgstr "Formulár produktu obsahuje informácie pre zjednodušenie predajného\nprocesu: ceny, poznámky v cenovej ponuke, účtovné údaje,\nmetódy obstáravania, atď."
+msgstr ""
+"Formulár produktu obsahuje informácie pre zjednodušenie predajného\n"
+"procesu: ceny, poznámky v cenovej ponuke, účtovné údaje,\n"
+"metódy obstáravania, atď."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
-"The rechargeable lithium-ion battery delivers up to seven hours of playtime.\n"
-"                                    And at home, you can listen even longer—the charging cradle lets\n"
+"The rechargeable lithium-ion battery delivers up to seven hours of "
+"playtime.\n"
+"                                    And at home, you can listen even longer—"
+"the charging cradle lets\n"
 "                                    you listen while it charges."
-msgstr "Dobíjacie lítium-iónová batéria poskytuje až sedem hodín hrania.\nA doma môžete počúvať ešte dlhšie - nabíjacia kolíska vám umožňuje\npočúvať popri nabíjaní."
+msgstr ""
+"Dobíjacie lítium-iónová batéria poskytuje až sedem hodín hrania.\n"
+"A doma môžete počúvať ešte dlhšie - nabíjacia kolíska vám umožňuje\n"
+"počúvať popri nabíjaní."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_9
@@ -2833,11 +2863,19 @@ msgstr "Elegantná hliníková Apple bezdrôtová klávesnica."
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "The speaker has a range of about 30 feet, so you can enjoy\n"
-"                                    the sound you want without wires. It pairs easily with your\n"
-"                                    smartphone, iPad® or other Bluetooth device.\n"
-"                                    And it remembers the most recent six devices you've used,\n"
+"                                    the sound you want without wires. It "
+"pairs easily with your\n"
+"                                    smartphone, iPad® or other Bluetooth "
+"device.\n"
+"                                    And it remembers the most recent six "
+"devices you've used,\n"
 "                                    so reconnecting is even simpler."
-msgstr "Reproduktor má rozsah asi 30 stôp, takže si môžete vychutnať\nzvuk ktorý chcete, bez drôtov. Ľahko sa spáruje s vašim\nsmartfónom, iPad® či iným Bluetooth zariadením .\nA pamätá si posledných šesť zariadení ktoré ste použili,\ntakže znovupripojenie je ešte jednoduchšie."
+msgstr ""
+"Reproduktor má rozsah asi 30 stôp, takže si môžete vychutnať\n"
+"zvuk ktorý chcete, bez drôtov. Ľahko sa spáruje s vašim\n"
+"smartfónom, iPad® či iným Bluetooth zariadením .\n"
+"A pamätá si posledných šesť zariadení ktoré ste použili,\n"
+"takže znovupripojenie je ešte jednoduchšie."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
@@ -2880,11 +2918,23 @@ msgstr "Je ho menej, ale nie menej v nom."
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
-"There’s another way to get a good mix of music on iPod: Let Genius do the work.\n"
-"                                        Activate Genius in iTunes on your computer, and it automatically finds songs that sound\n"
-"                                        great together. Then it creates Genius Mixes, which you can easily sync to your iPod.\n"
-"                                        It’s the perfect way to rediscover songs you haven’t listened to in forever."
-msgstr "Je tu ešte jeden spôsob, ako dostať dobrý mix hudby na iPod-e: Nechajte Genius robiť prácu.\nAktivujte Genius v iTunes na počítači, a to automaticky nájde skladby, ktoré znejú\nskvele spolu. Potom sa vytvoria Genius Mixy, ktoré môžete ľahko synchronizovať do vášho iPod-u.\nJe to dokonalý spôsob, ako znovu objaviť skladby ktoré ste nepočuli celú večnosť."
+"There’s another way to get a good mix of music on iPod: Let Genius do the "
+"work.\n"
+"                                        Activate Genius in iTunes on your "
+"computer, and it automatically finds songs that sound\n"
+"                                        great together. Then it creates "
+"Genius Mixes, which you can easily sync to your iPod.\n"
+"                                        It’s the perfect way to rediscover "
+"songs you haven’t listened to in forever."
+msgstr ""
+"Je tu ešte jeden spôsob, ako dostať dobrý mix hudby na iPod-e: Nechajte "
+"Genius robiť prácu.\n"
+"Aktivujte Genius v iTunes na počítači, a to automaticky nájde skladby, ktoré "
+"znejú\n"
+"skvele spolu. Potom sa vytvoria Genius Mixy, ktoré môžete ľahko "
+"synchronizovať do vášho iPod-u.\n"
+"Je to dokonalý spôsob, ako znovu objaviť skladby ktoré ste nepočuli celú "
+"večnosť."
 
 #. module: product
 #: sql_constraint:product.attribute.value:0
@@ -2899,16 +2949,20 @@ msgstr "Toto pochádza z formulára produktu."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_variant
 msgid ""
-"This field holds the image used as image for the product variant, limited to"
-" 1024x1024px."
-msgstr "Toto pole obsahuje obrázok použitý ako obrázok pre túto produktovú variantu, obmedzený na 1024x1024px."
+"This field holds the image used as image for the product variant, limited to "
+"1024x1024px."
+msgstr ""
+"Toto pole obsahuje obrázok použitý ako obrázok pre túto produktovú variantu, "
+"obmedzený na 1024x1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image
 msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
-msgstr "Toto pole obsahuje obrázok použitý ako obrázok pre tento produkt, obmedzený na 1024x1024px."
+msgstr ""
+"Toto pole obsahuje obrázok použitý ako obrázok pre tento produkt, obmedzený "
+"na 1024x1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_qty
@@ -2935,27 +2989,27 @@ msgstr "Táto poznámka bude zobrazená na žiadostiach o cenové ponuky."
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr "Pri predaji aktuálnemu partnerovi bude namiesto predvoleného cenníka použitý tento."
+msgstr ""
+"Pri predaji aktuálnemu partnerovi bude namiesto predvoleného cenníka použitý "
+"tento."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr "Kód produktu tohto predajcu bude použitý pri tlačení žiadosti o cenovú ponuku. Nechajte prázdne pre použitie internej."
+msgstr ""
+"Kód produktu tohto predajcu bude použitý pri tlačení žiadosti o cenovú "
+"ponuku. Nechajte prázdne pre použitie internej."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_name
 msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr "Názov produktu tohto predajcu bude použitý pri tlačení žiadosti o cenovú ponuku. Nechajte prázdne pre použitie internej."
-
-#. module: product
-#: model:product.product,name:product.product_product_39
-#: model:product.template,name:product.product_product_39_product_template
-msgid "Toner Cartridge"
-msgstr "Tonerová kazeta"
+msgstr ""
+"Názov produktu tohto predajcu bude použitý pri tlačení žiadosti o cenovú "
+"ponuku. Nechajte prázdne pre použitie internej."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2969,24 +3023,14 @@ msgid "Type"
 msgstr "Typ"
 
 #. module: product
-#: model:product.product,name:product.product_product_53
-#: model:product.template,name:product.product_product_53_product_template
-msgid "TypeMatrix Dvorak Keyboard"
-msgstr "TypeMatrix Dvorak klávesnica"
-
-#. module: product
-#: model:product.product,name:product.product_product_48
-#: model:product.template,name:product.product_product_48_product_template
-msgid "USB Adapter"
-msgstr "USB adaptér"
-
-#. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "USB port allows for software update to ensure ongoing Bluetooth device "
 "compatibility"
-msgstr "USB porty umožňujú aktulizácii softvéru zaistiť pokračujúcu Bluetooth kompatibilitu"
+msgstr ""
+"USB porty umožňujú aktulizácii softvéru zaistiť pokračujúcu Bluetooth "
+"kompatibilitu"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -3047,39 +3091,49 @@ msgstr "Kategórie merných jendotiek"
 msgid ""
 "Units of measure belonging to the same category can be\n"
 "                converted between each others. For example, in the category\n"
-"                <i>'Time'</i>, you will have the following units of measure:\n"
+"                <i>'Time'</i>, you will have the following units of "
+"measure:\n"
 "                Hours, Days."
-msgstr "Merné jendotky patriace do rovnakej kategórie môžu byť\nkonvertované medzi sebou. Napríklad, v kategórii\n<i>'Čas'</i>, budete mať nasledovné merné jednotky:\nHodiny, Dni."
+msgstr ""
+"Merné jendotky patriace do rovnakej kategórie môžu byť\n"
+"konvertované medzi sebou. Napríklad, v kategórii\n"
+"<i>'Čas'</i>, budete mať nasledovné merné jednotky:\n"
+"Hodiny, Dni."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Universal iPod docking station fits most iPod/iPhone models"
-msgstr "Univerzálna dokovacia iPod stanica sa hodí pre väčšinu modelov iPod / iPhone"
+msgstr ""
+"Univerzálna dokovacia iPod stanica sa hodí pre väčšinu modelov iPod / iPhone"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid ""
 "Unlike many small headphones, each earpiece of the Apple In-Ear Headphones\n"
-"                                    contains two separate high-performance drivers — a woofer to handle bass and\n"
-"                                    mid-range sounds and a tweeter for high-frequency audio. These dedicated\n"
-"                                    drivers help ensure accurate, detailed sound across the entire sonic spectrum.\n"
-"                                    The result: you’re immersed in the music and hear details you never knew existed.\n"
-"                                    Even when listening to an old favorite, you may feel like you’re hearing it for the first time."
-msgstr "Na rozdiel od mnohých malých slúchadiel, každé slúchadlo z Apple slúchadiel do uší\nobsahuje dva samostatné vysoko výkonné ovládače - woofer zvláda basy a\nstredopásmové zvuky a výškový reproduktor pre vysokofrekvenčné zvuk. Tieto dedikované\novládače pomáhajú zabezpečiť presný a detailný zvuk v celom zvukovom spektre.\nVýsledok: ste ponorený v hudbe a počujete detaily, o ktorých existencii nevedeli.\nDokonca aj pri počúvaní starého favorita môžete mať pocit, ako by ste to počul prvý krát."
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_unread
-#: model:ir.model.fields,field_description:product.field_product_template_message_unread
-msgid "Unread Messages"
-msgstr "Neprečítané správy"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_unread_counter
-#: model:ir.model.fields,field_description:product.field_product_template_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Počítadlo neprečítaných správ"
+"                                    contains two separate high-performance "
+"drivers — a woofer to handle bass and\n"
+"                                    mid-range sounds and a tweeter for high-"
+"frequency audio. These dedicated\n"
+"                                    drivers help ensure accurate, detailed "
+"sound across the entire sonic spectrum.\n"
+"                                    The result: you’re immersed in the music "
+"and hear details you never knew existed.\n"
+"                                    Even when listening to an old favorite, "
+"you may feel like you’re hearing it for the first time."
+msgstr ""
+"Na rozdiel od mnohých malých slúchadiel, každé slúchadlo z Apple slúchadiel "
+"do uší\n"
+"obsahuje dva samostatné vysoko výkonné ovládače - woofer zvláda basy a\n"
+"stredopásmové zvuky a výškový reproduktor pre vysokofrekvenčné zvuk. Tieto "
+"dedikované\n"
+"ovládače pomáhajú zabezpečiť presný a detailný zvuk v celom zvukovom "
+"spektre.\n"
+"Výsledok: ste ponorený v hudbe a počujete detaily, o ktorých existencii "
+"nevedeli.\n"
+"Dokonca aj pri počúvaní starého favorita môžete mať pocit, ako by ste to "
+"počul prvý krát."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3131,9 +3185,7 @@ msgid "Variants"
 msgstr "Varianty"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_name
-#: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
 msgstr "Predajca"
@@ -3165,6 +3217,8 @@ msgid "Vendor of this product"
 msgstr "Predajca tohto produktu"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_seller_ids
+#: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendors"
 msgstr "Predajcovia"
@@ -3177,6 +3231,7 @@ msgstr "Pohľad"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_volume
 #: model:ir.model.fields,field_description:product.field_product_template_volume
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:product.uom.categ,name:product.product_uom_categ_vol
 msgid "Volume"
 msgstr "Objem"
@@ -3192,7 +3247,8 @@ msgstr "Kontrola hlasitosti na hlavnom systéme"
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "Wall charger can be plugged into the cradle or directly into the speaker"
-msgstr "Stenová nabíjačka môže byť zapojená do kolísky alebo priamo do reproduktoru"
+msgstr ""
+"Stenová nabíjačka môže byť zapojená do kolísky alebo priamo do reproduktoru"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_warranty
@@ -3201,13 +3257,8 @@ msgid "Warranty"
 msgstr "Záruka"
 
 #. module: product
-#: model:product.product,name:product.product_product_34
-#: model:product.template,name:product.product_product_34_product_template
-msgid "Webcam"
-msgstr "Webkamera"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.model.fields,field_description:product.field_product_product_weight
+#: model:ir.model.fields,field_description:product.field_product_template_weight
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
 msgstr "Hmotnosť"
@@ -3228,8 +3279,7 @@ msgstr "Keď jeden zoznam skladieb nestačí."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
 msgid ""
-"When this field is filled in, the vendor data will only apply to the "
-"variant."
+"When this field is filled in, the vendor data will only apply to the variant."
 msgstr "Keď je toto pole vyplnené, dáta predajcu budú uplatnné iba na variant."
 
 #. module: product
@@ -3257,34 +3307,31 @@ msgid "Wi-Fi"
 msgstr "Wi-Fi"
 
 #. module: product
-#: model:product.product,name:product.product_product_40
-#: model:product.template,name:product.product_product_40_product_template
-msgid "Windows 7 Professional"
-msgstr "Windows 7 Professional"
-
-#. module: product
-#: model:product.product,name:product.product_product_41
-#: model:product.template,name:product.product_product_41_product_template
-msgid "Windows Home Server 2011"
-msgstr "Windows Home Server 2011"
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "With advanced Wi‑Fi that’s up to twice as fast as\n"
-"                                   any previous-generation iPad and access to fast\n"
-"                                   cellular data networks around the world, iPad mini\n"
+"                                   any previous-generation iPad and access "
+"to fast\n"
+"                                   cellular data networks around the world, "
+"iPad mini\n"
 "                                   lets you download content, stream video,\n"
 "                                   and browse the web at amazing speeds."
-msgstr "S pokročilým Wi-Fi ktoré je až dvakrát rýchlejšie ako\npredchádzajúce generácie Pad-u a prístup k rýchlej\ncelulárnej dátovej siete po celom svete, iPad mini\nvám umožní stahovať obsah, streamovať video,\na prehliadať web úžasnou rýchlosťou."
+msgstr ""
+"S pokročilým Wi-Fi ktoré je až dvakrát rýchlejšie ako\n"
+"predchádzajúce generácie Pad-u a prístup k rýchlej\n"
+"celulárnej dátovej siete po celom svete, iPad mini\n"
+"vám umožní stahovať obsah, streamovať video,\n"
+"a prehliadať web úžasnou rýchlosťou."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_group_product_variant
 msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
-msgstr "Práca s variantou produktu vám umožňuje určovať variantu tých istých produktov, napríklad ľahkosťou spravovania produktu v e-commerce "
+msgstr ""
+"Práca s variantou produktu vám umožňuje určovať variantu tých istých "
+"produktov, napríklad ľahkosťou spravovania produktu v e-commerce "
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
@@ -3296,7 +3343,9 @@ msgstr "Pracovný čas"
 msgid ""
 "You must define a conversion rate between several Units of\n"
 "                Measure within the same category."
-msgstr "Musíe definovať konverzný kurz medzi viacerými mernými\njednotkami v tej istej kategórii."
+msgstr ""
+"Musíe definovať konverzný kurz medzi viacerými mernými\n"
+"jednotkami v tej istej kategórii."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -3306,14 +3355,20 @@ msgid ""
 "You must define a product for everything you sell, whether it's\n"
 "                a physical product, a consumable or a service you offer to\n"
 "                customers."
-msgstr "Musíte definovať produkt pre všetko čo predávate, či je to\nfyzický produkt, niečo spotrebné alebo služba čo ponúkate\nzákazníkom."
+msgstr ""
+"Musíte definovať produkt pre všetko čo predávate, či je to\n"
+"fyzický produkt, niečo spotrebné alebo služba čo ponúkate\n"
+"zákazníkom."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
+#, fuzzy
 msgid ""
 "You must define a product for everything you sell, whether it's a physical "
-"product, a consumable or a service you offer to  customers."
-msgstr "Musíte definovať produkt pre všetko čo predávate, či je to fyzický produkt, niečo spotrebné alebo služba čo ponúkate zákazníkom."
+"product, a consumable or a service you offer to customers."
+msgstr ""
+"Musíte definovať produkt pre všetko čo predávate, či je to fyzický produkt, "
+"niečo spotrebné alebo služba čo ponúkate zákazníkom."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -3322,15 +3377,26 @@ msgstr "Musíte definovať produkt pre všetko čo predávate, či je to fyzick�
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "You probably have multiple playlists in iTunes on your computer.\n"
-"                                        One for your commute. One for the gym. Sync those playlists\n"
-"                                        to iPod, and you can play the perfect mix for whatever\n"
-"                                        mood strikes you. VoiceOver tells you the name of each playlist,\n"
-"                                        so it’s easy to switch between them and find the one you want without looking."
-msgstr "Pravdepodobne máte viac zoznamov skladieb v iTunes v počítači.\nJeden pre cestovanie. Jeden do telocvične. Synchronizujte tieto zoznamy skladieb\ndo iPod-u, a môžete hrať perfektný mix pre akúkoľvek\nnáladu akú máye. VoiceOver vám povie názov každého zoznamu skladieb,\ntakže je medzi nimi ľahké prepínanie a nájdite ten, ktorý chcete, bez toho by ste sa pozerali."
+"                                        One for your commute. One for the "
+"gym. Sync those playlists\n"
+"                                        to iPod, and you can play the "
+"perfect mix for whatever\n"
+"                                        mood strikes you. VoiceOver tells "
+"you the name of each playlist,\n"
+"                                        so it’s easy to switch between them "
+"and find the one you want without looking."
+msgstr ""
+"Pravdepodobne máte viac zoznamov skladieb v iTunes v počítači.\n"
+"Jeden pre cestovanie. Jeden do telocvične. Synchronizujte tieto zoznamy "
+"skladieb\n"
+"do iPod-u, a môžete hrať perfektný mix pre akúkoľvek\n"
+"náladu akú máye. VoiceOver vám povie názov každého zoznamu skladieb,\n"
+"takže je medzi nimi ľahké prepínanie a nájdite ten, ktorý chcete, bez toho "
+"by ste sa pozerali."
 
 #. module: product
-#: model:product.product,name:product.product_product_43
-#: model:product.template,name:product.product_product_43_product_template
+#: model:product.product,name:product.product_order_01
+#: model:product.template,name:product.product_order_01_product_template
 msgid "Zed+ Antivirus"
 msgstr "Zed+ Antivírus"
 
@@ -3433,9 +3499,14 @@ msgstr "iPod"
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "iTunes on your Mac or PC makes it easy to load up\n"
-"                                        your iPod. Just choose the playlists, audiobooks,\n"
-"                                        podcasts, and other audio files you want, then sync."
-msgstr "iTunes vo vašomMac alebo PC uľahčuje naplniť\nváš iPod. Stačí si len vybrať zoznamy skladieb, audioknihy,\npodcasty a ďalšie zvukové súbory, ktoré chcete, a potom synchronizovať."
+"                                        your iPod. Just choose the "
+"playlists, audiobooks,\n"
+"                                        podcasts, and other audio files you "
+"want, then sync."
+msgstr ""
+"iTunes vo vašomMac alebo PC uľahčuje naplniť\n"
+"váš iPod. Stačí si len vybrať zoznamy skladieb, audioknihy,\n"
+"podcasty a ďalšie zvukové súbory, ktoré chcete, a potom synchronizovať."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_inch
@@ -3498,20 +3569,24 @@ msgid "qt"
 msgstr "množ"
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_58
-#: model:product.template,description_sale:product.product_product_58_product_template
+#: model:product.product,description_sale:product.consu_delivery_02
+#: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid ""
 "raid 1 \n"
 "            512ECC ram"
-msgstr "raid 1 \n512ECC ram"
+msgstr ""
+"raid 1 \n"
+"512ECC ram"
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_59
-#: model:product.template,description_sale:product.product_product_59_product_template
+#: model:product.product,description_sale:product.consu_delivery_01
+#: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid ""
 "raid 10 \n"
 "            2048ECC ram"
-msgstr "raid 10\n2048ECC ram"
+msgstr ""
+"raid 10\n"
+"2048ECC ram"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist
@@ -3538,3 +3613,202 @@ msgstr "na"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "neznámy"
+
+#~ msgid ""
+#~ "17\" Monitor\n"
+#~ "6GB RAM\n"
+#~ "Hi-Speed 234Q Processor\n"
+#~ "QWERTY keyboard"
+#~ msgstr ""
+#~ "17\" Monitor\n"
+#~ "6GB RAM\n"
+#~ "Hi-Speed 234Q Processor\n"
+#~ "QWERTY klávesnica"
+
+#~ msgid "30m RJ45 wire"
+#~ msgstr "30m RJ45 wire"
+
+#~ msgid "8-port Switch"
+#~ msgstr "8-port Switch"
+
+#~ msgid "Action Needed"
+#~ msgstr "Potrebná akcia"
+
+#~ msgid "All in one hi-speed printer with fax and scanner."
+#~ msgstr "Všetko v jednej vysokorýchlostnej tlačiarni s faxom a skenerom."
+
+#~ msgid "Blank CD"
+#~ msgstr "Čisté CD"
+
+#~ msgid "Blank DVD-RW"
+#~ msgstr "Čisté DVD-RW"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Dátum poslednej správy zaslanej záznamu."
+
+#~ msgid "Dell Inspiron Laptop without OS"
+#~ msgstr "Dell Inspiron Laptop bez OS"
+
+#~ msgid "Desktop Computer Table"
+#~ msgstr "Stolík stolného počítača"
+
+#~ msgid "Desktop Lamp"
+#~ msgstr "Stolová lampa"
+
+#~ msgid "End of Lifecycle"
+#~ msgstr "Koniec životného cyklu"
+
+#~ msgid "Ergonomic Mouse"
+#~ msgstr "Ergonomická myš"
+
+#~ msgid "External Hard disk"
+#~ msgstr "Externý pevný disk"
+
+#~ msgid "Followers"
+#~ msgstr "Odberatelia"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Odberatelia (Kanály)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Odberatelia (Partneri)"
+
+#~ msgid "Full featured image editing software."
+#~ msgstr "Plne vybavený software pre úpravu obrázkov."
+
+#~ msgid "GrapWorks Software"
+#~ msgstr "GrapWorks softvér"
+
+#~ msgid "Gross Weight"
+#~ msgstr "Hrubá hmotnosť"
+
+#~ msgid "HDD SH-2 (mto)"
+#~ msgstr "HDD SH-2 (mto)"
+
+#~ msgid "HDD on Demand"
+#~ msgstr "HDD na požiadanie"
+
+#~ msgid ""
+#~ "Hands free headset for laptop PC with in-line microphone and headphone "
+#~ "plug."
+#~ msgstr ""
+#~ "Hands free slúchadlá pre prenosný počítač s inline mikrofónom a "
+#~ "slúchadlový konektor."
+
+#~ msgid "Headset USB"
+#~ msgstr "Headset USB"
+
+#~ msgid "Headset for laptop PC with USB connector."
+#~ msgstr "Headset pre laptop PC s USB konektorom."
+
+#~ msgid "Headset standard"
+#~ msgstr "Headset štandard"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "In Development"
+#~ msgstr "Vo vývoji"
+
+#~ msgid "Ink Cartridge"
+#~ msgstr "Atramentová náplň"
+
+#~ msgid "Is Follower"
+#~ msgstr "Je odberateľ"
+
+#~ msgid "Laptop S3450"
+#~ msgstr "Laptop S3450"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Dátum poslednej správy"
+
+#~ msgid "Linutop"
+#~ msgstr "Linutop"
+
+#~ msgid "Messages"
+#~ msgstr "Správy"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Správy a história komunikácie"
+
+#~ msgid "Motherboard A20Z7"
+#~ msgstr "Základná doska A20Z7"
+
+#~ msgid "Multimedia Speakers"
+#~ msgstr "Multimediálne reporoduktory"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Počet akcií"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Počet správ ktoré vyžadujú akciu"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Počet neprečítaných správ"
+
+#~ msgid "Obsolete"
+#~ msgstr "Zastaralé"
+
+#~ msgid ""
+#~ "Office Editing Software with word processing, spreadsheets, "
+#~ "presentations, graphics, and databases..."
+#~ msgstr ""
+#~ "Softvér Office Úpravy s ovládaním textového editora, tabuľky, "
+#~ "prezentácie, grafiky a databáz ..."
+
+#~ msgid "Office Suite"
+#~ msgstr "Kancelársky balík"
+
+#~ msgid "On demand hard-disk having capacity based on requirement."
+#~ msgstr "Na požiadanie pevný disk s kapacitou na základe požiadavky."
+
+#~ msgid "Pen drive, SP-2"
+#~ msgstr "Pen drive, SP-2"
+
+#~ msgid "Pen drive, SP-4"
+#~ msgstr "Pen drive, SP-4"
+
+#~ msgid "Printer, All-in-one"
+#~ msgstr "Tlačiareň, všetko-v-jendom"
+
+#~ msgid "Processor AMD 8-Core"
+#~ msgstr "Procesor AMD 8-Core"
+
+#~ msgid "RAM SR2 (kit)"
+#~ msgstr "RAM SR2 (súprava)"
+
+#~ msgid "RAM SR3"
+#~ msgstr "RAM SR3"
+
+#~ msgid "Router R430"
+#~ msgstr "Router R430"
+
+#~ msgid "Status"
+#~ msgstr "Stav"
+
+#~ msgid "Toner Cartridge"
+#~ msgstr "Tonerová kazeta"
+
+#~ msgid "TypeMatrix Dvorak Keyboard"
+#~ msgstr "TypeMatrix Dvorak klávesnica"
+
+#~ msgid "USB Adapter"
+#~ msgstr "USB adaptér"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Neprečítané správy"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Počítadlo neprečítaných správ"
+
+#~ msgid "Webcam"
+#~ msgstr "Webkamera"
+
+#~ msgid "Windows 7 Professional"
+#~ msgstr "Windows 7 Professional"
+
+#~ msgid "Windows Home Server 2011"
+#~ msgstr "Windows Home Server 2011"

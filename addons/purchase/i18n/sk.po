@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * purchase
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2015
@@ -9,134 +9,59 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:18+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-22 09:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: purchase
+#: model:mail.template,body_html:purchase.email_template_edi_purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<p>Dear\n"
+"% if object.partner_id.is_company and object.child_ids:\n"
+"    ${object.partner_id.child_ids[0].name}\n"
+"% else :\n"
+"    ${object.partner_id.name}\n"
+"% endif\n"
+",</p><p>\n"
+"Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or "
+"'purchase order confirmation'} <strong>${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    with reference: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"amounting <strong>${object.amount_total} ${object.currency_id.name}</"
+"strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
 "\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"\n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.partner_ref:\n"
-"       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
-"       % endif\n"
-"       % if object.create_uid:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.create_uid.email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br/>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n<p>Dobrý deň ${object.partner_id.name},</p>\n\n<p>Tu je ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n\n<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n&nbsp;&nbsp;<strong>REFERENCIE</strong><br />\n&nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n&nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n&nbsp;&nbsp;Order date: ${object.date_order}<br />\n% if object.origin:\n&nbsp;&nbsp;Order reference: ${object.origin}<br />\n% endif\n% if object.partner_ref:\n&nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n% endif\n% if object.create_uid:\n&nbsp;&nbsp;Your contact: <a href=\"mailto:${object.create_uid.email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</a>\n% endif\n</p>\n\n<br/>\n<p>Ak máte akékoľvek otázky, neváhajte nás kontaktovať.</p>\n<p>Vďaka!</p>\n<br/>\n<br/>\n<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n<strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n</div>\n<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n</span>\n% if object.company_id.phone:\n<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\nPhone:&nbsp; ${object.company_id.phone}\n</div>\n% endif\n% if object.company_id.website:\n<div>\nWeb :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n</div>\n%endif\n<p></p>\n</div>\n</div>"
-
-#. module: purchase
-#: model:mail.template,body_html:purchase.email_template_edi_purchase
-msgid ""
-"\n"
-"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"\n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;RFQ number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;RFQ date: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;RFQ reference: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.partner_ref:\n"
-"       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
-"       % endif\n"
-"       % if object.create_uid:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.create_uid.email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br/>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n<p>Dobrý deň ${object.partner_id.name},</p>\n\n<p>Tu je ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n\n<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n&nbsp;&nbsp;<strong>REFERENCIE</strong><br />\n&nbsp;&nbsp;RFQ number: <strong>${object.name}</strong><br />\n&nbsp;&nbsp;RFQ date: ${object.date_order}<br />\n% if object.origin:\n&nbsp;&nbsp;RFQ reference: ${object.origin}<br />\n% endif\n% if object.partner_ref:\n&nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n% endif\n% if object.create_uid:\n&nbsp;&nbsp;Your contact: <a href=\"mailto:${object.create_uid.email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</a>\n% endif\n</p>\n\n<br/>\n<p>Ak máte akékoľvek otázky, neváhajte nás kontaktovať.</p>\n<p>Vďaka!</p>\n<br/>\n<br/>\n<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n<strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n</div>\n<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n</span>\n% if object.company_id.phone:\n<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\nPhone:&nbsp; ${object.company_id.phone}\n</div>\n% endif\n% if object.company_id.website:\n<div>\nWeb :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n</div>\n%endif\n<p></p>\n</div>\n</div>"
+"<p>If you have any question, do not hesitate to contact us.</p>\n"
+"<p>Best regards,</p>\n"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_stock_dropshipping
+#, fuzzy
 msgid ""
 "\n"
-"Creates the dropship Route and add more complex tests-This installs the module stock_dropshipping."
-msgstr "\nVytvorí dropshipingovú trasu a pridá ďalšie komplexné testy-To nainštaluje modul stock_dropshipping."
+"Creates the dropship Route and add more complex tests\n"
+"-This installs the module stock_dropshipping."
+msgstr ""
+"\n"
+"Vytvorí dropshipingovú trasu a pridá ďalšie komplexné testy-To nainštaluje "
+"modul stock_dropshipping."
 
 #. module: purchase
-#: code:addons/purchase/stock.py:62
+#: code:addons/purchase/stock.py:81
 #, python-format
 msgid " Buy"
 msgstr "Kúpiť"
@@ -158,7 +83,7 @@ msgid "# of Invoices"
 msgstr "# Faktúr"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_nbr
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_nbr_lines
 msgid "# of Lines"
 msgstr "# riadky"
 
@@ -169,10 +94,6 @@ msgstr "# Objednávok"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase
-msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name|safe} Objednávka (Ref ${object.name or 'n/a' })"
-
-#. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 msgstr "${object.company_id.name} Objednávka (Ref ${object.name or 'n/a' })"
@@ -246,11 +167,6 @@ msgid "<strong>Your Order Reference</strong>"
 msgstr "<strong>Vaša referencia objednávky</strong>"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_needaction
-msgid "Action Needed"
-msgstr "Potrebná akcia"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
 msgid "Add Purchase Order"
 msgstr "Pridať nákupnú objednávku"
@@ -283,9 +199,10 @@ msgstr "Povoliť používanie a importovanie cenníkov predajcu"
 #. module: purchase
 #: selection:purchase.config.settings,module_purchase_requisition:0
 msgid ""
-"Allow using call for tenders to get quotes from multiple suppliers "
-"(advanced)"
-msgstr "Povoliť použitie výzvy na predkladanie ponúk pre zíaskanie cenových ponúk od rôznych dodávateľov (rozšírené)"
+"Allow using call for tenders to get quotes from multiple suppliers (advanced)"
+msgstr ""
+"Povoliť použitie výzvy na predkladanie ponúk pre zíaskanie cenových ponúk od "
+"rôznych dodávateľov (rozšírené)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_costing_method
@@ -299,16 +216,13 @@ msgid ""
 msgstr "Umožňuje vám vybrať a udržiavať rôzne merné jednotky pre produkty."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_account_config_settings_group_analytic_account_for_purchases
-msgid "Allows you to specify an analytic account on purchase order lines."
-msgstr "Umožňuje vám špecifikovať analytický účet na riadkoch nákupnej objednávky."
-
-#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
 "An administrator can set up default Terms and conditions in your Company "
 "settings."
-msgstr "Administrátor môže nastaviť východiskové výrazy a podmienky vo vašich nastveniach spoločnosti."
+msgstr ""
+"Administrátor môže nastaviť východiskové výrazy a podmienky vo vašich "
+"nastveniach spoločnosti."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
@@ -320,11 +234,6 @@ msgstr "Analytický účet"
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
 msgstr "Analytické účtovníctvo pre Nákupy"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_account_config_settings_group_analytic_account_for_purchases
-msgid "Analytic accounting for purchases"
-msgstr "Analytické účtovníctvo pre nákupy"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
@@ -351,7 +260,9 @@ msgstr "Pridružené obstarávania"
 msgid ""
 "Associated Purchase Order. Filled in automatically when a PO is chosen on "
 "the vendor bill."
-msgstr "Pridružená nákupná objednávka.Automaticky vyplnené keď je nákupná objednávka zvolená na účte predajcu."
+msgstr ""
+"Pridružená nákupná objednávka.Automaticky vyplnené keď je nákupná objednávka "
+"zvolená na účte predajcu."
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
@@ -369,7 +280,7 @@ msgid "Billed Qty"
 msgstr "Účtované množ."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:605 code:addons/purchase/stock.py:56
+#: code:addons/purchase/purchase.py:717 code:addons/purchase/stock.py:75
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -392,11 +303,19 @@ msgstr "Výzvy na cenové ponuky"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_purchase_requisition
+#, fuzzy
 msgid ""
-"Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products.\n"
-"                    You can configure per product if you directly do a Request for Quotation\n"
-"                    to one vendor or if you want a Call for Tenders to compare offers from several vendors."
-msgstr "Výzvy na cenové ponuky sa používajú keď chcete vygenerovať žiadosti  o cenové ponuky od viacerých predajcov pre danú sadu produktov.\nMôžete konfigurovať za produkt ak priamo robíte žiadosť o cenovú ponuku\njednému predajcovi alebo ak chcete výzvu na cenové ponuky pre porovnanie ponúk od viacerých predajcov."
+"Calls for tenders are used when you want to generate requests for quotations "
+"to several vendors for a given set of products.\n"
+"You can configure per product if you directly do a Request for Quotation to "
+"one vendor or if you want a Call for Tenders to compare offers from several "
+"vendors."
+msgstr ""
+"Výzvy na cenové ponuky sa používajú keď chcete vygenerovať žiadosti  o "
+"cenové ponuky od viacerých predajcov pre danú sadu produktov.\n"
+"Môžete konfigurovať za produkt ak priamo robíte žiadosť o cenovú ponuku\n"
+"jednému predajcovi alebo ak chcete výzvu na cenové ponuky pre porovnanie "
+"ponúk od viacerých predajcov."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_ok
@@ -406,15 +325,17 @@ msgid "Can be Purchased"
 msgstr "Môže byť zakúpené"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:621
+#: code:addons/purchase/purchase.py:733
 #, python-format
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
 "purchase order first."
-msgstr "Nie je možné zrušiť obstarávanie spojené s nákupnou objednávkou. Prosím zrušte najskôr nákupnú objednávku."
+msgstr ""
+"Nie je možné zrušiť obstarávanie spojené s nákupnou objednávkou. Prosím "
+"zrušte najskôr nákupnú objednávku."
 
 #. module: purchase
-#: code:addons/purchase/stock.py:59
+#: code:addons/purchase/stock.py:78
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr "Nemožno nájsť žiadnu generickú trasu Kúpiť."
@@ -431,7 +352,7 @@ msgid "Cancelled"
 msgstr "Zrušené"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:529
+#: code:addons/purchase/purchase.py:612
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "Nie je možné zmazať nákupnú objednávku ktorá je v stave '%s'."
@@ -450,7 +371,9 @@ msgstr "Kliknite pre vytvorenie konceptu faktúry."
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
 msgid ""
 "Click to create a quotation that will be converted into a purchase order."
-msgstr "Kliknite pre vytvorenie cenovej ponuky ktorá bude konvertovaná na nákupnú objednávku."
+msgstr ""
+"Kliknite pre vytvorenie cenovej ponuky ktorá bude konvertovaná na nákupnú "
+"objednávku."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -463,14 +386,15 @@ msgid "Click to define a new product."
 msgstr "Kliknite pre definovanie nového produktu."
 
 #. module: purchase
-#: model:web.tip,description:purchase.purchase_tip_1
-msgid "Click to mark products as received."
-msgstr "Kliknite pre označenie produktov ako prijatých."
-
-#. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid "Click to record a vendor bill related to this purchase."
 msgstr "Kliknite pre vytvorenie účtenky predajcu spojenej s týmto nákupom."
+
+#. module: purchase
+#: model:web.tip,description:purchase.purchase_tip_1
+#, fuzzy
+msgid "Click to scrap products."
+msgstr "Kliknite pre definovanie nového produktu."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
@@ -491,7 +415,7 @@ msgid "Company"
 msgstr "Spoločnost"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:237
+#: code:addons/purchase/purchase.py:254
 #, python-format
 msgid "Compose Email"
 msgstr "Vytvoriť Email"
@@ -559,12 +483,7 @@ msgid "Date Approved"
 msgstr "Dátum schválený"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Dátum poslednej správy zaslanej záznamu."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_report_date
+#: model:ir.model.fields,help:purchase.field_purchase_report_date_order
 msgid "Date on which this document has been created"
 msgstr "Odo dňa, keď bol tento dokument vytvorený"
 
@@ -594,7 +513,9 @@ msgstr "Doručenia & Faktúry"
 msgid ""
 "Depicts the date where the Quotation should be validated and converted into "
 "a purchase order."
-msgstr "Znázorňuje dátum keď mala byť cenová ponuka overená a prekonvertovaná na nákupnú objednávku."
+msgstr ""
+"Znázorňuje dátum keď mala byť cenová ponuka overená a prekonvertovaná na "
+"nákupnú objednávku."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_name
@@ -615,7 +536,7 @@ msgid "Display Name"
 msgstr "Zobraziť meno"
 
 #. module: purchase
-#: selection:purchase.order,state:0 selection:purchase.report,state:0
+#: selection:purchase.report,state:0
 msgid "Done"
 msgstr "Dokončiť"
 
@@ -650,16 +571,19 @@ msgid "Email composition wizard"
 msgstr "Sprievodca zostavovaním emailov"
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_survey_mail_compose_message
+#, fuzzy
+msgid "Email composition wizard for Survey"
+msgstr "Sprievodca zostavovaním emailov"
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
 msgid ""
 "Encoding help. When selected, the associated purchase order lines are added "
 "to the vendor bill. Several PO can be selected."
-msgstr "Kódovacia pomoc. Pri výbere pridružené príkazu k nákupu riadky sú pridané do účtenky predajcu. Možno zvoliť niekoľko PO."
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-msgid "Expected Date"
-msgstr "Očakávaný dátum"
+msgstr ""
+"Kódovacia pomoc. Pri výbere pridružené príkazu k nákupu riadky sú pridané do "
+"účtenky predajcu. Možno zvoliť niekoľko PO."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -674,21 +598,6 @@ msgid "Fiscal Position"
 msgstr "Fiškálna pozícia"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_follower_ids
-msgid "Followers"
-msgstr "Odberatelia"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
-
-#. module: purchase
 #: selection:res.company,po_double_validation:0
 msgid "Get 2 levels of approvals to confirm a purchase order"
 msgstr "Získať 2 úrovne schválení pre potvrdenie nákupnej objednávky"
@@ -697,6 +606,11 @@ msgstr "Získať 2 úrovne schválení pre potvrdenie nákupnej objednávky"
 #: model:web.tip,description:purchase.purchase_tip_3
 msgid "Get all the shipments related to this order."
 msgstr "Získať všetky zásielky spojené s touto objednávkou."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
+msgid "Gross Weight"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -723,27 +637,12 @@ msgstr "ID"
 msgid ""
 "If a product has been broken or damaged during the transport, you can scrap "
 "it with this button."
-msgstr "Ak bol produkt poškodený alebo zničený počas dopravy, môžete ho zošrotovať týmto tlačidlom."
+msgstr ""
+"Ak bol produkt poškodený alebo zničený počas dopravy, môžete ho zošrotovať "
+"týmto tlačidlom."
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid ""
-"If a purchase order is done, you cannot modify it manually anymore. You will"
-" not be able to receive invoices anymore for this purchase order."
-msgstr "Ak sa urobí nákupná objednávka, už ju nemôžete manuálne upravovať. Nebudete schopný viac príjmať faktúry pre túto nákupnú objednávku."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:184
+#: code:addons/purchase/purchase.py:186
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr "Pre zmazanie nákupnej objednávky ju musíte najskôr zrušiť."
@@ -753,7 +652,10 @@ msgstr "Pre zmazanie nákupnej objednávky ju musíte najskôr zrušiť."
 msgid ""
 "In the process of a public tendering, you can compare the tender lines and "
 "choose for each requested product which quantity you will buy from each bid."
-msgstr "V procese verejného ponukového konania, môžete porovnať súťažné riadky a vybrať si pre každý požadovaný produkt aké množstvo budete kupovať z ktorej ponuky."
+msgstr ""
+"V procese verejného ponukového konania, môžete porovnať súťažné riadky a "
+"vybrať si pre každý požadovaný produkt aké množstvo budete kupovať z ktorej "
+"ponuky."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -766,11 +668,6 @@ msgid "Incoming Shipments"
 msgstr "Prichádzajúce zásielky"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_picking_in_search_picking_inherit
-msgid "Incoming Shipments to Invoice"
-msgstr "Prichádzajúce zásielky na vyfaktúrovanie"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_incoterm_id
 msgid "Incoterm"
 msgstr "Incoterm"
@@ -780,7 +677,9 @@ msgstr "Incoterm"
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "Medzinárodné obchodné podmienky (Incoterms) sú zbierka predefinovaných obchodných podmienok používaných pri medzinárodných transakciách."
+msgstr ""
+"Medzinárodné obchodné podmienky (Incoterms) sú zbierka predefinovaných "
+"obchodných podmienok používaných pri medzinárodných transakciách."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_invoice
@@ -824,16 +723,6 @@ msgid "Invoices and Incoming Shipments"
 msgstr "Faktúry a prichádzajúce zásielky"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_is_follower
-msgid "Is Follower"
-msgstr "Je odberateľ"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_last_post
-msgid "Last Message Date"
-msgstr "Dátum poslednej správy"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings___last_update
 #: model:ir.model.fields,field_description:purchase.field_purchase_order___last_update
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line___last_update
@@ -866,6 +755,17 @@ msgid "Location & Warehouse"
 msgstr "Lokácia & Skladisko"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Lock Bills"
+msgstr "Účtenky predajcu"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Locked"
+msgstr ""
+
+#. module: purchase
 #: model:res.groups,name:purchase.group_manage_vendor_price
 msgid "Manage Vendor Price"
 msgstr "Spravovať cenu predajcu"
@@ -889,19 +789,12 @@ msgstr "Manuálne faktúry"
 #: model:ir.model.fields,help:purchase.field_res_company_po_lead
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for procuring products, they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
-msgstr "Odchýlka pre dodacie lehoty predajcov. Keď systém vygeneruje nákupnú objednávku pre obstaranie výrobkov, budú naplánované o toľko dní skôr pre vysporiadanie sa s nečakaným oneskorením predajcov."
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_ids
-msgid "Messages"
-msgstr "Správy"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_message_ids
-msgid "Messages and communication history"
-msgstr "Správa a história komunikácie"
+"Orders for procuring products, they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
+msgstr ""
+"Odchýlka pre dodacie lehoty predajcov. Keď systém vygeneruje nákupnú "
+"objednávku pre obstaranie výrobkov, budú naplánované o toľko dní skôr pre "
+"vysporiadanie sa s nečakaným oneskorením predajcov."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
@@ -918,7 +811,9 @@ msgstr "Mesačné nákupy"
 msgid ""
 "Most propositions of purchase orders are created automatically\n"
 "                by Odoo based on inventory needs."
-msgstr "Väčšina návrhov nákupných objednávok sú vytvorené automaticky\n                podľa Odoo na základe nastavených minimálnych zásob."
+msgstr ""
+"Väčšina návrhov nákupných objednávok sú vytvorené automaticky\n"
+"                podľa Odoo na základe nastavených minimálnych zásob."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -931,11 +826,13 @@ msgid "No variants on products"
 msgstr "Žiadne varianty pre produkty"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:771
+#: code:addons/purchase/purchase.py:893
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
-msgstr "Žiadny predajca pridružený k produktu %s. Prosím nastavte nejakého pre opravu tohto obstarávania."
+msgstr ""
+"Žiadny predajca pridružený k produktu %s. Prosím nastavte nejakého pre "
+"opravu tohto obstarávania."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -953,24 +850,17 @@ msgid "Notes"
 msgstr "Poznámky"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Počet akcií"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Počet správ ktoré vyžadujú akciu"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Počet neprečítaných správ"
-
-#. module: purchase
 #: selection:product.template,purchase_method:0
 msgid "On ordered quantities"
 msgstr "Na objednaných množstvách"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_product_product_purchase_method
+#: model:ir.model.fields,help:purchase.field_product_template_purchase_method
+msgid ""
+"On ordered quantities: Invoice this product based on ordered quantities.\n"
+"On received quantities: Invoice this product based on received quantity."
+msgstr ""
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -978,14 +868,9 @@ msgid "On received quantities"
 msgstr "Na obdržaných množstvách"
 
 #. module: purchase
-#: model:ir.actions.client,name:purchase.action_client_purchase_menu
-msgid "Open Purchase Menu"
-msgstr "Otvoriť nákupné menu"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_date_order
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_date_order
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_date_order
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Order Date"
 msgstr "Dátum objednávky"
@@ -1112,7 +997,7 @@ msgid "Product Category"
 msgstr "Kategória produktu"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report_quantity
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_unit_quantity
 msgid "Product Quantity"
 msgstr "Množstvo produktu"
 
@@ -1150,7 +1035,9 @@ msgstr "Hodnota produktov"
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr "Produkty môžu mať niekoľko atribútov, definujúce varianty (Príklad: veľkosť, farba, ...)"
+msgstr ""
+"Produkty môžu mať niekoľko atribútov, definujúce varianty (Príklad: veľkosť, "
+"farba, ...)"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_uom:0
@@ -1161,11 +1048,6 @@ msgstr "Produkty majú iba jednu mernú jednotku (jednoduchšie)"
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation
 msgid "Provide a double validation mechanism for purchases"
 msgstr "Poskytnite mechanizmus dvojitého overovania pre nákupy"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_mail_mail_website_published
-msgid "Published"
-msgstr "Publikované"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1183,7 +1065,10 @@ msgid ""
 "Purchase Analysis allows you to easily check and analyse your company "
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your vendors, etc."
-msgstr "Nákupná anlýza vám umožňuje jednoducho skontrolovať a analyzovať históriu nákupov a výkon vašej spoločnosti. Z tohto menu môžete sledovať výkon vašých vyjednávaní, výkon dodávania vašich predajcov, atď"
+msgstr ""
+"Nákupná anlýza vám umožňuje jednoducho skontrolovať a analyzovať históriu "
+"nákupov a výkon vašej spoločnosti. Z tohto menu môžete sledovať výkon vašých "
+"vyjednávaní, výkon dodávania vašich predajcov, atď"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lead
@@ -1247,7 +1132,7 @@ msgid "Purchase Orders Statistics"
 msgstr "Štatistiky nákupných objednávok"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:530
+#: code:addons/purchase/purchase.py:614
 #, python-format
 msgid "Purchase order line deleted."
 msgstr "Riadok nákupnej objednávky zmazaný."
@@ -1261,7 +1146,8 @@ msgstr "Nákupné objednávky ktoré obsahuú nevyfaktúrované riadky."
 #: selection:purchase.config.settings,module_purchase_requisition:0
 msgid ""
 "Purchase propositions trigger draft purchase orders to a single supplier"
-msgstr "Nákupné pozície spúšťajú koncept nákupných objednávok k jedinému dodávateľovi"
+msgstr ""
+"Nákupné pozície spúšťajú koncept nákupných objednávok k jedinému dodávateľovi"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_to_resupply
@@ -1290,7 +1176,9 @@ msgstr "Nákupy objednávok"
 msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
-msgstr "Poskytnite adresu ak chcete doručenie od predajcu priamo zákaznikovi. V opačnom prípade, nechajte prázdne pre doručenie do vašej spoločnosti."
+msgstr ""
+"Poskytnite adresu ak chcete doručenie od predajcu priamo zákaznikovi. V "
+"opačnom prípade, nechajte prázdne pre doručenie do vašej spoločnosti."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_qty
@@ -1374,9 +1262,11 @@ msgstr "Referencia mernej jednotky"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_origin
 msgid ""
-"Reference of the document that generated this purchase order request (e.g. a"
-" sale order or an internal procurement request)"
-msgstr "Referencia dokumentu ktorý vygeneroval túto žiadosť o nákupnú objednávku (napr. predajná objednávka alebo interná obstarávacia žiadosť)"
+"Reference of the document that generated this purchase order request (e.g. a "
+"sale order or an internal procurement request)"
+msgstr ""
+"Referencia dokumentu ktorý vygeneroval túto žiadosť o nákupnú objednávku "
+"(napr. predajná objednávka alebo interná obstarávacia žiadosť)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_partner_ref
@@ -1384,7 +1274,10 @@ msgid ""
 "Reference of the sales order or bid sent by the vendor. It's used to do the "
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
-msgstr "Odkaz na predajné objednávky alebo ponuky zaslanej dodávateľom. Používa sa na vytvorenie zhody keď dostanete produkty, keďže tento odkaz je zvyčajne napísaný na dodacej objenávke zaslanej vašim predajcom."
+msgstr ""
+"Odkaz na predajné objednávky alebo ponuky zaslanej dodávateľom. Používa sa "
+"na vytvorenie zhody keď dostanete produkty, keďže tento odkaz je zvyčajne "
+"napísaný na dodacej objenávke zaslanej vašim predajcom."
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
@@ -1445,8 +1338,13 @@ msgstr "Nastaviť pevnú cenu nákladov na každý produkt"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Set to Done"
-msgstr "Nastaviť ako Hotovo"
+#, fuzzy
+msgid ""
+"Set a purchase order as done if you don't want to receive vendor bills "
+"anymore for this purchase order."
+msgstr ""
+"Ak sa urobí nákupná objednávka, už ju nemôžete manuálne upravovať. Nebudete "
+"schopný viac príjmať faktúry pre túto nákupnú objednávku."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1470,9 +1368,12 @@ msgstr "Jednoduchá výzva na predkladanie ponúk (vybrať z jedného RFQ)"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_uom:0
+#, fuzzy
 msgid ""
-"Some products may be sold/puchased in different unit of measures (advanced)"
-msgstr "Niektoré výrobky môžu byť predávané / zakúpené v inej mernej jednotke (pokročilé)"
+"Some products may be sold/puchased in different units of measure (advanced)"
+msgstr ""
+"Niektoré výrobky môžu byť predávané / zakúpené v inej mernej jednotke "
+"(pokročilé)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_origin
@@ -1543,9 +1444,13 @@ msgstr "Pojmy a podmienky"
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
 msgid ""
 "The product form contains detailed information to improve the\n"
-"            purchase process: prices, procurement logistics, accounting data,\n"
+"            purchase process: prices, procurement logistics, accounting "
+"data,\n"
 "            available vendors, etc."
-msgstr "Formulár produktu podrobné obsahuje informácie pre zjednodušenie \nnákupného procesu: ceny, logistiky obstarávania, účtovné údaje,\ndostupných predajcov, atď."
+msgstr ""
+"Formulár produktu podrobné obsahuje informácie pre zjednodušenie \n"
+"nákupného procesu: ceny, logistiky obstarávania, účtovné údaje,\n"
+"dostupných predajcov, atď."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1553,22 +1458,31 @@ msgid ""
 "The quotation contains the history of the discussion/negotiation\n"
 "                you had with your vendor. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order."
-msgstr "Cenová ponuka obsahuje históriu diskusie/vyjednávania\nktoré ste mali s predajcom. Keď sa potvrdí, žiadosť o\ncenovú ponuku je prekonvertovaná na nákupnú objednávku."
+msgstr ""
+"Cenová ponuka obsahuje históriu diskusie/vyjednávania\n"
+"ktoré ste mali s predajcom. Keď sa potvrdí, žiadosť o\n"
+"cenovú ponuku je prekonvertovaná na nákupnú objednávku."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
-"                    converted into a purchase order, you will be able to control the receipt\n"
+"                    converted into a purchase order, you will be able to "
+"control the receipt\n"
 "                    of the products and the vendor bill."
-msgstr "Žiadosť o cenovú ponuku je prvý krok toku nákupov. Akonáhle\nprekonvertované na nákupnú objednávku, budete môcť kontrolovať príjem\nproduktov a účetnku predajcu."
+msgstr ""
+"Žiadosť o cenovú ponuku je prvý krok toku nákupov. Akonáhle\n"
+"prekonvertované na nákupnú objednávku, budete môcť kontrolovať príjem\n"
+"produktov a účetnku predajcu."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category_property_account_creditor_price_difference_categ
 msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
-msgstr "Tento účet bude používaný na hodnotenie cenového rozdielu medzi nákupnou cenou a účtovným nákladom."
+msgstr ""
+"Tento účet bude používaný na hodnotenie cenového rozdielu medzi nákupnou "
+"cenou a účtovným nákladom."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_property_account_creditor_price_difference
@@ -1576,19 +1490,24 @@ msgstr "Tento účet bude používaný na hodnotenie cenového rozdielu medzi n�
 msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
-msgstr "tento účet bude použitý na vyčíslenie rozdielu medzi nákupnou cenou a skutočným nákladom."
+msgstr ""
+"tento účet bude použitý na vyčíslenie rozdielu medzi nákupnou cenou a "
+"skutočným nákladom."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
 msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
-msgstr "Táto mena bude pouźitá, namiesto predvolenej, pre nákupy od aktuálneho partnera"
+msgstr ""
+"Táto mena bude pouźitá, namiesto predvolenej, pre nákupy od aktuálneho "
+"partnera"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Click to create a new RfQ."
-msgstr "Predajca nemá žiadnu nákpnú objedávku. Kliknite pre vytvorenie novej RFQ."
+msgstr ""
+"Predajca nemá žiadnu nákpnú objedávku. Kliknite pre vytvorenie novej RFQ."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_picking_type_id
@@ -1596,6 +1515,7 @@ msgid "This will determine picking type of incoming shipment"
 msgstr "Toto určí typ odberu prichádzajúcej zásielky"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "To Approve"
 msgstr "Na schválenie"
@@ -1627,20 +1547,22 @@ msgid "Transfer"
 msgstr "Prevod"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:283
+#: code:addons/purchase/purchase.py:300
 #, python-format
 msgid ""
-"Unable to cancel purchase order %s as some receptions have already been "
-"done."
-msgstr "Nemožno zrušiť nákupnú objednávku %s, keďže niektoré príjmy už boli urobené."
+"Unable to cancel purchase order %s as some receptions have already been done."
+msgstr ""
+"Nemožno zrušiť nákupnú objednávku %s, keďže niektoré príjmy už boli urobené."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:286
-#, python-format
+#: code:addons/purchase/purchase.py:303
+#, fuzzy, python-format
 msgid ""
-"Unable to cancel this purchase order.i You must first cancel related vendor "
+"Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
-msgstr "Nemožno zrušiť túto nákupnú objednávku. Najskôr musíte zrušiť pridružené účtenky predajcu."
+msgstr ""
+"Nemožno zrušiť túto nákupnú objednávku. Najskôr musíte zrušiť pridružené "
+"účtenky predajcu."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1654,24 +1576,10 @@ msgstr "Kategórie merných jednotiek"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_uom
-msgid "Unit of Measures"
-msgstr "Merné jednotky"
-
-#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
 msgstr "Merné jednotky"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_unread
-msgid "Unread Messages"
-msgstr "Neprečítané správy"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Počítadlo neprečítaných správ"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
@@ -1686,7 +1594,9 @@ msgstr "Suma bez DPH"
 #. module: purchase
 #: selection:purchase.config.settings,group_costing_method:0
 msgid "Use a 'Fixed', 'Real' or 'Average' price costing method"
-msgstr "Použite \"Pevná\", \"Skutočná\" alebo \"Priemerná\" ako metódu cenovej kalkulácie"
+msgstr ""
+"Použite \"Pevná\", \"Skutočná\" alebo \"Priemerná\" ako metódu cenovej "
+"kalkulácie"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -1695,16 +1605,25 @@ msgid ""
 "            vendor. When registering a new bill, set the purchase order\n"
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
-msgstr "Použite toto menu na kontrolu faktúr ktoré obdržíte od vášho \npredajcu. keď registrujete novú účtenku, nastavte nákupnú objednávku \na Odoo vypni účtenku automaticky podľa objednaného\nalebo obdržaného množstva."
+msgstr ""
+"Použite toto menu na kontrolu faktúr ktoré obdržíte od vášho \n"
+"predajcu. keď registrujete novú účtenku, nastavte nákupnú objednávku \n"
+"a Odoo vypni účtenku automaticky podľa objednaného\n"
+"alebo obdržaného množstva."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
 msgid ""
 "Use this menu to search within your purchase orders by\n"
 "                references, vendor, products, etc. For each purchase order,\n"
-"                you can track the related discussion with the vendor, control\n"
+"                you can track the related discussion with the vendor, "
+"control\n"
 "                the products received and control the vendor bills."
-msgstr "Použite toto menu na vyhľadávanie vo vašich nákupných objednávkach podľa\nreferencií, predajcu, produktov, atď. Pre každú nákupnú objednávku,\nmôžete sledovať súvisiacu diskusiu s predajcom, konrolovať\nprijaté produkty, a kontrolovať účtenky predajcu."
+msgstr ""
+"Použite toto menu na vyhľadávanie vo vašich nákupných objednávkach podľa\n"
+"referencií, predajcu, produktov, atď. Pre každú nákupnú objednávku,\n"
+"môžete sledovať súvisiacu diskusiu s predajcom, konrolovať\n"
+"prijaté produkty, a kontrolovať účtenky predajcu."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -1758,12 +1677,16 @@ msgid ""
 "                    orders or receipts. This allows you to control bills\n"
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
-msgstr "Účtenky predajcu môžu byť predvytvorené, na základe nákupných\nobjednávok alebo príjmov. Toto vám umožňuje kontrolovať účtenky\nktoré obdržíte od vášho predajcu, na základe konceptu \ndokumentu v Odoo."
+msgstr ""
+"Účtenky predajcu môžu byť predvytvorené, na základe nákupných\n"
+"objednávok alebo príjmov. Toto vám umožňuje kontrolovať účtenky\n"
+"ktoré obdržíte od vášho predajcu, na základe konceptu \n"
+"dokumentu v Odoo."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_mail_mail_website_published
-msgid "Visible on the website as a comment"
-msgstr "Viditeľné na webstránke ako komentár"
+#: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
+msgid "Volume"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
@@ -1777,16 +1700,6 @@ msgid "Warehouse"
 msgstr "Sklad"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_website_message_ids
-msgid "Website Messages"
-msgstr "Správy webovej stránky"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_website_message_ids
-msgid "Website communication history"
-msgstr "História komunikácie webovej stránky"
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
 msgid "When products are bought, they can be delivered to this warehouse"
 msgstr "Keď sú produkty zakúpené, môźu byť doručené do tohto skladiska"
@@ -1796,22 +1709,30 @@ msgstr "Keď sú produkty zakúpené, môźu byť doručené do tohto skladiska"
 msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
-msgstr "Práca s variantou produktu vám umožňuje určovať variantu tých istých produktov, napríklad ľahkosťou spravovania produktu v e-commerce "
+msgstr ""
+"Práca s variantou produktu vám umožňuje určovať variantu tých istých "
+"produktov, napríklad ľahkosťou spravovania produktu v e-commerce "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid ""
 "You can control the invoice from your vendor according to\n"
 "            what you purchased (services) or received (products)."
-msgstr "Môžete kontrolovať faktúru od svojho predajcu podľa\ntoho, čo ste si zakúpili (služby) alebo dostali (produkty)."
+msgstr ""
+"Môžete kontrolovať faktúru od svojho predajcu podľa\n"
+"toho, čo ste si zakúpili (služby) alebo dostali (produkty)."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
+#, fuzzy
 msgid ""
 "You must define a product for everything you purchase, whether\n"
 "            it's a physical product, a consumable or services you buy to\n"
-"            subcontractants."
-msgstr "Musíte definovať produkt pre všetko čo nakúpite, či je to\nfyzický produkt, niečo spotrebné alebo služba čo kupujete vašim\npoddodávateľom."
+"            subcontractors."
+msgstr ""
+"Musíte definovať produkt pre všetko čo nakúpite, či je to\n"
+"fyzický produkt, niečo spotrebné alebo služba čo kupujete vašim\n"
+"poddodávateľom."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:335
@@ -1820,16 +1741,365 @@ msgid "You must set a Vendor Location for this partner %s"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_account_config_settings
-msgid "account.config.settings"
-msgstr "account.config.settings"
-
-#. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_settings
 msgid "purchase.config.settings"
 msgstr "purchase.config.settings"
 
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_mail_mail_description
-msgid "unknown"
-msgstr "neznáme"
+#~ msgid ""
+#~ "\n"
+#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+#~ "\">\n"
+#~ "\n"
+#~ "    <p>Hello ${object.partner_id.name},</p>\n"
+#~ "\n"
+#~ "    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
+#~ "quotation' or 'purchase order confirmation'} from ${object.company_id."
+#~ "name}: </p>\n"
+#~ "\n"
+#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+#~ "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+#~ "       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object."
+#~ "currency_id.name}</strong><br />\n"
+#~ "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+#~ "       % if object.origin:\n"
+#~ "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+#~ "       % endif\n"
+#~ "       % if object.partner_ref:\n"
+#~ "       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
+#~ "       % endif\n"
+#~ "       % if object.create_uid:\n"
+#~ "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.create_uid."
+#~ "email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</"
+#~ "a>\n"
+#~ "       % endif\n"
+#~ "    </p>\n"
+#~ "\n"
+#~ "    <br/>\n"
+#~ "    <p>If you have any question, do not hesitate to contact us.</p>\n"
+#~ "    <p>Thank you!</p>\n"
+#~ "    <br/>\n"
+#~ "    <br/>\n"
+#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
+#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
+#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
+#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
+#~ "color: #DDD;\">\n"
+#~ "            <strong style=\"text-transform:uppercase;\">${object."
+#~ "company_id.name}</strong></h3>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
+#~ "height: 16px; background-color: #F2F2F2;\">\n"
+#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
+#~ "\">\n"
+#~ "            ${object.company_id.partner_id.sudo()."
+#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
+#~ "safe}\n"
+#~ "        </span>\n"
+#~ "        % if object.company_id.phone:\n"
+#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
+#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
+#~ "                Phone:&nbsp; ${object.company_id.phone}\n"
+#~ "            </div>\n"
+#~ "        % endif\n"
+#~ "        % if object.company_id.website:\n"
+#~ "            <div>\n"
+#~ "                Web :&nbsp;<a href=\"${object.company_id.website}\">"
+#~ "${object.company_id.website}</a>\n"
+#~ "            </div>\n"
+#~ "        %endif\n"
+#~ "        <p></p>\n"
+#~ "    </div>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+#~ "\">\n"
+#~ "\n"
+#~ "<p>Dobrý deň ${object.partner_id.name},</p>\n"
+#~ "\n"
+#~ "<p>Tu je ${object.state in ('draft', 'sent') and 'request for quotation' "
+#~ "or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n"
+#~ "\n"
+#~ "<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+#~ "&nbsp;&nbsp;<strong>REFERENCIE</strong><br />\n"
+#~ "&nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+#~ "&nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object."
+#~ "currency_id.name}</strong><br />\n"
+#~ "&nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+#~ "% if object.origin:\n"
+#~ "&nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+#~ "% endif\n"
+#~ "% if object.partner_ref:\n"
+#~ "&nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
+#~ "% endif\n"
+#~ "% if object.create_uid:\n"
+#~ "&nbsp;&nbsp;Your contact: <a href=\"mailto:${object.create_uid.email or "
+#~ "''}?subject=Order%20${object.name}\">${object.create_uid.name}</a>\n"
+#~ "% endif\n"
+#~ "</p>\n"
+#~ "\n"
+#~ "<br/>\n"
+#~ "<p>Ak máte akékoľvek otázky, neváhajte nás kontaktovať.</p>\n"
+#~ "<p>Vďaka!</p>\n"
+#~ "<br/>\n"
+#~ "<br/>\n"
+#~ "<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+#~ "#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px "
+#~ "5px; background-repeat: repeat no-repeat;\">\n"
+#~ "<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;"
+#~ "\">\n"
+#~ "<strong style=\"text-transform:uppercase;\">${object.company_id.name}</"
+#~ "strong></h3>\n"
+#~ "</div>\n"
+#~ "<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+#~ "16px; background-color: #F2F2F2;\">\n"
+#~ "<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+#~ "${object.company_id.partner_id.sudo().with_context(show_address=True, "
+#~ "html_format=True).name_get()[0][1] | safe}\n"
+#~ "</span>\n"
+#~ "% if object.company_id.phone:\n"
+#~ "<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; "
+#~ "margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+#~ "0px; padding-left: 0px; \">\n"
+#~ "Phone:&nbsp; ${object.company_id.phone}\n"
+#~ "</div>\n"
+#~ "% endif\n"
+#~ "% if object.company_id.website:\n"
+#~ "<div>\n"
+#~ "Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id."
+#~ "website}</a>\n"
+#~ "</div>\n"
+#~ "%endif\n"
+#~ "<p></p>\n"
+#~ "</div>\n"
+#~ "</div>"
+
+#~ msgid ""
+#~ "\n"
+#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+#~ "\">\n"
+#~ "\n"
+#~ "    <p>Hello ${object.partner_id.name},</p>\n"
+#~ "\n"
+#~ "    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
+#~ "quotation' or 'purchase order confirmation'} from ${object.company_id."
+#~ "name}: </p>\n"
+#~ "\n"
+#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+#~ "       &nbsp;&nbsp;RFQ number: <strong>${object.name}</strong><br />\n"
+#~ "       &nbsp;&nbsp;RFQ date: ${object.date_order}<br />\n"
+#~ "       % if object.origin:\n"
+#~ "       &nbsp;&nbsp;RFQ reference: ${object.origin}<br />\n"
+#~ "       % endif\n"
+#~ "       % if object.partner_ref:\n"
+#~ "       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
+#~ "       % endif\n"
+#~ "       % if object.create_uid:\n"
+#~ "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.create_uid."
+#~ "email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</"
+#~ "a>\n"
+#~ "       % endif\n"
+#~ "    </p>\n"
+#~ "\n"
+#~ "    <br/>\n"
+#~ "    <p>If you have any question, do not hesitate to contact us.</p>\n"
+#~ "    <p>Thank you!</p>\n"
+#~ "    <br/>\n"
+#~ "    <br/>\n"
+#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
+#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
+#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
+#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
+#~ "color: #DDD;\">\n"
+#~ "            <strong style=\"text-transform:uppercase;\">${object."
+#~ "company_id.name}</strong></h3>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
+#~ "height: 16px; background-color: #F2F2F2;\">\n"
+#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
+#~ "\">\n"
+#~ "            ${object.company_id.partner_id.sudo()."
+#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
+#~ "safe}\n"
+#~ "        </span>\n"
+#~ "        % if object.company_id.phone:\n"
+#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
+#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
+#~ "                Phone:&nbsp; ${object.company_id.phone}\n"
+#~ "            </div>\n"
+#~ "        % endif\n"
+#~ "        % if object.company_id.website:\n"
+#~ "            <div>\n"
+#~ "                Web :&nbsp;<a href=\"${object.company_id.website}\">"
+#~ "${object.company_id.website}</a>\n"
+#~ "            </div>\n"
+#~ "        %endif\n"
+#~ "        <p></p>\n"
+#~ "    </div>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+#~ "\">\n"
+#~ "\n"
+#~ "<p>Dobrý deň ${object.partner_id.name},</p>\n"
+#~ "\n"
+#~ "<p>Tu je ${object.state in ('draft', 'sent') and 'request for quotation' "
+#~ "or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n"
+#~ "\n"
+#~ "<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+#~ "&nbsp;&nbsp;<strong>REFERENCIE</strong><br />\n"
+#~ "&nbsp;&nbsp;RFQ number: <strong>${object.name}</strong><br />\n"
+#~ "&nbsp;&nbsp;RFQ date: ${object.date_order}<br />\n"
+#~ "% if object.origin:\n"
+#~ "&nbsp;&nbsp;RFQ reference: ${object.origin}<br />\n"
+#~ "% endif\n"
+#~ "% if object.partner_ref:\n"
+#~ "&nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
+#~ "% endif\n"
+#~ "% if object.create_uid:\n"
+#~ "&nbsp;&nbsp;Your contact: <a href=\"mailto:${object.create_uid.email or "
+#~ "''}?subject=Order%20${object.name}\">${object.create_uid.name}</a>\n"
+#~ "% endif\n"
+#~ "</p>\n"
+#~ "\n"
+#~ "<br/>\n"
+#~ "<p>Ak máte akékoľvek otázky, neváhajte nás kontaktovať.</p>\n"
+#~ "<p>Vďaka!</p>\n"
+#~ "<br/>\n"
+#~ "<br/>\n"
+#~ "<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+#~ "#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px "
+#~ "5px; background-repeat: repeat no-repeat;\">\n"
+#~ "<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;"
+#~ "\">\n"
+#~ "<strong style=\"text-transform:uppercase;\">${object.company_id.name}</"
+#~ "strong></h3>\n"
+#~ "</div>\n"
+#~ "<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+#~ "16px; background-color: #F2F2F2;\">\n"
+#~ "<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+#~ "${object.company_id.partner_id.sudo().with_context(show_address=True, "
+#~ "html_format=True).name_get()[0][1] | safe}\n"
+#~ "</span>\n"
+#~ "% if object.company_id.phone:\n"
+#~ "<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; "
+#~ "margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+#~ "0px; padding-left: 0px; \">\n"
+#~ "Phone:&nbsp; ${object.company_id.phone}\n"
+#~ "</div>\n"
+#~ "% endif\n"
+#~ "% if object.company_id.website:\n"
+#~ "<div>\n"
+#~ "Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id."
+#~ "website}</a>\n"
+#~ "</div>\n"
+#~ "%endif\n"
+#~ "<p></p>\n"
+#~ "</div>\n"
+#~ "</div>"
+
+#~ msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
+#~ msgstr ""
+#~ "${object.company_id.name|safe} Objednávka (Ref ${object.name or 'n/a' })"
+
+#~ msgid "Action Needed"
+#~ msgstr "Potrebná akcia"
+
+#~ msgid "Allows you to specify an analytic account on purchase order lines."
+#~ msgstr ""
+#~ "Umožňuje vám špecifikovať analytický účet na riadkoch nákupnej objednávky."
+
+#~ msgid "Analytic accounting for purchases"
+#~ msgstr "Analytické účtovníctvo pre nákupy"
+
+#~ msgid "Click to mark products as received."
+#~ msgstr "Kliknite pre označenie produktov ako prijatých."
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Dátum poslednej správy zaslanej záznamu."
+
+#~ msgid "Expected Date"
+#~ msgstr "Očakávaný dátum"
+
+#~ msgid "Followers"
+#~ msgstr "Odberatelia"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Odberatelia (Kanály)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Odberatelia (Partneri)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "Incoming Shipments to Invoice"
+#~ msgstr "Prichádzajúce zásielky na vyfaktúrovanie"
+
+#~ msgid "Is Follower"
+#~ msgstr "Je odberateľ"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Dátum poslednej správy"
+
+#~ msgid "Messages"
+#~ msgstr "Správy"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Správa a história komunikácie"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Počet akcií"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Počet správ ktoré vyžadujú akciu"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Počet neprečítaných správ"
+
+#~ msgid "Open Purchase Menu"
+#~ msgstr "Otvoriť nákupné menu"
+
+#~ msgid "Published"
+#~ msgstr "Publikované"
+
+#~ msgid "Set to Done"
+#~ msgstr "Nastaviť ako Hotovo"
+
+#~ msgid "Unit of Measures"
+#~ msgstr "Merné jednotky"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Neprečítané správy"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Počítadlo neprečítaných správ"
+
+#~ msgid "Visible on the website as a comment"
+#~ msgstr "Viditeľné na webstránke ako komentár"
+
+#~ msgid "Website Messages"
+#~ msgstr "Správy webovej stránky"
+
+#~ msgid "Website communication history"
+#~ msgstr "História komunikácie webovej stránky"
+
+#~ msgid "account.config.settings"
+#~ msgstr "account.config.settings"
+
+#~ msgid "unknown"
+#~ msgstr "neznáme"
