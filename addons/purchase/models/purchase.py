@@ -355,6 +355,10 @@ class PurchaseOrder(models.Model):
         self.write({'state': 'cancel'})
 
     @api.multi
+    def button_unlock(self):
+        self.write({'state': 'purchase'})
+
+    @api.multi
     def button_done(self):
         self.write({'state': 'done'})
 
