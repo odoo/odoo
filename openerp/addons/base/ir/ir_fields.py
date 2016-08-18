@@ -402,7 +402,11 @@ class IrFieldsConverter(models.AbstractModel):
             id, _, ws = self.db_id_for(model, field, subfield, reference)
             ids.append(id)
             warnings.extend(ws)
-        return [REPLACE_WITH(ids)], warnings
+
+        if self._context.get('update_many2many'):
+            return [LINK_TO(id) for id in ids], warnings
+        else:
+            return [REPLACE_WITH(ids)], warnings
 
     @api.model
     def _str_to_one2many(self, model, field, records):
