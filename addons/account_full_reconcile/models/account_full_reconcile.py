@@ -79,8 +79,8 @@ class AccountPartialReconcile(models.Model):
 
             #in that case, mark the reference on the partial reconciliations and the entries
             self.env['account.full.reconcile'].with_context(check_move_validity=False).create({
-                'partial_reconcile_ids': [(6, 0, partial_rec_ids)],
-                'reconciled_line_ids': [(6, 0, aml_ids)]})
+                'partial_reconcile_ids': [(4, p_id) for p_id in partial_rec_ids],
+                'reconciled_line_ids': [(4, a_id) for a_id in aml_ids]})
         return res
 
     @api.multi
