@@ -237,7 +237,7 @@ class res_currency(osv.osv):
             That function expects the number as first parameter and the currency id as second parameter.
             If the currency id parameter is false or undefined, the company currency is used.
         """
-        company_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
+        company_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=dict(context or {}, active_test=False)).company_id.currency_id.id
         function = ""
         for row in self.search_read(cr, uid, domain=[], fields=['id', 'name', 'symbol', 'decimal_places', 'position'], context=context):
             symbol = row['symbol'] or row['name']
