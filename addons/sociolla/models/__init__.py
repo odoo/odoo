@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import product, product_brand
+import product
 import sale 
 import account_invoice

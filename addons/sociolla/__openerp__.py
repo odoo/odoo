@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Socioll Addons",
+    'name': "Sociolla Addons",
     'summary': """
-        Addon featured for PT. Social Bella Indonesia""",
+        Addon feature for PT. Social Bella Indonesia""",
 
     'description': """
         Version 1:
             - Add posting journal Sales Discount
             - Add posting journal Sales Return
-            - Add brand for product
     """,
 
     'author': "Internal Development - PT. Social Bella Indonesia",
@@ -22,8 +21,5 @@
 
     'data': [
         'views/product_view.xml',
-        'views/product_brand_view.xml',
-
-        'security/ir.model.access.csv',
     ],
 }

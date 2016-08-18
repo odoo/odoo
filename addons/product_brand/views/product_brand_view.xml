@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="product_brand_search_form_view" model="ir.ui.view">
+            <field name="name">product.brand.search.form</field>
+            <field name="model">product.brand</field>
+            <field name="arch" type="xml">
+                <search string="Product Brand">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                </search>
+            </field>
+        </record>
+
+        <act_window
+            id="action_open_brand_products"
+            name="Brand Products"
+            res_model="product.template"
+            view_type="form"
+            view_mode="kanban,form,tree"
+            domain="[('product_brand_id', '=', active_id)]"/>
+
+        <act_window
+            id="action_open_single_product_brand"
+            name="Product Brand"
+            res_model="product.brand"
+            view_type="form"
+            view_mode="kanban,form,tree"
+            target="current"
+            domain="[('product_ids', 'in', active_id)]"/>
+
+        <record id="view_product_brand_form" model="ir.ui.view">
+            <field name="name">product.brand.form</field>
+            <field name="model">product.brand</field>
+            <field name="arch" type="xml">
+                <form string="Product Brand" version="7.0">
+                    <sheet>
+                        <field name="logo" widget="image" class="oe_avatar oe_left"/>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Brand Name"/>
+                            </div>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <div class="oe_right oe_button_box">
+                            <button
+                                class="oe_inline oe_stat_button"
+                                type="action"
+                                name="%(action_open_brand_products)d"
+                                icon="fa-cubes">
+                                <field name="products_count" string="Products" widget="statinfo" />
+                            </button>
+                        </div>
+                        <group>
+                            <field name="partner_id"/>
+                        </group>
+                        <group string="Description">
+                            <field name="description" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_product_brand_tree" model="ir.ui.view">
+            <field name="name">product.brand.tree</field>
+            <field name="model">product.brand</field>
+            <field name="arch" type="xml">
+                <tree string="product.brand">
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="partner_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_product_brand_kanban" model="ir.ui.view">
+            <field name="name">product.brand.kanban</field>
+            <field name="model">product.brand</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="logo"/>
+                    <field name="products_count"/>
+                    <field name="description"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_vignette oe_semantic_html_override">
+                                <a type="open">
+                                    <img t-att-src="kanban_image('product.product', 'logo', record.id.value)"
+                                         class="oe_kanban_image"/>
+                                </a>
+                                <div class="oe_kanban_details">
+                                    <h4>
+                                        <a type="open">
+                                            <field name="name"/>
+                                        </a>
+                                    </h4>
+                                    <div>
+                                        <a name="%(product_brand.action_open_brand_products)d"
+                                           type="action">
+                                            <t t-esc="record.products_count.value"/> Products
+                                        </a>
+                                    </div>
+                                    <span>
+                                        <t t-esc="record.description.value.substr(0,200)"/>
+                                        <t t-if="record.description.value.length > 200">
+                                            <a type="open"><b>...</b></a>
+                                        </t>
+                                    </span>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_product_template_search_brand" model="ir.ui.view">
+            <field name="name">product.template.search.brand</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="product_brand_id"/>
+                    <filter string="Brand" name="groupby_brand" domain="[]"
+                            context="{'group_by' : 'product_brand_id'}"/>
+                    <separator/>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_template_form_brand_add" model="ir.ui.view">
+            <field name="name">product.template.product.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view" />
+            <field name="arch" type="xml">
+                <field name="name" position="after"  >
+                    <field name="product_brand_id" placeholder="Brand"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_product_template_kanban_brand" model="ir.ui.view">
+            <field name="name">product kanban view: add brand</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_kanban_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_kanban_details']/strong[1]" position="after">
+                    <div>
+                        <a t-if="record.product_brand_id" type="action"
+                           name="%(action_open_single_product_brand)d">
+                            <field name="product_brand_id"/>
+                        </a>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_product_variant_kanban_brand" model="ir.ui.view">
+            <field name="name">product variant kanban view: add brand</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_kanban_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='o_kanban_tags_section']" position="after">
+                    <div>
+                        <a t-if="record.product_brand_id" type="open">
+                            <field name="product_brand_id"/>
+                        </a>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_product_template_tree_brand" model="ir.ui.view">
+            <field name="name">product tree view: add brand</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view" />
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="product_brand_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_product_variant_tree_brand" model="ir.ui.view">
+            <field name="name">product variant tree view: add brand</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view" />
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="product_brand_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_product_brand">
+            <field name="name">Brand</field>
+            <field name="res_model">product.brand</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,form,tree</field>
+        </record>
+
+        <menuitem
+            name="Product Brands"
+            id="menu_product_brand"
+            action="action_product_brand"
+            parent="base.menu_product"/>
+
+    </data>
+</openerp>
