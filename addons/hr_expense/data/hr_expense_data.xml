@@ -42,18 +42,24 @@
             <field name="name">Approved</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="default" eval="True"/>
-            <field name="description">Expense approved</field>
+            <field name="description">Expense report approved</field>
         </record>
         <record id="mt_expense_refused" model="mail.message.subtype">
             <field name="name">Refused</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="default" eval="True"/>
-            <field name="description">Expense refused</field>
+            <field name="description">Expense report refused</field>
         </record>
         <record id="mt_expense_confirmed" model="mail.message.subtype">
-            <field name="name">To Approve</field>
+            <field name="name">Submitted</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="description">Expense confirmed, waiting confirmation</field>
+            <field name="description">Expense report submitted, waiting approval</field>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mt_expense_paid" model="mail.message.subtype">
+            <field name="name">Paid</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="description">Expense report paid</field>
             <field name="default" eval="False"/>
         </record>
         <!-- Department (Parent) related subtypes for messaging / Chatter -->
