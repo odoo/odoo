@@ -17,6 +17,7 @@
             <field name="alias_name">expense</field>
             <field name="alias_model_id" ref="model_hr_expense"/>
             <field name="alias_user_id" ref="base.user_root"/>
+            <field name="alias_contact">employees</field>
         </record>
 
 
@@ -65,15 +66,5 @@
             <field name="sequence" eval="10"/>
         </record>
 
-        <record id="mail_template_data_expense_unknown_email_address" model="mail.template">
-            <field name="name">HrExpense: unknown employee bounce</field>
-            <field name="subject">Your expense has not been created</field>
-            <field name="email_from">help@odoo.com</field>
-            <field name="email_to">${ctx['email_to']|safe}</field>
-            <field name="lang">${user.lang}</field>
-            <field name="model_id" ref="base.model_ir_module_module"/>
-            <field name="auto_delete" eval="True"/>
-            <field name="body_html" ><![CDATA[Your expense has not been created because your email address is not set on an employee or on a employee's user. Configure your employee's information correctly and try again.]]></field>
-        </record>
     </data>
 </odoo>

@@ -289,21 +289,14 @@ class HrExpense(models.Model):
     def message_new(self, msg_dict, custom_values=None):
         if custom_values is None:
             custom_values = {}
-        # Retrieve the email address from the email field. The string is constructed like
-        # 'foo <bar>'. We will extract 'bar' from this
+
         email_address = email_split(msg_dict.get('email_from', False))[0]
 
-        # Look after an employee who has this email address or an employee for whom the related
-        # user has this email address. In the case not employee is found, we send back an email
-        # to explain that the expense will not be created.
-        employee = self.env['hr.employee'].search([('work_email', 'ilike', email_address)], limit=1)
-        if not employee:
-            employee = self.env['hr.employee'].search([('user_id.email', 'ilike', email_address)], limit=1)
-        if not employee:
-            # Send back an email to explain why the expense has not been created
-            mail_template = self.env.ref('hr_expense.mail_template_data_expense_unknown_email_address')
-            mail_template.with_context(email_to=email_address).send_mail(self.env.ref('base.module_hr_expense').id)
-            return False
+        employee = self.env['hr.employee'].search([
+            '|',
+            ('work_email', 'ilike', email_address),
+            ('user_id.email', 'ilike', email_address)
+        ], limit=1)
 
         expense_description = msg_dict.get('subject', '')
 
