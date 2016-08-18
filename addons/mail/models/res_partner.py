@@ -4,7 +4,7 @@
 import logging
 import threading
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, registry, SUPERUSER_ID
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -145,7 +145,7 @@ class Partner(models.Model):
             })
 
     @api.multi
-    def _notify(self, message, force_send=False, user_signature=True):
+    def _notify(self, message, force_send=False, send_after_commit=True, user_signature=True):
         # TDE TODO: model-dependant ? (like customer -> always email ?)
         message_sudo = message.sudo()
         email_channels = message.channel_ids.filtered(lambda channel: channel.email_send)
@@ -154,14 +154,19 @@ class Partner(models.Model):
             ('id', 'in', self.ids),
             ('channel_ids', 'in', email_channels.ids),
             ('email', '!=', message_sudo.author_id and message_sudo.author_id.email or message.email_from),
-            ('notify_email', '!=', 'none')])._notify_by_email(message, force_send=force_send, user_signature=user_signature)
+            ('notify_email', '!=', 'none')])._notify_by_email(message, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
         self._notify_by_chat(message)
         return True
 
     @api.multi
-    def _notify_by_email(self, message, force_send=False, user_signature=True):
+    def _notify_by_email(self, message, force_send=False, send_after_commit=True, user_signature=True):
         """ Method to send email linked to notified messages. The recipients are
-        the recordset on which this method is called. """
+        the recordset on which this method is called.
+
+        :param boolean force_send: send notification emails now instead of letting the scheduler handle the email queue
+        :param boolean send_after_commit: send notification emails after the transaction end instead of durign the
+                                          transaction; this option is used only if force_send is True
+        :param user_signature: add current user signature to notification emails """
         if not self.ids:
             return True
 
@@ -220,9 +225,24 @@ class Partner(models.Model):
         #   2. do not send emails immediately if the registry is not loaded,
         #      to prevent sending email during a simple update of the database
         #      using the command-line.
+        test_mode = getattr(threading.currentThread(), 'testing', False)
         if force_send and recipients_nbr < recipients_max and \
-                (not self.pool._init or getattr(threading.currentThread(), 'testing', False)):
-            emails.send()
+                (not self.pool._init or test_mode):
+            email_ids = emails.ids
+            dbname = self.env.cr.dbname
+
+            def send_notifications():
+                db_registry = registry(dbname)
+                with db_registry.cursor() as cr:
+                    env = api.Environment(cr, SUPERUSER_ID, {})
+                    env['mail.mail'].browse(email_ids).send()
+
+            # unless asked specifically, send emails after the transaction to
+            # avoid side effects due to emails being sent while the transaction fails
+            if not test_mode and send_after_commit:
+                self._cr.after('commit', send_notifications)
+            else:
+                emails.send()
 
         return True
 

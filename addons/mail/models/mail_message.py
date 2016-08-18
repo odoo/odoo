@@ -749,7 +749,7 @@ class Message(models.Model):
     #------------------------------------------------------
 
     @api.multi
-    def _notify(self, force_send=False, user_signature=True):
+    def _notify(self, force_send=False, send_after_commit=True, user_signature=True):
         """ Add the related record followers to the destination partner_ids if is not a private message.
             Call mail_notification.notify to manage the email sending
         """
@@ -786,7 +786,7 @@ class Message(models.Model):
         self.write({'channel_ids': [(6, 0, channels.ids)], 'needaction_partner_ids': [(6, 0, partners.ids)]})
 
         # notify partners and channels
-        partners._notify(self, force_send=force_send, user_signature=user_signature)
+        partners._notify(self, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
         channels._notify(self)
 
         # Discard cache, because child / parent allow reading and therefore
