@@ -4478,11 +4478,6 @@ class stock_picking_type(osv.osv):
             name = record.name
             if record.warehouse_id:
                 name = record.warehouse_id.name + ': ' +name
-            if context.get('special_shortened_wh_name'):
-                if record.warehouse_id:
-                    name = record.warehouse_id.name
-                else:
-                    name = _('Customer') + ' (' + record.name + ')'
             res.append((record.id, name))
         return res
 
