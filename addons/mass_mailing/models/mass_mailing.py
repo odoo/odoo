@@ -9,6 +9,7 @@ from openerp import SUPERUSER_ID
 from openerp.exceptions import UserError
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import html_translate
 from openerp.osv import osv, fields
 
 
@@ -478,7 +479,7 @@ class MassMailing(osv.Model):
         'create_date': fields.datetime('Creation Date'),
         'sent_date': fields.datetime('Sent Date', oldname='date', copy=False),
         'schedule_date': fields.datetime('Schedule in the Future'),
-        'body_html': fields.html('Body', translate=True, sanitize=False),
+        'body_html': fields.html('Body', translate=html_translate, sanitize=False),
         'attachment_ids': fields.many2many(
             'ir.attachment', 'mass_mailing_ir_attachments_rel',
             'mass_mailing_id', 'attachment_id', 'Attachments'
