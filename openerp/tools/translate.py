@@ -850,7 +850,7 @@ def trans_generate(lang, modules, cr):
             if (field_model is None or not field_model._translate or
                     field_name not in field_model._fields):
                 continue
-            field = field_model._fields.get[field_name]
+            field = field_model._fields[field_name]
 
             if isinstance(getattr(field, 'selection', None), (list, tuple)):
                 name = "%s,%s" % (encode(record.model), field_name)
