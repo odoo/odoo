@@ -82,7 +82,7 @@ class Website(Home):
     def web_login(self, redirect=None, *args, **kw):
         response = super(Website, self).web_login(redirect=redirect, *args, **kw)
         if not redirect and request.params['login_success']:
-            if request.env.user.has_group('base.group_user'):
+            if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
                 redirect = '/web?' + request.httprequest.query_string
             else:
                 redirect = '/'
