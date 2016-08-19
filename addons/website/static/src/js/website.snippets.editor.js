@@ -31,9 +31,8 @@ options.registry.menu_data = options.Class.extend({
             title: _t("Confirmation"),
             $content: $(core.qweb.render("website.leaving_current_page_edition")),
             buttons: [
-                {text: _t("Continue") + " *", classes: "btn-primary", click: save_editor_then_go_to.bind(null, this.link)},
-                {text: _t("Continue & Edit") + " *", classes: "btn-primary", click: save_editor_then_go_to.bind(null, this.link + "?enable_editor=1")},
-                {text: _t("Edit the menu") + " *", classes: "btn-primary", click: function () {
+                {text: _t("Go to Link"), classes: "btn-primary", click: save_editor_then_go_to.bind(null, this.link)},
+                {text: _t("Edit the menu"), classes: "btn-primary", click: function () {
                     var self = this;
                     website.topBar.content_menu.edit_menu(function () {
                         return editor.editor_bar.save_without_reload();
