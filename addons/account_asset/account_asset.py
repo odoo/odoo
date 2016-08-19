@@ -371,7 +371,7 @@ class AccountAssetDepreciationLine(models.Model):
             categ_type = line.asset_id.category_id.type
             debit_account = line.asset_id.category_id.account_asset_id.id
             credit_account = line.asset_id.category_id.account_depreciation_id.id
-            prec = self.env['decimal.precision'].precision_ger('Account')
+            prec = self.env['decimal.precision'].precision_get('Account')
             self.env['account.move.line'].create({
                 'name': asset_name or reference,
                 'ref': reference,
