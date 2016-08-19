@@ -70,7 +70,7 @@ class PartnerCategory(models.Model):
     _parent_store = True
     _parent_order = 'name'
 
-    name = fields.Char(string='Category Name', required=True, translate=True)
+    name = fields.Char(string='Tag Name', required=True, translate=True)
     color = fields.Integer(string='Color Index')
     parent_id = fields.Many2one('res.partner.category', string='Parent Category', index=True, ondelete='cascade')
     child_ids = fields.One2many('res.partner.category', 'parent_id', string='Child Tags')
