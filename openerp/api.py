@@ -414,9 +414,8 @@ def one(method):
         The method may be called in both record and traditional styles, like::
 
             # recs = model.browse(cr, uid, ids, context)
-            names = recs.rename(args)
-
-            names = model.rename(cr, uid, ids, args, context=context)
+            recs.rename(newname)
+            model.rename(cr, uid, ids, newname, context=context)
 
         .. warning::
             If you ``return`` something from the method, **you could get
