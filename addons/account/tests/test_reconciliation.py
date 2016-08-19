@@ -63,6 +63,7 @@ class TestReconciliation(AccountingTestCase):
         bank_stmt = self.acc_bank_stmt_model.create({
             'journal_id': bank_journal.id,
             'date': time.strftime('%Y') + '-07-15',
+            'name': 'payment' + invoice_record.number
         })
 
         bank_stmt_line = self.acc_bank_stmt_line_model.create({'name': 'payment',

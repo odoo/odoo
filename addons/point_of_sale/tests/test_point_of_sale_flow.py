@@ -188,6 +188,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'date': time.strftime('%Y-%m-%d'),
             'journal_id': journal.id,
             'company_id': self.company_id,
+            'name': 'pos session test',
         })
         # I create bank statement line
         account_statement_line = self.AccountBankStatementLine.create({

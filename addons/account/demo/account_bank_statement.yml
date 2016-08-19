@@ -6,6 +6,7 @@
       import time
       if journal:
           vals = {
+              'name': 'demo_bank_statement_1',
               'journal_id': journal.id,
               'date': time.strftime('%Y')+'-01-01',
               'name': "BNK/2014/001",
