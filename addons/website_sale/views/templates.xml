@@ -161,7 +161,7 @@
                     <div class="products_pager">
                         <div class="row" style="width: 100%;">
                             <t t-call="website_sale.search">
-                                <t t-set="search_class">pagination form-inline</t>
+                                <t t-set="search_class">pagination form-inline o_website_sale_search</t>
                             </t>
                             <t t-call="website_sale.pricelist_list" />
                             <t t-call="website.pager" />
@@ -209,6 +209,30 @@
             </div>
         </t>
     </template>
+
+    <template id="sort" inherit_id="website_sale.products" active="True" customize_show="True" name="Show Sort by">
+        <xpath expr="//div[@class='products_pager']/div/t[@t-call][last()]" position="after">
+            <t t-set="website_sale_sortable" t-value="[
+                ('Price &lt;i class=\'fa fa-arrow-up\' aria-hidden=\'true\'&gt;&lt;/i&gt;', 'list_price desc'),
+                ('Price &lt;i class=\'fa fa-arrow-down\' aria-hidden=\'true\'&gt;&lt;/i&gt;', 'list_price asc'),
+                ('Name', 'name asc')
+            ]"/>
+            <div class="dropdown btn-group dropdown_sorty_by">
+                <a href="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">
+                    <span>Sort by</span>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li t-foreach="website_sale_sortable" t-as="sortby">
+                        <a t-att-href="keep('/shop', order=sortby[1])">
+                            <span t-raw="sortby[0]"/>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </xpath>
+    </template>
+
 
     <!-- Add to cart button-->
     <template id="categories_recursive" name="Category list">

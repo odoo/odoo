@@ -339,6 +339,20 @@ odoo.define('website_sale.website_sale', function (require) {
             $(this).closest('tr').find('.js_quantity').val(0).trigger('change');
         });
 
+        if ($('.oe_website_sale .dropdown_sorty_by').length) {
+            // this method allow to keep current get param from the action, with new search query
+            $('.oe_website_sale .o_website_sale_search').on('submit', function (event) {
+                var $this = $(this);
+                if (!event.isDefaultPrevented() && !$this.is(".disabled")) {
+                    event.preventDefault();
+                    var oldurl = $this.attr('action');
+                    oldurl += (oldurl.indexOf("?")===-1) ? "?" : "";
+                    var search = $this.find('input.search-query');
+                    window.location = oldurl + '&' + search.attr('name') + '=' + encodeURIComponent(search.val());
+                }
+            });
+        }
+
         if ($(".checkout_autoformat").length) {
             $(oe_website_sale).on('change', "select[name='country_id']", function () {
                 clickwatch(function() {
