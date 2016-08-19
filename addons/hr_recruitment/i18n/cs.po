@@ -3,13 +3,14 @@
 # * hr_recruitment
 # 
 # Translators:
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-05-14 16:47+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-08-11 12:17+0000\n"
+"Last-Translator: Jaroslav Helemik Nemec <nemec@helemik.cz>\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-8/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,42 +31,42 @@ msgstr ""
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_1
 msgid "0-15"
-msgstr ""
+msgstr "0-15"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_2
 msgid "16-20"
-msgstr ""
+msgstr "16-20"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_3
 msgid "21-30"
-msgstr ""
+msgstr "21-30"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_4
 msgid "31-40"
-msgstr ""
+msgstr "31-40"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_5
 msgid "41-50"
-msgstr ""
+msgstr "41-50"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_6
 msgid "51-60"
-msgstr ""
+msgstr "51-60"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_7
 msgid "61-70"
-msgstr ""
+msgstr "61-70"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_8
 msgid "71+"
-msgstr ""
+msgstr "71+"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
@@ -151,7 +152,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id.signature | safe}"
-msgstr ""
+msgstr "<p>Vážený/á ${object.partner_name or 'applicant'},</p>\n<p>Gratulujeme! Váš životopis nás zaujal!\nZavoláme Vám co nejdřív, bude to 10 minutový telefonní rozhovor a naplánujeme první schůzku.</p>\n<p>Pokud se s Vámi nebudeme moci spojit, prosím neváhejte nás kontaktovat na čísle 723 516 408.\nPokud to nebudeme zvedat, zanechejte nám prosím odkaz s přibližnými časy, kdy Vás můžeme opět kontaktovat.</p>\n<p>S přátelským pozdravem,</p>\n<br/>\n${object.user_id.signature | safe}"
 
 #. module: hr_recruitment
 #: model:email.template,body_html:hr_recruitment.applicant_refuse
@@ -164,7 +165,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id and object.user_id.signature | safe or ''}"
-msgstr ""
+msgstr "<p>Vážený/á ${object.partner_name or 'applicant'},</p>\n<p>Děkujeme Vám za Váš zájem o naši společnost a za Vaši přihlášku.\nBohužel, Váš profil neodpovídá našim potřebám a nebo již byla náborová \nkampaň ukončena.</p>\n<p>Jestli potřebujete víc informací, neváhejte nás kontaktovat telefonicky.</p>\n<p>S přátelským pozdravem,</p>\n<br/>\\n${object.user_id and object.user_id.signature | safe or ''}\""
 
 #. module: hr_recruitment
 #: model:survey.survey,description:hr_recruitment.recruitment_form
@@ -198,7 +199,7 @@ msgstr "Činnosti"
 #. module: hr_recruitment
 #: help:hr.job,address_id:0
 msgid "Address where employees are working"
-msgstr ""
+msgstr "Adresa, kde pracují zaměstnanci"
 
 #. module: hr_recruitment
 #: field:hr.job,alias_id:0
@@ -213,28 +214,28 @@ msgstr "Alias domény"
 #. module: hr_recruitment
 #: field:hr.config.settings,module_document:0
 msgid "Allow the automatic indexation of resumes"
-msgstr ""
+msgstr "Povolit automatické indexování životopisů"
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
 msgid "Answer related job question"
-msgstr ""
+msgstr "Odpovědět na otázku o podobných pozicích"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
 msgid "Applicant"
-msgstr ""
+msgstr "Uchazeč"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_new
 msgid "Applicant Created"
-msgstr ""
+msgstr "Uchazeč vytvořen"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_hired
 msgid "Applicant Hired"
-msgstr ""
+msgstr "Uchazeč přijat"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
@@ -244,17 +245,17 @@ msgstr ""
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
 msgid "Applicant created"
-msgstr ""
+msgstr "Uchazeč vytvořen"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
 msgid "Applicant hired"
-msgstr ""
+msgstr "Uchazeč přijat"
 
 #. module: hr_recruitment
 #: field:hr.applicant,partner_name:0
 msgid "Applicant's Name"
-msgstr ""
+msgstr "Jméno uchazeče"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/hr_recruitment.py:93
@@ -262,7 +263,7 @@ msgstr ""
 #: view:hr.applicant:hr_recruitment.hr_applicant_calendar_view
 #, python-format
 msgid "Applicants"
-msgstr ""
+msgstr "Uchazeči"
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
@@ -428,7 +429,7 @@ msgstr "Firma"
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_website_company
 msgid "Company Website"
-msgstr ""
+msgstr "Firemní webové stránky"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/hr_recruitment.py:381
@@ -441,12 +442,12 @@ msgstr "Kontaktní"
 #: code:addons/hr_recruitment/hr_recruitment.py:383
 #, python-format
 msgid "Contact Email"
-msgstr ""
+msgstr "Kontaktní mail:"
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
 msgid "Contact:"
-msgstr ""
+msgstr "Kontakt:"
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
@@ -692,22 +693,22 @@ msgstr "Chyba!"
 #: selection:hr.applicant,priority:0
 #: selection:hr.recruitment.report,priority:0
 msgid "Excellent"
-msgstr ""
+msgstr "Excelentní"
 
 #. module: hr_recruitment
 #: field:hr.applicant,salary_expected:0
 msgid "Expected Salary"
-msgstr ""
+msgstr "Očekávaný plat"
 
 #. module: hr_recruitment
 #: field:hr.applicant,salary_expected_extra:0
 msgid "Expected Salary Extra"
-msgstr ""
+msgstr "Očekávané prémie"
 
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_2_3
 msgid "Experience"
-msgstr ""
+msgstr "Zkušenosti"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
@@ -809,7 +810,7 @@ msgstr "Seskupit podle"
 #. module: hr_recruitment
 #: view:hr.job:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
-msgstr ""
+msgstr "Najatí zaměstnanci"
 
 #. module: hr_recruitment
 #: help:hr.applicant,message_summary:0
@@ -968,7 +969,7 @@ msgstr "Naposled upraveno"
 #. module: hr_recruitment
 #: view:hr.job:hr_recruitment.view_hr_job_kanban
 msgid "Launch Recruitment"
-msgstr ""
+msgstr "Spusť nábor"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_linkedin

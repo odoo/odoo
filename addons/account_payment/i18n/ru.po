@@ -1,21 +1,23 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_payment
+# 
+# Translators:
+# Evgeny <transingularity@gmail.com>, 2016
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2016-08-06 10:50+0000\n"
+"Last-Translator: Evgeny <transingularity@gmail.com>\n"
+"Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:52+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -23,8 +25,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a payment order.\n"
 "              </p><p>\n"
-"                A payment order is a payment request from your company to "
-"pay a\n"
+"                A payment order is a payment request from your company to pay a\n"
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
@@ -59,7 +60,7 @@ msgstr "Адрес заказчика"
 #: view:payment.order:account_payment.view_payment_order_form
 #: view:website:account_payment.report_paymentorder
 msgid "Amount"
-msgstr "Сумма"
+msgstr "Количество"
 
 #. module: account_payment
 #: view:payment.line:account_payment.view_payment_line_tree
@@ -130,10 +131,7 @@ msgid ""
 "Choose an option for the Payment Order:'Fixed' stands for a date specified "
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
-msgstr ""
-"Выберите опцию для платежного поручения: 'Заданная'' - дата установлена "
-"вами. 'Немедленно' - выполнить сразу. 'Дата исполнения' - выполнить в "
-"определенную дату."
+msgstr "Выберите опцию для платежного поручения: 'Заданная'' - дата установлена вами. 'Немедленно' - выполнить сразу. 'Дата исполнения' - выполнить в определенную дату."
 
 #. module: account_payment
 #: field:payment.line,communication:0
@@ -151,8 +149,7 @@ msgid "Communication Type"
 msgstr "Тип назначения платежа"
 
 #. module: account_payment
-#: field:payment.line,company_id:0
-#: field:payment.mode,company_id:0
+#: field:payment.line,company_id:0 field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Компания"
@@ -176,7 +173,7 @@ msgstr "Подтвердить платежи"
 #: view:payment.order:account_payment.view_payment_order_search
 #: selection:payment.order,state:0
 msgid "Confirmed"
-msgstr "Подтверждено"
+msgstr "Утверждено"
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -186,21 +183,18 @@ msgstr "Создано"
 #. module: account_payment
 #: field:account.payment.make.payment,create_uid:0
 #: field:account.payment.populate.statement,create_uid:0
-#: field:payment.line,create_uid:0
-#: field:payment.mode,create_uid:0
-#: field:payment.order,create_uid:0
-#: field:payment.order.create,create_uid:0
+#: field:payment.line,create_uid:0 field:payment.mode,create_uid:0
+#: field:payment.order,create_uid:0 field:payment.order.create,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Создано"
 
 #. module: account_payment
 #: field:account.payment.make.payment,create_date:0
 #: field:account.payment.populate.statement,create_date:0
-#: field:payment.mode,create_date:0
-#: field:payment.order,create_date:0
+#: field:payment.mode,create_date:0 field:payment.order,create_date:0
 #: field:payment.order.create,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Создан"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -242,7 +236,7 @@ msgstr "Немедленно"
 #: view:payment.order:account_payment.view_payment_order_search
 #: selection:payment.order,state:0
 msgid "Done"
-msgstr "Сделано"
+msgstr "Выполнено"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_search
@@ -251,8 +245,7 @@ msgid "Draft"
 msgstr "Черновик"
 
 #. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-#: field:payment.order.create,duedate:0
+#: field:payment.line,ml_maturity_date:0 field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Дата исполнения"
 
@@ -314,7 +307,7 @@ msgstr "Заданная дата"
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
-msgstr "Свободно"
+msgstr "Свободен"
 
 #. module: account_payment
 #: view:payment.line:account_payment.view_payment_line_form
@@ -326,18 +319,16 @@ msgstr "Общая информация"
 #: view:payment.mode:account_payment.view_payment_mode_search
 #: view:payment.order:account_payment.view_payment_order_search
 msgid "Group By"
-msgstr ""
+msgstr "Группировать по"
 
 #. module: account_payment
 #: field:account.payment.make.payment,id:0
-#: field:account.payment.populate.statement,id:0
-#: field:payment.line,id:0
-#: field:payment.mode,id:0
-#: field:payment.order,id:0
+#: field:account.payment.populate.statement,id:0 field:payment.line,id:0
+#: field:payment.mode,id:0 field:payment.order,id:0
 #: field:payment.order.create,id:0
 #: field:report.account_payment.report_paymentorder,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_payment
 #: help:payment.line,date:0
@@ -360,12 +351,12 @@ msgstr "Импорт платежей"
 #: view:payment.line:account_payment.view_payment_line_form
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Information"
-msgstr "Информация"
+msgstr "Сведения"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
 msgid "Invoice"
-msgstr "Счет"
+msgstr "Инвойс"
 
 #. module: account_payment
 #: help:payment.line,ml_date_created:0
@@ -385,7 +376,7 @@ msgstr "Ссылка на счет"
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Invoices"
-msgstr ""
+msgstr "Счета"
 
 #. module: account_payment
 #: view:payment.mode:account_payment.view_payment_mode_search
@@ -396,27 +387,23 @@ msgstr "Журнал"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr "Элементы журнала"
+msgstr "Товары из журналы"
 
 #. module: account_payment
 #: field:account.payment.make.payment,write_uid:0
 #: field:account.payment.populate.statement,write_uid:0
-#: field:payment.line,write_uid:0
-#: field:payment.mode,write_uid:0
-#: field:payment.order,write_uid:0
-#: field:payment.order.create,write_uid:0
+#: field:payment.line,write_uid:0 field:payment.mode,write_uid:0
+#: field:payment.order,write_uid:0 field:payment.order.create,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: account_payment
 #: field:account.payment.make.payment,write_date:0
 #: field:account.payment.populate.statement,write_date:0
-#: field:payment.line,write_date:0
-#: field:payment.mode,write_date:0
-#: field:payment.order,write_date:0
-#: field:payment.order.create,write_date:0
+#: field:payment.line,write_date:0 field:payment.mode,write_date:0
+#: field:payment.order,write_date:0 field:payment.order.create,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последний раз обновлено"
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
@@ -437,7 +424,7 @@ msgstr "Способ оплаты"
 #. module: account_payment
 #: field:payment.mode,name:0
 msgid "Name"
-msgstr "Название"
+msgstr "Имя"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
@@ -447,7 +434,7 @@ msgstr "Новое платежное поручение"
 #. module: account_payment
 #: field:payment.line,order_id:0
 msgid "Order"
-msgstr "Распоряжение"
+msgstr "Заказ"
 
 #. module: account_payment
 #: view:payment.line:account_payment.view_payment_line_form
@@ -457,11 +444,10 @@ msgid "Owner Account"
 msgstr "Владелец счета"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
+#: field:payment.line,partner_id:0 field:payment.mode,partner_id:0
 #: view:website:account_payment.report_paymentorder
 msgid "Partner"
-msgstr "Контрагент"
+msgstr "Партнер"
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -534,7 +520,7 @@ msgstr "Заполнение заявления на оплату"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Payment Type:"
-msgstr ""
+msgstr "Тип Платежа:"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -576,7 +562,7 @@ msgstr "Предпочтительная дата"
 #: field:payment.order,reference:0
 #: view:website:account_payment.report_paymentorder
 msgid "Reference"
-msgstr "Обозначение"
+msgstr "Ссылка"
 
 #. module: account_payment
 #: field:payment.order,user_id:0
@@ -662,7 +648,7 @@ msgstr "Эта проводка будет использована для ин�
 #: field:payment.order,total:0
 #: view:website:account_payment.report_paymentorder
 msgid "Total"
-msgstr "Всего"
+msgstr "Итоговая сумма"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
@@ -690,9 +676,7 @@ msgstr ""
 msgid ""
 "Used as the message between ordering customer and current company. Depicts "
 "'What do you want to say to the recipient about this order ?'"
-msgstr ""
-"Используется как сообщение между плательщиком и текущей компанией. "
-"Обозначает \"Что вы хотите сказать получателю в этом распоряжении ?'"
+msgstr "Используется как сообщение между плательщиком и текущей компанией. Обозначает \"Что вы хотите сказать получателю в этом распоряжении ?'"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
@@ -718,9 +702,7 @@ msgstr "Да"
 msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
-msgstr ""
-"Нельзя отменить счет который уже импортирован в платежное распоряжение. "
-"Удалите его из платежного распоряжения: %s"
+msgstr "Нельзя отменить счет который уже импортирован в платежное распоряжение. Удалите его из платежного распоряжения: %s"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -731,3 +713,11 @@ msgstr "Ссылка"
 #: view:payment.order.create:account_payment.view_create_payment_order_lines
 msgid "_Add to payment order"
 msgstr "Добавить к платежному поручению"
+
+#. module: account_payment
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+#: view:account.payment.populate.statement:account_payment.account_payment_populate_statement_view
+#: view:payment.order.create:account_payment.view_create_payment_order
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
+msgid "or"
+msgstr "или"

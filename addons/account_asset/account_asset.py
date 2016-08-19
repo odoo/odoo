@@ -7,6 +7,7 @@ import openerp.addons.decimal_precision as dp
 from openerp import api, fields, models, _
 from openerp.exceptions import UserError, ValidationError
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from openerp.tools import float_compare
 
 
 class AccountAssetCategory(models.Model):
@@ -370,13 +371,14 @@ class AccountAssetDepreciationLine(models.Model):
             categ_type = line.asset_id.category_id.type
             debit_account = line.asset_id.category_id.account_asset_id.id
             credit_account = line.asset_id.category_id.account_depreciation_id.id
+            prec = self.env['decimal.precision'].precision_ger('Account')
             self.env['account.move.line'].create({
                 'name': asset_name or reference,
                 'ref': reference,
                 'move_id': move.id,
                 'account_id': credit_account,
-                'debit': 0.0,
-                'credit': amount,
+                'debit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
+                'credit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
                 'period_id': periods.id or False,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
@@ -391,8 +393,8 @@ class AccountAssetDepreciationLine(models.Model):
                 'ref': reference,
                 'move_id': move.id,
                 'account_id': debit_account,
-                'credit': 0.0,
-                'debit': amount,
+                'credit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
+                'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
                 'period_id': periods.id or False,
                 'journal_id': journal_id,
                 'partner_id': partner_id,

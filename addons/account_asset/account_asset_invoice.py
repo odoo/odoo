@@ -58,11 +58,12 @@ class AccountInvoiceLine(models.Model):
     @api.one
     def asset_create(self):
         if self.asset_category_id and self.asset_category_id.method_number > 1:
+            sign = -1 if self.invoice_id.type in ("in_refund", 'out_refund') else 1
             vals = {
                 'name': self.name,
                 'code': self.invoice_id.number or False,
                 'category_id': self.asset_category_id.id,
-                'value': self.price_subtotal,
+                'value': sign * self.price_subtotal,
                 'partner_id': self.invoice_id.partner_id.id,
                 'company_id': self.invoice_id.company_id.id,
                 'currency_id': self.invoice_id.currency_id.id,
