@@ -43,7 +43,11 @@ class Job(models.Model):
     _name = 'hr.job'
     _inherit = ['hr.job', 'website.seo.metadata', 'website.published.mixin']
 
-    website_description = fields.Html('Website description', translate=html_translate, sanitize=False)
+    def _get_default_website_description(self):
+        default_description = self.env["ir.model.data"].xmlid_to_object("website_hr_recruitment.default_website_description")
+        return (default_description.render() if default_description else "")
+
+    website_description = fields.Html('Website description', translate=html_translate, sanitize=False, default=_get_default_website_description)
 
     @api.multi
     def _compute_website_url(self):

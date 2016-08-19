@@ -85,53 +85,61 @@
     </t>
 </template>
 
-<template id="detail" name='Job Detail'>
+<template id="detail" name="Job Detail">
     <t t-call="website.layout">
-    <t t-set="additional_title">Job Detail</t>
-    <div id="wrap" class="js_hr_recruitment">
-        <div class="oe_structure"/>
+        <t t-set="additional_title">Job Detail</t>
+        <div id="wrap" class="js_hr_recruitment">
+            <div class="oe_structure"/>
 
-        <section class="container mt8">
-            <div class="row">
-              <div class="col-sm-5">
-                  <ol class="breadcrumb mb0">
-                      <li><a href="/jobs">Our Jobs</a></li>
-                      <li class="active"><span t-field="job.name"></span></li>
-                  </ol>
-              </div><div class="col-sm-7">
-                  <t t-call="website.publish_management">
-                      <t t-set="object" t-value="job"/>
-                      <t t-set="publish_edit" t-value="True"/>
-                  </t>
-              </div>
-            </div>
-        </section>
-
-        <div class="oe_structure" style="clear:both;">
-            <h1 class="text-center" t-field="job.name"/>
-            <h5 class="text-center" t-field="job.address_id" t-options='{
-                "widget": "contact",
-                "fields": ["address"],
-                "no_tag_br": True
-                }'/>
-           <h5 class="text-center text-muted">
-                <i class="fa fa-clock-o"/> <span t-field="job.write_date"/>
-            </h5>
-        </div>
-        <div t-field="job.website_description"/>
-
-        <div class="oe_structure">
-            <section class="mt16 mb16">
+            <!-- Breadcrumb -->
+            <section class="mb16 bg-white">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-12 text-center mt16 mb16">
-                            <a t-attf-href="/jobs/apply/#{ job.id }" class="btn btn-primary btn-lg">Apply</a>
+                        <div class="col-sm-5">
+                            <ol class="breadcrumb mb0 bg-white">
+                                <li><a href="/jobs">Our Jobs</a></li>
+                                <li class="active"><span t-field="job.name"></span></li>
+                            </ol>
+                        </div>
+                        <div class="col-sm-7 mt8 mb8">
+                            <t t-call="website.publish_management">
+                                <t t-set="object" t-value="job"/>
+                                <t t-set="publish_edit" t-value="True"/>
+                            </t>
                         </div>
                     </div>
                 </div>
             </section>
+
+            <!-- Content -->
+            <div class="oe_structure">
+                <section class="o_job_top_bar">
+                    <div class="container mb32">
+                        <h4 class="fw_semibold text-uppercase text-violet-dark mb0 mt32" t-field="job.name"/>
+                        <h6 class="fw_semibold text-uppercase mb0 mt0" t-field="job.address_id" t-field-options='{
+                            "widget": "contact",
+                            "fields": ["city"],
+                            "no_tag_br": True
+                        }'/>
+                        <a t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg mt32">Apply Now!</a>
+                    </div>
+                </section>
+            </div>
+
+            <div t-field="job.website_description"/>
+
+            <div class="oe_structure">
+                <section class="o_job_bottom_bar mt16">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 text-center mt16 mb16">
+                                <a t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg">Apply</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </div>
-    </div>
     </t>
 </template>
 
@@ -202,6 +210,202 @@
             </div>
         </div>
     </t>
+</template>
+
+<template id="default_website_description">
+    <!-- Description -->
+    <section class="mb32">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10">
+                    <p class="mt0 lead">
+                        A sales job for smart people who likes software and can easily learn different management practices and industries. You will be in charge of the full sales cycle from the opportunity qualification to the negotiation, going through business needs analysis and an astonishing product demos.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Responsibilities -->
+    <section class="o_tasks">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <h5 class="fw_semibold text-uppercase">Responsibilities</h5>
+                    <p>Full sales cycle</p>
+                    <p>Achieve monthly targets</p>
+                    <p>US + Canada Territory</p>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <h5 class="fw_semibold text-uppercase">Challenges</h5>
+                    <p>Full sales cycle</p>
+                    <p>Achieve monthly targets</p>
+                    <p>US + Canada Territory</p>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <h5 class="fw_semibold text-uppercase">Must Have</h5>
+                    <p>Full sales cycle</p>
+                    <p>Achieve monthly targets</p>
+                    <p>US + Canada Territory</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What's great -->
+    <section class="mb32 mt32">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h3 class="mt0 text-violet-dark display-4">What's great in the job?</h3>
+                    <ul>
+                        <li>No outbound calls, you get leads and focus on providing value to them</li>
+                        <li>You sell management software to directors of SMEs: interesting projects and people</li>
+                        <li>Large apps scope: CRM, MRP, Accounting, Inventory, HR, Project Mgt, etc.</li>
+                        <li>Direct coordination with functional consultants for qualification and follow ups</li>
+                        <li>High commissions for good performers</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Datas -->
+    <section style="border: 0 solid #e3e3e3; border-width: 2px 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-md-4 mt16 mb16">
+                    <h6 class="mb0">Job Complexity:</h6>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <h6 class="mb0">Personal Evolution:</h6>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <h6 class="mb0">Variability of the Job:</h6>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star-o"/>
+                    <h6 class="mb0">Job Security:</h6>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star-o"/>
+                    <i class="fa fa-star-o"/>
+                    <h6 class="mb0">Overachieving Possibilities:</h6>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                </div>
+                <div class="col-sm-6 col-md-4 mt16 mb16">
+                    <h6 class="mb0">Team / Company Size:</h6>
+                    <p class="text-uppercase ">10  / 40 people</p>
+                    <h6 class="mb0">Avg Deal Size:</h6>
+                    <p class="text-uppercase ">$15k</p>
+                    <h6 class="mb0">Sales Cycle:</h6>
+                    <p class="text-uppercase ">3 months</p>
+                    <h6 class="mb0">Company Growth:</h6>
+                    <p class="text-uppercase ">50% YoY</p>
+                    <h6 class="mb0">Company Maturity:</h6>
+                    <p class="text-uppercase ">Profitable</p>
+                </div>
+                <div class="col-sm-6 col-md-4 mt16 mb16">
+                    <h3 class="fw_light mt0">Need More Info?</h3>
+                    <ul>
+                        <li><a href="https://www.linkedin.com/pulse/20140818150823-57131497-how-i-grew-from-1-to-250-employees-in-5-years?trk=prof-post">The founder’s story</a></li>
+                        <li><a href="http://www.slideshare.net/openobject/the-odoo-culture">The Odoo culture</a></li>
+                        <li><a href="http://www.slideshare.net/openobject/be-a-team-leader-not-a-manager">Who is your manager?</a></li>
+                        <li><a href="/blog/customer-reviews-6">What people say about us?</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Perks -->
+    <section class="o_perk mt16 mb16">
+        <div class="container">
+            <div class="row">
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-heart"/>
+                    <h4 class="mb0 mt8 text-violet-dark">Benefits</h4>
+                    <p>Healthcare, dental, vision, life insurance, Flexible Spending Account (FSA), Health Savings Account (HSA)</p>
+                </div>
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-sun-o"/>
+                    <h4 class="mt8 mb0 text-violet-dark">PTOs</h4>
+                    <p>Vacation, Sick, and Holiday paid leaves</p>
+                </div>
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-car"/>
+                    <h4 class="mt8 mb0 text-violet-dark">Save on commute</h4>
+                    <p>Pre-tax commuter benefitsbr <br/>(parking and transit) </p>
+                    </div>
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-check-circle"/>
+                    <h4 class="mb0 mt8 text-violet-dark">Discount Programs</h4>
+                    <p>Brand-name product and services in categories like travel, electronics, health, fitness, cellular, and more</p>
+                </div>
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-map-marker"/>
+                    <h4 class="mb0 mt8 text-violet-dark">Prime location</h4>
+                    <p>Only a couple blocs from BART, Caltrain, Highway 101, carpool pickup, and Bay Bridge.</p>
+                </div>
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-calendar"/>
+                    <h4 class="mt8 mb0 text-violet-dark">Sponsored Events</h4>
+                    <p>Tuesday Dinners, Monthly Lunch Mixers, Monthly Happy Hour, Annual day event</p>
+                </div>
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-futbol-o"/>
+                    <h4 class="mt8 mb0 text-violet-dark">Sport Activity</h4>
+                    <p>Play any sport with colleagues and the bill is covered</p>
+                    </div>
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-coffee"/>
+                    <h4 class="mb0 mt8 text-violet-dark">Eat &amp; Drink</h4>
+                    <p>Peet's and Philz coffee provided all day to order and pantry snacks</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photos -->
+    <section class="mt16 mb16">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 mt16 mb16">
+                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_3.jpg"/>
+                </div>
+                <div class="col-sm-6 col-md-3 mt16 mb16">
+                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_2.jpg"/>
+                </div>
+                <div class="col-sm-6 col-md-3 mt16 mb16">
+                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_4.jpg"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-3 mt16 mb16">
+                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_6.jpg"/>
+                </div>
+                <div class="col-sm-6 col-md-3 mt16 mb16">
+                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_5.jpg"/>
+                </div>
+                <div class="col-sm-12 col-md-6 mt16 mb16">
+                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_1.jpg"/>
+                </div>
+            </div>
+        </div>
+    </section>
 </template>
 
 <template id="thankyou">
