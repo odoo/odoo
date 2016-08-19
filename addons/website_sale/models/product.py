@@ -81,7 +81,7 @@ class ProductTemplate(models.Model):
         domain=lambda self: ['&', ('model', '=', self._name), ('message_type', '=', 'comment')],
         string='Website Comments',
     )
-    website_description = fields.Html('Description for the website', sanitize=False, translate=True)
+    website_description = fields.Html('Description for the website', sanitize_attributes=False, translate=True)
     alternative_product_ids = fields.Many2many('product.template', 'product_alternative_rel', 'src_id', 'dest_id',
                                                string='Suggested Products', help='Appear on the product page')
     accessory_product_ids = fields.Many2many('product.product', 'product_accessory_rel', 'src_id', 'dest_id',

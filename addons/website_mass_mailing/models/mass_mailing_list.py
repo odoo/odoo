@@ -18,6 +18,6 @@ class MassMailingList(models.Model):
 </div>
 <p class="o_message_paragraph">Join our Marketing newsletter and get <strong>this white paper instantly</strong></p>"""
 
-    popup_content = fields.Html(string="Website Popup Content", translate=True, sanitize=False,
+    popup_content = fields.Html(string="Website Popup Content", translate=True, sanitize_attributes=False,
                                 default=_default_popup_content)
     popup_redirect_url = fields.Char(string="Website Popup Redirect URL", default='/')

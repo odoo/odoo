@@ -193,9 +193,9 @@ class MixedModel(models.Model):
     reference = fields.Reference(string='Related Document',
         selection='_reference_models')
     comment1 = fields.Html(sanitize=False)
-    comment2 = fields.Html(sanitize=True, strip_classes=False)
-    comment3 = fields.Html(sanitize=True, strip_classes=True)
-    comment4 = fields.Html(sanitize=True, strip_style=True)
+    comment2 = fields.Html(sanitize_attributes=True, strip_classes=False)
+    comment3 = fields.Html(sanitize_attributes=True, strip_classes=True)
+    comment4 = fields.Html(sanitize_attributes=True, strip_style=True)
 
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.ref('base.EUR'))
     amount = fields.Monetary()

@@ -133,18 +133,25 @@ class TestSanitizer(unittest.TestCase):
         ]
 
         for test, in_lst, out_lst in test_data:
-            new_html = html_sanitize(test, strict=False, strip_style=False, strip_classes=False)
+            new_html = html_sanitize(test, sanitize_attributes=False, sanitize_style=True, strip_style=False, strip_classes=False)
             for text in in_lst:
                 self.assertIn(text, new_html)
             for text in out_lst:
                 self.assertNotIn(text, new_html)
 
         # style should not be sanitized if removed
-        new_html = html_sanitize(test_data[0][0], strict=False, strip_style=True, strip_classes=False)
+        new_html = html_sanitize(test_data[0][0], sanitize_attributes=False, strip_style=True, strip_classes=False)
         self.assertEqual(new_html, u'<span>Coin coin </span>')
 
     def test_style_class(self):
-        html = html_sanitize(test_mail_examples.REMOVE_CLASS, strict=True, strip_style=False, strip_classes=True)
+        html = html_sanitize(test_mail_examples.REMOVE_CLASS, sanitize_attributes=True, sanitize_style=True, strip_classes=True)
+        for ext in test_mail_examples.REMOVE_CLASS_IN:
+            self.assertIn(ext, html)
+        for ext in test_mail_examples.REMOVE_CLASS_OUT:
+            self.assertNotIn(ext, html,)
+
+    def test_style_class_only(self):
+        html = html_sanitize(test_mail_examples.REMOVE_CLASS, sanitize_attributes=False, sanitize_style=True, strip_classes=True)
         for ext in test_mail_examples.REMOVE_CLASS_IN:
             self.assertIn(ext, html)
         for ext in test_mail_examples.REMOVE_CLASS_OUT:
