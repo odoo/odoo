@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event_sale
-# 
+#
 # Translators:
 # Davor Bojkić <bole@dajmi5.com>, 2015
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
@@ -10,18 +10,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
 "PO-Revision-Date: 2015-10-20 08:54+0000\n"
 "Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:170
+#: code:addons/event_sale/models/event.py:147
 #, python-format
 msgid " with ticket %s"
 msgstr "s ulaznicom%s"
@@ -30,6 +31,12 @@ msgstr "s ulaznicom%s"
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "Primjeni"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+#, fuzzy
+msgid "Asset Type"
+msgstr "Vrsta događaja"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -56,14 +63,17 @@ msgstr "Prije potvrde"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "Odaberite događaj i automatski će se kreirati registracija za ovaj događaj."
+msgstr ""
+"Odaberite događaj i automatski će se kreirati registracija za ovaj događaj."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
-msgstr "Odaberite ulaznicu za događaj i automatski će se kreirati registracija za ulaznicu za događaj."
+msgstr ""
+"Odaberite ulaznicu za događaj i automatski će se kreirati registracija za "
+"ulaznicu za događaj."
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_2_product
@@ -86,20 +96,31 @@ msgid "Created on"
 msgstr "Datum kreiranja"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
-msgstr "Odredite broj raspoloživih ulaznica. Ako imate previše prijava nećete više moći prodavati ulaznice. Postavite 0 kako biste ignorirali pravilo i postavite na neograničeno."
+msgstr ""
+"Odredite broj raspoloživih ulaznica. Ako imate previše prijava nećete više "
+"moći prodavati ulaznice. Postavite 0 kako biste ignorirali pravilo i "
+"postavite na neograničeno."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,help:event_sale.field_product_template_event_ok
+#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ok
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr "Odredite da li proizvod treba automatski stvoriti registraciju događaja ako se potvrdi redak prodajnog naloga."
+msgstr ""
+"Odredite da li proizvod treba automatski stvoriti registraciju događaja ako "
+"se potvrdi redak prodajnog naloga."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
@@ -127,6 +148,12 @@ msgid "Event"
 msgstr "Događaj"
 
 #. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+#, fuzzy
+msgid "Event Name"
+msgstr "Vrsta događaja"
+
+#. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
 msgstr "Organiziranje događaja"
@@ -134,6 +161,7 @@ msgstr "Organiziranje događaja"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,field_description:event_sale.field_product_template_event_ok
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
 msgid "Event Subscription"
@@ -157,6 +185,12 @@ msgstr "Ulaznice za događaj"
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_type_id
 msgid "Event Type"
 msgstr "Vrsta događaja"
+
+#. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+#, fuzzy
+msgid "Event's Ticket"
+msgstr "Ulaznica za događaj"
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_1_product
@@ -219,13 +253,13 @@ msgid "Name"
 msgstr "Naziv"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:131
+#: code:addons/event_sale/models/event.py:108
 #, python-format
 msgid "No more available seats for the ticket"
 msgstr "Nema više slobodnih mjesta za ulaznice"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:153
+#: code:addons/event_sale/models/event.py:130
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "Nema više slobodnih mjesta za ove ulaznice"
@@ -326,10 +360,13 @@ msgstr "Korištena mjesta"
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
 #: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
+#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_type_id
 msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
-msgstr "Odaberite događaj pa kada koristite ovaj proizvod u retku prodajnog naloga, filtirirati će samo događaje ove vrste."
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
+msgstr ""
+"Odaberite događaj pa kada koristite ovaj proizvod u retku prodajnog naloga, "
+"filtirirati će samo događaje ove vrste."
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -350,7 +387,7 @@ msgid "Standard"
 msgstr "Standardno"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:21
+#: code:addons/event_sale/models/event.py:19
 #, python-format
 msgid "Subscription"
 msgstr "Pretplata"
@@ -362,12 +399,14 @@ msgid "Technical Training"
 msgstr "Tehnička obuka"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:168
+#: code:addons/event_sale/models/event.py:145
 #, python-format
 msgid ""
 "The registration has been created for event %(event_name)s%(ticket)s from "
 "sale order %(order)s"
-msgstr "Stvorena je registracija za događaj %(event_name)s%(ticket)s iz prodajnog naloga %(order)s"
+msgstr ""
+"Stvorena je registracija za događaj %(event_name)s%(ticket)s iz prodajnog "
+"naloga %(order)s"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
@@ -404,11 +443,6 @@ msgid "VIP"
 msgstr "VIP"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
-msgid "event_ok"
-msgstr "događaj_ok"
-
-#. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give details about the registrations"
 msgstr "molim vas detalje o registracijama"
@@ -422,3 +456,6 @@ msgstr "registration.editor"
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "registration.editor.line"
 msgstr "registration.editor.line"
+
+#~ msgid "event_ok"
+#~ msgstr "događaj_ok"

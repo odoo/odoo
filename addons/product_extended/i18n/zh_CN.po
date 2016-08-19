@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product_extended
-# 
+#
 # Translators:
 # Gary Wei <Gary.wei@elico-corp.com>, 2015
 # Joray <13637815@qq.com>, 2016
@@ -10,14 +10,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-19 10:25+0000\n"
 "PO-Revision-Date: 2016-06-22 13:04+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
+"language/zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: product_extended
@@ -54,6 +55,7 @@ msgstr "同时更改子物料清单的价格"
 
 #. module: product_extended
 #: model:ir.actions.act_window,name:product_extended.action_view_compute_price_wizard
+#: model:ir.model,name:product_extended.model_wizard_price
 msgid "Compute Price Wizard"
 msgstr "计算价格向导"
 
@@ -61,11 +63,6 @@ msgstr "计算价格向导"
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
 msgid "Compute from BOM"
 msgstr "从物料表计算"
-
-#. module: product_extended
-#: model:ir.model,name:product_extended.model_wizard_price
-msgid "Compute price wizard"
-msgstr "计算价格向导"
 
 #. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
@@ -91,7 +88,8 @@ msgstr "显示名称"
 
 #. module: product_extended
 #: model:ir.model.fields,field_description:product_extended.field_wizard_price_real_time_accounting
-msgid "Generate accounting entries when real-time"
+#, fuzzy
+msgid "Generate accounting entries when perpetual"
 msgstr "当实时产生会计分录"
 
 #. module: product_extended
@@ -120,6 +118,11 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_get_variant_count
+msgid "Number of variant for the product"
+msgstr ""
+
+#. module: product_extended
 #: model:ir.model,name:product_extended.model_product_template
 msgid "Product Template"
 msgstr "产品模板"
@@ -143,8 +146,11 @@ msgstr "价格从那些没有指定变型的物料清单行计算得出"
 
 #. module: product_extended
 #: code:addons/product_extended/wizard/wizard_price.py:38
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"This wizard is build for product templates, while you are currently running "
+"This wizard is built for product templates, while you are currently running "
 "it from a product variant."
 msgstr "此向导是为产品模板构建的，而您目前正在从一个产品变型中运行它。"
+
+#~ msgid "Compute price wizard"
+#~ msgstr "计算价格向导"

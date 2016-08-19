@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_operations
-# 
+#
 # Translators:
 # Grazziano Duarte <g.negocios@outlook.com.br>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"POT-Creation-Date: 2016-08-19 10:25+0000\n"
 "PO-Revision-Date: 2015-12-10 01:10+0000\n"
 "Last-Translator: Grazziano Duarte <g.negocios@outlook.com.br>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
+"language/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: mrp_operations
@@ -27,11 +28,23 @@ msgstr "# de Linhas"
 #: model:ir.model.fields,help:mrp_operations.field_mrp_production_workcenter_line_state
 msgid ""
 "* When a work order is created it is set in 'Draft' status.\n"
-"* When user sets work order in start mode that time it will be set in 'In Progress' status.\n"
-"* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In "
+"Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop "
+"or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
-"* When order is completely processed that time it is set in 'Finished' status."
-msgstr "* Quando uma ordem de serviço é criado é definido como 'Provisório'.\n* Quando o usuário define ordem de serviço no início, o modo de tempo que será definido como \"Em andamento\".\n* Quando a ordem de serviço está em execução, durante esse tempo, se o usuário quer parar ou fazer alterações em ordem, então pode definir como 'pendente'\n* Quando o usuário cancela a ordem de serviço será definido como 'cancelado'.\n* Quando a ordem é completamente processado é definida como 'concluído'."
+"* When order is completely processed that time it is set in 'Finished' "
+"status."
+msgstr ""
+"* Quando uma ordem de serviço é criado é definido como 'Provisório'.\n"
+"* Quando o usuário define ordem de serviço no início, o modo de tempo que "
+"será definido como \"Em andamento\".\n"
+"* Quando a ordem de serviço está em execução, durante esse tempo, se o "
+"usuário quer parar ou fazer alterações em ordem, então pode definir como "
+"'pendente'\n"
+"* Quando o usuário cancela a ordem de serviço será definido como "
+"'cancelado'.\n"
+"* Quando a ordem é completamente processado é definida como 'concluído'."
 
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -75,7 +88,9 @@ msgstr "Cancelado"
 msgid ""
 "Check this to be able to move independently all production orders, without "
 "moving dependent ones."
-msgstr "Selecione isso para ser capaz de mover de forma independente todas as OP, sem mover as dependentes."
+msgstr ""
+"Selecione isso para ser capaz de mover de forma independente todas as OP, "
+"sem mover as dependentes."
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_stock_move_move_dest_id_lines
@@ -90,7 +105,7 @@ msgstr "Clique para iniciar uma nova ordem de serviço."
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_code
-#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_id_10488
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_id_10352
 msgid "Code"
 msgstr "Código"
 
@@ -190,6 +205,11 @@ msgid "Future Work Orders"
 msgstr "Ordens de Serviço Futuras"
 
 #. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_weight
+msgid "Gross Weight"
+msgstr ""
+
+#. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
 #: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
 msgid "Group By"
@@ -220,21 +240,24 @@ msgid "In Progress"
 msgstr "Em Progresso"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:438
+#: code:addons/mrp_operations/mrp_operations.py:473
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
-msgstr "Para poder Finalizar a operação, ela precisará estar em Início ou Continuar!"
+msgstr ""
+"Para poder Finalizar a operação, ela precisará estar em Início ou Continuar!"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:429
+#: code:addons/mrp_operations/mrp_operations.py:464
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
-msgstr "Para Pausar uma operação, ela precisará estar definida como Início ou Reiniciar"
+msgstr ""
+"Para Pausar uma operação, ela precisará estar definida como Início ou "
+"Reiniciar"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:433
+#: code:addons/mrp_operations/mrp_operations.py:468
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
 msgstr "Para Reiniciar uma operação, ela precisará estar em Pausa!"
@@ -269,18 +292,13 @@ msgid "Late"
 msgstr "Atrasado"
 
 #. module: mrp_operations
-#: model:ir.model,name:mrp_operations.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Ordem de Produção"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:105
+#: code:addons/mrp_operations/mrp_operations.py:132
 #, python-format
 msgid "Manufacturing order cannot be started in state \"%s\"!"
 msgstr "Ordem de produção não pode ser iniciada no estado de \"%s\"!"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:445
+#: code:addons/mrp_operations/mrp_operations.py:480
 #, python-format
 msgid "No operation to cancel."
 msgstr "Nenhuma operação para cancelar"
@@ -296,27 +314,28 @@ msgid "Operation Name"
 msgstr "Nome da Operação"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:425
+#: code:addons/mrp_operations/mrp_operations.py:460
 #, python-format
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
 "operation."
-msgstr "A Operação já foi iniciada! Você pode Pausar/Finalizar/Cancelar a operação."
+msgstr ""
+"A Operação já foi iniciada! Você pode Pausar/Finalizar/Cancelar a operação."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:441
+#: code:addons/mrp_operations/mrp_operations.py:476
 #, python-format
 msgid "Operation is Already Cancelled!"
 msgstr "A Operação já está Cancelada!"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:448
+#: code:addons/mrp_operations/mrp_operations.py:483
 #, python-format
 msgid "Operation is already finished!"
 msgstr "A Operação já está concluída!"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:418
+#: code:addons/mrp_operations/mrp_operations.py:453
 #, python-format
 msgid "Operation is not started yet!"
 msgstr "Operação não iniciada ainda!"
@@ -391,6 +410,7 @@ msgid "Product to Produce"
 msgstr "Produto para Produzir"
 
 #. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_production
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_production_id
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_production_id
 #: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -545,17 +565,26 @@ msgstr "Movimentação do Estoque"
 #. module: mrp_operations
 #: model:ir.model.fields,help:mrp_operations.field_mrp_production_workcenter_line_delay
 msgid "The elapsed time between operation start and stop in this Work Center"
-msgstr "O tempo decorrido entre iniciar e parar a operação neste Centro de Trabalho"
+msgstr ""
+"O tempo decorrido entre iniciar e parar a operação neste Centro de Trabalho"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
 msgid ""
 "To manufacture or assemble products, and use raw materials and\n"
-"            finished products you must also handle manufacturing operations.\n"
-"            Manufacturing operations are often called Work Orders. The various\n"
+"            finished products you must also handle manufacturing "
+"operations.\n"
+"            Manufacturing operations are often called Work Orders. The "
+"various\n"
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
-msgstr "Para fabricar ou montar produtos, e usar matérias-primas e\nprodutos acabados você tem de lidar com operações de manufatura.\nAs operações de fabricação são freqüentemente chamados de Ordens de Serviço. As várias\noperações terão diferentes impactos sobre os custos de\nfabricação e planejamento, dependendo da carga de trabalho disponível."
+msgstr ""
+"Para fabricar ou montar produtos, e usar matérias-primas e\n"
+"produtos acabados você tem de lidar com operações de manufatura.\n"
+"As operações de fabricação são freqüentemente chamados de Ordens de Serviço. "
+"As várias\n"
+"operações terão diferentes impactos sobre os custos de\n"
+"fabricação e planejamento, dependendo da carga de trabalho disponível."
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_total_cycles
@@ -571,6 +600,11 @@ msgstr "Horas Totais"
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_uom
 msgid "Unit of Measure"
 msgstr "Unidade de Medida - UdM"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_volume
+msgid "Volume"
+msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -634,9 +668,17 @@ msgid ""
 "            manufacturing order. Once you start the first work order of a\n"
 "            manufacturing order, the manufacturing order is automatically\n"
 "            marked as started. Once you finish the latest operation of a\n"
-"            manufacturing order, the MO is automatically done and the related\n"
+"            manufacturing order, the MO is automatically done and the "
+"related\n"
 "            products are produced."
-msgstr "Ordens de Serviço são a lista de operações a serem realizadas para cada\nordem de produção. Uma vez que você começar a primeira ordem de serviço de uma\nordem de produção, a ordem de produção é automaticamente\nmarcada como iniciada. Depois de terminar a última operação de uma\nordem de produção, a OP é feita automaticamente e os respectivos\nos produtos são produzidos."
+msgstr ""
+"Ordens de Serviço são a lista de operações a serem realizadas para cada\n"
+"ordem de produção. Uma vez que você começar a primeira ordem de serviço de "
+"uma\n"
+"ordem de produção, a ordem de produção é automaticamente\n"
+"marcada como iniciada. Depois de terminar a última operação de uma\n"
+"ordem de produção, a OP é feita automaticamente e os respectivos\n"
+"os produtos são produzidos."
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_delay
@@ -657,3 +699,6 @@ msgstr "mrp_operations.operation"
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
 msgid "mrp_operations.operation.code"
 msgstr "mrp_operations.operation.code"
+
+#~ msgid "Manufacturing Order"
+#~ msgstr "Ordem de Produção"

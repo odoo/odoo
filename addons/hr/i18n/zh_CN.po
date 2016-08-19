@@ -1,7 +1,8 @@
+# #-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr
-# 
+#
 # Translators:
 # fausthuang, 2015
 # fausthuang, 2015
@@ -15,22 +16,34 @@
 # yuwei.zhang <yuwei.pro@gmail.com>, 2016
 # yuwei.zhang <yuwei.pro@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
+# #-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr
+#
+# Translators:
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 10:41+0000\n"
-"PO-Revision-Date: 2016-07-12 01:08+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr
-#: code:addons/hr/hr.py:119
+#: code:addons/hr/models/hr.py:76
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -76,8 +89,11 @@ msgstr "<i>你可以轻松的管理他们</i>"
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid ""
 "<span class=\"o_unfollow\">Unfollow</span>\n"
-"                                    <span class=\"o_following\">Following</span>"
-msgstr "<span class=\"o_unfollow\">不关注</span>\n<span class=\"o_following\">已关注</span>"
+"                                    <span class=\"o_following\">Following</"
+"span>"
+msgstr ""
+"<span class=\"o_unfollow\">不关注</span>\n"
+"<span class=\"o_following\">已关注</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -107,7 +123,10 @@ msgid ""
 "people. You will start contract with a full technical and functional "
 "training. If you are passionate, motivate and flexible apply for this job, "
 "you will certainly join the best company ever."
-msgstr "一份全职工作，会与聪明的人在一个团队中和一份有吸引力的薪酬。你会从一份完整的技术和功能培训合同开始。如果你有足够激情、激励和灵活来申请这份工作，你肯定是加入了最好的公司。"
+msgstr ""
+"一份全职工作，会与聪明的人在一个团队中和一份有吸引力的薪酬。你会从一份完整的"
+"技术和功能培训合同开始。如果你有足够激情、激励和灵活来申请这份工作，你肯定是"
+"加入了最好的公司。"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -121,13 +140,7 @@ msgid "A good job in a young and dynamic team"
 msgstr "一个好的工作是在一个年轻而充满活力的团队"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_needaction
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_needaction
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_needaction
-msgid "Action Needed"
-msgstr "所需动作"
-
-#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "有效"
@@ -138,9 +151,15 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr "分析需求，编写规范文件和报价单"
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
+#, fuzzy
 msgid "Archived"
-msgstr "存档"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"存档\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"已归档"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -154,7 +173,9 @@ msgid ""
 "our team of enthusiastic chief technical officer. So if working on an open "
 "source project in a friendly and cooperative atmosphere sounds like fun to "
 "you, read on..."
-msgstr "因为不间断的成长，我们目前在寻找能够加强我们公司的富有热情的CTO，所以如果在一个友好合作的氛围中做开源项目对你来说比较不错的话，读一下……"
+msgstr ""
+"因为不间断的成长，我们目前在寻找能够加强我们公司的富有热情的CTO，所以如果在一"
+"个友好合作的氛围中做开源项目对你来说比较不错的话，读一下……"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -164,9 +185,11 @@ msgstr "因为不间断的成长，我们目前在寻找能够加强我们公司
 #: model:hr.job,website_description:hr.job_marketing
 msgid ""
 "Because of our constant growth, we're now looking for people to reinforce "
-"our team of enthusiastic developers. So if working on an open source project"
-" in a friendly and cooperative atmosphere sounds like fun to you, read on..."
-msgstr "因为不间断的成长，我们正在寻找富有热情的开发人员来壮大我们的团队，所以如果在一个友好合作的氛围中做开源项目对你来说比较不错的话，读一下……"
+"our team of enthusiastic developers. So if working on an open source project "
+"in a friendly and cooperative atmosphere sounds like fun to you, read on..."
+msgstr ""
+"因为不间断的成长，我们正在寻找富有热情的开发人员来壮大我们的团队，所以如果在"
+"一个友好合作的氛围中做开源项目对你来说比较不错的话，读一下……"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_trainee
@@ -174,7 +197,9 @@ msgid ""
 "Because of our constant growth, we're now looking for people to reinforce "
 "our team of enthusiastic trainees. So if working on an open source project "
 "in a friendly and cooperative atmosphere sounds like fun to you, read on..."
-msgstr "因为不间断的成长，我们正在寻找富有热情的学员来壮大我们的团队，所以如果在一个友好合作的氛围中做开源项目对你来说比较不错的话，读一下……"
+msgstr ""
+"因为不间断的成长，我们正在寻找富有热情的学员来壮大我们的团队，所以如果在一个"
+"友好合作的氛围中做开源项目对你来说比较不错的话，读一下……"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -221,11 +246,6 @@ msgstr "单击添加一个新的员工"
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
 msgstr "单击创建一个部门"
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid "Click to define a new department."
-msgstr "单击定义一个新的部门"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -287,8 +307,13 @@ msgstr "顾问"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
+#, fuzzy
 msgid "Contact Information"
-msgstr "联系信息"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"联系信息\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"合同信息"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -296,11 +321,6 @@ msgstr "联系信息"
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Contributions to open source projects"
 msgstr "贡献开源项目"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr "创建您的部门"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
@@ -315,8 +335,13 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_date
 #: model:ir.model.fields,field_description:hr.field_hr_job_create_date
+#, fuzzy
 msgid "Created on"
-msgstr "创建时间"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"创建时间\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"创建于"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_employee
@@ -327,13 +352,6 @@ msgstr "当前员工数量"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_birthday
 msgid "Date of Birth"
 msgstr "出生日期"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_last_post
-#: model:ir.model.fields,help:hr.field_hr_employee_message_last_post
-#: model:ir.model.fields,help:hr.field_hr_job_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "发布到记录上的最后消息的日期"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -399,8 +417,13 @@ msgstr "员工"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_category
+#, fuzzy
 msgid "Employee Category"
-msgstr "员工分类"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"员工分类\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"员工类别"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_name
@@ -450,13 +473,13 @@ msgid "Employees Tags"
 msgstr "员工标签"
 
 #. module: hr
-#: code:addons/hr/hr.py:299 constraint:hr.department:0
+#: code:addons/hr/models/hr.py:264
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "错误！你不能创建递归的部门"
 
 #. module: hr
-#: code:addons/hr/hr.py:269 constraint:hr.employee:0
+#: code:addons/hr/models/hr.py:177
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "错误！您不能创建递归的员工层级。"
@@ -493,31 +516,19 @@ msgid "Follow and check the development part"
 msgstr "关注和检查开发部分"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_follower_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_follower_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_follower_ids
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr "关注者"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_channel_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_channel_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "关注者(频道)"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_partner_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_partner_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "关注者（业务伙伴）"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
 msgstr "性别"
+
+#. module: hr
+#: model:web.tip,description:hr.hr_tip_1
+msgid "Get all applications related to this job position."
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -566,11 +577,6 @@ msgid "Group By"
 msgstr "分组"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "HR Department"
-msgstr "HR 部门"
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
 msgstr "HR 设置"
@@ -606,6 +612,11 @@ msgid "Home Address"
 msgstr "家庭地址"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "Hr Department"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
 msgstr "人力资源"
@@ -620,27 +631,18 @@ msgstr "人力资源管理员"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_id
+#, fuzzy
 msgid "ID"
-msgstr "ID"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"ID\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"标识"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_identification_id
 msgid "Identification No"
 msgstr "身份证号"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_unread
-#: model:ir.model.fields,help:hr.field_hr_employee_message_unread
-#: model:ir.model.fields,help:hr.field_hr_job_message_unread
-msgid "If checked new messages require your attention."
-msgstr "查看是否有需要留意的新信息。"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_needaction
-#: model:ir.model.fields,help:hr.field_hr_employee_message_needaction
-#: model:ir.model.fields,help:hr.field_hr_job_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "确认后, 会出现新消息."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_active
@@ -681,13 +683,6 @@ msgid "Increase the visibility of the product"
 msgstr "增加产品的可见性"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_is_follower
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_is_follower
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_is_follower
-msgid "Is Follower"
-msgstr "是关注者"
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model:ir.ui.view,arch_db:hr.view_hr_job_tree
@@ -707,8 +702,13 @@ msgstr "工作名称"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_job
+#, fuzzy
 msgid "Job Position"
-msgstr "工作岗位"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"工作岗位\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"职位"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -726,10 +726,14 @@ msgstr "工作岗位"
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid ""
 "Job Positions are used to define jobs and their requirements.\n"
-"                You can keep track of the number of employees you have per job\n"
-"                position and follow the evolution according to what you planned\n"
+"                You can keep track of the number of employees you have per "
+"job\n"
+"                position and follow the evolution according to what you "
+"planned\n"
 "                for the future."
-msgstr "工作职位用来定义工作和相关需求\n你可以根据工作职称来跟踪雇员并且根据变化计划将来的事情"
+msgstr ""
+"工作职位用来定义工作和相关需求\n"
+"你可以根据工作职称来跟踪雇员并且根据变化计划将来的事情"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
@@ -743,39 +747,43 @@ msgid "Jobs"
 msgstr "工作"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_last_post
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_last_post
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_last_post
-msgid "Last Message Date"
-msgstr "最后消息日期"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_job___last_update
+#, fuzzy
 msgid "Last Modified on"
-msgstr "最后修改时间"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_last_website_so_id
-msgid "Last Online Sale Order"
-msgstr "最近的在线销售订单"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"最后修改时间\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"最后修改日"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job_write_uid
+#, fuzzy
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"最后更新者\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"最后更新人"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_date
+#: model:ir.model.fields,field_description:hr.field_hr_job_write_date
+#, fuzzy
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"最后更新时间\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"最近更新时间"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_last_login
@@ -804,8 +812,13 @@ msgstr "发布新的产品，市场营销和职位"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_login
+#, fuzzy
 msgid "Login"
-msgstr "用户名"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"用户名\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"登录"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -816,8 +829,13 @@ msgstr "男性"
 #: model:ir.model.fields,field_description:hr.field_hr_department_manager_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_parent_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
+#, fuzzy
 msgid "Manager"
-msgstr "管理员"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"管理员\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"经理"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_marital
@@ -852,20 +870,29 @@ msgid ""
 "Medium-sized photo of the employee. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "员工的中等尺寸照片。保留纵横比例，自动缩放为128x128px的图像。这个字段用在表单视图和某些看板视图。"
+msgstr ""
+"员工的中等尺寸照片。保留纵横比例，自动缩放为128x128px的图像。这个字段用在表单"
+"视图和某些看板视图。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_member_ids
+#, fuzzy
 msgid "Members"
-msgstr "成员"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"成员\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"会员"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_ids
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+#, fuzzy
 msgid "Messages"
-msgstr "消息"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"消息\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"信息"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -884,7 +911,6 @@ msgid "Must have ..."
 msgstr "一定有..."
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
@@ -908,20 +934,23 @@ msgstr "最好有"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
+#, fuzzy
 msgid "Note"
-msgstr "备注"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"备注\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"笔记"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_notes
+#, fuzzy
 msgid "Notes"
-msgstr "备注"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_needaction_counter
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_needaction_counter
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_needaction_counter
-msgid "Number of Actions"
-msgstr "动作的序列号"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"备注\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"便签"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
@@ -935,23 +964,9 @@ msgid ""
 msgstr "招聘阶段此岗位已经雇佣的员工数量。"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_needaction_counter
-#: model:ir.model.fields,help:hr.field_hr_employee_message_needaction_counter
-#: model:ir.model.fields,help:hr.field_hr_job_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要动作的消息编号"
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_recruitment
 msgid "Number of new employees you expect to recruit."
 msgstr "您计划招聘的新员工数。"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_unread_counter
-#: model:ir.model.fields,help:hr.field_hr_employee_message_unread_counter
-#: model:ir.model.fields,help:hr.field_hr_job_message_unread_counter
-msgid "Number of unread messages"
-msgstr "未读的消息数量"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -959,12 +974,9 @@ msgid ""
 "Odoo's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves and holidays, recruitments, etc."
-msgstr "Odoo的部门结构用来管理所有不同部门员工的文档：费用，工时单，休假和假期，招聘等等"
-
-#. module: hr
-#: model:ir.actions.client,name:hr.action_client_hr_menu
-msgid "Open HR Menu"
-msgstr "打开 人力资源 菜单"
+msgstr ""
+"Odoo的部门结构用来管理所有不同部门员工的文档：费用，工时单，休假和假期，招聘"
+"等等"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -991,6 +1003,11 @@ msgstr "我们的员工在工作中"
 #: model:ir.model.fields,field_description:hr.field_hr_department_parent_id
 msgid "Parent Department"
 msgstr "上级部门"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Partner"
+msgstr "业务伙伴"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -1077,8 +1094,13 @@ msgstr "用于管理资源访问权限的用户名"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
+#, fuzzy
 msgid "Reports"
-msgstr "报告"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"报告\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"报表"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_requirements
@@ -1159,9 +1181,10 @@ msgstr "小尺寸照片"
 #: model:ir.model.fields,help:hr.field_hr_employee_image_small
 msgid ""
 "Small-sized photo of the employee. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
-msgstr "小尺寸的员工照片。保留纵横比，自动缩放为64x64px。用在任何需要小图像的场合"
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
+msgstr ""
+"小尺寸的员工照片。保留纵横比，自动缩放为64x64px。用在任何需要小图像的场合"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_sinid
@@ -1196,11 +1219,6 @@ msgid "Subordinates"
 msgstr "下属"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_subscription_count
-msgid "Subscriptions"
-msgstr "订阅"
-
-#. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
 msgstr "标签名已存在!"
@@ -1230,9 +1248,12 @@ msgstr "公司每个部门内的岗位名称必须唯一！"
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
-msgstr "这个字段描述完成任务的资源的效率。比如：例如： 资源单独投入一个阶段， 5 天 5 个任务指派给他，这一阶段默认情况将显示 100%的负荷，下，但如果我们把效率设置为 200%，他的负荷将只是 50%。"
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
+msgstr ""
+"这个字段描述完成任务的资源的效率。比如：例如： 资源单独投入一个阶段， 5 天 5 "
+"个任务指派给他，这一阶段默认情况将显示 100%的负荷，下，但如果我们把效率设置"
+"为 200%，他的负荷将只是 50%。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
@@ -1257,9 +1278,6 @@ msgid "Transform our product into a suite of well positioned business Apps"
 msgstr "将我们的产品转化为一套好的商务应用程序"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_unread
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_unread
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1268,16 +1286,9 @@ msgid "Unread Messages"
 msgstr "未读消息"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_unread_counter
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread_counter
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "未读消息计数器"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_write_date
-msgid "Update Date"
-msgstr "更新日期"
+#: model:ir.model.fields,help:hr.field_hr_employee_login
+msgid "Used to log into the system"
+msgstr "用户登录入系统"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1292,38 +1303,46 @@ msgstr "用户"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid ""
-"We are looking for a motivated and results-driven Functional Consultant! You"
-" will take part in the consulting services we provide to our partners and "
+"We are looking for a motivated and results-driven Functional Consultant! You "
+"will take part in the consulting services we provide to our partners and "
 "customers, on the functional side. Your job start from the quotation to the "
-"customer to the delivery to the customer. You listen the customer and try to"
-" give him the best service. You report to the head of consulting service and"
-" will be coached by a senior consultant."
-msgstr "我们在寻找以动机和结果为导向的功能顾问，来参与到我们给顾客和业务伙伴提供的咨询服务中。 在功能方面，你的工作将会从给顾客报价一直到交货为止。倾听并给客户提供最好的服务。回报对象是咨询部门领导。并且由高级顾问对你进行培训"
+"customer to the delivery to the customer. You listen the customer and try to "
+"give him the best service. You report to the head of consulting service and "
+"will be coached by a senior consultant."
+msgstr ""
+"我们在寻找以动机和结果为导向的功能顾问，来参与到我们给顾客和业务伙伴提供的咨"
+"询服务中。 在功能方面，你的工作将会从给顾客报价一直到交货为止。倾听并给客户提"
+"供最好的服务。回报对象是咨询部门领导。并且由高级顾问对你进行培训"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_hrm
 msgid ""
 "We are looking for a passionated Human Resources Manager to help us make "
 "products people love to use. We need someone who is ambitious, passionated, "
-"and ..... not afraid to start new things, a lot of new things and scale "
-"them."
-msgstr "我们在寻找一个热情的人力资源经理，来帮产品人员喜欢用它，需要有上进心的，热情的，和……，不害怕接触新事物，接触这些新的事物并规划它们"
+"and ..... not afraid to start new things, a lot of new things and scale them."
+msgstr ""
+"我们在寻找一个热情的人力资源经理，来帮产品人员喜欢用它，需要有上进心的，热情"
+"的，和……，不害怕接触新事物，接触这些新的事物并规划它们"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 msgid ""
 "We are looking for a passionated executive manager to help us make products "
-"people love to use. We need someone who is ambitious, passionated, and ....."
-" not afraid to start new things, a lot of new things and scale them."
-msgstr "我们在寻找一个热情的执行经理，来帮产品人员喜欢用它，需要有上进心的，热情的，和……，不害怕接触新事物，接触这些新的事物并规划它们"
+"people love to use. We need someone who is ambitious, passionated, and ..... "
+"not afraid to start new things, a lot of new things and scale them."
+msgstr ""
+"我们在寻找一个热情的执行经理，来帮产品人员喜欢用它，需要有上进心的，热情的，"
+"和……，不害怕接触新事物，接触这些新的事物并规划它们"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
 msgid ""
 "We are looking for a passionated marketer manager to help us make products "
-"people love to use. We need someone who is ambitious, passionated, and ....."
-" not afraid to start new things, a lot of new things and scale them."
-msgstr "我们在寻找一个富有热情的市场经理，来帮助产品人员喜欢用它。我们需要有上进心的，热情的，和……，不害怕接触新事物，接触这些新的事物并规划它们"
+"people love to use. We need someone who is ambitious, passionated, and ..... "
+"not afraid to start new things, a lot of new things and scale them."
+msgstr ""
+"我们在寻找一个富有热情的市场经理，来帮助产品人员喜欢用它。我们需要有上进心"
+"的，热情的，和……，不害怕接触新事物，接触这些新的事物并规划它们"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1362,9 +1381,12 @@ msgstr "汇报给服务部主管"
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
-"                can easily find all the information you need for each person;\n"
+"                can easily find all the information you need for each "
+"person;\n"
 "                contact data, job position, availability, etc."
-msgstr "随着Odoo员工的屏幕上只是一个快速浏览，你可以很容易地找到你所需要的每个人的信息;联系人数据，工作岗位，可用性等。"
+msgstr ""
+"随着Odoo员工的屏幕上只是一个快速浏览，你可以很容易地找到你所需要的每个人的信"
+"息;联系人数据，工作岗位，可用性等。"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1378,7 +1400,9 @@ msgid ""
 "With our product, which is a suite of 3000 business apps. It is fully open "
 "source, full featured and it’s online offer is 3 times cheaper than "
 "traditional competitors. We have 2.000.000 users, and we're growing fast."
-msgstr "我们的产品是一个有着3000个APP的商务应用程序，它是全部开源的，非常多的功能并且在线报价比传统的竞争者便宜３倍，我们有超过 2.000.000用户，并且我们增长很快"
+msgstr ""
+"我们的产品是一个有着3000个APP的商务应用程序，它是全部开源的，非常多的功能并且"
+"在线报价比传统的竞争者便宜３倍，我们有超过 2.000.000用户，并且我们增长很快"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
@@ -1470,7 +1494,8 @@ msgstr "你准备在一个充满活力的公司工作"
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid ""
 "You can attach a survey to a job position. It will be used in\n"
-"                the recruitment process to evaluate the applicants for this job\n"
+"                the recruitment process to evaluate the applicants for this "
+"job\n"
 "                position."
 msgstr "你可以给一个职位做调查，它被用在招聘流程中，用来评估这个职位的申请者"
 
@@ -1515,21 +1540,27 @@ msgstr "你讲英语和法语很流利"
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_trainee
+#, fuzzy
 msgid ""
-"You will be responsible for developing and improving applications, such as "
-"the You will work autonomously as well as                     coordinate and"
-" supervise small distributed development teams for specific projects. You "
-"will become a technical                 expert of the product."
-msgstr "你要负责开发和改进引用，例如某些特定的项目要自主的工作同时协调并领导小型的分散的团队你会是一个技术专家"
+"You will be responsible for developing and improving applications. You will "
+"work autonomously as well as                     coordinate and supervise "
+"small distributed development teams for specific projects. You will become a "
+"technical                 expert of the product."
+msgstr ""
+"你要负责开发和改进引用，例如某些特定的项目要自主的工作同时协调并领导小型的分"
+"散的团队你会是一个技术专家"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
+#, fuzzy
 msgid ""
-"You will be responsible for developing and improving applications, such as "
-"the You will work autonomously as well as coordinate and supervise small "
-"distributed development teams for specific projects. You will become a "
-"technical expert of the product."
-msgstr "你要负责开发和改进引用，某些特定的项目要自主的工作同时协调并领导小型的分散的团队你会是一个技术专家"
+"You will be responsible for developing and improving applications. You will "
+"work autonomously as well as coordinate and supervise small distributed "
+"development teams for specific projects. You will become a technical expert "
+"of the product."
+msgstr ""
+"你要负责开发和改进引用，某些特定的项目要自主的工作同时协调并领导小型的分散的"
+"团队你会是一个技术专家"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1540,7 +1571,9 @@ msgid ""
 "You will work autonomously as well as coordinate and supervise small "
 "distributed development teams for specific projects. You will become a "
 "techinical expert of the product."
-msgstr "你要负责开发和改进引用产品的交流，某些特定的项目要自主的工作同时协调并领导小型的分散的团队你会是一个技术专家"
+msgstr ""
+"你要负责开发和改进引用产品的交流，某些特定的项目要自主的工作同时协调并领导小"
+"型的分散的团队你会是一个技术专家"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -1587,14 +1620,6 @@ msgid "You will work closely with all trainees"
 msgstr "你将会和所有的学员紧密合作"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid ""
-"Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and timesheets,\n"
-"                leaves and holidays, recruitments, etc."
-msgstr "部门结构用来管理所有的不同部门员工的相关文档：费用和工时单，休假和假期，招聘等等"
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "部门"
@@ -1603,3 +1628,72 @@ msgstr "部门"
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Part Time"
 msgstr "例如： 部分时间"
+
+#~ msgid "Action Needed"
+#~ msgstr "所需动作"
+
+#~ msgid "Click to define a new department."
+#~ msgstr "单击定义一个新的部门"
+
+#~ msgid "Create Your Departments"
+#~ msgstr "创建您的部门"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "发布到记录上的最后消息的日期"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "关注者(频道)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "关注者（业务伙伴）"
+
+#~ msgid "HR Department"
+#~ msgstr "HR 部门"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "查看是否有需要留意的新信息。"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "确认后, 会出现新消息."
+
+#~ msgid "Is Follower"
+#~ msgstr "是关注者"
+
+#~ msgid "Last Message Date"
+#~ msgstr "最后消息日期"
+
+#~ msgid "Last Online Sale Order"
+#~ msgstr "最近的在线销售订单"
+
+#~ msgid "Number of Actions"
+#~ msgstr "动作的序列号"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "需要动作的消息编号"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "未读的消息数量"
+
+#~ msgid "Open HR Menu"
+#~ msgstr "打开 人力资源 菜单"
+
+#~ msgid "Subscriptions"
+#~ msgstr "订阅"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "未读消息计数器"
+
+#~ msgid "Update Date"
+#~ msgstr "更新日期"
+
+#~ msgid ""
+#~ "Your departments structure is used to manage all documents\n"
+#~ "                related to employees by departments: expenses and "
+#~ "timesheets,\n"
+#~ "                leaves and holidays, recruitments, etc."
+#~ msgstr ""
+#~ "部门结构用来管理所有的不同部门员工的相关文档：费用和工时单，休假和假期，招"
+#~ "聘等等"
+
+#~ msgid "Resource Name"
+#~ msgstr "资源名称"

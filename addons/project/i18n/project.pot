@@ -4,16 +4,131 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~11c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-10-09 09:17+0000\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"PO-Revision-Date: 2016-08-19 10:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_module_install_project
+msgid "\n"
+"            % set last_created_project = user.env['project.project'].search([], order=\"create_date desc\")[0]\n"
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #a24689;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p style=\"color:#a24689;margin:0\" >Hooray!</p><br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Your Odoo Project application is up and running</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold;\">What’s next?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Try creating a task by sending an email to </span>\n"
+"                                        <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                        </a>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Invite new users</span></a></span>\n"
+"                                        <span>to collaborate</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Discover the </span>\n"
+"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">project planner</span></a></span>\n"
+"                                <span> to activate extra features</span>\n"
+"                                <span style=\"color:#a24689;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Track hours with timesheets,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Plan tasks and resources with forecasts,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Get smart reporting and accurate dashboards,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Bill time on tasks or issues,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>And much more...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Need Help?</span>\n"
+"                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us at \n"
+"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
+"                                help@odoo.com</span></a> if you have any question. You can also discover \n"
+"                                how to get the best out of Odoo Project with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
+"                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
+"                                </span><span> or with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/9.0/\">\n"
+"                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Enjoy your Odoo experience,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
+msgstr ""
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid "\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -32,18 +147,11 @@ msgid "# of Tasks"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:248
-#: code:addons/project/project.py:267
-#: code:addons/project/project.py:413
+#: code:addons/project/project.py:273
+#: code:addons/project/project.py:294
+#: code:addons/project/project.py:438
 #, python-format
 msgid "%s (copy)"
-msgstr ""
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/xml/project.xml:8
-#, python-format
-msgid "&times;"
 msgstr ""
 
 #. module: project
@@ -72,7 +180,7 @@ msgid "<i class=\"fa fa-user\"/> Person Responsible"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:139
+#: code:addons/project/project.py:151
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                        Documents are attached to the tasks and issues of your project.</p><p>\n"
@@ -382,7 +490,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Follow only what you need</strong><br/>\n"
-"                                    The simplest way to use notifications is to follow a whole Project: you will then receive all the selected notifications for all the Project's new and existing and new Tasks or Issues."
+"                                    The simplest way to use notifications is to follow a whole project: you will receive notifications for all the new and existing tasks or issues of a project."
 msgstr ""
 
 #. module: project
@@ -575,12 +683,6 @@ msgid "Account Preferences"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_message_needaction
-#: model:ir.model.fields,field_description:project.field_project_task_message_needaction
-msgid "Action Needed"
-msgstr ""
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:38
 #, python-format
@@ -651,9 +753,9 @@ msgid "Aliased Model"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:133
 #, python-format
-msgid "All Employees Project: all employees can access"
+msgid "All employees"
 msgstr ""
 
 #. module: project
@@ -757,7 +859,7 @@ msgid "At the end of the week, each employee should review\n"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:132
+#: code:addons/project/project.py:144
 #: model:ir.model.fields,field_description:project.field_project_task_attachment_ids
 #, python-format
 msgid "Attachments"
@@ -866,12 +968,7 @@ msgid "Check this box to manage internal activities through this project"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project_use_timesheets
-msgid "Check this field if this project manages timesheets"
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:612
+#: code:addons/project/project.py:640
 #, python-format
 msgid "Child task still open.\n"
 "Please cancel or complete child task first."
@@ -895,10 +992,13 @@ msgid "Click to add a stage in the task pipeline."
 msgstr ""
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/xml/project.xml:25
-#, python-format
-msgid "Close"
+#: model:ir.ui.view,arch_db:project.view_project_kanban
+msgid "Click to add/remove from favorite"
+msgstr ""
+
+#. module: project
+#: model:web.tip,description:project.project_tip_1
+msgid "Click to view all the tasks related to this project."
 msgstr ""
 
 #. module: project
@@ -1082,7 +1182,7 @@ msgid "Current Timesheet"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:829
+#: code:addons/project/project.py:860
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1091,15 +1191,9 @@ msgid "Customer"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:829
+#: code:addons/project/project.py:860
 #, python-format
 msgid "Customer Email"
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:120
-#, python-format
-msgid "Customer Project: visible in portal if the customer is a follower"
 msgstr ""
 
 #. module: project
@@ -1129,6 +1223,12 @@ msgid "Customer has reported new issue"
 msgstr ""
 
 #. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer project"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:70
 #, python-format
@@ -1154,12 +1254,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_date
 #: model:ir.model.fields,field_description:project.field_project_task_history_date
 msgid "Date"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_project_message_last_post
-#: model:ir.model.fields,help:project.field_project_task_message_last_post
-msgid "Date of the last message posted on the record."
 msgstr ""
 
 #. module: project
@@ -1194,11 +1288,6 @@ msgid "Define the steps that will be used in the project from the\n"
 "                creation of the task, up to the closing of the task or issue.\n"
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_child_ids
-msgid "Delegated Tasks"
 msgstr ""
 
 #. module: project
@@ -1291,11 +1380,6 @@ msgid "Do not estimate working time on tasks"
 msgstr ""
 
 #. module: project
-#: selection:project.config.settings,module_project_timesheet:0
-msgid "Do not record timesheets on tasks"
-msgstr ""
-
-#. module: project
 #: selection:project.config.settings,module_project_issue_sheet:0
 msgid "Do not track working hours on issues"
 msgstr ""
@@ -1361,6 +1445,11 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Email Alias"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
+msgid "Email Template"
 msgstr ""
 
 #. module: project
@@ -1465,6 +1554,11 @@ msgid "Extra useful for when you're with a customer or in a meeting."
 msgstr ""
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_project_kanban
+msgid "Favorite"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:88
 #, python-format
@@ -1491,24 +1585,6 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Followed by Me"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_message_follower_ids
-#: model:ir.model.fields,field_description:project.field_project_task_message_follower_ids
-msgid "Followers"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_message_channel_ids
-#: model:ir.model.fields,field_description:project.field_project_task_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_message_partner_ids
-#: model:ir.model.fields,field_description:project.field_project_task_message_partner_ids
-msgid "Followers (Partners)"
 msgstr ""
 
 #. module: project
@@ -1633,7 +1709,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_history
-#: model:ir.model,name:project.model_project_task_history_cumulative
 msgid "History of Tasks"
 msgstr ""
 
@@ -1649,7 +1724,7 @@ msgid "Holds visibility of the tasks or issues that belong to the current projec
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:760
+#: code:addons/project/project.py:791
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -1703,15 +1778,8 @@ msgid "Identify problems and blocking points more easily"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project_message_unread
-#: model:ir.model.fields,help:project.field_project_task_message_unread
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_project_message_needaction
-#: model:ir.model.fields,help:project.field_project_task_message_needaction
-msgid "If checked, new messages require your attention."
+#: model:ir.model.fields,help:project.field_project_task_type_mail_template_id
+msgid "If set an email will be sent to the customer when the task or issue reaches this step."
 msgstr ""
 
 #. module: project
@@ -1791,12 +1859,6 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Internal notes are messages that will appear in the Chatter but will not be notified in Odoo's Inbox."
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_message_is_follower
-#: model:ir.model.fields,field_description:project.field_project_task_message_is_follower
-msgid "Is Follower"
 msgstr ""
 
 #. module: project
@@ -1911,12 +1973,6 @@ msgid "Last Message"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_message_last_post
-#: model:ir.model.fields,field_description:project.field_project_task_message_last_post
-msgid "Last Message Date"
-msgstr ""
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
 msgid "Last Modification Date"
 msgstr ""
@@ -2014,15 +2070,8 @@ msgid "Marketing Department"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_message_ids
-#: model:ir.model.fields,field_description:project.field_project_task_message_ids
-msgid "Messages"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_project_message_ids
-#: model:ir.model.fields,help:project.field_project_task_message_ids
-msgid "Messages and communication history"
+#: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
+msgid "Members"
 msgstr ""
 
 #. module: project
@@ -2036,11 +2085,17 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr ""
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "More Info"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr ""
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:ir.ui.view,arch_db:project.view_task_history_search
 msgid "My Projects"
 msgstr ""
@@ -2074,7 +2129,7 @@ msgid "New"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:762
+#: code:addons/project/project.py:793
 #, python-format
 msgid "New Task"
 msgstr ""
@@ -2120,12 +2175,6 @@ msgid "Notifications"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_message_needaction_counter
-#: model:ir.model.fields,field_description:project.field_project_task_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
 msgid "Number of Days to Open the task"
 msgstr ""
@@ -2138,18 +2187,6 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
 msgid "Number of documents attached"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_project_message_needaction_counter
-#: model:ir.model.fields,help:project.field_project_task_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_project_message_unread_counter
-#: model:ir.model.fields,help:project.field_project_task_message_unread_counter
-msgid "Number of unread messages"
 msgstr ""
 
 #. module: project
@@ -2177,11 +2214,6 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Open"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.client,name:project.action_client_project_menu
-msgid "Open Project Menu"
 msgstr ""
 
 #. module: project
@@ -2293,7 +2325,7 @@ msgid "Planner"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:895
+#: code:addons/project/project.py:953
 #, python-format
 msgid "Please remove existing tasks in the project linked to the accounts you want to delete."
 msgstr ""
@@ -2303,7 +2335,7 @@ msgstr ""
 msgid "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
+"- followers: only followers of the related document or members of following channels\n"
 ""
 msgstr ""
 
@@ -2329,9 +2361,9 @@ msgid "Privacy / Visibility"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:122
+#: code:addons/project/project.py:134
 #, python-format
-msgid "Private Project: followers only"
+msgid "Private: followers only"
 msgstr ""
 
 #. module: project
@@ -2398,12 +2430,6 @@ msgid "Project Tasks"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
-#: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
-msgid "Project Time Unit"
-msgstr ""
-
-#. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
 msgstr ""
@@ -2414,7 +2440,7 @@ msgid "Project's tasks"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:282
+#: code:addons/project/project.py:309
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.actions.act_window,name:project.open_view_project_all_config
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_ids
@@ -2427,6 +2453,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_project
 #, python-format
 msgid "Projects"
+msgstr ""
+
+#. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
 msgstr ""
 
 #. module: project
@@ -2500,13 +2531,13 @@ msgid "Reason for cancellation has been documented"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
-msgid "Record Thread ID"
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
 msgstr ""
 
 #. module: project
-#: selection:project.config.settings,module_project_timesheet:0
-msgid "Record timesheet lines per tasks"
+#: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
+msgid "Record Thread ID"
 msgstr ""
 
 #. module: project
@@ -2652,7 +2683,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/xml/project.xml:9
+#: code:addons/project/static/src/js/project.js:45
 #, python-format
 msgid "Set a Cover Image"
 msgstr ""
@@ -2671,6 +2702,11 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Share files and manage versions"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_is_favorite
+msgid "Show Project on dashboard"
 msgstr ""
 
 #. module: project
@@ -2763,11 +2799,6 @@ msgid "Starting Date"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_account_type
-msgid "State"
-msgstr ""
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_state
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2775,8 +2806,8 @@ msgid "Status"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_subscription_ids
-msgid "Subscriptions"
+#: model:ir.model.fields,field_description:project.field_project_task_child_ids
+msgid "Sub-tasks"
 msgstr ""
 
 #. module: project
@@ -2907,11 +2938,6 @@ msgid "Task's Analysis"
 msgstr ""
 
 #. module: project
-#: model:res.groups,name:project.group_tasks_work_on_tasks
-msgid "Task's Work on Tasks"
-msgstr ""
-
-#. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_use_tasks
@@ -3024,7 +3050,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/xml/project.xml:20
+#: code:addons/project/static/src/xml/project.xml:7
 #, python-format
 msgid "There is no available image to be set as cover. Send a message on the task with an attached image."
 msgstr ""
@@ -3032,12 +3058,6 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_rating_project
 msgid "This allows customers to give rating on provided services"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_config_settings_module_project_timesheet
-msgid "This allows you to transfer the entries under tasks defined for Project Management to the timesheet line entries for particular date and user, with the effect of creating, editing and deleting either ways.\n"
-"-This installs the module project_timesheet."
 msgstr ""
 
 #. module: project
@@ -3077,7 +3097,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
 msgid "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
+"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
 
 #. module: project
@@ -3097,6 +3117,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
 msgstr ""
 
@@ -3106,7 +3127,6 @@ msgid "Timesheet app for Chrome/Android/iOS"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_use_timesheets
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Timesheets"
 msgstr ""
@@ -3126,11 +3146,6 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Timesheets can be used for several purposes:"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_timesheet
-msgid "Timesheets on Project"
 msgstr ""
 
 #. module: project
@@ -3172,11 +3187,6 @@ msgid "Total remaining time, can be re-estimated periodically by the assignee of
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_account_type
-msgid "Type of Account"
-msgstr ""
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unassigned"
@@ -3188,18 +3198,10 @@ msgid "Unassigned Tasks"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_message_unread
-#: model:ir.model.fields,field_description:project.field_project_task_message_unread
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unread Messages"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_message_unread_counter
-#: model:ir.model.fields,field_description:project.field_project_task_message_unread_counter
-msgid "Unread Messages Counter"
 msgstr ""
 
 #. module: project
@@ -3304,18 +3306,6 @@ msgid "We've developed a super simple and efficient Chrome extension to enter yo
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_website_message_ids
-#: model:ir.model.fields,field_description:project.field_project_task_website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_project_website_message_ids
-#: model:ir.model.fields,help:project.field_project_task_website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Welcome"
 msgstr ""
@@ -3348,6 +3338,11 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is their average number of working hours over the year?"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_is_favorite
+msgid "Whether this project should be displayed on the dashboard or not"
 msgstr ""
 
 #. module: project
@@ -3399,11 +3394,11 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-msgid "You can save your reports to for easy reuse later"
+msgid "You can save your reports to easily reuse it later"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:87
+#: code:addons/project/project.py:94
 #, python-format
 msgid "You cannot delete a project containing tasks. You can either delete all the project's tasks and then delete the project or simply deactivate the project."
 msgstr ""
@@ -3416,6 +3411,11 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Objectives"
+msgstr ""
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_module_install_project
+msgid "Your Odoo Project application is up and running"
 msgstr ""
 
 #. module: project
@@ -3459,12 +3459,17 @@ msgid "project.config.settings"
 msgstr ""
 
 #. module: project
+#: model:ir.model,name:project.model_project_task_history_cumulative
+msgid "project.task.history.cumulative"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "send us an email"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:569
+#: code:addons/project/project.py:597
 #, python-format
 msgid "tasks"
 msgstr ""
@@ -3477,7 +3482,6 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
 #: model:ir.model.fields,field_description:project.field_project_project_project_count
-#: model:ir.model.fields,field_description:project.field_project_project_subscription_count
 #: model:ir.model.fields,field_description:project.field_project_project_task_ids
 msgid "unknown"
 msgstr ""

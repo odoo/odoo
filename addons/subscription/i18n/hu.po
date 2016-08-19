@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * subscription
-# 
+#
 # Translators:
 # krnkris, 2015
 # krnkris, 2016
@@ -9,14 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-19 10:25+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
+"hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: subscription
@@ -69,7 +70,8 @@ msgstr "Alapértelmezett Érték"
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_document_fields_value
 msgid "Default value is considered for field when new document is generated."
-msgstr "A mező alap értéke ki lesz választva amint egy új dokumentum generálva lesz."
+msgstr ""
+"A mező alap értéke ki lesz választva amint egy új dokumentum generálva lesz."
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_note
@@ -138,14 +140,18 @@ msgstr "ID"
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription document without removing it."
-msgstr "Ha az aktív mező Hamisra állított, akkor lehetősége van a dokumentumot amire feliratkozott eltüntetni anélkül, hogy törölné azt."
+msgstr ""
+"Ha az aktív mező Hamisra állított, akkor lehetősége van a dokumentumot amire "
+"feliratkozott eltüntetni anélkül, hogy törölné azt."
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription without removing it."
-msgstr "Ha az aktív mező Hamisra állított, akkor lehetősége van a dokumentumot amire feliratkozott eltüntetni anélkül, hogy törölné azt."
+msgstr ""
+"Ha az aktív mező Hamisra állított, akkor lehetősége van a dokumentumot amire "
+"feliratkozott eltüntetni anélkül, hogy törölné azt."
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_notes
@@ -155,7 +161,8 @@ msgstr "Belső jegyzetek"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
-msgid "Interval Qty"
+#, fuzzy
+msgid "Internal Qty"
 msgstr "Intervallum db"
 
 #. module: subscription
@@ -206,7 +213,8 @@ msgstr "Jegyzetek"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
-msgid "Number of documents"
+#, fuzzy
+msgid "Number of Documents"
 msgstr "Dokumentumok száma"
 
 #. module: subscription
@@ -221,12 +229,14 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:101
+#: code:addons/subscription/models/subscription.py:88
 #, python-format
 msgid ""
 "Please provide another source document.\n"
 "This one does not exist!"
-msgstr "Kérem gondoskodjon másik forrás dokumentumról.\nEz nem létezik!"
+msgstr ""
+"Kérem gondoskodjon másik forrás dokumentumról.\n"
+"Ez nem létezik!"
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
@@ -291,6 +301,12 @@ msgid "Subscription"
 msgstr "Feliratkozás"
 
 #. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+#, fuzzy
+msgid "Subscription Data"
+msgstr "Feliratkozási adat"
+
+#. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_document_id
 #: model:ir.ui.view,arch_db:subscription.document_form
@@ -324,11 +340,6 @@ msgid "Subscriptions"
 msgstr "Feliratkozások"
 
 #. module: subscription
-#: model:ir.ui.view,arch_db:subscription.view_subscription_form
-msgid "Subsription Data"
-msgstr "Feliratkozási adat"
-
-#. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_user_id
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "User"
@@ -338,7 +349,9 @@ msgstr "Felhasználó"
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_doc_source
 msgid ""
 "User can choose the source document on which he wants to create documents"
-msgstr "A felhasználó kiválaszthatja az alap dokumentumot, melyre létrehozza a sajátjait"
+msgstr ""
+"A felhasználó kiválaszthatja az alap dokumentumot, melyre létrehozza a "
+"sajátjait"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -346,7 +359,7 @@ msgid "Weeks"
 msgstr "Hetek"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:128
+#: code:addons/subscription/models/subscription.py:111
 #, python-format
 msgid "You cannot delete an active subscription!"
 msgstr "Nem tud törölni egy aktív feliratkozást!"

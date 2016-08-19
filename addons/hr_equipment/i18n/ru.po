@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_equipment
-# 
+#
 # Translators:
 # Gennady Marchenko <gennadym@gmail.com>, 2016
 # Viktor Pogrebniak <vp@aifil.ru>, 2016
@@ -9,15 +9,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:27+0000\n"
+"POT-Creation-Date: 2016-08-19 10:26+0000\n"
 "PO-Revision-Date: 2016-04-06 20:36+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
@@ -44,7 +46,9 @@ msgstr "<b>Серийный номер:</b>"
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr "Словарь Python, который будет вычислен для получения значений по умолчанию при создании записей для этого псевдонима."
+msgstr ""
+"Словарь Python, который будет вычислен для получения значений по умолчанию "
+"при создании записей для этого псевдонима."
 
 #. module: hr_equipment
 #: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
@@ -53,13 +57,7 @@ msgid "Acer Laptop"
 msgstr "Acer Laptop"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction
-msgid "Action Needed"
-msgstr "Требуется реакция"
-
-#. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_active
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
 msgid "Active"
 msgstr "Активен"
@@ -105,13 +103,19 @@ msgid "Apply"
 msgstr "Применить"
 
 #. module: hr_equipment
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
 msgid "Asset"
 msgstr "Активы"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_6493
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5719
 msgid "Asset Category"
 msgstr "Категория актива"
 
@@ -289,13 +293,6 @@ msgid "Current Maintenance"
 msgstr "Текущий ремонт"
 
 #. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_last_post
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_last_post
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Дата последнего сообщения"
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_defaults
 msgid "Default Values"
 msgstr "Значения по умолчанию"
@@ -412,27 +409,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_follower_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_follower_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_follower_ids
-msgid "Followers"
-msgstr "Подписчики"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_channel_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_channel_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Подписчики (Каналы)"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_partner_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_partner_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Подписчики (Партнеры)"
-
-#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
@@ -467,23 +443,11 @@ msgstr "ID"
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
-msgstr "Идентификатор записи родителя, содержащей алиас (например, проект содержит алис для создания записи)"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
+msgstr ""
+"Идентификатор записи родителя, содержащей алиас (например, проект содержит "
+"алис для создания записи)"
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
@@ -497,23 +461,9 @@ msgid "Internal Note ......."
 msgstr "Внутренняя заметка ......."
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_is_follower
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_is_follower
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_is_follower
-msgid "Is Follower"
-msgstr "Подписчик"
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_kanban_state
 msgid "Kanban State"
 msgstr "Канбан статус"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_last_post
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_last_post
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_last_post
-msgid "Last Message Date"
-msgstr "Последнее сообщение по дате"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment___last_update
@@ -611,20 +561,6 @@ msgid "Maintenance ids"
 msgstr "ИД обслуживания"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_ids
-msgid "Messages"
-msgstr "Сообщения"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_ids
-msgid "Messages and communication history"
-msgstr "Сообщения и история общения"
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_model
 msgid "Model"
 msgstr "Модель"
@@ -667,38 +603,15 @@ msgid "Note"
 msgstr "Примечание"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Количество действий"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Количество сообщений, требующих реакции"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Количество непрочтённых сообщений"
-
-#. module: hr_equipment
-#: model:ir.actions.client,name:hr_equipment.action_client_hr_equipment_menu
-msgid "Open Equipments Menu"
-msgstr "Открыть меню оборудования"
-
-#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "Опциональный номер записи к которой все входящие сообщения будут присоединены, даже если на них не было ответа. Если установлено, это отключит создание новых записей полностью."
+msgstr ""
+"Опциональный номер записи к которой все входящие сообщения будут "
+"присоединены, даже если на них не было ответа. Если установлено, это "
+"отключит создание новых записей полностью."
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_user_id
@@ -718,10 +631,13 @@ msgstr "Parent Record Thread ID"
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
-msgstr "Предок содержит алиас. Модель, содержащая ссылку на алиас - не обязательно та, на которую ссылается alias_model_id (например, проект (parent_model) и задача (model))"
+msgstr ""
+"Предок содержит алиас. Модель, содержащая ссылку на алиас - не обязательно "
+"та, на которую ссылается alias_model_id (например, проект (parent_model) и "
+"задача (model))"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
@@ -730,12 +646,18 @@ msgstr "Телефоны"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
+#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
-msgstr "Политики для сообщений в документе с использованием почтового шлюза:\n- все: каждый может писать\n- партнёры: только аутентифицированные партнёры;\n- подписчики: только подписчики соответствующего документа\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
+msgstr ""
+"Политики для сообщений в документе с использованием почтового шлюза:\n"
+"- все: каждый может писать\n"
+"- партнёры: только аутентифицированные партнёры;\n"
+"- подписчики: только подписчики соответствующего документа\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -902,17 +824,22 @@ msgstr "Техник"
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
-msgstr "Модель (Вид Документа Odoo), которому соответствует этот псевдоним. Любая входящая электронная почта, которая не отвечает существующей записи, вызовет создание новогой записи этой модели (например, Задача Проекта)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
+msgstr ""
+"Модель (Вид Документа Odoo), которому соответствует этот псевдоним. Любая "
+"входящая электронная почта, которая не отвечает существующей записи, вызовет "
+"создание новогой записи этой модели (например, Задача Проекта)"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "Наименование псевдонима электронной почты, например, \"работа\", если вы хотите, чтобы поймать письма для <jobs@example.odoo.com>"
+msgstr ""
+"Наименование псевдонима электронной почты, например, \"работа\", если вы "
+"хотите, чтобы поймать письма для <jobs@example.odoo.com>"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_user_id
@@ -921,14 +848,19 @@ msgid ""
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
-msgstr "Владелец записей, созданных по письмам с этим псевдонимом. Если это поле не задано, система попытается найти подходящего владельца на основе отправителя или сделает владельцем администратора."
+msgstr ""
+"Владелец записей, созданных по письмам с этим псевдонимом. Если это поле не "
+"задано, система попытается найти подходящего владельца на основе отправителя "
+"или сделает владельцем администратора."
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment to\n"
-"                an employee or departement. You will manage allocations, issues\n"
+"                Create some laptop, printer or phone and link each equipment "
+"to\n"
+"                an employee or departement. You will manage allocations, "
+"issues\n"
 "                and maintenance of equipment."
 msgstr ""
 
@@ -936,8 +868,10 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment to an employee or departement.\n"
-"                You will manage allocations, issues and mainteannce of equipment."
+"                Create some laptop, printer or phone and link each equipment "
+"to an employee or departement.\n"
+"                You will manage allocations, issues and maintenance of "
+"equipment."
 msgstr ""
 
 #. module: hr_equipment
@@ -956,9 +890,6 @@ msgid "Under Maintenance"
 msgstr "На техобслуживании"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_unread
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
@@ -966,16 +897,11 @@ msgid "Unread Messages"
 msgstr "Непрочитанные"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_unread_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Счетчик непрочтённых сообщений"
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_equipment_alias_prefix
 msgid "Use the following alias to report internal equipment issue"
-msgstr "Использовать следующий алиас для сообщений о внутренних проблемах оборудования"
+msgstr ""
+"Использовать следующий алиас для сообщений о внутренних проблемах "
+"оборудования"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_equipment_assign_to
@@ -1010,26 +936,14 @@ msgid "Warranty"
 msgstr "Гарантия"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_website_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_website_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_website_message_ids
-msgid "Website Messages"
-msgstr "Сообщения с сайта"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_website_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_website_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_website_message_ids
-msgid "Website communication history"
-msgstr "История общения с сайта"
-
-#. module: hr_equipment
 #: code:addons/hr_equipment/models/hr_equipment.py:71
 #, python-format
 msgid ""
-"You cannot delete an equipment category containing equipments or maintenance"
-" requests."
-msgstr "Вы не можете удалить категорию оборудования, которая содержит оборудование или запрос на обслуживание."
+"You cannot delete an equipment category containing equipments or maintenance "
+"requests."
+msgstr ""
+"Вы не можете удалить категорию оборудования, которая содержит оборудование "
+"или запрос на обслуживание."
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_config_settings
@@ -1045,3 +959,57 @@ msgstr "Запрос обслуживания"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 msgid "maintenance Request Search"
 msgstr "Поиск запросов обслуживания"
+
+#~ msgid "Action Needed"
+#~ msgstr "Требуется реакция"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Дата последнего сообщения"
+
+#~ msgid "Followers"
+#~ msgstr "Подписчики"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Подписчики (Каналы)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Подписчики (Партнеры)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
+
+#~ msgid "Is Follower"
+#~ msgstr "Подписчик"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Последнее сообщение по дате"
+
+#~ msgid "Messages"
+#~ msgstr "Сообщения"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Сообщения и история общения"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Количество действий"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Количество сообщений, требующих реакции"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Количество непрочтённых сообщений"
+
+#~ msgid "Open Equipments Menu"
+#~ msgstr "Открыть меню оборудования"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Счетчик непрочтённых сообщений"
+
+#~ msgid "Website Messages"
+#~ msgstr "Сообщения с сайта"
+
+#~ msgid "Website communication history"
+#~ msgstr "История общения с сайта"

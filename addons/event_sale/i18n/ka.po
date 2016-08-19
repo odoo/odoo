@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event_sale
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
 "PO-Revision-Date: 2016-06-27 15:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Georgian (http://www.transifex.com/odoo/odoo-9/language/ka/)\n"
+"Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ka\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:170
+#: code:addons/event_sale/models/event.py:147
 #, python-format
 msgid " with ticket %s"
 msgstr ""
@@ -27,6 +27,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "გააქტიურება"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+msgid "Asset Type"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -73,13 +78,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_create_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "შემქმნელი"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_date
 msgid "Created on"
+msgstr "შექმნის თარიღი"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
 msgstr ""
 
 #. module: event_sale
@@ -93,6 +103,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,help:event_sale.field_product_template_event_ok
+#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ok
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
@@ -124,6 +135,12 @@ msgid "Event"
 msgstr "მოვლენა"
 
 #. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+#, fuzzy
+msgid "Event Name"
+msgstr "მოვლენა"
+
+#. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
 msgstr ""
@@ -131,6 +148,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,field_description:event_sale.field_product_template_event_ok
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
 msgid "Event Subscription"
@@ -153,6 +171,11 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_type_id
 msgid "Event Type"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+msgid "Event's Ticket"
 msgstr ""
 
 #. module: event_sale
@@ -216,13 +239,13 @@ msgid "Name"
 msgstr "სახელი"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:131
+#: code:addons/event_sale/models/event.py:108
 #, python-format
 msgid "No more available seats for the ticket"
 msgstr ""
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:153
+#: code:addons/event_sale/models/event.py:130
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr ""
@@ -308,12 +331,12 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "გაყიდვის ორდერი"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "გაყიდვის ორდერის ხაზი"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_used
@@ -323,15 +346,16 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
 #: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
+#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_type_id
 msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
 msgstr ""
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Skip"
-msgstr ""
+msgstr "გამოტოვება"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_id
@@ -347,7 +371,7 @@ msgid "Standard"
 msgstr "სტანდარტული"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:21
+#: code:addons/event_sale/models/event.py:19
 #, python-format
 msgid "Subscription"
 msgstr ""
@@ -359,7 +383,7 @@ msgid "Technical Training"
 msgstr ""
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:168
+#: code:addons/event_sale/models/event.py:145
 #, python-format
 msgid ""
 "The registration has been created for event %(event_name)s%(ticket)s from "
@@ -398,11 +422,6 @@ msgstr "შეუზღუდავი"
 #: model:event.event.ticket,name:event_sale.event_2_ticket_2
 #: model:event.event.ticket,name:event_sale.event_3_ticket_2
 msgid "VIP"
-msgstr ""
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
-msgid "event_ok"
 msgstr ""
 
 #. module: event_sale

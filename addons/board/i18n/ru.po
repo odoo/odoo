@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * board
-# 
+#
 # Translators:
 # Max Belyanin <maxbelyanin@gmail.com>, 2015
 # Viktor Pogrebniak <vp@aifil.ru>, 2016
@@ -9,15 +9,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
 "PO-Revision-Date: 2016-04-06 20:36+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: board
 #. openerp-web
@@ -28,7 +30,7 @@ msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:406
+#: code:addons/board/static/src/js/dashboard.js:409
 #, python-format
 msgid "'%s' added to dashboard"
 msgstr "'%s' добавлено на панель"
@@ -54,7 +56,7 @@ msgstr "Добавить на мою панель"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:139
+#: code:addons/board/static/src/js/dashboard.js:141
 #, python-format
 msgid "Are you sure you want to remove this item ?"
 msgstr "Вы действительно хотите удалить этот объект?"
@@ -63,21 +65,6 @@ msgstr "Вы действительно хотите удалить этот о�
 #: model:ir.model,name:board.model_board_board
 msgid "Board"
 msgstr "Панель"
-
-#. module: board
-#: model:ir.model,name:board.model_board_create
-msgid "Board Creation"
-msgstr "Создание панели"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_name
-msgid "Board Name"
-msgstr "Название панели"
-
-#. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Cancel"
-msgstr "Отмена"
 
 #. module: board
 #. openerp-web
@@ -102,95 +89,93 @@ msgstr "Выбрать вид панели"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:408
+#: code:addons/board/static/src/js/dashboard.js:411
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Не возможно добавить фильтр к доске"
 
 #. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Create"
-msgstr "Создать"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr "Создать панель"
-
-#. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Create New Dashboard"
-msgstr "Создать новую панель"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_create_uid
-msgid "Created by"
-msgstr "Создано"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_create_date
-msgid "Created on"
-msgstr "Создан"
-
-#. module: board
 #: model:ir.model.fields,field_description:board.field_board_board_display_name
-#: model:ir.model.fields,field_description:board.field_board_create_display_name
 msgid "Display Name"
 msgstr "Отображаемое Имя"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:94
+#: code:addons/board/static/src/js/dashboard.js:96
 #, python-format
 msgid "Edit Layout"
 msgstr "Редактировать макет"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board_id
-#: model:ir.model.fields,field_description:board.field_board_create_id
 msgid "ID"
 msgstr "ID"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board___last_update
-#: model:ir.model.fields,field_description:board.field_board_create___last_update
 msgid "Last Modified on"
 msgstr "Последний раз изменено"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_write_uid
-msgid "Last Updated by"
-msgstr "Последний раз обновлено"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_write_date
-msgid "Last Updated on"
-msgstr "Последний раз обновлено"
-
-#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:32
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
 #: model:ir.ui.view,arch_db:board.board_my_dash_view
+#, python-format
 msgid "My Dashboard"
 msgstr "Моя панель"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
-msgid "Parent Menu"
-msgstr "Родительское меню"
 
 #. module: board
 #: model:ir.actions.act_window,help:board.open_board_my_dash_action
 msgid ""
 "To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add to\n"
+"                    menu, switch to list or graph view, and click <i>'Add "
+"to\n"
 "                    Dashboard'</i> in the extended search options."
-msgstr "Чтобы добавить ваш первый отчет на панель, зайдите в любое\nменю, выберите список или график и нажмите <i>'Добавить\nна Панель'</i> в дополнительных параметрах поиска."
+msgstr ""
+"Чтобы добавить ваш первый отчет на панель, зайдите в любое\n"
+"меню, выберите список или график и нажмите <i>'Добавить\n"
+"на Панель'</i> в дополнительных параметрах поиска."
 
 #. module: board
 #: model:ir.actions.act_window,help:board.open_board_my_dash_action
 msgid ""
 "You can filter and group data before inserting into the\n"
 "                    dashboard using the search options."
-msgstr "Вы можете фильтровать или группировать данные перед добавлением их\n                    на панель используе опции поиска."
+msgstr ""
+"Вы можете фильтровать или группировать данные перед добавлением их\n"
+"                    на панель используе опции поиска."
+
+#~ msgid "Board Creation"
+#~ msgstr "Создание панели"
+
+#~ msgid "Board Name"
+#~ msgstr "Название панели"
+
+#~ msgid "Cancel"
+#~ msgstr "Отмена"
+
+#~ msgid "Create"
+#~ msgstr "Создать"
+
+#~ msgid "Create Board"
+#~ msgstr "Создать панель"
+
+#~ msgid "Create New Dashboard"
+#~ msgstr "Создать новую панель"
+
+#~ msgid "Created by"
+#~ msgstr "Создано"
+
+#~ msgid "Created on"
+#~ msgstr "Создан"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Последний раз обновлено"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Последний раз обновлено"
+
+#~ msgid "Parent Menu"
+#~ msgstr "Родительское меню"

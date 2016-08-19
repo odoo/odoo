@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_action_rule
-# 
+#
 # Translators:
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
@@ -10,26 +10,34 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:18+0000\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
 "PO-Revision-Date: 2016-07-13 06:03+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "<b>Please choose the document type before setting the conditions.</b>"
-msgstr "<b>Bitte wählen Sie zuerst den Dokumententyp bevor Sie Bedingungen konfigurieren.</b>"
+msgstr ""
+"<b>Bitte wählen Sie zuerst den Dokumententyp bevor Sie Bedingungen "
+"konfigurieren.</b>"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_tree
 msgid "Action Rule"
 msgstr "Regel für Aktion"
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
+#, fuzzy
+msgid "Action Rule Line Test"
+msgstr "Aktionsregeltest"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -114,18 +122,16 @@ msgid "Conditions"
 msgstr "Bedingungen"
 
 #. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
-msgid "Create Date"
-msgstr "Erstellungsdatum"
-
-#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_uid
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_uid
 msgid "Created by"
 msgstr "Angelegt von"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_date
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_date
 msgid "Created on"
 msgstr "Angelegt am"
 
@@ -141,11 +147,18 @@ msgstr "Zeitspanne nach Auslösedatum"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
+#, fuzzy
 msgid ""
-"Delay after the trigger date.You can put a negative number if you need a "
-"delay before thetrigger date, like sending a reminder 15 minutes before a "
-"meeting."
-msgstr "Zeitliche Verzögerung nach Auslösedatum. Sie können hier auch einen negativen Wert eintragen, insofern Sie eine zeitliche Verzögerung vor dem Auslösedatum benötigen, z.B. wenn Sie 15 Minuten vor einem Treffen erinnert werden möchten."
+"Delay after the trigger date.\n"
+"                                    You can put a negative number if you "
+"need a delay before the\n"
+"                                    trigger date, like sending a reminder 15 "
+"minutes before a meeting."
+msgstr ""
+"Zeitliche Verzögerung nach Auslösedatum. Sie können hier auch einen "
+"negativen Wert eintragen, insofern Sie eine zeitliche Verzögerung vor dem "
+"Auslösedatum benötigen, z.B. wenn Sie 15 Minuten vor einem Treffen erinnert "
+"werden möchten."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
@@ -160,6 +173,7 @@ msgstr "Typ Zeitverzug"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_display_name
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_display_name
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
@@ -194,7 +208,10 @@ msgid ""
 "Go to your \"Related Document Model\" page and set the filter parameters in "
 "the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
-msgstr "Gehen Sie auf die Seite für das \"Verbundene Datenmodell' und setzen Sie Filterparameter in der Suchanzeige (Beispiel für einen Filter auf Basis von Chancen / Interessenten: Datum der Erstellung  am 01.01.2012)"
+msgstr ""
+"Gehen Sie auf die Seite für das \"Verbundene Datenmodell' und setzen Sie "
+"Filterparameter in der Suchanzeige (Beispiel für einen Filter auf Basis von "
+"Chancen / Interessenten: Datum der Erstellung  am 01.01.2012)"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -204,6 +221,7 @@ msgstr "Stunden"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_id
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_id
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_id
 msgid "ID"
 msgstr "ID"
 
@@ -213,15 +231,18 @@ msgstr "ID"
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
-msgstr "Bei Verfügbarkeit muß diese Kondition vor Ausführung der Aktionsregel erfüllt sein."
+msgstr ""
+"Bei Verfügbarkeit muß diese Kondition vor Ausführung der Aktionsregel "
+"erfüllt sein."
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_domain
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_id
 msgid ""
-"If present, this condition must be satisfied before the update of the "
-"record."
-msgstr "Falls vorhanden, muß diese Bedingung vor der Aktualisierung des Datensatzes erfüllt werden."
+"If present, this condition must be satisfied before the update of the record."
+msgstr ""
+"Falls vorhanden, muß diese Bedingung vor der Aktualisierung des Datensatzes "
+"erfüllt werden."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -231,10 +252,13 @@ msgstr "In Bearbeitung"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid ""
-"In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
-" the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
+"In this same \"Search\" view, select the menu \"Save Current Filter\", enter "
+"the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
-msgstr "Wählen Sie in In der gleichen 'Suche' Ansicht den Button 'Speichere aktuellen Filter', geben Sie eine Bezeichnung hierfür ein (z.B. 'Erstelle den 01.01.2012') und wählen Sie die Option \"Mit allen Benutzern teilen\"."
+msgstr ""
+"Wählen Sie in In der gleichen 'Suche' Ansicht den Button 'Speichere "
+"aktuellen Filter', geben Sie eine Bezeichnung hierfür ein (z.B. 'Erstelle "
+"den 01.01.2012') und wählen Sie die Option \"Mit allen Benutzern teilen\"."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
@@ -249,25 +273,39 @@ msgstr "Letzte Aktion"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule___last_update
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test___last_update
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test___last_update
 msgid "Last Modified on"
 msgstr "Zuletzt geändert am"
 
 #. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
-msgid "Last Run"
-msgstr "Zuletzt ausgeführt"
-
-#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_uid
 msgid "Last Updated by"
 msgstr "Zuletzt aktualisiert durch"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_date
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_date
 msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
+#, fuzzy
+msgid "Last run"
+msgstr "Zuletzt ausgeführt"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
+msgid "Lead id"
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
+msgid "Line ids"
+msgstr ""
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -283,6 +321,12 @@ msgstr "Modell"
 #: selection:base.action.rule,trg_date_range_type:0
 msgid "Months"
 msgstr "Monate"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_name
+#, fuzzy
+msgid "Name"
+msgstr "Regelbezeichnung"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -344,7 +388,9 @@ msgstr "Regelbezeichnung"
 msgid ""
 "Select when the action must be run, and choose records and/or timing "
 "conditions."
-msgstr "Auswählen, wann die Aktion ausgeführt werden muss, und Wahl der Datensätze und/oder Zeitbedingungen."
+msgstr ""
+"Auswählen, wann die Aktion ausgeführt werden muss, und Wahl der Datensätze "
+"und/oder Zeitbedingungen."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_sequence
@@ -411,25 +457,44 @@ msgstr "Benutze Kalender"
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user may\n"
+"                various screens. Example: a lead created by a specific user "
+"may\n"
 "                be automatically set to a specific sales team, or an\n"
-"                opportunity which still has status pending after 14 days might\n"
+"                opportunity which still has status pending after 14 days "
+"might\n"
 "                trigger an automatic reminder email."
-msgstr "Verwenden Sie automatisierte Aktionen, um automatisch Aktionen\nfür verschiedene Sichten auszulösen. Beispiel: Ein Lead, durch einen bestimmten Nutzer angelegt, kann automatisch einem bestimmten Verkaufsteam zugeordnet werden, oder eine Chance, die nach 14 Tagen immer noch unbearbeitet ist, löst automatisch eine Erinnerungs-Email aus."
+msgstr ""
+"Verwenden Sie automatisierte Aktionen, um automatisch Aktionen\n"
+"für verschiedene Sichten auszulösen. Beispiel: Ein Lead, durch einen "
+"bestimmten Nutzer angelegt, kann automatisch einem bestimmten Verkaufsteam "
+"zugeordnet werden, oder eine Chance, die nach 14 Tagen immer noch "
+"unbearbeitet ist, löst automatisch eine Erinnerungs-Email aus."
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_user_id
+msgid "User id"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
-msgstr "Zur Berechnung Ihrer täglichen Terminrestriktionen, können Sie einen Kalender für die Terminberechnung auf Basis von Arbeitstagen nutzen."
+msgstr ""
+"Zur Berechnung Ihrer täglichen Terminrestriktionen, können Sie einen "
+"Kalender für die Terminberechnung auf Basis von Arbeitstagen nutzen."
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
+#, fuzzy
 msgid ""
-"When should the condition be triggered. If present, will be checked by the "
+"When should the condition be triggered.\n"
+"                                  If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
-msgstr "Unter welcher Bedingung soll die Regel ausgelöst werden? Wenn eine Bedingung vorhanden, wird die Regel vom Scheduler ausgelöst, anderenfalls nur bei Anlage und bei Aktualisierung."
+msgstr ""
+"Unter welcher Bedingung soll die Regel ausgelöst werden? Wenn eine Bedingung "
+"vorhanden, wird die Regel vom Scheduler ausgelöst, anderenfalls nur bei "
+"Anlage und bei Aktualisierung."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind
@@ -439,11 +504,18 @@ msgstr "Wann zu starten"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_active
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr "Wenn diese Option deaktiviert wurde, wird die Regel ausgeblendet und auch demnach nicht ausgeführt."
+msgstr ""
+"Wenn diese Option deaktiviert wurde, wird die Regel ausgeblendet und auch "
+"demnach nicht ausgeführt."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid ""
 "You may also use filters instead of choosing records. In order to create a "
 "new filter:"
-msgstr "Sie können auch Filter, anstelle einer manuellen Auswahl, einsetzen. Um einen neuen Filter zu erstellen:"
+msgstr ""
+"Sie können auch Filter, anstelle einer manuellen Auswahl, einsetzen. Um "
+"einen neuen Filter zu erstellen:"
+
+#~ msgid "Create Date"
+#~ msgstr "Erstellungsdatum"

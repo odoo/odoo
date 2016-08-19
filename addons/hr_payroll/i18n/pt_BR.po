@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_payroll
-# 
+#
 # Translators:
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
 # Grazziano Duarte <g.negocios@outlook.com.br>, 2015
@@ -9,14 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:26+0000\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
 "PO-Revision-Date: 2016-03-23 13:03+0000\n"
 "Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
+"language/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_payroll
@@ -29,10 +30,16 @@ msgstr "%s (copia)"
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_state
 msgid ""
 "* When the payslip is created the status is 'Draft'.            \n"
-"* If the payslip is under verification, the status is 'Waiting'.             \n"
+"* If the payslip is under verification, the status is "
+"'Waiting'.             \n"
 "* If the payslip is confirmed then status is set to 'Done'.            \n"
 "* When user cancel payslip the status is 'Rejected'."
-msgstr "* Quando o holerite é criado o estado é 'Provisório'.\n* Se o holerite está sob verificação, a situação 'Aguardando'.\n* Se o holerite é confirmado em seguida a situação é definida como 'Concluído'.\n* Quando o usuário cancelar o holerite a situação é 'Rejeitado'."
+msgstr ""
+"* Quando o holerite é criado o estado é 'Provisório'.\n"
+"* Se o holerite está sob verificação, a situação 'Aguardando'.\n"
+"* Se o holerite é confirmado em seguida a situação é definida como "
+"'Concluído'.\n"
+"* Quando o usuário cancelar o holerite a situação é 'Rejeitado'."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -118,9 +125,13 @@ msgstr "Total"
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid ""
 "A contribution register is a third party involved in the salary\n"
-"                payment of the employees. It can be the social security, the\n"
+"                payment of the employees. It can be the social security, "
+"the\n"
 "                estate or anyone that collect or inject money on payslips."
-msgstr "Um registo de contribuição é um terceiro envolvido no pagamento\nde salário dos funcionários. Pode ser a seguridade social, o\nEstado ou qualquer um que recolhe ou injetar dinheiro em holerites."
+msgstr ""
+"Um registo de contribuição é um terceiro envolvido no pagamento\n"
+"de salário dos funcionários. Pode ser a seguridade social, o\n"
+"Estado ou qualquer um que recolhe ou injetar dinheiro em holerites."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -187,7 +198,9 @@ msgstr "Aparece em Holerite"
 msgid ""
 "Applied this rule for calculation if condition is true. You can specify "
 "condition like basic > 1000."
-msgstr "Aplicada esta regra para o cálculo se a condição é verdadeira. Você pode especificar como condição básica> 1000."
+msgstr ""
+"Aplicada esta regra para o cálculo se a condição é verdadeira. Você pode "
+"especificar como condição básica> 1000."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
@@ -222,7 +235,7 @@ msgstr "Cancelar Holerite"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9081
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9030
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
 msgstr "Categoria"
@@ -331,7 +344,6 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_contract
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_contract_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_contract_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_contract_id
@@ -431,7 +443,12 @@ msgid ""
 "the contract chosen. If you let empty the field contract, this field isn't "
 "mandatory anymore and thus the rules applied will be all the rules set on "
 "the structure of all contracts of the employee valid for the chosen period"
-msgstr "Define as regras que têm de ser aplicadas a este holerite, de acordo com o contrato escolhido. Se você deixar em branco o campo contrato, este campo não é obrigatório e, portanto, as regras aplicadas serão as regras definidas na estrutura de todos os contratos do funcionário válida para o período escolhido"
+msgstr ""
+"Define as regras que têm de ser aplicadas a este holerite, de acordo com o "
+"contrato escolhido. Se você deixar em branco o campo contrato, este campo "
+"não é obrigatório e, portanto, as regras aplicadas serão as regras definidas "
+"na estrutura de todos os contratos do funcionário válida para o período "
+"escolhido"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_note
@@ -521,6 +538,12 @@ msgid "Employee"
 msgstr "Funcionário"
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_contract
+#, fuzzy
+msgid "Employee Contract"
+msgstr "Função do Funcionário"
+
+#. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_list_view
 msgid "Employee Function"
@@ -549,7 +572,8 @@ msgstr "Erro! Você não pode criar uma estrutura de salários recursiva."
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_register_id
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_register_id
 msgid "Eventual third party involved in the salary payment of the employees."
-msgstr "Eventual de terceiros envolvidos no pagamento de salário dos funcionários."
+msgstr ""
+"Eventual de terceiros envolvidos no pagamento de salário dos funcionários."
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
@@ -618,7 +642,9 @@ msgstr "ID"
 msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
-msgstr "Se a sua marcada, indica que todos os recibos gerados a partir daqui são recibos de reembolso."
+msgstr ""
+"Se a sua marcada, indica que todos os recibos gerados a partir daqui são "
+"recibos de reembolso."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_active
@@ -626,7 +652,9 @@ msgstr "Se a sua marcada, indica que todos os recibos gerados a partir daqui sã
 msgid ""
 "If the active field is set to false, it will allow you to hide the salary "
 "rule without removing it."
-msgstr "Se o campo ativo é definido com falso, ela permitirá que você esconda a regra de salário sem removê-lo."
+msgstr ""
+"Se o campo ativo é definido com falso, ela permitirá que você esconda a "
+"regra de salário sem removê-lo."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_credit_note
@@ -662,15 +690,22 @@ msgid ""
 "It is used in computation for percentage and fixed amount.For e.g. A rule "
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
-msgstr "Ele é usado no cálculo da percentagem e, por uma porcentagem de valor fixo . Por exemplo A regra vale-refeição para ter valor fixo de R$ 10 por dia de trabalho pode ter sua quantidade definida na expressão como worked_days.WORK100.number_of_days."
+msgstr ""
+"Ele é usado no cálculo da percentagem e, por uma porcentagem de valor fixo . "
+"Por exemplo A regra vale-refeição para ter valor fixo de R$ 10 por dia de "
+"trabalho pode ter sua quantidade definida na expressão como worked_days."
+"WORK100.number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
 msgid ""
-"It is used in computation. For e.g. A rule for sales having 1% commission of"
-" basic salary for per product can defined in expression like result = "
-"inputs.SALEURO.amount * contract.wage*0.01."
-msgstr "É utilizado no cálculo. Para por exemplo, A regra para as vendas com comissão de 1% do salário base por produto podem definido na expressão como resultado = inputs.SALEURO.amount * contract.wage * 0,01."
+"It is used in computation. For e.g. A rule for sales having 1% commission of "
+"basic salary for per product can defined in expression like result = inputs."
+"SALEURO.amount * contract.wage*0.01."
+msgstr ""
+"É utilizado no cálculo. Para por exemplo, A regra para as vendas com "
+"comissão de 1% do salário base por produto podem definido na expressão como "
+"resultado = inputs.SALEURO.amount * contract.wage * 0,01."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register___last_update
@@ -736,7 +771,9 @@ msgstr "Associar a folha de pagamento a contabilidade"
 msgid ""
 "Linking a salary category to its parent is used only for the reporting "
 "purpose."
-msgstr "Ligando uma categoria de salário para seu diretório é usado apenas para fins de relatórios."
+msgstr ""
+"Ligando uma categoria de salário para seu diretório é usado apenas para fins "
+"de relatórios."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_paid
@@ -890,7 +927,6 @@ msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr "Recibo de Pagamento 'Date From' deve ser antes 'Date To'."
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_payslip_run
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Payslip Batches"
@@ -937,6 +973,12 @@ msgstr "Linhas de Recibo de Pagamento por Contribuição Registrar"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_name
 msgid "Payslip Name"
 msgstr "Nome Recibo de Pagamento"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_run
+#, fuzzy
+msgid "Payslip Run"
+msgstr "Payslip Linha"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
@@ -1142,7 +1184,8 @@ msgid "Salary Rules"
 msgstr "Regras de Salários"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:638
+#: code:addons/hr_payroll/hr_payroll.py:640
+#: code:addons/hr_payroll/hr_payroll.py:699
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr "Folha de Pagamento de %s para %s"
@@ -1240,7 +1283,9 @@ msgstr "Estrutura"
 msgid ""
 "The code of salary rules can be used as reference in computation of other "
 "rules. In that case, it is case sensitive."
-msgstr "O código de regras salariais podem ser usados como referência no cálculo de outras regras. Nesse caso, ele diferencia maiúsculas de minúsculas."
+msgstr ""
+"O código de regras salariais podem ser usados como referência no cálculo de "
+"outras regras. Nesse caso, ele diferencia maiúsculas de minúsculas."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_code
@@ -1277,17 +1322,23 @@ msgstr "A quantidade mínima, aplicada para esta regra"
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range
 msgid ""
-"This will be used to compute the % fields values; in general it is on basic,"
-" but you can also use categories code fields in lowercase as a variable "
-"names (hra, ma, lta, etc.) and the variable basic."
-msgstr "Isso será usado para calcular os valores de campos %  em geral é básico, mas você também pode usar os campos de código de categorias em letras minúsculas como um nomes de variáveis ​​(HRA, ma, lta, etc) e básicos variável."
+"This will be used to compute the % fields values; in general it is on basic, "
+"but you can also use categories code fields in lowercase as a variable names "
+"(hra, ma, lta, etc.) and the variable basic."
+msgstr ""
+"Isso será usado para calcular os valores de campos %  em geral é básico, mas "
+"você também pode usar os campos de código de categorias em letras minúsculas "
+"como um nomes de variáveis ​​(HRA, ma, lta, etc) e básicos variável."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 msgid ""
-"This wizard will generate payslips for all selected employee(s) based on the"
-" dates and credit note specified on Payslips Run."
-msgstr "este assistente irá gerar folhas de pagamentos para todos os funcionários selecionado(s), com base nas datas e nota de crédito especificado em Executar Holerites."
+"This wizard will generate payslips for all selected employee(s) based on the "
+"dates and credit note specified on Payslips Run."
+msgstr ""
+"este assistente irá gerar folhas de pagamentos para todos os funcionários "
+"selecionado(s), com base nas datas e nota de crédito especificado em "
+"Executar Holerites."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_total
@@ -1340,31 +1391,32 @@ msgid "Worked Days & Inputs"
 msgstr "Dias Trabalhados & Entradas"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:838
+#: code:addons/hr_payroll/hr_payroll.py:884
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
-msgstr "Percentual base errada ou quantidade definida para a regra salário %s (%s)."
+msgstr ""
+"Percentual base errada ou quantidade definida para a regra salário %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:844
+#: code:addons/hr_payroll/hr_payroll.py:890
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr "Código Python errado definido para a regra de salário %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:867
+#: code:addons/hr_payroll/hr_payroll.py:913
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr "Condição python errada definida para a regra de salário %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:831
+#: code:addons/hr_payroll/hr_payroll.py:877
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr "Quantidade errada definida para a regra de salário %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:861
+#: code:addons/hr_payroll/hr_payroll.py:907
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr "Condição de intervalo errada definido para a regra de salário %s (%s)."
@@ -1373,12 +1425,19 @@ msgstr "Condição de intervalo errada definido para a regra de salário %s (%s)
 #: code:addons/hr_payroll/hr_payroll.py:333
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
-msgstr "Você não pode excluir um holerite que não está como provisório ou cancelado!"
+msgstr ""
+"Você não pode excluir um holerite que não está como provisório ou cancelado!"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:35
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
+msgstr "Você precisa selecionar o funcionário para gerar o holerite."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:964
+#, fuzzy, python-format
+msgid "You must set a contract to create a payslip line."
 msgstr "Você precisa selecionar o funcionário para gerar o holerite."
 
 #. module: hr_payroll

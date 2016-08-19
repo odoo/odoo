@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_equipment
-# 
+#
 # Translators:
 # Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
@@ -11,14 +11,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:27+0000\n"
+"POT-Creation-Date: 2016-08-19 10:26+0000\n"
 "PO-Revision-Date: 2016-07-12 00:48+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
+"language/zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_equipment
@@ -55,13 +56,7 @@ msgid "Acer Laptop"
 msgstr "宏基笔记本"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction
-msgid "Action Needed"
-msgstr "所需行动"
-
-#. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_active
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
 msgid "Active"
 msgstr "有效"
@@ -107,13 +102,19 @@ msgid "Apply"
 msgstr "应用"
 
 #. module: hr_equipment
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
 msgid "Asset"
 msgstr "资产"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_6493
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5719
 msgid "Asset Category"
 msgstr "资产类别"
 
@@ -291,13 +292,6 @@ msgid "Current Maintenance"
 msgstr "当前保养"
 
 #. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_last_post
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_last_post
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "发布到记录上的最后消息的日期"
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_defaults
 msgid "Default Values"
 msgstr "默认值"
@@ -348,7 +342,9 @@ msgstr "邮箱别名"
 msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create new maintenance request for this equipment category."
-msgstr "该设备种类的邮件别名。只要是这个邮件别名收到的邮件就会自动的创建该设备种类的修理需求"
+msgstr ""
+"该设备种类的邮件别名。只要是这个邮件别名收到的邮件就会自动的创建该设备种类的"
+"修理需求"
 
 #. module: hr_equipment
 #: selection:hr.equipment,equipment_assign_to:0
@@ -414,27 +410,6 @@ msgid ""
 msgstr "跟进请求的处理，并且和合作者沟通。"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_follower_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_follower_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_follower_ids
-msgid "Followers"
-msgstr "关注者"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_channel_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_channel_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "关注者(频道)"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_partner_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_partner_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "关注者（业务伙伴）"
-
-#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
@@ -469,23 +444,9 @@ msgstr "ID"
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr "父记录ID支持别名(例如:项目支持任务创建别名)"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread
-msgid "If checked new messages require your attention."
-msgstr "查看是否有需要留意的新信息。"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "确认后, 会出现新消息."
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
@@ -499,23 +460,9 @@ msgid "Internal Note ......."
 msgstr "内部提示……"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_is_follower
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_is_follower
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_is_follower
-msgid "Is Follower"
-msgstr "是关注者"
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_kanban_state
 msgid "Kanban State"
 msgstr "看板状态"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_last_post
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_last_post
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_last_post
-msgid "Last Message Date"
-msgstr "最后消息日期"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment___last_update
@@ -613,20 +560,6 @@ msgid "Maintenance ids"
 msgstr "维护id"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_ids
-msgid "Messages"
-msgstr "消息"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_ids
-msgid "Messages and communication history"
-msgstr "消息和通信历史"
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_model
 msgid "Model"
 msgstr "模型"
@@ -669,38 +602,14 @@ msgid "Note"
 msgstr "笔记"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction_counter
-msgid "Number of Actions"
-msgstr "动作的序列号"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要动作的消息编号"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread_counter
-msgid "Number of unread messages"
-msgstr "未读的消息数量"
-
-#. module: hr_equipment
-#: model:ir.actions.client,name:hr_equipment.action_client_hr_equipment_menu
-msgid "Open Equipments Menu"
-msgstr "打开设备菜单"
-
-#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "所有的来邮都将附上一条线索（记录）选配的ID，即使它们不曾回复过它。如果设置了，这个将完全阻止新记录的创建。"
+msgstr ""
+"所有的来邮都将附上一条线索（记录）选配的ID，即使它们不曾回复过它。如果设置"
+"了，这个将完全阻止新记录的创建。"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_user_id
@@ -720,10 +629,12 @@ msgstr "父记录线程ID"
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
-msgstr "父级模型拥有别名。拥有别名参照的模型不必是alias_model_id给出的模型 (example: project(parent_model) and task (model))"
+msgstr ""
+"父级模型拥有别名。拥有别名参照的模型不必是alias_model_id给出的模型 (example: "
+"project(parent_model) and task (model))"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
@@ -732,12 +643,18 @@ msgstr "电话"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
+#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
-msgstr "文档信息发送使用邮件服务器规则。\n- 所有人：所有人都允许\n- 业务伙伴：仅认证的业务伙伴\n- 关注者：仅关注相关文档者\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
+msgstr ""
+"文档信息发送使用邮件服务器规则。\n"
+"- 所有人：所有人都允许\n"
+"- 业务伙伴：仅认证的业务伙伴\n"
+"- 关注者：仅关注相关文档者\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -904,17 +821,21 @@ msgstr "技术员"
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
-msgstr "相应于这个别名对应的模型(Odoo的文件种类)。任何一封不属于对某个已存在的记录的到来邮件，将导致此模块中新记录的创建(例如，一个新的项目任务)。"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
+msgstr ""
+"相应于这个别名对应的模型(Odoo的文件种类)。任何一封不属于对某个已存在的记录的"
+"到来邮件，将导致此模块中新记录的创建(例如，一个新的项目任务)。"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "邮件别名的名称，例如，如果你要收取 <jobs@example.odoo.com> 的电子邮件,别名就要被设为：\"jobs\""
+msgstr ""
+"邮件别名的名称，例如，如果你要收取 <jobs@example.odoo.com> 的电子邮件,别名就"
+"要被设为：\"jobs\""
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_user_id
@@ -923,24 +844,38 @@ msgid ""
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
-msgstr "基于此别名接收到的邮件，创建记录的所有人。若此字段没有设置，系统将试图根据发送者(From)地址来查找正确的所有者，如果对于那个地址没有系统用户被发现，将使用系统管理员账户。"
+msgstr ""
+"基于此别名接收到的邮件，创建记录的所有人。若此字段没有设置，系统将试图根据发"
+"送者(From)地址来查找正确的所有者，如果对于那个地址没有系统用户被发现，将使用"
+"系统管理员账户。"
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment to\n"
-"                an employee or departement. You will manage allocations, issues\n"
+"                Create some laptop, printer or phone and link each equipment "
+"to\n"
+"                an employee or departement. You will manage allocations, "
+"issues\n"
 "                and maintenance of equipment."
-msgstr "该应用可以让员工用来追踪设备。创建一些笔记本电脑，打印机或者手机并\n且给每个设备链接到某一员工或者某一部门。你将能够管理到这些设备的分配\n问题追踪和设备维护"
+msgstr ""
+"该应用可以让员工用来追踪设备。创建一些笔记本电脑，打印机或者手机并\n"
+"且给每个设备链接到某一员工或者某一部门。你将能够管理到这些设备的分配\n"
+"问题追踪和设备维护"
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
+#, fuzzy
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment to an employee or departement.\n"
-"                You will manage allocations, issues and mainteannce of equipment."
-msgstr "该应用可以让员工用来追踪设备。创建一些笔记本电脑，打印机或者手机并\n且给每个设备链接到某一员工或者某一部门。你将能够管理到这些设备的分配\n问题追踪和设备维护"
+"                Create some laptop, printer or phone and link each equipment "
+"to an employee or departement.\n"
+"                You will manage allocations, issues and maintenance of "
+"equipment."
+msgstr ""
+"该应用可以让员工用来追踪设备。创建一些笔记本电脑，打印机或者手机并\n"
+"且给每个设备链接到某一员工或者某一部门。你将能够管理到这些设备的分配\n"
+"问题追踪和设备维护"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
@@ -958,21 +893,11 @@ msgid "Under Maintenance"
 msgstr "处于维护中"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_unread
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Unread Messages"
 msgstr "未读消息"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_unread_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "未读消息计数器"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_equipment_alias_prefix
@@ -1012,25 +937,11 @@ msgid "Warranty"
 msgstr "质保"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_website_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_website_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_website_message_ids
-msgid "Website Messages"
-msgstr "网站消息"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_website_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_website_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_website_message_ids
-msgid "Website communication history"
-msgstr "网站沟通记录"
-
-#. module: hr_equipment
 #: code:addons/hr_equipment/models/hr_equipment.py:71
 #, python-format
 msgid ""
-"You cannot delete an equipment category containing equipments or maintenance"
-" requests."
+"You cannot delete an equipment category containing equipments or maintenance "
+"requests."
 msgstr "对于已经有相关设备或者修理请求的设备种类不能被删除"
 
 #. module: hr_equipment
@@ -1047,3 +958,57 @@ msgstr "维护请求"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 msgid "maintenance Request Search"
 msgstr "维护请求搜索"
+
+#~ msgid "Action Needed"
+#~ msgstr "所需行动"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "发布到记录上的最后消息的日期"
+
+#~ msgid "Followers"
+#~ msgstr "关注者"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "关注者(频道)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "关注者（业务伙伴）"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "查看是否有需要留意的新信息。"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "确认后, 会出现新消息."
+
+#~ msgid "Is Follower"
+#~ msgstr "是关注者"
+
+#~ msgid "Last Message Date"
+#~ msgstr "最后消息日期"
+
+#~ msgid "Messages"
+#~ msgstr "消息"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "消息和通信历史"
+
+#~ msgid "Number of Actions"
+#~ msgstr "动作的序列号"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "需要动作的消息编号"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "未读的消息数量"
+
+#~ msgid "Open Equipments Menu"
+#~ msgstr "打开设备菜单"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "未读消息计数器"
+
+#~ msgid "Website Messages"
+#~ msgstr "网站消息"
+
+#~ msgid "Website communication history"
+#~ msgstr "网站沟通记录"

@@ -1,34 +1,46 @@
+# #-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_expense
-# 
+#
 # Translators:
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# #-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_expense
+#
+# Translators:
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2016-07-12 18:27+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Date:</strong>"
+#, fuzzy
+msgid "<strong>Currency:</strong>"
 msgstr "<strong>Datum:</strong>"
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Description:</strong>"
-msgstr "<strong>Omschrijving:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -37,18 +49,30 @@ msgstr "<strong>Werknemer:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
+msgid "<strong>Manager:</strong>"
+msgstr "<strong>Datum:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
+msgid "<strong>Status:</strong>"
+msgstr "<strong>Datum:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Total</strong>"
 msgstr "<strong>Totaal</strong>"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Validated By:</strong>"
-msgstr "<strong>Gevalideerd door:</strong>"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_id
+msgid "Account"
+msgstr "Rekening"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction
-msgid "Action Needed"
-msgstr "Vereist actie"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_accounting_date
+msgid "Accounting Date"
+msgstr "Boekhouddatum"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
@@ -85,8 +109,13 @@ msgstr "Kan gedeclareerd worden"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
+#, fuzzy
 msgid "Cancel"
-msgstr "Annuleren"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Annuleren\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Annuleer"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.car_travel
@@ -131,8 +160,13 @@ msgstr "Klik om een nieuwe declaratie-categorie aan te maken."
 #: selection:hr.expense,payment_mode:0
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_company_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#, fuzzy
 msgid "Company"
-msgstr "Bedrijf"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Bedrijf\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Bedijf"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
@@ -166,11 +200,6 @@ msgstr "Valuta"
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Date"
 msgstr "Datum"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum van het laatste bericht verstuurt op deze regel."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_department_id
@@ -262,8 +291,13 @@ msgstr "Declaratie afgekeurd"
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:product.category,name:hr_expense.cat_expense
+#, fuzzy
 msgid "Expenses"
-msgstr "Declaraties"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Declaraties\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Kosten"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_report_filtered
@@ -289,18 +323,20 @@ msgid "Expenses by Month"
 msgstr "Declaraties per maand"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:206
+#: code:addons/hr_expense/models/hr_expense.py:210
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "Declaraties moeten dot dezelfde werknemer behoren."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:209
+#: code:addons/hr_expense/models/hr_expense.py:213
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
 "entries."
-msgstr "Uitgaven moeten een uitgavendagboek hebben om financiële boekingen te genereren."
+msgstr ""
+"Uitgaven moeten een uitgavendagboek hebben om financiële boekingen te "
+"genereren."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -320,21 +356,6 @@ msgid "Expenses to Invoice"
 msgstr "Te factureren declaraties"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_follower_ids
-msgid "Followers"
-msgstr "Volgers"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Volgers (Kanalen)"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
-
-#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Former Employees"
 msgstr "Voormalige werknemers"
@@ -344,22 +365,25 @@ msgstr "Voormalige werknemers"
 msgid ""
 "From here the accountant will be able to approve as well as refuse the "
 "expenses which are verified by the HR Manager."
-msgstr "Van hieruit zal de boekhouder de uitgaven kunnen goedkeuren en weigeren die geverifieerd zijn door de HR manager."
+msgstr ""
+"Van hieruit zal de boekhouder de uitgaven kunnen goedkeuren en weigeren die "
+"geverifieerd zijn door de HR manager."
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
-msgid "Generate Single Accounting Entry"
+#, fuzzy
+msgid "Generate Accounting Entries"
 msgstr "Genereer enkele financiële boeking"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#, fuzzy
 msgid "Group By"
-msgstr "Groeperen op"
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
-msgid "HR Department"
-msgstr "HR afdeling"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Groeperen op\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Groepeer op"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
@@ -378,6 +402,11 @@ msgid "Hotel Accommodation"
 msgstr "Hotel accommodatie"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
+msgid "Hr Department"
+msgstr "HR afdeling"
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
 msgid "Hr Expense refuse Reason wizard"
 msgstr "HR declaratie weigeringsreden wizard"
@@ -390,21 +419,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_is_follower
-msgid "Is Follower"
-msgstr "Is een volger"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_move_id
 msgid "Journal Entry"
 msgstr "Boeking"
@@ -413,11 +427,6 @@ msgstr "Boeking"
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Item"
 msgstr "Boeking"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_last_post
-msgid "Last Message Date"
-msgstr "Laatste bericht datum"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
@@ -437,16 +446,6 @@ msgstr "Laatst bijgewerkt door"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_ids
-msgid "Messages"
-msgstr "Berichten"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_ids
-msgid "Messages and communication history"
-msgstr "Berichten en communicatie historie"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all
@@ -481,24 +480,27 @@ msgid "New Mail"
 msgstr "Nieuwe e-mail"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:260
+#: code:addons/hr_expense/models/hr_expense.py:278
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
 "configure one."
-msgstr "Geen uitgavenrekening gevonden voor het product %s (of voor de categorie), configureer er één aub."
+msgstr ""
+"Geen uitgavenrekening gevonden voor het product %s (of voor de categorie), "
+"configureer er één aub."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:231
+#: code:addons/hr_expense/models/hr_expense.py:246
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr "Geen thuisadres gevonden voor werknemer %s, configureer er één aub."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:227
+#: code:addons/hr_expense/models/hr_expense.py:242
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
-msgstr "Geen credet rekening gevonden voor het %s dagboek, configureer er één aub."
+msgstr ""
+"Geen credet rekening gevonden voor het %s dagboek, configureer er één aub."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -506,24 +508,9 @@ msgid "Notes..."
 msgstr "Notities..."
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Aantal acties"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_attachment_number
 msgid "Number of Attachments"
 msgstr "Aantal bijlages"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Aantal berichten die actie vereisen"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Aantal ongelezen berichten"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense
@@ -531,12 +518,9 @@ msgstr "Aantal ongelezen berichten"
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr "Wanneer u uw declaratie heeft aangemaakt kan u het voorleggen aan uw manager die het valideert."
-
-#. module: hr_expense
-#: model:ir.actions.client,name:hr_expense.action_client_expense_menu
-msgid "Open Expense Menu"
-msgstr "Open onkosten menu"
+msgstr ""
+"Wanneer u uw declaratie heeft aangemaakt kan u het voorleggen aan uw manager "
+"die het valideert."
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -549,17 +533,24 @@ msgid "Payment By"
 msgstr "Betaling door"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:264
+#: code:addons/hr_expense/models/hr_expense.py:282
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
 "`property_account_expense_categ_id`."
-msgstr "Configureer aub uw standaard uitgavenrekening voor de productuitgave: `property_account_expense_categ_id`."
+msgstr ""
+"Configureer aub uw standaard uitgavenrekening voor de productuitgave: "
+"`property_account_expense_categ_id`."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
+#, fuzzy
 msgid "Post Journal Entries"
-msgstr "Boekingsregels boeken"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Boekingsregels boeken\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Dagboekregels boeken"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -600,8 +591,13 @@ msgstr "Reden om onkosten te weigeren."
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
+#, fuzzy
 msgid "Refuse"
-msgstr "Weigeren"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Weigeren\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Weiger"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
@@ -616,8 +612,9 @@ msgstr "Geweigerd"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense
-msgid "Reporting"
-msgstr "Rapportages"
+#, fuzzy
+msgid "Reports"
+msgstr "Rapport"
 
 #. module: hr_expense
 #: model:web.tip,description:hr_expense.expense_tip_1
@@ -625,12 +622,14 @@ msgid "Select the lines you want to submit to be reimbursed."
 msgstr "Selecteer de regels welke je wilt indienen voor terugbetaling."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:73
+#: code:addons/hr_expense/models/hr_expense.py:78
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product"
-" Unit of Measure"
-msgstr "De geselecteerde maateenheid behoort niet tot dezelfde categorie als de maateenheid van het product."
+"Selected Unit of Measure does not belong to the same category as the product "
+"Unit of Measure"
+msgstr ""
+"De geselecteerde maateenheid behoort niet tot dezelfde categorie als de "
+"maateenheid van het product."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -644,6 +643,7 @@ msgstr "Specificeer of het product kan worden gebruikt als declaratie."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_state
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Status"
 msgstr "Status"
 
@@ -687,12 +687,14 @@ msgstr "Het gebruikte dagboek als de declaratie wordt doorberekend."
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
-msgstr "De betaalmethode gebruikt wanneer de uitgave betaald is door het bedrijf."
+msgstr ""
+"De betaalmethode gebruikt wanneer de uitgave betaald is door het bedrijf."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "This document must be dated and signed for reimbursement."
-msgstr "Dit document moet een datum hebben en ondertekend worden voor terugbetaling."
+msgstr ""
+"Dit document moet een datum hebben en ondertekend worden voor terugbetaling."
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_expense_to_approve
@@ -734,16 +736,6 @@ msgid "Unit of Measure"
 msgstr "Maateenheid"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread
-msgid "Unread Messages"
-msgstr "Ongelezen berichten"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Teller ongelezen berichten"
-
-#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "UoM"
 msgstr "Maateenheid"
@@ -753,7 +745,9 @@ msgstr "Maateenheid"
 msgid ""
 "Use the messaging tool to log a note and attach a document to the expense. "
 "(e.g. scan of the bill)"
-msgstr "Gebruik de berichtentool om een notitie vast te leggen of een bijlage te koppelen aan een declaratie (bijv. de scan van een bonnetje)"
+msgstr ""
+"Gebruik de berichtentool om een notitie vast te leggen of een bijlage te "
+"koppelen aan een declaratie (bijv. de scan van een bonnetje)"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -761,50 +755,52 @@ msgid "Waiting Payment"
 msgstr "Wachten op betaling"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_website_message_ids
-msgid "Website Messages"
-msgstr "Website berichten"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_website_message_ids
-msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_state
 msgid ""
 "When the expense request is created the status is 'To Submit'.\n"
-" It is submitted by the employee and request is sent to manager, the status is 'Submitted'.        \n"
+" It is submitted by the employee and request is sent to manager, the status "
+"is 'Submitted'.        \n"
 "If the manager approve it, the status is 'Approved'.\n"
-" If the accountant genrate the accounting entries for the expense request, the status is 'Waiting Payment'."
-msgstr "Wanneer een declaratie wordt ingegeven staat de status op 'In te dienen'.\nNadat de werknemer zijn aanvraag heeft ingediend en het verzoek verstuurd is aan een manager, gaat de status naar 'Verstuurd'.            \nAls de manager het verzoek accepteert, gaat de status naar 'Goedgekeurd'.\nAls de boeking voor de declaratie is aangemaakt, dan wordt de status 'Wachten op betaling'."
+" If the accountant genrate the accounting entries for the expense request, "
+"the status is 'Waiting Payment'."
+msgstr ""
+"Wanneer een declaratie wordt ingegeven staat de status op 'In te dienen'.\n"
+"Nadat de werknemer zijn aanvraag heeft ingediend en het verzoek verstuurd is "
+"aan een manager, gaat de status naar 'Verstuurd'.            \n"
+"Als de manager het verzoek accepteert, gaat de status naar 'Goedgekeurd'.\n"
+"Als de boeking voor de declaratie is aangemaakt, dan wordt de status "
+"'Wachten op betaling'."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:107
+#: code:addons/hr_expense/models/hr_expense.py:112
 #, python-format
 msgid "You can only delete draft or refused expenses!"
 msgstr "U kan enkel concept of geweigerde uitgaven verwijderen!"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:203
+#: code:addons/hr_expense/models/hr_expense.py:207
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
-msgstr "U kan enkel financiële boekingen verrichten voor goedgekeurde uitgave(s)."
+msgstr ""
+"U kan enkel financiële boekingen verrichten voor goedgekeurde uitgave(s)."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:113
+#: code:addons/hr_expense/models/hr_expense.py:118
 #, python-format
 msgid "You can only submit draft expenses!"
 msgstr "U kunt alleen declaraties in de conceptfase verwijderen."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:124
+#: code:addons/hr_expense/models/hr_expense.py:129
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
 "class=o_timeline_tracking_value_list><li>Reason<span> : </span><span "
 "class=o_timeline_tracking_value>%s</span></li></ul>"
-msgstr "Uw declaratie %s werd geweigerd.<br/><ul class=o_timeline_tracking_value_list><li>Reden<span> : </span><span class=o_timeline_tracking_value>%s</span></li></ul>"
+msgstr ""
+"Uw declaratie %s werd geweigerd.<br/><ul "
+"class=o_timeline_tracking_value_list><li>Reden<span> : </span><span "
+"class=o_timeline_tracking_value>%s</span></li></ul>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -815,3 +811,181 @@ msgstr "bijv. zakenlunchen met X"
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "or"
 msgstr "of"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
+msgid "report.hr_expense.report_expense"
+msgstr ""
+
+#~ msgid "<strong>Description:</strong>"
+#~ msgstr "<strong>Omschrijving:</strong>"
+
+#~ msgid "<strong>Validated By:</strong>"
+#~ msgstr "<strong>Gevalideerd door:</strong>"
+
+#~ msgid "Action Needed"
+#~ msgstr "Vereist actie"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
+
+#~ msgid "Followers"
+#~ msgstr "Volgers"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Volgers (Kanalen)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Volgers (Partners)"
+
+#~ msgid "HR Department"
+#~ msgstr "HR afdeling"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+
+#~ msgid "Is Follower"
+#~ msgstr "Is een volger"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Laatste bericht datum"
+
+#~ msgid "Messages"
+#~ msgstr "Berichten"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Berichten en communicatie historie"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Aantal acties"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Aantal berichten die actie vereisen"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Aantal ongelezen berichten"
+
+#~ msgid "Open Expense Menu"
+#~ msgstr "Open onkosten menu"
+
+#~ msgid "Reporting"
+#~ msgstr "Rapportages"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Ongelezen berichten"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Teller ongelezen berichten"
+
+#~ msgid "Website Messages"
+#~ msgstr "Website berichten"
+
+#~ msgid "Website communication history"
+#~ msgstr "Website communicatie geschiedenis"
+
+#~ msgid "Accounting"
+#~ msgstr "Boekhouding"
+
+#~ msgid "Alias Domain"
+#~ msgstr "Alias domein"
+
+#~ msgid "Apply"
+#~ msgstr "Toepassen"
+
+#~ msgid "Approved Expenses"
+#~ msgstr "Goedgekeurde declaraties"
+
+#~ msgid "Bill Reference"
+#~ msgstr "Rekening kenmerk"
+
+#~ msgid "Can be Expensed"
+#~ msgstr "Declaratie product"
+
+#~ msgid "Company related to this journal"
+#~ msgstr "Bedrijf gerelateerd aan dit dagboek"
+
+#~ msgid "Congratulations, you're done!"
+#~ msgstr "Gefeliciteerd, u bent klaar!"
+
+#~ msgid "Don't hesitate to"
+#~ msgstr "Aarzel niet om"
+
+#~ msgid "End"
+#~ msgstr "Einde"
+
+#~ msgid "Expense Lines"
+#~ msgstr "Declaratieregels"
+
+#~ msgid "General Information"
+#~ msgstr "Algemene informatie"
+
+#~ msgid "Hide payment method"
+#~ msgstr "Verberg betaalmethode"
+
+#~ msgid "Memo"
+#~ msgstr "Memo"
+
+#~ msgid "Partner"
+#~ msgstr "Relatie"
+
+#~ msgid "Payment Amount"
+#~ msgstr "Betaalbedrag"
+
+#~ msgid "Payment Date"
+#~ msgstr "Betaaldatum"
+
+#~ msgid "Payment Method"
+#~ msgstr "Betaalmethode"
+
+#~ msgid "Payment Type"
+#~ msgstr "Betaalwijze"
+
+#~ msgid "Planner"
+#~ msgstr "Planner"
+
+#~ msgid "Posted"
+#~ msgstr "Geboekt"
+
+#~ msgid "Product Name"
+#~ msgstr "Productnaam"
+
+#~ msgid "Ref."
+#~ msgstr "Ref."
+
+#~ msgid "Register Payment"
+#~ msgstr "Betaling registreren"
+
+#~ msgid "Settings"
+#~ msgstr "Instellingen"
+
+#~ msgid "Setup your domain alias"
+#~ msgstr "Stel uw domeinalias in"
+
+#~ msgid "Subject:"
+#~ msgstr "Onderwerp:"
+
+#~ msgid ""
+#~ "Technical field used to hide the payment method if the selected journal "
+#~ "has only one available which is 'manual'"
+#~ msgstr ""
+#~ "Technisch veld gebruikt om de betalingsmethode te verbergen als het "
+#~ "geselecteerde dagboek maar één betaalmethode heeft die 'handmatig' is"
+
+#~ msgid "To:"
+#~ msgstr "Aan:"
+
+#~ msgid "Validate"
+#~ msgstr "Valideer"
+
+#~ msgid "Validation By"
+#~ msgstr "Goedgekeurd door"
+
+#~ msgid "send us an email"
+#~ msgstr "verzend ons een e-mail"
+
+#~ msgid "to describe<br/> your experience or to suggest improvements!"
+#~ msgstr ""
+#~ "om uw<br/> ervaringen met ons te delen of verbeteringen voor te stellen!"

@@ -1,7 +1,8 @@
+# #-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_recruitment
-# 
+#
 # Translators:
 # fausthuang, 2015
 # fausthuang, 2015
@@ -10,35 +11,70 @@
 # lttlsnk <lttlsnk@gmail.com>, 2016
 # lttlsnk <lttlsnk@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
+# #-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_recruitment
+#
+# Translators:
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-07-12 00:57+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_recruitment
-#: model:mail.template,body_html:hr_recruitment.hr_welcome_new_employee
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
 msgid ""
 "\n"
-"            <p>\n"
-"                %if object.department_id:\n"
-"                    I’m very pleased to announce that <strong> ${object.name} </strong> will be joining us as a ${object.job_id.name}\n"
-"                    in ${object.department_id.name}.\n"
-"                %else:\n"
-"                    I’m very pleased to announce that <strong> ${object.name} </strong> will be joining us as a ${object.job_id.name}.\n"
-"                %endif\n"
-"            </p>\n"
-"            <p>Please welcome him/her and help him/her finding his/her marks.</p>\n"
-"            "
-msgstr "\n<p>\n%if object.department_id:\n非常高兴地宣布 <strong> ${object.name} </strong> 会加入我们 ${object.job_id.name}\n在${object.department_id.name}.\n%else:\n我非常高兴地宣布<strong> ${object.name} </strong> 会加入我们 ${object.job_id.name}.\n%endif\n</p>\n<p>请欢迎并帮助他/她适应他/她的工作.</p>"
+"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+"<p>Thank you for your enquiry.<br />\n"
+"Unfortunately, your profile does not match with our needs</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
+msgid ""
+"\n"
+"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+"<p>Thank you for your enquiry.<br />\n"
+"Your resume got our interest. I will contact you as soon as possible to "
+"plan\n"
+"next steps of the recruitment process.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_employee
+msgid ""
+"\n"
+"<p>Dear all,</p>\n"
+"<p>I’m very pleased to announce that <strong> ${object.name} </strong> will "
+"be\n"
+"joining us as a ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"    in ${object.department_id.name}.\n"
+"%endif\n"
+".</p>\n"
+"<p>Please welcome him/her and help him/her finding his/her marks.</p>"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_1
@@ -96,32 +132,6 @@ msgid "<b>Departement:</b>"
 msgstr "<b>部门:</b>"
 
 #. module: hr_recruitment
-#: model:mail.template,body_html:hr_recruitment.applicant_interest
-msgid ""
-"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-"        <p>Congrats! Your resume's got our interest!\n"
-"        I will call you as soon as possible to make a 10 minutes phone interview and  plan a first meeting.</p>\n"
-"        <p>If we can’t reach you or if you miss our call, feel free to reach me back on the number 001 312 349 3030\n"
-"        If I do not answer, please let me a message with some schedules to call you back.</p>\n"
-"        <p>Kind regards,</p>\n"
-"        <br/>\n"
-"         ${object.user_id.signature | safe}"
-msgstr "<p>${object.partner_name or 'applicant'} 您好,</p>        <p> 非常高兴收到您的简历!        我们将尽快和您电话沟通并预约初试时间.</p>        <p>如果我们无法联系到您或者您错过接听电话,请在方便的时间联系我 XXX-XXXX(公司电话或者个人电话,译者注)         如果我没有接听到您的电话,请短信或者邮件告诉我一个合适的时间,我再与您联系</p>        <p>致敬,</p>        <br>         ${object.user_id.signature}"
-
-#. module: hr_recruitment
-#: model:mail.template,body_html:hr_recruitment.applicant_refuse
-msgid ""
-"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-"        <p>We thank you for your interest in our company and for your application.\n"
-"        Unfortunately, your profile does not match with our needs or our recruitment\n"
-"        campaign has reached its term.</p>\n"
-"        <p>If you want more details, feel free to contact us by phone.</p>\n"
-"        <p>Kind regards,</p>\n"
-"        <br/>\n"
-"         ${object.user_id and object.user_id.signature | safe or ''}"
-msgstr "<p>${object.partner_name or 'applicant'} 你好,</p>\n<p>谢谢您申请我们公司的职位.\n很抱歉, 您的简历不符合我们的招聘要求\n此职位的招聘已结束.</p>\n<p>如果您有其他想法,请在方便的时间电话联系我们.</p>\n<p>此致,</p>\n<br>\n${object.user_id and object.user_id.signature or ''}"
-
-#. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "<span class=\"o_stat_text\">Meetings</span>"
 msgstr "<span class=\"o_stat_text\">会议</span>"
@@ -131,14 +141,18 @@ msgstr "<span class=\"o_stat_text\">会议</span>"
 msgid ""
 "<span class=\"o_stat_text\">Print</span>\n"
 "                            <span class=\"o_stat_text\">Interview</span>"
-msgstr "<span class=\"o_stat_text\">打印</span><span class=\"o_stat_text\">面试</span>"
+msgstr ""
+"<span class=\"o_stat_text\">打印</span><span class=\"o_stat_text\">面试</"
+"span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid ""
 "<span class=\"o_stat_text\">Start</span>\n"
 "                            <span class=\"o_stat_text\">Interview</span>"
-msgstr "<span class=\"o_stat_text\">开始</span><span class=\"o_stat_text\">面试</span>"
+msgstr ""
+"<span class=\"o_stat_text\">开始</span><span class=\"o_stat_text\">面试</"
+"span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -168,11 +182,6 @@ msgid ""
 msgstr "当创建别名的新记录时，一个Python字典被提供作为默认值"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_needaction
-msgid "Action Needed"
-msgstr "所需行动"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_active
 msgid "Active"
 msgstr "有效"
@@ -194,8 +203,13 @@ msgstr "别名"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_contact
+#, fuzzy
 msgid "Alias Contact Security"
-msgstr "别名联系安全"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"别名联系安全\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"别名联系人安全"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_alias_id
@@ -209,13 +223,23 @@ msgstr "别名"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_domain
+#, fuzzy
 msgid "Alias domain"
-msgstr "别名域"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"别名域\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"别名网域"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_model_id
+#, fuzzy
 msgid "Aliased Model"
-msgstr "别名模型"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"别名模型\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"别名的模型"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.config.settings,module_document:0
@@ -259,7 +283,7 @@ msgid "Applicant's Name"
 msgstr "申请人姓名"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:85
+#: code:addons/hr_recruitment/models/hr_recruitment.py:92
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_calendar_view
 #, python-format
@@ -269,18 +293,26 @@ msgstr "申请人"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 msgid ""
-"Applicants and their attached CV are created automatically when an email is sent.\n"
-"                If you install the document management modules, all resumes are indexed automatically,\n"
+"Applicants and their attached CV are created automatically when an email is "
+"sent.\n"
+"                If you install the document management modules, all resumes "
+"are indexed automatically,\n"
 "                so that you can easily search through their content."
-msgstr "申请人及其附着的简历会被自动创建时当电子邮件被被发送时。如果您安装了文件管理模块，所有的简历会自动建立索引，这样就可以通过他们的内容轻松地搜索。"
+msgstr ""
+"申请人及其附着的简历会被自动创建时当电子邮件被被发送时。如果您安装了文件管理"
+"模块，所有的简历会自动建立索引，这样就可以通过他们的内容轻松地搜索。"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid ""
-"Applicants and their attached CV are created automatically when an email is sent.\n"
-"            If you install the document management modules, all resumes are indexed automatically, \n"
+"Applicants and their attached CV are created automatically when an email is "
+"sent.\n"
+"            If you install the document management modules, all resumes are "
+"indexed automatically, \n"
 "            so that you can easily search through their content."
-msgstr "申请和简历附件随着邮件发送自动生产。如果你安装了文件管理模块。所有的简历会被自动检索。所以你能方便地从内容检索。"
+msgstr ""
+"申请和简历附件随着邮件发送自动生产。如果你安装了文件管理模块。所有的简历会被"
+"自动检索。所以你能方便地从内容检索。"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -293,12 +325,12 @@ msgid "Application Summary"
 msgstr "申请摘要"
 
 #. module: hr_recruitment
-#: model:mail.template,subject:hr_recruitment.applicant_interest
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_interest
 msgid "Application approved"
 msgstr "申请通过"
 
 #. module: hr_recruitment
-#: model:mail.template,subject:hr_recruitment.applicant_refuse
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Application refused"
 msgstr "申请被拒绝"
 
@@ -338,8 +370,13 @@ msgstr "评价"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#, fuzzy
 msgid "Archived"
-msgstr "存档"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"存档\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"已归档"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_open
@@ -384,23 +421,28 @@ msgstr "基本信息"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_departmnet
+#, fuzzy
 msgid "By Department"
-msgstr "按“部门”过虑"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"按“部门”过虑\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"部门"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_job
+#, fuzzy
 msgid "By Job"
-msgstr "按“工作”过虑"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"按“工作”过虑\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"工作"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_recruiter
 msgid "By Recruiter"
 msgstr "被招聘人"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_campaign_id
-msgid "Campaign"
-msgstr "营销活动"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_configuration
@@ -410,8 +452,13 @@ msgstr "取消"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
+#, fuzzy
 msgid "Cases By Stage and Estimates"
-msgstr "按阶段和评估的事务"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"按阶段和评估的事务\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"案件，按阶段和估算"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
@@ -422,22 +469,29 @@ msgstr "申请人类别"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_survey
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_survey_id
 msgid ""
-"Choose an interview form for this job position and you will be able to "
-"print/answer this interview from all applicants who apply for this job"
-msgstr "选择一个此岗位的面试表格，你可以把它打印出来让所有此岗位的应聘者回答这个表格的问题"
+"Choose an interview form for this job position and you will be able to print/"
+"answer this interview from all applicants who apply for this job"
+msgstr ""
+"选择一个此岗位的面试表格，你可以把它打印出来让所有此岗位的应聘者回答这个表格"
+"的问题"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid ""
-"Click here to create a new job. You can remove the \"In Recruitment\" filter"
-" to display all the job positions."
+"Click here to create a new job. You can remove the \"In Recruitment\" filter "
+"to display all the job positions."
 msgstr "点击这里生成一个新工作。你可以移除\"在招聘中”来过滤所有的工作岗位。"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
+#, fuzzy
 msgid "Click to add a new employee."
-msgstr "单机新增一个员工"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"单机新增一个员工\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"单击添加一个新的员工"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -446,12 +500,18 @@ msgid "Click to add a new stage in the recruitment process."
 msgstr "点击在招聘过程中增加一个新的阶段"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
+msgid "Click to add a new tag."
+msgstr "点击来创建一个新的标签"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_closed
 msgid "Closed"
 msgstr "已关闭"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_color
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_color
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_color
 msgid "Color Index"
@@ -480,22 +540,31 @@ msgid "Configure Recruitment"
 msgstr "设置招聘"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:382
+#: code:addons/hr_recruitment/models/hr_recruitment.py:388
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_id
-#, python-format
+#, fuzzy, python-format
 msgid "Contact"
-msgstr "联系人"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"联系人\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"联系"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:384
+#: code:addons/hr_recruitment/models/hr_recruitment.py:390
 #, python-format
 msgid "Contact Email"
 msgstr "联系电邮"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#, fuzzy
 msgid "Contract"
-msgstr "合同"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"合同\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"合约"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
@@ -525,16 +594,8 @@ msgstr "生产别名"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
-"Create email and url for each distinct source. <br>\n"
-"                When the applicant will arrive, you will know from wich source the Job position is coming."
+"Create some aliases that will allow you to track where applicants come from."
 msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
-msgid ""
-"Create here some alias...\n"
-"                That will allow you to track from where the applicant is coming from..."
-msgstr "在这里生产一些别名...这会允许你申请来自哪里"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -552,8 +613,13 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_create_date
+#, fuzzy
 msgid "Created on"
-msgstr "创建时间"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"创建时间\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"创建于"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_create_date
@@ -567,14 +633,14 @@ msgid "Creation Week"
 msgstr "创建周"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "发布到记录上的最后消息的日期"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_day_close
+#, fuzzy
 msgid "Days to Close"
-msgstr "剩余天数"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"剩余天数\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"关闭日期"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_day_open
@@ -592,7 +658,8 @@ msgid ""
 "Define a specific contact address for this job position. If you keep it "
 "empty, the default email address will be used which is in human resources "
 "settings"
-msgstr "为这个职位定义一个特定的联系地址。如果为空，将默认使用人事部门预设的电子邮件"
+msgstr ""
+"为这个职位定义一个特定的联系地址。如果为空，将默认使用人事部门预设的电子邮件"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -600,7 +667,9 @@ msgid ""
 "Define here your stages of the recruitment process, for example:\n"
 "            qualification call, first interview, second interview, refused,\n"
 "            hired."
-msgstr "这里定义招聘过程中的各个阶段，例如：资格通话，第一次面试，第二次面试，拒绝，录用。"
+msgstr ""
+"这里定义招聘过程中的各个阶段，例如：资格通话，第一次面试，第二次面试，拒绝，"
+"录用。"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
@@ -609,7 +678,9 @@ msgid ""
 "Define job position profile and manage recruitment in a context of a "
 "particular job: print interview survey, define number of expected new "
 "employees, and manage its recruitment pipe"
-msgstr "定义工作岗位的资料，并在具体工作的背景下，管理招聘：打印的采访调查中，定义预期新员工的数量，并管理其招募管道"
+msgstr ""
+"定义工作岗位的资料，并在具体工作的背景下，管理招聘：打印的采访调查中，定义预"
+"期新员工的数量，并管理其招募管道"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -706,7 +777,9 @@ msgstr "文档"
 msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "            is different according to the job position."
-msgstr "不要忘了，指定部门\n如果你的招聘流程根据工作岗位。"
+msgstr ""
+"不要忘了，指定部门\n"
+"如果你的招聘流程根据工作岗位。"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_11
@@ -731,8 +804,13 @@ msgstr "Email"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#, fuzzy
 msgid "Email Alias"
-msgstr "邮箱别名"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"邮箱别名\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Email别名"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_id
@@ -761,12 +839,16 @@ msgstr "员工内部申请"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_no_employee
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#, fuzzy
 msgid "Employees"
-msgstr "员工列表"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"员工列表\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"员工"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
+#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
 msgid "Excellent"
 msgstr "杰出"
 
@@ -802,8 +884,13 @@ msgstr "额外奖金或补贴..."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#, fuzzy
 msgid "Feedback of interviews..."
-msgstr "面谈反馈..."
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"面谈反馈...\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"面试反馈..."
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_2_2
@@ -822,23 +909,13 @@ msgstr "初次面试"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
+#, fuzzy
 msgid "Folded in Recruitment Pipe"
-msgstr "在招聘渠道中收起"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_follower_ids
-msgid "Followers"
-msgstr "关注者"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "关注者(频道)"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "关注者（业务伙伴）"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"在招聘渠道中收起\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"在招聘管道收起"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_8
@@ -866,8 +943,7 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr "定义一个序列按顺序显示列表中的各阶段。"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
+#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
 msgid "Good"
 msgstr "好"
 
@@ -898,14 +974,14 @@ msgid "Group By"
 msgstr "分组"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_department
-msgid "HR Department"
-msgstr "HR 部门"
-
-#. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
 msgstr "已雇用员工"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_department
+msgid "Hr Department"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -915,25 +991,25 @@ msgstr "已雇用员工"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_id
+#, fuzzy
 msgid "ID"
-msgstr "ID"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"ID\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"标识"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_thread_id
+#, fuzzy
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
-msgstr "父记录ID支持别名(例如:项目支持任务创建别名)"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_unread
-msgid "If checked new messages require your attention."
-msgstr "查看是否有需要留意的新信息。"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "确认后, 会出现新消息."
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"父记录ID支持别名(例如:项目支持任务创建别名)\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"上级记录ID支持别名(例如:项目支持任务创建别名)"
 
 #. module: hr_recruitment
 #: model:survey.question,comments_message:hr_recruitment.recruitment_1_1
@@ -944,8 +1020,8 @@ msgstr "确认后, 会出现新消息."
 #: model:survey.question,comments_message:hr_recruitment.recruitment_2_3
 #: model:survey.question,comments_message:hr_recruitment.recruitment_2_4
 #: model:survey.question,comments_message:hr_recruitment.recruitment_3_1
-msgid "If other, precise:"
-msgstr "如其他的，精确的："
+msgid "If other, please specify:"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_template_id
@@ -978,13 +1054,14 @@ msgstr "初步评价"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#, fuzzy
 msgid "Interview Form"
-msgstr "面试表格"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_is_follower
-msgid "Is Follower"
-msgstr "是关注者"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"面试表格\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"面试表单"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1009,8 +1086,13 @@ msgstr "工作地点"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
+#, fuzzy
 msgid "Job Position"
-msgstr "工作岗位"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"工作岗位\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"职位"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_department_new
@@ -1025,19 +1107,28 @@ msgstr "招聘岗位生成"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_config
+#, fuzzy
 msgid "Job Positions"
-msgstr "职位"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"职位\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"工作岗位"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_stage_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_ids
-msgid "Job Stages"
-msgstr "招聘阶段"
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
+msgid "Job Specific"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+#, fuzzy
 msgid "Jobs"
-msgstr "作业"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"作业\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"工作"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1055,11 +1146,6 @@ msgid "Knowledge"
 msgstr "知识"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_last_post
-msgid "Last Message Date"
-msgstr "最后消息日期"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant___last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category___last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings___last_update
@@ -1067,8 +1153,13 @@ msgstr "最后消息日期"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report___last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source___last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage___last_update
+#, fuzzy
 msgid "Last Modified on"
-msgstr "最后修改时间"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"最后修改时间\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"最后修改日"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_last_stage_id
@@ -1090,8 +1181,13 @@ msgstr "最后阶段更新"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_write_uid
+#, fuzzy
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"最后更新者\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"最后更新人"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_write_date
@@ -1099,8 +1195,13 @@ msgstr "最后更新者"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_write_date
+#, fuzzy
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"最后更新时间\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"最近更新时间"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_2_1
@@ -1111,8 +1212,13 @@ msgstr "男性"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_config_settings_module_document
 msgid ""
 "Manage your CV's and motivation letter related to all applicants.\n"
-"-This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)"
-msgstr "管理您的简历和求职信与所有申请人。\n                安装模块document_ftp。为了让您通过使用特定的关键字的所有文件的内容进行搜索，这将安装知识管理模块（PDF，DOCX...）"
+"-This installs the module document_ftp. This will install the knowledge "
+"management  module in order to allow you to search using specific keywords "
+"through  the content of all documents (PDF, .DOCx...)"
+msgstr ""
+"管理您的简历和求职信与所有申请人。\n"
+"                安装模块document_ftp。为了让您通过使用特定的关键字的所有文件"
+"的内容进行搜索，这将安装知识管理模块（PDF，DOCX...）"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -1120,20 +1226,9 @@ msgid "Master Degree"
 msgstr "硕士"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_medium_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_medium_id
 msgid "Medium"
 msgstr "普通"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_ids
-msgid "Messages"
-msgstr "消息"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_ids
-msgid "Messages and communication history"
-msgstr "消息和通信历史"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_mobile
@@ -1142,8 +1237,13 @@ msgstr "手机"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#, fuzzy
 msgid "Mobile:"
-msgstr "手机："
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"手机：\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"手机"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -1166,11 +1266,14 @@ msgid "Name"
 msgstr "名称"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_job.py:27
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
-#, python-format
+#, fuzzy
 msgid "New"
-msgstr "新建"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"新建\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"新的"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_new_applicant_count
@@ -1194,7 +1297,7 @@ msgid "New Applications"
 msgstr "新的申请"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:428
+#: code:addons/hr_recruitment/models/hr_recruitment.py:438
 #, python-format
 msgid "New Employee %s Hired"
 msgstr "被雇佣的新员工%s"
@@ -1240,7 +1343,7 @@ msgid "No Interview Form"
 msgstr "没有面试表格"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:395
+#: code:addons/hr_recruitment/models/hr_recruitment.py:406
 #, python-format
 msgid "No Subject"
 msgstr "无主题"
@@ -1251,8 +1354,7 @@ msgid "No out of hours working"
 msgstr "并未兼职"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
+#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
 msgid "Normal"
 msgstr "一般"
 
@@ -1260,11 +1362,6 @@ msgstr "一般"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_1
 msgid "Not important"
 msgstr "不重要的"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_needaction_counter
-msgid "Number of Actions"
-msgstr "动作的序列号"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_attachment_number
@@ -1277,20 +1374,11 @@ msgid "Number of Days to close the project issue"
 msgstr "剩余天数"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要动作的消息编号"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_unread_counter
-msgid "Number of unread messages"
-msgstr "未读的消息数量"
-
-#. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
-"                process and follow up all operations: meetings, interviews, etc."
+"                process and follow up all operations: meetings, interviews, "
+"etc."
 msgstr "Odoo帮助您在招聘过程跟踪申请人及跟进所有操作：会议，采访等。"
 
 #. module: hr_recruitment
@@ -1311,17 +1399,19 @@ msgid "Office location"
 msgstr "办公地点"
 
 #. module: hr_recruitment
-#: model:ir.actions.client,name:hr_recruitment.action_client_hr_recruitment_menu
-msgid "Open HR Menu"
-msgstr "打开 人力资源 菜单"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_force_thread_id
+#, fuzzy
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "所有的来邮都将附上一条线索（记录）选配的ID，即使它们不曾回复过它。如果设置了，这个将完全阻止新记录的创建。"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"所有的来邮都将附上一条线索（记录）选配的ID，即使它们不曾回复过它。如果设置"
+"了，这个将完全阻止新记录的创建。\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"所有的进来的邮件都将附上一条线索（记录）选配的ID，即使它们不曾回复过它。如果"
+"设置了，这个将完全阻止新记录的创建。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_user_id
@@ -1335,16 +1425,23 @@ msgstr "上级模型"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_parent_thread_id
+#, fuzzy
 msgid "Parent Record Thread ID"
-msgstr "父记录线程ID"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"父记录线程ID\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"上级记录线程ID"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
-msgstr "父级模型拥有别名。拥有别名参照的模型不必是alias_model_id给出的模型 (example: project(parent_model) and task (model))"
+msgstr ""
+"父级模型拥有别名。拥有别名参照的模型不必是alias_model_id给出的模型 (example: "
+"project(parent_model) and task (model))"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_partner_id
@@ -1367,13 +1464,23 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
-msgstr "文档信息发送使用邮件服务器规则。\n- 所有人：所有人都允许\n- 业务伙伴：仅认证的业务伙伴\n- 关注者：仅关注相关文档者\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
+msgstr ""
+"策略是通过邮件网关在文档上提交一个消息\n"
+"- everyone: 任何人都可以提交\n"
+"- partners: 只有认证过的合作伙伴\n"
+"- followers: 只有相关文件或下列频道成员的跟随者\n"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#, fuzzy
 msgid "Print interview report"
-msgstr "打印面谈报告"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"打印面谈报告\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"打印面试报告"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_probability
@@ -1397,8 +1504,13 @@ msgstr "评价的重要性"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_force_thread_id
+#, fuzzy
 msgid "Record Thread ID"
-msgstr "记录线索D"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"记录线索D\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"记录线索ID"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
@@ -1463,20 +1575,25 @@ msgid "Regular meetings"
 msgstr "定期会议"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "Reopen Application"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
+#, fuzzy
 msgid "Reports"
-msgstr "报告"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"报告\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"报表"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_requirements
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Requirements"
 msgstr "要求"
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-msgid "Reset Application"
-msgstr "重置申请"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_response_id
@@ -1533,13 +1650,23 @@ msgstr "公司推荐的薪酬标准"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#, fuzzy
 msgid "Schedule Interview"
-msgstr "安排面谈"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"安排面谈\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"预约面试"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#, fuzzy
 msgid "Schedule interview with this applicant"
-msgstr "为这个申请人计划面谈"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"为这个申请人计划面谈\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"为这个申请人安排面试"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1574,16 +1701,25 @@ msgid "Somewhat important"
 msgstr "有些重要的"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_source_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_source_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_source_id
+#, fuzzy
 msgid "Source"
-msgstr "原文"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"原文\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"来源"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_name
+#, fuzzy
 msgid "Source Name"
-msgstr "源名称"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"源名称\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"来源名称"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
@@ -1601,6 +1737,11 @@ msgstr "应聘者来源"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Specific Email Address"
 msgstr "指定的电子邮件"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
+msgid "Specific job that uses this stage. Other jobs will not use this stage."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1672,8 +1813,13 @@ msgstr "主题/应用 名称"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_survey
+#, fuzzy
 msgid "Survey"
-msgstr "调查"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"调查\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"问卷"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.applicant.category:0
@@ -1681,7 +1827,10 @@ msgid "Tag name already exists !"
 msgstr "标签名已存在!"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_categ_ids
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 msgid "Tags"
 msgstr "标签"
 
@@ -1704,11 +1853,18 @@ msgstr "申请者可以开始上班的日期"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_model_id
+#, fuzzy
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
-msgstr "相应于这个别名对应的模型(Odoo的文件种类)。任何一封不属于对某个已存在的记录的到来邮件，将导致此模块中新记录的创建(例如，一个新的项目任务)。"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"相应于这个别名对应的模型(Odoo的文件种类)。任何一封不属于对某个已存在的记录的"
+"到来邮件，将导致此模块中新记录的创建(例如，一个新的项目任务)。\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"相应于这个别名对应的模型(Odoo单据种类)。任何一封不属于对某个已存在的记录的到"
+"来邮件，将导致此模块中新记录的创建(例如，一个新的项目任务)。"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.recruitment.degree:0
@@ -1720,16 +1876,34 @@ msgstr "应聘者学历的名称必须唯一"
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "邮件别名的名称，例如，如果你要收取 <jobs@example.odoo.com> 的电子邮件,别名就要被设为：\"jobs\""
+msgstr ""
+"邮件别名的名称，例如，如果你要收取 <jobs@example.odoo.com> 的电子邮件,别名就"
+"要被设为：\"jobs\""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_user_id
+#, fuzzy
 msgid ""
 "The owner of records created upon receiving emails on this alias. If this "
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
-msgstr "记录所有者是根据在此别名上接受邮件来创立的。\r\n若此字段无设置，系统将依据收发地址来寻找正确的所有者，如果在那个地址上没有系统使用者可以找到的话，将使用admin账户。"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"记录所有者是根据在此别名上接受邮件来创立的。\r\n"
+"若此字段无设置，系统将依据收发地址来寻找正确的所有者，如果在那个地址上没有系"
+"统使用者可以找到的话，将使用admin账户。\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"基于此别名接收到的邮件，创建记录的所有人。若此字段没有设置，系统将试图根据发"
+"送者(From)地址来查找正确的所有者，如果对于那个地址没有系统用户被发现，将使用"
+"系统管理员账户。"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
+msgid ""
+"These aliases can be emails or urls for every source. When the applicant "
+"arrives here through one of these you'll know where he came from."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1737,7 +1911,8 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr "这些邮箱地址将添加到所有接收的发送邮件的抄送字段，用逗号分隔多个邮件地址。"
+msgstr ""
+"这些邮箱地址将添加到所有接收的发送邮件的抄送字段，用逗号分隔多个邮件地址。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_from
@@ -1756,25 +1931,26 @@ msgid ""
 msgstr "此界面是为了帮助招聘面试的负责人"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr "这里是一个帮助跟踪您不同市场活动尝试的名称。例如：Fall_Drive，Christmas_Special"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_medium_id
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_medium_id
+#, fuzzy
 msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "这里是交付的方式。例如： 明信片、 电子邮件、 或横幅广告"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"这里是交付的方式。例如： 明信片、 电子邮件、 或横幅广告\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"这是交付方式。例如： 明信片、 电子邮件、 或横幅广告"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_source_id
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_source_id
+#, fuzzy
 msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr "这是链接的来源，例如：搜索引擎，其他领域，或者邮件列表名称"
+"This is the source of the link Ex: Search Engine, another domain, or name of "
+"email list"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"这是链接的来源，例如：搜索引擎，其他领域，或者邮件列表名称\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"这是链接的来源，例如：搜索引擎，其他网域，或者邮件列表名称"
 
 #. module: hr_recruitment
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_1
@@ -1798,21 +1974,20 @@ msgstr "当这个阶段中没有任何记录要呈现的时候，这个阶段在
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+#, fuzzy
 msgid "Unassigned"
-msgstr "未分配"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"未分配\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"未分派"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_unread
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 #: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
 msgid "Unread Messages"
 msgstr "未读消息"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "未读消息计数器"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_write_date
@@ -1831,12 +2006,16 @@ msgstr "用户"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_user_email
+#, fuzzy
 msgid "User Email"
-msgstr "用户电子邮件"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"用户电子邮件\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"用户Email"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
+#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
 msgid "Very Good"
 msgstr "非常好"
 
@@ -1851,19 +2030,9 @@ msgid "Watchers Emails"
 msgstr "关注者的电子邮件"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_website_message_ids
-msgid "Website Messages"
-msgstr "网站消息"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_website_message_ids
-msgid "Website communication history"
-msgstr "网站沟通记录"
-
-#. module: hr_recruitment
-#: model:mail.template,subject:hr_recruitment.hr_welcome_new_employee
-msgid "Welcoming ${object.name} "
-msgstr "欢迎 ${object.name}"
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
+msgid "Welcome ${object.name} "
+msgstr ""
 
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_1_3
@@ -1879,12 +2048,15 @@ msgstr "您的性别是？"
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
 msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
-"                can easily find all the information you need for each person;\n"
+"                can easily find all the information you need for each "
+"person;\n"
 "                contact data, job position, availability, etc."
-msgstr "随着Odoo员工的屏幕上只是一个快速浏览，你可以很容易地找到你所需要的每个人的信息;联系人数据，工作岗位，可用性等。"
+msgstr ""
+"随着Odoo员工的屏幕上只是一个快速浏览，你可以很容易地找到你所需要的每个人的信"
+"息;联系人数据，工作岗位，可用性等。"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:432
+#: code:addons/hr_recruitment/models/hr_recruitment.py:442
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr "你必须指定应聘者应聘的岗位和姓名"
@@ -1900,7 +2072,7 @@ msgid "hr.recruitment.config.settings"
 msgstr "hr.recruitment.config.settings"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:300
+#: code:addons/hr_recruitment/models/hr_recruitment.py:298
 #, python-format
 msgid "job applicants"
 msgstr "应聘者"
@@ -1909,3 +2081,185 @@ msgstr "应聘者"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
+
+#~ msgid ""
+#~ "\n"
+#~ "            <p>\n"
+#~ "                %if object.department_id:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}\n"
+#~ "                    in ${object.department_id.name}.\n"
+#~ "                %else:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}.\n"
+#~ "                %endif\n"
+#~ "            </p>\n"
+#~ "            <p>Please welcome him/her and help him/her finding his/her "
+#~ "marks.</p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "<p>\n"
+#~ "%if object.department_id:\n"
+#~ "非常高兴地宣布 <strong> ${object.name} </strong> 会加入我们 ${object."
+#~ "job_id.name}\n"
+#~ "在${object.department_id.name}.\n"
+#~ "%else:\n"
+#~ "我非常高兴地宣布<strong> ${object.name} </strong> 会加入我们 ${object."
+#~ "job_id.name}.\n"
+#~ "%endif\n"
+#~ "</p>\n"
+#~ "<p>请欢迎并帮助他/她适应他/她的工作.</p>"
+
+#~ msgid ""
+#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+#~ "        <p>Congrats! Your resume's got our interest!\n"
+#~ "        I will call you as soon as possible to make a 10 minutes phone "
+#~ "interview and  plan a first meeting.</p>\n"
+#~ "        <p>If we can’t reach you or if you miss our call, feel free to "
+#~ "reach me back on the number 001 312 349 3030\n"
+#~ "        If I do not answer, please let me a message with some schedules "
+#~ "to call you back.</p>\n"
+#~ "        <p>Kind regards,</p>\n"
+#~ "        <br/>\n"
+#~ "         ${object.user_id.signature | safe}"
+#~ msgstr ""
+#~ "<p>${object.partner_name or 'applicant'} 您好,</p>        <p> 非常高兴收到"
+#~ "您的简历!        我们将尽快和您电话沟通并预约初试时间.</p>        <p>如果"
+#~ "我们无法联系到您或者您错过接听电话,请在方便的时间联系我 XXX-XXXX(公司电话"
+#~ "或者个人电话,译者注)         如果我没有接听到您的电话,请短信或者邮件告诉我"
+#~ "一个合适的时间,我再与您联系</p>        <p>致敬,</p>        <br>         "
+#~ "${object.user_id.signature}"
+
+#~ msgid ""
+#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+#~ "        <p>We thank you for your interest in our company and for your "
+#~ "application.\n"
+#~ "        Unfortunately, your profile does not match with our needs or our "
+#~ "recruitment\n"
+#~ "        campaign has reached its term.</p>\n"
+#~ "        <p>If you want more details, feel free to contact us by phone.</"
+#~ "p>\n"
+#~ "        <p>Kind regards,</p>\n"
+#~ "        <br/>\n"
+#~ "         ${object.user_id and object.user_id.signature | safe or ''}"
+#~ msgstr ""
+#~ "<p>${object.partner_name or 'applicant'} 你好,</p>\n"
+#~ "<p>谢谢您申请我们公司的职位.\n"
+#~ "很抱歉, 您的简历不符合我们的招聘要求\n"
+#~ "此职位的招聘已结束.</p>\n"
+#~ "<p>如果您有其他想法,请在方便的时间电话联系我们.</p>\n"
+#~ "<p>此致,</p>\n"
+#~ "<br>\n"
+#~ "${object.user_id and object.user_id.signature or ''}"
+
+#~ msgid "Action Needed"
+#~ msgstr "所需行动"
+
+#~ msgid "Campaign"
+#~ msgstr "营销活动"
+
+#~ msgid ""
+#~ "Create here some alias...\n"
+#~ "                That will allow you to track from where the applicant is "
+#~ "coming from..."
+#~ msgstr "在这里生产一些别名...这会允许你申请来自哪里"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "发布到记录上的最后消息的日期"
+
+#~ msgid "Followers"
+#~ msgstr "关注者"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "关注者(频道)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "关注者（业务伙伴）"
+
+#~ msgid "HR Department"
+#~ msgstr "HR 部门"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "查看是否有需要留意的新信息。"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "确认后, 会出现新消息."
+
+#~ msgid "If other, precise:"
+#~ msgstr "如其他的，精确的："
+
+#~ msgid "Is Follower"
+#~ msgstr "是关注者"
+
+#~ msgid "Job Stages"
+#~ msgstr "招聘阶段"
+
+#~ msgid "Last Message Date"
+#~ msgstr "最后消息日期"
+
+#~ msgid "Messages"
+#~ msgstr "消息"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "消息和通信历史"
+
+#~ msgid "Number of Actions"
+#~ msgstr "动作的序列号"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "需要动作的消息编号"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "未读的消息数量"
+
+#~ msgid "Open HR Menu"
+#~ msgstr "打开 人力资源 菜单"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "文档信息发送使用邮件服务器规则。\n"
+#~ "- 所有人：所有人都允许\n"
+#~ "- 业务伙伴：仅认证的业务伙伴\n"
+#~ "- 关注者：仅关注相关文档者\n"
+
+#~ msgid "Reset Application"
+#~ msgstr "重置申请"
+
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "这里是一个帮助跟踪您不同市场活动尝试的名称。例如：Fall_Drive，"
+#~ "Christmas_Special"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "未读消息计数器"
+
+#~ msgid "Website Messages"
+#~ msgstr "网站消息"
+
+#~ msgid "Website communication history"
+#~ msgstr "网站沟通记录"
+
+#~ msgid "Welcoming ${object.name} "
+#~ msgstr "欢迎 ${object.name}"
+
+#~ msgid "Content"
+#~ msgstr "内容"
+
+#~ msgid "Create"
+#~ msgstr "创建"
+
+#~ msgid "Departments"
+#~ msgstr "部门"
+
+#~ msgid "Discard"
+#~ msgstr "舍弃"
+
+#~ msgid "Refused"
+#~ msgstr "已拒绝"

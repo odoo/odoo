@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * fetchmail
-# 
+#
 # Translators:
 # taro yamada <riokoko5@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
 "PO-Revision-Date: 2016-04-26 08:08+0000\n"
 "Last-Translator: taro yamada <riokoko5@gmail.com>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: fetchmail
@@ -60,7 +60,7 @@ msgid "Confirmed"
 msgstr "確認済"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:150
+#: code:addons/fetchmail/models/fetchmail.py:137
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "接続テストに失敗しました: %s"
@@ -70,7 +70,9 @@ msgstr "接続テストに失敗しました: %s"
 msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
-msgstr "専用ポートを使った接続によって SSL/TLS で暗号化されます (デフォルト：IMAPS=993, POP3S=995)。"
+msgstr ""
+"専用ポートを使った接続によって SSL/TLS で暗号化されます (デフォルト："
+"IMAPS=993, POP3S=995)。"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_object_id
@@ -78,13 +80,11 @@ msgid "Create a New Record"
 msgstr "新しいレコードを作成する"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "作成者"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "作成日"
@@ -95,7 +95,6 @@ msgid "Defines the order of processing, lower values mean higher priority"
 msgstr "処理の順序を定義します。値が小さいほど優先度が高い。"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr "表示名"
@@ -111,7 +110,6 @@ msgid "Hostname or IP of the mail server"
 msgstr "ホスト名あるいはEメールサーバのIP"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "ID"
@@ -164,19 +162,16 @@ msgid "Last Fetch Date"
 msgstr "前回の読取り日"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
 msgstr "最終更新日"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
 msgstr "最終更新者"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "最終更新日"
@@ -212,7 +207,9 @@ msgstr "未確認"
 msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
-msgstr "受信するEメールが作成したレコードによって、カスタムサーバの実行を起動するかどうかの選択"
+msgstr ""
+"受信するEメールが作成したレコードによって、カスタムサーバの実行を起動するかど"
+"うかの選択"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
@@ -255,7 +252,11 @@ msgid ""
 "Process each incoming mail as part of a conversation corresponding to this "
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
-msgstr "受信Eメールを、この文書タイプに対応する交信の一部として処理する。\r\n\r\nそうすると、新しい交信のための新しい文書を作成するか、既存の交信（文書）への追跡Eメールを添付します。"
+msgstr ""
+"受信Eメールを、この文書タイプに対応する交信の一部として処理する。\r\n"
+"\r\n"
+"そうすると、新しい交信のための新しい文書を作成するか、既存の交信（文書）への"
+"追跡Eメールを添付します。"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -339,20 +340,20 @@ msgstr "ユーザ名"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
+#, fuzzy
 msgid ""
-"Whether a full original copy of each email should be kept for referenceand "
+"Whether a full original copy of each email should be kept for reference and "
 "attached to each processed message. This will usually double the size of "
 "your message database."
-msgstr "Eメールの原本を保存して、処理済みメッセージを添付するかどうかの指定。これを指定すると、メッセージ・データベースのサイズが倍になります。"
+msgstr ""
+"Eメールの原本を保存して、処理済みメッセージを添付するかどうかの指定。これを指"
+"定すると、メッセージ・データベースのサイズが倍になります。"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach
 msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
-msgstr "添付ファイルをダウンロードするかどうか。これを指定しないと，Eメールを受信する前に添付ファイアは外されます。"
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
 msgstr ""
+"添付ファイルをダウンロードするかどうか。これを指定しないと，Eメールを受信する"
+"前に添付ファイアは外されます。"

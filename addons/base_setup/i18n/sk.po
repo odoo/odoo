@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_setup
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2016
@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
 "PO-Revision-Date: 2016-02-20 10:12+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: base_setup
@@ -30,6 +30,11 @@ msgid "Allow documents sharing"
 msgstr "Povoliť zdieľanie dokumentov"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_currency
+msgid "Allow multi currencies"
+msgstr ""
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
 msgstr "Povoliť používateľom synchronizovať svoj kalendár s Google Calendar"
@@ -38,6 +43,11 @@ msgstr "Povoliť používateľom synchronizovať svoj kalendár s Google Calenda
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_base_import
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
 msgstr "Povoliť používateľom importovať dáta zo súborov CSV/XLS/XLSX/ODS"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_currency
+msgid "Allows to work in a multi currency environment"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -62,11 +72,6 @@ msgid "Cancel"
 msgstr "Zrušiť"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "Klient"
-
-#. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_sale_config
 #: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Configure Sales"
@@ -84,34 +89,21 @@ msgstr "Nakonfigurovať dáta vašej spoločnosti"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Vytvoril"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Vytvorené"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "Zákazník"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 msgid "Display Name"
 msgstr "Zobraziť meno"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr "Darca"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -145,18 +137,7 @@ msgid "Google Integration"
 msgstr "Google Integrácia"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr "Hosť"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
-msgid "How do you call a Customer"
-msgstr "Ako zvoláte zákaznikovi"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
@@ -173,21 +154,18 @@ msgstr "Inter spoločnosť"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "Posledná modifikácia"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Naposledy upravoval"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Naposledy upravované"
@@ -198,14 +176,9 @@ msgid "Manage Inter Company"
 msgstr "Vnútropodnikové spravovanie"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_light_multi_company
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
 msgid "Manage multiple companies"
 msgstr "Spravovanie viacerých spoločností"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "Člen"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -214,20 +187,17 @@ msgstr "Multi spoločnosť"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Multi Currencies"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
-"Once installed, you can configure your API credentials for \"Google "
-"calendar\""
-msgstr "Akonáhle nainštalované, môžete nakonfigurovať vaše API údaje pre \"Google kalendár\""
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr "Trpezlivý"
+"Once installed, you can configure your API credentials for \"Google calendar"
+"\""
+msgstr ""
+"Akonáhle nainštalované, môžete nakonfigurovať vaše API údaje pre \"Google "
+"kalendár\""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -248,24 +218,23 @@ msgstr "Zdieľať partnerov všetkým spoločnostiam"
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_company_share_partner
 msgid ""
 "Share your partners to all companies defined in your instance.\n"
-" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
-msgstr "Zdieľajte svojich partnerov so všetkými spoločnosťami definovanými vo vašej inštancii.\n* Zaškrtnuté : Partneri sú viditeľný pre všetky spoločnosti, aj ked j spoločnosť definovaná na paertnerovi.\n* Nezaškrtnuté : Každá spoločnosť môže vidieť iba svojho partnera (partnerov kde je definovaná spoločnosť). Partneri netýkajúci sa spoločnosti sú viditeľný pre všetky spoločnosti."
+" * Checked : Partners are visible for every companies, even if a company is "
+"defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company "
+"is defined). Partners not related to a company are visible for all companies."
+msgstr ""
+"Zdieľajte svojich partnerov so všetkými spoločnosťami definovanými vo vašej "
+"inštancii.\n"
+"* Zaškrtnuté : Partneri sú viditeľný pre všetky spoločnosti, aj ked j "
+"spoločnosť definovaná na paertnerovi.\n"
+"* Nezaškrtnuté : Každá spoločnosť môže vidieť iba svojho partnera (partnerov "
+"kde je definovaná spoločnosť). Partneri netýkajúci sa spoločnosti sú "
+"viditeľný pre všetky spoločnosti."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Shared resources"
 msgstr "Zdieľané zdroje"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid "Specify Your Terminology"
-msgstr "Špecifikujte vašu terminológiu"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr "Nájomník"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
@@ -281,49 +250,55 @@ msgstr "Toto nainštaluje modul google_docs."
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_inter_company_rules
 msgid ""
 "This installs the module inter_company_rules.\n"
-" Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
-msgstr "Toto nainštaluje modul inter_company_rules.\nNakonfigurujte pravidlá spoločnosti pre automatické vytvorenie SO/PO, keď jedna vaša spoločnosť kupuje / predáva ďalšej vašej spoločnosti."
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "POvedzte iné slovo pre \"zákazník\""
+" Configure company rules to automatically create SO/PO when one of your "
+"company sells/buys to another of your company."
+msgstr ""
+"Toto nainštaluje modul inter_company_rules.\n"
+"Nakonfigurujte pravidlá spoločnosti pre automatické vytvorenie SO/PO, keď "
+"jedna vaša spoločnosť kupuje / predáva ďalšej vašej spoločnosti."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers, sign in with Google..."
+#, fuzzy
+msgid "Use external authentication providers (OAuth)"
 msgstr "Použiť externých poskytovateľov overenia, prihlásiť sa cez Google..."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "When you send a document to a customer\n"
-"                                    (quotation, invoice), your customer will be\n"
-"                                    able to signup to get all his documents,\n"
-"                                    read your company news, check his projects,\n"
+"                                    (quotation, invoice), your customer will "
+"be\n"
+"                                    able to signup to get all his "
+"documents,\n"
+"                                    read your company news, check his "
+"projects,\n"
 "                                    etc."
-msgstr "Keď pošlete dokument zákazníkovi\n(cenová ponuka, faktúra), váš zákazník sa bude\nvedieť prihlásiť aby získal všetky svoje dokumenty,\nprečítal novinky vašej spoločnosti, skontroloval svoje projekty,\natď."
+msgstr ""
+"Keď pošlete dokument zákazníkovi\n"
+"(cenová ponuka, faktúra), váš zákazník sa bude\n"
+"vedieť prihlásiť aby získal všetky svoje dokumenty,\n"
+"prečítal novinky vašej spoločnosti, skontroloval svoje projekty,\n"
+"atď."
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_light_multi_company
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_company
 msgid ""
-"Work in multi-company environments, with appropriate security access between"
-" companies."
-msgstr "Práca v prostredí multi-spoločnosti, so zodpovedajúcim zabezpečením prístupu medzi spoločnosťami."
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
-msgstr "Môžete použiť tohoto sprievodcu na zmenu terminológií pre zákazníkov v celej aplikácii."
+"Work in multi-company environments, with appropriate security access between "
+"companies."
+msgstr ""
+"Práca v prostredí multi-spoločnosti, so zodpovedajúcim zabezpečením prístupu "
+"medzi spoločnosťami."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "You will find more options in your company details: address for the header "
 "and footer, overdue payments texts, etc."
-msgstr "Viac detailov nájdete v detailoch vašej spoločnosti: adresy pre záhlavie a zápätie,\ntexty platieb po splatnosti, atď."
+msgstr ""
+"Viac detailov nájdete v detailoch vašej spoločnosti: adresy pre záhlavie a "
+"zápätie,\n"
+"texty platieb po splatnosti, atď."
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_config_settings
@@ -331,11 +306,49 @@ msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr "base.setup.terminology"
-
-#. module: base_setup
 #: model:ir.model,name:base_setup.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr "sale.config.settings"
+
+#~ msgid "Client"
+#~ msgstr "Klient"
+
+#~ msgid "Customer"
+#~ msgstr "Zákazník"
+
+#~ msgid "Donor"
+#~ msgstr "Darca"
+
+#~ msgid "Guest"
+#~ msgstr "Hosť"
+
+#~ msgid "How do you call a Customer"
+#~ msgstr "Ako zvoláte zákaznikovi"
+
+#~ msgid "Member"
+#~ msgstr "Člen"
+
+#~ msgid "Partner"
+#~ msgstr "Partner"
+
+#~ msgid "Patient"
+#~ msgstr "Trpezlivý"
+
+#~ msgid "Specify Your Terminology"
+#~ msgstr "Špecifikujte vašu terminológiu"
+
+#~ msgid "Tenant"
+#~ msgstr "Nájomník"
+
+#~ msgid "Use another word to say \"Customer\""
+#~ msgstr "POvedzte iné slovo pre \"zákazník\""
+
+#~ msgid ""
+#~ "You can use this wizard to change the terminologies for customers in the "
+#~ "whole application."
+#~ msgstr ""
+#~ "Môžete použiť tohoto sprievodcu na zmenu terminológií pre zákazníkov v "
+#~ "celej aplikácii."
+
+#~ msgid "base.setup.terminology"
+#~ msgstr "base.setup.terminology"

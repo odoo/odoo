@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0c\n"
+"Project-Id-Version: Odoo Server 9.saas~11c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 10:41+0000\n"
-"PO-Revision-Date: 2016-01-15 10:41+0000\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"PO-Revision-Date: 2016-08-19 10:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr
-#: code:addons/hr/hr.py:119
+#: code:addons/hr/models/hr.py:76
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -102,13 +102,7 @@ msgid "A good job in a young and dynamic team"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_needaction
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_needaction
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_needaction
-msgid "Action Needed"
-msgstr ""
-
-#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr ""
@@ -119,6 +113,7 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr ""
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr ""
@@ -194,11 +189,6 @@ msgid "Click to create a department."
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid "Click to define a new department."
-msgstr ""
-
-#. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid "Click to define a new job position."
 msgstr ""
@@ -269,11 +259,6 @@ msgid "Contributions to open source projects"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
@@ -297,13 +282,6 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_birthday
 msgid "Date of Birth"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_last_post
-#: model:ir.model.fields,help:hr.field_hr_employee_message_last_post
-#: model:ir.model.fields,help:hr.field_hr_job_message_last_post
-msgid "Date of the last message posted on the record."
 msgstr ""
 
 #. module: hr
@@ -421,15 +399,13 @@ msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/hr.py:299
-#: constraint:hr.department:0
+#: code:addons/hr/models/hr.py:264
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/hr.py:269
-#: constraint:hr.employee:0
+#: code:addons/hr/models/hr.py:177
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
@@ -465,30 +441,18 @@ msgid "Follow and check the development part"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_follower_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_follower_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_follower_ids
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_channel_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_channel_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_partner_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_partner_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
+msgstr ""
+
+#. module: hr
+#: model:web.tip,description:hr.hr_tip_1
+msgid "Get all applications related to this job position."
 msgstr ""
 
 #. module: hr
@@ -538,11 +502,6 @@ msgid "Group By"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "HR Department"
-msgstr ""
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
 msgstr ""
@@ -578,6 +537,11 @@ msgid "Home Address"
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "Hr Department"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
 msgstr ""
@@ -598,20 +562,6 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_identification_id
 msgid "Identification No"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_unread
-#: model:ir.model.fields,help:hr.field_hr_employee_message_unread
-#: model:ir.model.fields,help:hr.field_hr_job_message_unread
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_needaction
-#: model:ir.model.fields,help:hr.field_hr_employee_message_needaction
-#: model:ir.model.fields,help:hr.field_hr_job_message_needaction
-msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: hr
@@ -648,13 +598,6 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase the visibility of the product"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_is_follower
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_is_follower
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_is_follower
-msgid "Is Follower"
 msgstr ""
 
 #. module: hr
@@ -712,23 +655,11 @@ msgid "Jobs"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_last_post
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_last_post
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_last_post
-msgid "Last Message Date"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_job___last_update
 msgid "Last Modified on"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_last_website_so_id
-msgid "Last Online Sale Order"
 msgstr ""
 
 #. module: hr
@@ -743,6 +674,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_date
+#: model:ir.model.fields,field_description:hr.field_hr_job_write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -826,9 +758,6 @@ msgid "Members"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_ids
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Messages"
 msgstr ""
@@ -850,7 +779,6 @@ msgid "Must have ..."
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
@@ -883,13 +811,6 @@ msgid "Notes"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_needaction_counter
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_needaction_counter
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
 msgid "Number of employees currently occupying this job position."
 msgstr ""
@@ -900,22 +821,8 @@ msgid "Number of hired employees for this job position during recruitment phase.
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_needaction_counter
-#: model:ir.model.fields,help:hr.field_hr_employee_message_needaction_counter
-#: model:ir.model.fields,help:hr.field_hr_job_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_recruitment
 msgid "Number of new employees you expect to recruit."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_unread_counter
-#: model:ir.model.fields,help:hr.field_hr_employee_message_unread_counter
-#: model:ir.model.fields,help:hr.field_hr_job_message_unread_counter
-msgid "Number of unread messages"
 msgstr ""
 
 #. module: hr
@@ -923,11 +830,6 @@ msgstr ""
 msgid "Odoo's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves and holidays, recruitments, etc."
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.client,name:hr.action_client_hr_menu
-msgid "Open HR Menu"
 msgstr ""
 
 #. module: hr
@@ -954,6 +856,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_parent_id
 msgid "Parent Department"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Partner"
 msgstr ""
 
 #. module: hr
@@ -1156,11 +1063,6 @@ msgid "Subordinates"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_subscription_count
-msgid "Subscriptions"
-msgstr ""
-
-#. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
 msgstr ""
@@ -1211,9 +1113,6 @@ msgid "Transform our product into a suite of well positioned business Apps"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_unread
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_unread
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1222,15 +1121,8 @@ msgid "Unread Messages"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_unread_counter
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread_counter
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_write_date
-msgid "Update Date"
+#: model:ir.model.fields,help:hr.field_hr_employee_login
+msgid "Used to log into the system"
 msgstr ""
 
 #. module: hr
@@ -1448,12 +1340,12 @@ msgstr ""
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_trainee
-msgid "You will be responsible for developing and improving applications, such as the You will work autonomously as well as                     coordinate and supervise small distributed development teams for specific projects. You will become a technical                 expert of the product."
+msgid "You will be responsible for developing and improving applications. You will work autonomously as well as                     coordinate and supervise small distributed development teams for specific projects. You will become a technical                 expert of the product."
 msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
-msgid "You will be responsible for developing and improving applications, such as the You will work autonomously as well as coordinate and supervise small distributed development teams for specific projects. You will become a technical expert of the product."
+msgid "You will be responsible for developing and improving applications. You will work autonomously as well as coordinate and supervise small distributed development teams for specific projects. You will become a technical expert of the product."
 msgstr ""
 
 #. module: hr
@@ -1505,13 +1397,6 @@ msgstr ""
 #. module: hr
 #: model:hr.job,website_description:hr.job_trainee
 msgid "You will work closely with all trainees"
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid "Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and timesheets,\n"
-"                leaves and holidays, recruitments, etc."
 msgstr ""
 
 #. module: hr

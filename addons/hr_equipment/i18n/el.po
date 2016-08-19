@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_equipment
-# 
+#
 # Translators:
 # Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:27+0000\n"
+"POT-Creation-Date: 2016-08-19 10:26+0000\n"
 "PO-Revision-Date: 2016-03-03 10:54+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_equipment
@@ -43,7 +43,9 @@ msgstr ""
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr "Ένα Python λεξικό που θα αξιολογηθεί για να παρέχει προεπιλεγμένες τιμές όταν δημιουργείτε νέες εγγραφές για αυτό το ψευδώνυμο."
+msgstr ""
+"Ένα Python λεξικό που θα αξιολογηθεί για να παρέχει προεπιλεγμένες τιμές "
+"όταν δημιουργείτε νέες εγγραφές για αυτό το ψευδώνυμο."
 
 #. module: hr_equipment
 #: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
@@ -52,13 +54,7 @@ msgid "Acer Laptop"
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction
-msgid "Action Needed"
-msgstr "Απαιτείται ενέργεια"
-
-#. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_active
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
 msgid "Active"
 msgstr "Ενεργό"
@@ -104,13 +100,19 @@ msgid "Apply"
 msgstr "Εφαρμογή"
 
 #. module: hr_equipment
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
 msgid "Asset"
 msgstr "Πάγιo"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_6493
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5719
 msgid "Asset Category"
 msgstr "Κατηγορία Παγίου"
 
@@ -288,13 +290,6 @@ msgid "Current Maintenance"
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_last_post
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_last_post
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Ημερομηνία του τελευταίου μηνύματος "
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_defaults
 msgid "Default Values"
 msgstr "Προεπιλεγμένες τιμές"
@@ -411,27 +406,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_follower_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_follower_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_follower_ids
-msgid "Followers"
-msgstr "Ακόλουθοι"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_channel_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_channel_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Ακόλουθοι (Κανάλια)"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_partner_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_partner_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Ακόλουθοι (Συνεργάτες)"
-
-#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
@@ -466,23 +440,11 @@ msgstr "ID"
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
-msgstr "Αναγνωριστικό της μητρικής εγγραφής που κρατά το ψευδώνυμο (παράδειγμα: έργο που κατέχει το ψευδώνυμο της δημιουργίας εργασίας)"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
+msgstr ""
+"Αναγνωριστικό της μητρικής εγγραφής που κρατά το ψευδώνυμο (παράδειγμα: έργο "
+"που κατέχει το ψευδώνυμο της δημιουργίας εργασίας)"
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
@@ -496,23 +458,9 @@ msgid "Internal Note ......."
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_is_follower
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_is_follower
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_is_follower
-msgid "Is Follower"
-msgstr "Είναι Ακόλουθος"
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_kanban_state
 msgid "Kanban State"
 msgstr ""
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_last_post
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_last_post
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_last_post
-msgid "Last Message Date"
-msgstr "Τελευταία ημερομηνία μηνύματος"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment___last_update
@@ -610,20 +558,6 @@ msgid "Maintenance ids"
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_ids
-msgid "Messages"
-msgstr "Μηνύματα"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_ids
-msgid "Messages and communication history"
-msgstr "Μηνύματα και ιστορικό επικοινωνίας"
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_model
 msgid "Model"
 msgstr "Μοντέλο"
@@ -666,38 +600,15 @@ msgid "Note"
 msgstr "Σημείωση"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Αριθμός ενεργειών"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
-
-#. module: hr_equipment
-#: model:ir.actions.client,name:hr_equipment.action_client_hr_equipment_menu
-msgid "Open Equipments Menu"
-msgstr ""
-
-#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "Προαιρετική ταυτότητα ενός νήματος (εγγραφής), στην οποία όλα τα εισερχόμενα μηνύματα θα πρέπει να επισυνάπτονται, ακόμη και αν δεν απαντήσει σ 'αυτό. Εάν οριστεί, αυτό θα απενεργοποιήσει εντελώς τη δημιουργία νέων αρχείων."
+msgstr ""
+"Προαιρετική ταυτότητα ενός νήματος (εγγραφής), στην οποία όλα τα εισερχόμενα "
+"μηνύματα θα πρέπει να επισυνάπτονται, ακόμη και αν δεν απαντήσει σ 'αυτό. "
+"Εάν οριστεί, αυτό θα απενεργοποιήσει εντελώς τη δημιουργία νέων αρχείων."
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_user_id
@@ -717,10 +628,13 @@ msgstr "Κωδικός γονικής εγγραφής νήματος"
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
-msgstr "Γονικό μοντέλο κρατώντας το ψευδώνυμο. Το μοντέλο που κρατά το ψευδώνυμο αναφοράς δεν είναι απαραίτητο το μοντέλο να δίνεται από alias_model_id (παράδειγμα: Έργο (parent_model) και Εργασία (μοντέλο))"
+msgstr ""
+"Γονικό μοντέλο κρατώντας το ψευδώνυμο. Το μοντέλο που κρατά το ψευδώνυμο "
+"αναφοράς δεν είναι απαραίτητο το μοντέλο να δίνεται από alias_model_id "
+"(παράδειγμα: Έργο (parent_model) και Εργασία (μοντέλο))"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
@@ -729,12 +643,19 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
+#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
-msgstr "Πολιτική για να δημοσιεύσετε ένα μήνυμα σχετικά με το έγγραφο χρησιμοποιώντας το mailgateway.\n- Ο καθένας: ο καθένας μπορεί να δημοσιεύσει\n- Συνεργάτες: Μόνο πιστοποιημένοι συνεργάτες\n- Ακόλουθοι: μόνο οι ακόλουθοι του σχετικού εγγράφου\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
+msgstr ""
+"Πολιτική για να δημοσιεύσετε ένα μήνυμα σχετικά με το έγγραφο "
+"χρησιμοποιώντας το mailgateway.\n"
+"- Ο καθένας: ο καθένας μπορεί να δημοσιεύσει\n"
+"- Συνεργάτες: Μόνο πιστοποιημένοι συνεργάτες\n"
+"- Ακόλουθοι: μόνο οι ακόλουθοι του σχετικού εγγράφου\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -901,17 +822,23 @@ msgstr ""
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
-msgstr "Το μοντέλο (Odoo Document Kind) στο οποίο αντιστοιχεί αυτό το ψευδώνυμο. Κάθε εισερχόμενο email που δεν έχει απαντηθεί σε υπάρχουσα εγγραφή, θα προκαλέσει τη δημιουργία μίας νέας εγγραφής αυτού του μοντέλου (π.χ. Εργασία Έργου)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
+msgstr ""
+"Το μοντέλο (Odoo Document Kind) στο οποίο αντιστοιχεί αυτό το ψευδώνυμο. "
+"Κάθε εισερχόμενο email που δεν έχει απαντηθεί σε υπάρχουσα εγγραφή, θα "
+"προκαλέσει τη δημιουργία μίας νέας εγγραφής αυτού του μοντέλου (π.χ. Εργασία "
+"Έργου)"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "Το όνομα του ψευδώνυμου email , π.χ. 'jobs', αν θέλετε να πάρετε emails για <jobs@example.odoo.com>"
+msgstr ""
+"Το όνομα του ψευδώνυμου email , π.χ. 'jobs', αν θέλετε να πάρετε emails για "
+"<jobs@example.odoo.com>"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_user_id
@@ -920,14 +847,22 @@ msgid ""
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
-msgstr "Ο ιδιοκτήτης των εγγραφών που δημιουργούνται κατά τη λήψη μηνυμάτων ηλεκτρονικού ταχυδρομείου σε αυτό το ψευδώνυμο. Αν αυτό το πεδίο δεν είναι ρυθμισμένο το σύστημα θα προσπαθήσει να βρει το σωστό ιδιοκτήτη με βάση τον αποστολέα (Από) τη διεύθυνση.\nΔιαφορετικά, θα χρησιμοποιήσει το λογαριασμό διαχειριστή, αν ο χρήστης δεν έχει βρεθεί στο σύστημα για τη συγκεκριμένη διεύθυνση."
+msgstr ""
+"Ο ιδιοκτήτης των εγγραφών που δημιουργούνται κατά τη λήψη μηνυμάτων "
+"ηλεκτρονικού ταχυδρομείου σε αυτό το ψευδώνυμο. Αν αυτό το πεδίο δεν είναι "
+"ρυθμισμένο το σύστημα θα προσπαθήσει να βρει το σωστό ιδιοκτήτη με βάση τον "
+"αποστολέα (Από) τη διεύθυνση.\n"
+"Διαφορετικά, θα χρησιμοποιήσει το λογαριασμό διαχειριστή, αν ο χρήστης δεν "
+"έχει βρεθεί στο σύστημα για τη συγκεκριμένη διεύθυνση."
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment to\n"
-"                an employee or departement. You will manage allocations, issues\n"
+"                Create some laptop, printer or phone and link each equipment "
+"to\n"
+"                an employee or departement. You will manage allocations, "
+"issues\n"
 "                and maintenance of equipment."
 msgstr ""
 
@@ -935,8 +870,10 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment to an employee or departement.\n"
-"                You will manage allocations, issues and mainteannce of equipment."
+"                Create some laptop, printer or phone and link each equipment "
+"to an employee or departement.\n"
+"                You will manage allocations, issues and maintenance of "
+"equipment."
 msgstr ""
 
 #. module: hr_equipment
@@ -955,21 +892,11 @@ msgid "Under Maintenance"
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_unread
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Unread Messages"
 msgstr "Αδιάβαστα Μηνύματα"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_unread_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_equipment_alias_prefix
@@ -1009,25 +936,11 @@ msgid "Warranty"
 msgstr "Εγγύηση"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_website_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_website_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_website_message_ids
-msgid "Website Messages"
-msgstr "Μηνύματα Ιστότοπου"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_website_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_website_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_website_message_ids
-msgid "Website communication history"
-msgstr "Ιστορικό επικοινωνίας ιστότοπου"
-
-#. module: hr_equipment
 #: code:addons/hr_equipment/models/hr_equipment.py:71
 #, python-format
 msgid ""
-"You cannot delete an equipment category containing equipments or maintenance"
-" requests."
+"You cannot delete an equipment category containing equipments or maintenance "
+"requests."
 msgstr ""
 
 #. module: hr_equipment
@@ -1044,3 +957,54 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 msgid "maintenance Request Search"
 msgstr ""
+
+#~ msgid "Action Needed"
+#~ msgstr "Απαιτείται ενέργεια"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Ημερομηνία του τελευταίου μηνύματος "
+
+#~ msgid "Followers"
+#~ msgstr "Ακόλουθοι"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Ακόλουθοι (Κανάλια)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Ακόλουθοι (Συνεργάτες)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
+
+#~ msgid "Is Follower"
+#~ msgstr "Είναι Ακόλουθος"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Τελευταία ημερομηνία μηνύματος"
+
+#~ msgid "Messages"
+#~ msgstr "Μηνύματα"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Μηνύματα και ιστορικό επικοινωνίας"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Αριθμός ενεργειών"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
+
+#~ msgid "Website Messages"
+#~ msgstr "Μηνύματα Ιστότοπου"
+
+#~ msgid "Website communication history"
+#~ msgstr "Ιστορικό επικοινωνίας ιστότοπου"

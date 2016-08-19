@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_stock
-# 
+#
 # Translators:
 # fausthuang, 2015
 # fausthuang, 2015
@@ -13,15 +13,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:27+0000\n"
+"POT-Creation-Date: 2016-08-19 10:25+0000\n"
 "PO-Revision-Date: 2016-07-22 05:35+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
+"language/zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+#, fuzzy
+msgid "<strong>Customer Reference:</strong>"
+msgstr "<strong>国际贸易术语解释通则:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
@@ -90,6 +97,19 @@ msgid "Enable Route on Sales Order Line"
 msgstr "开启销售订单行上的路线"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_product_product_expense_policy
+msgid "Expense Invoice Policy"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_product_product_expense_policy
+msgid ""
+"If you invoice at cost, the expense will be invoiced on the sale order at "
+"the cost of the analytic line;if you invoice at sales price, the price of "
+"the product will be used instead."
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
 msgid "Incoterms"
@@ -99,9 +119,11 @@ msgstr "贸易术语"
 #: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
-msgstr "贸易术语是一系列的销售术语,用来划分交易成本和买卖双方的责任,反映运输方法的发展。"
+"costs and responsibilities between buyer and seller and reflect state-of-the-"
+"art transportation practices."
+msgstr ""
+"贸易术语是一系列的销售术语,用来划分交易成本和买卖双方的责任,反映运输方法的发"
+"展。"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
@@ -129,9 +151,11 @@ msgstr "发票行"
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
-msgstr "向客户承诺日期的误差幅度。产品将被比实际承诺的日期提前很多天安排采购和交付，以应对供应链中的意外延误。"
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
+msgstr ""
+"向客户承诺日期的误差幅度。产品将被比实际承诺的日期提前很多天安排采购和交付，"
+"以应对供应链中的意外延误。"
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
@@ -144,7 +168,7 @@ msgid "No shipping costs on sales orders"
 msgstr "销售订单不加运输成本"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:141
+#: code:addons/sale_stock/sale_stock.py:156
 #, python-format
 msgid "Not enough inventory!"
 msgstr "库存不够！"
@@ -161,7 +185,7 @@ msgid "Order Routing"
 msgstr "订单路线"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:152
+#: code:addons/sale_stock/sale_stock.py:167
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "订货数量减少"
@@ -182,6 +206,12 @@ msgid "Procurement"
 msgstr "补货"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_product
+#, fuzzy
+msgid "Product"
+msgstr "产品模板"
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
 msgid "Product Template"
 msgstr "产品模板"
@@ -190,6 +220,11 @@ msgstr "产品模板"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_mrp_properties
 msgid "Properties on SO Lines"
 msgstr "销售订单行的属性"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -263,15 +298,28 @@ msgid "Stock Move"
 msgstr "库存调拨"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:194
+#: code:addons/sale_stock/sale_stock.py:213
 #, python-format
 msgid "This product is packaged by %d . You should sell %d ."
 msgstr "产品用 %d包装 . 你可以卖 %d ."
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_to_refund_so
+#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking_line_to_refund_so
+msgid "To Refund in SO"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "调拨"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_stock_move_to_refund_so
+#: model:ir.model.fields,help:sale_stock.field_stock_return_picking_line_to_refund_so
+msgid ""
+"Trigger a decrease of the delivered quantity in the associated Sale Order"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
@@ -280,13 +328,13 @@ msgid "Warehouse"
 msgstr "仓库"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:193
+#: code:addons/sale_stock/sale_stock.py:212
 #, python-format
 msgid "Warning"
 msgstr "警告"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:153
+#: code:addons/sale_stock/sale_stock.py:168
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
@@ -294,7 +342,7 @@ msgid ""
 msgstr "你在减少订单数量，不要忘记需要手工更新发货单的数量"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:142
+#: code:addons/sale_stock/sale_stock.py:157
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available!\n"
@@ -305,3 +353,8 @@ msgstr "你计划销售 %.2f %s 但是只有 %.2f %s 在手 ！ 实际库存 %.2
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr "sale.config.settings"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking_line
+msgid "stock.return.picking.line"
+msgstr ""

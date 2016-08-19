@@ -1,21 +1,33 @@
+# #-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_sale_delivery
-# 
+#
 # Translators:
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
+# #-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_sale_delivery
+#
+# Translators:
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-07-27 21:31+0000\n"
-"Last-Translator: Kaloyan Naumov <kaloyan@lumnus.net>\n"
-"Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
+"POT-Creation-Date: 2016-08-19 10:26+0000\n"
+"PO-Revision-Date: 2016-05-10 21:17+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/"
+"bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
+"#-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_delivery
@@ -23,7 +35,17 @@ msgstr ""
 msgid ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
 "updated after choosing a new delivery method\"> Delivery:</span>"
-msgstr "<span class=\"col-xs-6 text-right text-muted\" title=\"Доставните условия ще се променят, слад като изберете метод за доставка\"> Доставка:</span>"
+msgstr ""
+"<span class=\"col-xs-6 text-right text-muted\" title=\"Доставните условия ще "
+"се променят, слад като изберете метод за доставка\"> Доставка:</span>"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
+msgid ""
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
+"Customer Invoice/Refund"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -62,13 +84,6 @@ msgid "Check if you want this product to appear in the Point of Sale"
 msgstr "Изберете, ако искате продукта да се вижда в ПОС"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_purchase_requisition
-msgid ""
-"Check this box to generate Call for Tenders instead of generating requests "
-"for quotation from procurement."
-msgstr "Избери за да се създаде запитване за Търг, вместо да се създаде запитване/оферта за доставка."
-
-#. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose your Delivery Method"
 msgstr "Изберете начин за доставка"
@@ -84,13 +99,20 @@ msgid "Delivery Amount"
 msgstr "Сума на доставката"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form
+#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
+#, fuzzy
+msgid "Delivery Methods"
+msgstr "Изберете начин за доставка"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description"
 msgstr "Описание"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form
-msgid "Description displayed on the eCommerce and on the Online Quotations."
+#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
+#, fuzzy
+msgid "Description displayed on the eCommerce and on online quotations."
 msgstr "Описание за показване в eCommerce и он-лайн Оферти"
 
 #. module: website_sale_delivery
@@ -107,6 +129,21 @@ msgstr "Описание за офертата"
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_sequence
 msgid "Determine the display order in the Website E-commerce"
 msgstr "Determine the display order in the Website E-commerce"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_split_method
+msgid ""
+"Equal : Cost will be equally divided.\n"
+"By Quantity : Cost will be divided according to product's quantity.\n"
+"By Current cost : Cost will be divided according to product's current cost.\n"
+"By Weight : Cost will be divided depending on its weight.\n"
+"By Volume : Cost will be divided depending on its volume."
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_attachment_count
+msgid "File"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
@@ -129,22 +166,19 @@ msgid "Landed Costs"
 msgstr "Доставни разходи"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn_msg
-msgid "Message for Purchase Order Line"
-msgstr "Съобщение за ред от поръчка за покупка"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn_msg
-msgid "Message for Sales Order Line"
-msgstr "Съобщение за ред от поръчка за продажба"
-
-#. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:127
+#: code:addons/website_sale_delivery/models/sale_order.py:104
 #, python-format
 msgid ""
-"No shipping method is available for your current order and shipping address."
-" Please contact us for more information."
-msgstr "Няма възможен метод за доставка за техущата ви поръчка и адрес. Моля свържете се с нас за допълнителна информация."
+"No shipping method is available for your current order and shipping address. "
+"Please contact us for more information."
+msgstr ""
+"Няма възможен метод за доставка за техущата ви поръчка и адрес. Моля "
+"свържете се с нас за допълнителна информация."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_optional_product_ids
+msgid "Optional Products"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_pos_categ_id
@@ -157,14 +191,9 @@ msgid "Procurement"
 msgstr "Снабдаване"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_project_id
-msgid "Project"
-msgstr "Проект"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-msgid "Purchase Order Line"
-msgstr "Ред от поръчка за покупка"
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_optional_product_ids
+msgid "Products to propose when add to cart."
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
@@ -177,23 +206,9 @@ msgid "Sales Order"
 msgstr "Нареждане за продажба"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid "Sales Order Line"
-msgstr "Ред от нареждане за продажба"
-
-#. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
 msgid "Select..."
 msgstr "Избери..."
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr "При избор на опция \"Предупреждение\" потребителят ще бъде уведомен със съобщение, при избор на \"Блокиращо съобщение\" , заедно със съобщението ще бъде наложен отвод  и ще се прекъсне работния ход. Съобщението трябва да бъде въведено в следващото поле."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
@@ -211,7 +226,7 @@ msgid "Size Y"
 msgstr "Size Y"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:126
+#: code:addons/website_sale_delivery/models/sale_order.py:103
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr "Съжелявам, не можем да изпратим вашата поръчка"
@@ -237,11 +252,6 @@ msgid "The amount without tax."
 msgstr "Сумата без данък."
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_url
-msgid "The full URL to access the document through the website."
-msgstr "Пълният URL за достъп до документа през уебсайта."
-
-#. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Those categories are used to group similar products for e-commerce."
 msgstr "Those categories are used to group similar products for e-commerce."
@@ -255,6 +265,11 @@ msgstr "Тези категории се използват за групира�
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_to_weight
 msgid "To Weigh With Scale"
 msgstr "Да се премери на кантар"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.shipping_tracking
+msgid "Tracking:"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
@@ -272,11 +287,6 @@ msgid "Website Product Category"
 msgstr "Категория продукти в Уебсайт"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_url
-msgid "Website URL"
-msgstr "URL на Уебсайта"
-
-#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
 msgid "Website meta description"
 msgstr "Website meta description"
@@ -290,3 +300,41 @@ msgstr "Website meta keywords"
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_title
 msgid "Website meta title"
 msgstr "Website meta title"
+
+#~ msgid ""
+#~ "Check this box to generate Call for Tenders instead of generating "
+#~ "requests for quotation from procurement."
+#~ msgstr ""
+#~ "Избери за да се създаде запитване за Търг, вместо да се създаде запитване/"
+#~ "оферта за доставка."
+
+#~ msgid "Message for Purchase Order Line"
+#~ msgstr "Съобщение за ред от поръчка за покупка"
+
+#~ msgid "Message for Sales Order Line"
+#~ msgstr "Съобщение за ред от поръчка за продажба"
+
+#~ msgid "Project"
+#~ msgstr "Проект"
+
+#~ msgid "Purchase Order Line"
+#~ msgstr "Ред от поръчка за покупка"
+
+#~ msgid "Sales Order Line"
+#~ msgstr "Ред от нареждане за продажба"
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "При избор на опция \"Предупреждение\" потребителят ще бъде уведомен със "
+#~ "съобщение, при избор на \"Блокиращо съобщение\" , заедно със съобщението "
+#~ "ще бъде наложен отвод  и ще се прекъсне работния ход. Съобщението трябва "
+#~ "да бъде въведено в следващото поле."
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "Пълният URL за достъп до документа през уебсайта."
+
+#~ msgid "Website URL"
+#~ msgstr "URL на Уебсайта"

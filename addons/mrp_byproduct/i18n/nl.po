@@ -1,21 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_byproduct
-# 
+#
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-19 10:25+0000\n"
 "PO-Revision-Date: 2015-09-10 14:51+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_byproduct
@@ -64,12 +68,25 @@ msgid ""
 "that the quantity will be computed as    '(quantity of byproduct set on the "
 "BoM / quantity of manufactured product set on the BoM * quantity of "
 "manufactured product in the production order.)'"
-msgstr "Geef aan hoe de hoeveelheid bijproducten zal worden ingesteld op de productieorders met behulp van deze materiaallijst. 'Vaste' geeft een situatie aan waarbij de hoeveelheid aangemaakt bijproduct gelijk is aan de hoeveelheid set op de materiaallijst, ongeacht hoeveel er gemaakt zijn in de productieorder. Tegenovergesteld is, 'Variabel'. Dit betekent dat de hoeveelheid wordt berekend als '(hoeveelheid bijproduct ingesteld op de materiaallijst/hoeveelheid van de vervaardigde producten ingesteld op de materiaallijst* hoeveelheid vervaardigde product in de productieorder.)'"
+msgstr ""
+"Geef aan hoe de hoeveelheid bijproducten zal worden ingesteld op de "
+"productieorders met behulp van deze materiaallijst. 'Vaste' geeft een "
+"situatie aan waarbij de hoeveelheid aangemaakt bijproduct gelijk is aan de "
+"hoeveelheid set op de materiaallijst, ongeacht hoeveel er gemaakt zijn in de "
+"productieorder. Tegenovergesteld is, 'Variabel'. Dit betekent dat de "
+"hoeveelheid wordt berekend als '(hoeveelheid bijproduct ingesteld op de "
+"materiaallijst/hoeveelheid van de vervaardigde producten ingesteld op de "
+"materiaallijst* hoeveelheid vervaardigde product in de productieorder.)'"
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
+#, fuzzy
 msgid "Display Name"
-msgstr "Naam weergeven"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Weergave naam\n"
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Naam weergeven"
 
 #. module: mrp_byproduct
 #: selection:mrp.subproduct,subproduct_type:0
@@ -97,11 +114,6 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Productieorder"
-
-#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
 msgid "Product"
 msgstr "Product"
@@ -117,9 +129,31 @@ msgid "Product Unit of Measure"
 msgstr "Maateenheid product"
 
 #. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_production
+#, fuzzy
+msgid "Production"
+msgstr "Product"
+
+#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_subproduct_type
 msgid "Quantity Type"
 msgstr "Hoeveelheid type"
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
+#, fuzzy
+msgid "Subproduct"
+msgstr "Bijproducten"
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct line that generated the move in a manufacturing order"
+msgstr ""
 
 #. module: mrp_byproduct
 #: code:addons/mrp_byproduct/mrp_byproduct.py:45
@@ -127,7 +161,9 @@ msgstr "Hoeveelheid type"
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr "De maateenheid van het door u gekozen product heeft een andere categorie dan in het product bestand."
+msgstr ""
+"De maateenheid van het door u gekozen product heeft een andere categorie dan "
+"in het product bestand."
 
 #. module: mrp_byproduct
 #: selection:mrp.subproduct,subproduct_type:0
@@ -139,3 +175,6 @@ msgstr "Variabel"
 #, python-format
 msgid "Warning"
 msgstr "Waarschuwing"
+
+#~ msgid "Manufacturing Order"
+#~ msgstr "Productieorder"

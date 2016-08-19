@@ -1,27 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_asset
-# 
+#
 # Translators:
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 09:26+0000\n"
-"PO-Revision-Date: 2016-07-28 05:49+0000\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"PO-Revision-Date: 2016-05-12 09:34+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
+"#-#-#-#-#  tr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"#-#-#-#-#  tr.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:350
+#: code:addons/account_asset/account_asset.py:369
 #, python-format
 msgid " (copy)"
 msgstr " (kopya)"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:495
+#, python-format
+msgid " (grouped)"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_entry_count
@@ -49,9 +59,21 @@ msgid "Account Entry"
 msgstr "Hesap Girişi"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_needaction
-msgid "Action Needed"
-msgstr "Eylem Gerekiyor"
+#: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_id
+msgid "Account used in the depreciation entries, to decrease the asset value."
+msgstr ""
+
+#. module: account_asset
+#: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_expense_id
+msgid ""
+"Account used in the periodical entries, to record a part of the asset as "
+"expense."
+msgstr ""
+
+#. module: account_asset
+#: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
+msgid "Account used to record the purchase of the asset at its original price."
+msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -60,7 +82,12 @@ msgid "Active"
 msgstr "Etkin"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Additional Options"
+msgstr ""
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:552
 #, python-format
 msgid "Amount"
 msgstr "Tutar"
@@ -82,7 +109,6 @@ msgstr "Analiz Hesabı"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_asset_id
-#: model:ir.model.fields,field_description:account_asset.field_account_move_asset_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_asset_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -92,7 +118,6 @@ msgstr "Asset"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
 msgid "Asset Account"
 msgstr "Demirbaş Hesabı"
@@ -151,7 +176,7 @@ msgid "Asset category"
 msgstr "Demirbaş Kategorisi"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:238
+#: code:addons/account_asset/account_asset.py:256
 #, python-format
 msgid "Asset created"
 msgstr ""
@@ -162,7 +187,7 @@ msgid "Asset depreciation line"
 msgstr "Demirbaş amortisman satırı"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:271
+#: code:addons/account_asset/account_asset.py:289
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
@@ -191,6 +216,12 @@ msgid "Assets Analysis"
 msgstr "Demirbaş Analizi"
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_move_asset_depreciation_ids
+#, fuzzy
+msgid "Assets Depreciation Lines"
+msgstr "Demirbaş amortisman satırı"
+
+#. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
 msgid "Assets and Revenues"
 msgstr ""
@@ -216,6 +247,11 @@ msgid "Assets in running state"
 msgstr "Çalışır durumdaki Demirbaşlar"
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
+msgid "Auto-confirm Assets"
+msgstr ""
+
+#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid "Cancel"
@@ -238,7 +274,14 @@ msgstr ""
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
-msgstr "Faturalar oluşturulurken bu kategorideki demirbaşların otomatikmen onaylanmasını istiyorsanız bunu işaretleyin."
+msgstr ""
+"Faturalar oluşturulurken bu kategorideki demirbaşların otomatikmen "
+"onaylanmasını istiyorsanız bunu işaretleyin."
+
+#. module: account_asset
+#: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
+msgid "Check this if you want to group the generated entries by categories."
+msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -247,23 +290,37 @@ msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr "Amortisman kalemlerinin hesaplanmasında kullanılacak yöntemi seçin.\n  * Doğrusal:  Toplam Değer/amortisman sayısı formülü ile hesaplanır\n  * Azalan Oranlı: kalan değer * amortisman çarpanı formülü ile hesaplanır"
+msgstr ""
+"Amortisman kalemlerinin hesaplanmasında kullanılacak yöntemi seçin.\n"
+"  * Doğrusal:  Toplam Değer/amortisman sayısı formülü ile hesaplanır\n"
+"  * Azalan Oranlı: kalan değer * amortisman çarpanı formülü ile hesaplanır"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_time
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_time
 msgid ""
-"Choose the method to use to compute the dates and number of depreciation lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
-msgstr "Amortisman tarihlerini ve satırlarını hesaplamakta kullanılacak yöntemi seçin.\n  * Amortisman Sayısı: 2 Amortisman arasındaki amortisman satır sayısını sabitleyin.\n  * Bitiş Tarihi: 2 Amortisman arasındaki ,amortismanın daha ileriye gidemeyeceği süreyi ve tarihi seçin."
+"Choose the method to use to compute the dates and number of depreciation "
+"lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the "
+"time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
+msgstr ""
+"Amortisman tarihlerini ve satırlarını hesaplamakta kullanılacak yöntemi "
+"seçin.\n"
+"  * Amortisman Sayısı: 2 Amortisman arasındaki amortisman satır sayısını "
+"sabitleyin.\n"
+"  * Bitiş Tarihi: 2 Amortisman arasındaki ,amortismanın daha ileriye "
+"gidemeyeceği süreyi ve tarihi seçin."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
 msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
-msgstr "Çalışan demirbaşların amortisman satırlarının otomatikman işlenmesini istediğiniz dönemi seçin"
+msgstr ""
+"Çalışan demirbaşların amortisman satırlarının otomatikman işlenmesini "
+"istediğiniz dönemi seçin"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
@@ -311,7 +368,7 @@ msgid "Created Asset Moves"
 msgstr "Oluşturulan Demirbaş Hareketleri"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/wizard_asset_compute.py:20
+#: code:addons/account_asset/wizard/wizard_asset_compute.py:18
 #, python-format
 msgid "Created Revenue Moves"
 msgstr ""
@@ -340,7 +397,7 @@ msgid "Cumulative Depreciation"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:552
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -383,11 +440,6 @@ msgid "Date of depreciation"
 msgstr "Amortisman Tarihi"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Kayıta işlenmiş son mesajın tarihi."
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Account"
 msgstr ""
@@ -421,10 +473,9 @@ msgid "Depreciation"
 msgstr "Amortisman"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
-msgid "Depreciation Account"
-msgstr "Amortisman Hesabı"
+msgid "Depreciation Asset Account"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -438,14 +489,21 @@ msgid "Depreciation Date"
 msgstr "Amortisman Tarihi"
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
+#, fuzzy
+msgid "Depreciation Entries: Asset Account"
+msgstr "Amortisman Hesabı"
+
+#. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_expense_id
+#, fuzzy
+msgid "Depreciation Entries: Expense Account"
+msgstr "Amortisman Hesabı"
+
+#. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
 msgid "Depreciation Entry"
 msgstr "Amortisman kaydı"
-
-#. module: account_asset
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
-msgid "Depreciation Asset Account"
-msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -485,7 +543,7 @@ msgid "Depreciation board modified"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:489
+#: code:addons/account_asset/account_asset.py:555
 #, python-format
 msgid "Depreciation line posted."
 msgstr ""
@@ -501,19 +559,19 @@ msgid "Display Name"
 msgstr "Adı Göster"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:274
+#: code:addons/account_asset/account_asset.py:292
 #, python-format
 msgid "Disposal Move"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:277
+#: code:addons/account_asset/account_asset.py:295
 #, python-format
 msgid "Disposal Moves"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:468
+#: code:addons/account_asset/account_asset.py:534
 #, python-format
 msgid "Document closed."
 msgstr ""
@@ -538,11 +596,6 @@ msgid "Ending date"
 msgstr "Bitiş Tarihi"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_account_move_ids
-msgid "Entries"
-msgstr "Kayıtlar"
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Every"
 msgstr ""
@@ -553,25 +606,11 @@ msgid "Extended Filters..."
 msgstr "Gelişmiş Filtreler..."
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_follower_ids
-msgid "Followers"
-msgstr "İzleyiciler"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "İzleyiciler (Kanallar)"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "İzleyiciler (İş ortakları)"
-
-#. module: account_asset
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
 "From this report, you can have an overview on all depreciations. The\n"
-"            search bar can also be used to personalize your assets depreciation reporting."
+"            search bar can also be used to personalize your assets "
+"depreciation reporting."
 msgstr ""
 
 #. module: account_asset
@@ -611,6 +650,12 @@ msgid "Group By..."
 msgstr "Grupla İle..."
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
+#, fuzzy
+msgid "Group Journal Entries"
+msgstr "Yevmiye Kayıtları"
+
+#. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_id
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_id
@@ -619,21 +664,6 @@ msgstr "Grupla İle..."
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_id
 msgid "ID"
 msgstr "ID"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
-
-#. module: account_asset
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
-msgid "Income Account"
-msgstr "Gelir Hesabı"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_prorata
@@ -663,11 +693,6 @@ msgid "Invoice Line"
 msgstr "Fatura Satırı"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_is_follower
-msgid "Is Follower"
-msgstr "Takipçi mi"
-
-#. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_salvage_value
 msgid "It is the amount you plan to have that you cannot depreciate."
 msgstr "Bu amortisman düşemeyeceğinizi planladığınız tutardır."
@@ -683,16 +708,11 @@ msgid "Journal"
 msgstr "Yevmiye"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:376
+#: code:addons/account_asset/account_asset.py:403
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
 msgstr "Yevmiye Kayıtları"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_last_post
-msgid "Last Message Date"
-msgstr "Son Mesaj Tarihi"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset___last_update
@@ -727,11 +747,6 @@ msgstr "Son Güncellenen"
 #: selection:account.asset.category,method:0
 msgid "Linear"
 msgstr "Doğrusal"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_ids
-msgid "Messages"
-msgstr "Mesajlar"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -771,11 +786,6 @@ msgid "Note"
 msgstr "Not"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_needaction_counter
-msgid "Number of Actions"
-msgstr "İşlem Sayısı"
-
-#. module: account_asset
 #: selection:account.asset.asset,method_time:0
 #: selection:account.asset.category,method_time:0
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_number
@@ -795,17 +805,7 @@ msgid "Number of Months in a Period"
 msgstr "Bir dönemdeki ay sayısı"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Eylem gerektiren mesaj sayısı"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Okunmamış mesaj sayısı"
-
-#. module: account_asset
-#: code:addons/account_asset/account_asset.py:488
+#: code:addons/account_asset/account_asset.py:554
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -828,11 +828,6 @@ msgstr "Periyodik Tekrarlanma"
 #: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
 msgid "Post Depreciation Lines"
 msgstr ""
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
-msgid "Post Journal Entries"
-msgstr "Günlük Girişleri İşle"
 
 #. module: account_asset
 #. openerp-web
@@ -866,12 +861,13 @@ msgid "Prorata Temporis"
 msgstr "Kısmi Süreyle Orantılı"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:316
+#: code:addons/account_asset/account_asset.py:335
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
-msgstr "Kısmi süreyle orantı yalnızca süre yöntemine \"amortisman sayısı\" uygulanır."
+msgstr ""
+"Kısmi süreyle orantı yalnızca süre yöntemine \"amortisman sayısı\" uygulanır."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -894,7 +890,13 @@ msgid "Reason"
 msgstr "Neden"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_income_recognition_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+#, fuzzy
+msgid "Recognition Account"
+msgstr "Amortisman Hesabı"
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Income Account"
 msgstr ""
 
@@ -984,8 +986,10 @@ msgstr "Demirbaşınızı amorti etmeniz için gereken amortisman sayısı"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid ""
-"This wizard will post installment/depreciation lines for the selected month.<br/>\n"
-"                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
+"This wizard will post installment/depreciation lines for the selected month."
+"<br/>\n"
+"                        This will generate journal entries for all related "
+"installment lines on this period of asset/revenue recognition as well."
 msgstr ""
 
 #. module: account_asset
@@ -1019,16 +1023,6 @@ msgid "Unposted Amount"
 msgstr "İşlenmemiş Tutar"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_unread
-msgid "Unread Messages"
-msgstr "Okunmamış Mesajlar"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Okunmamış Mesaj Sayacı"
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_purchase_tree
 msgid "Vendor"
@@ -1039,22 +1033,21 @@ msgstr "Tedarikçi"
 #: model:ir.model.fields,help:account_asset.field_account_asset_depreciation_line_parent_state
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
-msgstr "Yeni bir demirbaş oluşturulduğunda durumu 'Taslak' olarak ayarlanır.\nDemirbaş onaylandığında durmu 'çalışıyor' a çevrilir ve amortisman kalemleri muhasebeye işlenmeye başlar.\nAmortisman bittiğinden demirbaşı elle kapatabilirsiniz ya da son amortisman kalemi muhasebeye işlendiğinde durumu otomatik olarak kapanır."
+"If the asset is confirmed, the status goes in 'Running' and the depreciation "
+"lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last "
+"line of depreciation is posted, the asset automatically goes in that status."
+msgstr ""
+"Yeni bir demirbaş oluşturulduğunda durumu 'Taslak' olarak ayarlanır.\n"
+"Demirbaş onaylandığında durmu 'çalışıyor' a çevrilir ve amortisman kalemleri "
+"muhasebeye işlenmeye başlar.\n"
+"Amortisman bittiğinden demirbaşı elle kapatabilirsiniz ya da son amortisman "
+"kalemi muhasebeye işlendiğinde durumu otomatik olarak kapanır."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name
 msgid "Year"
 msgstr "Yıl"
-
-#. module: account_asset
-#: code:addons/account_asset/account_asset_invoice.py:53
-#, python-format
-msgid ""
-"You already have assets with the reference %s.\n"
-"Please delete these assets before creating new ones for this invoice."
-msgstr ""
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:100
@@ -1063,19 +1056,19 @@ msgid "You cannot delete a document is in %s state."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:102
+#: code:addons/account_asset/account_asset.py:103
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:497
+#: code:addons/account_asset/account_asset.py:563
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:499
+#: code:addons/account_asset/account_asset.py:565
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr ""
@@ -1100,3 +1093,57 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
 msgstr "ay"
+
+#~ msgid "Action Needed"
+#~ msgstr "Eylem Gerekiyor"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Kayıta işlenmiş son mesajın tarihi."
+
+#~ msgid "Entries"
+#~ msgstr "Kayıtlar"
+
+#~ msgid "Followers"
+#~ msgstr "İzleyiciler"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "İzleyiciler (Kanallar)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "İzleyiciler (İş ortakları)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
+
+#~ msgid "Income Account"
+#~ msgstr "Gelir Hesabı"
+
+#~ msgid "Is Follower"
+#~ msgstr "Takipçi mi"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Son Mesaj Tarihi"
+
+#~ msgid "Messages"
+#~ msgstr "Mesajlar"
+
+#~ msgid "Number of Actions"
+#~ msgstr "İşlem Sayısı"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Eylem gerektiren mesaj sayısı"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Okunmamış mesaj sayısı"
+
+#~ msgid "Post Journal Entries"
+#~ msgstr "Günlük Girişleri İşle"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Okunmamış Mesajlar"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Okunmamış Mesaj Sayacı"

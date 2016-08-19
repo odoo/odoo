@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_picking_wave
-# 
+#
 # Translators:
 # Grazziano Duarte <g.negocios@outlook.com.br>, 2015
 # Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2016
@@ -9,20 +9,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-19 10:25+0000\n"
 "PO-Revision-Date: 2016-01-28 13:23+0000\n"
 "Last-Translator: Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
+"language/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction
-msgid "Action Needed"
-msgstr "Ação Necessária"
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
@@ -85,11 +81,6 @@ msgid "Created on"
 msgstr "Criado em"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Data da ultima mensagem para o registro."
-
-#. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_display_name
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_display_name
 msgid "Display Name"
@@ -105,21 +96,6 @@ msgstr "Concluído"
 #: selection:stock.picking.wave,state:0
 msgid "Draft"
 msgstr "Provisório"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_follower_ids
-msgid "Followers"
-msgstr "Seguidores"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Seguidores (Canais)"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Seguidores (Parceiros)"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -146,7 +122,8 @@ msgstr "Sorvete de chocolate"
 #. module: stock_picking_wave
 #: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_choco
 #: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_choco_product_template
-msgid "Ice Cream Chocolate with stucks"
+#, fuzzy
+msgid "Ice Cream Chocolate with sticks"
 msgstr "Sorvete de chocolate com canudinhos"
 
 #. module: stock_picking_wave
@@ -158,29 +135,9 @@ msgid "Ice Cream Vanilla"
 msgstr "Sorvete de Baunilha"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Se marcado novas mensagens solicitarão sua atenção."
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Se marcado novas mensagens solicitarão sua atenção."
-
-#. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 msgid "In Progress"
 msgstr "Em Progresso"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_is_follower
-msgid "Is Follower"
-msgstr "É um seguidor"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_last_post
-msgid "Last Message Date"
-msgstr "Data da última mensagem"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave___last_update
@@ -206,40 +163,15 @@ msgid "List of picking associated to this wave"
 msgstr "Lista de separação associada com esta remessa"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_ids
-msgid "Messages"
-msgstr "Mensagens"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_ids
-msgid "Messages and communication history"
-msgstr "Histórico de mensagens e comunicação"
-
-#. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_name
 msgid "Name of the picking wave"
 msgstr "Nome da remessa de separação"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:42
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:46
 #, python-format
 msgid "Nothing to print."
 msgstr "Nada para imprimir"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Número de ações"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Número de mensagens que requer uma ação"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Quantidade de mensagens não lidas."
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_user_id
@@ -247,10 +179,10 @@ msgid "Person responsible for this wave"
 msgstr "Pessoa responsável por esta remessa"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:64
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9563
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9493
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -273,7 +205,7 @@ msgid "Picking Waves not finished"
 msgstr "Remessas de separação não finalizadas"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9563
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9493
 msgid "Picking wave associated to this picking"
 msgstr "Remessa associada a esta separação"
 
@@ -309,12 +241,14 @@ msgid "Select a wave"
 msgstr "Selecione uma remessa"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:59
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:59
 #, python-format
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
 "availability before setting this wave to done."
-msgstr "Algumas separações ainda estão esperando por produtos. Por favor force sua disponibilidade antes de marcar esta remessa como pronta"
+msgstr ""
+"Algumas separações ainda estão esperando por produtos. Por favor force sua "
+"disponibilidade antes de marcar esta remessa como pronta"
 
 #. module: stock_picking_wave
 #: model:product.product,name:stock_picking_wave.product_product_dry_specu
@@ -348,12 +282,21 @@ msgstr "Remessas de separação de estoque"
 
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
+#, fuzzy
 msgid ""
-"The Goal of the picking waves is to group operations that may \n"
-"                (needs to) be done together in order to increase their efficiency.\n"
-"                It may also be useful to assign jobs (one person = one wave) or\n"
-"                help the timing management of operations (tasks to be done at 1pm)."
-msgstr "O Objetivo das ondas de remessa é o grupo de operações que pode\n(precisa) ser feito em conjunto, a fim de aumentar a sua eficiência.\nEle também pode ser útil para atribuir postos de trabalho (uma pessoa = uma onda) ou\najudar a gestão calendário de operações (tarefas a ser feito em 1:00pm)."
+"The goal of the picking waves is to group operations that may\n"
+"                (needs to) be done together in order to increase their "
+"efficiency.\n"
+"                It may also be useful to assign jobs (one person = one wave) "
+"or\n"
+"                help the timing management of operations (tasks to be done "
+"at 1pm)."
+msgstr ""
+"O Objetivo das ondas de remessa é o grupo de operações que pode\n"
+"(precisa) ser feito em conjunto, a fim de aumentar a sua eficiência.\n"
+"Ele também pode ser útil para atribuir postos de trabalho (uma pessoa = uma "
+"onda) ou\n"
+"ajudar a gestão calendário de operações (tarefas a ser feito em 1:00pm)."
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking
@@ -361,20 +304,10 @@ msgid "Transfer"
 msgstr "Transferir"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:63
 #, python-format
 msgid "Transferred by"
 msgstr "Transferido por"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_unread
-msgid "Unread Messages"
-msgstr "Mensagens não lidas"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Contador de Mensagens Não Lidas."
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
@@ -386,12 +319,56 @@ msgstr "Usuário"
 msgid "Wave"
 msgstr "Remessa"
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_website_message_ids
-msgid "Website Messages"
-msgstr "Mensagens do Site"
+#~ msgid "Action Needed"
+#~ msgstr "Ação Necessária"
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_website_message_ids
-msgid "Website communication history"
-msgstr "Histórico de Comunicação do Site"
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data da ultima mensagem para o registro."
+
+#~ msgid "Followers"
+#~ msgstr "Seguidores"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Seguidores (Canais)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Seguidores (Parceiros)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
+
+#~ msgid "Is Follower"
+#~ msgstr "É um seguidor"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data da última mensagem"
+
+#~ msgid "Messages"
+#~ msgstr "Mensagens"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Histórico de mensagens e comunicação"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Número de ações"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Número de mensagens que requer uma ação"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Quantidade de mensagens não lidas."
+
+#~ msgid "Unread Messages"
+#~ msgstr "Mensagens não lidas"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Contador de Mensagens Não Lidas."
+
+#~ msgid "Website Messages"
+#~ msgstr "Mensagens do Site"
+
+#~ msgid "Website communication history"
+#~ msgstr "Histórico de Comunicação do Site"

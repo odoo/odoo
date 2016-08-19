@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-# 
+#
 # Translators:
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
@@ -9,57 +9,103 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-19 10:25+0000\n"
 "PO-Revision-Date: 2016-05-09 07:27+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
 msgid ""
-"            Will be safe_eval with `self` being the current transaction. i.e.:\n"
+"            Will be safe_eval with `self` being the current transaction. i."
+"e.:\n"
 "                self.env['my.model'].payment_validated(self)"
-msgstr "            Will be safe_eval with `self` being the current transaction. i.e.:\n                self.env['my.model'].payment_validated(self)"
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
-msgid "-It installs the module payment_adyen."
-msgstr "-Instalira modul payment_adyen."
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
-msgid "-It installs the module payment_authorize."
-msgstr "-Instalira molud payment_authorize."
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
-msgid "-It installs the module payment_buckaroo."
-msgstr "-Instalira modul payment_buckaroo."
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
-msgid "-It installs the module payment_ogone."
-msgstr "-Instalira modul payment_ogone."
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
-msgid "-It installs the module payment_paypal."
-msgstr "-Instalira modul payment_paypal."
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
-msgid "-It installs the module payment_transfer."
-msgstr "-Instalira modul payment_transfer."
+msgstr ""
+"            Will be safe_eval with `self` being the current transaction. i."
+"e.:\n"
+"                self.env['my.model'].payment_validated(self)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
 msgid "3D Secure HTML"
 msgstr "3D Secure HTML"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-danger\">Test</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-success\">Production</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_authorize
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_buckaroo
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_ogone
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_paypal
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_sips
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_stripe
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_adyen
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_authorize
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_buckaroo
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_ogone
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_paypal
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_sips
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_stripe
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_transfer
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_adyen
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_authorize
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_buckaroo
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_ogone
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_paypal
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_sips
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_stripe
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_transfer
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_authorize
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_buckaroo
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_ogone
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_paypal
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_sips
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_stripe
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
@@ -98,7 +144,7 @@ msgid "Address"
 msgstr "Adresa"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_adyen
+#: model:payment.acquirer,name:payment.payment_acquirer_adyen
 msgid "Adyen"
 msgstr "Adyen"
 
@@ -119,7 +165,12 @@ msgid "At payment with acquirer confirmation"
 msgstr "Prilikom isplate sa potvrdom stjecatelja"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_buckaroo
+#: model:payment.acquirer,name:payment.payment_acquirer_authorize
+msgid "Authorize.Net"
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
 msgid "Buckaroo"
 msgstr "Buckaroo"
 
@@ -140,6 +191,11 @@ msgid "City"
 msgstr "Grad"
 
 #. module: payment
+#: model:ir.actions.act_window,help:payment.action_payment_acquirer
+msgid "Click to create a payment acquirer."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
 msgid "Company"
 msgstr "Tvrtka"
@@ -150,9 +206,20 @@ msgid "Configuration"
 msgstr "Postava"
 
 #. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_kanban
+#, fuzzy
+msgid "Configure"
+msgstr "Postava"
+
+#. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_acquirer_installation
 msgid "Configure payment acquiring methods"
 msgstr "Konfiguracija metode plaćanja stjecatelja"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_id
+msgid "Corresponding Module"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_count
@@ -204,6 +271,11 @@ msgid "Customer Details"
 msgstr "Detaji o korisniku"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_description
+msgid "Description"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
 msgid "Determine the display order"
 msgstr "Odredite redoslijed prikaza"
@@ -242,6 +314,7 @@ msgstr "E-mail"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_environment
+#: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Environment"
 msgstr "Okolina"
 
@@ -268,7 +341,8 @@ msgstr "Iznos naknade; postavlja sustav jer ovisi o stjecatelju"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
 msgid "Field used to store error and/or validation messages for information"
-msgstr "Polje se koristi za pohranu pogreške i/ili poruke o potvrdi za informacije "
+msgstr ""
+"Polje se koristi za pohranu pogreške i/ili poruke o potvrdi za informacije "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
@@ -316,6 +390,23 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
 msgid "Image"
 msgstr "Slika"
+
+#. module: payment
+#: model:payment.acquirer,name:payment.payment_acquirer_ogone
+msgid "Ingenico"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_kanban
+msgid "Install"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_state
+#, fuzzy
+msgid "Installation State"
+msgstr "Provjera valjanosti datuma"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_reference
@@ -397,14 +488,17 @@ msgstr "Poruka se prikazuje ako se narudžba otkaže prilikom postupka plaćanja
 msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
-msgstr "Poruka se prikazuje ako je narudžba uspješno završena nakon postupka plaćanja. "
+msgstr ""
+"Poruka se prikazuje ako je narudžba uspješno završena nakon postupka "
+"plaćanja. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
 msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
-msgstr "Poruka se prikazuje ako je narudžba u stanju čekanja nakon postupka plaćanja."
+msgstr ""
+"Poruka se prikazuje ako je narudžba u stanju čekanja nakon postupka plaćanja."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -428,11 +522,6 @@ msgstr "Naziv načina plaćanja"
 #: selection:payment.acquirer,auto_confirm:0
 msgid "No automatic confirmation"
 msgstr "Nema automatske potvrde"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_ogone
-msgid "Ogone"
-msgstr "Ogone"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
@@ -487,7 +576,6 @@ msgstr "Transakcija plaćanja"
 #: model:ir.actions.act_window,name:payment.action_payment_tx_ids
 #: model:ir.actions.act_window,name:payment.payment_transaction_action_child
 #: model:ir.model.fields,field_description:payment.field_payment_method_payment_ids
-#: model:ir.ui.menu,name:payment.finance_pay_tx_menu
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
@@ -495,7 +583,6 @@ msgid "Payment Transactions"
 msgstr "Transakcija plaćanja"
 
 #. module: payment
-#: model:ir.ui.menu,name:payment.finance_payment_menu
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.payment_method_form_view
@@ -503,7 +590,7 @@ msgid "Payments"
 msgstr "Plaćanja"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_paypal
+#: model:payment.acquirer,name:payment.payment_acquirer_paypal
 msgid "Paypal"
 msgstr "Paypal"
 
@@ -560,7 +647,6 @@ msgstr "Predložak obrasca S2S"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_method_action
-#: model:ir.ui.menu,name:payment.finance_pay_method_menu
 #: model:ir.ui.menu,name:payment.payment_method_menu
 msgid "Saved Payment Data"
 msgstr "Spremljeni podaci plaćanja"
@@ -576,6 +662,11 @@ msgid "Server To Server"
 msgstr "Poslužitelj do poslužitelja"
 
 #. module: payment
+#: model:payment.acquirer,name:payment.payment_acquirer_sips
+msgid "Sips"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
 msgid "Small-sized image"
 msgstr "Slika male veličine"
@@ -583,15 +674,22 @@ msgstr "Slika male veličine"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px"
-" image, with aspect ratio preserved. Use this field anywhere a small image "
-"is required."
-msgstr "Mala slika poslužitelja. Automatski je izmjenjena veličina na 64x64px sa očuvanim proporcijama. Koristitie ovo polje svuda gdje se traži mala slika."
+"Small-sized image of this provider. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
+msgstr ""
+"Mala slika poslužitelja. Automatski je izmjenjena veličina na 64x64px sa "
+"očuvanim proporcijama. Koristitie ovo polje svuda gdje se traži mala slika."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
 msgid "Status"
 msgstr "Status"
+
+#. module: payment
+#: model:payment.acquirer,name:payment.payment_acquirer_stripe
+msgid "Stripe"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
@@ -623,7 +721,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is be rendered with qWeb with the following evaluation context:"
+"                                            It is be rendered with qWeb with "
+"the following evaluation context:"
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
+msgid "Transfer information will be provided after choosing the payment mode."
 msgstr ""
 
 #. module: payment
@@ -652,9 +756,55 @@ msgid "Visible in Portal / Website"
 msgstr "Vidljivo na portalu / web stranici"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_transfer
+#: model:payment.acquirer,name:payment.payment_acquirer_transfer
 msgid "Wire Transfer"
 msgstr "Bankovni nalog"
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
+msgid "You will be prompt with Stripe Payment page for payment information."
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_adyen
+msgid ""
+"You will be redirected to the Adyen website after clicking on the payment "
+"button."
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_authorize
+msgid ""
+"You will be redirected to the Authorize website after clicking on the "
+"payment button."
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
+msgid ""
+"You will be redirected to the Buckaroo website after clicking on the payment "
+"button."
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
+msgid ""
+"You will be redirected to the Ingenico website after clicking on the payment "
+"button."
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_paypal
+msgid ""
+"You will be redirected to the Paypal website after clicking on the payment "
+"button."
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_sips
+msgid ""
+"You will be redirected to the Sips website after clicking on payment button."
+msgstr ""
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -665,11 +815,6 @@ msgstr "Poštanski broj"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_zip
 msgid "Zip"
 msgstr "Poštanski kod"
-
-#. module: payment
-#: model:ir.model,name:payment.model_account_config_settings
-msgid "account.config.settings"
-msgstr "account.config.settings"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -724,11 +869,33 @@ msgid "tx_values: transaction values"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
-msgid "unknown"
-msgstr "nepoznato"
-
-#. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr ""
+
+#~ msgid "-It installs the module payment_adyen."
+#~ msgstr "-Instalira modul payment_adyen."
+
+#~ msgid "-It installs the module payment_authorize."
+#~ msgstr "-Instalira molud payment_authorize."
+
+#~ msgid "-It installs the module payment_buckaroo."
+#~ msgstr "-Instalira modul payment_buckaroo."
+
+#~ msgid "-It installs the module payment_ogone."
+#~ msgstr "-Instalira modul payment_ogone."
+
+#~ msgid "-It installs the module payment_paypal."
+#~ msgstr "-Instalira modul payment_paypal."
+
+#~ msgid "-It installs the module payment_transfer."
+#~ msgstr "-Instalira modul payment_transfer."
+
+#~ msgid "Ogone"
+#~ msgstr "Ogone"
+
+#~ msgid "account.config.settings"
+#~ msgstr "account.config.settings"
+
+#~ msgid "unknown"
+#~ msgstr "nepoznato"

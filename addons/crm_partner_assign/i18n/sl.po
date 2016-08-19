@@ -1,22 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * crm_partner_assign
-# 
+#
 # Translators:
 # Matjaž Mozetič <m.mozetic@matmoz.si>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
 "PO-Revision-Date: 2015-10-16 11:06+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
-"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
+"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
+"sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
+"%100==4 ? 2 : 3);\n"
 
 #. module: crm_partner_assign
 #: model:mail.template,body_html:crm_partner_assign.email_template_lead_forward_mail
@@ -26,34 +28,91 @@ msgid ""
 "<p>Hello,</p>\n"
 "\n"
 "\n"
-"<p>We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to ${ctx['partner_id'].name}:</p>\n"
+"<p>We have been contacted by those prospects that are in your region. Thus, "
+"the following leads have been assigned to ${ctx['partner_id'].name}:</p>\n"
 "\n"
 "<ol>\n"
 "% for lead in ctx['partner_leads']:\n"
-"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject "
+"Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or "
+"'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id."
+"country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or "
+"'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n"
 "% endfor\n"
 "</ol>\n"
 "\n"
 "% if ctx.get('partner_in_portal'):\n"
-"<p>Please connect to your <a href=\"${object.get_portal_url()}\">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: \"I'm interested\" & \"I'm not interested\".</p>\n"
+"<p>Please connect to your <a href=\"${object.get_portal_url()}\">Partner "
+"Portal</a> to get details. On each lead are two buttons on the top left "
+"corner that you should press after having contacted the lead: \"I'm "
+"interested\" & \"I'm not interested\".</p>\n"
 "% else:\n"
 "<p>\n"
 "    You do not have yet a portal access to our database. Please contact \n"
-"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n"
+"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and "
+"'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,"
+"ctx['partner_id'].user_id.email) or 'us'}.\n"
 "</p>\n"
 "% endif\n"
-"<p>The lead will be sent to another partner if you do not contact the lead before 20 days.</p>\n"
+"<p>The lead will be sent to another partner if you do not contact the lead "
+"before 20 days.</p>\n"
 "\n"
 "<p>Thanks,</p>\n"
 "\n"
 "<pre>\n"
-"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe "
+"or ''}\n"
 "</pre>\n"
 "% if not ctx['partner_id'].user_id:\n"
-"PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
+"PS: It looks like you do not have an account manager assigned to you, please "
+"contact us.\n"
 "% endif\n"
 "            "
-msgstr "\n            \n<p>Pozdravljeni,</p>\n\n\n<p>Z nami so v stiku potencialni partnerji iz vaše regije. Naslednji indici so bili dodeljeni ${ctx['partner_id'].name}:</p>\n\n<ol>\n% for lead in ctx['partner_leads']:\n     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Predmet ni določen'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Naziv stika ni določen'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Država ni določena' }, ${lead.lead_id.email_from or 'E-pošta ni določena'}, ${lead.lead_id.phone or ''} </li></br>\n% endfor\n</ol>\n\n% if ctx.get('partner_in_portal'):\n<p>Prijavite se v vaš <a href=\"${object.get_portal_url()}\">partnerski portal</a> za več podrobnosti. Pri vsakem indicu sta zgoraj levo dva gumba, ki ju morate pritisniti po vzpostavitvi stika z indicem: \"Zanima me\" & \"Ne zanima me\".</p>\n% else:\n<p>\n    Do naše baze/portala nimate dostopa. Obvestite \n    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'svojega skrbnika računa %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n</p>\n% endif\n<p>Če z indicem ne vzpostavite stika prej kot v 20 dneh, bo dodeljen drugemu partnerju.</p>\n\n<p>Hvala,</p>\n\n<pre>\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n</pre>\n% if not ctx['partner_id'].user_id:\nPS: Izgleda, da nimate dodeljenega skrbnika računa.\n% endif\n            "
+msgstr ""
+"\n"
+"            \n"
+"<p>Pozdravljeni,</p>\n"
+"\n"
+"\n"
+"<p>Z nami so v stiku potencialni partnerji iz vaše regije. Naslednji indici "
+"so bili dodeljeni ${ctx['partner_id'].name}:</p>\n"
+"\n"
+"<ol>\n"
+"% for lead in ctx['partner_leads']:\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Predmet ni "
+"določen'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or "
+"'Naziv stika ni določen'}, ${lead.lead_id.country_id and lead.lead_id."
+"country_id.name or 'Država ni določena' }, ${lead.lead_id.email_from or 'E-"
+"pošta ni določena'}, ${lead.lead_id.phone or ''} </li></br>\n"
+"% endfor\n"
+"</ol>\n"
+"\n"
+"% if ctx.get('partner_in_portal'):\n"
+"<p>Prijavite se v vaš <a href=\"${object.get_portal_url()}\">partnerski "
+"portal</a> za več podrobnosti. Pri vsakem indicu sta zgoraj levo dva gumba, "
+"ki ju morate pritisniti po vzpostavitvi stika z indicem: \"Zanima me\" & "
+"\"Ne zanima me\".</p>\n"
+"% else:\n"
+"<p>\n"
+"    Do naše baze/portala nimate dostopa. Obvestite \n"
+"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and "
+"'svojega skrbnika računa %s (%s)' % (ctx['partner_id'].user_id.name,"
+"ctx['partner_id'].user_id.email) or 'us'}.\n"
+"</p>\n"
+"% endif\n"
+"<p>Če z indicem ne vzpostavite stika prej kot v 20 dneh, bo dodeljen drugemu "
+"partnerju.</p>\n"
+"\n"
+"<p>Hvala,</p>\n"
+"\n"
+"<pre>\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe "
+"or ''}\n"
+"</pre>\n"
+"% if not ctx['partner_id'].user_id:\n"
+"PS: Izgleda, da nimate dodeljenega skrbnika računa.\n"
+"% endif\n"
+"            "
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_nbr
@@ -72,34 +131,46 @@ msgid "<p>I am interested by this lead.</p>"
 msgstr "<p>Zainteresiran sem za ta indic.</p>"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:35
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:34
 #, python-format
 msgid "<p>I am not interested by this lead. I contacted the lead.</p>"
 msgstr "<p>Ta indic me ne zanima. Stik sem vzpostavil.</p>"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:37
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:36
 #, python-format
-msgid ""
-"<p>I am not interested by this lead. I have not contacted the lead.</p>"
+msgid "<p>I am not interested by this lead. I have not contacted the lead.</p>"
 msgstr "<p>Ta indic me ne zanima in stika nisem vzpostavil.</p>"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid ""
-"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
-"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
-msgstr "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;"
+"=',0)]}\">N </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':"
+"[('partner_latitude','&gt;=',0)]}\">S </span>"
+msgstr ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;"
+"=',0)]}\">N </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':"
+"[('partner_latitude','&gt;=',0)]}\">S </span>"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid ""
-"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">E </span>\n"
-"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;"
+"=',0)]}\">E </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':"
+"[('partner_longitude','&gt;=',0)]}\">W </span>\n"
 "                                <span class=\"oe_grey\">) </span>"
-msgstr "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">E </span>\n                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n                                <span class=\"oe_grey\">) </span>"
+msgstr ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;"
+"=',0)]}\">E </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':"
+"[('partner_longitude','&gt;=',0)]}\">W </span>\n"
+"                                <span class=\"oe_grey\">) </span>"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_activation
@@ -134,16 +205,6 @@ msgstr "Dodeli prodajalca dodeljenega partnerja"
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_date_assign
 msgid "Assignation Date"
 msgstr "Datum priredbe"
-
-#. module: crm_partner_assign
-#: model:crm.stage,name:crm_partner_assign.stage_portal_lead_assigned
-msgid "Assigned"
-msgstr "Dodeljeno"
-
-#. module: crm_partner_assign
-#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_partner_assign_form
-msgid "Assigned Opportunities"
-msgstr "Prirejene priložnosti"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_partner_assigned_id
@@ -379,7 +440,9 @@ msgstr "Geolokacija"
 msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignation.)"
-msgstr "Podajanje verjetnosti dodeljevanja indica temu partnerju. (0 pomeni, da dodelitve ni)"
+msgstr ""
+"Podajanje verjetnosti dodeljevanja indica temu partnerju. (0 pomeni, da "
+"dodelitve ni)"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_grade_id
@@ -440,6 +503,11 @@ msgstr "Zanimanje za ta indic"
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_date
 msgid "Invoice Account Date"
 msgstr "Datum konta računa"
+
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_account_invoice_report
+msgid "Invoices Statistics"
+msgstr ""
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation___last_update
@@ -534,7 +602,7 @@ msgid "Leads Analysis"
 msgstr "Analiza indicev"
 
 #. module: crm_partner_assign
-#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_id_9621
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_id_8703
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_partner_grade_form
 msgid "Level"
 msgstr "Nivo"
@@ -770,15 +838,14 @@ msgid "Set an email address for the partner(s): %s"
 msgstr "Nastavi e-poštni naslov za partnerje(a): %s"
 
 #. module: crm_partner_assign
-#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_stage_id
-#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
-msgid "Stage"
-msgstr "Stopnja"
-
-#. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
 msgid "Subject"
 msgstr "Zadeva"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_tag_ids
+msgid "Tags"
+msgstr ""
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/crm_lead.py:17
@@ -802,11 +869,6 @@ msgstr "Skupina portala ni najdena"
 #: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_channel_interested_contacted
 msgid "The lead has been contacted"
 msgstr "Za indic je bil vzpostavljen stik"
-
-#. module: crm_partner_assign
-#: model:crm.stage,name:crm_partner_assign.stage_portal_lead_recycle
-msgid "To Recycle"
-msgstr "Za reciklažo"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_turnover
@@ -893,6 +955,20 @@ msgstr "res.partner.grade"
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,forward_type:0
 msgid ""
-"several partners: automatic assignation, using GPS coordinates and partner's"
-" grades"
-msgstr "več partnerjev: samodejno dodeljevanje z GPS koordinatami in stopnjami partnerjev"
+"several partners: automatic assignation, using GPS coordinates and partner's "
+"grades"
+msgstr ""
+"več partnerjev: samodejno dodeljevanje z GPS koordinatami in stopnjami "
+"partnerjev"
+
+#~ msgid "Assigned"
+#~ msgstr "Dodeljeno"
+
+#~ msgid "Assigned Opportunities"
+#~ msgstr "Prirejene priložnosti"
+
+#~ msgid "Stage"
+#~ msgstr "Stopnja"
+
+#~ msgid "To Recycle"
+#~ msgstr "Za reciklažo"

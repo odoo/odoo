@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_stock
-# 
+#
 # Translators:
 # Sergey Vilizhanin <sv@grimmette.ru>, 2015
 # Viktor Pogrebniak <vp@aifil.ru>, 2016
@@ -9,15 +9,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:27+0000\n"
+"POT-Creation-Date: 2016-08-19 10:25+0000\n"
 "PO-Revision-Date: 2016-04-30 19:55+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+#, fuzzy
+msgid "<strong>Customer Reference:</strong>"
+msgstr "<strong>Инкотермс:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
@@ -33,7 +41,9 @@ msgstr "Позволяет добавлять стоимость доставк�
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Allow setting manufacturing order properties per order line (advanced)"
-msgstr "Разрешить настройки свойств заказа на изготовление  в строке заказа (продвинутый)"
+msgstr ""
+"Разрешить настройки свойств заказа на изготовление  в строке заказа "
+"(продвинутый)"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
@@ -78,12 +88,27 @@ msgstr "Заказы на доставку"
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Don't use manufacturing properties (recommended as its easier)"
-msgstr "Не использовать производственные свойства (рекомендуется, так как это более простой вариант)"
+msgstr ""
+"Не использовать производственные свойства (рекомендуется, так как это более "
+"простой вариант)"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
 msgstr "Активируйте маршрут в строке заказа на продажу"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_product_product_expense_policy
+msgid "Expense Invoice Policy"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_product_product_expense_policy
+msgid ""
+"If you invoice at cost, the expense will be invoiced on the sale order at "
+"the cost of the analytic line;if you invoice at sales price, the price of "
+"the product will be used instead."
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
@@ -95,16 +120,23 @@ msgstr "Инкотермс"
 #: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
-msgstr "Инкоте́рмс /англ. Incoterms, International commerce terms/ — международные правила по толкованию наиболее широко используемых торговых терминов в области внешней торговли.  Инкотермс регулируют ряд наиболее важных, принципиальных, базовых вопросов, связанных с организацией доставки товара до места назначения."
+"costs and responsibilities between buyer and seller and reflect state-of-the-"
+"art transportation practices."
+msgstr ""
+"Инкоте́рмс /англ. Incoterms, International commerce terms/ — международные "
+"правила по толкованию наиболее широко используемых торговых терминов в "
+"области внешней торговли.  Инкотермс регулируют ряд наиболее важных, "
+"принципиальных, базовых вопросов, связанных с организацией доставки товара "
+"до места назначения."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "Международные правила по толкованию наиболее широко используемых торговых терминов в области внешней торговли."
+msgstr ""
+"Международные правила по толкованию наиболее широко используемых торговых "
+"терминов в области внешней торговли."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
@@ -125,9 +157,13 @@ msgstr "Строка инвойса"
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
-msgstr "Допустимый предел погрешности для дат, обещанных клиентам. Закупка и поставка товаров будет назначена на несколько дней раньше, чем фактически обещанная дата, чтобы справиться с неожиданными задержками в системе поставок."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
+msgstr ""
+"Допустимый предел погрешности для дат, обещанных клиентам. Закупка и "
+"поставка товаров будет назначена на несколько дней раньше, чем фактически "
+"обещанная дата, чтобы справиться с неожиданными задержками в системе "
+"поставок."
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
@@ -140,7 +176,7 @@ msgid "No shipping costs on sales orders"
 msgstr "Нет транспортных расходов по заказам продаж"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:141
+#: code:addons/sale_stock/sale_stock.py:156
 #, python-format
 msgid "Not enough inventory!"
 msgstr "Не достаточный запас!"
@@ -157,7 +193,7 @@ msgid "Order Routing"
 msgstr "Маршрут заказа"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:152
+#: code:addons/sale_stock/sale_stock.py:167
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Заказанное количество уменьшилось!"
@@ -178,6 +214,12 @@ msgid "Procurement"
 msgstr "Снабжение"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_product
+#, fuzzy
+msgid "Product"
+msgstr "Шаблон продукта"
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
 msgid "Product Template"
 msgstr "Шаблон продукта"
@@ -186,6 +228,11 @@ msgstr "Шаблон продукта"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_mrp_properties
 msgid "Properties on SO Lines"
 msgstr "Свойства в строках заказа продажи"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -235,7 +282,9 @@ msgstr "Доставить все продукты сразу, без возвр
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
 msgid "Ship products when some are available, and allow back orders"
-msgstr "Доставить Продукты, когда некоторые из них доступны и разрешены возвраты заказов"
+msgstr ""
+"Доставить Продукты, когда некоторые из них доступны и разрешены возвраты "
+"заказов"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_delivery
@@ -259,15 +308,28 @@ msgid "Stock Move"
 msgstr "Движение запасов"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:194
+#: code:addons/sale_stock/sale_stock.py:213
 #, python-format
 msgid "This product is packaged by %d . You should sell %d ."
 msgstr "Этот продукт упакован %d . Вы должны продать %d ."
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_to_refund_so
+#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking_line_to_refund_so
+msgid "To Refund in SO"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "Перевод"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_stock_move_to_refund_so
+#: model:ir.model.fields,help:sale_stock.field_stock_return_picking_line_to_refund_so
+msgid ""
+"Trigger a decrease of the delivered quantity in the associated Sale Order"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
@@ -276,28 +338,37 @@ msgid "Warehouse"
 msgstr "Склад"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:193
+#: code:addons/sale_stock/sale_stock.py:212
 #, python-format
 msgid "Warning"
 msgstr "Внимание"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:153
+#: code:addons/sale_stock/sale_stock.py:168
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr "Вы уменьшили заказанное количество! Не забудьте вручную обновить заказ доставки, если это необходимо."
+msgstr ""
+"Вы уменьшили заказанное количество! Не забудьте вручную обновить заказ "
+"доставки, если это необходимо."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:142
+#: code:addons/sale_stock/sale_stock.py:157
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available!\n"
 "The stock on hand is %.2f %s."
-msgstr "Вы планируете продать %.2f %s но имеете только %.2f %s !\nДействительные запасы %.2f %s."
+msgstr ""
+"Вы планируете продать %.2f %s но имеете только %.2f %s !\n"
+"Действительные запасы %.2f %s."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr "sale.config.settings"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking_line
+msgid "stock.return.picking.line"
+msgstr ""

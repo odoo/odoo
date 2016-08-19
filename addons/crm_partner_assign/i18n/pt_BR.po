@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * crm_partner_assign
-# 
+#
 # Translators:
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
 # grazziano <g.negocios@outlook.com.br>, 2015
@@ -10,14 +10,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
 "PO-Revision-Date: 2016-07-27 23:53+0000\n"
 "Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
+"language/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: crm_partner_assign
@@ -28,34 +29,95 @@ msgid ""
 "<p>Hello,</p>\n"
 "\n"
 "\n"
-"<p>We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to ${ctx['partner_id'].name}:</p>\n"
+"<p>We have been contacted by those prospects that are in your region. Thus, "
+"the following leads have been assigned to ${ctx['partner_id'].name}:</p>\n"
 "\n"
 "<ol>\n"
 "% for lead in ctx['partner_leads']:\n"
-"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject "
+"Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or "
+"'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id."
+"country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or "
+"'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n"
 "% endfor\n"
 "</ol>\n"
 "\n"
 "% if ctx.get('partner_in_portal'):\n"
-"<p>Please connect to your <a href=\"${object.get_portal_url()}\">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: \"I'm interested\" & \"I'm not interested\".</p>\n"
+"<p>Please connect to your <a href=\"${object.get_portal_url()}\">Partner "
+"Portal</a> to get details. On each lead are two buttons on the top left "
+"corner that you should press after having contacted the lead: \"I'm "
+"interested\" & \"I'm not interested\".</p>\n"
 "% else:\n"
 "<p>\n"
 "    You do not have yet a portal access to our database. Please contact \n"
-"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n"
+"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and "
+"'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,"
+"ctx['partner_id'].user_id.email) or 'us'}.\n"
 "</p>\n"
 "% endif\n"
-"<p>The lead will be sent to another partner if you do not contact the lead before 20 days.</p>\n"
+"<p>The lead will be sent to another partner if you do not contact the lead "
+"before 20 days.</p>\n"
 "\n"
 "<p>Thanks,</p>\n"
 "\n"
 "<pre>\n"
-"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe "
+"or ''}\n"
 "</pre>\n"
 "% if not ctx['partner_id'].user_id:\n"
-"PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
+"PS: It looks like you do not have an account manager assigned to you, please "
+"contact us.\n"
 "% endif\n"
 "            "
-msgstr "\n            \n<p>Ola,</p>\n\n\n<p>Temos sido contactados por essas perspectivas que estão em sua região. Assim, os seguintes prospectos têm sido atribuídos a ${ctx['partner_id'].name}:</p>\n\n<ol>\n% for lead in ctx['partner_leads']:\n     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n% endfor\n</ol>\n\n% if ctx.get('partner_in_portal'):\n<p>Por favor, conectar ao <a href=\"${object.get_portal_url()}\">Parceiro de Portal </a> para saber os detalhes. Em cada prospecto são dois botões no canto superior esquerdo que você deve pressionar depois de ter contactado a frente do marcador. \"Eu estou interessado\" e \"Eu não estou interessado\".</p>\n% else:\n<p>\n    Você ainda não tem cadastro em nosso banco de dados para acessar o porta. Por favor contate\n    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n</p>\n% endif\n<p>O prospecto será enviado para outro parceiro, se você não entrar em contato com a liderança antes de 20 dias.</p>\n\n<p>Thanks,</p>\n\n<pre>\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n</pre>\n% if not ctx['partner_id'].user_id:\nObs: Parece que você não tem um gerente de conta atribuída a você, entre em contato conosco\n% endif\n            "
+msgstr ""
+"\n"
+"            \n"
+"<p>Ola,</p>\n"
+"\n"
+"\n"
+"<p>Temos sido contactados por essas perspectivas que estão em sua região. "
+"Assim, os seguintes prospectos têm sido atribuídos a ${ctx['partner_id']."
+"name}:</p>\n"
+"\n"
+"<ol>\n"
+"% for lead in ctx['partner_leads']:\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject "
+"Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or "
+"'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id."
+"country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or "
+"'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n"
+"% endfor\n"
+"</ol>\n"
+"\n"
+"% if ctx.get('partner_in_portal'):\n"
+"<p>Por favor, conectar ao <a href=\"${object.get_portal_url()}\">Parceiro de "
+"Portal </a> para saber os detalhes. Em cada prospecto são dois botões no "
+"canto superior esquerdo que você deve pressionar depois de ter contactado a "
+"frente do marcador. \"Eu estou interessado\" e \"Eu não estou interessado\"."
+"</p>\n"
+"% else:\n"
+"<p>\n"
+"    Você ainda não tem cadastro em nosso banco de dados para acessar o "
+"porta. Por favor contate\n"
+"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and "
+"'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,"
+"ctx['partner_id'].user_id.email) or 'us'}.\n"
+"</p>\n"
+"% endif\n"
+"<p>O prospecto será enviado para outro parceiro, se você não entrar em "
+"contato com a liderança antes de 20 dias.</p>\n"
+"\n"
+"<p>Thanks,</p>\n"
+"\n"
+"<pre>\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe "
+"or ''}\n"
+"</pre>\n"
+"% if not ctx['partner_id'].user_id:\n"
+"Obs: Parece que você não tem um gerente de conta atribuída a você, entre em "
+"contato conosco\n"
+"% endif\n"
+"            "
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_nbr
@@ -74,34 +136,49 @@ msgid "<p>I am interested by this lead.</p>"
 msgstr "<p>Eu estou interessado neste prospecto.</p>"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:35
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:34
 #, python-format
 msgid "<p>I am not interested by this lead. I contacted the lead.</p>"
-msgstr "<p>Eu estou interessado neste prospecto. %s ?? contatou o prospecto.</p>"
+msgstr ""
+"<p>Eu estou interessado neste prospecto. %s ?? contatou o prospecto.</p>"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:37
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:36
 #, python-format
-msgid ""
-"<p>I am not interested by this lead. I have not contacted the lead.</p>"
-msgstr "<p>Eu não estou interessado neste prospecto. \nEu não tenho contato com o prospecto.</p>"
+msgid "<p>I am not interested by this lead. I have not contacted the lead.</p>"
+msgstr ""
+"<p>Eu não estou interessado neste prospecto. \n"
+"Eu não tenho contato com o prospecto.</p>"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid ""
-"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
-"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
-msgstr "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;"
+"=',0)]}\">N </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':"
+"[('partner_latitude','&gt;=',0)]}\">S </span>"
+msgstr ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;"
+"=',0)]}\">N </span>\n"
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;"
+"=',0)]}\">S </span>"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid ""
-"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">E </span>\n"
-"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;"
+"=',0)]}\">E </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':"
+"[('partner_longitude','&gt;=',0)]}\">W </span>\n"
 "                                <span class=\"oe_grey\">) </span>"
-msgstr "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">L </span>\n<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">O </span>\n<span class=\"oe_grey\">) </span>"
+msgstr ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;"
+"=',0)]}\">L </span>\n"
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;"
+"=',0)]}\">O </span>\n"
+"<span class=\"oe_grey\">) </span>"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_activation
@@ -136,16 +213,6 @@ msgstr "Atribuir vendedor aos parceiros"
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_date_assign
 msgid "Assignation Date"
 msgstr "Data da Atribuição"
-
-#. module: crm_partner_assign
-#: model:crm.stage,name:crm_partner_assign.stage_portal_lead_assigned
-msgid "Assigned"
-msgstr "Atribuído"
-
-#. module: crm_partner_assign
-#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_partner_assign_form
-msgid "Assigned Opportunities"
-msgstr "Oportunidades Atribuidas"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_partner_assigned_id
@@ -381,7 +448,9 @@ msgstr "Geolocalização"
 msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignation.)"
-msgstr "Fornece a probabilidade para se atribuir o prospecto para este parceiro. (0 significa sem atribuição.)"
+msgstr ""
+"Fornece a probabilidade para se atribuir o prospecto para este parceiro. (0 "
+"significa sem atribuição.)"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_grade_id
@@ -442,6 +511,11 @@ msgstr "Interessado por esse prospecto"
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_date
 msgid "Invoice Account Date"
 msgstr "Data da Conta de Fatura"
+
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_account_invoice_report
+msgid "Invoices Statistics"
+msgstr ""
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation___last_update
@@ -536,7 +610,7 @@ msgid "Leads Analysis"
 msgstr "Analisar Prospecções"
 
 #. module: crm_partner_assign
-#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_id_9621
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_id_8703
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_partner_grade_form
 msgid "Level"
 msgstr "Nível"
@@ -596,7 +670,9 @@ msgstr "Número de Dias para abrir o caso"
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Once the lead is processed, it will be in your \"Opportunities\" menu."
-msgstr "Quando seu prospecto for processado, ele estará em seu menu \"Oportunidades\"."
+msgstr ""
+"Quando seu prospecto for processado, ele estará em seu menu \"Oportunidades"
+"\"."
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_opening_date
@@ -772,15 +848,14 @@ msgid "Set an email address for the partner(s): %s"
 msgstr "Definir um endereço de e-mail para o parceiro(s) %s"
 
 #. module: crm_partner_assign
-#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_stage_id
-#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
-msgid "Stage"
-msgstr "Estágio"
-
-#. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
 msgid "Subject"
 msgstr "Assunto"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_tag_ids
+msgid "Tags"
+msgstr ""
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/crm_lead.py:17
@@ -804,11 +879,6 @@ msgstr "O grupo portal não pode ser encontrado"
 #: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_channel_interested_contacted
 msgid "The lead has been contacted"
 msgstr "O lider foi contactado"
-
-#. module: crm_partner_assign
-#: model:crm.stage,name:crm_partner_assign.stage_portal_lead_recycle
-msgid "To Recycle"
-msgstr "Para Lixeira"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_turnover
@@ -855,7 +925,8 @@ msgstr "Porque você não está interessado nesse prospecto?"
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:26
 #, python-format
 msgid "You must contact the lead before saying that you are interested"
-msgstr "Você deve contatar a liderança antes de dizer que você está interessado"
+msgstr ""
+"Você deve contatar a liderança antes de dizer que você está interessado"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,forward_type:0
@@ -895,6 +966,20 @@ msgstr "res.partner.grade"
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,forward_type:0
 msgid ""
-"several partners: automatic assignation, using GPS coordinates and partner's"
-" grades"
-msgstr "Muitos parceiros: atribuição automática, utilizando coordenadas de GPS e as notas de parceiros"
+"several partners: automatic assignation, using GPS coordinates and partner's "
+"grades"
+msgstr ""
+"Muitos parceiros: atribuição automática, utilizando coordenadas de GPS e as "
+"notas de parceiros"
+
+#~ msgid "Assigned"
+#~ msgstr "Atribuído"
+
+#~ msgid "Assigned Opportunities"
+#~ msgstr "Oportunidades Atribuidas"
+
+#~ msgid "Stage"
+#~ msgstr "Estágio"
+
+#~ msgid "To Recycle"
+#~ msgstr "Para Lixeira"

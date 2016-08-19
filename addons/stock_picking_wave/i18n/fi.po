@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_picking_wave
-# 
+#
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Marko Happonen <marko.happonen@sprintit.fi>, 2016
@@ -10,20 +10,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-19 10:25+0000\n"
 "PO-Revision-Date: 2016-06-27 07:57+0000\n"
 "Last-Translator: Marko Happonen <marko.happonen@sprintit.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction
-msgid "Action Needed"
-msgstr "Vaatii toimia"
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
@@ -86,11 +81,6 @@ msgid "Created on"
 msgstr "Luotu"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Viimeisen viestin päivämäärä"
-
-#. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_display_name
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_display_name
 msgid "Display Name"
@@ -106,21 +96,6 @@ msgstr "Valmis"
 #: selection:stock.picking.wave,state:0
 msgid "Draft"
 msgstr "Luonnos"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_follower_ids
-msgid "Followers"
-msgstr "Seuraajat"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Seuraajat (kanavat)"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Seuraajat (kumppanit)"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -147,7 +122,7 @@ msgstr ""
 #. module: stock_picking_wave
 #: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_choco
 #: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_choco_product_template
-msgid "Ice Cream Chocolate with stucks"
+msgid "Ice Cream Chocolate with sticks"
 msgstr ""
 
 #. module: stock_picking_wave
@@ -159,29 +134,9 @@ msgid "Ice Cream Vanilla"
 msgstr "Vaniljajäätelö"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 msgid "In Progress"
 msgstr "Käynnissä"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_is_follower
-msgid "Is Follower"
-msgstr "on seuraaja"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_last_post
-msgid "Last Message Date"
-msgstr "Viimeinen viestipvm"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave___last_update
@@ -207,40 +162,15 @@ msgid "List of picking associated to this wave"
 msgstr ""
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_ids
-msgid "Messages"
-msgstr "Viestit"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_ids
-msgid "Messages and communication history"
-msgstr "Viesti- ja kommunikointihistoria"
-
-#. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_name
 msgid "Name of the picking wave"
 msgstr ""
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:42
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:46
 #, python-format
 msgid "Nothing to print."
 msgstr ""
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Toimenpiteiden määrä"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Toimenpiteitä vaativien viestien määrä"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Lukemattomien viestien määrä"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_user_id
@@ -248,10 +178,10 @@ msgid "Person responsible for this wave"
 msgstr ""
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:64
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9563
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9493
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -274,7 +204,7 @@ msgid "Picking Waves not finished"
 msgstr ""
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9563
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9493
 msgid "Picking wave associated to this picking"
 msgstr ""
 
@@ -310,7 +240,7 @@ msgid "Select a wave"
 msgstr ""
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:59
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:59
 #, python-format
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
@@ -350,10 +280,13 @@ msgstr ""
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
 msgid ""
-"The Goal of the picking waves is to group operations that may \n"
-"                (needs to) be done together in order to increase their efficiency.\n"
-"                It may also be useful to assign jobs (one person = one wave) or\n"
-"                help the timing management of operations (tasks to be done at 1pm)."
+"The goal of the picking waves is to group operations that may\n"
+"                (needs to) be done together in order to increase their "
+"efficiency.\n"
+"                It may also be useful to assign jobs (one person = one wave) "
+"or\n"
+"                help the timing management of operations (tasks to be done "
+"at 1pm)."
 msgstr ""
 
 #. module: stock_picking_wave
@@ -362,20 +295,10 @@ msgid "Transfer"
 msgstr "Siirrä"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:63
 #, python-format
 msgid "Transferred by"
 msgstr ""
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_unread
-msgid "Unread Messages"
-msgstr "Lukemattomia viestejä"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Lukemattomien viestien laskuri"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
@@ -387,12 +310,56 @@ msgstr "Käyttäjä"
 msgid "Wave"
 msgstr ""
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_website_message_ids
-msgid "Website Messages"
-msgstr "Verkkosivun ilmoitukset"
+#~ msgid "Action Needed"
+#~ msgstr "Vaatii toimia"
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_website_message_ids
-msgid "Website communication history"
-msgstr "Verkkosivun viestihistoria"
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Viimeisen viestin päivämäärä"
+
+#~ msgid "Followers"
+#~ msgstr "Seuraajat"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Seuraajat (kanavat)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Seuraajat (kumppanit)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
+
+#~ msgid "Is Follower"
+#~ msgstr "on seuraaja"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Viimeinen viestipvm"
+
+#~ msgid "Messages"
+#~ msgstr "Viestit"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Viesti- ja kommunikointihistoria"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Toimenpiteiden määrä"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Toimenpiteitä vaativien viestien määrä"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Lukemattomien viestien määrä"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Lukemattomia viestejä"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Lukemattomien viestien laskuri"
+
+#~ msgid "Website Messages"
+#~ msgstr "Verkkosivun ilmoitukset"
+
+#~ msgid "Website communication history"
+#~ msgstr "Verkkosivun viestihistoria"

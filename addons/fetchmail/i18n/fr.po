@@ -1,21 +1,41 @@
+# #-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * fetchmail
-# 
+#
 # Translators:
 # Friderici Claude, 2015
+# #-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * fetchmail
+#
+# Translators:
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Nancy Bolognesi <nb@microcom.ca>, 2016
+# Lucas Deliege <lud@odoo.com>, 2016
+# Miguel Vidali <mvidali129@gmail.com>, 2016
+# Friderici Claude <claude@friderici.org>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Melanie Bernard <mbe@odoo.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-13 21:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Olivier Lenoir <olivier.lenoir@free.fr>, 2016\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: fetchmail
@@ -56,21 +76,33 @@ msgstr "Paramétrez la passerelle de messagerie pour la réception"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
+#, fuzzy
 msgid "Confirmed"
-msgstr "Confirmé"
+msgstr ""
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Confirmé\n"
+"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Confirmée"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:150
+#: code:addons/fetchmail/models/fetchmail.py:137
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "Le test de connexion a échoué: %s"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_is_ssl
+#, fuzzy
 msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
-msgstr "Les connexions sont cryptées via SSL/TLS au travers d'un port dédié (par défaut : IMAPS=993, POP3S=995)"
+msgstr ""
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Les connexions sont cryptées via SSL/TLS au travers d'un port dédié (par "
+"défaut : IMAPS=993, POP3S=995)\n"
+"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Les connexions sont chiffrées via SSL/TLS au travers d'un port dédié (par "
+"défaut : IMAPS=993, POP3S=995)"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_object_id
@@ -78,13 +110,11 @@ msgid "Create a New Record"
 msgstr "Créer un nouvel enregistrement"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "Créé par"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "Créé le"
@@ -92,10 +122,11 @@ msgstr "Créé le"
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_priority
 msgid "Defines the order of processing, lower values mean higher priority"
-msgstr "Définit l'ordre de traitement, les valeurs les moins élevées correspondent à une priorité élevée"
+msgstr ""
+"Définit l'ordre de traitement, les valeurs les moins élevées correspondent à "
+"une priorité élevée"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr "Afficher le nom"
@@ -111,7 +142,6 @@ msgid "Hostname or IP of the mail server"
 msgstr "Nom de domaine ou adresse IP du serveur de courriels"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "ID"
@@ -164,22 +194,34 @@ msgid "Last Fetch Date"
 msgstr "Dernière date de rapatriement"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
+#, fuzzy
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr ""
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Dernière modification le\n"
+"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Dernière Modification le"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
+#, fuzzy
 msgid "Last Updated by"
-msgstr "Mis à jour par"
+msgstr ""
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Mis à jour par\n"
+"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Dernière mise à jour par"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
+#, fuzzy
 msgid "Last Updated on"
-msgstr "Mis à jour le"
+msgstr ""
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Mis à jour le\n"
+"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Dernière mise à jour le"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
@@ -212,7 +254,10 @@ msgstr "Non confirmé"
 msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
-msgstr "Action de serveur optionnelle et  personnalisée à déclencher pour chaque courriel entrant, sur l'enregistrement qui a été créé ou mis à jour par ce courriel"
+msgstr ""
+"Action de serveur optionnelle et  personnalisée à déclencher pour chaque "
+"courriel entrant, sur l'enregistrement qui a été créé ou mis à jour par ce "
+"courriel"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
@@ -255,7 +300,11 @@ msgid ""
 "Process each incoming mail as part of a conversation corresponding to this "
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
-msgstr "Traiter chaque courriel comme une partie de conversation correspondant à ce type de documents. Cela créera un nouveau document pour chaque nouvelle conversation, or attachera les courriels à une conversation (document) existante."
+msgstr ""
+"Traiter chaque courriel comme une partie de conversation correspondant à ce "
+"type de documents. Cela créera un nouveau document pour chaque nouvelle "
+"conversation, or attachera les courriels à une conversation (document) "
+"existante."
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -289,8 +338,13 @@ msgstr "Serveur et login"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_action_id
+#, fuzzy
 msgid "Server Action"
-msgstr "Action du Serveur"
+msgstr ""
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Action du Serveur\n"
+"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Action-serveur"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -334,25 +388,40 @@ msgstr "Tester et confirmer"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_user
+#, fuzzy
 msgid "Username"
-msgstr "Nom d'utilisateur"
+msgstr ""
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Nom d'utilisateur\n"
+"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Nom d’utilisateur"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
 msgid ""
-"Whether a full original copy of each email should be kept for referenceand "
+"Whether a full original copy of each email should be kept for reference and "
 "attached to each processed message. This will usually double the size of "
 "your message database."
-msgstr "Une copie originale complète de chaque courriel doit être conservée comme référence et attachée à chaque message traité. Cela engendrera le doublement de la taille de votre base de données des messages."
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach
 msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
-msgstr "Si les pièces jointes doivent être ou non téléchargées. Si cela n'est pas activé, les courriels entrant seront détachés de leurs pièces jointes avant d'être traités."
+msgstr ""
+"Si les pièces jointes doivent être ou non téléchargées. Si cela n'est pas "
+"activé, les courriels entrant seront détachés de leurs pièces jointes avant "
+"d'être traités."
 
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
-msgstr "fetchmail.config.settings"
+#~ msgid ""
+#~ "Whether a full original copy of each email should be kept for "
+#~ "referenceand attached to each processed message. This will usually double "
+#~ "the size of your message database."
+#~ msgstr ""
+#~ "Une copie originale complète de chaque courriel doit être conservée comme "
+#~ "référence et attachée à chaque message traité. Cela engendrera le "
+#~ "doublement de la taille de votre base de données des messages."
+
+#~ msgid "fetchmail.config.settings"
+#~ msgstr "fetchmail.config.settings"
