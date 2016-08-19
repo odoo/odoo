@@ -1304,7 +1304,10 @@ class Html(_String):
     type = 'html'
     _slots = {
         'sanitize': True,               # whether value must be sanitized
-        'strip_style': False,           # whether to strip style attributes (otherwise: sanitized)
+        'sanitize_tags': True,          # whether to sanitize tags (only a white list of attributes is accepted)
+        'sanitize_attributes': True,    # whether to sanitize attributes (only a white list of attributes is accepted)
+        'sanitize_style': False,        # whether to sanitize style attributes
+        'strip_style': False,           # whether to strip style attributes (removed and therefore not sanitized)
         'strip_classes': False,         # whether to strip classes attributes
     }
 
@@ -1318,6 +1321,18 @@ class Html(_String):
     _related_sanitize = property(attrgetter('sanitize'))
     _description_sanitize = property(attrgetter('sanitize'))
 
+    _column_sanitize_tags = property(attrgetter('sanitize_tags'))
+    _related_sanitize_tags = property(attrgetter('sanitize_tags'))
+    _description_sanitize_tags = property(attrgetter('sanitize_tags'))
+
+    _column_sanitize_attributes = property(attrgetter('sanitize_attributes'))
+    _related_sanitize_attributes = property(attrgetter('sanitize_attributes'))
+    _description_sanitize_attributes = property(attrgetter('sanitize_attributes'))
+
+    _column_sanitize_style = property(attrgetter('sanitize_style'))
+    _related_sanitize_style = property(attrgetter('sanitize_style'))
+    _description_sanitize_style = property(attrgetter('sanitize_style'))
+
     _column_strip_style = property(attrgetter('strip_style'))
     _related_strip_style = property(attrgetter('strip_style'))
     _description_strip_style = property(attrgetter('strip_style'))
@@ -1330,7 +1345,13 @@ class Html(_String):
         if value is None or value is False:
             return False
         if validate and self.sanitize:
-            return html_sanitize(value, silent=True, strict=True, strip_style=self.strip_style, strip_classes=self.strip_classes)
+            return html_sanitize(
+                value, silent=True,
+                sanitize_tags=self.sanitize_tags,
+                sanitize_attributes=self.sanitize_attributes,
+                sanitize_style=self.sanitize_style,
+                strip_style=self.strip_style,
+                strip_classes=self.strip_classes)
         return value
 
 

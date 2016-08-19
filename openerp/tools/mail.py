@@ -50,6 +50,9 @@ class _Cleaner(clean.Cleaner):
         # tables
         'border-collapse', 'border-spacing', 'caption-side', 'empty-cells', 'table-layout']
 
+    strip_classes = False
+    sanitize_style = False
+
     def __call__(self, doc):
         # perform quote detection before cleaning and class removal
         for el in doc.iter():
@@ -57,8 +60,13 @@ class _Cleaner(clean.Cleaner):
 
         super(_Cleaner, self).__call__(doc)
 
+        # if we keep attributes but still remove classes
+        if not getattr(self, 'safe_attrs_only', False) and self.strip_classes:
+            for el in doc.iter():
+                self.strip_class(el)
+
         # if we keep style attribute, sanitize them
-        if not self.style:
+        if not self.style and self.sanitize_style:
             for el in doc.iter():
                 self.parse_style(el)
 
@@ -123,6 +131,10 @@ class _Cleaner(clean.Cleaner):
         if el.getparent() is not None and (el.getparent().get('data-o-mail-quote') or el.getparent().get('data-o-mail-quote-container')) and not el.getparent().get('data-o-mail-quote-node'):
             el.set('data-o-mail-quote', '1')
 
+    def strip_class(self, el):
+        if el.attrib.get('class'):
+            del el.attrib['class']
+
     def parse_style(self, el):
         attributes = el.attrib
         styling = attributes.get('style')
@@ -143,7 +155,7 @@ class _Cleaner(clean.Cleaner):
         return super(_Cleaner, self).allow_element(el)
 
 
-def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_classes=False):
+def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=False, sanitize_style=False, strip_style=False, strip_classes=False):
     if not src:
         return src
     src = ustr(src, errors='replace')
@@ -164,35 +176,38 @@ def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_class
 
     kwargs = {
         'page_structure': True,
-        'style': strip_style,       # True = remove style tags/attrs
-        'forms': True,              # remove form tags
+        'style': strip_style,              # True = remove style tags/attrs
+        'sanitize_style': sanitize_style,  # True = sanitize styling
+        'forms': True,                     # True = remove form tags
         'remove_unknown_tags': False,
-        'allow_tags': allowed_tags,
         'comments': False,
         'processing_instructions': False
     }
-    if etree.LXML_VERSION >= (2, 3, 1):
-        # kill_tags attribute has been added in version 2.3.1
+    if sanitize_tags:
+        kwargs['allow_tags'] = allowed_tags
+        if etree.LXML_VERSION >= (2, 3, 1):
+            # kill_tags attribute has been added in version 2.3.1
+            kwargs.update({
+                'kill_tags': tags_to_kill,
+                'remove_tags': tags_to_remove,
+            })
+        else:
+            kwargs['remove_tags'] = tags_to_kill + tags_to_remove
+
+    if sanitize_attributes and etree.LXML_VERSION >= (3, 1, 0):  # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attributes in order to keep "style"
+        if strip_classes:
+            current_safe_attrs = safe_attrs - frozenset(['class'])
+        else:
+            current_safe_attrs = safe_attrs
         kwargs.update({
-            'kill_tags': tags_to_kill,
-            'remove_tags': tags_to_remove,
+            'safe_attrs_only': True,
+            'safe_attrs': current_safe_attrs,
         })
     else:
-        kwargs['remove_tags'] = tags_to_kill + tags_to_remove
-
-    if strict:
-        if etree.LXML_VERSION >= (3, 1, 0):
-            # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attributes in order to keep "style"
-            if strip_classes:
-                current_safe_attrs = safe_attrs - frozenset(['class'])
-            else:
-                current_safe_attrs = safe_attrs
-            kwargs.update({
-                'safe_attrs_only': True,
-                'safe_attrs': current_safe_attrs,
-            })
-    else:
-        kwargs['safe_attrs_only'] = False    # keep oe-data attributes + style
+        kwargs.update({
+            'safe_attrs_only': False,  # keep oe-data attributes + style
+            'strip_classes': strip_classes,  # remove classes, even when keeping other attributes
+        })
 
     try:
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)

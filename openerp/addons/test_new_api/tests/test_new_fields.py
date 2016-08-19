@@ -605,9 +605,9 @@ class TestHtmlField(common.TransactionCase):
 
     def test_00_sanitize(self):
         self.assertEqual(self.model._fields['comment1'].sanitize, False)
-        self.assertEqual(self.model._fields['comment2'].sanitize, True)
+        self.assertEqual(self.model._fields['comment2'].sanitize_attributes, True)
         self.assertEqual(self.model._fields['comment2'].strip_classes, False)
-        self.assertEqual(self.model._fields['comment3'].sanitize, True)
+        self.assertEqual(self.model._fields['comment3'].sanitize_attributes, True)
         self.assertEqual(self.model._fields['comment3'].strip_classes, True)
 
         some_ugly_html = """<p>Oops this should maybe be sanitized

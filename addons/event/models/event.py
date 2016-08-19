@@ -184,7 +184,7 @@ class EventEvent(models.Model):
         readonly=False, states={'done': [('readonly', True)]})
     country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True)
     description = fields.Html(
-        string='Description', oldname='note', translate=html_translate, sanitize=False,
+        string='Description', oldname='note', translate=html_translate, sanitize_attributes=False,
         readonly=False, states={'done': [('readonly', True)]})
     # badge fields
     badge_front = fields.Html(string='Badge Front')

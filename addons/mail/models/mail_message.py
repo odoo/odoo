@@ -50,7 +50,7 @@ class Message(models.Model):
     # content
     subject = fields.Char('Subject')
     date = fields.Datetime('Date', default=fields.Datetime.now)
-    body = fields.Html('Contents', default='', strip_classes=True)
+    body = fields.Html('Contents', default='', sanitize_style=True, strip_classes=True)
     attachment_ids = fields.Many2many(
         'ir.attachment', 'message_attachment_rel',
         'message_id', 'attachment_id',

@@ -339,18 +339,26 @@ class text(_column):
 class html(text):
     _type = 'html'
     _symbol_c = '%s'
-    __slots__ = ['_sanitize', '_strip_style', '_strip_classes', '_symbol_f', '_symbol_set']
+    __slots__ = ['_sanitize', '_sanitize_tags', '_sanitize_attributes', '_sanitize_style', '_strip_style', '_strip_classes', '_symbol_f', '_symbol_set']
 
     def _symbol_set_html(self, value):
         if value is None or value is False:
             return None
         if not self._sanitize:
             return value
-        return html_sanitize(value, silent=True, strict=True, strip_style=self._strip_style, strip_classes=self._strip_classes)
+        return html_sanitize(
+            value, silent=True,
+            sanitize_attributes=self._sanitize_attributes,
+            sanitize_style=self._sanitize_style,
+            strip_style=self._strip_style,
+            strip_classes=self._strip_classes)
 
-    def __init__(self, string='unknown', sanitize=True, strip_style=False, strip_classes=False, **args):
+    def __init__(self, string='unknown', sanitize=True, sanitize_tags=True, sanitize_attributes=True, sanitize_style=False, strip_style=False, strip_classes=False, **args):
         super(html, self).__init__(string=string, **args)
         self._sanitize = sanitize
+        self._sanitize_tags = sanitize_tags
+        self._sanitize_attributes = sanitize_attributes
+        self._sanitize_style = sanitize_style
         self._strip_style = strip_style
         self._strip_classes = strip_classes
         # symbol_set redefinition because of sanitize specific behavior
@@ -360,6 +368,9 @@ class html(text):
     def to_field_args(self):
         args = super(html, self).to_field_args()
         args['sanitize'] = self._sanitize
+        args['sanitize_tags'] = self._sanitize_tags
+        args['sanitize_attributes'] = self._sanitize_attributes
+        args['sanitize_style'] = self._sanitize_style
         args['strip_style'] = self._strip_style
         args['strip_classes'] = self._strip_classes
         return args

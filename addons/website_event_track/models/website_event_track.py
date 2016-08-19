@@ -49,7 +49,7 @@ class Track(models.Model):
     state = fields.Selection([
         ('draft', 'Proposal'), ('confirmed', 'Confirmed'), ('announced', 'Announced'), ('published', 'Published'), ('refused', 'Refused'), ('cancel', 'Cancelled')],
         'Status', default='draft', required=True, copy=False, track_visibility='onchange')
-    description = fields.Html('Track Description', translate=html_translate, sanitize=False)
+    description = fields.Html('Track Description', translate=html_translate, sanitize_attributes=False)
     date = fields.Datetime('Track Date')
     duration = fields.Float('Duration', default=1.5)
     location_id = fields.Many2one('event.track.location', 'Room')
