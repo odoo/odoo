@@ -857,11 +857,7 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
         fp.close()
 
 def convert_sql_import(cr, fp):
-    queries = fp.read().split(';')
-    for query in queries:
-        new_query = ' '.join(query.split())
-        if new_query:
-            cr.execute(new_query)
+    cr.execute(fp.read())
 
 def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         noupdate=False):
