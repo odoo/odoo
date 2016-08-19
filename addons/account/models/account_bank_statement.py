@@ -185,14 +185,6 @@ class AccountBankStatement(models.Model):
                         % (balance_end_real, balance_end))
         return True
 
-    @api.model
-    def create(self, vals):
-        if not vals.get('name'):
-            journal_id = vals.get('journal_id', self._context.get('default_journal_id', False))
-            journal = self.env['account.journal'].browse(journal_id)
-            vals['name'] = journal.sequence_id.with_context(ir_sequence_date=vals.get('date')).next_by_id()
-        return super(AccountBankStatement, self).create(vals)
-
     @api.multi
     def unlink(self):
         for statement in self:
@@ -378,6 +370,9 @@ class AccountBankStatementLine(models.Model):
     journal_entry_ids = fields.One2many('account.move', 'statement_line_id', 'Journal Entries', copy=False, readonly=True)
     amount_currency = fields.Monetary(help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one('res.currency', string='Currency', help="The optional other currency if it is a multi-currency entry.")
+    move_name = fields.Char(string='Journal Entry Name', readonly=True,
+        default=False, copy=False,
+        help="Technical field holding the number given to the journal entry, automatically set when the statement line is reconciled then stored to set the same number again if the line is cancelled, set to draft and re-processed again.")
 
     @api.one
     @api.constrains('amount')
@@ -412,6 +407,8 @@ class AccountBankStatementLine(models.Model):
         for line in self:
             if line.journal_entry_ids.ids:
                 raise UserError(_('In order to delete a bank statement line, you must first cancel it to delete related journal items.'))
+            if line.move_name:
+                raise UserError(_('It is not allowed to delete a bank statement line that already created a journal entry since it would create a gap in the numbering. You should create the journal entry again and cancel it thanks to a regular revert.'))
         return super(AccountBankStatementLine, self).unlink()
 
     @api.model
@@ -429,7 +426,7 @@ class AccountBankStatementLine(models.Model):
             for move in st_line.journal_entry_ids:
                 for line in move.line_ids:
                     payment_to_unreconcile |= line.payment_id
-                    if st_line.statement_id.name == line.payment_id.name:
+                    if st_line.move_name and line.payment_id.payment_reference == st_line.move_name:
                         #there can be several moves linked to a statement line but maximum one created by the line itself
                         moves_to_cancel |= st_line.journal_entry_ids
                         payment_to_cancel |= line.payment_id
@@ -709,20 +706,25 @@ class AccountBankStatementLine(models.Model):
             self.env['account.move.line'].invalidate_cache()
             return False
 
-    def _prepare_reconciliation_move(self, move_name):
+    def _prepare_reconciliation_move(self, move_ref):
         """ Prepare the dict of values to create the move from a statement line. This method may be overridden to adapt domain logic
             through model inheritance (make sure to call super() to establish a clean extension chain).
 
-           :param char st_line_number: will be used as the name of the generated account move
+           :param char move_ref: will be used as the reference of the generated account move
            :return: dict of value to create() the account.move
         """
-        return {
+        ref = move_ref or ''
+        if self.ref:
+            ref = move_ref + ' - ' + self.ref if move_ref else self.ref
+        data = {
             'statement_line_id': self.id,
             'journal_id': self.statement_id.journal_id.id,
             'date': self.date,
-            'name': move_name,
-            'ref': self.ref,
+            'ref': ref,
         }
+        if self.move_name:
+            data.update(name=self.move_name)
+        return data
 
     def _prepare_reconciliation_move_line(self, move, amount):
         """ Prepare the dict of values to create the move line from a statement line.
@@ -755,7 +757,6 @@ class AccountBankStatementLine(models.Model):
         return {
             'name': self.name,
             'date': self.date,
-            'ref': self.ref,
             'move_id': move.id,
             'partner_id': self.partner_id and self.partner_id.id or False,
             'account_id': amount >= 0 \
@@ -864,13 +865,12 @@ class AccountBankStatementLine(models.Model):
 
             # Create the move
             self.sequence = self.statement_id.line_ids.ids.index(self.id) + 1
-            move_name = (self.statement_id.name or self.name) + "/" + str(self.sequence)
-            move_vals = self._prepare_reconciliation_move(move_name)
+            move_vals = self._prepare_reconciliation_move(self.statement_id.name)
             move = self.env['account.move'].create(move_vals)
             counterpart_moves = (counterpart_moves | move)
 
             # Create The payment
-            payment_id = False
+            payment = False
             if abs(total)>0.00001:
                 partner_id = self.partner_id and self.partner_id.id or False
                 partner_type = False
@@ -882,7 +882,7 @@ class AccountBankStatementLine(models.Model):
 
                 payment_methods = (total>0) and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
                 currency = self.journal_id.currency_id or self.company_id.currency_id
-                payment_id = self.env['account.payment'].create({
+                payment = self.env['account.payment'].create({
                     'payment_method_id': payment_methods and payment_methods[0].id or False,
                     'payment_type': total >0 and 'inbound' or 'outbound',
                     'partner_id': self.partner_id and self.partner_id.id or False,
@@ -894,7 +894,7 @@ class AccountBankStatementLine(models.Model):
                     'amount': abs(total),
                     'communication': self.name or '',
                     'name': self.statement_id.name,
-                }).id
+                })
 
             # Complete dicts to create both counterpart move lines and write-offs
             to_create = (counterpart_aml_dicts + new_aml_dicts)
@@ -926,7 +926,7 @@ class AccountBankStatementLine(models.Model):
 
             # Create write-offs
             for aml_dict in new_aml_dicts:
-                aml_dict['payment_id'] = payment_id
+                aml_dict['payment_id'] = payment and payment.id or False
                 aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
             # Create counterpart move lines and reconcile them
@@ -934,7 +934,7 @@ class AccountBankStatementLine(models.Model):
                 if aml_dict['move_line'].partner_id.id:
                     aml_dict['partner_id'] = aml_dict['move_line'].partner_id.id
                 aml_dict['account_id'] = aml_dict['move_line'].account_id.id
-                aml_dict['payment_id'] = payment_id
+                aml_dict['payment_id'] = payment and payment.id or False
 
                 counterpart_move_line = aml_dict.pop('move_line')
                 if counterpart_move_line.currency_id and counterpart_move_line.currency_id != company_currency and not aml_dict.get('currency_id'):
@@ -948,9 +948,14 @@ class AccountBankStatementLine(models.Model):
             # This leaves out the amount already reconciled and avoids rounding errors from currency conversion
             st_line_amount = -sum([x.balance for x in move.line_ids])
             aml_dict = self._prepare_reconciliation_move_line(move, st_line_amount)
-            aml_dict['payment_id'] = payment_id
-            aml_obj.with_context(check_move_validity=False).create(aml_dict)            
+            aml_dict['payment_id'] = payment and payment.id or False
+            aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
             move.post()
+            #record the move name on the statement line to be able to retrieve it in case of unreconciliation
+            self.write({'move_name': move.name})
+            payment.write({'payment_reference': move.name})
+        elif self.move_name:
+            raise UserError(_('Operation not allowed. Since your statement line already received a number, you cannot reconcile it entirely with existing journal entries otherwise it would make a gap in the numbering. You should book an entry and make a regular revert of it in case you want to cancel it.'))
         counterpart_moves.assert_balanced()
         return counterpart_moves
