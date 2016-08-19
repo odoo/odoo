@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-06-08 11:36+0000\n"
+"PO-Revision-Date: 2016-08-12 14:39+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-8/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -1303,7 +1303,7 @@ msgstr "Sve odabrane stavke dnevnika će biti potvrđene i objavljene. To znači
 msgid ""
 "All the account entries lines must be processed in order to close the "
 "statement."
-msgstr ""
+msgstr "Sve stavke knjiženja moraju biti završene kako bi mogli zatvoriti izvod."
 
 #. module: account
 #: field:account.journal,update_posted:0
@@ -1588,7 +1588,7 @@ msgstr "Primjenjuje se"
 #: field:account.tax,python_applicable:0
 #: field:account.tax.template,python_applicable:0
 msgid "Applicable Code"
-msgstr ""
+msgstr "Primjenjiva šifra"
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -1887,12 +1887,12 @@ msgstr "Detalji banke"
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_tree
 msgid "Bank Reconciliation Move Presets"
-msgstr ""
+msgstr "Zadane postavke zatvaranja izvoda banke"
 
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_search
 msgid "Bank Reconciliation Move preset"
-msgstr ""
+msgstr "Zadana postavka zatvaranja izvoda banke"
 
 #. module: account
 #: view:account.bank.statement:account.view_account_bank_statement_filter
@@ -2206,7 +2206,7 @@ msgstr "Nije moguće izraditi račun.\nPovezani način plaćanja je vjerojatno k
 msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
-msgstr ""
+msgstr "Ne postoji kontni plan za ovu tvrtku. Morate ga postaviti.\nPogledajte postavke računovodstva."
 
 #. module: account
 #: code:addons/account/account_move_line.py:551
@@ -2214,7 +2214,7 @@ msgstr ""
 msgid ""
 "Cannot find any account journal of \"%s\" type for this company, You should create one.\n"
 " Please go to Journal Configuration"
-msgstr ""
+msgstr "Za ovu tvrtku ne postoji dnevnik vrste \"%s\".\nPogledajte konfiguraciju dnevnika."
 
 #. module: account
 #: code:addons/account/account_invoice.py:591
@@ -3054,7 +3054,7 @@ msgstr "Storniraj dokument"
 #: code:addons/account/static/src/js/account_widgets.js:1294
 #, python-format
 msgid "Create Write-off"
-msgstr ""
+msgstr "Kreiraj otpis"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -3925,7 +3925,7 @@ msgstr "Efektivni datum"
 #: code:addons/account/static/src/js/account_widgets.js:538
 #, python-format
 msgid "Efficiency at its finest"
-msgstr ""
+msgstr "Efikasnost na najbolji način"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_email_templates
@@ -4309,7 +4309,7 @@ msgstr "Prošireni filtri..."
 #: code:addons/account/static/src/js/account_widgets.js:545
 #, python-format
 msgid "Fast reconciler"
-msgstr ""
+msgstr "Brzo zatvaranje"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -5217,7 +5217,7 @@ msgstr "Da bi zatvorili period, morate prvo proknjižiti temeljnice iz tog perio
 msgid ""
 "In order to delete a bank statement line, you must first cancel it to delete"
 " related journal items."
-msgstr ""
+msgstr "Kako bi izbrisali bankovni izvod, morate ga prvo otkazati kako bi se obrisale sve stavke dnevnika povezane s njim."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:392
@@ -5849,7 +5849,7 @@ msgstr "Dnevnik za analitiku"
 #. module: account
 #: view:account.invoice.report:account.view_account_invoice_report_search
 msgid "Journal invoices with period in current year"
-msgstr ""
+msgstr "Dnevnik računa sa razdobljem u trenutnoj godini"
 
 #. module: account
 #: field:account.journal.period,name:0
@@ -6840,7 +6840,7 @@ msgstr "Samo administrator može promijeniti postavke"
 #: code:addons/account/static/src/js/account_widgets.js:539
 #, python-format
 msgid "Only use the ctrl-enter shortcut to validate reconciliations."
-msgstr ""
+msgstr "Koristite samo kraticu ctrl-enter za potvrdu zatvaranja."
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_search
@@ -8013,7 +8013,7 @@ msgstr "Zatvaranje s otpisom."
 #: code:addons/account/static/src/js/account_tour_bank_statement_reconciliation.js:8
 #, python-format
 msgid "Reconcile the demo bank statement"
-msgstr ""
+msgstr "Zatvaranje demo izvoda banke"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -9200,7 +9200,7 @@ msgstr "Podigni novac"
 #: code:addons/account/static/src/js/account_widgets.js:546
 #, python-format
 msgid "Take on average less than 5 seconds to reconcile a transaction."
-msgstr ""
+msgstr "U prosjeku je potrebno manje od 5 sekunda za zatvaranje transakcije."
 
 #. module: account
 #: field:account.aged.trial.balance,target_move:0
@@ -9608,7 +9608,7 @@ msgstr "Iznos iskazan u valuti konta ako nije isti valuti kompanije."
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
 " is debited and negative when account is credited."
-msgstr ""
+msgstr "Iznos iskazan u sekundarnoj valuti mora imati pozitivan predznak kada konto duguje i negativan predznak kada konto potražuje. "
 
 #. module: account
 #: help:account.statement.operation.template,amount:0
@@ -9621,7 +9621,7 @@ msgstr ""
 #: code:addons/account/account_bank_statement.py:728
 #, python-format
 msgid "The bank statement line was already reconciled."
-msgstr ""
+msgstr "Stavka bankovnog izvoda je već zatvorena."
 
 #. module: account
 #: help:account.move.line,statement_id:0
@@ -9656,7 +9656,7 @@ msgstr "Oznaka će biti vidljiva na izvještajima."
 #: help:account.invoice,commercial_partner_id:0
 msgid ""
 "The commercial entity that will be used on Journal Entries for this invoice"
-msgstr ""
+msgstr "Zapis koji će se koristiti u temeljnici za ovaj račun"
 
 #. module: account
 #: constraint:account.config.settings:0
@@ -10060,7 +10060,7 @@ msgstr "Konto potraživanja od kupaca za ovog partnera, ako je različit od uobi
 msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n"
 "-This installs the module account_budget."
-msgstr ""
+msgstr "Ovo omogućuje računovođama planiranje budžeta. \nKada se postave glavni budžet i ostali budžeti, menadžeri mogu postaviti planirani iznos na svaki analitički konto.\n-Ovo instalira modul account_budget."
 
 #. module: account
 #: help:account.config.settings,module_account_followup:0
@@ -10169,7 +10169,7 @@ msgid ""
 "This field is used to record the third party name when importing bank "
 "statement in electronic format, when the partner doesn't exist yet in the "
 "database (or cannot be found)."
-msgstr ""
+msgstr "Ovo polje se koristi za bilježenje naziva stranke prilikom importa izvoda banke, kada partner nije u bazi (ili ga se ne može pronaći)."
 
 #. module: account
 #: help:account.partner.reconcile.process,next_partner_id:0
@@ -10284,7 +10284,7 @@ msgstr "Ova opcionalno polje vam omogućava da povežete predložak konta na odr
 msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
 "provides with a neat interface to do so."
-msgstr ""
+msgstr "Ovdje se prikazuju sve transakcije banke koje su za zatvaranje i omogućuje se zatvaranje."
 
 #. module: account
 #: help:res.partner,property_supplier_payment_term:0
@@ -10316,7 +10316,7 @@ msgid ""
 "This technical field can be used at the statement line creation/import time "
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
-msgstr ""
+msgstr "Ovo polje se može koristiti za dodavanje stavaka izvoda i time izbjegnete proces zatvaranja kasnije. Stavka izvoda će kreirati protustavku ovom kontu"
 
 #. module: account
 #: help:account.account.template,type:0 help:account.entries.report,type:0
@@ -11557,7 +11557,7 @@ msgstr "Kako bi automatski knjižili stavke temeljnice vezane za ralike tečaja,
 msgid ""
 "You should have defined an 'Internal Transfer Account' in your cash "
 "register's journal!"
-msgstr ""
+msgstr "Morate odrediti 'Prijelazni konto' u dnevniku blagajne!"
 
 #. module: account
 #. openerp-web
