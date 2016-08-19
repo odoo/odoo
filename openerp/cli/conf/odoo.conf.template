@@ -1,0 +1,10 @@
+[options]
+logfile = /var/log/odoo/{{hostname|snake}}.log
+logrotate = True
+proxy_mode = True
+workers = {{workers}}
+max_cron_threads = 1
+db_maxconn = 4
+xmlrpc_interface = 127.0.0.1
+xmlrpc_port = {{port}}
+longpolling_port = {{longpoll_port}}
