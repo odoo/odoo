@@ -1619,92 +1619,13 @@ class sparse(function):
     __slots__ = ['serialization_field']
 
     def convert_value(self, obj, cr, uid, record, value, read_value, context=None):        
-        """
-            + For a many2many field, a list of tuples is expected.
-              Here is the list of tuple that are accepted, with the corresponding semantics ::
-
-                 (0, 0,  { values })    link to a new record that needs to be created with the given values dictionary
-                 (1, ID, { values })    update the linked record with id = ID (write *values* on it)
-                 (2, ID)                remove and delete the linked record with id = ID (calls unlink on ID, that will delete the object completely, and the link to it as well)
-                 (3, ID)                cut the link to the linked record with id = ID (delete the relationship between the two objects but does not delete the target object itself)
-                 (4, ID)                link to existing record with id = ID (adds a relationship)
-                 (5)                    unlink all (like using (3,ID) for all linked records)
-                 (6, 0, [IDs])          replace the list of linked IDs (like using (5) then (4,ID) for each ID in the list of IDs)
-
-                 Example:
-                    [(6, 0, [8, 5, 6, 4])] sets the many2many to ids [8, 5, 6, 4]
-
-            + For a one2many field, a lits of tuples is expected.
-              Here is the list of tuple that are accepted, with the corresponding semantics ::
-
-                 (0, 0,  { values })    link to a new record that needs to be created with the given values dictionary
-                 (1, ID, { values })    update the linked record with id = ID (write *values* on it)
-                 (2, ID)                remove and delete the linked record with id = ID (calls unlink on ID, that will delete the object completely, and the link to it as well)
-
-                 Example:
-                    [(0, 0, {'field_name':field_value_record1, ...}), (0, 0, {'field_name':field_value_record2, ...})]
-        """
-
-        if self._type == 'many2many':
-            if not value:
-                return []
-            assert value[0][0] == 6, 'Unsupported m2m value for sparse field: %s' % value
-            return value[0][2]
-
-        elif self._type == 'one2many':
-            if not read_value:
-                read_value = []
-            relation_obj = obj.pool[self.relation]
-            for vals in value:
-                assert vals[0] in (0,1,2), 'Unsupported o2m value for sparse field: %s' % vals
-                if vals[0] == 0:
-                    read_value.append(relation_obj.create(cr, uid, vals[2], context=context))
-                elif vals[0] == 1:
-                    relation_obj.write(cr, uid, vals[1], vals[2], context=context)
-                elif vals[0] == 2:
-                    relation_obj.unlink(cr, uid, vals[1], context=context)
-                    read_value.remove(vals[1])
-            return read_value
-        return value
+        raise TypeError("Dead method")
 
     def _sparse_write(self,obj,cr, uid, ids, field_name, value, args, context=None):
-        if not type(ids) == list:
-            ids = [ids]
-        records = obj.browse(cr, uid, ids, context=context)
-        for record in records:
-            # grab serialized value as object - already deserialized
-            serialized = getattr(record, self.serialization_field)
-            if value is None:
-                # simply delete the key to unset it.
-                serialized.pop(field_name, None)
-            else: 
-                serialized[field_name] = self.convert_value(obj, cr, uid, record, value, serialized.get(field_name), context=context)
-            obj.write(cr, uid, ids, {self.serialization_field: serialized}, context=context)
-        return True
+        raise TypeError("Dead method")
 
     def _sparse_read(self, obj, cr, uid, ids, field_names, args, context=None):
-        results = {}
-        records = obj.browse(cr, uid, ids, context=context)
-        for record in records:
-            # grab serialized value as object - already deserialized
-            serialized = getattr(record, self.serialization_field)
-            results[record.id] = {}
-            for field_name in field_names:
-                field_type = obj._columns[field_name]._type
-                value = serialized.get(field_name, False)
-                if field_type in ('one2many','many2many'):
-                    value = value or []
-                    if value:
-                        # filter out deleted records as superuser
-                        relation_obj = obj.pool[obj._columns[field_name].relation]
-                        value = relation_obj.exists(cr, openerp.SUPERUSER_ID, value)
-                if type(value) in (int,long) and field_type == 'many2one':
-                    relation_obj = obj.pool[obj._columns[field_name].relation]
-                    # check for deleted record as superuser
-                    if not relation_obj.exists(cr, openerp.SUPERUSER_ID, [value]):
-                        value = False
-                results[record.id][field_name] = value
-        return results
+        raise TypeError("Dead method")
 
     def __init__(self, serialization_field, **kwargs):
         self.serialization_field = serialization_field
