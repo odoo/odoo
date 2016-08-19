@@ -26,12 +26,6 @@ class event_config_settings(models.TransientModel):
         (0, "Manually confirm every registration")
         ], "Auto Confirmation",
         help='Unselect this option to manually manage draft event and draft registration')
-    group_email_scheduling = fields.Selection([
-        (0, "No automated emails"),
-        (1, 'Schedule emails to attendees and subscribers')
-        ], "Email Scheduling",
-        help='You will be able to configure emails, and to schedule them to be automatically sent to the attendees on registration and/or attendance',
-        implied_group='event.group_email_scheduling')
     module_event_barcode = fields.Boolean("Scan badges to confirm attendances",
         help="Install the event_barcode module")
 
