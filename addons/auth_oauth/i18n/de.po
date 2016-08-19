@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_oauth
-# 
+#
 # Translators:
 # Fabian Liesch <fabian.liesch@gmail.com>, 2016
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
@@ -11,30 +11,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
 "PO-Revision-Date: 2016-06-03 09:33+0000\n"
 "Last-Translator: Fabian Liesch <fabian.liesch@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"<br/>\n"
-"                                    - Ceate a new project<br/>\n"
-"                                    - Go to Api Access<br/>\n"
-"                                    - Create an oauth client_id<br/>\n"
-"                                    - Edit settings and set both Authorized Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
-"                                    <br/>\n"
-"                                    Now copy paste the client_id here:"
-msgstr "<br/>\n                                    - Ein neues Projekt anlegen<br/>\n                                    - Gehe zu API-Zugriff<br/>\n                                    - Legen Sie eine oauth client_id an<br/>\n                                    - Einstellungen bearbeiten und Authorisierte Redirect URIs sowie Authorisierte JavaScript Herkunft auf Ihren hostname einstellen.<br/>\n                                    <br/>\n                                    Jetzt mit copy paste die client_id hier einfügen:"
-
-#. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:99
+#: code:addons/auth_oauth/controllers/main.py:98
 #, python-format
 msgid "Access Denied"
 msgstr "Zugriff verweigert"
@@ -51,6 +39,7 @@ msgstr "Debitorenkonto"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_enabled
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Allow users to sign in with Google"
 msgstr "Erlaube Benutzer sich mit Google Konto einzuloggen"
 
@@ -58,6 +47,12 @@ msgstr "Erlaube Benutzer sich mit Google Konto einzuloggen"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_enabled
 msgid "Allowed"
 msgstr "Erlaubt"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+#, fuzzy
+msgid "Authentication"
+msgstr "Authorisierungs URL"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
@@ -80,6 +75,26 @@ msgid "CSS class"
 msgstr "CSS Klasse"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Check that the application type is set on <b>Web Application</b>. \n"
+"                                        Now configure the allowed pages on "
+"which you will be redirected."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Click on <b>Create Project</b> and enter the project name and \n"
+"                                        other details."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Click on <b>Use Google APIs</b>"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_client_id
 msgid "Client ID"
@@ -89,6 +104,11 @@ msgstr "Client ID"
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_ref_company_ids
 msgid "Companies that refers to partner"
 msgstr "Unternehmen mit Bezug zu diesem Partner"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Connect to your Google account and go to"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contract_ids
@@ -108,7 +128,8 @@ msgstr "Angelegt am"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
-msgid "Currency id"
+#, fuzzy
+msgid "Currency"
 msgstr "Währungs-ID"
 
 #. module: auth_oauth
@@ -122,9 +143,21 @@ msgid "Data URL"
 msgstr "Daten URL"
 
 #. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
+msgid "Degree of trust you have in this debtor"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
 msgid "Display Name"
 msgstr "Anzeigename"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Fill in your address, email and the product name (for example odoo) \n"
+"                                        and then save."
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
@@ -133,8 +166,9 @@ msgstr "Steuerzuordnung"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Google APIs console"
-msgstr "Google APIs Konsole"
+#, fuzzy
+msgid "Google Client ID:"
+msgstr "Client ID"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
@@ -145,6 +179,12 @@ msgstr "Nicht ausgeglichene Einträge vorhanden"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
 msgid "ID"
 msgstr "ID"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
+#, fuzzy
+msgid "Invoice"
+msgstr "Alle Rechnungen"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
@@ -178,12 +218,21 @@ msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
-msgstr "Das letzte Mal, an dem der Rechnungs-/Zahlungsabgleich für diesen Partner durchgeführt wurde. Es wird gesetzt, wenn nicht wenigstens eine unausgeglichene Forderung und eine unausgegliche Verbindlichkeit besteht oder wenn Sie die Schaltfläche \"Erledigt\" gedrückt haben."
+msgstr ""
+"Das letzte Mal, an dem der Rechnungs-/Zahlungsabgleich für diesen Partner "
+"durchgeführt wurde. Es wird gesetzt, wenn nicht wenigstens eine "
+"unausgeglichene Forderung und eine unausgegliche Verbindlichkeit besteht "
+"oder wenn Sie die Schaltfläche \"Erledigt\" gedrückt haben."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
 msgstr "Letzte Rechnungen & Zahlungen am Datum"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
+msgid "Message for Invoice"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
@@ -226,6 +275,23 @@ msgid "Oauth Provider user_id"
 msgstr "Oauth Provider user_id"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"On the left side menu, select the sub menu <b>Credentials</b> \n"
+"                                        (from <b>API Manager</b>) then "
+"select <b>OAuth consent screen</b>."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Once done, you receive two information (your <b>Client ID</b> and <b>\n"
+"                                        Client Secret</b>). You have to "
+"insert your <b>Client ID</b> in \n"
+"                                        the field below."
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
 msgid "Payable Limit"
 msgstr "Kreditlimit"
@@ -241,12 +307,40 @@ msgid "Providers"
 msgstr "Provider"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Return to Top"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
 msgid "Scope"
 msgstr "Gültigkeitsbereich"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:97
+#: model:ir.model.fields,help:auth_oauth.field_res_users_invoice_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
+msgid "Server uri"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Show Tutorial"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
+msgid "Show tutorial"
+msgstr ""
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:96
 #, python-format
 msgid "Sign up is not allowed on this database."
 msgstr "Anmeldungen nimmt diese Datenbank nicht mehr an"
@@ -255,50 +349,86 @@ msgstr "Anmeldungen nimmt diese Datenbank nicht mehr an"
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_position_id
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr "Die Steuerzuordnung steuert die zu benutzenden Steuern und Konten für den Partner."
+msgstr ""
+"Die Steuerzuordnung steuert die zu benutzenden Steuern und Konten für den "
+"Partner."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_has_unreconciled_entries
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr "Der Partner hat mindestens einen nicht ausgeglichenen Soll- oder Habenposten seit dem letzten Abgleich von Rechnungen und Zahlungen."
+msgstr ""
+"Der Partner hat mindestens einen nicht ausgeglichenen Soll- oder Habenposten "
+"seit dem letzten Abgleich von Rechnungen und Zahlungen."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Then click on <b>Add Credentials</b> and select the second option \n"
+"                                        (OAuth 2.0 Client ID)."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Then click on <b>Create</b>."
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr "Dieses Konto wird an Stelle des Standard-Kreditorenkontos für diesen Partner verwendet"
+msgstr ""
+"Dieses Konto wird an Stelle des Standard-Kreditorenkontos für diesen Partner "
+"verwendet"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_receivable_id
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr "Dieses Konto wird als Debitorenkonto für diesen Partner an Stelle des Standardkontos verwendet"
+msgstr ""
+"Dieses Konto wird als Debitorenkonto für diesen Partner an Stelle des "
+"Standardkontos verwendet"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_supplier_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
-msgstr "Diese Zahlungsbedingung wird anstelle der Standardzahlungsbedingung für Bestellaufträge und Lieferantenrechnungen verwendet"
+msgstr ""
+"Diese Zahlungsbedingung wird anstelle der Standardzahlungsbedingung für "
+"Bestellaufträge und Lieferantenrechnungen verwendet"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr "Diese Zahlungsbedingung statt der Standardzahlungsbedingung für Angeobte und Kundenrechnungen verwenden"
+msgstr ""
+"Diese Zahlungsbedingung statt der Standardzahlungsbedingung für Angeobte und "
+"Kundenrechnungen verwenden"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
-"To setup the signin process with Google, first you have to perform the following steps:<br/>\n"
-"                                    <br/>\n"
-"                                    - Go to the"
-msgstr "Zur automatischen Anmeldung mit einem google Konto, müssen Sie zunächst folgendes tun:<br/>\n<br/>\n- Zum"
+"To achieve this, complete the field <b>Authorized redirect URIs</b>.\n"
+"                                        Copy paste the following link in the "
+"box"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+#, fuzzy
+msgid ""
+"To setup the sign in process with Google, you have to perform \n"
+"                                    the following steps first."
+msgstr ""
+"Zur automatischen Anmeldung mit einem google Konto, müssen Sie zunächst "
+"folgendes tun:<br/>\n"
+"<br/>\n"
+"- Zum"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
@@ -346,13 +476,15 @@ msgid "Vendor Payment Term"
 msgstr "Lieferantenzahlungsbedingung"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:101
+#: code:addons/auth_oauth/controllers/main.py:100
 #, python-format
 msgid ""
 "You do not have access to this database or your invitation has expired. "
 "Please ask for an invitation and be sure to follow the link in your "
 "invitation email."
-msgstr "Sie haben keinen Zugriff mehr auf die Datenbank, deren Einladungen mittlerweise ablaufen sind."
+msgstr ""
+"Sie haben keinen Zugriff mehr auf die Datenbank, deren Einladungen "
+"mittlerweise ablaufen sind."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
@@ -371,6 +503,11 @@ msgid "e.g. 1234-xyz.apps.googleusercontent.com"
 msgstr "z. B. 1234-xyz.apps.googleusercontent.com"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "https://console.developers.google.com/"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "ir.config_parameter"
 msgstr "ir.config_parameter"
@@ -379,3 +516,29 @@ msgstr "ir.config_parameter"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
 msgid "unknown"
 msgstr "unbekannt"
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                                    - Ceate a new project<br/>\n"
+#~ "                                    - Go to Api Access<br/>\n"
+#~ "                                    - Create an oauth client_id<br/>\n"
+#~ "                                    - Edit settings and set both "
+#~ "Authorized Redirect URIs and Authorized JavaScript Origins to your "
+#~ "hostname.<br/>\n"
+#~ "                                    <br/>\n"
+#~ "                                    Now copy paste the client_id here:"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                                    - Ein neues Projekt anlegen<br/>\n"
+#~ "                                    - Gehe zu API-Zugriff<br/>\n"
+#~ "                                    - Legen Sie eine oauth client_id "
+#~ "an<br/>\n"
+#~ "                                    - Einstellungen bearbeiten und "
+#~ "Authorisierte Redirect URIs sowie Authorisierte JavaScript Herkunft auf "
+#~ "Ihren hostname einstellen.<br/>\n"
+#~ "                                    <br/>\n"
+#~ "                                    Jetzt mit copy paste die client_id "
+#~ "hier einfügen:"
+
+#~ msgid "Google APIs console"
+#~ msgstr "Google APIs Konsole"

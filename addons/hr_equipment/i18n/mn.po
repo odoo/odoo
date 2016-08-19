@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_equipment
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:27+0000\n"
+"POT-Creation-Date: 2016-08-19 10:26+0000\n"
 "PO-Revision-Date: 2015-12-23 08:27+0000\n"
 "Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
+"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
+"mn/)\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_equipment
@@ -42,7 +43,9 @@ msgstr ""
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr "Python dictionary бөгөөд өөр нэрт шинэ бичлэг үүсгэхэд анхны утгыг олгохоор тооцоологддог."
+msgstr ""
+"Python dictionary бөгөөд өөр нэрт шинэ бичлэг үүсгэхэд анхны утгыг олгохоор "
+"тооцоологддог."
 
 #. module: hr_equipment
 #: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
@@ -51,13 +54,7 @@ msgid "Acer Laptop"
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction
-msgid "Action Needed"
-msgstr "Үйлдэл Шаардлагатай"
-
-#. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_active
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
 msgid "Active"
 msgstr "Идэвхитэй"
@@ -103,13 +100,19 @@ msgid "Apply"
 msgstr "Хэрэглэх"
 
 #. module: hr_equipment
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
 msgid "Asset"
 msgstr "Хөрөнгө"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5383
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5719
 msgid "Asset Category"
 msgstr "Хөрөнгийн Ангилал"
 
@@ -287,13 +290,6 @@ msgid "Current Maintenance"
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_last_post
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_last_post
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_defaults
 msgid "Default Values"
 msgstr "Анхны утгууд"
@@ -410,27 +406,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_follower_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_follower_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_follower_ids
-msgid "Followers"
-msgstr "Дагагчид"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_channel_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_channel_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Дагагчид (Сувагууд)"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_partner_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_partner_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Дагагчид (Харилцагчид)"
-
-#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
@@ -465,30 +440,11 @@ msgstr "ID"
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
-msgstr "Хуурмаг нэрийг агуулж байгаа эх бичлэгийн ID (Ж: даалгавар үүсгэсэн хуурмаг нэрийг агуулж байгаа төсөл)"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг шаардана."
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
-
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "Important Messages"
-msgstr "Чухал зурвасууд"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
+msgstr ""
+"Хуурмаг нэрийг агуулж байгаа эх бичлэгийн ID (Ж: даалгавар үүсгэсэн хуурмаг "
+"нэрийг агуулж байгаа төсөл)"
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
@@ -502,23 +458,9 @@ msgid "Internal Note ......."
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_is_follower
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_is_follower
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_is_follower
-msgid "Is Follower"
-msgstr "Дагагч эсэх"
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_kanban_state
 msgid "Kanban State"
 msgstr "Канбан Төлөв"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_last_post
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_last_post
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_last_post
-msgid "Last Message Date"
-msgstr "Сүүлийн зурвасын огноо"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment___last_update
@@ -616,20 +558,6 @@ msgid "Maintenance ids"
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_ids
-msgid "Messages"
-msgstr "Зурвасууд"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_ids
-msgid "Messages and communication history"
-msgstr "Зурвас болон харилцсан түүх"
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_model
 msgid "Model"
 msgstr "Модел"
@@ -672,38 +600,15 @@ msgid "Note"
 msgstr "Тэмдэглэл"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Үйлдлийн тоо"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Үйлдэл шаардлагатай зурвасын тоо"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread_counter
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Уншаагүй зурвасын тоо"
-
-#. module: hr_equipment
-#: model:ir.actions.client,name:hr_equipment.action_client_hr_equipment_menu
-msgid "Open Equipments Menu"
-msgstr ""
-
-#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "Мөчирийн сонгож болох ID хувийн дугаар бөгөөд ирж буй зурвасууд нь хариулт биш байсан ч хамаагүй холбогдоно. Хэрэв сонгосон байвал шинэ бичлэг үүсэх явдлыг бүхэлд нь байхгүй болгоно."
+msgstr ""
+"Мөчирийн сонгож болох ID хувийн дугаар бөгөөд ирж буй зурвасууд нь хариулт "
+"биш байсан ч хамаагүй холбогдоно. Хэрэв сонгосон байвал шинэ бичлэг үүсэх "
+"явдлыг бүхэлд нь байхгүй болгоно."
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_user_id
@@ -723,10 +628,13 @@ msgstr "Эцэг салбар бичлэгийн ID"
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
-msgstr "Өөр хуурмаг нэрийг хадгалагч модель.  Хуурмаг нэрийн сурвалж хадгалагч модель нь alias_model_id-р өгөгдөх модель байх албагүй (жишээ: төсөл (parent_model) ба даалгавар (model))"
+msgstr ""
+"Өөр хуурмаг нэрийг хадгалагч модель.  Хуурмаг нэрийн сурвалж хадгалагч "
+"модель нь alias_model_id-р өгөгдөх модель байх албагүй (жишээ: төсөл "
+"(parent_model) ба даалгавар (model))"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
@@ -735,12 +643,18 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
+#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
-msgstr "mailgateway ашиглан баримтанд зурвас илгээх бодлого.\n- бүгд: бигд илгээж болно\n- харилцагчид: зөвхөн баталгаажсан харилцагчид\n- дагагчид: баримтын зөвхөн дагагчид\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
+msgstr ""
+"mailgateway ашиглан баримтанд зурвас илгээх бодлого.\n"
+"- бүгд: бигд илгээж болно\n"
+"- харилцагчид: зөвхөн баталгаажсан харилцагчид\n"
+"- дагагчид: баримтын зөвхөн дагагчид\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -907,17 +821,22 @@ msgstr ""
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
-msgstr "Хуурмаг нэрийн харгалзах модель (Odoo-н баримтын төрөл). Байгаа ямар нэг бичлэг рүү хариулж байгаа биш бүх эмэйл энэ моделийн шин бичлэгийг үүсгэнэ (Ж. Төслийн даалгавар)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
+msgstr ""
+"Хуурмаг нэрийн харгалзах модель (Odoo-н баримтын төрөл). Байгаа ямар нэг "
+"бичлэг рүү хариулж байгаа биш бүх эмэйл энэ моделийн шин бичлэгийг үүсгэнэ "
+"(Ж. Төслийн даалгавар)"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "эмэйл хуурмаг нэр, Ж. 'jobs' гэдэгээр <jobs@example.odoo.com> хаягийн эмэйлийг бүгдийг хүлээн авч байгаа бол"
+msgstr ""
+"эмэйл хуурмаг нэр, Ж. 'jobs' гэдэгээр <jobs@example.odoo.com> хаягийн "
+"эмэйлийг бүгдийг хүлээн авч байгаа бол"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_user_id
@@ -926,14 +845,20 @@ msgid ""
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
-msgstr "Энэ нэр дээр хүлээн авсан имэйлээ үүсэх бичлэгүүдийн эзэмшигч. Хэрэв энэ талбар тохируулагдаагүй байвал илгээгчийн хаягаас эзэмшигчийг автоматаар тогтоох гэж систем оролдоно. Эсвэл системийн хэрэглэгч олдохгүй бол  Administrator-ийг онооно."
+msgstr ""
+"Энэ нэр дээр хүлээн авсан имэйлээ үүсэх бичлэгүүдийн эзэмшигч. Хэрэв энэ "
+"талбар тохируулагдаагүй байвал илгээгчийн хаягаас эзэмшигчийг автоматаар "
+"тогтоох гэж систем оролдоно. Эсвэл системийн хэрэглэгч олдохгүй бол  "
+"Administrator-ийг онооно."
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment to\n"
-"                an employee or departement. You will manage allocations, issues\n"
+"                Create some laptop, printer or phone and link each equipment "
+"to\n"
+"                an employee or departement. You will manage allocations, "
+"issues\n"
 "                and maintenance of equipment."
 msgstr ""
 
@@ -941,8 +866,10 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment to an employee or departement.\n"
-"                You will manage allocations, issues and mainteannce of equipment."
+"                Create some laptop, printer or phone and link each equipment "
+"to an employee or departement.\n"
+"                You will manage allocations, issues and maintenance of "
+"equipment."
 msgstr ""
 
 #. module: hr_equipment
@@ -961,18 +888,11 @@ msgid "Under Maintenance"
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_unread
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Unread Messages"
 msgstr "Уншаагүй Зурвасууд"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_unread_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread_counter
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Уншаагүй зурвасын тоолуур"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_equipment_alias_prefix
@@ -1012,25 +932,11 @@ msgid "Warranty"
 msgstr "Баталгаа"
 
 #. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_website_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_website_message_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_website_message_ids
-msgid "Website Messages"
-msgstr "Вебсайтын зурвасууд"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_website_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_website_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_website_message_ids
-msgid "Website communication history"
-msgstr "Вебсайтын харилцааны түүх"
-
-#. module: hr_equipment
 #: code:addons/hr_equipment/models/hr_equipment.py:71
 #, python-format
 msgid ""
-"You cannot delete an equipment category containing equipments or maintenance"
-" requests."
+"You cannot delete an equipment category containing equipments or maintenance "
+"requests."
 msgstr ""
 
 #. module: hr_equipment
@@ -1047,3 +953,59 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 msgid "maintenance Request Search"
 msgstr ""
+
+#~ msgid "Action Needed"
+#~ msgstr "Үйлдэл Шаардлагатай"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
+
+#~ msgid "Followers"
+#~ msgstr "Дагагчид"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Дагагчид (Сувагууд)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Дагагчид (Харилцагчид)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr ""
+#~ "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг "
+#~ "шаардана."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
+
+#~ msgid "Important Messages"
+#~ msgstr "Чухал зурвасууд"
+
+#~ msgid "Is Follower"
+#~ msgstr "Дагагч эсэх"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Сүүлийн зурвасын огноо"
+
+#~ msgid "Messages"
+#~ msgstr "Зурвасууд"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Зурвас болон харилцсан түүх"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Үйлдлийн тоо"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Үйлдэл шаардлагатай зурвасын тоо"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Уншаагүй зурвасын тоо"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Уншаагүй зурвасын тоолуур"
+
+#~ msgid "Website Messages"
+#~ msgstr "Вебсайтын зурвасууд"
+
+#~ msgid "Website communication history"
+#~ msgstr "Вебсайтын харилцааны түүх"

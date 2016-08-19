@@ -1,23 +1,84 @@
+# #-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event
-# 
+#
 # Translators:
 # krnkris, 2015-2016
 # krnkris, 2016
+# #-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * event
+#
+# Translators:
+# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2016-06-06 19:55+0000\n"
-"Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: event
+#: model:mail.template,body_html:event.event_registration_mail_template_badge
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your inquiry.</p>\n"
+"<p>Here is your badge for the event ${object.event_id.name}.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: event
+#: model:mail.template,body_html:event.event_subscription
+#, fuzzy
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your inquiry.</p>\n"
+"<p>We confirm your subscription to the event <b>${object.event_id.name}</b>. "
+"You will receive emails with practical information.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+"<p>Üdvözlöm ${object.name},</p>\n"
+"<p>Visszaigazoljuk, hogy a részvételét a ${object.event_id.name} eseményre "
+"rögzítettük.\n"
+"Kérjük, tekintse meg az email mellékletében az <b>Esemény Jelvény</b>.</p>\n"
+"<p>Köszönjük a részvételét!</p>\n"
+"<p>Viszont látásra</p>"
+
+#. module: event
+#: model:mail.template,body_html:event.event_reminder
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your registration to the event ${object.event_id.name}.</"
+"p>\n"
+"<p>The event will take place at ${object.event_id.address_id.city}\n"
+"% if object.event_id.address_id.street\n"
+", ${object.event_id.address_id.street}\n"
+"% endif\n"
+"from ${object.event_id.date_begin_located} to ${object.event_id."
+"date_end_located}.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_cancel_state
@@ -52,17 +113,22 @@ msgstr "5 intenzív nap"
 
 #. module: event
 #: model:event.event,description:event.event_2
+#, fuzzy
 msgid ""
-"<em>(Chamber Works reserves the right to cancel, re-name or re-"
-"locate<br/>the event or change the dates on which it is held.)</em>"
-msgstr "<em>(Terem Munka törlésének joga fenntartva, nevezze-újra vagy helyezze-át<br/>az eseményt vagy változtassa meg a szervezési dátumot.)</em>"
+"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the "
+"event or change the dates on which it is held.)</em>"
+msgstr ""
+"<em>(Terem Munka törlésének joga fenntartva, nevezze-újra vagy helyezze-"
+"át<br/>az eseményt vagy változtassa meg a szervezési dátumot.)</em>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid ""
 "<i class=\"fa fa-clock-o\"/>\n"
 "                                        <b>To</b>"
-msgstr "<i class=\"fa fa-clock-o\"/>\n                                        <b>Eddig</b>"
+msgstr ""
+"<i class=\"fa fa-clock-o\"/>\n"
+"                                        <b>Eddig</b>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -70,7 +136,9 @@ msgstr "<i class=\"fa fa-clock-o\"/>\n                                        <b
 #: model:event.event,description:event.event_3
 msgid ""
 "<i>You will be able to create dynamic page interacting with the ORM.</i>"
-msgstr "<i>Képes lesz egy dinamikus oldalt létrehozására, hogy kölcsönhatásba lépjen a halgatókkal.</i>"
+msgstr ""
+"<i>Képes lesz egy dinamikus oldalt létrehozására, hogy kölcsönhatásba lépjen "
+"a halgatókkal.</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -79,7 +147,9 @@ msgstr "<i>Képes lesz egy dinamikus oldalt létrehozására, hogy kölcsönhat�
 msgid ""
 "<i>You will be able to develop a full application with backend and user "
 "interface.</i>"
-msgstr "<i>Képes lesz egy teljes alkalmazás fejlesztésére háttér támogatással és felhasználói interfésszel.</i>"
+msgstr ""
+"<i>Képes lesz egy teljes alkalmazás fejlesztésére háttér támogatással és "
+"felhasználói interfésszel.</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -87,7 +157,9 @@ msgstr "<i>Képes lesz egy teljes alkalmazás fejlesztésére háttér támogat�
 #: model:event.event,description:event.event_3
 msgid ""
 "<i>You will be able to develop simple dynamic components in HTML pages.</i>"
-msgstr "<i>Képes lesz egy egyszerű dinamikus részekből álló HTML oldal fejlesztésére.</i>"
+msgstr ""
+"<i>Képes lesz egy egyszerű dinamikus részekből álló HTML oldal fejlesztésére."
+"</i>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -96,74 +168,33 @@ msgid "<i>to</i>"
 msgstr "<i>eddig</i>"
 
 #. module: event
-#: model:mail.template,body_html:event.event_reminder
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>This is a reminder for ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located} to ${object.event_id.date_end_located}.\n"
-"For any further information please contact our event department.</p>\n"
-"<p>Thank you for your participation!</p>\n"
-"<p>Best regards</p>"
-msgstr "<p>Üdvözlöm ${object.name},</p>\n<p>Ez egy emlékeztető a ${object.event_id.name} eseményre történt regisztrációjára amit jóváhagytunk és megtartásra kerül ${object.event_id.date_begin_located} -tól ${object.event_id.date_end_located} -ig.\nEgyéb felmerülő kérdésekben kérjük vegye fel a kapcsolatot a fejlesztő részlegünkkel.</p>\n<p>Köszönjük a részvételét!</p>\n<p>Viszont látásra</p>"
-
-#. module: event
-#: model:mail.template,body_html:event.event_registration_mail_template_badge
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.\n"
-"Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
-"<p>Thank you for your participation!</p>\n"
-"<p>Best regards</p>"
-msgstr "<p>Üdvözlöm ${object.name},</p>\n<p>Visszaigazoljuk, hogy a részvételét a ${object.event_id.name} eseményre rögzítettük.\nKérjük, tekintse meg az email mellékletében az <b>Esemény Jelvény</b>.</p>\n<p>Köszönjük a részvételét!</p>\n<p>Viszont látásra</p>"
-
-#. module: event
-#: model:mail.template,body_html:event.event_subscription
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.\n"
-"You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
-"<p>Thank you for your participation!</p>\n"
-"<p>Best regards</p>"
-msgstr "        <p>Hello ${object.name},</p>\n        <p>Visszaigazoljuk a feliratkozását erre a rendezvényre ${object.event_id.name} és annak rögzítésére.\n        Automatikus válasz levelet kap a részvétel információiról (mint menetrend, napirend...) amint a rendezvényt jóváhagyták.</p>\n        <p>Köszönjük jelentkezését, részvételét!</p>\n        <p>Viszont látásra</p>"
-
-#. module: event
-#: model:mail.template,body_html:event.event_thanks
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>We would like to thank you for your presence at our event ${object.event_id.name}.\n"
-"<br/><br/>\n"
-"    % if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n"
-"        <strong>The ${object.event_id.organizer_id.name} Team</strong>\n"
-"    % elif object.event_id.organizer_id:\n"
-"        <strong>${object.event_id.organizer_id.name}</strong>\n"
-"    % endif\n"
-"</p>"
-msgstr "<p>Tisztelt ${object.name},</p>\n<p>Köszönjül részvételét az eseményünkön  ${object.event_id.name} eseményünkön.\n<br/><br/>\n    % if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n        <strong>The ${object.event_id.organizer_id.name} Csoport</strong>\n    % elif object.event_id.organizer_id:\n        <strong>${object.event_id.organizer_id.name}</strong>\n    % endif\n</p>"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "<small>John Doe, CEO</small>"
-msgstr "<small>John Doe, CEO</small>"
-
-#. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid ""
-"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" "
+"class=\"oe_read_only\">\n"
 "                                                to \n"
 "                                            </span>"
-msgstr "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n                                                erre \n                                            </span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" "
+"class=\"oe_read_only\">\n"
+"                                                erre \n"
+"                                            </span>"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
-"developers who need to grasp knowledge of the <strong>business applications "
-"development </strong>process. This course is for new developers or for IT "
-"professionals eager to learn more about technical aspects.</span>"
-msgstr "<span style=\"text-align: -webkit-center; \">Ez az előadássorozat olyan fejlesztők részére ajánlott  akik az <strong>üzleti alkalmazás fejlesztés</strong>folyamatáról szeretnének ismereteket szerezni. Ez az előadás sorozat új fejlesztőknek vagy IT szakembereknek akik műszaki szemszögből szeretnének tanulni.</span>"
+"<span style=\"text-align: -webkit-center; \">This course is dedicated "
+"to developers who need to grasp knowledge of the <strong>business "
+"applications development </strong>process. This course is for new developers "
+"or for IT professionals eager to learn more about technical aspects.</span>"
+msgstr ""
+"<span style=\"text-align: -webkit-center; \">Ez az előadássorozat olyan "
+"fejlesztők részére ajánlott  akik az <strong>üzleti alkalmazás fejlesztés</"
+"strong>folyamatáról szeretnének ismereteket szerezni. Ez az előadás sorozat "
+"új fejlesztőknek vagy IT szakembereknek akik műszaki szemszögből szeretnének "
+"tanulni.</span>"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -175,9 +206,10 @@ msgstr "<strong>Konferencia az üzleti alkalmazáshoz</strong>"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<strong>Having attended this course, participants should be able "
-"to:</strong>"
-msgstr "<strong>Jelentkezett erre az előadás sorozatra, résztvevők tudnak majd:</strong>"
+"<strong>Having attended this course, participants should be able to:</strong>"
+msgstr ""
+"<strong>Jelentkezett erre az előadás sorozatra, résztvevők tudnak majd:</"
+"strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -210,12 +242,6 @@ msgstr "<strong>Követelmények:</strong>"
 #: model:event.event,description:event.event_2
 msgid "<strong>Where to find us:</strong>"
 msgstr "<strong>Hol talál minket:</strong>"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_needaction
-#: model:ir.model.fields,field_description:event.field_event_registration_message_needaction
-msgid "Action Needed"
-msgstr "Művelet szükséges"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_active
@@ -257,7 +283,9 @@ msgstr "Jegyek értékesítésének engedélyezése"
 #. module: event
 #: selection:event.config.settings,module_website_event_track:0
 msgid "Allow tracks, agenda and dedicated menus/website per event"
-msgstr "Nyomon követések,  napirend és ajánlott menük/weboldalak eseményenkénti engedélyezése"
+msgstr ""
+"Nyomon követések,  napirend és ajánlott menük/weboldalak eseményenkénti "
+"engedélyezése"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_configuration
@@ -266,8 +294,13 @@ msgstr "Alkalmaz"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
+#, fuzzy
 msgid "Archived"
-msgstr "Archívált"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Archívált\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Archivált"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -336,14 +369,14 @@ msgid "Badge Front"
 msgstr "Jelvény előlap"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
+msgid "Badge Inner Left"
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
 msgid "Badge Inner Right"
 msgstr "Jelkép jobbra belül"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
-msgid "Badge Innner Left"
-msgstr "Jelkép balra belül"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -393,8 +426,13 @@ msgstr "ORM hívása"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_configuration
 #: model:ir.ui.view,arch_db:event.view_event_confirm
+#, fuzzy
 msgid "Cancel"
-msgstr "Megszakítás"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Megszakítás\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Mégse"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -411,8 +449,13 @@ msgstr "Regisztráció törlése"
 #: selection:event.event,state:0 selection:event.registration,state:0
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
+#, fuzzy
 msgid "Cancelled"
-msgstr "Törölt"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Törölt\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Visszavont"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_type_id
@@ -430,7 +473,7 @@ msgid "Click to add a new event."
 msgstr "Kattintson új esemény létrehozásához."
 
 #. module: event
-#: code:addons/event/models/event.py:204
+#: code:addons/event/models/event.py:206
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
 msgstr "Befejezés dátuma nem lehet a kezdő dátum előtti."
@@ -444,7 +487,7 @@ msgid "Company"
 msgstr "Vállalat"
 
 #. module: event
-#: code:addons/event/models/event.py:397
+#: code:addons/event/models/event.py:402
 #, python-format
 msgid "Compose Email"
 msgstr "Email írás"
@@ -472,8 +515,13 @@ msgstr "Esemény beállítása"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#, fuzzy
 msgid "Confirm"
-msgstr "Jóváhagyás"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Jóváhagyás\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Megerősít"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -515,14 +563,20 @@ msgstr "Visszaigazolt események."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_partner_id
+#, fuzzy
 msgid "Contact"
-msgstr "Kapcsolattartó"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Kapcsolattartó\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Kapcsolat"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
-msgid "Controlers and Views"
+#, fuzzy
+msgid "Controllers and Views"
 msgstr "Vezérlők és nézetek"
 
 #. module: event
@@ -540,9 +594,11 @@ msgstr "Előadás sorozat összegzés"
 #. module: event
 #: model:web.tip,description:event.event_tip_1
 msgid ""
-"Create and manage registrations for this event, send emails to attendees and"
-" print identification badges."
-msgstr "Hozzon létre és kezelje ennek az eseménynek a regisztrációit, küldjön e-mail leveleket a résztvevőknek és nyomtasson azonosító kitűzőket."
+"Create and manage registrations for this event, send emails to attendees and "
+"print identification badges."
+msgstr ""
+"Hozzon létre és kezelje ennek az eseménynek a regisztrációit, küldjön e-mail "
+"leveleket a résztvevőknek és nyomtasson azonosító kitűzőket."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
@@ -572,22 +628,20 @@ msgid "Creation Date"
 msgstr "Létrehozás dátuma"
 
 #. module: event
-#: code:addons/event/models/event.py:378
-#, python-format
+#: code:addons/event/models/event.py:379
+#, fuzzy, python-format
 msgid "Customer"
-msgstr "Vevő"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Vevő\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Vásárló"
 
 #. module: event
-#: code:addons/event/models/event.py:376
+#: code:addons/event/models/event.py:381
 #, python-format
 msgid "Customer Email"
 msgstr "Vevői e-mail"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_last_post
-#: model:ir.model.fields,help:event.field_event_registration_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "A feljegyzésen történt utolsó levelezés dátuma."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -612,8 +666,13 @@ msgstr "Nap 3"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
+#, fuzzy
 msgid "Day(s)"
-msgstr "nap"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"nap\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Nap(ok)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_registration_max
@@ -651,8 +710,13 @@ msgstr "Fejlesszen új modult egy bizonyos alkalmazáshoz."
 #: model:ir.model.fields,field_description:event.field_event_registration_display_name
 #: model:ir.model.fields,field_description:event.field_event_type_display_name
 #: model:ir.model.fields,field_description:event.field_report_event_registration_display_name
+#, fuzzy
 msgid "Display Name"
-msgstr "Név megjelenítése"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Név megjelenítése\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Megjelenített név"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_sequence
@@ -669,8 +733,13 @@ msgstr "Merüljön el a szövegben"
 #. module: event
 #: selection:event.event,state:0
 #: selection:report.event.registration,event_state:0
+#, fuzzy
 msgid "Done"
-msgstr "Kész"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Kész\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Elvégezve"
 
 #. module: event
 #: selection:report.event.registration,event_state:0
@@ -683,12 +752,19 @@ msgstr "Tervezet"
 msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
-msgstr "Konferencia alatt, csoportunk részletes áttekintést fog adni az üzleti alkalmazásainkról. Tudni fogja a használata előnyeit."
+msgstr ""
+"Konferencia alatt, csoportunk részletes áttekintést fog adni az üzleti "
+"alkalmazásainkról. Tudni fogja a használata előnyeit."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
+#, fuzzy
 msgid "Email"
-msgstr "Email"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Email\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"E-mail"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -707,8 +783,13 @@ msgstr "Email küldésre"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
+#, fuzzy
 msgid "End Date"
-msgstr "Dátum-ig:"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Dátum-ig:\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Befejezés dátuma"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end_located
@@ -722,8 +803,13 @@ msgstr "Befejezés dátuma elhelyezett"
 #: model:ir.model.fields,field_description:event.field_report_event_registration_event_id
 #: model:ir.ui.view,arch_db:event.view_registration_search
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#, fuzzy
 msgid "Event"
-msgstr "Rendezvény"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Rendezvény\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Esemény"
 
 #. module: event
 #: model:ir.actions.report.xml,name:event.report_event_event_badge
@@ -734,6 +820,11 @@ msgstr "Esemény jelvény"
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event Beginning Date"
 msgstr "Esemény kezdő dátuma"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Event Categories"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
@@ -822,6 +913,11 @@ msgid "Event Type"
 msgstr "Esemény típusa"
 
 #. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+msgid "Event Types"
+msgstr ""
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.report_event_registration_graph
 #: model:ir.ui.view,arch_db:event.report_event_registration_pivot
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -849,11 +945,6 @@ msgstr "Rendezvények elemzése"
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
 msgstr "Esemény email ütemezők"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-msgid "Events Types"
-msgstr "Rendezvény típusai"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -887,31 +978,18 @@ msgstr "Várható résztvevők"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#, fuzzy
 msgid "Extended Filters..."
-msgstr "Kiterjesztett szűrők"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Kiterjesztett szűrők\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Kiterjesztett szűrők..."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Finish Event"
 msgstr "Esemény vége"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_follower_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_follower_ids
-msgid "Followers"
-msgstr "Követők"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_channel_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Követők (Csatornák)"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_partner_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Követők (Partnerek)"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -923,7 +1001,9 @@ msgstr "További információkért, kérjük keressenek fel bennünket itt"
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
-msgstr "Mindegyik eseményre meghatározhat maximális regisztrálható ülésszámot(résztvevők számát), magasabb számú regisztráció nem fogadható el."
+msgstr ""
+"Mindegyik eseményre meghatározhat maximális regisztrálható "
+"ülésszámot(résztvevők számát), magasabb számú regisztráció nem fogadható el."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_min
@@ -931,7 +1011,10 @@ msgid ""
 "For each event you can define a minimum reserved seats (number of "
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
-msgstr "Mindegyik eseményre meghatározhat minimális foglalási  ülésszámot (résztvevők számát), ha nem éri el a regisztráció ezt a számot, akkor az eseményt nem lehet jóváhagyni (a szabály elkerüléséhez adja be a 0 értéket) "
+msgstr ""
+"Mindegyik eseményre meghatározhat minimális foglalási  ülésszámot "
+"(résztvevők számát), ha nem éri el a regisztráció ezt a számot, akkor az "
+"eseményt nem lehet jóváhagyni (a szabály elkerüléséhez adja be a 0 értéket) "
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -954,8 +1037,13 @@ msgstr "Beosztások"
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#, fuzzy
 msgid "Group By"
-msgstr "Csoportosítás..."
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Csoportosítás...\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Csoportosítás"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -971,8 +1059,13 @@ msgstr "Helló világ"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
+#, fuzzy
 msgid "Hour(s)"
-msgstr "óra"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"óra\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Óra(k)"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -980,15 +1073,6 @@ msgstr "óra"
 #: model:event.event,description:event.event_3
 msgid "How to Debug"
 msgstr "Hogyan keressen hibát"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"I did not expect such a great learning experience. I feel like I can develop"
-" anything now."
-msgstr "Nem vártam ezt a nagyszerű tanulási élményt. Úgy érzem már mindenfélét tudok fejleszteni."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_id
@@ -999,29 +1083,26 @@ msgstr "Nem vártam ezt a nagyszerű tanulási élményt. Úgy érzem már minde
 #: model:ir.model.fields,field_description:event.field_event_registration_id
 #: model:ir.model.fields,field_description:event.field_event_type_id
 #: model:ir.model.fields,field_description:event.field_report_event_registration_id
+#, fuzzy
 msgid "ID"
-msgstr "ID"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_unread
-#: model:ir.model.fields,help:event.field_event_registration_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_needaction
-#: model:ir.model.fields,help:event.field_event_registration_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"ID\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Azonosító ID"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_state
 msgid ""
 "If event is created, the status is 'Draft'. If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the"
-" status is set to 'Done'. If event is cancelled the status is set to "
+"particular dates the status is set to 'Confirmed'. If the event is over, the "
+"status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
-msgstr "Ha az eseményt létrehozta, annak állapota 'Tervezet'. Ha az eseményt visszaigazolták a megfelelő dátumra akkor annak állapota 'Visszaigazolt'. Ha az esemény lefutott, akkor annak állapota 'Befejeződött'. Ha az eseményt törölték akkor annak állapota 'Törölve'."
+msgstr ""
+"Ha az eseményt létrehozta, annak állapota 'Tervezet'. Ha az eseményt "
+"visszaigazolták a megfelelő dátumra akkor annak állapota 'Visszaigazolt'. Ha "
+"az esemény lefutott, akkor annak állapota 'Befejeződött'. Ha az eseményt "
+"törölték akkor annak állapota 'Törölve'."
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1089,31 +1170,23 @@ msgid "Introduction, CRM, Sales Management"
 msgstr "Bemutatás, CRM ügyfélkapcsolat-kezelő rendszer, Értékesítés szervezése"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_is_follower
-#: model:ir.model.fields,field_description:event.field_event_registration_message_is_follower
-msgid "Is Follower"
-msgstr "Ő követő"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_max
 msgid "It will select this default maximum value when you choose this event"
-msgstr "Ezt a maximum alapértelmezett értéket választja ha ezt az eseményt kiválasztja"
+msgstr ""
+"Ezt a maximum alapértelmezett értéket választja ha ezt az eseményt "
+"kiválasztja"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_min
 msgid "It will select this default minimum value when you choose this event"
-msgstr "Ezt az alapértelmezett minimum értékel választja ha ez az eseményt lett kiválasztva"
+msgstr ""
+"Ezt az alapértelmezett minimum értékel választja ha ez az eseményt lett "
+"kiválasztva"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_color
 msgid "Kanban Color Index"
 msgstr "Kanban szín meghatározó"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_last_post
-#: model:ir.model.fields,field_description:event.field_event_registration_message_last_post
-msgid "Last Message Date"
-msgstr "Utolsó üzenet dátuma"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings___last_update
@@ -1124,8 +1197,13 @@ msgstr "Utolsó üzenet dátuma"
 #: model:ir.model.fields,field_description:event.field_event_registration___last_update
 #: model:ir.model.fields,field_description:event.field_event_type___last_update
 #: model:ir.model.fields,field_description:event.field_report_event_registration___last_update
+#, fuzzy
 msgid "Last Modified on"
-msgstr "Utolsó frissítés dátuma"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Utolsó frissítés dátuma\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Utoljára frissítve ekkor"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_write_uid
@@ -1135,8 +1213,13 @@ msgstr "Utolsó frissítés dátuma"
 #: model:ir.model.fields,field_description:event.field_event_mail_write_uid
 #: model:ir.model.fields,field_description:event.field_event_registration_write_uid
 #: model:ir.model.fields,field_description:event.field_event_type_write_uid
+#, fuzzy
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Utoljára frissítve, által\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Utoljára frissítette"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_write_date
@@ -1182,7 +1265,7 @@ msgid "Mail Scheduler"
 msgstr "Email ütemező"
 
 #. module: event
-#: model:ir.ui.menu,name:event.menu_event_type
+#: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
 msgstr "Email ütemezők"
 
@@ -1228,18 +1311,6 @@ msgid "Maximum Attendees Number"
 msgstr "Maximum Résztvevők száma"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_ids
-msgid "Messages"
-msgstr "Üzenetek"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_ids
-#: model:ir.model.fields,help:event.field_event_registration_message_ids
-msgid "Messages and communication history"
-msgstr "Üzenetek és kommunikáció történet"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
 msgid "Minimum Attendees"
 msgstr "Minimum Résztvevők"
@@ -1282,13 +1353,13 @@ msgid "No mini website per event"
 msgstr "Nincs mini weboldal az eseményekhez"
 
 #. module: event
-#: code:addons/event/models/event.py:198
+#: code:addons/event/models/event.py:200
 #, python-format
 msgid "No more available seats."
 msgstr "Nincs több szék."
 
 #. module: event
-#: code:addons/event/models/event.py:298
+#: code:addons/event/models/event.py:300
 #, python-format
 msgid "No more seats available for this event."
 msgstr "Nincs több szabad ülőhely ehhez az eseményhez"
@@ -1297,12 +1368,6 @@ msgstr "Nincs több szabad ülőhely ehhez az eseményhez"
 #: selection:event.config.settings,auto_confirmation:0
 msgid "No validation step on subscription"
 msgstr "Nincs jóváhagyási lépés a feliratkozásokon"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_needaction_counter
-#: model:ir.model.fields,field_description:event.field_event_registration_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Műveletek száma"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_nbevent
@@ -1325,18 +1390,6 @@ msgid "Number of Registrations"
 msgstr "Jelentkezők száma"
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_needaction_counter
-#: model:ir.model.fields,help:event.field_event_registration_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_unread_counter
-#: model:ir.model.fields,help:event.field_event_registration_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Olvasatlan üzenetek száma"
-
-#. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
@@ -1354,19 +1407,19 @@ msgstr "Odoo Web kliens"
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid ""
 "Odoo helps you schedule and efficiently organize your events:\n"
-"    track subscriptions and participations, automate the confirmation emails,\n"
+"    track subscriptions and participations, automate the confirmation "
+"emails,\n"
 "    sell tickets, etc."
-msgstr "Odoo rendszer segít az eseményei, rendezvényei hatékony \n    megszervezésében és szervezésében: feliratkozások, részvételek nyomon követése, \n    automatikus email igazolások, jegy eladás, stb."
+msgstr ""
+"Odoo rendszer segít az eseményei, rendezvényei hatékony \n"
+"    megszervezésében és szervezésében: feliratkozások, részvételek nyomon "
+"követése, \n"
+"    automatikus email igazolások, jegy eladás, stb."
 
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Open Days in Los Angeles"
 msgstr "Nyílt napok Los Angeles-ben"
-
-#. module: event
-#: model:ir.actions.client,name:event.action_client_event_menu
-msgid "Open Event Menu"
-msgstr "Esemény menü megnyitás"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
@@ -1390,7 +1443,9 @@ msgstr "Résztvevő / kapcsolat neve"
 msgid ""
 "Participants are expected to have some knowledge in programming. A basic "
 "knowledge of the Python programming is recommended."
-msgstr "Résztvevőktől elvárt, hogy a programozásban járatosak legyenek. A Python programozás alap szintje ajánlott."
+msgstr ""
+"Résztvevőktől elvárt, hogy a programozásban járatosak legyenek. A Python "
+"programozás alap szintje ajánlott."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1399,7 +1454,9 @@ msgstr "Résztvevőktől elvárt, hogy a programozásban járatosak legyenek. A
 msgid ""
 "Participants preferably have a functional knowledge of our software (see "
 "Functional Training)."
-msgstr "Résztevőknek ajánlott a programjaink funkcionális ismerete (lásd Funkcionális gyakorlat)."
+msgstr ""
+"Résztevőknek ajánlott a programjaink funkcionális ismerete (lásd "
+"Funkcionális gyakorlat)."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1434,18 +1491,13 @@ msgid "Python Objects"
 msgstr "Python objektum"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Read Great Contents"
-msgstr "Olvasson nagyszerű  tartalmakat"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_registration_origin
 msgid ""
 "Reference of the document that created the registration, for example a sale "
 "order"
-msgstr "A regisztrációt létrehozó dokumentum hivatkozása, például egy vásárlói megrendelés"
+msgstr ""
+"A regisztrációt létrehozó dokumentum hivatkozása, például egy vásárlói "
+"megrendelés"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1659,33 +1711,24 @@ msgid "Technical Training"
 msgstr "Műstaki képzés"
 
 #. module: event
-#: model:mail.template,subject:event.event_thanks
-msgid "Thanks for attending ${object.event_id.name}"
-msgstr "Köszönjük a részvételt erre ${object.event_id.name}"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event_reply_to
 msgid ""
-"The email address of the organizer is likely to be put here, with the effect"
-" to be in the 'Reply-To' of the mails sent automatically at event or "
+"The email address of the organizer is likely to be put here, with the effect "
+"to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
-msgstr "A szervező e-mail címét ide tegye, ezzel a 'Válasz-cím' helyén ez lesz az automatikus esemény visszaigazoló emaileken. A saját e-mail címét is beteheti az e-mail átjárójából, ha használ ilyet."
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"This course help me build my first application within a month. Definetly "
-"worth its price."
-msgstr "Ez a kurzus segítséget nyújt az első alkalmazásom egy hónap alatti felépítésében. Feltétlen megérte az árát."
+msgstr ""
+"A szervező e-mail címét ide tegye, ezzel a 'Válasz-cím' helyén ez lesz az "
+"automatikus esemény visszaigazoló emaileken. A saját e-mail címét is "
+"beteheti az e-mail átjárójából, ha használ ilyet."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
-msgstr "Ez a mező az e-mail sablont tartalmazza amit mindig el fog küldeni  automatikusan"
+msgstr ""
+"Ez a mező az e-mail sablont tartalmazza amit mindig el fog küldeni  "
+"automatikusan"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_sale
@@ -1762,24 +1805,18 @@ msgid "Unlimited"
 msgstr "Korlátlan"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_unread
-#: model:ir.model.fields,field_description:event.field_event_registration_message_unread
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_unread_counter
-#: model:ir.model.fields,field_description:event.field_event_registration_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Olvasatlan üzenetek számlálója"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
 msgid ""
 "Unselect this option to manually manage draft event and draft subscription"
-msgstr "Tervezet esemény és tervezet feliratkozás kézi szervezéséhez kapcsolja ki ezt a lehetőséget"
+msgstr ""
+"Tervezet esemény és tervezet feliratkozás kézi szervezéséhez kapcsolja ki "
+"ezt a lehetőséget"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1813,29 +1850,14 @@ msgstr "Raktár kezelés, Gyártás (MRP) &amp; Értékesítés, Import/Export."
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
-msgstr "Figyelem: Ez a rendezvény még nem érte el a minimális regisztrációs limitet, Biztos benne, hogy szeretné megerősíteni?"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_website_message_ids
-msgid "Website Messages"
-msgstr "Weboldal üzenetek"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_website_message_ids
-msgid "Website communication history"
-msgstr "Weboldal  kommunikáció történet"
+msgstr ""
+"Figyelem: Ez a rendezvény még nem érte el a minimális regisztrációs limitet, "
+"Biztos benne, hogy szeretné megerősíteni?"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Week(s)"
 msgstr "Hét(ek)"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "What do people say about this course?"
-msgstr "Mit mondanak erről a kurzusról?"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1857,25 +1879,31 @@ msgid "Workflows"
 msgstr "Munkafolyamatok"
 
 #. module: event
-#: code:addons/event/models/event.py:230
+#: code:addons/event/models/event.py:232
 #, python-format
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
-msgstr "Már jelentkezett erre az eseményre mint 'Résztvevő'. Kérem állítsa vissza tervezetre, ha vissza szeretné vonni ezt a jelentkezést."
+msgstr ""
+"Már jelentkezett erre az eseményre mint 'Résztvevő'. Kérem állítsa vissza "
+"tervezetre, ha vissza szeretné vonni ezt a jelentkezést."
 
 #. module: event
-#: code:addons/event/models/event.py:355
+#: code:addons/event/models/event.py:357
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
-msgstr "Várnia kell az esemény indításának napjára ahhoz, hogy ezt a műveletet el tudja végezni."
+msgstr ""
+"Várnia kell az esemény indításának napjára ahhoz, hogy ezt a műveletet el "
+"tudja végezni."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_group_email_scheduling
 msgid ""
 "You will be able to configure emails, and to schedule them to be "
 "automatically sent to the attendees on subscription and/or attendance"
-msgstr "Be tudja majd állítani az email-eket , és így ütemezheti a résztvevőknek az automatikus kiküldést a feliratkozáskor és/vagy részvételre jelentkezéskor"
+msgstr ""
+"Be tudja majd állítani az email-eket , és így ütemezheti a résztvevőknek az "
+"automatikus kiküldést a feliratkozáskor és/vagy részvételre jelentkezéskor"
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
@@ -1945,3 +1973,163 @@ msgstr "megtanulni a műszaki sajátosságait"
 #: model:event.event,description:event.event_3
 msgid "training material."
 msgstr "képzési anyag."
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
+#~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
+#~ "to ${object.event_id.date_end_located}.\n"
+#~ "For any further information please contact our event department.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>Üdvözlöm ${object.name},</p>\n"
+#~ "<p>Ez egy emlékeztető a ${object.event_id.name} eseményre történt "
+#~ "regisztrációjára amit jóváhagytunk és megtartásra kerül ${object.event_id."
+#~ "date_begin_located} -tól ${object.event_id.date_end_located} -ig.\n"
+#~ "Egyéb felmerülő kérdésekben kérjük vegye fel a kapcsolatot a fejlesztő "
+#~ "részlegünkkel.</p>\n"
+#~ "<p>Köszönjük a részvételét!</p>\n"
+#~ "<p>Viszont látásra</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
+#~ "has been recorded.\n"
+#~ "You will automatically receive an email providing you more practical "
+#~ "information (such as the schedule, the agenda...) as soon as the event is "
+#~ "confirmed.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "        <p>Hello ${object.name},</p>\n"
+#~ "        <p>Visszaigazoljuk a feliratkozását erre a rendezvényre ${object."
+#~ "event_id.name} és annak rögzítésére.\n"
+#~ "        Automatikus válasz levelet kap a részvétel információiról (mint "
+#~ "menetrend, napirend...) amint a rendezvényt jóváhagyták.</p>\n"
+#~ "        <p>Köszönjük jelentkezését, részvételét!</p>\n"
+#~ "        <p>Viszont látásra</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We would like to thank you for your presence at our event ${object."
+#~ "event_id.name}.\n"
+#~ "<br/><br/>\n"
+#~ "    % if object.event_id.organizer_id and object.event_id.organizer_id."
+#~ "is_company:\n"
+#~ "        <strong>The ${object.event_id.organizer_id.name} Team</strong>\n"
+#~ "    % elif object.event_id.organizer_id:\n"
+#~ "        <strong>${object.event_id.organizer_id.name}</strong>\n"
+#~ "    % endif\n"
+#~ "</p>"
+#~ msgstr ""
+#~ "<p>Tisztelt ${object.name},</p>\n"
+#~ "<p>Köszönjül részvételét az eseményünkön  ${object.event_id.name} "
+#~ "eseményünkön.\n"
+#~ "<br/><br/>\n"
+#~ "    % if object.event_id.organizer_id and object.event_id.organizer_id."
+#~ "is_company:\n"
+#~ "        <strong>The ${object.event_id.organizer_id.name} Csoport</"
+#~ "strong>\n"
+#~ "    % elif object.event_id.organizer_id:\n"
+#~ "        <strong>${object.event_id.organizer_id.name}</strong>\n"
+#~ "    % endif\n"
+#~ "</p>"
+
+#~ msgid "<small>John Doe, CEO</small>"
+#~ msgstr "<small>John Doe, CEO</small>"
+
+#~ msgid "Action Needed"
+#~ msgstr "Művelet szükséges"
+
+#~ msgid "Badge Innner Left"
+#~ msgstr "Jelkép balra belül"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
+
+#~ msgid "Events Types"
+#~ msgstr "Rendezvény típusai"
+
+#~ msgid "Followers"
+#~ msgstr "Követők"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Követők (Csatornák)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Követők (Partnerek)"
+
+#~ msgid ""
+#~ "I did not expect such a great learning experience. I feel like I can "
+#~ "develop anything now."
+#~ msgstr ""
+#~ "Nem vártam ezt a nagyszerű tanulási élményt. Úgy érzem már mindenfélét "
+#~ "tudok fejleszteni."
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#~ msgid "Is Follower"
+#~ msgstr "Ő követő"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Utolsó üzenet dátuma"
+
+#~ msgid "Messages"
+#~ msgstr "Üzenetek"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Üzenetek és kommunikáció történet"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Műveletek száma"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Olvasatlan üzenetek száma"
+
+#~ msgid "Open Event Menu"
+#~ msgstr "Esemény menü megnyitás"
+
+#~ msgid "Read Great Contents"
+#~ msgstr "Olvasson nagyszerű  tartalmakat"
+
+#~ msgid "Thanks for attending ${object.event_id.name}"
+#~ msgstr "Köszönjük a részvételt erre ${object.event_id.name}"
+
+#~ msgid ""
+#~ "This course help me build my first application within a month. Definetly "
+#~ "worth its price."
+#~ msgstr ""
+#~ "Ez a kurzus segítséget nyújt az első alkalmazásom egy hónap alatti "
+#~ "felépítésében. Feltétlen megérte az árát."
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Olvasatlan üzenetek számlálója"
+
+#~ msgid "Website Messages"
+#~ msgstr "Weboldal üzenetek"
+
+#~ msgid "Website communication history"
+#~ msgstr "Weboldal  kommunikáció történet"
+
+#~ msgid "What do people say about this course?"
+#~ msgstr "Mit mondanak erről a kurzusról?"
+
+#~ msgid "Available Seats"
+#~ msgstr "Még rendelkezésre álló székek"
+
+#~ msgid "Barcode Interface"
+#~ msgstr "Vonalkód interfész csatoló"
+
+#~ msgid "Event Category"
+#~ msgstr "Esemény kategória"
+
+#~ msgid "Your registration at ${object.event_id.name}"
+#~ msgstr "A jelentkezése erre ${object.event_id.name}"

@@ -1,24 +1,101 @@
+# #-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event
-# 
+#
 # Translators:
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# #-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * event
+#
+# Translators:
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2016-02-20 11:14+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: event
+#: model:mail.template,body_html:event.event_registration_mail_template_badge
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your inquiry.</p>\n"
+"<p>Here is your badge for the event ${object.event_id.name}.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+"\n"
+"<p>Beste ${object.name},</p>\n"
+"\n"
+"<p>Bedankt voor uw aanvraag.</p>\n"
+"\n"
+"<p>Hier is uw badge voor evenement ${object.event_id.name}.</p>\n"
+"\n"
+"<p>Wanneer u vragen heeft, laat het ons weten..</p>\n"
+"\n"
+"<p>Met vriendelijke groet,</p>"
+
+#. module: event
+#: model:mail.template,body_html:event.event_subscription
+#, fuzzy
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your inquiry.</p>\n"
+"<p>We confirm your subscription to the event <b>${object.event_id.name}</b>. "
+"You will receive emails with practical information.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+"\n"
+"<p>Beste ${object.name},</p>\n"
+"\n"
+"<p>Bedankt voor uw aanvraag.</p>\n"
+"\n"
+"<p>Hier is uw badge voor evenement ${object.event_id.name}.</p>\n"
+"\n"
+"<p>Wanneer u vragen heeft, laat het ons weten..</p>\n"
+"\n"
+"<p>Met vriendelijke groet,</p>"
+
+#. module: event
+#: model:mail.template,body_html:event.event_reminder
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your registration to the event ${object.event_id.name}.</"
+"p>\n"
+"<p>The event will take place at ${object.event_id.address_id.city}\n"
+"% if object.event_id.address_id.street\n"
+", ${object.event_id.address_id.street}\n"
+"% endif\n"
+"from ${object.event_id.date_begin_located} to ${object.event_id."
+"date_end_located}.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_cancel_state
@@ -53,17 +130,22 @@ msgstr "5 intensieve dagen"
 
 #. module: event
 #: model:event.event,description:event.event_2
+#, fuzzy
 msgid ""
-"<em>(Chamber Works reserves the right to cancel, re-name or re-"
-"locate<br/>the event or change the dates on which it is held.)</em>"
-msgstr "<em>(Chamber Works behoudt het recht om het evenement te annuleren,<br/>te hernoemen en te verplaatsen of de data te veranderen.)</em>"
+"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the "
+"event or change the dates on which it is held.)</em>"
+msgstr ""
+"<em>(Chamber Works behoudt het recht om het evenement te annuleren,<br/>te "
+"hernoemen en te verplaatsen of de data te veranderen.)</em>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid ""
 "<i class=\"fa fa-clock-o\"/>\n"
 "                                        <b>To</b>"
-msgstr "<i class=\"fa fa-clock-o\"/>\n                                        <b>Tot</b>"
+msgstr ""
+"<i class=\"fa fa-clock-o\"/>\n"
+"                                        <b>Tot</b>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -71,7 +153,9 @@ msgstr "<i class=\"fa fa-clock-o\"/>\n                                        <b
 #: model:event.event,description:event.event_3
 msgid ""
 "<i>You will be able to create dynamic page interacting with the ORM.</i>"
-msgstr "<i>U zal dynamische pagina's kunnen bouwen door middel van interactie met de ORM.</i>"
+msgstr ""
+"<i>U zal dynamische pagina's kunnen bouwen door middel van interactie met de "
+"ORM.</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -80,7 +164,9 @@ msgstr "<i>U zal dynamische pagina's kunnen bouwen door middel van interactie me
 msgid ""
 "<i>You will be able to develop a full application with backend and user "
 "interface.</i>"
-msgstr "<i>U zal een volledige applicatie kunnen ontwikkelend met een backend en een gebruikersinterface.</i>"
+msgstr ""
+"<i>U zal een volledige applicatie kunnen ontwikkelend met een backend en een "
+"gebruikersinterface.</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -88,7 +174,9 @@ msgstr "<i>U zal een volledige applicatie kunnen ontwikkelend met een backend en
 #: model:event.event,description:event.event_3
 msgid ""
 "<i>You will be able to develop simple dynamic components in HTML pages.</i>"
-msgstr "<i>U zult eenvoudige, dynamische componenten kunnen ontwikkelen in HTML pagina's.</i>"
+msgstr ""
+"<i>U zult eenvoudige, dynamische componenten kunnen ontwikkelen in HTML "
+"pagina's.</i>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -97,74 +185,33 @@ msgid "<i>to</i>"
 msgstr "<i>tot</i>"
 
 #. module: event
-#: model:mail.template,body_html:event.event_reminder
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>This is a reminder for ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located} to ${object.event_id.date_end_located}.\n"
-"For any further information please contact our event department.</p>\n"
-"<p>Thank you for your participation!</p>\n"
-"<p>Best regards</p>"
-msgstr "<p>Hallo ${object.name},</p>\n<p>Dit is een reminder voor ${object.event_id.name} waarvoor u zich heeft geregistreerd. Deze is bevestigd en wordt gehouden van ${object.event_id.date_begin_located} tot ${object.event_id.date_end_located}.\nVoor verdere informatie kan u ons departement altijd contacteren.</p>\n<p>Bedankt voor uw deelname!</p>\n<p>Met vriendelijke groeten,</p>"
-
-#. module: event
-#: model:mail.template,body_html:event.event_registration_mail_template_badge
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.\n"
-"Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
-"<p>Thank you for your participation!</p>\n"
-"<p>Best regards</p>"
-msgstr "<p>Hallo ${object.name},</p>\n<p>Hierbij bevestigen wij dat uw registratie voor ${object.event_id.name} goed werd ontvangen.\nIn bijlage van deze e-mail sturen wij u ook uw <b>Event Badge</b>.</p>\n<p>Bedankt voor uw deelname!</p>\n<p>Met vriendelijke groeten,</p>"
-
-#. module: event
-#: model:mail.template,body_html:event.event_subscription
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.\n"
-"You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
-"<p>Thank you for your participation!</p>\n"
-"<p>Best regards</p>"
-msgstr "<p>Hallo ${object.name},</p>\n<p>We bevestigen dat uw inschrijving voor het evenement ${object.event_id.name} geregistreerd is.\nU ontvangt automatisch een e-mail met praktische informatie (zoals het schema, de agenda,...) wanneer het evenement bevestigd is.</p>\n<p>Bedankt voor uw deelname!</p>\n<p>Met vriendelijke groeten</p>"
-
-#. module: event
-#: model:mail.template,body_html:event.event_thanks
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>We would like to thank you for your presence at our event ${object.event_id.name}.\n"
-"<br/><br/>\n"
-"    % if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n"
-"        <strong>The ${object.event_id.organizer_id.name} Team</strong>\n"
-"    % elif object.event_id.organizer_id:\n"
-"        <strong>${object.event_id.organizer_id.name}</strong>\n"
-"    % endif\n"
-"</p>"
-msgstr "<p>Hallo ${object.name},</p>\n<p>We willen u graag bedanken voor uw deelname aan ons evenement ${object.event_id.name}.\n<br/><br/>\n% if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n<strong>Het ${object.event_id.organizer_id.name} team</strong>\n% elif object.event_id.organizer_id:\n<strong>${object.event_id.organizer_id.name}</strong>\n% endif\n</p>"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "<small>John Doe, CEO</small>"
-msgstr "<small>John Doe, CEO</small>"
-
-#. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid ""
-"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" "
+"class=\"oe_read_only\">\n"
 "                                                to \n"
 "                                            </span>"
-msgstr "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n                                                tot \n                                            </span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" "
+"class=\"oe_read_only\">\n"
+"                                                tot \n"
+"                                            </span>"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
-"developers who need to grasp knowledge of the <strong>business applications "
-"development </strong>process. This course is for new developers or for IT "
-"professionals eager to learn more about technical aspects.</span>"
-msgstr "<span style=\"text-align: -webkit-center; \">Deze cursus is toegewijd aan ontwikkelaars die kennis moeten krijgen van het <strong>bedrijfsapplicatie ontwikkeling</strong> proces. Deze cursis is voor nieuwe ontwikkelaars of voor IT professionals die graag meer willen leren over de technische aspecten.</span>"
+"<span style=\"text-align: -webkit-center; \">This course is dedicated "
+"to developers who need to grasp knowledge of the <strong>business "
+"applications development </strong>process. This course is for new developers "
+"or for IT professionals eager to learn more about technical aspects.</span>"
+msgstr ""
+"<span style=\"text-align: -webkit-center; \">Deze cursus is toegewijd aan "
+"ontwikkelaars die kennis moeten krijgen van het <strong>bedrijfsapplicatie "
+"ontwikkeling</strong> proces. Deze cursis is voor nieuwe ontwikkelaars of "
+"voor IT professionals die graag meer willen leren over de technische "
+"aspecten.</span>"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -176,9 +223,10 @@ msgstr "<strong>Conferentie over bedrijfsapplicaties</strong>"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<strong>Having attended this course, participants should be able "
-"to:</strong>"
-msgstr "<strong>Na het beëindigen van deze cursus zouden de deelnemers in staat moeten zijn om het volgende te kunnen:</strong>"
+"<strong>Having attended this course, participants should be able to:</strong>"
+msgstr ""
+"<strong>Na het beëindigen van deze cursus zouden de deelnemers in staat "
+"moeten zijn om het volgende te kunnen:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -211,12 +259,6 @@ msgstr "<strong>Vereisten:</strong>"
 #: model:event.event,description:event.event_2
 msgid "<strong>Where to find us:</strong>"
 msgstr "<strong>Waar u ons kan vinden:</strong>"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_needaction
-#: model:ir.model.fields,field_description:event.field_event_registration_message_needaction
-msgid "Action Needed"
-msgstr "Vereist actie"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_active
@@ -337,14 +379,14 @@ msgid "Badge Front"
 msgstr "Badge voorkant"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
+msgid "Badge Inner Left"
+msgstr "Badge binnenkant links"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
 msgid "Badge Inner Right"
 msgstr "Badge binnenkant rechts"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
-msgid "Badge Innner Left"
-msgstr "Badge binnenkant links"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -394,8 +436,13 @@ msgstr "Het ORM aanroepen."
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_configuration
 #: model:ir.ui.view,arch_db:event.view_event_confirm
+#, fuzzy
 msgid "Cancel"
-msgstr "Annuleren"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Annuleren\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Annuleer"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -431,7 +478,7 @@ msgid "Click to add a new event."
 msgstr "Klik om een nieuw evenement aan te maken."
 
 #. module: event
-#: code:addons/event/models/event.py:204
+#: code:addons/event/models/event.py:206
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
 msgstr "Einddatum kan niet ingesteld worden voor begindatum."
@@ -441,11 +488,16 @@ msgstr "Einddatum kan niet ingesteld worden voor begindatum."
 #: model:ir.model.fields,field_description:event.field_event_registration_company_id
 #: model:ir.model.fields,field_description:event.field_report_event_registration_company_id
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#, fuzzy
 msgid "Company"
-msgstr "Bedrijf"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Bedrijf\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Bedijf"
 
 #. module: event
-#: code:addons/event/models/event.py:397
+#: code:addons/event/models/event.py:402
 #, python-format
 msgid "Compose Email"
 msgstr "Email opstellen"
@@ -473,8 +525,13 @@ msgstr "Configureer evenement"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#, fuzzy
 msgid "Confirm"
-msgstr "Bevestig"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Bevestig\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Bevestigen"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -516,14 +573,20 @@ msgstr "Bevestig evenement"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_partner_id
+#, fuzzy
 msgid "Contact"
-msgstr "Contactpersoon"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Contactpersoon\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Contact"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
-msgid "Controlers and Views"
+#, fuzzy
+msgid "Controllers and Views"
 msgstr "Controllers en weergaves"
 
 #. module: event
@@ -541,9 +604,11 @@ msgstr "Cursussamenvatting"
 #. module: event
 #: model:web.tip,description:event.event_tip_1
 msgid ""
-"Create and manage registrations for this event, send emails to attendees and"
-" print identification badges."
-msgstr "Maak en beheer registraties van dit evenement. Verstuur e-mails naar de deelnemers en druk identificatie badges af."
+"Create and manage registrations for this event, send emails to attendees and "
+"print identification badges."
+msgstr ""
+"Maak en beheer registraties van dit evenement. Verstuur e-mails naar de "
+"deelnemers en druk identificatie badges af."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
@@ -573,22 +638,16 @@ msgid "Creation Date"
 msgstr "Aanmaakdatum"
 
 #. module: event
-#: code:addons/event/models/event.py:378
+#: code:addons/event/models/event.py:379
 #, python-format
 msgid "Customer"
 msgstr "Klant"
 
 #. module: event
-#: code:addons/event/models/event.py:376
+#: code:addons/event/models/event.py:381
 #, python-format
 msgid "Customer Email"
 msgstr "Klant email"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_last_post
-#: model:ir.model.fields,help:event.field_event_registration_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum van het laatste bericht verstuurt op deze regel."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -628,8 +687,13 @@ msgstr "Standaard minimaal aantal registraties"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
+#, fuzzy
 msgid "Delete"
-msgstr "Verwijderen"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Verwijderen\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Verwijder"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_description
@@ -652,8 +716,13 @@ msgstr "Ontwikkel een nieuwe module voor een specifieke toepassing."
 #: model:ir.model.fields,field_description:event.field_event_registration_display_name
 #: model:ir.model.fields,field_description:event.field_event_type_display_name
 #: model:ir.model.fields,field_description:event.field_report_event_registration_display_name
+#, fuzzy
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Weergavenaam\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Schermnaam"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_sequence
@@ -670,8 +739,13 @@ msgstr "Duik in Strings"
 #. module: event
 #: selection:event.event,state:0
 #: selection:report.event.registration,event_state:0
+#, fuzzy
 msgid "Done"
-msgstr "Voltooid"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Voltooid\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Verwerkt"
 
 #. module: event
 #: selection:report.event.registration,event_state:0
@@ -684,12 +758,19 @@ msgstr "Concept"
 msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
-msgstr "Tijdens deze conferentie zal ons team u een gedetailleerd overzicht van onze bedrijfsapplicaties geven. U zal alle voordelen weten om ze te gebruiken."
+msgstr ""
+"Tijdens deze conferentie zal ons team u een gedetailleerd overzicht van onze "
+"bedrijfsapplicaties geven. U zal alle voordelen weten om ze te gebruiken."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
+#, fuzzy
 msgid "Email"
-msgstr "Email"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Email\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"E-mail"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -723,8 +804,13 @@ msgstr "Einddatum locatie"
 #: model:ir.model.fields,field_description:event.field_report_event_registration_event_id
 #: model:ir.ui.view,arch_db:event.view_registration_search
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#, fuzzy
 msgid "Event"
-msgstr "Evenement"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Evenement\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Gebeurtenis"
 
 #. module: event
 #: model:ir.actions.report.xml,name:event.report_event_event_badge
@@ -735,6 +821,11 @@ msgstr "Evenementenbadge"
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event Beginning Date"
 msgstr "Evenement startdatum"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Event Categories"
+msgstr "Evenement Categorieën "
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
@@ -823,6 +914,11 @@ msgid "Event Type"
 msgstr "Soort evenement"
 
 #. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+msgid "Event Types"
+msgstr "Soorten Evenementen"
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.report_event_registration_graph
 #: model:ir.ui.view,arch_db:event.report_event_registration_pivot
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -850,11 +946,6 @@ msgstr "Evenement analyse"
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
 msgstr "Evenementen mail planners"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-msgid "Events Types"
-msgstr "Soorten evenementen"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -897,24 +988,6 @@ msgid "Finish Event"
 msgstr "Evenement einde"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_follower_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_follower_ids
-msgid "Followers"
-msgstr "Volgers"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_channel_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Volgers (Kanalen)"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_partner_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
-
-#. module: event
 #: model:event.event,description:event.event_2
 msgid "For any additional information, please contact us at"
 msgstr "Voor meer informatie kan u ons contacteren op"
@@ -924,7 +997,10 @@ msgstr "Voor meer informatie kan u ons contacteren op"
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
-msgstr "Voor elk evenement kan u een maximaal aantal registraties of plaats (aantal deelnemers) opgeven. Boven dit cijfer worden registraties niet meer geaccepteerd."
+msgstr ""
+"Voor elk evenement kan u een maximaal aantal registraties of plaats (aantal "
+"deelnemers) opgeven. Boven dit cijfer worden registraties niet meer "
+"geaccepteerd."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_min
@@ -932,7 +1008,10 @@ msgid ""
 "For each event you can define a minimum reserved seats (number of "
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
-msgstr "Voor elk evenement kan u een maximum aantal gereserveerde plaatsen (aantal deelnemers) opgeven. Als het aantal vermelde registraties niet wordt gehaald kan het evenement niet bevestigd worden (zet op 0 om deze regel te negeren)"
+msgstr ""
+"Voor elk evenement kan u een maximum aantal gereserveerde plaatsen (aantal "
+"deelnemers) opgeven. Als het aantal vermelde registraties niet wordt gehaald "
+"kan het evenement niet bevestigd worden (zet op 0 om deze regel te negeren)"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -955,13 +1034,20 @@ msgstr "Functies"
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#, fuzzy
 msgid "Group By"
-msgstr "Groeperen op"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Groeperen op\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Groepeer op"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Having attended this conference, participants should be able to:"
-msgstr "Na het deelnemen aan deze conferentie zouden deelnemers in staat moeten zijn om het volgende te kunnen:"
+msgstr ""
+"Na het deelnemen aan deze conferentie zouden deelnemers in staat moeten zijn "
+"om het volgende te kunnen:"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -983,15 +1069,6 @@ msgid "How to Debug"
 msgstr "Hoe te debuggen"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"I did not expect such a great learning experience. I feel like I can develop"
-" anything now."
-msgstr "Ik verwachte niet zo een geweldige leerervaring. Ik heb het gevoel dat ik nu alles kan ontwikkelen."
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_id
 #: model:ir.model.fields,field_description:event.field_event_confirm_id
 #: model:ir.model.fields,field_description:event.field_event_event_id
@@ -1004,25 +1081,17 @@ msgid "ID"
 msgstr "ID"
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_unread
-#: model:ir.model.fields,help:event.field_event_registration_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_needaction
-#: model:ir.model.fields,help:event.field_event_registration_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event_state
 msgid ""
 "If event is created, the status is 'Draft'. If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the"
-" status is set to 'Done'. If event is cancelled the status is set to "
+"particular dates the status is set to 'Confirmed'. If the event is over, the "
+"status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
-msgstr "Als evenement wordt gecreëerd, is de status 'Concept'. Als evenement wordt bevestigd voor de specifieke data wordt de status  ingesteld op 'Bevestigd'. Als het evenement voorbij is, wordt de status op 'Gereed' gezet. Als het evenement wordt geannuleerd zal de status ingesteld worden op 'Cancelled'."
+msgstr ""
+"Als evenement wordt gecreëerd, is de status 'Concept'. Als evenement wordt "
+"bevestigd voor de specifieke data wordt de status  ingesteld op 'Bevestigd'. "
+"Als het evenement voorbij is, wordt de status op 'Gereed' gezet. Als het "
+"evenement wordt geannuleerd zal de status ingesteld worden op 'Cancelled'."
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1090,31 +1159,23 @@ msgid "Introduction, CRM, Sales Management"
 msgstr "Introductie, CRM, Verkoopbeheer"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_is_follower
-#: model:ir.model.fields,field_description:event.field_event_registration_message_is_follower
-msgid "Is Follower"
-msgstr "Is een volger"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_max
 msgid "It will select this default maximum value when you choose this event"
-msgstr "Het zal de deze standaard maximale waarde selecteren als u dit evenement kiest"
+msgstr ""
+"Het zal de deze standaard maximale waarde selecteren als u dit evenement "
+"kiest"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_min
 msgid "It will select this default minimum value when you choose this event"
-msgstr "Het zal de deze standaard minimale waarde selecteren als u dit evenement kiest"
+msgstr ""
+"Het zal de deze standaard minimale waarde selecteren als u dit evenement "
+"kiest"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_color
 msgid "Kanban Color Index"
 msgstr "Kanban kleur index"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_last_post
-#: model:ir.model.fields,field_description:event.field_event_registration_message_last_post
-msgid "Last Message Date"
-msgstr "Laatste bericht datum"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings___last_update
@@ -1183,7 +1244,7 @@ msgid "Mail Scheduler"
 msgstr "Mail planner"
 
 #. module: event
-#: model:ir.ui.menu,name:event.menu_event_type
+#: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
 msgstr "Mail planners"
 
@@ -1204,8 +1265,13 @@ msgstr "Mail registratie ids"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
+#, fuzzy
 msgid "Manager"
-msgstr "Manager"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Manager\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Beheerder"
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
@@ -1229,18 +1295,6 @@ msgid "Maximum Attendees Number"
 msgstr "Maximum aantal deelnemers"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_ids
-msgid "Messages"
-msgstr "Berichten"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_ids
-#: model:ir.model.fields,help:event.field_event_registration_message_ids
-msgid "Messages and communication history"
-msgstr "Berichten en communicatie historie"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
 msgid "Minimum Attendees"
 msgstr "Minimum aantal deelnemers"
@@ -1254,8 +1308,13 @@ msgstr "Modules"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
+#, fuzzy
 msgid "Month(s)"
-msgstr "Maand(en)"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Maand(en)\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Maand(e)"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1283,13 +1342,13 @@ msgid "No mini website per event"
 msgstr "Geen mini website per evenement"
 
 #. module: event
-#: code:addons/event/models/event.py:198
+#: code:addons/event/models/event.py:200
 #, python-format
 msgid "No more available seats."
 msgstr "Geen plaatsen meer beschikbaar."
 
 #. module: event
-#: code:addons/event/models/event.py:298
+#: code:addons/event/models/event.py:300
 #, python-format
 msgid "No more seats available for this event."
 msgstr "Geen plaatsen meer beschikbaar voor dit evenement."
@@ -1298,12 +1357,6 @@ msgstr "Geen plaatsen meer beschikbaar voor dit evenement."
 #: selection:event.config.settings,auto_confirmation:0
 msgid "No validation step on subscription"
 msgstr "Geen validatie stap op inschrijving"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_needaction_counter
-#: model:ir.model.fields,field_description:event.field_event_registration_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Aantal acties"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_nbevent
@@ -1326,18 +1379,6 @@ msgid "Number of Registrations"
 msgstr "Aantal registraties"
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_needaction_counter
-#: model:ir.model.fields,help:event.field_event_registration_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Aantal berichten die actie vereisen"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_unread_counter
-#: model:ir.model.fields,help:event.field_event_registration_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Aantal ongelezen berichten"
-
-#. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
@@ -1355,9 +1396,13 @@ msgstr "Odoo Web Client"
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid ""
 "Odoo helps you schedule and efficiently organize your events:\n"
-"    track subscriptions and participations, automate the confirmation emails,\n"
+"    track subscriptions and participations, automate the confirmation "
+"emails,\n"
 "    sell tickets, etc."
-msgstr "Odoo helpt u met het plannen en efficiënt organiseren van evenementen:\nvolg inschrijvingen en deelnames, automatiseer de bevestiging e-mails,\nverkoop tickets, etc."
+msgstr ""
+"Odoo helpt u met het plannen en efficiënt organiseren van evenementen:\n"
+"volg inschrijvingen en deelnames, automatiseer de bevestiging e-mails,\n"
+"verkoop tickets, etc."
 
 #. module: event
 #: model:event.event,name:event.event_0
@@ -1365,14 +1410,14 @@ msgid "Open Days in Los Angeles"
 msgstr "Open dagen in Los Angeles"
 
 #. module: event
-#: model:ir.actions.client,name:event.action_client_event_menu
-msgid "Open Event Menu"
-msgstr "Open menu Evenementen"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
+#, fuzzy
 msgid "Organizer"
-msgstr "Agenda"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Agenda\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Organisator"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1391,7 +1436,9 @@ msgstr "Deelnemer / Naam contactpersoon"
 msgid ""
 "Participants are expected to have some knowledge in programming. A basic "
 "knowledge of the Python programming is recommended."
-msgstr "Deelnemers worden verondersteld enige kennis over programmeren te hebben. Een basiskennis van de programmeertaal Python is aanbevolen."
+msgstr ""
+"Deelnemers worden verondersteld enige kennis over programmeren te hebben. "
+"Een basiskennis van de programmeertaal Python is aanbevolen."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1400,7 +1447,9 @@ msgstr "Deelnemers worden verondersteld enige kennis over programmeren te hebben
 msgid ""
 "Participants preferably have a functional knowledge of our software (see "
 "Functional Training)."
-msgstr "Deelnemers hebben bij voorkeur een functionele kennis van onze software (zie ook onze Functionele Training)"
+msgstr ""
+"Deelnemers hebben bij voorkeur een functionele kennis van onze software (zie "
+"ook onze Functionele Training)"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1415,7 +1464,8 @@ msgstr "Telefoon"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
-msgstr "Point of Sale (POS of kassa), introductie in het aanpassen van rapporten."
+msgstr ""
+"Point of Sale (POS of kassa), introductie in het aanpassen van rapporten."
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1435,18 +1485,13 @@ msgid "Python Objects"
 msgstr "Python objecten"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Read Great Contents"
-msgstr "Lees geweldige inhoud"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_registration_origin
 msgid ""
 "Reference of the document that created the registration, for example a sale "
 "order"
-msgstr "Referentie van het document dat de registratie heeft aangemaakt, bijvoorbeeld een verkooporder"
+msgstr ""
+"Referentie van het document dat de registratie heeft aangemaakt, "
+"bijvoorbeeld een verkooporder"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1618,8 +1663,13 @@ msgstr "Toon"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_origin
+#, fuzzy
 msgid "Source Document"
-msgstr "Bron document"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Bron document\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Brondocument"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin
@@ -1660,33 +1710,24 @@ msgid "Technical Training"
 msgstr "Technische training"
 
 #. module: event
-#: model:mail.template,subject:event.event_thanks
-msgid "Thanks for attending ${object.event_id.name}"
-msgstr "Bedankt voor uw deelname aan ${object.event_id.name}"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event_reply_to
 msgid ""
-"The email address of the organizer is likely to be put here, with the effect"
-" to be in the 'Reply-To' of the mails sent automatically at event or "
+"The email address of the organizer is likely to be put here, with the effect "
+"to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
-msgstr "Het e-mail adres van de organisator wat wordt ingesteld als 'antwoord aan' van alle e-mails welke automatisch worden verstuurt bij een evenement en registratie bevestiging. Het is ook mogelijk een e-mail adres van uw e-mail gateway in te stellen, indien u deze gebruikt."
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"This course help me build my first application within a month. Definetly "
-"worth its price."
-msgstr "Deze cursus heeft mij geholpen mijn eerste applicatie binnen een maand te bouwen.\nZeker zijn prijs waard."
+msgstr ""
+"Het e-mail adres van de organisator wat wordt ingesteld als 'antwoord aan' "
+"van alle e-mails welke automatisch worden verstuurt bij een evenement en "
+"registratie bevestiging. Het is ook mogelijk een e-mail adres van uw e-mail "
+"gateway in te stellen, indien u deze gebruikt."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
-msgstr "Dit veld bevat het sjabloon van de e-mail dat automatisch verzonden wordt"
+msgstr ""
+"Dit veld bevat het sjabloon van de e-mail dat automatisch verzonden wordt"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_sale
@@ -1763,24 +1804,18 @@ msgid "Unlimited"
 msgstr "Onbeperkt"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_unread
-#: model:ir.model.fields,field_description:event.field_event_registration_message_unread
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_unread_counter
-#: model:ir.model.fields,field_description:event.field_event_registration_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Teller ongelezen berichten"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
 msgid ""
 "Unselect this option to manually manage draft event and draft subscription"
-msgstr "Deselecteer deze optie om handmatig concept evenementen en concept inschrijvingen te beheren"
+msgstr ""
+"Deselecteer deze optie om handmatig concept evenementen en concept "
+"inschrijvingen te beheren"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1814,29 +1849,19 @@ msgstr "Magazijnbeheer, Productie (MRP) &amp; Verkoop, Import/Export."
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
-msgstr "Waarschuwing: dit evenement heeft zijn minimale inschrijving limiet nog niet bereikt. Weet u zeker dat u wilt bevestigen?"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_website_message_ids
-msgid "Website Messages"
-msgstr "Website berichten"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_website_message_ids
-msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
+msgstr ""
+"Waarschuwing: dit evenement heeft zijn minimale inschrijving limiet nog niet "
+"bereikt. Weet u zeker dat u wilt bevestigen?"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
+#, fuzzy
 msgid "Week(s)"
-msgstr "We(e)k(en)"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "What do people say about this course?"
-msgstr "Wat zeggen mensen over deze training?"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"We(e)k(en)\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Week/weken"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1858,25 +1883,31 @@ msgid "Workflows"
 msgstr "Workflows"
 
 #. module: event
-#: code:addons/event/models/event.py:230
+#: code:addons/event/models/event.py:232
 #, python-format
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
-msgstr "U heeft de registratie van dit evenement al gezet op \"aanwezig\". Zet deze status terug naar concept als u het evenement wilt annuleren."
+msgstr ""
+"U heeft de registratie van dit evenement al gezet op \"aanwezig\". Zet deze "
+"status terug naar concept als u het evenement wilt annuleren."
 
 #. module: event
-#: code:addons/event/models/event.py:355
+#: code:addons/event/models/event.py:357
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
-msgstr "U dient te wachten tot de startdag van het evenement om deze actie te kunnen uitvoeren."
+msgstr ""
+"U dient te wachten tot de startdag van het evenement om deze actie te kunnen "
+"uitvoeren."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_group_email_scheduling
 msgid ""
 "You will be able to configure emails, and to schedule them to be "
 "automatically sent to the attendees on subscription and/or attendance"
-msgstr "U zal e-mails kunnen configureren en inplannen dat ze automatisch verzonden worden aan de aanwezigen wanneer ze zich inschrijven en/of bij aanwezigheid"
+msgstr ""
+"U zal e-mails kunnen configureren en inplannen dat ze automatisch verzonden "
+"worden aan de aanwezigen wanneer ze zich inschrijven en/of bij aanwezigheid"
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
@@ -1946,3 +1977,215 @@ msgstr "om technische aspecten te leren"
 #: model:event.event,description:event.event_3
 msgid "training material."
 msgstr "training materiaal."
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
+#~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
+#~ "to ${object.event_id.date_end_located}.\n"
+#~ "For any further information please contact our event department.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>Hallo ${object.name},</p>\n"
+#~ "<p>Dit is een reminder voor ${object.event_id.name} waarvoor u zich heeft "
+#~ "geregistreerd. Deze is bevestigd en wordt gehouden van ${object.event_id."
+#~ "date_begin_located} tot ${object.event_id.date_end_located}.\n"
+#~ "Voor verdere informatie kan u ons departement altijd contacteren.</p>\n"
+#~ "<p>Bedankt voor uw deelname!</p>\n"
+#~ "<p>Met vriendelijke groeten,</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
+#~ "has been recorded.\n"
+#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>Hallo ${object.name},</p>\n"
+#~ "<p>Hierbij bevestigen wij dat uw registratie voor ${object.event_id.name} "
+#~ "goed werd ontvangen.\n"
+#~ "In bijlage van deze e-mail sturen wij u ook uw <b>Event Badge</b>.</p>\n"
+#~ "<p>Bedankt voor uw deelname!</p>\n"
+#~ "<p>Met vriendelijke groeten,</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
+#~ "has been recorded.\n"
+#~ "You will automatically receive an email providing you more practical "
+#~ "information (such as the schedule, the agenda...) as soon as the event is "
+#~ "confirmed.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>Hallo ${object.name},</p>\n"
+#~ "<p>We bevestigen dat uw inschrijving voor het evenement ${object.event_id."
+#~ "name} geregistreerd is.\n"
+#~ "U ontvangt automatisch een e-mail met praktische informatie (zoals het "
+#~ "schema, de agenda,...) wanneer het evenement bevestigd is.</p>\n"
+#~ "<p>Bedankt voor uw deelname!</p>\n"
+#~ "<p>Met vriendelijke groeten</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We would like to thank you for your presence at our event ${object."
+#~ "event_id.name}.\n"
+#~ "<br/><br/>\n"
+#~ "    % if object.event_id.organizer_id and object.event_id.organizer_id."
+#~ "is_company:\n"
+#~ "        <strong>The ${object.event_id.organizer_id.name} Team</strong>\n"
+#~ "    % elif object.event_id.organizer_id:\n"
+#~ "        <strong>${object.event_id.organizer_id.name}</strong>\n"
+#~ "    % endif\n"
+#~ "</p>"
+#~ msgstr ""
+#~ "<p>Hallo ${object.name},</p>\n"
+#~ "<p>We willen u graag bedanken voor uw deelname aan ons evenement ${object."
+#~ "event_id.name}.\n"
+#~ "<br/><br/>\n"
+#~ "% if object.event_id.organizer_id and object.event_id.organizer_id."
+#~ "is_company:\n"
+#~ "<strong>Het ${object.event_id.organizer_id.name} team</strong>\n"
+#~ "% elif object.event_id.organizer_id:\n"
+#~ "<strong>${object.event_id.organizer_id.name}</strong>\n"
+#~ "% endif\n"
+#~ "</p>"
+
+#~ msgid "<small>John Doe, CEO</small>"
+#~ msgstr "<small>John Doe, CEO</small>"
+
+#~ msgid "Action Needed"
+#~ msgstr "Vereist actie"
+
+#~ msgid "Badge Innner Left"
+#~ msgstr "Badge binnenkant links"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
+
+#~ msgid "Events Types"
+#~ msgstr "Soorten evenementen"
+
+#~ msgid "Followers"
+#~ msgstr "Volgers"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Volgers (Kanalen)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Volgers (Partners)"
+
+#~ msgid ""
+#~ "I did not expect such a great learning experience. I feel like I can "
+#~ "develop anything now."
+#~ msgstr ""
+#~ "Ik verwachte niet zo een geweldige leerervaring. Ik heb het gevoel dat ik "
+#~ "nu alles kan ontwikkelen."
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+
+#~ msgid "Is Follower"
+#~ msgstr "Is een volger"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Laatste bericht datum"
+
+#~ msgid "Messages"
+#~ msgstr "Berichten"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Berichten en communicatie historie"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Aantal acties"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Aantal berichten die actie vereisen"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Aantal ongelezen berichten"
+
+#~ msgid "Open Event Menu"
+#~ msgstr "Open menu Evenementen"
+
+#~ msgid "Read Great Contents"
+#~ msgstr "Lees geweldige inhoud"
+
+#~ msgid "Thanks for attending ${object.event_id.name}"
+#~ msgstr "Bedankt voor uw deelname aan ${object.event_id.name}"
+
+#~ msgid ""
+#~ "This course help me build my first application within a month. Definetly "
+#~ "worth its price."
+#~ msgstr ""
+#~ "Deze cursus heeft mij geholpen mijn eerste applicatie binnen een maand te "
+#~ "bouwen.\n"
+#~ "Zeker zijn prijs waard."
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Teller ongelezen berichten"
+
+#~ msgid "Website Messages"
+#~ msgstr "Website berichten"
+
+#~ msgid "Website communication history"
+#~ msgstr "Website communicatie geschiedenis"
+
+#~ msgid "What do people say about this course?"
+#~ msgstr "Wat zeggen mensen over deze training?"
+
+#~ msgid "After each registration"
+#~ msgstr "Na elke registratie"
+
+#~ msgid "Allow adding extra questions on registrations"
+#~ msgstr "Stel extra vragen bij inschrijven"
+
+#~ msgid "Available Seats"
+#~ msgstr "Beschikbare plaatsen"
+
+#~ msgid "Barcode Interface"
+#~ msgstr "Barcode interface"
+
+#~ msgid "Event Category"
+#~ msgstr "Evenement categorie"
+
+#~ msgid "Install the event_barcode module"
+#~ msgstr "Installeer de event_barcode module"
+
+#~ msgid "Manually confirm every registration"
+#~ msgstr "Handmatig elke inschrijving bevestigen"
+
+#~ msgid "No extra questions on registrations"
+#~ msgstr "Geen extra vragen bij inschrijven"
+
+#~ msgid "No validation step on registration"
+#~ msgstr "Geen validatie stap bij inschrijving"
+
+#~ msgid ""
+#~ "Odoo helps you schedule and efficiently organize your events:\n"
+#~ "    track registrations and participations, automate the confirmation "
+#~ "emails,\n"
+#~ "    sell tickets, etc."
+#~ msgstr ""
+#~ "Odoo helpt u met het plannen en efficiënt organiseren van evenementen:\n"
+#~ "\n"
+#~ "volg inschrijvingen en deelnames, automatiseer de bevestiging e-mails, "
+#~ "verkoop tickets, etc."
+
+#~ msgid "Registration Survey"
+#~ msgstr "Registratie Enquête"
+
+#~ msgid "Scan badges to confirm attendances"
+#~ msgstr "Scan badges om aanwezigheid te bevestigen"
+
+#~ msgid "Schedule Emails on Event Registration"
+#~ msgstr "Plan E-mails op Evenement Inschrijving"
+
+#~ msgid "Your registration at ${object.event_id.name}"
+#~ msgstr "Uw registratie voor ${object.event_id.name}"

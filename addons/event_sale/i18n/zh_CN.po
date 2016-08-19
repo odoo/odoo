@@ -1,7 +1,8 @@
+# #-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event_sale
-# 
+#
 # Translators:
 # fausthuang, 2015
 # fausthuang, 2015
@@ -12,22 +13,34 @@
 # liAnGjiA <liangjia@qq.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2015
 # liAnGjiA <liangjia@qq.com>, 2015
+# #-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * event_sale
+#
+# Translators:
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-06-22 13:04+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:170
+#: code:addons/event_sale/models/event.py:147
 #, python-format
 msgid " with ticket %s"
 msgstr "有票 %s"
@@ -38,9 +51,19 @@ msgid "Apply"
 msgstr "应用"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+msgid "Asset Type"
+msgstr "资产类型"
+
+#. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
+#, fuzzy
 msgid "Attendee"
-msgstr "参与者"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"参与者\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"出席者"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_availability
@@ -88,8 +111,18 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_date
+#, fuzzy
 msgid "Created on"
-msgstr "创建时间"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"创建时间\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"创建于"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr "递延收入类型"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
@@ -97,11 +130,14 @@ msgid ""
 "Define the number of available tickets. If you have too much registrations "
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
-msgstr "定义可用入场券的数量。如果太多人来注册，超过设置数量就卖不出去。如果设置为0，就是忽略这条规则当成无限制"
+msgstr ""
+"定义可用入场券的数量。如果太多人来注册，超过设置数量就卖不出去。如果设置为0，"
+"就是忽略这条规则当成无限制"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,help:event_sale.field_product_template_event_ok
+#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ok
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
@@ -133,6 +169,11 @@ msgid "Event"
 msgstr "活动"
 
 #. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+msgid "Event Name"
+msgstr "活动名称"
+
+#. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
 msgstr "事件登记记录"
@@ -140,6 +181,7 @@ msgstr "事件登记记录"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,field_description:event_sale.field_product_template_event_ok
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
 msgid "Event Subscription"
@@ -165,6 +207,11 @@ msgid "Event Type"
 msgstr "活动类型"
 
 #. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+msgid "Event's Ticket"
+msgstr ""
+
+#. module: event_sale
 #: model:product.product,name:event_sale.event_1_product
 #: model:product.template,name:event_sale.event_1_product_product_template
 msgid "Functional Webinar"
@@ -179,8 +226,13 @@ msgstr "常规事件"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_id
+#, fuzzy
 msgid "ID"
-msgstr "ID"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"ID\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"标识"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_is_expired
@@ -191,22 +243,37 @@ msgstr "已结束"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket___last_update
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor___last_update
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line___last_update
+#, fuzzy
 msgid "Last Modified on"
-msgstr "最后修改时间"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"最后修改时间\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"最后修改日"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_write_uid
+#, fuzzy
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"最后更新者\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"最后更新人"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_write_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_write_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_write_date
+#, fuzzy
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"最后更新时间\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"最近更新时间"
 
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
@@ -225,13 +292,13 @@ msgid "Name"
 msgstr "名称"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:131
+#: code:addons/event_sale/models/event.py:108
 #, python-format
 msgid "No more available seats for the ticket"
 msgstr "该入场券没有可用座位"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:153
+#: code:addons/event_sale/models/event.py:130
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "该入场券没有可用座位"
@@ -332,10 +399,13 @@ msgstr "用掉的座位"
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
 #: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
+#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_type_id
 msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
-msgstr "选择事件类型，因此当我们在销售订单行使用这个产品时，只有这个类型的事件被过滤。"
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
+msgstr ""
+"选择事件类型，因此当我们在销售订单行使用这个产品时，只有这个类型的事件被过"
+"滤。"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -356,7 +426,7 @@ msgid "Standard"
 msgstr "标准"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:21
+#: code:addons/event_sale/models/event.py:19
 #, python-format
 msgid "Subscription"
 msgstr "订阅"
@@ -368,12 +438,13 @@ msgid "Technical Training"
 msgstr "技术培训"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:168
+#: code:addons/event_sale/models/event.py:145
 #, python-format
 msgid ""
 "The registration has been created for event %(event_name)s%(ticket)s from "
 "sale order %(order)s"
-msgstr "已经为事件 %(event_name)s%(ticket)s 来自销售订单的 %(order)s生成为注册登记。"
+msgstr ""
+"已经为事件 %(event_name)s%(ticket)s 来自销售订单的 %(order)s生成为注册登记。"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
@@ -410,11 +481,6 @@ msgid "VIP"
 msgstr "VIP"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
-msgid "event_ok"
-msgstr "event_ok"
-
-#. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give details about the registrations"
 msgstr "请给出注册的详细信息"
@@ -428,3 +494,9 @@ msgstr "注册.编辑"
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "registration.editor.line"
 msgstr "r注册.编辑.行"
+
+#~ msgid "event_ok"
+#~ msgstr "event_ok"
+
+#~ msgid "Event Registration"
+#~ msgstr "事件记录"

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_expense
-# 
+#
 # Translators:
 # Bohdan Lisnenko, 2015-2016
 # Bohdan Lisnenko, 2016
@@ -9,25 +9,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
 "PO-Revision-Date: 2016-05-11 10:10+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
+"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
+"uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Date:</strong>"
+#, fuzzy
+msgid "<strong>Currency:</strong>"
 msgstr "<strong>Дата:</strong>"
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Description:</strong>"
-msgstr "<strong>Опис:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -36,18 +34,31 @@ msgstr "<strong>Співробітник:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
+msgid "<strong>Manager:</strong>"
+msgstr "<strong>Дата:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
+msgid "<strong>Status:</strong>"
+msgstr "<strong>Дата:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Total</strong>"
 msgstr "<strong>Разом</strong>"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Validated By:</strong>"
-msgstr "<strong>Підтвердив:</strong>"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_id
+#, fuzzy
+msgid "Account"
+msgstr "Аналітичний рахунок"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction
-msgid "Action Needed"
-msgstr "Необхідна дія"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_accounting_date
+msgid "Accounting Date"
+msgstr ""
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
@@ -119,7 +130,9 @@ msgstr "Натисніть тут для відмови"
 #. module: hr_expense
 #: model:web.tip,description:hr_expense.expense_tip_2
 msgid "Click on Action to submit multiple expenses to your manager."
-msgstr "Натисніть Дія, щоб відправити на затвердження керівнику одразу декілька звітів."
+msgstr ""
+"Натисніть Дія, щоб відправити на затвердження керівнику одразу декілька "
+"звітів."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_product
@@ -165,11 +178,6 @@ msgstr "Валюта"
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Date"
 msgstr "Дата"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Дата останнього повідомлення по запису."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_department_id
@@ -288,18 +296,20 @@ msgid "Expenses by Month"
 msgstr "Витрати по місяцях"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:206
+#: code:addons/hr_expense/models/hr_expense.py:210
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "Витрати повинні належати одному і тому самому користувачу."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:209
+#: code:addons/hr_expense/models/hr_expense.py:213
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
 "entries."
-msgstr "Витрати повинні містити вказаний журнал витрат для створення бухгалтерських проведень."
+msgstr ""
+"Витрати повинні містити вказаний журнал витрат для створення бухгалтерських "
+"проведень."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -319,21 +329,6 @@ msgid "Expenses to Invoice"
 msgstr "Витрати до включення в рахунок"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_follower_ids
-msgid "Followers"
-msgstr "Підписники"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Підписники (Канали)"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Підписники (Партнери)"
-
-#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Former Employees"
 msgstr "Колишні співробітники"
@@ -343,22 +338,20 @@ msgstr "Колишні співробітники"
 msgid ""
 "From here the accountant will be able to approve as well as refuse the "
 "expenses which are verified by the HR Manager."
-msgstr "Звідси бухгалтер зможе затвердити або відхилити витрати, що були підтверджені керівником."
+msgstr ""
+"Звідси бухгалтер зможе затвердити або відхилити витрати, що були "
+"підтверджені керівником."
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
-msgid "Generate Single Accounting Entry"
+#, fuzzy
+msgid "Generate Accounting Entries"
 msgstr "Створити бухгалтерське проведення"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Group By"
 msgstr "Групувати за"
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
-msgid "HR Department"
-msgstr "Віділ"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
@@ -377,6 +370,12 @@ msgid "Hotel Accommodation"
 msgstr "Проживання в готелі"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
+#, fuzzy
+msgid "Hr Department"
+msgstr "Віділ"
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
 msgid "Hr Expense refuse Reason wizard"
 msgstr "Майстер створення причини відхилення витрати"
@@ -389,21 +388,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_is_follower
-msgid "Is Follower"
-msgstr "Стежить"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_move_id
 msgid "Journal Entry"
 msgstr "Запис в журналі"
@@ -412,11 +396,6 @@ msgstr "Запис в журналі"
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Item"
 msgstr "запис у журналі"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_last_post
-msgid "Last Message Date"
-msgstr "Дата останнього повідомлення"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
@@ -436,16 +415,6 @@ msgstr "Востаннє оновив"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_ids
-msgid "Messages"
-msgstr "Повідомлення"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_ids
-msgid "Messages and communication history"
-msgstr "Повідомлення та історія бесіди"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all
@@ -480,24 +449,28 @@ msgid "New Mail"
 msgstr "Новий лист"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:260
+#: code:addons/hr_expense/models/hr_expense.py:278
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
 "configure one."
-msgstr "Не знайдено рахунку витрат для товару %s (або його категорії), будь ласка, вкажіть його."
+msgstr ""
+"Не знайдено рахунку витрат для товару %s (або його категорії), будь ласка, "
+"вкажіть його."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:231
+#: code:addons/hr_expense/models/hr_expense.py:246
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
-msgstr "Не вказано домашню адресу для співробітника %s, будь ласка, вкажіть її."
+msgstr ""
+"Не вказано домашню адресу для співробітника %s, будь ласка, вкажіть її."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:227
+#: code:addons/hr_expense/models/hr_expense.py:242
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
-msgstr "Не вказано кредитовий рахунок для журналу %s, будь ласка, вкажіть його."
+msgstr ""
+"Не вказано кредитовий рахунок для журналу %s, будь ласка, вкажіть його."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -505,24 +478,9 @@ msgid "Notes..."
 msgstr "Примітки..."
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Кількість дій"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_attachment_number
 msgid "Number of Attachments"
 msgstr "Кількість долучень"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Кількість повідомлень, які потебують дії"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Кількість непрочитаних повідомлень"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense
@@ -530,12 +488,9 @@ msgstr "Кількість непрочитаних повідомлень"
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr "Як тільки ви створите свої витрати, відправте їх своєму керівнику на підтвердження."
-
-#. module: hr_expense
-#: model:ir.actions.client,name:hr_expense.action_client_expense_menu
-msgid "Open Expense Menu"
-msgstr "Відкрити меню витрат"
+msgstr ""
+"Як тільки ви створите свої витрати, відправте їх своєму керівнику на "
+"підтвердження."
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -548,12 +503,14 @@ msgid "Payment By"
 msgstr "Оплатив"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:264
+#: code:addons/hr_expense/models/hr_expense.py:282
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
 "`property_account_expense_categ_id`."
-msgstr "Будь ласка, вкажіть типовий рахунок витрат для товару: `property_account_expense_categ_id`."
+msgstr ""
+"Будь ласка, вкажіть типовий рахунок витрат для товару: "
+"`property_account_expense_categ_id`."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -615,7 +572,8 @@ msgstr "Відхилено"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense
-msgid "Reporting"
+#, fuzzy
+msgid "Reports"
 msgstr "Звіти"
 
 #. module: hr_expense
@@ -624,12 +582,14 @@ msgid "Select the lines you want to submit to be reimbursed."
 msgstr "Оберіть рядки, які ви хочете відправити на підтвердження."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:73
+#: code:addons/hr_expense/models/hr_expense.py:78
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product"
-" Unit of Measure"
-msgstr "Обрана одиниця виміру не належить до тієї ж категорії, що і одиниця виміру товару"
+"Selected Unit of Measure does not belong to the same category as the product "
+"Unit of Measure"
+msgstr ""
+"Обрана одиниця виміру не належить до тієї ж категорії, що і одиниця виміру "
+"товару"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -643,6 +603,7 @@ msgstr "Вкажіть, чи можна вказувати товар у вит�
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_state
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Status"
 msgstr "Статус"
 
@@ -691,7 +652,9 @@ msgstr "Спосіб оплати, коли витрати понесені ін
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "This document must be dated and signed for reimbursement."
-msgstr "Документ необхідно підписати та вказати дату для подальшого відшкодування витрат."
+msgstr ""
+"Документ необхідно підписати та вказати дату для подальшого відшкодування "
+"витрат."
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_expense_to_approve
@@ -733,16 +696,6 @@ msgid "Unit of Measure"
 msgstr "Одиниця виміру"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread
-msgid "Unread Messages"
-msgstr "Непрочитані повідомлення"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Кількість непрочитаних повідомлень"
-
-#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "UoM"
 msgstr "Од. Вим."
@@ -752,7 +705,9 @@ msgstr "Од. Вим."
 msgid ""
 "Use the messaging tool to log a note and attach a document to the expense. "
 "(e.g. scan of the bill)"
-msgstr "Використовуйте обговорення під документом, щоб зробити примітки та долучити  підтверджуючі документи. (нариклад, відсканований чек)"
+msgstr ""
+"Використовуйте обговорення під документом, щоб зробити примітки та долучити  "
+"підтверджуючі документи. (нариклад, відсканований чек)"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -760,50 +715,50 @@ msgid "Waiting Payment"
 msgstr "Очікування виплати"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_website_message_ids
-msgid "Website Messages"
-msgstr "Повідомлення з веб-сайту"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_website_message_ids
-msgid "Website communication history"
-msgstr "Історія бесіди на веб-сайті"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_state
 msgid ""
 "When the expense request is created the status is 'To Submit'.\n"
-" It is submitted by the employee and request is sent to manager, the status is 'Submitted'.        \n"
+" It is submitted by the employee and request is sent to manager, the status "
+"is 'Submitted'.        \n"
 "If the manager approve it, the status is 'Approved'.\n"
-" If the accountant genrate the accounting entries for the expense request, the status is 'Waiting Payment'."
-msgstr "Коли звіт про витрати створено, його статус буде \"До відправлення.\"\nКоли користувач відправив звіт керівнику для затвердження статус буде \"Відправлено.\"\nКоли керівник його підтвердить, статус буде \"Затверджено.\"\nЯкщо бухгалтер зробить проведення, то статус буде \"Очікування виплати\"."
+" If the accountant genrate the accounting entries for the expense request, "
+"the status is 'Waiting Payment'."
+msgstr ""
+"Коли звіт про витрати створено, його статус буде \"До відправлення.\"\n"
+"Коли користувач відправив звіт керівнику для затвердження статус буде "
+"\"Відправлено.\"\n"
+"Коли керівник його підтвердить, статус буде \"Затверджено.\"\n"
+"Якщо бухгалтер зробить проведення, то статус буде \"Очікування виплати\"."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:107
+#: code:addons/hr_expense/models/hr_expense.py:112
 #, python-format
 msgid "You can only delete draft or refused expenses!"
 msgstr "Ви можете вилучити тільки чернетку або відхилений звіт!"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:203
+#: code:addons/hr_expense/models/hr_expense.py:207
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr "Ви можете робити проведення тільки для затверджених звітів(у). "
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:113
+#: code:addons/hr_expense/models/hr_expense.py:118
 #, python-format
 msgid "You can only submit draft expenses!"
 msgstr "Ви можете відправляти тільки чернетки звітів!"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:124
+#: code:addons/hr_expense/models/hr_expense.py:129
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
 "class=o_timeline_tracking_value_list><li>Reason<span> : </span><span "
 "class=o_timeline_tracking_value>%s</span></li></ul>"
-msgstr "Ваші витрати %s було відхилено.<br/><ul class=o_timeline_tracking_value_list><li>Причина<span>: </span><span class=o_timeline_tracking_value>%s</span></li></ul>"
+msgstr ""
+"Ваші витрати %s було відхилено.<br/><ul "
+"class=o_timeline_tracking_value_list><li>Причина<span>: </span><span "
+"class=o_timeline_tracking_value>%s</span></li></ul>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -814,3 +769,72 @@ msgstr "наприклад Бізнес-ланч з Х"
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "or"
 msgstr "або"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
+msgid "report.hr_expense.report_expense"
+msgstr ""
+
+#~ msgid "<strong>Description:</strong>"
+#~ msgstr "<strong>Опис:</strong>"
+
+#~ msgid "<strong>Validated By:</strong>"
+#~ msgstr "<strong>Підтвердив:</strong>"
+
+#~ msgid "Action Needed"
+#~ msgstr "Необхідна дія"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Дата останнього повідомлення по запису."
+
+#~ msgid "Followers"
+#~ msgstr "Підписники"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Підписники (Канали)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Підписники (Партнери)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr ""
+#~ "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
+
+#~ msgid "Is Follower"
+#~ msgstr "Стежить"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Дата останнього повідомлення"
+
+#~ msgid "Messages"
+#~ msgstr "Повідомлення"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Повідомлення та історія бесіди"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Кількість дій"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Кількість повідомлень, які потебують дії"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Кількість непрочитаних повідомлень"
+
+#~ msgid "Open Expense Menu"
+#~ msgstr "Відкрити меню витрат"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Непрочитані повідомлення"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Кількість непрочитаних повідомлень"
+
+#~ msgid "Website Messages"
+#~ msgstr "Повідомлення з веб-сайту"
+
+#~ msgid "Website communication history"
+#~ msgstr "Історія бесіди на веб-сайті"

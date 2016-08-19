@@ -1,7 +1,8 @@
+# #-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale
-# 
+#
 # Translators:
 # Clo <clo@odoo.com>, 2015
 # Fabien Pinckaers <fp@openerp.com>, 2015
@@ -16,87 +17,85 @@
 # Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015-2016
 # Melanie Bernard <mbe@odoo.com>, 2015
 # Nancy Bolognesi <nb@microcom.ca>, 2015
+# #-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale
+#
+# Translators:
+# Clo <clo@odoo.com>, 2015
+# Fabien Pinckaers <fp@openerp.com>, 2015
+# Fabrice Henrion, 2016
+# Florian Hatat, 2015
+# Florian Hatat, 2015
+# Hubert TETARD <htetard@apik-conseils.com>, 2015
+# Hubert TETARD <htetard@apik-conseils.com>, 2015
+# Lucas Deliege <lud@odoo.com>, 2015-2016
+# Martin Trigaux, 2015-2016
+# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015-2016
+# Melanie Bernard <mbe@odoo.com>, 2015
+# Nancy Bolognesi <nb@microcom.ca>, 2015
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-07-26 10:33+0000\n"
-"Last-Translator: Jérôme Tanché <jerome.tanche@ouest-dsi.fr>\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"PO-Revision-Date: 2016-06-28 12:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"% set access_action = object.get_access_action()\n"
+"% set doc_name = 'quotation' if object.state in ('draft', 'sent') else "
+"'order confirmation'\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions."
+"act_url'\n"
+"% set access_name = is_online and object.template_id and 'Accept and pay %s "
+"online' % doc_name or 'View %s' % doc_name\n"
+"% set access_url = is_online and access_action['url'] or object."
+"get_signup_url()\n"
 "\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>\n"
+"<p>Dear\n"
+"% if object.partner_id.is_company and object.child_ids:\n"
+"    ${object.partner_id.child_ids[0].name}\n"
+"% else :\n"
+"    ${object.partner_id.name}\n"
+"% endif\n"
+",</p>\n"
+"<p>Thank you for your inquiry.<br />\n"
+"Here is your ${doc_name} <strong>${object.name}</strong>\n"
+"% if object.origin:\n"
+"(with reference: ${object.origin} )\n"
+"% endif\n"
+"amounting in <strong>${object.amount_total} ${object.pricelist_id."
+"currency_id.name}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
 "\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"    <p>\n"
-"        You can view your quotation online:\n"
-"    </p>\n"
-"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-"\n"
-"    % if object.paypal_url:\n"
-"    <br/>\n"
-"    <p>It is also possible to directly pay with Paypal:</p>\n"
-"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
-"        </a>\n"
-"    % endif\n"
-"\n"
-"    <br/>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Bonjour ${object.partner_id.name},</p>\n    \n    <p>Voici votre ${object.state in ('draft', 'sent') and 'devis' or 'confirmation de commande'} de ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;Numéro de commande&nbsp;: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Total de la commande&nbsp;: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Date de la commande&nbsp;: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Référence de la commande&nbsp;: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Votre référence&nbsp;: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Votre contact&nbsp;: <a href=\"mailto:${object.user_id.email or ''}?subject=Commande%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n    <p>\n      Vous pouvez voir votre devis en ligne&nbsp;:\n    </p>\n    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n        href=\"/quote/${object.id}/${object.access_token}\">Voir votre ${object.state in ('draft', 'sent') and 'devis' or 'commande'}</a>\n\n    % if object.paypal_url:\n    <br/>\n    <p>Il est également possible de payer directement avec Paypal&nbsp;:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>Si vous avez des questions, n'hésitez pas à nous contacter.</p>\n    <p>Merci d'avoir choisi ${object.company_id.name or 'notre société'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Tél&nbsp;:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web&nbsp;:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+"<p style=\"margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;\">\n"
+"    <a href=\"${access_url}\" style=\"padding: 5px 10px; font-size: 12px; "
+"line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: "
+"none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-"
+"align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; "
+"background-image: none; background-color: #a24689; border: 1px solid "
+"#a24689; border-radius:3px\" class=\"o_default_snippet_text\">${access_name}"
+"</a>\n"
+"</p>\n"
+"<p>If you have any question, do not hesitate to contact us.</p>\n"
+"<p>Best regards,</p>\n"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -134,14 +133,25 @@ msgstr "N° de la commande"
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
+msgstr ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
+#, fuzzy
 msgid ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Devis' or 'Bon de commande'} (Réf ${object.name or 'n/a' })"
+msgstr ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Devis' or 'Bon de commande'} (Réf ${object.name or 'n/a' })"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "&amp;bull;"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -149,9 +159,13 @@ msgid "(update)"
 msgstr "(mise à jour)"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
-msgstr "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
+#: model:ir.actions.act_window,help:sale.action_orders_upselling
+msgid ""
+"<i>Example: pre-paid service offers for which the customer have\n"
+"                to buy an extra pack of hours, because he used all his "
+"support\n"
+"                hours.</i>"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -174,6 +188,13 @@ msgid "<strong>Shipping address:</strong>"
 msgstr "<strong>Addresse de livraison:</strong>"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
+msgid "<strong>Subtotal: </strong>"
+msgstr "<strong>Total</strong>"
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Total Without Taxes</strong>"
 msgstr "<strong>Total hors taxe</strong>"
@@ -194,14 +215,25 @@ msgid "A single sale price per product"
 msgstr "Un seul prix de vente par article"
 
 #. module: sale
+#: model:res.groups,name:sale.group_warning_sale
+msgid "A warning can be set on a product or a customer (Sale)"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Account used for deposits"
 msgstr "Compte utilisé pour les dépôts"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_needaction
-msgid "Action Needed"
-msgstr "A besoin d'une action"
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_pagebreak
+msgid "Add pagebreak"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_subtotal
+#, fuzzy
+msgid "Add subtotal"
+msgstr "Sous-total"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_delivery_address
@@ -214,7 +246,7 @@ msgid "Addresses in Sales Orders"
 msgstr "Adresses des commandes"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:126
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:139
 #, python-format
 msgid "Advance: %s"
 msgstr "Avance : %s"
@@ -223,6 +255,11 @@ msgstr "Avance : %s"
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Advanced pricing based on formula"
 msgstr "Tarification avancée en fonction d'une formule"
+
+#. module: sale
+#: selection:sale.config.settings,group_warning_sale:0
+msgid "All the products and the customers can be used in sale orders"
+msgstr ""
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
@@ -234,30 +271,39 @@ msgstr "Permettre les remises sur les lignes de commande"
 msgid ""
 "Allow to edit sales order from the 'Sales Order' menu (not from the "
 "Quotation menu)"
-msgstr "Autoriser la modification des ordres de vente dans le menu \"Ordres de vente\" (et non dans le menu \"Devis\")"
+msgstr ""
+"Autoriser la modification des ordres de vente dans le menu \"Ordres de vente"
+"\" (et non dans le menu \"Devis\")"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
-"                    Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr "Permet de gérer les différents prix basés sur des règles par catégorie de clients.\nExemple : 10% pour les revendeurs, promotion de 5 EUR sur cet article etc."
+"                    Example: 10% for retailers, promotion of 5 EUR on this "
+"product, etc."
+msgstr ""
+"Permet de gérer les différents prix basés sur des règles par catégorie de "
+"clients.\n"
+"Exemple : 10% pour les revendeurs, promotion de 5 EUR sur cet article etc."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_uom
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr "Permet de choisir et de gérer différentes unités de mesures pour les articles."
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_account_config_settings_group_analytic_account_for_sales
-msgid "Allows you to specify an analytic account on sales orders."
-msgstr "Vous permet de spécifier un compte analytique sur les commandes de vente."
+msgstr ""
+"Permet de choisir et de gérer différentes unités de mesures pour les "
+"articles."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_amount
 msgid "Amount of sales to invoice"
 msgstr "Montant des ventes à facturer"
+
+#. module: sale
+#: selection:sale.config.settings,group_warning_sale:0
+msgid ""
+"An informative or blocking warning can be set on a product or a customer"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_project_id
@@ -271,14 +317,21 @@ msgid "Analytic Accounting for Sales"
 msgstr "Comptes analytiques des ventes"
 
 #. module: sale
-#: model:ir.model,name:sale.model_account_analytic_line
-msgid "Analytic Line"
+#: model:ir.model.fields,field_description:sale.field_sale_order_line_analytic_tag_ids
+#, fuzzy
+msgid "Analytic Tags"
 msgstr "Ligne analytique"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_account_config_settings_group_analytic_account_for_sales
-msgid "Analytic accounting for sales"
-msgstr "Comptabilité analytique pour les ventes"
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Blocking Message"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
+msgid "Breaks Page"
+msgstr ""
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
@@ -350,6 +403,12 @@ msgid "Confirm Sale"
 msgstr "Confirmer la vente"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_confirmation_date
+#, fuzzy
+msgid "Confirmation Date"
+msgstr "Date de création"
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Create Invoice"
 msgstr "Créer une facture"
@@ -380,6 +439,7 @@ msgstr "Créer et afficher des factures"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_create_uid
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_create_uid
 msgid "Created by"
@@ -387,6 +447,7 @@ msgstr "Créé par"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_create_date
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_create_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_create_date
 msgid "Created on"
 msgstr "Créé le"
@@ -417,7 +478,6 @@ msgid "Customer Reference"
 msgstr "Référence client"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_product_taxes_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Customer Taxes"
 msgstr "Taxes à la vente"
@@ -438,13 +498,14 @@ msgid "Date Ordered:"
 msgstr "Date de commande :"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Date du dernier message posté sur cet enregistrement"
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_create_date
 msgid "Date on which sales order is created."
+msgstr "Date à laquelle le bon de commande a été créé."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_confirmation_date
+#, fuzzy
+msgid "Date on which the sale order is confirmed."
 msgstr "Date à laquelle le bon de commande a été créé."
 
 #. module: sale
@@ -510,6 +571,7 @@ msgstr "Article de dépôt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Description"
 msgstr "Description"
@@ -518,6 +580,13 @@ msgstr "Description"
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Different prices per customer segment"
 msgstr "Prix différents par segment de clients"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
+msgid "Disc.(%)"
+msgstr "Remise (%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -537,12 +606,14 @@ msgstr "Remise sur les lignes"
 #. module: sale
 #: selection:sale.config.settings,group_sale_delivery_address:0
 msgid ""
-"Display 3 fields on sales orders: customer, invoice address, delivery "
-"address"
-msgstr "Afficher 3 champs dans les ordres de vente : le client, l'adresse de facturation, l'adresse de livraison"
+"Display 3 fields on sales orders: customer, invoice address, delivery address"
+msgstr ""
+"Afficher 3 champs dans les ordres de vente : le client, l'adresse de "
+"facturation, l'adresse de livraison"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_display_name
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_order_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report_display_name
@@ -560,12 +631,18 @@ msgid "Display margins on quotations and sales orders"
 msgstr "Afficher les marges sur les devis et les commandes de ventes"
 
 #. module: sale
+#: selection:sale.config.settings,group_sale_layout:0
+#, fuzzy
+msgid "Do not personalize sale orders and invoice reports"
+msgstr "Afficher les incotermes sur les ordres de vente et les factures "
+
+#. module: sale
 #: selection:sale.order,state:0
 msgid "Done"
 msgstr "Terminé"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:70
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:83
 #, python-format
 msgid "Down Payment"
 msgstr "Acompte"
@@ -591,7 +668,7 @@ msgid "Down payment (percentage)"
 msgstr "Acompte (pourcentage)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:67
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:80
 #, python-format
 msgid "Down payment of %s%%"
 msgstr "Acompte de %s%%"
@@ -607,14 +684,17 @@ msgid "Email composition wizard"
 msgstr "Assistant de composition de courriel"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
-msgid "Enable customer portal to track orders, delivery and invoices"
-msgstr "Permettre au portail client de surveiller les commandes, livraisons et factures"
+#: model:ir.model,name:sale.model_survey_mail_compose_message
+#, fuzzy
+msgid "Email composition wizard for Survey"
+msgstr "Assistant de composition de courriel"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_product_property_account_expense_id
-msgid "Expense Account"
-msgstr "Compte de dépenses"
+#: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
+msgid "Enable customer portal to track orders, delivery and invoices"
+msgstr ""
+"Permettre au portail client de surveiller les commandes, livraisons et "
+"factures"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
@@ -635,24 +715,15 @@ msgstr "Régime fiscal"
 #: model:ir.model.fields,help:sale.field_sale_config_settings_sale_pricelist_setting
 msgid ""
 "Fix Price: all price manage from products sale price.\n"
-"Different prices per Customer: you can assign price on buying of minimum quantity in products sale tab.\n"
+"Different prices per Customer: you can assign price on buying of minimum "
+"quantity in products sale tab.\n"
 "Advanced pricing based on formula: You can have all the rights on pricelist"
-msgstr "Prix fixe : tous les prix sont gérés depuis le prix de vente de l'article.\nDifférents prix par client : vous pouvez attribuer le prix sur un achat d'une quantité minimum dans l'onglet ventes de l'article.\nLa tarification avancée basée sur une formule : Vous pouvez avoir tous les droits sur la liste de prix"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_follower_ids
-msgid "Followers"
-msgstr "Abonnés"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Abonnés (Canaux)"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Abonnés (Partenaires)"
+msgstr ""
+"Prix fixe : tous les prix sont gérés depuis le prix de vente de l'article.\n"
+"Différents prix par client : vous pouvez attribuer le prix sur un achat "
+"d'une quantité minimum dans l'onglet ventes de l'article.\n"
+"La tarification avancée basée sur une formule : Vous pouvez avoir tous les "
+"droits sur la liste de prix"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -660,13 +731,22 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr "Depuis ce rapport, vous pouvez avoir une vue générale de la somme facturée à votre client. L'outil de recherche peut aussi être utilisé pour personnaliser vos rapports de factures et dès lors, adapter cette analyse à vos besoins."
+msgstr ""
+"Depuis ce rapport, vous pouvez avoir une vue générale de la somme facturée à "
+"votre client. L'outil de recherche peut aussi être utilisé pour "
+"personnaliser vos rapports de factures et dès lors, adapter cette analyse à "
+"vos besoins."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Fully Invoiced"
 msgstr "Entièrement facturé"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report_weight
+msgid "Gross Weight"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -676,7 +756,14 @@ msgid "Group By"
 msgstr "Regrouper par"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
+#, fuzzy
+msgid "Group By Name"
+msgstr "Regrouper par"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_id
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_id
@@ -686,23 +773,15 @@ msgstr "ID"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
-"If a sale order is done, you cannot modify it manually anymore. However, you"
-" will still be able to invoice or deliver. This is used to freeze the sale "
+"If a sale order is done, you cannot modify it manually anymore. However, you "
+"will still be able to invoice or deliver. This is used to freeze the sale "
 "order."
-msgstr "Si un ordre de vente est fait, vous ne pouvez plus le modifier manuellement. Cependant, vous pouvez toujours facturer ou livrer. Ceci est utilisé pour geler l'ordre de vente."
+msgstr ""
+"Si un ordre de vente est fait, vous ne pouvez plus le modifier manuellement. "
+"Cependant, vous pouvez toujours facturer ou livrer. Ceci est utilisé pour "
+"geler l'ordre de vente."
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Si coché, de nouveaux messages demandent votre attention."
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "si elle est cochée, de nouveaux messages requièrent votre attention."
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_product_property_account_income_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Income Account"
 msgstr "Compte de revenus"
@@ -718,7 +797,7 @@ msgid "Invoice"
 msgstr "Facture"
 
 #. module: sale
-#: code:addons/sale/sale.py:785
+#: code:addons/sale/sale.py:916
 #, python-format
 msgid "Invoice %s paid"
 msgstr "Facture %s payée"
@@ -780,11 +859,6 @@ msgid "Invoice based on costs (time and material, expenses)"
 msgstr "Facture basée sur les coûts  (temps et matériel, dépenses)"
 
 #. module: sale
-#: selection:product.template,invoice_policy:0
-msgid "Invoice based on time and material"
-msgstr "Facture basée sur le temps et le matériel"
-
-#. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
 msgid "Invoice delivered quantities"
 msgstr "Facturer les quantités livrées"
@@ -797,10 +871,13 @@ msgstr "Facturer les quantités commandées"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_invoiced
 msgid ""
-"Invoice revenue for the current month. This is the amount the sales team has"
-" invoiced this month. It is used to compute the progression ratio of the "
+"Invoice revenue for the current month. This is the amount the sales team has "
+"invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
-msgstr "Prévision de facturation pour le mois en cours. C'est le montant que l'équipe commerciale a facturé ce mois.\nPermet de calculer le ratio réalisé/prévision affiché sur la vue kanban."
+msgstr ""
+"Prévision de facturation pour le mois en cours. C'est le montant que "
+"l'équipe commerciale a facturé ce mois.\n"
+"Permet de calculer le ratio réalisé/prévision affiché sur la vue kanban."
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -848,10 +925,14 @@ msgstr "Statistiques des factures"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#, fuzzy
 msgid ""
-"Invoices will be created in draft so that you can update\n"
+"Invoices will be created in draft so that you can review\n"
 "                        them before validation."
-msgstr "Les factures vont être crées en tant que brouillon pour que vous puissiez les modifier\navant la validation."
+msgstr ""
+"Les factures vont être crées en tant que brouillon pour que vous puissiez "
+"les modifier\n"
+"avant la validation."
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -863,6 +944,7 @@ msgstr "Facturation"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_invoice_policy
+#: model:ir.ui.view,arch_db:sale.product_template_form_view_invoice_policy
 msgid "Invoicing Policy"
 msgstr "Politique de facturation"
 
@@ -881,7 +963,9 @@ msgstr "Adresse de facturation et de livraison :"
 msgid ""
 "Invoicing and shipping addresses are always the same (Example: services "
 "companies)"
-msgstr "Les adresses de facturation et de livraison sont toujours les mêmes. (Exemple : sociétés de services)"
+msgstr ""
+"Les adresses de facturation et de livraison sont toujours les mêmes. "
+"(Exemple : sociétés de services)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
@@ -889,17 +973,8 @@ msgid "Invoicing/Progression Ratio"
 msgstr "Facturation/Ratio d'avancement"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_is_follower
-msgid "Is Follower"
-msgstr "Est un abonné"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_last_post
-msgid "Last Message Date"
-msgstr "Date du dernier message"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_order___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_order_line___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_report___last_update
@@ -908,6 +983,7 @@ msgstr "Dernière modification le"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_write_uid
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_write_uid
 msgid "Last Updated by"
@@ -915,10 +991,18 @@ msgstr "Mis à jour par"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_write_date
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_write_date
 msgid "Last Updated on"
 msgstr "Mis à jour le"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_sequence
+#: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_sequence
+#, fuzzy
+msgid "Layout Sequence"
+msgstr "Séquence"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
@@ -927,8 +1011,33 @@ msgstr "Gérer les inscriptions et les facturations récurrentes"
 
 #. module: sale
 #: selection:product.template,track_service:0
+#, fuzzy
 msgid "Manually set quantities on order"
-msgstr "Mettre manuellement les quantités sur la commande"
+msgstr ""
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Mettre manuellement les quantités sur la commande\n"
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Mettre manuellement les quantités à zéro "
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_track_service
+#: model:ir.model.fields,help:sale.field_product_template_track_service
+msgid ""
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sale order validation "
+"and track the work hours."
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_validity_date
+msgid ""
+"Manually set the expiration date of your quotation (offer), or it will set "
+"the date automatically based on the template if online quotation is "
+"installed."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
@@ -936,14 +1045,27 @@ msgid "Margins"
 msgstr "Marges"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_ids
-msgid "Messages"
-msgstr "Messages"
+#: model:sale.layout_category,name:sale.sale_layout_cat_2
+msgid "Material"
+msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_message_ids
-msgid "Messages and communication history"
-msgstr "Historique des messages et communications"
+#: model:ir.model.fields,field_description:sale.field_res_partner_sale_warn_msg
+#, fuzzy
+msgid "Message for Sales Order"
+msgstr "Recherche de commandes de ventes"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_sale_line_warn_msg
+#: model:ir.model.fields,field_description:sale.field_product_template_sale_line_warn_msg
+#, fuzzy
+msgid "Message for Sales Order Line"
+msgstr "Mes lignes de bons de commande"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.view_sales_config
+msgid "More Info"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -956,12 +1078,18 @@ msgid "My Sales Order Lines"
 msgstr "Mes lignes de bons de commande"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_name
+#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
+msgid "Name"
+msgstr ""
+
+#. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
 msgid "Never allow to modify a confirmed sale order"
 msgstr "Ne jamais permettre de modifier un ordre de vente"
 
 #. module: sale
-#: code:addons/sale/sale.py:96
+#: code:addons/sale/sale.py:102
 #, python-format
 msgid "New"
 msgstr "Nouveau"
@@ -972,9 +1100,17 @@ msgid "New Quotation"
 msgstr "Nouveau devis"
 
 #. module: sale
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,sale_warn:0
+#, fuzzy
+msgid "No Message"
+msgstr "Messages"
+
+#. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "No discount on sales order lines, global discount only"
-msgstr "Pas de réduction sur les lignes des ordres de commande, que réduction globale"
+msgstr ""
+"Pas de réduction sur les lignes des ordres de commande, que réduction globale"
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
@@ -988,20 +1124,32 @@ msgstr "Pas de variantes sur les articles"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
+#, fuzzy
+msgid ""
+"Note that once a Quotation becomes a Sale Order, it will be moved\n"
+"                from the Quotations list to the Sales Order list."
+msgstr ""
+"Attention, dès que le devis devient un bon de commande, il bougera \n"
+"de la liste de devis à celle des Bons de commande."
+
+#. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved \n"
 "                from the Quotations list to the Sales Order list."
-msgstr "Attention, dès que le devis devient un bon de commande, il bougera \nde la liste de devis à celle des Bons de commande."
+msgstr ""
+"Attention, dès que le devis devient un bon de commande, il bougera \n"
+"de la liste de devis à celle des Bons de commande."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
-#: model:ir.actions.act_window,help:sale.action_orders
 #: model:ir.actions.act_window,help:sale.action_orders_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved from the "
 "Quotations list to the Sales Order list."
-msgstr "Attention, dès que le devis devient un bon de commande, il bougera de la liste de devis à celle des Bons de commande."
+msgstr ""
+"Attention, dès que le devis devient un bon de commande, il bougera de la "
+"liste de devis à celle des Bons de commande."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -1010,31 +1158,33 @@ msgid "Nothing to Invoice"
 msgstr "Rien à facturer"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Nombre d'Actions"
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_customer_lead
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr "Nombre de jours entre la confirmation de la commande et l'expédition des articles au client."
+msgstr ""
+"Nombre de jours entre la confirmation de la commande et l'expédition des "
+"articles au client."
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Nombre de messages demandant une action"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Nombre de messages non lus"
+#: model:ir.actions.act_window,help:sale.action_orders
+msgid ""
+"Once the quotation is confirmed, it becomes a sales order.\n"
+"                    You'll be able to invoice it and collect payments.\n"
+"                    From the <i>Sales Orders</i> menu, you can track "
+"delivery\n"
+"                    orders or services."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
+#, fuzzy
 msgid "Online Quotations"
-msgstr "Devis en ligne"
+msgstr ""
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Devis en ligne\n"
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Factures en ligne"
 
 #. module: sale
 #. openerp-web
@@ -1042,11 +1192,6 @@ msgstr "Devis en ligne"
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "Seul entier sera une valeur valide."
-
-#. module: sale
-#: model:ir.actions.client,name:sale.action_client_sale_menu
-msgid "Open Sale Menu"
-msgstr "Ouvrir le menu \"Vente\""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -1083,6 +1228,7 @@ msgstr "N° de commande"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_order_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_name
+#: model:ir.model.fields,field_description:sale.field_sale_report_name
 msgid "Order Reference"
 msgstr "Référence commande"
 
@@ -1102,6 +1248,16 @@ msgid "Ordered Quantity"
 msgstr "Quantité commandée"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_invoice_policy
+#: model:ir.model.fields,help:sale.field_product_template_invoice_policy
+msgid ""
+"Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
+"Delivered Quantity: Invoiced based on the quantity the vendor delivered.\n"
+"Reinvoice Costs: Invoice with some additional charges (product transfer, "
+"labour charges,...)"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Ordered date of the sales order"
 msgstr "Date de commande du bon de commande"
@@ -1116,6 +1272,15 @@ msgstr "Quantités commandées"
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
 msgstr "Commandes à faire monter en gamme"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_orders_upselling
+msgid ""
+"Orders to upsell are orders having products with an invoicing\n"
+"                policy based on <i>ordered quantities</i> for which you "
+"have\n"
+"                delivered more than what have been ordered."
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1144,23 +1309,33 @@ msgid "Payment Term"
 msgstr "Condition de règlement"
 
 #. module: sale
-#: code:addons/sale/sale.py:233
+#: model:res.groups,name:sale.group_sale_layout
+#, fuzzy
+msgid "Personalize sale order and invoice report"
+msgstr "Afficher les incotermes sur les ordres de vente et les factures "
+
+#. module: sale
+#: selection:sale.config.settings,group_sale_layout:0
+msgid ""
+"Personalize the sale orders and invoice report with categories, subtotals "
+"and page-breaks"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:278
 #, python-format
 msgid "Please define an accounting sale journal for this company."
 msgstr "Veuillez définir un journal de vente pour cette entreprise."
 
 #. module: sale
-#: code:addons/sale/sale.py:654
+#: code:addons/sale/sale.py:764
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
 "category: \"%s\"."
-msgstr "Veuillez définir un compte de revenu pour ce produit: \"%s\" (id. : %d) -ou pour sa catégorie \"%s\""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Price"
-msgstr "Prix"
+msgstr ""
+"Veuillez définir un compte de revenu pour ce produit: \"%s\" (id. : %d) -ou "
+"pour sa catégorie \"%s\""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce
@@ -1185,8 +1360,13 @@ msgstr "Imprimer"
 
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
+#, fuzzy
 msgid "Print quotes or send by email"
-msgstr "Imprimer les devis ou les envoyer par courriel"
+msgstr ""
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Imprimer les devis ou les envoyer par courriel\n"
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Imprimer les factures ou par email"
 
 #. module: sale
 #: model:ir.model,name:sale.model_procurement_order
@@ -1239,7 +1419,9 @@ msgstr "Articles"
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr "Les articles peuvent avoir plusieurs attributs, définissant des variantes (exemple : taille, couleur, ...)"
+msgstr ""
+"Les articles peuvent avoir plusieurs attributs, définissant des variantes "
+"(exemple : taille, couleur, ...)"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
@@ -1273,6 +1455,7 @@ msgstr "Qté à facturer"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom_qty
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quantity"
 msgstr "Quantité"
@@ -1331,7 +1514,8 @@ msgstr "Devis envoyé"
 #: model:ir.model.fields,field_description:sale.field_crm_team_use_quotations
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Quotations"
 msgstr "Devis"
 
@@ -1346,6 +1530,12 @@ msgid "Quotations Analysis"
 msgstr "Analyse des devis"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#, fuzzy
+msgid "Quotations Sent"
+msgstr "Devis envoyé"
+
+#. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
 msgstr "Devis et ventes"
@@ -1354,6 +1544,25 @@ msgstr "Devis et ventes"
 #: model:ir.model.fields,help:sale.field_sale_order_origin
 msgid "Reference of the document that generated this sales order request."
 msgstr "Référence du document qui a généré cette demande de commande."
+
+#. module: sale
+#: selection:product.template,invoice_policy:0
+#, fuzzy
+msgid "Reinvoice Costs"
+msgstr "État de la facture"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.report_configuration_action
+#: model:ir.ui.view,arch_db:sale.report_configuration_form_view
+#: model:ir.ui.view,arch_db:sale.report_configuration_tree_view
+msgid "Report Configuration"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.Report_configuration
+#, fuzzy
+msgid "Report Layout Categories"
+msgstr "Catégorie d'articles"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1388,14 +1597,19 @@ msgid "Sale Price"
 msgstr "Prix de vente"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_layout
+msgid "Sale Reports Layout"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
+#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model:ir.ui.view,arch_db:sale.view_company_inherit_form2
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales"
 msgstr "Ventes"
 
@@ -1431,6 +1645,7 @@ msgstr "Information sur les ventes"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_order_ids
+#: model:ir.model.fields,field_description:sale.field_res_partner_sale_warn
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:res.request.link,name:sale.req_link_sale_order
@@ -1446,6 +1661,8 @@ msgstr "Commande de vente confirmée"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
+#: model:ir.model.fields,field_description:sale.field_product_product_sale_line_warn
+#: model:ir.model.fields,field_description:sale.field_product_template_sale_line_warn
 msgid "Sales Order Line"
 msgstr "Ligne de bons de commande"
 
@@ -1466,7 +1683,7 @@ msgid "Sales Order Lines related to a Sales Order of mine"
 msgstr "Lignes de commande liées à une de mes commandes"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Sales Order that haven't yet been confirmed"
 msgstr "Commandes qui n'ont pas encore été confirmées"
 
@@ -1524,16 +1741,41 @@ msgid "Salesperson"
 msgstr "Vendeur"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
+#, fuzzy
+msgid "Search Name"
+msgstr "Recherche de commandes de ventes"
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
 msgstr "Recherche de commandes de ventes"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_id
+#, fuzzy
+msgid "Section"
+msgstr "Description"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_sale_line_warn
+#: model:ir.model.fields,help:sale.field_product_template_sale_line_warn
+#: model:ir.model.fields,help:sale.field_res_partner_sale_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_sale_digital
 msgid ""
 "Sell digital products - provide downloadable content on your customer portal"
-msgstr "Vendez des produits digitaux - mettez à disposition du contenu téléchargeable sur votre portai lclient"
+msgstr ""
+"Vendez des produits digitaux - mettez à disposition du contenu "
+"téléchargeable sur votre portai lclient"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1542,13 +1784,29 @@ msgstr "Envoyer par courriel"
 
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
+#, fuzzy
 msgid "Send online quotations based on templates (advanced)"
-msgstr "Envoyez des devis en ligne basés sur des modèles (avancé)"
+msgstr ""
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Envoyez des devis en ligne basés sur des modèles (avancé)\n"
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Envoyez des devis basés sur des modèles (avancé)"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_sequence
 msgid "Sequence"
 msgstr "Séquence"
+
+#. module: sale
+#: model:sale.layout_category,name:sale.sale_layout_cat_1
+#, fuzzy
+msgid "Services"
+msgstr ""
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Service de suivi\n"
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Service de suivie"
 
 #. module: sale
 #. openerp-web
@@ -1570,7 +1828,8 @@ msgstr "Mettre en Devis"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Setup default terms and conditions in your company settings."
-msgstr "Définir les termes et conditions par défaut dans vos réglages d'entreprise "
+msgstr ""
+"Définir les termes et conditions par défaut dans vos réglages d'entreprise "
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
@@ -1589,9 +1848,12 @@ msgstr "Montrer les listes de prix au clients"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
+#, fuzzy
 msgid ""
-"Some products may be sold/purchased in different unit of measures (advanced)"
-msgstr "Certains produits peuvent être vendus/achetés dans différentes unités de mesure (avancé)"
+"Some products may be sold/purchased in different units of measure (advanced)"
+msgstr ""
+"Certains produits peuvent être vendus/achetés dans différentes unités de "
+"mesure (avancé)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1620,12 +1882,22 @@ msgstr "Sous-total"
 msgid ""
 "Target of invoice revenue for the current month. This is the amount the "
 "sales team estimates to be able to invoice this month."
-msgstr "Objectif de revenu facturé pour le mois courant.\nC'est le montant que l'équipe commerciale pense pouvoir atteindre ce mois."
+msgstr ""
+"Objectif de revenu facturé pour le mois courant.\n"
+"C'est le montant que l'équipe commerciale pense pouvoir atteindre ce mois."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
+msgid "Tax Excluded Price"
+msgstr "Prix de vente"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_tax
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_tax_id
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Taxes"
 msgstr "Taxes"
@@ -1641,12 +1913,14 @@ msgid "Terms and conditions"
 msgstr "Conditions de vente"
 
 #. module: sale
-#: code:addons/sale/sale_analytic.py:54
+#: code:addons/sale/sale_analytic.py:56
 #, python-format
 msgid ""
 "The Sale Order %s linked to the Analytic Account must be validated before "
 "registering expenses."
-msgstr "L'ordre de ventes %s est lié au Compte Analytique et doit être validé avant d'enregistrer les dépenses. "
+msgstr ""
+"L'ordre de ventes %s est lié au Compte Analytique et doit être validé avant "
+"d'enregistrer les dépenses. "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
@@ -1663,41 +1937,51 @@ msgstr "Le compte analytique lié au bon de commandes"
 msgid ""
 "The printed reports will display the incoterms for the sale orders and the "
 "related invoices"
-msgstr "Le rapport imprimé affichera les incoterms dans les ordres de ventes et les factures liées"
+msgstr ""
+"Le rapport imprimé affichera les incoterms dans les ordres de ventes et les "
+"factures liées"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:124
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:137
 #, python-format
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
-msgstr "Le produit utilisé pour facturer une avance doit être de type 'service'. Veuillez utiliser un autre produit pour modifier ce produit."
+msgstr ""
+"Le produit utilisé pour facturer une avance doit être de type 'service'. "
+"Veuillez utiliser un autre produit pour modifier ce produit."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:122
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:135
 #, python-format
 msgid ""
-"The product used to invoice a down payment should have an invoice policy set"
-" to \"Ordered quantities\". Please update your deposit product to be able to"
-" create a deposit invoice."
-msgstr "Le produit utilisé pour facturer un acompte doit avoir une police de facture configurée sous \"Quantités commandées\". Veuillez mettre à jour votre produit de dépôt pour pouvoir créer une facture d'acompte."
+"The product used to invoice a down payment should have an invoice policy set "
+"to \"Ordered quantities\". Please update your deposit product to be able to "
+"create a deposit invoice."
+msgstr ""
+"Le produit utilisé pour facturer un acompte doit avoir une police de facture "
+"configurée sous \"Quantités commandées\". Veuillez mettre à jour votre "
+"produit de dépôt pour pouvoir créer une facture d'acompte."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:64
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:77
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr "La valeur du montant de l'avance doit être positif. "
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:60
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:73
 #, python-format
 msgid ""
-"There is no income account defined for this product: \"%s\". You may have to"
-" install a chart of account from Accounting app, settings menu."
-msgstr "Il n'y a pas de compte de revenus défini pour ce produit: \"%s\". Vous devrez sans doute installer un plan comptabe depuis l'application Comptabilité, dans le menu de configuration. "
+"There is no income account defined for this product: \"%s\". You may have to "
+"install a chart of account from Accounting app, settings menu."
+msgstr ""
+"Il n'y a pas de compte de revenus défini pour ce produit: \"%s\". Vous "
+"devrez sans doute installer un plan comptabe depuis l'application "
+"Comptabilité, dans le menu de configuration. "
 
 #. module: sale
-#: code:addons/sale/sale.py:316
+#: code:addons/sale/sale.py:362 code:addons/sale/sale.py:366
 #, python-format
 msgid "There is no invoicable line."
 msgstr "Il n'y a pas de ligne facturable."
@@ -1708,35 +1992,29 @@ msgid "This Year"
 msgstr "Cette année"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_product_product_property_account_expense_id
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"expenses for the current product."
-msgstr "Ce compte sera utilisé au lieu de celui par défaut pour les factures pour comptabiliser les achats pour le produit en cours."
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_product_product_property_account_income_id
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"sales for the current product."
-msgstr "Ce compte sera utilisé au lieu de celui par défaut pour les factures pour comptabiliser les ventes pour le produit en cours."
-
-#. module: sale
 #: model:web.tip,description:sale.sale_tip_1
 msgid ""
 "This progress bar shows the stages your quotation will go through.\n"
 "                Use buttons on the left to move forward to the next stages."
-msgstr "Cette barre de progression montre les étapes que va suivre votre devis.\nUtilisez les boutons sur la gauche pour vous déplacer aux étapes suivantes."
+msgstr ""
+"Cette barre de progression montre les étapes que va suivre votre devis.\n"
+"Utilisez les boutons sur la gauche pour vous déplacer aux étapes suivantes."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman,"
-" partner, product, etc.) Use this report to perform analysis on sales not "
+"check your sales revenues and sort it by different group criteria (salesman, "
+"partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
-msgstr "Ce rapport analyse vos devis et commandes clients. Il vérifie les revenus liés aux ventes et les classifie selon différents critères (vendeur, partenaire, article, etc.). Vous pouvez utiliser ce rapport pour analyser vos ventes non encore facturées. Si vous souhaitez analyser votre chiffre d'affaires, vous devriez utiliser le rapport \"Analyse des factures clients\" dans l'application comptabilité."
+msgstr ""
+"Ce rapport analyse vos devis et commandes clients. Il vérifie les revenus "
+"liés aux ventes et les classifie selon différents critères (vendeur, "
+"partenaire, article, etc.). Vous pouvez utiliser ce rapport pour analyser "
+"vos ventes non encore facturées. Si vous souhaitez analyser votre chiffre "
+"d'affaires, vous devriez utiliser le rapport \"Analyse des factures clients"
+"\" dans l'application comptabilité."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -1746,7 +2024,12 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr "Ce rapport effectue des analyses sur vos devis. Contrôle vos revenus de ventes et les trie selon divers critères (vendeur, partenaire, produit, etc.) Utilisez ce rapport pour effectuer des analyses sur des ventes non facturées. Si vous voulez analyser la rotation de vos stocks, vous devriez utiliser le rapport Analyses des Factures dans l'application Comptabilité."
+msgstr ""
+"Ce rapport effectue des analyses sur vos devis. Contrôle vos revenus de "
+"ventes et les trie selon divers critères (vendeur, partenaire, produit, "
+"etc.) Utilisez ce rapport pour effectuer des analyses sur des ventes non "
+"facturées. Si vous voulez analyser la rotation de vos stocks, vous devriez "
+"utiliser le rapport Analyses des Factures dans l'application Comptabilité."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -1756,16 +2039,23 @@ msgid ""
 "product, etc.) Use this report to perform analysis on sales not having "
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
-msgstr "Ce rapport effectue des analyses sur vos bons de commande de vente. Contrôle vos revenus de ventes et les trie selon divers critères (vendeur, partenaire, produit, etc.) Utilisez ce rapport pour effectuer des analyses sur des ventes non facturées. Si vous voulez analyser la rotation de vos stocks, vous devriez utiliser le rapport Analyses des Factures dans l'application Comptabilité."
+msgstr ""
+"Ce rapport effectue des analyses sur vos bons de commande de vente. Contrôle "
+"vos revenus de ventes et les trie selon divers critères (vendeur, "
+"partenaire, produit, etc.) Utilisez ce rapport pour effectuer des analyses "
+"sur des ventes non facturées. Si vous voulez analyser la rotation de vos "
+"stocks, vous devriez utiliser le rapport Analyses des Factures dans "
+"l'application Comptabilité."
 
 #. module: sale
 #: selection:product.template,track_service:0
-msgid "Timesheets on contract"
+#, fuzzy
+msgid "Timesheets on project"
 msgstr "Feuilles de temps sur les contrats"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
@@ -1775,6 +2065,7 @@ msgstr "À facturer"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_total
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_total
+#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 #: model:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Total"
 msgstr "Total"
@@ -1793,11 +2084,17 @@ msgstr "Total taxes incluses"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_track_service
 #: model:ir.model.fields,field_description:sale.field_product_template_track_service
+#, fuzzy
 msgid "Track Service"
-msgstr "Service de suivi"
+msgstr ""
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Service de suivi\n"
+"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Service de suivie"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Unit Price"
 msgstr "Prix unitaire"
@@ -1811,19 +2108,14 @@ msgstr "Unité de mesure"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
-msgid "Unit of Measures"
+#, fuzzy
+msgid "Units of Measure"
 msgstr "Unité de mesure"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr "Messages non lus"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Compteur de messages non lus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_untaxed
@@ -1836,7 +2128,7 @@ msgid "Untaxed Total Price"
 msgstr "Prix total sans taxe"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "Upselling"
 msgstr "Montée en gamme"
 
@@ -1850,8 +2142,13 @@ msgstr "Opportunité de montée en gamme"
 #: model:web.tip,description:sale.sale_tip_2
 msgid ""
 "Use pivot and graph views to analyze your sales pipeline.\n"
-"                Select measures, filter and group dimensions to get the perfect report according to your needs."
-msgstr "Utilisez les vues pivot et graphique pour analyser votre pipeline de ventes.\nSélectionnez les mesures, le filtre et le groupage pour obtenir le rapport parfait pour vos besoins."
+"                Select measures, filter and group dimensions to get the "
+"perfect report according to your needs."
+msgstr ""
+"Utilisez les vues pivot et graphique pour analyser votre pipeline de "
+"ventes.\n"
+"Sélectionnez les mesures, le filtre et le groupage pour obtenir le rapport "
+"parfait pour vos besoins."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_pricelist
@@ -1864,14 +2161,33 @@ msgid "VAT:"
 msgstr "TVA :"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_website_message_ids
-msgid "Website Messages"
-msgstr "Messages du site web"
+#: model:ir.model.fields,field_description:sale.field_sale_report_volume
+msgid "Volume"
+msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_website_message_ids
-msgid "Website communication history"
-msgstr "Historique de communication du site web"
+#: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_warning_sale
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:239 code:addons/sale/sale.py:844
+#, python-format
+msgid "Warning for %s"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
+#, fuzzy
+msgid "Warning on the Sales Order"
+msgstr "Recherche de commandes de ventes"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+msgid "Warning when Selling this Product"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -1883,7 +2199,10 @@ msgstr "Que voulez-vous facturer ?"
 msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
-msgstr "Travailler avec variante de produit permet de définir d'autres produits du même type, cela facilite la gestion des produits dans le commerce électronique par exemple"
+msgstr ""
+"Travailler avec variante de produit permet de définir d'autres produits du "
+"même type, cela facilite la gestion des produits dans le commerce "
+"électronique par exemple"
 
 #. module: sale
 #. openerp-web
@@ -1893,40 +2212,72 @@ msgid "Wrong value entered!"
 msgstr "Mauvaise valeur saisie !"
 
 #. module: sale
-#: code:addons/sale/sale.py:741
+#: code:addons/sale/sale.py:164
+#, python-format
+msgid ""
+"You can not delete a sent quotation or a sales order! Try to cancel it "
+"before."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:873
 #, python-format
 msgid ""
 "You can not remove a sale order line.\n"
 "Discard changes and try setting the quantity to 0."
-msgstr "Vous ne pouvez pas enlever une ligne du bon de commande.\nAnnulez les changements et essayer de configurer les quantités à 0."
+msgstr ""
+"Vous ne pouvez pas enlever une ligne du bon de commande.\n"
+"Annulez les changements et essayer de configurer les quantités à 0."
 
 #. module: sale
-#: code:addons/sale/sale.py:153
-#, python-format
-msgid "You can only delete draft quotations!"
-msgstr "Vous ne pouvez supprimer que les offres en brouillon"
+#: model:ir.actions.act_window,help:sale.action_orders_to_invoice
+msgid ""
+"You can select all orders and invoice them in batch, or check\n"
+"                every order and invoice them one by one."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_orders_to_invoice
+#, fuzzy
+msgid "You will find here all orders that are ready to be invoiced."
+msgstr "Lignes de commande à facturer"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
+#, fuzzy
+msgid ""
+"Your next actions should flow efficiently: confirm the Quotation\n"
+"                to a Sale Order, then create the Invoice and collect the "
+"Payment."
+msgstr ""
+"Vos prochaines actions devraient circuler efficacement: confirmez le devis\n"
+"pour un bon de commande, ensuite créez la facture et collectez le paiement."
+
+#. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation \n"
-"                to a Sale Order, then create the Invoice and collect the Payment."
-msgstr "Vos prochaines actions devraient circuler efficacement: confirmez le devis\npour un bon de commande, ensuite créez la facture et collectez le paiement."
+"                to a Sale Order, then create the Invoice and collect the "
+"Payment."
+msgstr ""
+"Vos prochaines actions devraient circuler efficacement: confirmez le devis\n"
+"pour un bon de commande, ensuite créez la facture et collectez le paiement."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
-#: model:ir.actions.act_window,help:sale.action_orders
 #: model:ir.actions.act_window,help:sale.action_orders_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sale "
 "Order, then create the Invoice and collect the Payment."
-msgstr "Vos prochaines actions devraient circuler efficacement: confirmez le devis pour un bon de commande, ensuite créez la facture et collectez le paiement."
+msgstr ""
+"Vos prochaines actions devraient circuler efficacement: confirmez le devis "
+"pour un bon de commande, ensuite créez la facture et collectez le paiement."
 
 #. module: sale
-#: model:ir.model,name:sale.model_account_config_settings
-msgid "account.config.settings"
-msgstr "account.config.settings"
+#: model:ir.model,name:sale.model_account_analytic_line
+#, fuzzy
+msgid "account analytic line"
+msgstr "Ligne analytique"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1939,6 +2290,286 @@ msgid "sale.config.settings"
 msgstr "sale.config.settings"
 
 #. module: sale
+#: model:ir.model,name:sale.model_sale_layout_category
+msgid "sale.layout_category"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "inconnu"
+
+#~ msgid ""
+#~ "\n"
+#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+#~ "\">\n"
+#~ "\n"
+#~ "    <p>Hello ${object.partner_id.name},</p>\n"
+#~ "    \n"
+#~ "    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' "
+#~ "or 'order confirmation'} from ${object.company_id.name}: </p>\n"
+#~ "\n"
+#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+#~ "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+#~ "       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object."
+#~ "pricelist_id.currency_id.name}</strong><br />\n"
+#~ "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+#~ "       % if object.origin:\n"
+#~ "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+#~ "       % endif\n"
+#~ "       % if object.client_order_ref:\n"
+#~ "       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
+#~ "       % endif\n"
+#~ "       % if object.user_id:\n"
+#~ "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email "
+#~ "or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+#~ "       % endif\n"
+#~ "    </p>\n"
+#~ "    <p>\n"
+#~ "        You can view your quotation online:\n"
+#~ "    </p>\n"
+#~ "    <a style=\"display:block; width: 150px; height:20px; margin-left: "
+#~ "120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-"
+#~ "serif; font-size: 13px; font-weight: bold; text-align: center; text-"
+#~ "decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; "
+#~ "background-color: #8E0000; border-radius: 5px 5px; background-repeat: "
+#~ "repeat no-repeat;\"\n"
+#~ "        href=\"/quote/${object.id}/${object.access_token}\">View ${object."
+#~ "state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
+#~ "\n"
+#~ "    % if object.paypal_url:\n"
+#~ "    <br/>\n"
+#~ "    <p>It is also possible to directly pay with Paypal:</p>\n"
+#~ "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+#~ "            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/"
+#~ "btn_paynowcc_lg.gif\"/>\n"
+#~ "        </a>\n"
+#~ "    % endif\n"
+#~ "\n"
+#~ "    <br/>\n"
+#~ "    <p>If you have any question, do not hesitate to contact us.</p>\n"
+#~ "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+#~ "    <br/>\n"
+#~ "    <br/>\n"
+#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
+#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
+#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
+#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
+#~ "color: #DDD;\">\n"
+#~ "            <strong style=\"text-transform:uppercase;\">${object."
+#~ "company_id.name}</strong></h3>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
+#~ "height: 16px; background-color: #F2F2F2;\">\n"
+#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
+#~ "\">\n"
+#~ "            ${object.company_id.partner_id.sudo()."
+#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
+#~ "safe}\n"
+#~ "        </span>\n"
+#~ "        % if object.company_id.phone:\n"
+#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
+#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
+#~ "                Phone:&nbsp; ${object.company_id.phone}\n"
+#~ "            </div>\n"
+#~ "        % endif\n"
+#~ "        % if object.company_id.website:\n"
+#~ "            <div>\n"
+#~ "                Web :&nbsp;<a href=\"${object.company_id.website}\">"
+#~ "${object.company_id.website}</a>\n"
+#~ "            </div>\n"
+#~ "        %endif\n"
+#~ "        <p></p>\n"
+#~ "    </div>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+#~ "\">\n"
+#~ "\n"
+#~ "    <p>Bonjour ${object.partner_id.name},</p>\n"
+#~ "    \n"
+#~ "    <p>Voici votre ${object.state in ('draft', 'sent') and 'devis' or "
+#~ "'confirmation de commande'} de ${object.company_id.name}: </p>\n"
+#~ "\n"
+#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+#~ "       &nbsp;&nbsp;Numéro de commande&nbsp;: <strong>${object.name}</"
+#~ "strong><br />\n"
+#~ "       &nbsp;&nbsp;Total de la commande&nbsp;: <strong>${object."
+#~ "amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
+#~ "       &nbsp;&nbsp;Date de la commande&nbsp;: ${object.date_order}<br />\n"
+#~ "       % if object.origin:\n"
+#~ "       &nbsp;&nbsp;Référence de la commande&nbsp;: ${object.origin}<br /"
+#~ ">\n"
+#~ "       % endif\n"
+#~ "       % if object.client_order_ref:\n"
+#~ "       &nbsp;&nbsp;Votre référence&nbsp;: ${object.client_order_ref}<br /"
+#~ ">\n"
+#~ "       % endif\n"
+#~ "       % if object.user_id:\n"
+#~ "       &nbsp;&nbsp;Votre contact&nbsp;: <a href=\"mailto:${object.user_id."
+#~ "email or ''}?subject=Commande%20${object.name}\">${object.user_id.name}</"
+#~ "a>\n"
+#~ "       % endif\n"
+#~ "    </p>\n"
+#~ "    <p>\n"
+#~ "      Vous pouvez voir votre devis en ligne&nbsp;:\n"
+#~ "    </p>\n"
+#~ "    <a style=\"display:block; width: 150px; height:20px; margin-left: "
+#~ "120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-"
+#~ "serif; font-size: 13px; font-weight: bold; text-align: center; text-"
+#~ "decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; "
+#~ "background-color: #8E0000; border-radius: 5px 5px; background-repeat: "
+#~ "repeat no-repeat;\"\n"
+#~ "        href=\"/quote/${object.id}/${object.access_token}\">Voir votre "
+#~ "${object.state in ('draft', 'sent') and 'devis' or 'commande'}</a>\n"
+#~ "\n"
+#~ "    % if object.paypal_url:\n"
+#~ "    <br/>\n"
+#~ "    <p>Il est également possible de payer directement avec Paypal&nbsp;:</"
+#~ "p>\n"
+#~ "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+#~ "            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/"
+#~ "btn_paynowcc_lg.gif\"/>\n"
+#~ "        </a>\n"
+#~ "    % endif\n"
+#~ "\n"
+#~ "    <br/>\n"
+#~ "    <p>Si vous avez des questions, n'hésitez pas à nous contacter.</p>\n"
+#~ "    <p>Merci d'avoir choisi ${object.company_id.name or 'notre société'}!"
+#~ "</p>\n"
+#~ "    <br/>\n"
+#~ "    <br/>\n"
+#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
+#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
+#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
+#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
+#~ "color: #DDD;\">\n"
+#~ "            <strong style=\"text-transform:uppercase;\">${object."
+#~ "company_id.name}</strong></h3>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
+#~ "height: 16px; background-color: #F2F2F2;\">\n"
+#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
+#~ "\">\n"
+#~ "            ${object.company_id.partner_id.sudo()."
+#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
+#~ "safe}\n"
+#~ "        </span>\n"
+#~ "        % if object.company_id.phone:\n"
+#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
+#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
+#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
+#~ "                Tél&nbsp;:&nbsp; ${object.company_id.phone}\n"
+#~ "            </div>\n"
+#~ "        % endif\n"
+#~ "        % if object.company_id.website:\n"
+#~ "            <div>\n"
+#~ "                Web&nbsp;:&nbsp;<a href=\"${object.company_id.website}\">"
+#~ "${object.company_id.website}</a>\n"
+#~ "            </div>\n"
+#~ "        %endif\n"
+#~ "        <p></p>\n"
+#~ "    </div>\n"
+#~ "</div>\n"
+#~ "            "
+
+#~ msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
+#~ msgstr "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
+
+#~ msgid "Action Needed"
+#~ msgstr "A besoin d'une action"
+
+#~ msgid "Allows you to specify an analytic account on sales orders."
+#~ msgstr ""
+#~ "Vous permet de spécifier un compte analytique sur les commandes de vente."
+
+#~ msgid "Analytic accounting for sales"
+#~ msgstr "Comptabilité analytique pour les ventes"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Date du dernier message posté sur cet enregistrement"
+
+#~ msgid "Expense Account"
+#~ msgstr "Compte de dépenses"
+
+#~ msgid "Followers"
+#~ msgstr "Abonnés"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Abonnés (Canaux)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Abonnés (Partenaires)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Si coché, de nouveaux messages demandent votre attention."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr ""
+#~ "si elle est cochée, de nouveaux messages requièrent votre attention."
+
+#~ msgid "Invoice based on time and material"
+#~ msgstr "Facture basée sur le temps et le matériel"
+
+#~ msgid "Is Follower"
+#~ msgstr "Est un abonné"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Date du dernier message"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Historique des messages et communications"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Nombre d'Actions"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Nombre de messages demandant une action"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Nombre de messages non lus"
+
+#~ msgid "Open Sale Menu"
+#~ msgstr "Ouvrir le menu \"Vente\""
+
+#~ msgid "Price"
+#~ msgstr "Prix"
+
+#~ msgid ""
+#~ "This account will be used for invoices instead of the default one to "
+#~ "value expenses for the current product."
+#~ msgstr ""
+#~ "Ce compte sera utilisé au lieu de celui par défaut pour les factures pour "
+#~ "comptabiliser les achats pour le produit en cours."
+
+#~ msgid ""
+#~ "This account will be used for invoices instead of the default one to "
+#~ "value sales for the current product."
+#~ msgstr ""
+#~ "Ce compte sera utilisé au lieu de celui par défaut pour les factures pour "
+#~ "comptabiliser les ventes pour le produit en cours."
+
+#~ msgid "Unit of Measures"
+#~ msgstr "Unité de mesure"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Compteur de messages non lus"
+
+#~ msgid "Website Messages"
+#~ msgstr "Messages du site web"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historique de communication du site web"
+
+#~ msgid "You can only delete draft quotations!"
+#~ msgstr "Vous ne pouvez supprimer que les offres en brouillon"
+
+#~ msgid "account.config.settings"
+#~ msgstr "account.config.settings"

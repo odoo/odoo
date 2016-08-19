@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_byproduct
-# 
+#
 # Translators:
 # Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-19 10:25+0000\n"
 "PO-Revision-Date: 2015-09-23 15:26+0000\n"
 "Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: mrp_byproduct
@@ -64,7 +64,15 @@ msgid ""
 "that the quantity will be computed as    '(quantity of byproduct set on the "
 "BoM / quantity of manufactured product set on the BoM * quantity of "
 "manufactured product in the production order.)'"
-msgstr "Définit comment la quantité de sous-produits est déterminée dans les ordres de production utilisant cette nomenclature.  \"Fixe\" correspond à une situation où la quantité de sous-produit est toujours égale à la quantité définie dans la nomenclature, quelle que soit la quantité de l'ordre de fabrication.  Par opposition, \"Variable\" signifie que la quantité sera calculée comme \"(quantité du sous-produit dans la nomenclature / quantité du produit fabriqué dans la nomenclature x quantité du produit fabriqué dans l'ordre de fabrication.)\""
+msgstr ""
+"Définit comment la quantité de sous-produits est déterminée dans les ordres "
+"de production utilisant cette nomenclature.  \"Fixe\" correspond à une "
+"situation où la quantité de sous-produit est toujours égale à la quantité "
+"définie dans la nomenclature, quelle que soit la quantité de l'ordre de "
+"fabrication.  Par opposition, \"Variable\" signifie que la quantité sera "
+"calculée comme \"(quantité du sous-produit dans la nomenclature / quantité "
+"du produit fabriqué dans la nomenclature x quantité du produit fabriqué dans "
+"l'ordre de fabrication.)\""
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
@@ -97,11 +105,6 @@ msgid "Last Updated on"
 msgstr "Mis à jour le"
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Ordre de fabrication"
-
-#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
 msgid "Product"
 msgstr "Article"
@@ -117,9 +120,31 @@ msgid "Product Unit of Measure"
 msgstr "Unité de mesure d'article"
 
 #. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_production
+#, fuzzy
+msgid "Production"
+msgstr "Article"
+
+#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_subproduct_type
 msgid "Quantity Type"
 msgstr "Type de quantité"
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
+#, fuzzy
+msgid "Subproduct"
+msgstr "Sous-produit"
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct line that generated the move in a manufacturing order"
+msgstr ""
 
 #. module: mrp_byproduct
 #: code:addons/mrp_byproduct/mrp_byproduct.py:45
@@ -127,7 +152,9 @@ msgstr "Type de quantité"
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr "L'unité de mesure choisie est d'une autre catégorie que celle définie sur l'article."
+msgstr ""
+"L'unité de mesure choisie est d'une autre catégorie que celle définie sur "
+"l'article."
 
 #. module: mrp_byproduct
 #: selection:mrp.subproduct,subproduct_type:0
@@ -139,3 +166,6 @@ msgstr "Variable"
 #, python-format
 msgid "Warning"
 msgstr "Avertissement"
+
+#~ msgid "Manufacturing Order"
+#~ msgstr "Ordre de fabrication"

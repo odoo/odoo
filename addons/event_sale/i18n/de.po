@@ -1,27 +1,42 @@
+# #-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event_sale
-# 
+#
+# Translators:
+# Ermin Trevisan <trevi@twanda.com>, 2016
+# Rudolf Schnapka <rs@techno-flex.de>, 2016
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
+# Wolfgang Taferner, 2016
+# #-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * event_sale
+#
 # Translators:
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Wolfgang Taferner, 2016
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-19 10:24+0000\n"
 "PO-Revision-Date: 2016-06-13 20:28+0000\n"
 "Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
+"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:170
+#: code:addons/event_sale/models/event.py:147
 #, python-format
 msgid " with ticket %s"
 msgstr "mit Karte %s"
@@ -30,6 +45,12 @@ msgstr "mit Karte %s"
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "Anwenden"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+#, fuzzy
+msgid "Asset Type"
+msgstr "Veranstaltungstyp"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -56,7 +77,9 @@ msgstr "Vor Bestätigung"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "Wählen Sie eine Veranstaltung aus, um automatisch eine Anmeldung zu generieren."
+msgstr ""
+"Wählen Sie eine Veranstaltung aus, um automatisch eine Anmeldung zu "
+"generieren."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ticket_id
@@ -86,20 +109,31 @@ msgid "Created on"
 msgstr "Angelegt am"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
-msgstr "Legen Sie die Anzahl an verfügbaren Eintrittskarten fest. Wenn die Anmeldungen diese Zahl überschreitet, können Sie keine weiteren verkaufen. Setzen Sie 0, um die Anzahl nicht zu beschränken."
+msgstr ""
+"Legen Sie die Anzahl an verfügbaren Eintrittskarten fest. Wenn die "
+"Anmeldungen diese Zahl überschreitet, können Sie keine weiteren verkaufen. "
+"Setzen Sie 0, um die Anzahl nicht zu beschränken."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,help:event_sale.field_product_template_event_ok
+#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ok
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr "Legen Sie fest, ob ein Produkt automatisch durch den Auftrag auch gleichzeitig die Event Anmeldung erstellen soll."
+msgstr ""
+"Legen Sie fest, ob ein Produkt automatisch durch den Auftrag auch "
+"gleichzeitig die Event Anmeldung erstellen soll."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
@@ -127,6 +161,12 @@ msgid "Event"
 msgstr "Event"
 
 #. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+#, fuzzy
+msgid "Event Name"
+msgstr "Veranstaltungstyp"
+
+#. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
 msgstr "Veranstaltungsanmeldungen"
@@ -134,6 +174,7 @@ msgstr "Veranstaltungsanmeldungen"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,field_description:event_sale.field_product_template_event_ok
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
 msgid "Event Subscription"
@@ -159,6 +200,12 @@ msgid "Event Type"
 msgstr "Veranstaltungstyp"
 
 #. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+#, fuzzy
+msgid "Event's Ticket"
+msgstr "Veranstaltungskarte"
+
+#. module: event_sale
 #: model:product.product,name:event_sale.event_1_product
 #: model:product.template,name:event_sale.event_1_product_product_template
 msgid "Functional Webinar"
@@ -166,8 +213,13 @@ msgstr "Funktionales Webinar"
 
 #. module: event_sale
 #: model:event.type,name:event_sale.event_type
+#, fuzzy
 msgid "Generic Events"
-msgstr "Generelle Veranstaltungen"
+msgstr ""
+"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
+"Allgemeine Veranstaltungen\n"
+"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
+"Generelle Veranstaltungen"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_id
@@ -219,13 +271,13 @@ msgid "Name"
 msgstr "Bezeichnung"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:131
+#: code:addons/event_sale/models/event.py:108
 #, python-format
 msgid "No more available seats for the ticket"
 msgstr "Keine weiteren Sitzplätze für die Eintrittskarte verfügbar"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:153
+#: code:addons/event_sale/models/event.py:130
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "Keine weiteren Sitzplätze für diese Eintrittskarte verfügbar"
@@ -326,10 +378,14 @@ msgstr "Genutzte Sitzplätze"
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
 #: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
+#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_type_id
 msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
-msgstr "Wählen Sie Veranstaltungstypen aus, bei denen durch eine Produktauswahl in einer Auftragsposition nur die Veranstaltungen dieses Typs vorgeschlagen werden."
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
+msgstr ""
+"Wählen Sie Veranstaltungstypen aus, bei denen durch eine Produktauswahl in "
+"einer Auftragsposition nur die Veranstaltungen dieses Typs vorgeschlagen "
+"werden."
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -350,7 +406,7 @@ msgid "Standard"
 msgstr "Standard"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:21
+#: code:addons/event_sale/models/event.py:19
 #, python-format
 msgid "Subscription"
 msgstr "Aboauftrag"
@@ -362,12 +418,14 @@ msgid "Technical Training"
 msgstr "Technisches Training"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:168
+#: code:addons/event_sale/models/event.py:145
 #, python-format
 msgid ""
 "The registration has been created for event %(event_name)s%(ticket)s from "
 "sale order %(order)s"
-msgstr "Die Anmeldung für die Veranstaltung %(event_name)s wurde angelegt. %(ticket)s aus Verkaufsauftrag %(order)s"
+msgstr ""
+"Die Anmeldung für die Veranstaltung %(event_name)s wurde angelegt. "
+"%(ticket)s aus Verkaufsauftrag %(order)s"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
@@ -404,11 +462,6 @@ msgid "VIP"
 msgstr "VIP"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
-msgid "event_ok"
-msgstr "event_ok"
-
-#. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give details about the registrations"
 msgstr "Geben Sie bitte Details zu den Anmeldungen an"
@@ -422,3 +475,6 @@ msgstr "registration.editor"
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "registration.editor.line"
 msgstr "registration.editor.line"
+
+#~ msgid "event_ok"
+#~ msgstr "event_ok"

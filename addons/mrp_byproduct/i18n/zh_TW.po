@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_byproduct
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-19 10:25+0000\n"
 "PO-Revision-Date: 2015-08-25 10:19+0000\n"
 "Last-Translator: <>\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/language/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
+"language/zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mrp_byproduct
@@ -96,11 +97,6 @@ msgid "Last Updated on"
 msgstr "最後更新於"
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "製造命令"
-
-#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
 msgid "Product"
 msgstr "產品"
@@ -116,8 +112,30 @@ msgid "Product Unit of Measure"
 msgstr "產品量度單位"
 
 #. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_production
+#, fuzzy
+msgid "Production"
+msgstr "產品"
+
+#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_subproduct_type
 msgid "Quantity Type"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
+#, fuzzy
+msgid "Subproduct"
+msgstr "產品"
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct line that generated the move in a manufacturing order"
 msgstr ""
 
 #. module: mrp_byproduct
@@ -138,3 +156,6 @@ msgstr "變量"
 #, python-format
 msgid "Warning"
 msgstr "警告"
+
+#~ msgid "Manufacturing Order"
+#~ msgstr "製造命令"
