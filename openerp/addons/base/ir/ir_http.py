@@ -22,7 +22,7 @@ import openerp
 import openerp.exceptions
 import openerp.models
 from openerp import http
-from openerp.http import request, STATIC_CACHE
+from openerp.http import request, STATIC_CACHE, content_disposition
 from openerp.modules.module import get_resource_path, get_module_path
 from openerp.osv import osv, orm
 
@@ -209,16 +209,7 @@ class ir_http(osv.AbstractModel):
         return self._routing_map
 
     def content_disposition(self, filename):
-        filename = openerp.tools.ustr(filename)
-        escaped = urllib2.quote(filename.encode('utf8'))
-        browser = request.httprequest.user_agent.browser
-        version = int((request.httprequest.user_agent.version or '0').split('.')[0])
-        if browser == 'msie' and version < 9:
-            return "attachment; filename=%s" % escaped
-        elif browser == 'safari' and version < 537:
-            return u"attachment; filename=%s" % filename.encode('ascii', 'replace')
-        else:
-            return "attachment; filename*=UTF-8''%s" % escaped
+        return content_disposition(filename)
 
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
         """ Get file, attachment or downloadable content

@@ -25,11 +25,6 @@ import werkzeug.utils
 import werkzeug.wrappers
 from openerp.api import Environment
 
-try:
-    import xlwt
-except ImportError:
-    xlwt = None
-
 import openerp
 import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
@@ -37,9 +32,9 @@ from openerp.modules import get_resource_path
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp.tools import ustr
-from openerp.tools.misc import str2bool
+from openerp.tools.misc import str2bool, xlwt
 from openerp import http
-from openerp.http import request, serialize_exception as _serialize_exception
+from openerp.http import request, serialize_exception as _serialize_exception, content_disposition
 from openerp.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
@@ -419,10 +414,6 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
             kids.append(kid.tail)
     res["children"] = kids
     return res
-
-def content_disposition(filename):
-    return request.registry['ir.http'].content_disposition(filename)
-
 
 def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
     return request.registry['ir.http'].binary_content(
