@@ -5,8 +5,9 @@
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='website']" position="after">
-                <field name="mom_company_id" />
+            <xpath expr="//field[@name='website']" position="before">
+                <field name="mom_company_id" placeholder="Mother company" class="o_address_country" options='{"no_open": True, "no_create": True}'
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
             </xpath>
         </field>
         </record>

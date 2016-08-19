@@ -127,7 +127,7 @@ def _lang_get(self):
     languages = self.env['res.lang'].search([])
     return [(language.code, language.name) for language in languages]
 
-ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
+ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id', 'mom_company_id')
 
 
 class res_partner(osv.Model, format_address):
@@ -353,7 +353,7 @@ class res_partner(osv.Model, format_address):
                 address_fields = self._address_fields(cr, uid, context=context)
                 if any(parent[key] for key in address_fields):
                     result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
-        return result
+            return result
 
     @api.multi
     def onchange_state(self, state_id):
@@ -533,6 +533,8 @@ class res_partner(osv.Model, format_address):
         partner = super(res_partner, self).create(vals)
         self._fields_sync(partner, vals)
         self._handle_first_contact_creation(partner)
+        if not partner.mom_company_id.id:
+            partner.write({'mom_company_id': partner.id})
         return partner
 
     def open_commercial_entity(self, cr, uid, ids, context=None):
