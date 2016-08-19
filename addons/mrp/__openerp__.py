@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'MRP',
+    'name': 'Manufacturing',
     'version': '2.0',
     'website': 'https://www.odoo.com/page/manufacturing',
     'category': 'Manufacturing',
