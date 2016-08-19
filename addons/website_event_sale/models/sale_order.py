@@ -19,8 +19,8 @@ class SaleOrder(models.Model):
         return self.env['sale.order.line'].sudo().search(domain)
 
     @api.multi
-    def _website_product_id_change(self, order_id, product_id, qty=0, **kwargs):
-        values = super(SaleOrder, self)._website_product_id_change(order_id, product_id, qty=qty, **kwargs)
+    def _website_product_id_change(self, order_id, product_id, qty=0, attributes=None):
+        values = super(SaleOrder, self)._website_product_id_change(order_id, product_id, qty=qty, attributes=attributes)
         event_ticket_id = None
         if self.env.context.get("event_ticket_id"):
             event_ticket_id = self.env.context.get("event_ticket_id")

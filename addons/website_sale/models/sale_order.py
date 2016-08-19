@@ -56,7 +56,7 @@ class SaleOrder(models.Model):
         return self.env['sale.order.line'].sudo().search(domain)
 
     @api.multi
-    def _website_product_id_change(self, order_id, product_id, qty=0, update=False, **kwargs):
+    def _website_product_id_change(self, order_id, product_id, qty=0, attributes=None):
         order = self.sudo().browse(order_id)
         product_context = dict(self.env.context)
         product_context.setdefault('lang', order.partner_id.lang)
@@ -77,17 +77,16 @@ class SaleOrder(models.Model):
         }
 
         # The untracked attributes are not available on update so we keep the name
-        if not update:
+        if attributes:
             name = product.display_name
 
             # add untracked attributes in the name
             untracked_attributes = []
-            for k in kwargs:
-                if 'attribute' in k:
-                    # attribute should be like 'attribute-48-1' where 48 is the product_id, 1 is the attribute_id and v is the attribute value
-                    attribute_value = self.env['product.attribute.value'].sudo().browse(int(kwargs[k]))
-                    if attribute_value and not attribute_value.attribute_id.create_variant:
-                        untracked_attributes.append(attribute_value.name)
+            for k in attributes:
+                # attribute should be like 'attribute-48-1' where 48 is the product_id, 1 is the attribute_id and v is the attribute value
+                attribute_value = self.env['product.attribute.value'].sudo().browse(int(kwargs[k]))
+                if attribute_value and not attribute_value.attribute_id.create_variant:
+                    untracked_attributes.append(attribute_value.name)
             if untracked_attributes:
                 name += '\n %s' % (', '.join(untracked_attributes))
 
@@ -99,7 +98,7 @@ class SaleOrder(models.Model):
         return values
 
     @api.multi
-    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
+    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, attributes=None):
         """ Add or set product quantity, add_qty can be negative """
         self.ensure_one()
         SaleOrderLineSudo = self.env['sale.order.line'].sudo()
@@ -114,7 +113,7 @@ class SaleOrder(models.Model):
 
         # Create line if no line with product_id can be located
         if not order_line:
-            values = self._website_product_id_change(self.id, product_id, qty=1, **kwargs)
+            values = self._website_product_id_change(self.id, product_id, qty=1, attributes=attributes)
             order_line = SaleOrderLineSudo.create(values)
             try:
                 order_line._compute_tax_id()
