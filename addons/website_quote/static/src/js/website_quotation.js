@@ -2,6 +2,7 @@ odoo.define('website_quote.website_quote', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');
+var config = require('web.config');
 var Widget = require('web.Widget');
 var website = require('website.website');
 
@@ -175,6 +176,22 @@ if(!$('.o_website_quote').length) {
     nav_menu.setElement($('[data-id="quote_sidebar"]'));
     nav_menu.start($('body[data-target=".navspy"]'));
 
+    var $bs_sidebar = $(".o_website_quote .bs-sidebar");
+    $(window).on('resize', _.throttle(adapt_sidebar_position, 200, {leading: false}));
+    adapt_sidebar_position();
+
+    function adapt_sidebar_position() {
+        $bs_sidebar.css({
+            position: "",
+            width: "",
+        });
+        if (config.device.size_class >= config.device.SIZES.MD) {
+            $bs_sidebar.css({
+                position: "fixed",
+                width: $bs_sidebar.outerWidth(),
+            });
+        }
+    }
 });
 
 odoo.define('website_quote.payment_method', function (require) {

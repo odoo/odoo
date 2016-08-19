@@ -688,7 +688,7 @@ var DataSetSearch = DataSet.extend({
             .limit(options.limit || false);
         q = q.order_by.apply(q, this._sort);
 
-        return q.all().done(function (records) {
+        return this.orderer.add(q.all()).done(function (records) {
             // FIXME: not sure about that one, *could* have discarded count
             q.count().done(function (count) { self._length = count; });
             self.ids = _(records).pluck('id');

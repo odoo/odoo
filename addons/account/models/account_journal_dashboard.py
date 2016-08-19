@@ -117,7 +117,7 @@ class account_journal(models.Model):
         for i in range(0,6):
             if i == 0:
                 query += "("+select_sql_clause+" and date < '"+start_date.strftime(DF)+"')"
-            elif i == 6:
+            elif i == 5:
                 query += " UNION ALL ("+select_sql_clause+" and date >= '"+start_date.strftime(DF)+"')"
             else:
                 next_date = start_date + timedelta(days=7)
@@ -303,6 +303,7 @@ class account_journal(models.Model):
         invoice_type = _journal_invoice_type_map[(self.type, self._context.get('invoice_type'))]
 
         ctx = self._context.copy()
+        ctx.pop('group_by', None)
         ctx.update({
             'journal_type': self.type,
             'default_journal_id': self.id,
@@ -336,6 +337,7 @@ class account_journal(models.Model):
             'default_payment_type': payment_type,
             'default_journal_id': self.id
         })
+        ctx.pop('group_by', None)
         action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_account_payments')
         if action_rec:
             action = action_rec.read([])[0]
@@ -351,6 +353,7 @@ class account_journal(models.Model):
         ctx = dict(self.env.context, default_journal_id=self.id)
         if ctx.get('search_default_journal', False):
             ctx.update(search_default_journal_id=self.id)
+        ctx.pop('group_by', None)
         ir_model_obj = self.pool['ir.model.data']
         model, action_id = ir_model_obj.get_object_reference(self._cr, self._uid, 'account', action_name)
         action = self.pool[model].read(self._cr, self._uid, action_id, context=self._context)
