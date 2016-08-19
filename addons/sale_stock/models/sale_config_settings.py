@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import AccessError
+from odoo import api, fields, models
 
 
 class SaleConfiguration(models.TransientModel):
@@ -37,10 +36,6 @@ class SaleConfiguration(models.TransientModel):
 
     @api.multi
     def set_sale_defaults(self):
-        self.ensure_one()
-        if not self.env.user._is_admin():
-            raise AccessError(_("Only administrators can change the settings"))
-
         default_picking_policy = 'one' if self.default_picking_policy else 'direct'
         self.env['ir.values'].sudo().set_default('sale.order', 'picking_policy', default_picking_policy)
         return super(SaleConfiguration, self).set_sale_defaults()
