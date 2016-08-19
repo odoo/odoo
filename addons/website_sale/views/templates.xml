@@ -39,7 +39,7 @@
         </xpath>
     </template>
 
-    <template id="search" name="Search hidden fields">
+    <template id="search" name="Search Box">
         <form t-att-action="keep('/shop'+ ('/category/'+slug(category)) if category else None, search=0)" method="get" t-att-class="search_class">
             <t t-if="attrib_values">
                 <t t-foreach="attrib_values" t-as="a">
@@ -48,6 +48,12 @@
             </t>
             <t t-call="website.website_search_box" />
         </form>
+    </template>
+
+    <template id="search count" inherit_id="website.website_search_box" active="False" customize_show="True" name="Show # found">
+        <xpath expr="//button[contains(@class, 'oe_search_button')]" position="inside">
+            <span t-if='search and search_count' class='oe_search_found'> <small>(<t t-esc="search_count"/> found)</small></span>
+        </xpath>
     </template>
 
     <template id="404">
