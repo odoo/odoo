@@ -247,6 +247,7 @@ class WebsiteSale(http.Controller):
             'pager': pager,
             'pricelist': pricelist,
             'products': products,
+            'search_count': product_count,  # common for all searchbox
             'bins': TableCompute().process(products, ppg),
             'rows': PPR,
             'categories': categs,
