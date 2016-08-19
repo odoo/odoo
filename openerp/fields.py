@@ -13,7 +13,8 @@ import pytz
 import xmlrpclib
 
 from openerp.sql_db import LazyCursor
-from openerp.tools import float_precision, float_round, frozendict, html_sanitize, ustr, OrderedSet
+from openerp.tools import float_precision, float_round, frozendict, \
+                          html_sanitize, pg_varchar, ustr, OrderedSet
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from openerp.tools.translate import html_translate
@@ -288,6 +289,8 @@ class Field(object):
 
     type = None                         # type of the field (string)
     relational = False                  # whether the field is a relational one
+
+    column_type = None                  # database column type (ident, spec)
 
     _slots = {
         'args': EMPTY_DICT,             # the parameters given to __init__()
@@ -1085,6 +1088,7 @@ class Field(object):
 
 class Boolean(Field):
     type = 'boolean'
+    column_type = ('bool', 'bool')
 
     def convert_to_cache(self, value, record, validate=True):
         return bool(value)
@@ -1097,6 +1101,7 @@ class Boolean(Field):
 
 class Integer(Field):
     type = 'integer'
+    column_type = ('int4', 'int4')
     _slots = {
         'group_operator': 'sum',
     }
@@ -1140,6 +1145,16 @@ class Float(Field):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
 
     @property
+    def column_type(self):
+        # Explicit support for "falsy" digits (0, False) to indicate a NUMERIC
+        # field with no fixed precision. The values are saved in the database
+        # with all significant digits.
+        # FLOAT8 type is still the default when there is no precision because it
+        # is faster for most operations (sums, etc.)
+        return ('numeric', 'numeric') if self.digits is not None else \
+               ('float8', 'double precision')
+
+    @property
     def digits(self):
         if callable(self._digits):
             with LazyCursor() as cr:
@@ -1175,6 +1190,7 @@ class Monetary(Field):
                            field is expressed in (default: `currency_id`)
     """
     type = 'monetary'
+    column_type = ('numeric', 'numeric')
     _slots = {
         'currency_field': None,
         'group_operator': 'sum',
@@ -1278,6 +1294,10 @@ class Char(_String):
         'size': None,                   # maximum size of values (deprecated)
     }
 
+    @property
+    def column_type(self):
+        return ('varchar', pg_varchar(self.size))
+
     _column_size = property(attrgetter('size'))
     _related_size = property(attrgetter('size'))
     _description_size = property(attrgetter('size'))
@@ -1304,6 +1324,7 @@ class Text(_String):
         translation of terms.
     """
     type = 'text'
+    column_type = ('text', 'text')
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
@@ -1313,6 +1334,7 @@ class Text(_String):
 
 class Html(_String):
     type = 'html'
+    column_type = ('text', 'text')
     _slots = {
         'sanitize': True,               # whether value must be sanitized
         'sanitize_tags': True,          # whether to sanitize tags (only a white list of attributes is accepted)
@@ -1368,6 +1390,7 @@ class Html(_String):
 
 class Date(Field):
     type = 'date'
+    column_type = ('date', 'date')
 
     @staticmethod
     def today(*args):
@@ -1430,6 +1453,7 @@ class Date(Field):
 
 class Datetime(Field):
     type = 'datetime'
+    column_type = ('timestamp', 'timestamp')
 
     @staticmethod
     def now(*args):
@@ -1509,6 +1533,10 @@ class Binary(Field):
         'attachment': False,            # whether value is stored in attachment
     }
 
+    @property
+    def column_type(self):
+        return None if self.attachment else ('bytea', 'bytea')
+
     _column_attachment = property(attrgetter('attachment'))
     _description_attachment = property(attrgetter('attachment'))
 
@@ -1535,6 +1563,15 @@ class Selection(Field):
             from openerp import api
             selection = api.expected(api.model, selection)
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
+
+    @property
+    def column_type(self):
+        if (self.selection and
+                isinstance(self.selection, list) and
+                isinstance(self.selection[0][0], int)):
+            return ('int4', 'integer')
+        else:
+            return ('varchar', pg_varchar())
 
     def _setup_regular_base(self, model):
         super(Selection, self)._setup_regular_base(model)
@@ -1616,17 +1653,10 @@ class Selection(Field):
 
 class Reference(Selection):
     type = 'reference'
-    _slots = {
-        'size': None,                   # maximum size of values (deprecated)
-    }
 
-    _related_size = property(attrgetter('size'))
-    _column_size = property(attrgetter('size'))
-
-    def _setup_regular_base(self, model):
-        super(Reference, self)._setup_regular_base(model)
-        assert isinstance(self.size, (NoneType, int)), \
-            "Reference field %s with non-integer size %r" % (self, self.size)
+    @property
+    def column_type(self):
+        return ('varchar', pg_varchar())
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: (res_model, res_id) or False
@@ -1730,6 +1760,7 @@ class Many2one(_Relational):
     fields or field extensions.
     """
     type = 'many2one'
+    column_type = ('int4', 'int4')
     _slots = {
         'ondelete': 'set null',         # what to do when value is deleted
         'auto_join': False,             # whether joins are generated upon search
@@ -2089,6 +2120,7 @@ class Many2many(_RelationalMulti):
 class Serialized(Field):
     """ Serialized fields provide the storage for sparse fields. """
     type = 'serialized'
+    column_type = ('text', 'text')
 
     def convert_to_cache(self, value, record, validate=True):
         return value or {}
@@ -2097,6 +2129,7 @@ class Serialized(Field):
 class Id(Field):
     """ Special case for field 'id'. """
     type = 'integer'
+    column_type = ('int4', 'int4')
     _slots = {
         'string': 'ID',
         'store': True,

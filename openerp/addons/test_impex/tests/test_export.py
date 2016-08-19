@@ -283,17 +283,16 @@ class test_selection_function(CreatorCase):
             [['']])
 
     def test_value(self):
-        # FIXME: selection functions export the *value* itself
+        # selection functions export the *value* itself
         self.assertEqual(
-            self.export(1),
-            [[1]])
+            self.export('1'),
+            [['1']])
         self.assertEqual(
-            self.export(3),
-            [[3]])
-        # fucking hell
+            self.export('3'),
+            [['3']])
         self.assertEqual(
-            self.export(0),
-            [['']])
+            self.export('0'),
+            [['0']])
 
 
 class test_m2o(CreatorCase):
