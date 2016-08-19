@@ -1,13 +1,10 @@
 from openerp import http
 import json
 from openerp.http import request, serialize_exception as _serialize_exception
+from openerp.tools.misc import xlwt
 from cStringIO import StringIO
 from collections import deque
 
-try:
-    import xlwt
-except ImportError:
-    xlwt = None
 
 class TableExporter(http.Controller):
 
@@ -21,7 +18,7 @@ class TableExporter(http.Controller):
         jdata = json.loads(data)
         nbr_measures = jdata['nbr_measures']
         workbook = xlwt.Workbook()
-        worksheet = workbook.add_sheet(jdata['title'][:30])
+        worksheet = workbook.add_sheet(jdata['title'])
         header_bold = xlwt.easyxf("font: bold on; pattern: pattern solid, fore_colour gray25;")
         header_plain = xlwt.easyxf("pattern: pattern solid, fore_colour gray25;")
         bold = xlwt.easyxf("font: bold on;")

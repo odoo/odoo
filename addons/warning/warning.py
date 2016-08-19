@@ -233,6 +233,16 @@ class sale_order_line(osv.osv):
         return result
 
     @api.onchange('product_id')
+    def product_id_change(self):
+        warning = self.onchange_product_id_warning()
+        product_info = self.product_id
+        if product_info.sale_line_warn != 'no-message':
+            if product_info.sale_line_warn == 'block':
+                return warning
+        result = super(sale_order_line, self).product_id_change()
+        result['warning'] = warning and warning.get('warning')
+        return result
+
     def onchange_product_id_warning(self):
         if not self.product_id:
             return

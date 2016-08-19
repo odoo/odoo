@@ -1555,12 +1555,18 @@ class stock_picking(models.Model):
 
     def rereserve_quants(self, cr, uid, picking, move_ids=[], context=None):
         """ Unreserve quants then try to reassign quants."""
+        if context is None:
+            context = {}
         stock_move_obj = self.pool.get('stock.move')
         if not move_ids:
             self.do_unreserve(cr, uid, [picking.id], context=context)
             self.action_assign(cr, uid, [picking.id], context=context)
         else:
-            stock_move_obj.do_unreserve(cr, uid, move_ids, context=context)
+            if 'no_state_change' in context:
+                move = stock_move_obj.browse(cr, uid, move_ids, context=context)
+                stock_move_obj.do_unreserve(cr, uid, [m.id for m in move if m.reserved_quant_ids], context=context)
+            else:
+                stock_move_obj.do_unreserve(cr, uid, move_ids, context=context)
             stock_move_obj.action_assign(cr, uid, move_ids, no_prepare=True, context=context)
 
     def do_new_transfer(self, cr, uid, ids, context=None):
@@ -1667,6 +1673,7 @@ class stock_picking(models.Model):
                     if moves_reassign and (picking.location_id.usage not in ("supplier", "production", "inventory")):
                         ctx = dict(context)
                         ctx['reserve_only_ops'] = True #unnecessary to assign other quants than those involved with pack operations as they will be unreserved anyways.
+                        ctx['no_state_change'] = True
                         self.rereserve_quants(cr, uid, picking, move_ids=picking.move_lines.ids, context=ctx)
                     self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
 
@@ -2047,10 +2054,11 @@ class stock_move(osv.osv):
             if move.state in ('done', 'cancel'):
                 raise UserError(_('Cannot unreserve a done move'))
             quant_obj.quants_unreserve(cr, uid, move, context=context)
-            if self.find_move_ancestors(cr, uid, move, context=context):
-                self.write(cr, uid, [move.id], {'state': 'waiting'}, context=context)
-            else:
-                self.write(cr, uid, [move.id], {'state': 'confirmed'}, context=context)
+            if not context.get('no_state_change'):
+                if self.find_move_ancestors(cr, uid, move, context=context):
+                    self.write(cr, uid, [move.id], {'state': 'waiting'}, context=context)
+                else:
+                    self.write(cr, uid, [move.id], {'state': 'confirmed'}, context=context)
 
     def _prepare_procurement_from_move(self, cr, uid, move, context=None):
         origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or move.origin or move.picking_id.name or "/")
@@ -2625,6 +2633,8 @@ class stock_move(osv.osv):
         operations = set()
         move_qty = {}
         for move in self.browse(cr, uid, ids, context=context):
+            if move.picking_id:
+                pickings.add(move.picking_id.id)
             move_qty[move.id] = move.product_qty
             for link in move.linked_move_operation_ids:
                 operations.add(link.operation_id)
@@ -4890,11 +4900,6 @@ class stock_picking_type(osv.osv):
             name = record.name
             if record.warehouse_id:
                 name = record.warehouse_id.name + ': ' +name
-            if context.get('special_shortened_wh_name'):
-                if record.warehouse_id:
-                    name = record.warehouse_id.name
-                else:
-                    name = _('Customer') + ' (' + record.name + ')'
             res.append((record.id, name))
         return res
 
