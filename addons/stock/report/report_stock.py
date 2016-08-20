@@ -12,7 +12,7 @@ class ReportStockLinesDate(models.Model):
     _order = "date"
 
     id = fields.Integer('Product Id', readonly=True)
-    product_id = fields.Many2one('product.product', 'Product', readonly=True, select=True)
+    product_id = fields.Many2one('product.product', 'Product', readonly=True, index=True)
     date = fields.Datetime('Date of latest Inventory', readonly=True)
     move_date = fields.Datetime('Date of latest Stock Move', readonly=True)
     active = fields.Boolean("Active", readonly=True)

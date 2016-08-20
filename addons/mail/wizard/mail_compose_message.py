@@ -120,7 +120,7 @@ class MailComposer(models.TransientModel):
     auto_delete = fields.Boolean('Delete Emails', help='Delete sent emails (mass mailing only)')
     auto_delete_message = fields.Boolean('Delete Message Copy', help='Do not keep a copy of the email in the document communication history (mass mailing only)')
     template_id = fields.Many2one(
-        'mail.template', 'Use template', select=True,
+        'mail.template', 'Use template', index=True,
         domain="[('model', '=', model)]")
     # mail_message updated fields
     message_type = fields.Selection(default="comment")

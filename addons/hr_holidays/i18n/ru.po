@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_holidays
-# 
+#
 # Translators:
 # Sergey Vilizhanin <sv@grimmette.ru>, 2015
 # Viktor Pogrebniak <vp@aifil.ru>, 2016
@@ -9,15 +9,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-04-06 20:36+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -46,7 +48,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:234
-#: code:addons/hr_holidays/hr_holidays.py:356
+#: code:addons/hr_holidays/hr_holidays.py:361
 #, python-format
 msgid "%s on %s"
 msgstr ""
@@ -64,8 +66,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid ""
-"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
-"color:"
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-color:"
 msgstr ""
 
 #. module: hr_holidays
@@ -110,14 +111,14 @@ msgid "Absent Today"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_needaction
-msgid "Action Needed"
-msgstr "Требуется реакция"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_active
 msgid "Active"
 msgstr "Активен"
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Active Leaves and Allocations"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -176,7 +177,7 @@ msgid "Allocation Requests to Approve"
 msgstr "Утверждение запросов на распределение"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:559
+#: code:addons/hr_holidays/hr_holidays.py:575
 #, python-format
 msgid "Allocation for %s"
 msgstr "Распределение для %s"
@@ -185,6 +186,12 @@ msgstr "Распределение для %s"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_allocation_to_approve_count
 msgid "Allocation to Approve"
 msgstr ""
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#, fuzzy
+msgid "Allocations"
+msgstr "Распределение"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_limit
@@ -266,7 +273,9 @@ msgstr "Тэгом сотрудника"
 msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee Tag: "
 "Allocation/Request for group of employees in category"
-msgstr "Сотрудником: Распределение/Запрос для индивидуального сотрудника, Тэгом сотрудника: Распределение/Запрос для группы сотрудников в категории"
+msgstr ""
+"Сотрудником: Распределение/Запрос для индивидуального сотрудника, Тэгом "
+"сотрудника: Распределение/Запрос для группы сотрудников в категории"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_can_reset
@@ -298,8 +307,12 @@ msgstr "Категория сотрудника"
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_type
 msgid ""
 "Choose 'Leave Request' if someone wants to take an off-day. \n"
-"Choose 'Allocation Request' if you want to increase the number of leaves available for someone"
-msgstr "Выберите \"Запрос на отгул\" если кто-либо берет выходной.\nВыберите \"Запрос на распределение\" если вы хотите увеличить количество доступных дней отгула для кого-либо"
+"Choose 'Allocation Request' if you want to increase the number of leaves "
+"available for someone"
+msgstr ""
+"Выберите \"Запрос на отгул\" если кто-либо берет выходной.\n"
+"Выберите \"Запрос на распределение\" если вы хотите увеличить количество "
+"доступных дней отгула для кого-либо"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -365,6 +378,12 @@ msgid "Created on"
 msgstr "Создан"
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#, fuzzy
+msgid "Current"
+msgstr "Источник"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_current_leave_state
 msgid "Current Leave Status"
 msgstr "Текущий статус отгула"
@@ -375,21 +394,12 @@ msgid "Current Leave Type"
 msgstr "Текущий тип отгула"
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Current Year Leaves"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Dashboard"
 msgstr "Панель управления"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Дата последнего сообщения"
-
-#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_department
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_department_id
 msgid "Department"
 msgstr "Подразделение"
@@ -462,29 +472,16 @@ msgstr "Дата окончания"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid ""
-"Filters only on allocations and requests that belong to an holiday type that"
-" is 'active' (active field is True)"
-msgstr "Фильтры только для распределений и запросов, которые принадлежат к типу отгула, который «активен» (поле активности \"Действителен\")"
+"Filters only on allocations and requests that belong to an holiday type that "
+"is 'active' (active field is True)"
+msgstr ""
+"Фильтры только для распределений и запросов, которые принадлежат к типу "
+"отгула, который «активен» (поле активности \"Действителен\")"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_manager_id
 msgid "First Approval"
 msgstr "Первое утверждение"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_follower_ids
-msgid "Followers"
-msgstr "Подписчики"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Подписчики (Каналы)"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Подписчики (Партнеры)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_date_from
@@ -514,11 +511,6 @@ msgid "HR Comments"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_department
-msgid "HR Department"
-msgstr "Отдел кадров"
-
-#. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
 msgid "HR Leaves Summary Report By Department"
 msgstr "Итоговый отчет департамента об отгулах персонала"
@@ -539,21 +531,13 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
-
-#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_active
 msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
 "type without removing it."
-msgstr "Если активное поле установлено в False, это позволяет вам скрыть тип без его удаления."
+msgstr ""
+"Если активное поле установлено в False, это позволяет вам скрыть тип без его "
+"удаления."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_limit
@@ -561,22 +545,15 @@ msgid ""
 "If you select this check box, the system allows the employees to take more "
 "leaves than the available ones for this type and will not take them into "
 "account for the \"Remaining Legal Leaves\" defined on the employee form."
-msgstr "Если вы установите этот флажок, система позволяет сотрудникам брать больше отгулов, чем уже имеются для этого типа и не будет принимать их во внимание для \"оставшихся законных отгулов\", определенных в форме сотрудников."
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_is_follower
-msgid "Is Follower"
-msgstr "Подписчик"
+msgstr ""
+"Если вы установите этот флажок, система позволяет сотрудникам брать больше "
+"отгулов, чем уже имеются для этого типа и не будет принимать их во внимание "
+"для \"оставшихся законных отгулов\", определенных в форме сотрудников."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Ivory"
 msgstr "Слоновой кости"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_last_post
-msgid "Last Message Date"
-msgstr "Последнее сообщение по дате"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays___last_update
@@ -682,6 +659,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_approve
 #: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 #: model:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Leaves"
 msgstr "Отгулы"
 
@@ -771,17 +749,20 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_confirmed
-msgid "Leaves/Allocations: first approval"
-msgstr ""
+#, fuzzy
+msgid "Leaves/Allocations Confirmed"
+msgstr "Режим распределения"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_first_validated
-msgid "Leaves/Allocations: second approval"
-msgstr ""
+#, fuzzy
+msgid "Leaves/Allocations First Approval"
+msgstr "Утверждение запросов на распределение"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2015"
+#, fuzzy
+msgid "Legal Leaves 2016"
 msgstr "Официальные выходные 2015"
 
 #. module: hr_holidays
@@ -846,9 +827,9 @@ msgstr "Максимально разрешенные отгулы - Взяты�
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_virtual_remaining_leaves
-msgid ""
-"Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
-msgstr "Максимально разрешенные отгулы - Взятые отгулы - Отгулы, ждущие подтверждения"
+msgid "Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
+msgstr ""
+"Максимально разрешенные отгулы - Взятые отгулы - Отгулы, ждущие подтверждения"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_meeting_id
@@ -859,16 +840,6 @@ msgstr "Встреча"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_categ_id
 msgid "Meeting Type"
 msgstr "Тип встречи"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_ids
-msgid "Messages"
-msgstr "Сообщения"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_ids
-msgid "Messages and communication history"
-msgstr "Сообщения и история общения"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
@@ -887,13 +858,7 @@ msgid "My Department Leaves"
 msgstr "Отгулы моего подразделения"
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "My Leave Requests"
-msgstr "Мои запросы на отгулы"
-
-#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Leaves"
 msgstr "Мои отгулы"
 
@@ -913,11 +878,6 @@ msgid "New"
 msgstr "Новый"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Количество действий"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_number_of_days
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_employee
@@ -931,21 +891,13 @@ msgid "Number of Leaves"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Количество сообщений, требующих реакции"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Количество непрочтённых сообщений"
-
-#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_categ_id
 msgid ""
 "Once a leave is validated, Odoo will create a corresponding meeting of this "
 "type in the calendar."
-msgstr "После проверки отгула, Odoo будет создать соответствующую встречу этого типа в календаре."
+msgstr ""
+"После проверки отгула, Odoo будет создать соответствующую встречу этого типа "
+"в календаре."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -955,11 +907,6 @@ msgid ""
 "                type (recuperation, legal holidays, sickness) and the exact\n"
 "                number of open days related to your leave."
 msgstr ""
-
-#. module: hr_holidays
-#: model:ir.actions.client,name:hr_holidays.action_client_hr_holidays_menu
-msgid "Open HR Menu"
-msgstr "Открыть кадровое меню"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_parent_id
@@ -1115,15 +1062,30 @@ msgstr "Сумма"
 msgid ""
 "The employee or employee category of this request is missing. Please make "
 "sure that your user login is linked to an employee."
-msgstr "Сотрудник или категория сотрудников данного запроса не найдена. Пожалуйста убедитесь что ваш логин пользователя соединен с пользователем."
+msgstr ""
+"Сотрудник или категория сотрудников данного запроса не найдена. Пожалуйста "
+"убедитесь что ваш логин пользователя соединен с пользователем."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:554
+#: code:addons/hr_holidays/hr_holidays.py:570
 #, python-format
 msgid ""
-"The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
-"You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \\ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field."
-msgstr "Функцию в поле 'Оставшиеся законные отгулы' можно использовать только тогда, когда есть только один тип отгула с опцией \"Разрешить для переопределения лимита\". (%sFound). В противном случае, обновление неоднозначно, поскольку мы не можем решить, какие типы отгулов должны быть обновлены. ↵ \nВы можете предпочесть использовать классическое меню \"Запросы на отгулы\" и \"распределение запросов», расположенных в «кадровые ресурсы\\отгулы\" чтобы управлять отгулами сотрудников, если конфигурация не позволяет использовать это поле."
+"The feature behind the field 'Remaining Legal Leaves' can only be used when "
+"there is only one leave type with the option 'Allow to Override Limit' "
+"unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot "
+"decide on which leave type the update has to be done. \n"
+"You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
+"Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
+"the employees if the configuration does not allow to use this field."
+msgstr ""
+"Функцию в поле 'Оставшиеся законные отгулы' можно использовать только тогда, "
+"когда есть только один тип отгула с опцией \"Разрешить для переопределения "
+"лимита\". (%sFound). В противном случае, обновление неоднозначно, поскольку "
+"мы не можем решить, какие типы отгулов должны быть обновлены. ↵ \n"
+"Вы можете предпочесть использовать классическое меню \"Запросы на отгулы\" и "
+"\"распределение запросов», расположенных в «кадровые ресурсы\\отгулы\" чтобы "
+"управлять отгулами сотрудников, если конфигурация не позволяет использовать "
+"это поле."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -1135,7 +1097,9 @@ msgstr "Количество дней должно быть больше 0."
 msgid ""
 "The number of remaining leaves is not sufficient for this leave type.\n"
 "Please verify also the leaves waiting for validation."
-msgstr "Количество оставшихся отгулов не достаточно для данного типа.\nПожалуйста, подтвердите также отгулы ожидающие утверждения."
+msgstr ""
+"Количество оставшихся отгулов не достаточно для данного типа.\n"
+"Пожалуйста, подтвердите также отгулы ожидающие утверждения."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:304
@@ -1147,11 +1111,19 @@ msgstr "Начальная дата должна быть раньше коне�
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_state
 msgid ""
-"The status is set to 'To Submit', when a holiday request is created.            \n"
-"The status is 'To Approve', when holiday request is confirmed by user.            \n"
-"The status is 'Refused', when holiday request is refused by manager.            \n"
+"The status is set to 'To Submit', when a holiday request is "
+"created.            \n"
+"The status is 'To Approve', when holiday request is confirmed by "
+"user.            \n"
+"The status is 'Refused', when holiday request is refused by "
+"manager.            \n"
 "The status is 'Approved', when holiday request is approved by manager."
-msgstr "Статус установлен в \"Представить\", когда запрос на отгул создан. ↵ \nСтатус \"Утвердить\", когда запрос на отгул подтверждается пользователем. ↵ \nСтатус \"Отказано\", когда менеджер отказал в запросе на отгул. ↵ \nСтатус \"Одобрено\", когда запрос на отгул утвержден менеджером."
+msgstr ""
+"Статус установлен в \"Представить\", когда запрос на отгул создан. ↵ \n"
+"Статус \"Утвердить\", когда запрос на отгул подтверждается пользователем. "
+"↵ \n"
+"Статус \"Отказано\", когда менеджер отказал в запросе на отгул. ↵ \n"
+"Статус \"Одобрено\", когда запрос на отгул утвержден менеджером."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_manager_id
@@ -1163,28 +1135,35 @@ msgstr "Поле автоматически заполняется пользо�
 msgid ""
 "This area is automaticly filled by the user who validate the leave with "
 "second level (If Leave type need second validation)"
-msgstr "Эта область автоматически заполняется пользователем, который утверждает отгул на втором уровне (если отгул требует двойного утверждения)"
+msgstr ""
+"Эта область автоматически заполняется пользователем, который утверждает "
+"отгул на втором уровне (если отгул требует двойного утверждения)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_color_name
 msgid ""
 "This color will be used in the leaves summary located in Reporting\\Leaves "
 "by Department."
-msgstr "Этот цвет будет использован в отчете по отгулам, размещенном в отчетах/отгулах подразделением."
+msgstr ""
+"Этот цвет будет использован в отчете по отгулам, размещенном в отчетах/"
+"отгулах подразделением."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_leaves_taken
 msgid ""
 "This value is given by the sum of all holidays requests with a negative "
 "value."
-msgstr "Это значение образовано суммой всех праздничных запросов с негативной оценкой."
+msgstr ""
+"Это значение образовано суммой всех праздничных запросов с негативной "
+"оценкой."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_max_leaves
 msgid ""
 "This value is given by the sum of all holidays requests with a positive "
 "value."
-msgstr "Это оценка образована суммой всех выходных запросов с положительной оценкой."
+msgstr ""
+"Это оценка образована суммой всех выходных запросов с положительной оценкой."
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -1228,7 +1207,10 @@ msgid ""
 "Total number of legal leaves allocated to this employee, change this value "
 "to create allocation/leave request. Total based on all the leave types "
 "without overriding limit."
-msgstr "Общее количество законных отгулов распределенных для данного сотрудника, измените это значение создав распределение/запрос отгула. Итог основывается на всех типов запросов без преобладающих ограничений."
+msgstr ""
+"Общее количество законных отгулов распределенных для данного сотрудника, "
+"измените это значение создав распределение/запрос отгула. Итог основывается "
+"на всех типов запросов без преобладающих ограничений."
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1241,15 +1223,9 @@ msgid "Unpaid"
 msgstr "Не оплачено"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Unread Messages"
 msgstr "Непрочитанные"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Счетчик непрочтённых сообщений"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_remaining_leaves_user_user_id
@@ -1288,23 +1264,6 @@ msgid "Waiting Second Validation"
 msgstr "Ожидание Второго Утверждения"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:554
-#: code:addons/hr_holidays/hr_holidays.py:561
-#, python-format
-msgid "Warning!"
-msgstr "Внимание!"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_website_message_ids
-msgid "Website Messages"
-msgstr "Сообщения с сайта"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_website_message_ids
-msgid "Website communication history"
-msgstr "История общения с сайта"
-
-#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Wheat"
 msgstr "Пшеничный"
@@ -1314,12 +1273,9 @@ msgstr "Пшеничный"
 msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
 "validation to be approved."
-msgstr "После выбора, Утверждение/Запрос отгула для этого типа получают второе подтверждение для утверждения."
-
-#. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Year"
-msgstr "Год"
+msgstr ""
+"После выбора, Утверждение/Запрос отгула для этого типа получают второе "
+"подтверждение для утверждения."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
@@ -1340,18 +1296,19 @@ msgid "You cannot delete a leave which is in %s state."
 msgstr "Вы не можете удалить отгул, который находиться в состоянии %s."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:561
+#: code:addons/hr_holidays/hr_holidays.py:577
 #, python-format
 msgid "You cannot reduce validated allocation requests"
 msgstr "Вы не можете сократить утвержденные запросы отгулов"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:352
-#: code:addons/hr_holidays/hr_holidays.py:364
+#: code:addons/hr_holidays/hr_holidays.py:357
+#: code:addons/hr_holidays/hr_holidays.py:369
 #, python-format
 msgid ""
 "You cannot set a leave request as '%s'. Contact a human resource manager."
-msgstr "Вы не можете задать заявку на отгул как '%s'. Спросите менеджера почему."
+msgstr ""
+"Вы не можете задать заявку на отгул как '%s'. Спросите менеджера почему."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:26
@@ -1384,3 +1341,69 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "to"
 msgstr "для"
+
+#~ msgid "Action Needed"
+#~ msgstr "Требуется реакция"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Дата последнего сообщения"
+
+#~ msgid "Followers"
+#~ msgstr "Подписчики"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Подписчики (Каналы)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Подписчики (Партнеры)"
+
+#~ msgid "HR Department"
+#~ msgstr "Отдел кадров"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
+
+#~ msgid "Is Follower"
+#~ msgstr "Подписчик"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Последнее сообщение по дате"
+
+#~ msgid "Messages"
+#~ msgstr "Сообщения"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Сообщения и история общения"
+
+#~ msgid "My Leave Requests"
+#~ msgstr "Мои запросы на отгулы"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Количество действий"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Количество сообщений, требующих реакции"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Количество непрочтённых сообщений"
+
+#~ msgid "Open HR Menu"
+#~ msgstr "Открыть кадровое меню"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Счетчик непрочтённых сообщений"
+
+#~ msgid "Warning!"
+#~ msgstr "Внимание!"
+
+#~ msgid "Website Messages"
+#~ msgstr "Сообщения с сайта"
+
+#~ msgid "Website communication history"
+#~ msgstr "История общения с сайта"
+
+#~ msgid "Year"
+#~ msgstr "Год"

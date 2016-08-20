@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * purchase_requisition
-# 
+#
 # Translators:
 # Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015-2016
 # Melanie Bernard <mbe@odoo.com>, 2015
@@ -10,14 +10,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-08 22:21+0000\n"
 "Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: purchase_requisition
@@ -81,14 +81,18 @@ msgid ""
 "A Call for Tenders is a procedure for generating competing offers from\n"
 "            different bidders. In the call for tenders, you can record the\n"
 "            products you need to buy and generate the creation of RfQs to\n"
-"            vendors. Once the tenders have been registered, you can review and\n"
+"            vendors. Once the tenders have been registered, you can review "
+"and\n"
 "            compare them and you can validate some and cancel others."
-msgstr "Un appel d'offres est une procédure générant des offres concurrentes de\ndifférents soumissionnaires. Dans l'appel d'offres, vous pouvez enregistrer les\narticles que vous avez besoin d'acheter et générer des demandes de devis aux\nfournisseurs. Une fois que les offres ont été enregistrées, vous pouvez les passer en revue et les comparer et vous pouvez également en valider certaines et en annuler d'autres. "
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction
-msgid "Action Needed"
-msgstr "A besoin d'une action"
+msgstr ""
+"Un appel d'offres est une procédure générant des offres concurrentes de\n"
+"différents soumissionnaires. Dans l'appel d'offres, vous pouvez enregistrer "
+"les\n"
+"articles que vous avez besoin d'acheter et générer des demandes de devis "
+"aux\n"
+"fournisseurs. Une fois que les offres ont été enregistrées, vous pouvez les "
+"passer en revue et les comparer et vous pouvez également en valider "
+"certaines et en annuler d'autres. "
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
@@ -188,13 +192,6 @@ msgid "Change Quantity"
 msgstr "Changer la quantité"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_product_template_purchase_requisition
-msgid ""
-"Check this box to generate Call for Tenders instead of generating requests "
-"for quotation from procurement."
-msgstr "Cochez cette case pour générer un appel d'offres au lieu de générer les demandes de devis à partir de l'approvisionnement."
-
-#. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_partner
 msgid "Choose Vendor"
@@ -274,11 +271,6 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Date du dernier message posté sur cet enregistrement"
-
-#. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:22
 #, python-format
 msgid "Define product(s) you want to include in the call for tenders."
@@ -313,21 +305,6 @@ msgid "End Month"
 msgstr "Mois de fin"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_follower_ids
-msgid "Followers"
-msgstr "Abonnés"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Abonnés (Canaux)"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Abonnés (Partenaires)"
-
-#. module: purchase_requisition
 #. openerp-web
 #: code:addons/purchase_requisition/static/src/xml/purchase_requisition.xml:5
 #, python-format
@@ -346,26 +323,6 @@ msgstr "Regrouper par"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_id
 msgid "ID"
 msgstr "ID"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Si coché, de nouveaux messages demandent votre attention."
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Si coché, de nouveaux messages demandent votre attention."
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_is_follower
-msgid "Is Follower"
-msgstr "Est un abonné"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_last_post
-msgid "Last Message Date"
-msgstr "Date du dernier message"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty___last_update
@@ -397,16 +354,6 @@ msgid "Latest Requisition"
 msgstr "Dernièr appel d'offres"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_ids
-msgid "Messages"
-msgstr "Messages"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_ids
-msgid "Messages and communication history"
-msgstr "Historique des messages et communications"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_multiple_rfq_per_supplier
 msgid "Multiple RFQ per vendor"
 msgstr "Plusieurs demandes de prix par fournisseur"
@@ -425,21 +372,6 @@ msgstr "Nouveau"
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "New Call for Tenders"
 msgstr "Nouvel appel d'offres"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Nombre d'actions"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Nombre de messages demandant une action"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Nombre de messages non lus"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -551,7 +483,7 @@ msgid "Purchase Requisition Partner"
 msgstr "Partenaires associés à l'appel d'offres"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:431
+#: code:addons/purchase_requisition/purchase_requisition.py:435
 #, python-format
 msgid "Purchase Requisition created"
 msgstr "Demande d'achat créé"
@@ -660,9 +592,16 @@ msgstr "Choisir une seule demande de prix (exclusive)"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_exclusive
 msgid ""
-"Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
-"Select multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
-msgstr "Choisir une seule demande de prix (exclusive) : à la confirmation de la commande d'achat, les autres bons de commandes sont annulées.\nChoisir plusieurs demandes de prix : permet d'avoir plusieurs commandes d'achat. À la confirmation de la commande d'achat, les autres bons de commandes ne sont pas annulées."
+"Select only one RFQ (exclusive):  On the confirmation of a purchase order, "
+"it cancels the remaining purchase order.\n"
+"Select multiple RFQ:  It allows to have multiple purchase orders.On "
+"confirmation of a purchase order it does not cancel the remaining orders"
+msgstr ""
+"Choisir une seule demande de prix (exclusive) : à la confirmation de la "
+"commande d'achat, les autres bons de commandes sont annulées.\n"
+"Choisir plusieurs demandes de prix : permet d'avoir plusieurs commandes "
+"d'achat. À la confirmation de la commande d'achat, les autres bons de "
+"commandes ne sont pas annulées."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -690,7 +629,9 @@ msgstr "Statut"
 msgid ""
 "Technical field for not loosing the initial information about the quantity "
 "proposed in the tender"
-msgstr "Champ technique pour ne pas perdre l'information initiale sur la quantité proposée dans l'offre"
+msgstr ""
+"Champ technique pour ne pas perdre l'information initiale sur la quantité "
+"proposée dans l'offre"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_date_end
@@ -716,7 +657,8 @@ msgstr "Conditions générales"
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_schedule_date
 msgid ""
 "The expected and scheduled delivery date where all the products are received"
-msgstr "La date de livraison prévue et planifiée où tous les produits sont reçus"
+msgstr ""
+"La date de livraison prévue et planifiée où tous les produits sont reçus"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -727,16 +669,6 @@ msgstr "Non assigné"
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned  Requisition"
 msgstr "Appel d'offres non assigné"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread
-msgid "Unread Messages"
-msgstr "Messages non lus"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Compteur de messages non lus"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
@@ -754,20 +686,11 @@ msgid "Warehouse"
 msgstr "Entrepôt"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_website_message_ids
-msgid "Website Messages"
-msgstr "Messages du site web"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_website_message_ids
-msgid "Website communication history"
-msgstr "Historique de communication du site web"
-
-#. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:72
 #, python-format
 msgid "You can not confirm call because there is no product line."
-msgstr "Vous ne pouvez pas confirmer l'appel car il n'y a pas de ligne de produit."
+msgstr ""
+"Vous ne pouvez pas confirmer l'appel car il n'y a pas de ligne de produit."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:249
@@ -781,7 +704,9 @@ msgstr "Vous avez déjà généré un bon de commande(s)."
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
-msgstr "Il existe déjà une commande %s pour ce partenaire, vous devez annuler cette commande avant de faire un nouveau devis."
+msgstr ""
+"Il existe déjà une commande %s pour ce partenaire, vous devez annuler cette "
+"commande avant de faire un nouveau devis."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:258
@@ -793,3 +718,64 @@ msgstr "Vous n'avez pas de ligne sélectionnée pour l'achat."
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
 msgstr "par ex. PO0025"
+
+#~ msgid "Action Needed"
+#~ msgstr "A besoin d'une action"
+
+#~ msgid ""
+#~ "Check this box to generate Call for Tenders instead of generating "
+#~ "requests for quotation from procurement."
+#~ msgstr ""
+#~ "Cochez cette case pour générer un appel d'offres au lieu de générer les "
+#~ "demandes de devis à partir de l'approvisionnement."
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Date du dernier message posté sur cet enregistrement"
+
+#~ msgid "Followers"
+#~ msgstr "Abonnés"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Abonnés (Canaux)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Abonnés (Partenaires)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Si coché, de nouveaux messages demandent votre attention."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Si coché, de nouveaux messages demandent votre attention."
+
+#~ msgid "Is Follower"
+#~ msgstr "Est un abonné"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Date du dernier message"
+
+#~ msgid "Messages"
+#~ msgstr "Messages"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Historique des messages et communications"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Nombre d'actions"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Nombre de messages demandant une action"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Nombre de messages non lus"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Messages non lus"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Compteur de messages non lus"
+
+#~ msgid "Website Messages"
+#~ msgstr "Messages du site web"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historique de communication du site web"

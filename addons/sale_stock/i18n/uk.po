@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_stock
-# 
+#
 # Translators:
 # Bohdan Lisnenko, 2015-2016
 # Bohdan Lisnenko, 2016
@@ -9,15 +9,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:27+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-05-21 10:22+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
+"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
+"uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
@@ -33,7 +35,9 @@ msgstr "Дозволити додавання витрат на доставку
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Allow setting manufacturing order properties per order line (advanced)"
-msgstr "Дозволити вказання властивостей замовлення на виробництво для рядків замовлення (розширено)"
+msgstr ""
+"Дозволити вказання властивостей замовлення на виробництво для рядків "
+"замовлення (розширено)"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
@@ -78,12 +82,27 @@ msgstr "Замовлення на доставку"
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Don't use manufacturing properties (recommended as its easier)"
-msgstr "Не використовувати властивості для виробництва (рекомендовано, тому що простіше)"
+msgstr ""
+"Не використовувати властивості для виробництва (рекомендовано, тому що "
+"простіше)"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
 msgstr "Дозволити маршрути для рядків продажу"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_product_product_expense_policy
+msgid "Expense Invoice Policy"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_product_product_expense_policy
+msgid ""
+"If you invoice at cost, the expense will be invoiced on the sale order at "
+"the cost of the analytic line;if you invoice at sales price, the price of "
+"the product will be used instead."
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
@@ -95,16 +114,22 @@ msgstr "Інкотермс"
 #: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
-msgstr "Інкотермс - це набір термінів продажу. Вони служать для визначення розподілу відповідальності та вартості доставки між покупцем і продавцем і уособлюють витвір мистецтва практики перевезень."
+"costs and responsibilities between buyer and seller and reflect state-of-the-"
+"art transportation practices."
+msgstr ""
+"Інкотермс - це набір термінів продажу. Вони служать для визначення розподілу "
+"відповідальності та вартості доставки між покупцем і продавцем і уособлюють "
+"витвір мистецтва практики перевезень."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "Міжнародні комерційні умови, комплект міжнародних правил з тлумачення найбільш широко використовуваних торгівельних термінів в галузі міжнародної торгівлі."
+msgstr ""
+"Міжнародні комерційні умови, комплект міжнародних правил з тлумачення "
+"найбільш широко використовуваних торгівельних термінів в галузі міжнародної "
+"торгівлі."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
@@ -125,14 +150,20 @@ msgstr "Рядок рахунку"
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
-msgstr "Межа відхилення для терміну постачання товарів замовникам. Поповнення запасів та дата відвантаження буде запланована на цю кількість днів раніше ніж обіцяна дата, щоб впоратися з несподіваними затримками в ланцюгу постачань."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
+msgstr ""
+"Межа відхилення для терміну постачання товарів замовникам. Поповнення "
+"запасів та дата відвантаження буде запланована на цю кількість днів раніше "
+"ніж обіцяна дата, щоб впоратися з несподіваними затримками в ланцюгу "
+"постачань."
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
 msgid "No order specific routes like MTO or drop shipping"
-msgstr "Без спеціальних маршрутів замовлення таких, як виготовлення під замовлення чи пряма поставка."
+msgstr ""
+"Без спеціальних маршрутів замовлення таких, як виготовлення під замовлення "
+"чи пряма поставка."
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
@@ -140,7 +171,7 @@ msgid "No shipping costs on sales orders"
 msgstr "Без вартості доставки у замовленнях на продаж"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:141
+#: code:addons/sale_stock/sale_stock.py:156
 #, python-format
 msgid "Not enough inventory!"
 msgstr "Не достатньо запасів!"
@@ -157,7 +188,7 @@ msgid "Order Routing"
 msgstr "Маршрути замовлення"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:152
+#: code:addons/sale_stock/sale_stock.py:167
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Замовлена кількість зменшилась!"
@@ -176,6 +207,12 @@ msgstr "Відбирання, пов’язане з цим замовлення
 #: model:ir.model,name:sale_stock.model_procurement_order
 msgid "Procurement"
 msgstr "Забезпечення"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_product
+#, fuzzy
+msgid "Product"
+msgstr "Шаблон товару"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
@@ -235,7 +272,8 @@ msgstr "Доставляти все відразу без дозамовленн
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
 msgid "Ship products when some are available, and allow back orders"
-msgstr "Доставляти коли є наявність чого не будь і використовувати дозамовлення "
+msgstr ""
+"Доставляти коли є наявність чого не будь і використовувати дозамовлення "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_delivery
@@ -259,9 +297,9 @@ msgid "Stock Move"
 msgstr "Переміщення запасів"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:194
-#, python-format
-msgid "This product is packaged by %d . You should sell %d ."
+#: code:addons/sale_stock/sale_stock.py:213
+#, fuzzy, python-format
+msgid "This product is packaged by %s %s. You should sell %s %s."
 msgstr "Цей товар запаковано у %d . ви повинні продати %d ."
 
 #. module: sale_stock
@@ -276,26 +314,30 @@ msgid "Warehouse"
 msgstr "Склад"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:193
+#: code:addons/sale_stock/sale_stock.py:212
 #, python-format
 msgid "Warning"
 msgstr "Попередження"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:153
+#: code:addons/sale_stock/sale_stock.py:168
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr "Ви зменшили кількість у замовленні! Не забудьте вручну змінити кількість у замовленні на доставку, якщо це потрібно."
+msgstr ""
+"Ви зменшили кількість у замовленні! Не забудьте вручну змінити кількість у "
+"замовленні на доставку, якщо це потрібно."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:142
+#: code:addons/sale_stock/sale_stock.py:157
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available!\n"
 "The stock on hand is %.2f %s."
-msgstr "Ви плануєте продати %.2f %s але в наявності є тільки %.2f %s!\nНа складі є %.2f %s."
+msgstr ""
+"Ви плануєте продати %.2f %s але в наявності є тільки %.2f %s!\n"
+"На складі є %.2f %s."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings

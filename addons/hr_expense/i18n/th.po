@@ -1,32 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_expense
-# 
+#
 # Translators:
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-04-11 12:09+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
+"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Date:</strong>"
+#, fuzzy
+msgid "<strong>Currency:</strong>"
 msgstr "<strong>;yomuj:</strong>"
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Description:</strong>"
-msgstr "<strong>คำอธิบาย:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -35,18 +35,25 @@ msgstr "<strong>บุคลากร:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
+msgid "<strong>Manager:</strong>"
+msgstr "<strong>;yomuj:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
+msgid "<strong>Status:</strong>"
+msgstr "<strong>;yomuj:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Total</strong>"
 msgstr "<strong>ทั้งหมด</strong>"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Validated By:</strong>"
-msgstr "<strong>ตรวจสอบโดย:</strong>"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction
-msgid "Action Needed"
-msgstr "ต้องดำเนินการ"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_id
+msgid "Account"
+msgstr ""
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
@@ -166,11 +173,7 @@ msgid "Date"
 msgstr "วันที่"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "วันที่ข้อความล่าสุดโพสต์ในระเบียน"
-
-#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_department_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Department"
@@ -287,13 +290,13 @@ msgid "Expenses by Month"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:206
+#: code:addons/hr_expense/models/hr_expense.py:209
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:209
+#: code:addons/hr_expense/models/hr_expense.py:212
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -318,21 +321,6 @@ msgid "Expenses to Invoice"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_follower_ids
-msgid "Followers"
-msgstr "ผู้ติดตาม"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "ผู้ติดตาม (ช่องทาง)"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "ผู้ติดตาม (คู่ค้า)"
-
-#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Former Employees"
 msgstr ""
@@ -346,18 +334,13 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
-msgid "Generate Single Accounting Entry"
+msgid "Generate Accounting Entries"
 msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Group By"
 msgstr "จัดกลุ่มโดย"
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
-msgid "HR Department"
-msgstr "แผนก HR"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
@@ -388,21 +371,6 @@ msgid "ID"
 msgstr "รหัส"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread
-msgid "If checked new messages require your attention."
-msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_is_follower
-msgid "Is Follower"
-msgstr "เป็นผู้ติดตาม"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_move_id
 msgid "Journal Entry"
 msgstr "บันทึกบัญชี"
@@ -411,11 +379,6 @@ msgstr "บันทึกบัญชี"
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Item"
 msgstr "รายการสมุดบัญชีรายวัน"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_last_post
-msgid "Last Message Date"
-msgstr "วันที่ข้อความล่าสุด"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
@@ -435,16 +398,6 @@ msgstr "อัพเดทครั้งสุดท้ายโดย"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_date
 msgid "Last Updated on"
 msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_ids
-msgid "Messages"
-msgstr "ข้อความ"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_ids
-msgid "Messages and communication history"
-msgstr "ข้อความและประวัติการติดต่อ"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all
@@ -479,7 +432,7 @@ msgid "New Mail"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:260
+#: code:addons/hr_expense/models/hr_expense.py:276
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
@@ -487,13 +440,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:231
+#: code:addons/hr_expense/models/hr_expense.py:244
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:227
+#: code:addons/hr_expense/models/hr_expense.py:240
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr ""
@@ -504,23 +457,8 @@ msgid "Notes..."
 msgstr "โน้ต..."
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction_counter
-msgid "Number of Actions"
-msgstr "จำนวนกิจกรรม"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_attachment_number
 msgid "Number of Attachments"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread_counter
-msgid "Number of unread messages"
 msgstr ""
 
 #. module: hr_expense
@@ -529,11 +467,6 @@ msgstr ""
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.actions.client,name:hr_expense.action_client_expense_menu
-msgid "Open Expense Menu"
 msgstr ""
 
 #. module: hr_expense
@@ -547,7 +480,7 @@ msgid "Payment By"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:264
+#: code:addons/hr_expense/models/hr_expense.py:280
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -623,11 +556,11 @@ msgid "Select the lines you want to submit to be reimbursed."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:73
+#: code:addons/hr_expense/models/hr_expense.py:77
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product"
-" Unit of Measure"
+"Selected Unit of Measure does not belong to the same category as the product "
+"Unit of Measure"
 msgstr ""
 
 #. module: hr_expense
@@ -732,16 +665,6 @@ msgid "Unit of Measure"
 msgstr "หน่วยของการวัด"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread
-msgid "Unread Messages"
-msgstr "ข้อความที่ยังไม่ได้อ่าน"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "UoM"
 msgstr "หน่วยวัด"
@@ -759,44 +682,36 @@ msgid "Waiting Payment"
 msgstr "คอยการจ่ายเงิน"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_website_message_ids
-msgid "Website Messages"
-msgstr "ข้อความเว็บไซต์"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_website_message_ids
-msgid "Website communication history"
-msgstr "ประวัติการสื่อสารเว็บไซต์"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_state
 msgid ""
 "When the expense request is created the status is 'To Submit'.\n"
-" It is submitted by the employee and request is sent to manager, the status is 'Submitted'.        \n"
+" It is submitted by the employee and request is sent to manager, the status "
+"is 'Submitted'.        \n"
 "If the manager approve it, the status is 'Approved'.\n"
-" If the accountant genrate the accounting entries for the expense request, the status is 'Waiting Payment'."
+" If the accountant genrate the accounting entries for the expense request, "
+"the status is 'Waiting Payment'."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:107
+#: code:addons/hr_expense/models/hr_expense.py:111
 #, python-format
 msgid "You can only delete draft or refused expenses!"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:203
+#: code:addons/hr_expense/models/hr_expense.py:206
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:113
+#: code:addons/hr_expense/models/hr_expense.py:117
 #, python-format
 msgid "You can only submit draft expenses!"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:124
+#: code:addons/hr_expense/models/hr_expense.py:128
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
@@ -813,3 +728,65 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "or"
 msgstr "หรือ"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
+msgid "report.hr_expense.report_expense"
+msgstr ""
+
+#~ msgid "<strong>Description:</strong>"
+#~ msgstr "<strong>คำอธิบาย:</strong>"
+
+#~ msgid "<strong>Validated By:</strong>"
+#~ msgstr "<strong>ตรวจสอบโดย:</strong>"
+
+#~ msgid "Action Needed"
+#~ msgstr "ต้องดำเนินการ"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "วันที่ข้อความล่าสุดโพสต์ในระเบียน"
+
+#~ msgid "Followers"
+#~ msgstr "ผู้ติดตาม"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "ผู้ติดตาม (ช่องทาง)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "ผู้ติดตาม (คู่ค้า)"
+
+#~ msgid "HR Department"
+#~ msgstr "แผนก HR"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#~ msgid "Is Follower"
+#~ msgstr "เป็นผู้ติดตาม"
+
+#~ msgid "Last Message Date"
+#~ msgstr "วันที่ข้อความล่าสุด"
+
+#~ msgid "Messages"
+#~ msgstr "ข้อความ"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "ข้อความและประวัติการติดต่อ"
+
+#~ msgid "Number of Actions"
+#~ msgstr "จำนวนกิจกรรม"
+
+#~ msgid "Unread Messages"
+#~ msgstr "ข้อความที่ยังไม่ได้อ่าน"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "จำนวนข้อความที่ยังไม่ได้อ่าน"
+
+#~ msgid "Website Messages"
+#~ msgstr "ข้อความเว็บไซต์"
+
+#~ msgid "Website communication history"
+#~ msgstr "ประวัติการสื่อสารเว็บไซต์"

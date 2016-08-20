@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_timesheet_sheet
-# 
+#
 # Translators:
 # Fabian Liesch <fabian.liesch@gmail.com>, 2016
 # darenkster <renkosp@gmail.com>, 2015
@@ -9,23 +9,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-13 10:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-02 08:45+0000\n"
 "Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed timesheet.                 \n"
-"* The 'Confirmed' status is used for to confirm the timesheet by user.                 \n"
-"* The 'Done' status is used when users timesheet is accepted by his/her senior."
-msgstr " * Der \"Entwurf\"-Status wird verwendet, wenn ein Benutzer einen neuen und noch nicht bestätigten Stundenzettel anlegen möchte.\n* Die \"Bestätigt\"-Status wird eigetragen, wenn Benutzer Ihre Stundenzettel bestätigen.\n* Die \"Fertig\" Status wird verwendet, wenn Stundenzettel durch dessen Vorgesetzten genehmigt wurden."
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"timesheet.                 \n"
+"* The 'Confirmed' status is used for to confirm the timesheet by "
+"user.                 \n"
+"* The 'Done' status is used when users timesheet is accepted by his/her "
+"senior."
+msgstr ""
+" * Der \"Entwurf\"-Status wird verwendet, wenn ein Benutzer einen neuen und "
+"noch nicht bestätigten Stundenzettel anlegen möchte.\n"
+"* Die \"Bestätigt\"-Status wird eigetragen, wenn Benutzer Ihre Stundenzettel "
+"bestätigen.\n"
+"* Die \"Fertig\" Status wird verwendet, wenn Stundenzettel durch dessen "
+"Vorgesetzten genehmigt wurden."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
@@ -58,11 +67,6 @@ msgid "Absent"
 msgstr "Abwesend"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction
-msgid "Action Needed"
-msgstr "Aktion notwendig"
-
-#. module: hr_timesheet_sheet
 #. openerp-web
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:33
 #, python-format
@@ -74,12 +78,8 @@ msgstr "Eintrag hinzufügen"
 msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
-msgstr "Erlaubte Abweichung in Stunden bei der Arbeitszeit für eine Zeitabrechnung."
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Analytischer Buchungssatz"
+msgstr ""
+"Erlaubte Abweichung in Stunden bei der Arbeitszeit für eine Zeitabrechnung."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_ids
@@ -110,11 +110,6 @@ msgstr "Anwesenheit"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Attendances"
 msgstr "Anwesenheitszeiten"
-
-#. module: hr_timesheet_sheet
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_current_open
-msgid "Cancel"
-msgstr "Abbrechen"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -173,22 +168,13 @@ msgid "Date from"
 msgstr "Von"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum der letzten Nachricht."
-
-#. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "Bis"
 
 #. module: hr_timesheet_sheet
-#: selection:res.company,timesheet_range:0
-msgid "Day"
-msgstr "Tag"
-
-#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -249,10 +235,11 @@ msgid "Employees"
 msgstr "Mitarbeiter"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:77
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:85
 #, python-format
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr "Fehler ! Anmelden (bzw. Abmelden) muss immer Abmelden folgen (bzw. Anmelden)"
+msgstr ""
+"Fehler ! Anmelden (bzw. Abmelden) muss immer Abmelden folgen (bzw. Anmelden)"
 
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
@@ -260,29 +247,9 @@ msgid "External Timesheet"
 msgstr "Externe Zeiterfassung"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_follower_ids
-msgid "Followers"
-msgstr "Beobachter"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Beobachter (Kanäle)"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Beobachter (Partner)"
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
 msgstr "Gruppiere nach"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-msgid "HR Department"
-msgstr "Personalabteilung"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -298,56 +265,25 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "In Draft"
 msgstr "In Entwurf"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:54
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:64
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:74
 #, python-format
 msgid ""
-"In order to create a timesheet for this employee, you must link him/her to a"
-" user."
-msgstr "Um für diesen Mitarbeiter die Zeiterfassung zu ermöglichen, muß er mit einem Benutzer verbunden sein."
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:68
-#, python-format
-msgid ""
-"In order to create a timesheet for this employee, you must link the employee"
-" to a product."
-msgstr "Um eine Zeiterfassung für diesen Mitarbeiter anzulegen, muss dem Mitarbeiter ein Produkt zugewiesen werden."
+"In order to create a timesheet for this employee, you must link him/her to a "
+"user."
+msgstr ""
+"Um für diesen Mitarbeiter die Zeiterfassung zu ermöglichen, muß er mit einem "
+"Benutzer verbunden sein."
 
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
 msgid "Internal Timesheet"
 msgstr "Interne Zeiterfassung"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_is_follower
-msgid "Is Follower"
-msgstr "Ist Beobachter"
-
-#. module: hr_timesheet_sheet
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_current_open
-msgid "It will open your current timesheet"
-msgstr "Aktuelle Zeiterfassung wird geöffnet"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_last_post
-msgid "Last Message Date"
-msgstr "Letzte Benachrichtigung"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -370,32 +306,14 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_ids
-msgid "Messages"
-msgstr "Mitteilungen"
-
-#. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
 msgid "Month"
 msgstr "Monat"
 
 #. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_current_open
 msgid "My Timesheet"
 msgstr "Meine Zeiterfassung"
-
-#. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
-msgid ""
-"My Timesheet opens your timesheet so that you can book your activities into "
-"the system. From the same form, you can register your attendances (Sign "
-"In/Out) and describe the working hours made on the different projects. At "
-"the end of the period defined in the company, the timesheet is confirmed by "
-"the user and can be validated by his manager. If required, as defined on the"
-" project, you can generate the invoices based on the timesheet."
-msgstr "Meine Zeiterfassung öffnet Ihr eigenes Zeiterfassungsformular zur Erfassung Ihrer Aufgaben und Arbeitszeiten. Über dasselbe Formular können Sie auch die Ein- und Ausschreibung am Arbeitsplatz vornehmen oder Zeiten für spezifische Projekte oder analytische Konten erfassen (z.B. Kostenstellen). Zum Ende der durch das Unternehmen vorgegebenen Zeitperiode, wird das Formular durch den Benutzer bestätigt und durch den Vorgesetzten geprüft und genehmigt. Zusätzlich kann, wenn erforderlich, auch noch eine Abrechnung von projektbezogenen Zeiten an Kunden vorgenommen werden."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
@@ -420,30 +338,9 @@ msgid "Note"
 msgstr "Bemerkung"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Anzahl der Aktionen"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Anzahl ungelesene Nachrichten"
-
-#. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_current_open
 msgid "Open"
 msgstr "Öffnen"
-
-#. module: hr_timesheet_sheet
-#: model:ir.actions.client,name:hr_timesheet_sheet.action_client_hr_timesheet_sheet_menu
-msgid "Open HR Menu"
-msgstr "Personalmenü öffnen"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:30
@@ -464,11 +361,13 @@ msgid "Periodicity on which you validate your timesheets."
 msgstr "Intervall in dem Sie Ihre Zeiterfassung validieren müssen"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:108
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:116
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f."
-msgstr "Bitte stellen Sie sicher, das die vollständige Differenz zwischen den Zeiterfassungen weniger als %.2f."
+msgstr ""
+"Bitte stellen Sie sicher, das die vollständige Differenz zwischen den "
+"Zeiterfassungen weniger als %.2f."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -536,12 +435,14 @@ msgid "Summary"
 msgstr "Zusammenfassung"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:45
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:55
 #, python-format
 msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
 "sign ins and sign outs."
-msgstr "Die Zeiterfassung kann ich bestätigt werden, da die Anzahl der An- und Abmeldungen nicht übereinstimmt."
+msgstr ""
+"Die Zeiterfassung kann ich bestätigt werden, da die Anzahl der An- und "
+"Abmeldungen nicht übereinstimmt."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
@@ -630,7 +531,9 @@ msgstr "Zeiterfassung nach Perioden"
 msgid ""
 "Timesheets can also be invoiced to customers, depending on the\n"
 "                configuration of each project's related contract."
-msgstr "Zeiterfassungen können auch Kunden in Rechnung gestellt werden, falls der Vertrag des verbundenen Projektes dies erlaubt."
+msgstr ""
+"Zeiterfassungen können auch Kunden in Rechnung gestellt werden, falls der "
+"Vertrag des verbundenen Projektes dies erlaubt."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -641,6 +544,7 @@ msgid "Timesheets to Approve"
 msgstr "Zu bestätigende Zeiterfassungen"
 
 #. module: hr_timesheet_sheet
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_hr_to_approve
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "To Approve"
 msgstr "Zur Genehmigung"
@@ -683,15 +587,9 @@ msgid "Total Timesheet"
 msgstr "Gesamte Projektzeit"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Unread Messages"
 msgstr "Ungelesene Mitteilungen"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Zähler der ungelelesen Nachrichten"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -710,22 +608,12 @@ msgid "Waiting Approval"
 msgstr "Erwarte Genehmigung"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_website_message_ids
-msgid "Website Messages"
-msgstr "Website Nachrichten"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_website_message_ids
-msgid "Website communication history"
-msgstr "Website Kommunikationshistorie"
-
-#. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
 msgid "Week"
 msgstr "Woche"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:221
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:230
 #, python-format
 msgid "Week "
 msgstr "Woche "
@@ -736,68 +624,83 @@ msgid "Weekly"
 msgstr "Wöchentlich"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:454
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:470
 #, python-format
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
-msgstr "Sie können keine Anwesenheitszeiten erfassen, die außerhalb des festgelegten Datums des Zeiterfassungsformulars liegen."
+msgstr ""
+"Sie können keine Anwesenheitszeiten erfassen, die außerhalb des festgelegten "
+"Datums des Zeiterfassungsformulars liegen."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:452
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:468
 #, python-format
 msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
 "to reset it before adding attendance."
-msgstr "Sie können keine Anwesenheitszeiten in einem Zeiterfassungsformular erfassen, das bereits zur Genehmigung vorgelegt wurde.  Bitte sprechen Sie mit Ihrem Vorgesetzten."
+msgstr ""
+"Sie können keine Anwesenheitszeiten in einem Zeiterfassungsformular "
+"erfassen, das bereits zur Genehmigung vorgelegt wurde.  Bitte sprechen Sie "
+"mit Ihrem Vorgesetzten."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:231
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:240
 #, python-format
 msgid "You cannot delete a timesheet which have attendance entries."
-msgstr "Sie können keine Zeiterfassung löschen, die Anwesenheitseinträge enthält."
+msgstr ""
+"Sie können keine Zeiterfassung löschen, die Anwesenheitseinträge enthält."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:229
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:238
 #, python-format
 msgid "You cannot delete a timesheet which is already confirmed."
 msgstr "Sie können keine Zeiterfassung löschen, die bereits bestätigt wurde."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:49
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:59
 #, python-format
 msgid "You cannot duplicate a timesheet."
 msgstr "Sie können keine Zeiterfassung duplizieren."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:473
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:489
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
-msgstr "Sie können keine Anwesenheitszeiten ausserhalb des festgelegten Zeitraums der aktuellen Zeiterfassung erfassen."
+msgstr ""
+"Sie können keine Anwesenheitszeiten ausserhalb des festgelegten Zeitraums "
+"der aktuellen Zeiterfassung erfassen."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
-msgstr "Bei meinen aktuellen Stundenzetteln können sich 2 Teilnehmer überschneiden.  Bitte benutzen Sie das Menü\n\"Meine Zeiterfassung\", um dieses Problem zu lösen."
+msgstr ""
+"Bei meinen aktuellen Stundenzetteln können sich 2 Teilnehmer überschneiden.  "
+"Bitte benutzen Sie das Menü\n"
+"\"Meine Zeiterfassung\", um dieses Problem zu lösen."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:72
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:76
 #, python-format
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "You should use the menu 'My Timesheet' to avoid this problem."
-msgstr "Sie können keine 2 Zeiterfassungen anlegen, deren Zeiträume sich überschneiden!\nSie sollten das Menu 'Meine Zeiterfassung' benutzen, um dieses Problem zu vermeiden."
+msgstr ""
+"Sie können keine 2 Zeiterfassungen anlegen, deren Zeiträume sich "
+"überschneiden!\n"
+"Sie sollten das Menu 'Meine Zeiterfassung' benutzen, um dieses Problem zu "
+"vermeiden."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:496
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr "Sie können keinen Eintrag in einer bestätigten Zeiterfassung ändern"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:353
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:355
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr "Sie können keinen Eintrag einer validierten Zeiterfassung bearbeiten."
@@ -809,7 +712,10 @@ msgid ""
 "You must record timesheets every day and confirm at the end\n"
 "                of the week. Once the timesheet is confirmed, it should be\n"
 "                validated by a manager."
-msgstr "Sie müssen jeden Tag ihre Zeit erfassen und am Ende der Woche bestätigen lassen. Sobald die Zeiterfassung bestätigt wurde, muss sie vom Manager überprüft werden."
+msgstr ""
+"Sie müssen jeden Tag ihre Zeit erfassen und am Ende der Woche bestätigen "
+"lassen. Sobald die Zeiterfassung bestätigt wurde, muss sie vom Manager "
+"überprüft werden."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -817,6 +723,12 @@ msgstr "Sie müssen jeden Tag ihre Zeit erfassen und am Ende der Woche bestätig
 #, python-format
 msgid "You will be able to register your working hours and activities."
 msgstr "Sie können sämtliche Arbeitszeiten und Aktivitäten eingeben."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
+#, fuzzy
+msgid "account analytic line"
+msgstr "Analytischer Buchungssatz"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
@@ -837,3 +749,92 @@ msgstr "bis"
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_confirmed
 msgid "waiting approval"
 msgstr "Erwarte Genehmigung"
+
+#~ msgid "Action Needed"
+#~ msgstr "Aktion notwendig"
+
+#~ msgid "Cancel"
+#~ msgstr "Abbrechen"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Datum der letzten Nachricht."
+
+#~ msgid "Day"
+#~ msgstr "Tag"
+
+#~ msgid "Followers"
+#~ msgstr "Beobachter"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Beobachter (Kanäle)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Beobachter (Partner)"
+
+#~ msgid "HR Department"
+#~ msgstr "Personalabteilung"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#~ msgid ""
+#~ "In order to create a timesheet for this employee, you must link the "
+#~ "employee to a product."
+#~ msgstr ""
+#~ "Um eine Zeiterfassung für diesen Mitarbeiter anzulegen, muss dem "
+#~ "Mitarbeiter ein Produkt zugewiesen werden."
+
+#~ msgid "Is Follower"
+#~ msgstr "Ist Beobachter"
+
+#~ msgid "It will open your current timesheet"
+#~ msgstr "Aktuelle Zeiterfassung wird geöffnet"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Letzte Benachrichtigung"
+
+#~ msgid "Messages"
+#~ msgstr "Mitteilungen"
+
+#~ msgid ""
+#~ "My Timesheet opens your timesheet so that you can book your activities "
+#~ "into the system. From the same form, you can register your attendances "
+#~ "(Sign In/Out) and describe the working hours made on the different "
+#~ "projects. At the end of the period defined in the company, the timesheet "
+#~ "is confirmed by the user and can be validated by his manager. If "
+#~ "required, as defined on the project, you can generate the invoices based "
+#~ "on the timesheet."
+#~ msgstr ""
+#~ "Meine Zeiterfassung öffnet Ihr eigenes Zeiterfassungsformular zur "
+#~ "Erfassung Ihrer Aufgaben und Arbeitszeiten. Über dasselbe Formular können "
+#~ "Sie auch die Ein- und Ausschreibung am Arbeitsplatz vornehmen oder Zeiten "
+#~ "für spezifische Projekte oder analytische Konten erfassen (z.B. "
+#~ "Kostenstellen). Zum Ende der durch das Unternehmen vorgegebenen "
+#~ "Zeitperiode, wird das Formular durch den Benutzer bestätigt und durch den "
+#~ "Vorgesetzten geprüft und genehmigt. Zusätzlich kann, wenn erforderlich, "
+#~ "auch noch eine Abrechnung von projektbezogenen Zeiten an Kunden "
+#~ "vorgenommen werden."
+
+#~ msgid "Number of Actions"
+#~ msgstr "Anzahl der Aktionen"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Anzahl ungelesene Nachrichten"
+
+#~ msgid "Open HR Menu"
+#~ msgstr "Personalmenü öffnen"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Zähler der ungelelesen Nachrichten"
+
+#~ msgid "Website Messages"
+#~ msgstr "Website Nachrichten"
+
+#~ msgid "Website communication history"
+#~ msgstr "Website Kommunikationshistorie"

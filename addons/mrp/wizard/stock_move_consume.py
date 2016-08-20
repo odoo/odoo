@@ -14,9 +14,7 @@ class StockMoveConsume(models.TransientModel):
         'product.product', 'Product',
         index=True, required=True)
     product_qty = fields.Float(
-        'Quantity',
-        digits_compute=dp.get_precision('Product Unit of Measure'),
-        required=True)
+        'Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
     product_uom = fields.Many2one(
         'product.uom', 'Product Unit of Measure',
         required=True)

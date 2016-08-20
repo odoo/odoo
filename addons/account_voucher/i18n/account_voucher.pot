@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 9.saas~10c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:36+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-08-18 14:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -35,11 +35,6 @@ msgid "Account Date"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
-msgid "Accounting Date"
-msgstr ""
-
-#. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
 msgstr ""
@@ -61,9 +56,7 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
-#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
 msgstr ""
 
@@ -93,7 +86,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:165
+#: code:addons/account_voucher/account_voucher.py:147
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
@@ -146,7 +139,9 @@ msgid "Customer"
 msgstr ""
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Date"
 msgstr ""
 
@@ -182,7 +177,7 @@ msgid "Due Date"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_date
 msgid "Effective date for accounting entries"
 msgstr ""
 
@@ -299,13 +294,13 @@ msgid "Payment Reference"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:201
+#: code:addons/account_voucher/account_voucher.py:183
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:204
+#: code:addons/account_voucher/account_voucher.py:186
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
@@ -493,7 +488,7 @@ msgid "Vendor Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:97
+#: code:addons/account_voucher/account_voucher.py:31
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -542,7 +537,7 @@ msgid "When the sale receipt is confirmed, you can record the customer\n"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:367
+#: code:addons/account_voucher/account_voucher.py:348
 #, python-format
 msgid "You must first select a partner!"
 msgstr ""

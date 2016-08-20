@@ -1,26 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_picking_wave
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-05-16 13:35+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction
-msgid "Action Needed"
-msgstr "الاجراء المطلوب"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
@@ -83,11 +79,6 @@ msgid "Created on"
 msgstr "أنشئ في"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "تاريخ آخر رسالة في هذا السجل."
-
-#. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_display_name
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_display_name
 msgid "Display Name"
@@ -103,21 +94,6 @@ msgstr "منتهي"
 #: selection:stock.picking.wave,state:0
 msgid "Draft"
 msgstr "مسودة"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_follower_ids
-msgid "Followers"
-msgstr "المتابعون"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "المتابعون (القنوات)"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "المتابعون (الشرماء)"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -144,7 +120,8 @@ msgstr "الآيس كريم الشوكولاته"
 #. module: stock_picking_wave
 #: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_choco
 #: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_choco_product_template
-msgid "Ice Cream Chocolate with stucks"
+#, fuzzy
+msgid "Ice Cream Chocolate with sticks"
 msgstr "آيس كريم الشوكولاته بالعصي"
 
 #. module: stock_picking_wave
@@ -156,29 +133,9 @@ msgid "Ice Cream Vanilla"
 msgstr "آيس كريم الفانيليا"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_unread
-msgid "If checked new messages require your attention."
-msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "عند التفعيل، توجد رسالة جديدة"
-
-#. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 msgid "In Progress"
 msgstr "قيد التقدم"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_is_follower
-msgid "Is Follower"
-msgstr "متابع"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_last_post
-msgid "Last Message Date"
-msgstr "تاريخ آخر رسالة"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave___last_update
@@ -204,16 +161,6 @@ msgid "List of picking associated to this wave"
 msgstr "قائمة القطف المرتبطة بهذه الموجة "
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_ids
-msgid "Messages"
-msgstr "الرسائل"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_ids
-msgid "Messages and communication history"
-msgstr "الرسائل و سجل التواصل"
-
-#. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_name
 msgid "Name of the picking wave"
 msgstr "اسم موجة قطف"
@@ -225,21 +172,6 @@ msgid "Nothing to print."
 msgstr "لا شيء للطباعة. "
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
-msgid "Number of Actions"
-msgstr "عدد الاجراءات"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "عدد الرسائل الواجب اجراءها"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_message_unread_counter
-msgid "Number of unread messages"
-msgstr "عدد الرسائل غير المقروءة"
-
-#. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_user_id
 msgid "Person responsible for this wave"
 msgstr "الشخص المسؤول عن هذه الموجة"
@@ -248,7 +180,7 @@ msgstr "الشخص المسؤول عن هذه الموجة"
 #: code:addons/stock_picking_wave/stock_picking_wave.py:60
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9563
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -271,7 +203,7 @@ msgid "Picking Waves not finished"
 msgstr "اختيار موجات لم تنته "
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9563
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
 msgid "Picking wave associated to this picking"
 msgstr "اختيار الموجة المرتبطة بهذا الالتقاط "
 
@@ -312,7 +244,9 @@ msgstr "اختيار الموجه "
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
 "availability before setting this wave to done."
-msgstr "بعض الالتقاطات لا تزال تنتظر البضاعة. يرجى مراجعة أو إجبار توافرها قبل وضع هذه الموجة إلى القيام به."
+msgstr ""
+"بعض الالتقاطات لا تزال تنتظر البضاعة. يرجى مراجعة أو إجبار توافرها قبل وضع "
+"هذه الموجة إلى القيام به."
 
 #. module: stock_picking_wave
 #: model:product.product,name:stock_picking_wave.product_product_dry_specu
@@ -347,10 +281,13 @@ msgstr "l,[hj hgjrh' hglo.,k"
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
 msgid ""
-"The Goal of the picking waves is to group operations that may \n"
-"                (needs to) be done together in order to increase their efficiency.\n"
-"                It may also be useful to assign jobs (one person = one wave) or\n"
-"                help the timing management of operations (tasks to be done at 1pm)."
+"The goal of the picking waves is to group operations that may\n"
+"                (needs to) be done together in order to increase their "
+"efficiency.\n"
+"                It may also be useful to assign jobs (one person = one wave) "
+"or\n"
+"                help the timing management of operations (tasks to be done "
+"at 1pm)."
 msgstr ""
 
 #. module: stock_picking_wave
@@ -365,16 +302,6 @@ msgid "Transferred by"
 msgstr ""
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_unread
-msgid "Unread Messages"
-msgstr "رسائل غير مقروءة"
-
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "عداد الرسائل الغير مقروءة"
-
-#. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 msgid "User"
 msgstr "المستخدم"
@@ -384,12 +311,56 @@ msgstr "المستخدم"
 msgid "Wave"
 msgstr "موجه"
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_website_message_ids
-msgid "Website Messages"
-msgstr "رسائل الموقع"
+#~ msgid "Action Needed"
+#~ msgstr "الاجراء المطلوب"
 
-#. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_website_message_ids
-msgid "Website communication history"
-msgstr "سجل تواصل الموقع"
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "تاريخ آخر رسالة في هذا السجل."
+
+#~ msgid "Followers"
+#~ msgstr "المتابعون"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "المتابعون (القنوات)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "المتابعون (الشرماء)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "عند التفعيل، توجد رسالة جديدة"
+
+#~ msgid "Is Follower"
+#~ msgstr "متابع"
+
+#~ msgid "Last Message Date"
+#~ msgstr "تاريخ آخر رسالة"
+
+#~ msgid "Messages"
+#~ msgstr "الرسائل"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "الرسائل و سجل التواصل"
+
+#~ msgid "Number of Actions"
+#~ msgstr "عدد الاجراءات"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "عدد الرسائل الواجب اجراءها"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "عدد الرسائل غير المقروءة"
+
+#~ msgid "Unread Messages"
+#~ msgstr "رسائل غير مقروءة"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "عداد الرسائل الغير مقروءة"
+
+#~ msgid "Website Messages"
+#~ msgstr "رسائل الموقع"
+
+#~ msgid "Website communication history"
+#~ msgstr "سجل تواصل الموقع"

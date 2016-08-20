@@ -1,21 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * analytic
-# 
+#
 # Translators:
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-10-06 05:31+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
@@ -33,8 +39,9 @@ msgid "Account Currency"
 msgstr "العملة للحساب"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction
-msgid "Action Needed"
+#: selection:account.analytic.account,account_type:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+msgid "Active"
 msgstr ""
 
 #. module: analytic
@@ -83,11 +90,6 @@ msgid "Analytic Entry"
 msgstr "قيد تحليلي"
 
 #. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "البند التحليلي"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
 msgid "Analytic Lines"
 msgstr "سطور تحليلية"
@@ -104,8 +106,8 @@ msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,account_type:0
-msgid "Analytic View"
-msgstr "العرض التحليلى"
+msgid "Archived"
+msgstr ""
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -199,11 +201,6 @@ msgid "Date"
 msgstr "التاريخ"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "تاريخ آخر رسالة في هذا السجل."
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_debit
 msgid "Debit"
 msgstr "المدين"
@@ -219,22 +216,7 @@ msgstr "الوصف"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_follower_ids
-msgid "Followers"
-msgstr "المتابعون"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
+msgstr "اسم العرض"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
@@ -256,33 +238,14 @@ msgid "ID"
 msgstr "المعرف"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread
-msgid "If checked new messages require your attention."
-msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sale orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_is_follower
-msgid "Is Follower"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_last_post
-msgid "Last Message Date"
-msgstr "تاريخ آخر رسالة"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
@@ -309,16 +272,6 @@ msgid "Last Updated on"
 msgstr "آخر تحديث في"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_ids
-msgid "Messages"
-msgstr "الرسائل"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_ids
-msgid "Messages and communication history"
-msgstr "الرسائل و سجل التواصل"
-
-#. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account."
 msgstr ""
@@ -326,21 +279,6 @@ msgstr ""
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet."
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread_counter
-msgid "Number of unread messages"
 msgstr ""
 
 #. module: analytic
@@ -369,8 +307,10 @@ msgstr "الإشارة"
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sale orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sale "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 
@@ -383,6 +323,11 @@ msgstr "بحث الخطوط التحليلية"
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
 msgid "Select the Period for Analysis"
 msgstr "اختر الفترة للتحليل"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
+msgid "State"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
@@ -411,26 +356,74 @@ msgid "Total"
 msgstr "الإجمالي"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
-msgid "Type of Account"
-msgstr "نوع الحساب"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_unread
-msgid "Unread Messages"
-msgstr "رسائل غير مقروءة"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_user_id
 msgid "User"
 msgstr "المستخدم"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+#, fuzzy
+msgid "account analytic line"
+msgstr "حساب مخطط تحليلي"
+
+#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr ""
+
+#~ msgid "Action Needed"
+#~ msgstr "الاجراء المطلوب"
+
+#~ msgid "Analytic Line"
+#~ msgstr "البند التحليلي"
+
+#~ msgid "Analytic View"
+#~ msgstr "العرض التحليلى"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "تاريخ آخر رسالة في هذا السجل."
+
+#~ msgid "Followers"
+#~ msgstr "المتابعون"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "المتابعون (القنوات)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "المتابعون (الشرماء)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "عند التفعيل، توجد رسالة جديدة"
+
+#~ msgid "Is Follower"
+#~ msgstr "متابع"
+
+#~ msgid "Last Message Date"
+#~ msgstr "تاريخ آخر رسالة"
+
+#~ msgid "Messages"
+#~ msgstr "الرسائل"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "الرسائل و سجل التواصل"
+
+#~ msgid "Number of Actions"
+#~ msgstr "عدد الاجراءات"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "عدد الرسائل الواجب اجراءها"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "عدد الرسائل غير المقروءة"
+
+#~ msgid "Type of Account"
+#~ msgstr "نوع الحساب"
+
+#~ msgid "Unread Messages"
+#~ msgstr "رسائل غير مقروءة"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "عداد الرسائل الغير مقروءة"

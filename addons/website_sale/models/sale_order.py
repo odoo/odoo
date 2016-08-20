@@ -296,6 +296,20 @@ class Website(models.Model):
                 'partner_shipping_id': addr['delivery'],
                 'user_id': salesperson_id or self.salesperson_id.id,
             })
+
+            # set fiscal position
+            if request.website.partner_id.id != partner.id:
+                sale_order.onchange_partner_shipping_id()
+            else: # For public user, fiscal position based on geolocation
+                country_code = request.session['geoip'].get('country_code')
+                if country_code:
+                    country_id = request.env['res.country'].search([('code', '=', country_code)], limit=1).id
+                    fp_id = request.env['account.fiscal.position'].sudo()._get_fpos_by_region(country_id)
+                    sale_order.fiscal_position_id = fp_id
+                else:
+                    # if no geolocation, use the public user fp
+                    sale_order.onchange_partner_shipping_id()
+
             request.session['sale_order_id'] = sale_order.id
 
             if request.website.partner_id.id != partner.id:
@@ -316,6 +330,7 @@ class Website(models.Model):
                 # change the partner, and trigger the onchange
                 sale_order.write({'partner_id': partner.id})
                 sale_order.onchange_partner_id()
+                sale_order.onchange_partner_shipping_id() # fiscal position
 
                 # check the pricelist : update it if the pricelist is not the 'forced' one
                 values = {}

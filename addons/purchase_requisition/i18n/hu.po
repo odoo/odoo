@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * purchase_requisition
-# 
+#
 # Translators:
 # krnkris, 2015
 # krnkris, 2016
@@ -9,14 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
+"hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_requisition
@@ -80,14 +81,17 @@ msgid ""
 "A Call for Tenders is a procedure for generating competing offers from\n"
 "            different bidders. In the call for tenders, you can record the\n"
 "            products you need to buy and generate the creation of RfQs to\n"
-"            vendors. Once the tenders have been registered, you can review and\n"
+"            vendors. Once the tenders have been registered, you can review "
+"and\n"
 "            compare them and you can validate some and cancel others."
-msgstr "Egy tender kiírás egy olyan művelet, mely különböző ajánlók által generált ajánlatokat \nversenyeztet. A tender kiíráson, rögzítheti a vásárolni kívánt termékeket és hozzá generálhatja az árajánlat kéréseket a beszállítók részére. Miután a tender kiírást berögzítette, azokat átnézheti, \nösszehasonlíthatja valamint egyeseket jóvá is hagyhatja, másokat érvénytelenítheti. "
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction
-msgid "Action Needed"
-msgstr "Művelet szükséges"
+msgstr ""
+"Egy tender kiírás egy olyan művelet, mely különböző ajánlók által generált "
+"ajánlatokat \n"
+"versenyeztet. A tender kiíráson, rögzítheti a vásárolni kívánt termékeket és "
+"hozzá generálhatja az árajánlat kéréseket a beszállítók részére. Miután a "
+"tender kiírást berögzítette, azokat átnézheti, \n"
+"összehasonlíthatja valamint egyeseket jóvá is hagyhatja, másokat "
+"érvénytelenítheti. "
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
@@ -187,13 +191,6 @@ msgid "Change Quantity"
 msgstr "Mennyiség változtatása"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_product_template_purchase_requisition
-msgid ""
-"Check this box to generate Call for Tenders instead of generating requests "
-"for quotation from procurement."
-msgstr "Jelölje be a négyzetet árajánlat tender generálásához az igények alapján történő árajánlat kérések generálása helyett."
-
-#. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_partner
 msgid "Choose Vendor"
@@ -273,15 +270,12 @@ msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:22
 #, python-format
 msgid "Define product(s) you want to include in the call for tenders."
-msgstr "Határozzon meg termék(ek)et, melyeket hozzá akar fűzni az árajánlati tenderekhez."
+msgstr ""
+"Határozzon meg termék(ek)et, melyeket hozzá akar fűzni az árajánlati "
+"tenderekhez."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_description
@@ -312,21 +306,6 @@ msgid "End Month"
 msgstr "Befejezés hónapja"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_follower_ids
-msgid "Followers"
-msgstr "Követők"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Követők (Csatornák)"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Követők (Partnerek)"
-
-#. module: purchase_requisition
 #. openerp-web
 #: code:addons/purchase_requisition/static/src/xml/purchase_requisition.xml:5
 #, python-format
@@ -345,26 +324,6 @@ msgstr "Csoportosítás..."
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_id
 msgid "ID"
 msgstr "ID"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_is_follower
-msgid "Is Follower"
-msgstr "Ő követő"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_last_post
-msgid "Last Message Date"
-msgstr "Utolsó üzenet dátuma"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty___last_update
@@ -396,16 +355,6 @@ msgid "Latest Requisition"
 msgstr "Legújabb igénylés"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_ids
-msgid "Messages"
-msgstr "Üzenetek"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_ids
-msgid "Messages and communication history"
-msgstr "Üzenetek és kommunikáció történet"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_multiple_rfq_per_supplier
 msgid "Multiple RFQ per vendor"
 msgstr "Beszállítónkénti többszörös árajánlat kérés"
@@ -424,21 +373,6 @@ msgstr "Új"
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "New Call for Tenders"
 msgstr "Új tender kiírások"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Műveletek száma"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Olvasatlan üzenetek száma"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -550,7 +484,7 @@ msgid "Purchase Requisition Partner"
 msgstr "Beszerzési igénylési partner"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:431
+#: code:addons/purchase_requisition/purchase_requisition.py:435
 #, python-format
 msgid "Purchase Requisition created"
 msgstr "Beszerzési igény létrehozva"
@@ -659,9 +593,16 @@ msgstr "Csak egy árajánlat kérés kiválasztása (kizárólag)"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_exclusive
 msgid ""
-"Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
-"Select multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
-msgstr "Csak egy árajánlat kérés kiválasztása (kizárólag):  A beszerzési megrendelés jóváhagyásán, az összes megmaradt beszerzési megrendelést törölni fogja.\nTöbbszörös árajánlat kérés kiválasztás:  Lehetővé teszi a többszörös megrendelést. A beszerzési megrendelés jóváhagyásán, nem fogja törölni az összes megmaradt beszerzési megrendelést."
+"Select only one RFQ (exclusive):  On the confirmation of a purchase order, "
+"it cancels the remaining purchase order.\n"
+"Select multiple RFQ:  It allows to have multiple purchase orders.On "
+"confirmation of a purchase order it does not cancel the remaining orders"
+msgstr ""
+"Csak egy árajánlat kérés kiválasztása (kizárólag):  A beszerzési megrendelés "
+"jóváhagyásán, az összes megmaradt beszerzési megrendelést törölni fogja.\n"
+"Többszörös árajánlat kérés kiválasztás:  Lehetővé teszi a többszörös "
+"megrendelést. A beszerzési megrendelés jóváhagyásán, nem fogja törölni az "
+"összes megmaradt beszerzési megrendelést."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -689,7 +630,9 @@ msgstr "Állapot"
 msgid ""
 "Technical field for not loosing the initial information about the quantity "
 "proposed in the tender"
-msgstr "Technikai mező, hogy el ne veszítse a tender kiírásra vonatkozó elsődleges mennyiségi adatokat"
+msgstr ""
+"Technikai mező, hogy el ne veszítse a tender kiírásra vonatkozó elsődleges "
+"mennyiségi adatokat"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_date_end
@@ -715,7 +658,9 @@ msgstr "Kikötések és feltételek"
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_schedule_date
 msgid ""
 "The expected and scheduled delivery date where all the products are received"
-msgstr "Az elvárt és a tervezett szállítási dátum az összes termék beérkezésére vonatkozóan"
+msgstr ""
+"Az elvárt és a tervezett szállítási dátum az összes termék beérkezésére "
+"vonatkozóan"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -726,16 +671,6 @@ msgstr "Nem hozzárendelt"
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned  Requisition"
 msgstr "Nem pontosított vásárlási igény"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread
-msgid "Unread Messages"
-msgstr "Olvasatlan üzenetek"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Olvasatlan üzenetek számlálója"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
@@ -751,16 +686,6 @@ msgstr "Kereskedők"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_warehouse_id
 msgid "Warehouse"
 msgstr "Raktár"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_website_message_ids
-msgid "Website Messages"
-msgstr "Weboldal üzenetek"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_website_message_ids
-msgid "Website communication history"
-msgstr "Weboldal  kommunikáció történet"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:72
@@ -780,7 +705,9 @@ msgstr "Már létrehozta a beszerzési megrendelés(eke)t."
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
-msgstr "Már van egy %s megrendelése erre a partnerre, egy új árajánlat létrehozásához érvénytelenítenie kell ezt a megrendelést."
+msgstr ""
+"Már van egy %s megrendelése erre a partnerre, egy új árajánlat "
+"létrehozásához érvénytelenítenie kell ezt a megrendelést."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:258
@@ -792,3 +719,64 @@ msgstr "Nem választott ki tételsort beszerezéshez."
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
 msgstr "pl. PO0025"
+
+#~ msgid "Action Needed"
+#~ msgstr "Művelet szükséges"
+
+#~ msgid ""
+#~ "Check this box to generate Call for Tenders instead of generating "
+#~ "requests for quotation from procurement."
+#~ msgstr ""
+#~ "Jelölje be a négyzetet árajánlat tender generálásához az igények alapján "
+#~ "történő árajánlat kérések generálása helyett."
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
+
+#~ msgid "Followers"
+#~ msgstr "Követők"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Követők (Csatornák)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Követők (Partnerek)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#~ msgid "Is Follower"
+#~ msgstr "Ő követő"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Utolsó üzenet dátuma"
+
+#~ msgid "Messages"
+#~ msgstr "Üzenetek"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Üzenetek és kommunikáció történet"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Műveletek száma"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Olvasatlan üzenetek száma"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Olvasatlan üzenetek"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Olvasatlan üzenetek számlálója"
+
+#~ msgid "Website Messages"
+#~ msgstr "Weboldal üzenetek"
+
+#~ msgid "Website communication history"
+#~ msgstr "Weboldal  kommunikáció történet"

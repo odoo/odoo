@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 9.saas~10c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:36+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-08-18 14:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -70,7 +70,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:550
+#: code:addons/pos_restaurant/static/src/js/floors.js:543
 #, python-format
 msgid "Are you sure ?"
 msgstr ""
@@ -131,10 +131,17 @@ msgstr ""
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:260
-#: code:addons/pos_restaurant/static/src/js/floors.js:297
-#: code:addons/pos_restaurant/static/src/js/floors.js:411
+#: code:addons/pos_restaurant/static/src/js/floors.js:404
 #, python-format
 msgid "Changes could not be saved"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/js/floors.js:261
+#: code:addons/pos_restaurant/static/src/js/floors.js:405
+#, python-format
+msgid "Check your internet connection and access rights"
 msgstr ""
 
 #. module: pos_restaurant
@@ -226,7 +233,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:925
+#: code:addons/pos_restaurant/static/src/js/floors.js:918
 #, python-format
 msgid "Guests ?"
 msgstr ""
@@ -306,7 +313,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:483
+#: code:addons/pos_restaurant/static/src/js/floors.js:476
 #, python-format
 msgid "Number of Seats ?"
 msgstr ""
@@ -362,6 +369,11 @@ msgid "Point of Sale"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_pos_order_ids
+msgid "Pos Orders"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:20
 #, python-format
@@ -385,7 +397,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:551
+#: code:addons/pos_restaurant/static/src/js/floors.js:544
 #, python-format
 msgid "Removing a table cannot be undone"
 msgstr ""
@@ -476,7 +488,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:471
+#: code:addons/pos_restaurant/static/src/js/floors.js:464
 #, python-format
 msgid "Table Name ?"
 msgstr ""
@@ -520,6 +532,11 @@ msgid "The list of tables in this floor"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_pos_order_ids
+msgid "The orders served at this table"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_floor_ids
 msgid "The restaurant floors served by this point of sale"
 msgstr ""
@@ -556,7 +573,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:106
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:102
 #, python-format
 msgid "This floor has no tables yet, use the"
 msgstr ""
@@ -599,15 +616,6 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:261
-#: code:addons/pos_restaurant/static/src/js/floors.js:298
-#: code:addons/pos_restaurant/static/src/js/floors.js:412
-#, python-format
-msgid "You must be connected to the internet to save your changes."
-msgstr ""
-
-#. module: pos_restaurant
-#. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:36
 #, python-format
 msgid "at"
@@ -623,7 +631,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:107
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:103
 #, python-format
 msgid "button in the editing toolbar to create new tables."
 msgstr ""

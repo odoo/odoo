@@ -1,34 +1,45 @@
+# #-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_expense
-# 
+#
+# Translators:
+# danimaribeiro <danimaribeiro@gmail.com>, 2016
+# grazziano <g.negocios@outlook.com.br>, 2015
+# Mateus Lopes <mateus1@gmail.com>, 2015
+# #-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_expense
+#
 # Translators:
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
 # Grazziano Duarte <g.negocios@outlook.com.br>, 2015
 # Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-23 13:02+0000\n"
 "Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
+"language/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
+"#-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"#-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Date:</strong>"
+#, fuzzy
+msgid "<strong>Currency:</strong>"
 msgstr "Data:"
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Description:</strong>"
-msgstr "<strong>Descrição:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -37,18 +48,26 @@ msgstr "<strong>Funcionário:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
+msgid "<strong>Manager:</strong>"
+msgstr "Data:"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
+msgid "<strong>Status:</strong>"
+msgstr "Data:"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Total</strong>"
 msgstr "Total"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Validated By:</strong>"
-msgstr "<strong>Validado Por:</strong>"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction
-msgid "Action Needed"
-msgstr "Ação Necessária"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_id
+#, fuzzy
+msgid "Account"
+msgstr "Conta Analítica"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
@@ -97,7 +116,9 @@ msgstr "Despesas de Viagem de Carro"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Certified honest and conform,<br/>(Date and signature).<br/><br/>"
-msgstr "Certificado honesto e estar em conformidade, <br/>(Data e assinatura).<br/><br/>"
+msgstr ""
+"Certificado honesto e estar em conformidade, <br/>(Data e assinatura).<br/"
+"><br/>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_my_tree
@@ -168,11 +189,7 @@ msgid "Date"
 msgstr "Data"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Data da ultima mensagem para o registro."
-
-#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_department_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Department"
@@ -289,18 +306,20 @@ msgid "Expenses by Month"
 msgstr "Despesas por Mês"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:206
+#: code:addons/hr_expense/models/hr_expense.py:209
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "Despesas devem pertencer ao mesmo Funcionário."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:209
+#: code:addons/hr_expense/models/hr_expense.py:212
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
 "entries."
-msgstr "Despesas devem ter um diário de despesa especificado para gerar entradas na conta."
+msgstr ""
+"Despesas devem ter um diário de despesa especificado para gerar entradas na "
+"conta."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -320,21 +339,6 @@ msgid "Expenses to Invoice"
 msgstr "Despesas para Faturar"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_follower_ids
-msgid "Followers"
-msgstr "Seguidores"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Seguidores (Canais)"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Seguidores (Parceiros)"
-
-#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Former Employees"
 msgstr "Ex-Funcionários"
@@ -344,22 +348,20 @@ msgstr "Ex-Funcionários"
 msgid ""
 "From here the accountant will be able to approve as well as refuse the "
 "expenses which are verified by the HR Manager."
-msgstr "A partir daqui o contador será capaz de aprovar, bem como recusar as despesas que são verificadas pelo Gerente de RH."
+msgstr ""
+"A partir daqui o contador será capaz de aprovar, bem como recusar as "
+"despesas que são verificadas pelo Gerente de RH."
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
-msgid "Generate Single Accounting Entry"
+#, fuzzy
+msgid "Generate Accounting Entries"
 msgstr "Gerar Única Entrada Contábil"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Group By"
 msgstr "Agrupar por"
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
-msgid "HR Department"
-msgstr "Departamento de RH"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
@@ -390,21 +392,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Se marcado novas mensagens solicitarão sua atenção."
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Se marcado novas mensagens solicitarão sua atenção."
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_is_follower
-msgid "Is Follower"
-msgstr "É um seguidor"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_move_id
 msgid "Journal Entry"
 msgstr "Lançamento de Diário"
@@ -413,11 +400,6 @@ msgstr "Lançamento de Diário"
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Item"
 msgstr "Item de Diário"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_last_post
-msgid "Last Message Date"
-msgstr "Data da última mensagem"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
@@ -437,16 +419,6 @@ msgstr "Última atualização por"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_date
 msgid "Last Updated on"
 msgstr "Última atualização em"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_ids
-msgid "Messages"
-msgstr "Mensagens"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_ids
-msgid "Messages and communication history"
-msgstr "Histórico de mensagens e comunicação"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all
@@ -481,24 +453,30 @@ msgid "New Mail"
 msgstr "Novo Email"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:260
+#: code:addons/hr_expense/models/hr_expense.py:276
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
 "configure one."
-msgstr "Nenhuma conta de Despesa encontrada para o produto %s (ou para sua categoria), por favor, configure uma."
+msgstr ""
+"Nenhuma conta de Despesa encontrada para o produto %s (ou para sua "
+"categoria), por favor, configure uma."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:231
+#: code:addons/hr_expense/models/hr_expense.py:244
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
-msgstr "Nenhum endereço de casa encontrado para o funcionário %s, por favor, configure um."
+msgstr ""
+"Nenhum endereço de casa encontrado para o funcionário %s, por favor, "
+"configure um."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:227
+#: code:addons/hr_expense/models/hr_expense.py:240
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
-msgstr "Nenhuma conta de crédito encontrada para o diário %s, por favor, configure uma."
+msgstr ""
+"Nenhuma conta de crédito encontrada para o diário %s, por favor, configure "
+"uma."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -506,24 +484,9 @@ msgid "Notes..."
 msgstr "Notas..."
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Número de ações"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_attachment_number
 msgid "Number of Attachments"
 msgstr "Número de anexos"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Número de mensagens que requer uma ação"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Quantidade de mensagens não lidas."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense
@@ -531,12 +494,9 @@ msgstr "Quantidade de mensagens não lidas."
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr "Depois de ter criado a sua despesa, submeta-a ao seu gerente que irá validá-la."
-
-#. module: hr_expense
-#: model:ir.actions.client,name:hr_expense.action_client_expense_menu
-msgid "Open Expense Menu"
-msgstr "Abrir Menu de Despesas"
+msgstr ""
+"Depois de ter criado a sua despesa, submeta-a ao seu gerente que irá validá-"
+"la."
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -549,12 +509,14 @@ msgid "Payment By"
 msgstr "Pago Por"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:264
+#: code:addons/hr_expense/models/hr_expense.py:280
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
 "`property_account_expense_categ_id`."
-msgstr "Por favor configurar a conta de despesa padrão para despesa do produto: `property_account_expense_categ_id`."
+msgstr ""
+"Por favor configurar a conta de despesa padrão para despesa do produto: "
+"`property_account_expense_categ_id`."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -625,12 +587,14 @@ msgid "Select the lines you want to submit to be reimbursed."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:73
+#: code:addons/hr_expense/models/hr_expense.py:77
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product"
-" Unit of Measure"
-msgstr "A Unidade de Medida não pertence a mesma categoria da unidade de medida do produto"
+"Selected Unit of Measure does not belong to the same category as the product "
+"Unit of Measure"
+msgstr ""
+"A Unidade de Medida não pertence a mesma categoria da unidade de medida do "
+"produto"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -734,16 +698,6 @@ msgid "Unit of Measure"
 msgstr "Unidade de Medida - UdM"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread
-msgid "Unread Messages"
-msgstr "Mensagens não lidas"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Contador de Mensagens Não Lidas."
-
-#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "UoM"
 msgstr "UoM"
@@ -761,50 +715,58 @@ msgid "Waiting Payment"
 msgstr "Esperando pagamento"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_website_message_ids
-msgid "Website Messages"
-msgstr "Mensagens do Site"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_website_message_ids
-msgid "Website communication history"
-msgstr "Histórico de Comunicação do Site"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_state
+#, fuzzy
 msgid ""
 "When the expense request is created the status is 'To Submit'.\n"
-" It is submitted by the employee and request is sent to manager, the status is 'Submitted'.        \n"
+" It is submitted by the employee and request is sent to manager, the status "
+"is 'Submitted'.        \n"
 "If the manager approve it, the status is 'Approved'.\n"
-" If the accountant genrate the accounting entries for the expense request, the status is 'Waiting Payment'."
-msgstr "Quando a solicitação de despesa é criada o estado é 'Enviar'.\nÉ enviada pelo funcionário e enviada ao gerente, o status é 'Enviada'.\nSe o gerente de aprová-la, o status é 'Aprovada'.\nSe o contador gerar os lançamentos contábeis para a solicitação de despesa, o status é 'Esperando Pagamento'."
+" If the accountant genrate the accounting entries for the expense request, "
+"the status is 'Waiting Payment'."
+msgstr ""
+"#-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#\n"
+"Quando a solicitação de despesa é criada o estado é 'Enviar'.\n"
+"Quando o funcionário envia ao gerente, o status é 'Enviada'.\n"
+"Se o gerente aprovar, o status é 'Aprovada'.\n"
+"Se o contador gerar os lançamentos contábeis para a solicitação de despesa, "
+"o status é 'Esperando Pagamento'.\n"
+"#-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#\n"
+"Quando a solicitação de despesa é criada o estado é 'Enviar'.\n"
+"É enviada pelo funcionário e enviada ao gerente, o status é 'Enviada'.\n"
+"Se o gerente de aprová-la, o status é 'Aprovada'.\n"
+"Se o contador gerar os lançamentos contábeis para a solicitação de despesa, "
+"o status é 'Esperando Pagamento'."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:107
+#: code:addons/hr_expense/models/hr_expense.py:111
 #, python-format
 msgid "You can only delete draft or refused expenses!"
 msgstr "Você só pode excluir o rascunho ou despesas recusadas!"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:203
+#: code:addons/hr_expense/models/hr_expense.py:206
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr "Você só pode gerar entrada contábil de despesa(s) aprovada(s)."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:113
+#: code:addons/hr_expense/models/hr_expense.py:117
 #, python-format
 msgid "You can only submit draft expenses!"
 msgstr "Você só pode enviar rascunhos de despesas!"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:124
+#: code:addons/hr_expense/models/hr_expense.py:128
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
 "class=o_timeline_tracking_value_list><li>Reason<span> : </span><span "
 "class=o_timeline_tracking_value>%s</span></li></ul>"
-msgstr "Sua Despesa %s foi recusada.<br/><ul class=o_timeline_tracking_value_list><li>Razão<span> : </span><span class=o_timeline_tracking_value>%s</span></li></ul>"
+msgstr ""
+"Sua Despesa %s foi recusada.<br/><ul "
+"class=o_timeline_tracking_value_list><li>Razão<span> : </span><span "
+"class=o_timeline_tracking_value>%s</span></li></ul>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -815,3 +777,74 @@ msgstr "por exemplo, Lanche de negócios com X"
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "or"
 msgstr "ou"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
+msgid "report.hr_expense.report_expense"
+msgstr ""
+
+#~ msgid "<strong>Description:</strong>"
+#~ msgstr "<strong>Descrição:</strong>"
+
+#~ msgid "<strong>Validated By:</strong>"
+#~ msgstr "<strong>Validado Por:</strong>"
+
+#~ msgid "Action Needed"
+#~ msgstr "Ação Necessária"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data da ultima mensagem para o registro."
+
+#~ msgid "Followers"
+#~ msgstr "Seguidores"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Seguidores (Canais)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Seguidores (Parceiros)"
+
+#~ msgid "HR Department"
+#~ msgstr "Departamento de RH"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
+
+#~ msgid "Is Follower"
+#~ msgstr "É um seguidor"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data da última mensagem"
+
+#~ msgid "Messages"
+#~ msgstr "Mensagens"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Histórico de mensagens e comunicação"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Número de ações"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Número de mensagens que requer uma ação"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Quantidade de mensagens não lidas."
+
+#~ msgid "Open Expense Menu"
+#~ msgstr "Abrir Menu de Despesas"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Mensagens não lidas"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Contador de Mensagens Não Lidas."
+
+#~ msgid "Website Messages"
+#~ msgstr "Mensagens do Site"
+
+#~ msgid "Website communication history"
+#~ msgstr "Histórico de Comunicação do Site"

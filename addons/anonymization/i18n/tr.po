@@ -1,20 +1,32 @@
+# #-#-#-#-#  tr.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * anonymization
-# 
+#
 # Translators:
+# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2015
+# #-#-#-#-#  tr.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * anonymization
+#
+# Translators:
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-10-12 12:56+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
+"#-#-#-#-#  tr.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"#-#-#-#-#  tr.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: anonymization
@@ -55,26 +67,30 @@ msgid "Anonymized Fields"
 msgstr "Anonim Alanlar"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:431
+#: code:addons/anonymization/anonymization.py:434
 #, python-format
 msgid "Anonymized value can not be empty."
-msgstr ""
+msgstr "Anonim değeri boş olamaz."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:283
+#: code:addons/anonymization/anonymization.py:284
 #, python-format
 msgid ""
-"Before executing the anonymization process, you should make a backup of your"
-" database."
-msgstr "Anonimleştirme işlemi çalıştırmadan önce,  Veritabanı bir yedeğini almanız gerekir."
+"Before executing the anonymization process, you should make a backup of your "
+"database."
+msgstr ""
+"Anonimleştirme işlemi çalıştırmadan önce,  Veritabanı bir yedeğini almanız "
+"gerekir."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:427
+#: code:addons/anonymization/anonymization.py:430
 #, python-format
 msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
 "one2many, reference."
-msgstr "Şu tür alanlar anonim olamaz:  binary( Ikili), many2many, many2one, one2many referans."
+msgstr ""
+"Şu tür alanlar anonim olamaz:  binary( Ikili), many2many, many2one, one2many "
+"referans."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
@@ -132,8 +148,8 @@ msgid "Done"
 msgstr "Biten"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:372
-#: code:addons/anonymization/anonymization.py:431
+#: code:addons/anonymization/anonymization.py:373
+#: code:addons/anonymization/anonymization.py:434
 #, python-format
 msgid "Error !"
 msgstr "Error !"
@@ -189,12 +205,14 @@ msgid "Import"
 msgstr "İçeaktar"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:519
+#: code:addons/anonymization/anonymization.py:521
 #, python-format
 msgid ""
 "It is not possible to reverse the anonymization process without supplying "
 "the anonymization export file."
-msgstr "Anonimleştirme dışaaktarım dosyasını sağlamadan anonimleştirme sürecini tersine çeviremezsiniz."
+msgstr ""
+"Anonimleştirme dışaaktarım dosyasını sağlamadan anonimleştirme sürecini "
+"tersine çeviremezsiniz."
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization___last_update
@@ -290,61 +308,74 @@ msgid "Target Version"
 msgstr "Hedef Sürüm"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:74
+#: code:addons/anonymization/anonymization.py:75
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to create, write or delete fields."
-msgstr "Veritabanı anonimleştirme şu anda dengesiz bir durumda. Bazı alanlar anonim olmazken, bazı alanlar, anonim edilir. Sen oluşturma, yazma veya alanları silme'yi denemeden önce bu sorunu çözmek için çalışmalısınız."
+msgstr ""
+"Veritabanı anonimleştirme şu anda dengesiz bir durumda. Bazı alanlar anonim "
+"olmazken, bazı alanlar, anonim edilir. Sen oluşturma, yazma veya alanları "
+"silme'yi denemeden önce bu sorunu çözmek için çalışmalısınız."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:341
+#: code:addons/anonymization/anonymization.py:342
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything else."
-msgstr "Veritabanı anonimleştirme dengesiz bir durumda şu anda. Bazı alanlar anonim almazken, bazı alanlar, anonim edilir. Bir şey yapmaya çalışıyor önce bu sorunu çözmek için çalışmalısınız."
+msgstr ""
+"Veritabanı anonimleştirme dengesiz bir durumda şu anda. Bazı alanlar anonim "
+"almazken, bazı alanlar, anonim edilir. Bir şey yapmaya çalışıyor önce bu "
+"sorunu çözmek için çalışmalısınız."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:374
-#: code:addons/anonymization/anonymization.py:512
+#: code:addons/anonymization/anonymization.py:375
+#: code:addons/anonymization/anonymization.py:514
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything."
-msgstr "Veritabanı anonimleştirme dengesiz bir durumda şu anda. Bazı alanlar anonim almazken, bazı alanlar, anonim edilir. Bir şey yapmaya çalışıyor önce bu sorunu çözmek için çalışmalısınız."
+msgstr ""
+"Veritabanı anonimleştirme dengesiz bir durumda şu anda. Bazı alanlar anonim "
+"almazken, bazı alanlar, anonim edilir. Bir şey yapmaya çalışıyor önce bu "
+"sorunu çözmek için çalışmalısınız."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:372
+#: code:addons/anonymization/anonymization.py:373
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
 msgstr "Veritabanı şu anda tekrar anonim olamaz, anonimleştirilir."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:72
+#: code:addons/anonymization/anonymization.py:73
 #, python-format
 msgid ""
 "The database is currently anonymized, you cannot create, modify or delete "
 "fields."
 msgstr ""
+"Veritabanı şu anda anonimdir, alan oluşturamaz, değiştiremez ya da "
+"silemezsiniz."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:510
+#: code:addons/anonymization/anonymization.py:512
 #, python-format
 msgid ""
 "The database is not currently anonymized, you cannot reverse the "
 "anonymization."
-msgstr ""
+msgstr "Veritabanı şu anda anonimdir, anonimliği geri çeviremezsiniz."
 
 #. module: anonymization
 #: model:ir.model.fields,help:anonymization.field_ir_model_fields_anonymize_wizard_file_import
 msgid ""
-"This is the file created by the anonymization process. It should have the "
-"'.pickle' extention."
-msgstr "Bu anonimleştirme süreç tarafından oluşturulan dosyadır. Bu '.pickle' uzantısı olması gerekir."
+"This is the file created by the anonymization process. It should have the '."
+"pickle' extention."
+msgstr ""
+"Bu anonimleştirme süreç tarafından oluşturulan dosyadır. Bu '.pickle' "
+"uzantısı olması gerekir."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymize.wizard,state:0
@@ -352,7 +383,7 @@ msgid "Unstable"
 msgstr "Kararsız"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:48
+#: code:addons/anonymization/anonymization.py:49
 #: sql_constraint:ir.model.fields.anonymization:0
 #, python-format
 msgid "You cannot have two fields with the same name on the same object!"

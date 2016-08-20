@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * subscription
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2015-10-21 12:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
+"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
+"pt/)\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: subscription
@@ -136,14 +137,18 @@ msgstr "ID"
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription document without removing it."
-msgstr "Se o campo 'ativo' estiver como Falso, então, isso permitir-lhe-á ocultar o documento de subscrição sem ter de o eliminar"
+msgstr ""
+"Se o campo 'ativo' estiver como Falso, então, isso permitir-lhe-á ocultar o "
+"documento de subscrição sem ter de o eliminar"
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription without removing it."
-msgstr "Se o campo ativo é definido como Falso, ele permitirá que oculte a subscrição sem removê-la."
+msgstr ""
+"Se o campo ativo é definido como Falso, ele permitirá que oculte a "
+"subscrição sem removê-la."
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_notes
@@ -153,7 +158,8 @@ msgstr "Notas Internas"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
-msgid "Interval Qty"
+#, fuzzy
+msgid "Internal Qty"
 msgstr "Quantidade do intervalo"
 
 #. module: subscription
@@ -204,7 +210,8 @@ msgstr "Notas"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
-msgid "Number of documents"
+#, fuzzy
+msgid "Number of Documents"
 msgstr "Número de Documentos"
 
 #. module: subscription
@@ -219,12 +226,14 @@ msgid "Partner"
 msgstr "Parceiro"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:101
+#: code:addons/subscription/models/subscription.py:88
 #, python-format
 msgid ""
 "Please provide another source document.\n"
 "This one does not exist!"
-msgstr "Por favor, forneça um outro documento de origem. \nEste não existe!"
+msgstr ""
+"Por favor, forneça um outro documento de origem. \n"
+"Este não existe!"
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
@@ -289,6 +298,12 @@ msgid "Subscription"
 msgstr "Subscrição"
 
 #. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+#, fuzzy
+msgid "Subscription Data"
+msgstr "Data de Subscrição"
+
+#. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_document_id
 #: model:ir.ui.view,arch_db:subscription.document_form
@@ -322,11 +337,6 @@ msgid "Subscriptions"
 msgstr "Subscrições"
 
 #. module: subscription
-#: model:ir.ui.view,arch_db:subscription.view_subscription_form
-msgid "Subsription Data"
-msgstr "Data de Subscrição"
-
-#. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_user_id
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "User"
@@ -336,7 +346,8 @@ msgstr "Utilizador"
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_doc_source
 msgid ""
 "User can choose the source document on which he wants to create documents"
-msgstr "O utilizador pode escolher o documento de origem em que quer criar documentos"
+msgstr ""
+"O utilizador pode escolher o documento de origem em que quer criar documentos"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -344,7 +355,7 @@ msgid "Weeks"
 msgstr "Semanas"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:128
+#: code:addons/subscription/models/subscription.py:111
 #, python-format
 msgid "You cannot delete an active subscription!"
 msgstr "Não pode apagar uma subscrição activa!"

@@ -1,27 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_crm
-# 
+#
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-05-31 13:43+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
-"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
+"mk/)\n"
+"Language: mk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mk\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_claim_count
-msgid "# Claims"
-msgstr "#Рекламации"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
@@ -53,17 +49,20 @@ msgstr ""
 msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
-msgstr "Член со кој сакате да го поврзете членството. Ќе се смета состојбата на членството на здружениот член."
+msgstr ""
+"Член со кој сакате да го поврзете членството. Ќе се смета состојбата на "
+"членството на здружениот член."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
+#, fuzzy
+msgid "Activation"
+msgstr "Цитат"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
 msgid "Associate Member"
 msgstr "Здружен член"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_campaign_id
-msgid "Campaign"
-msgstr "Кампања"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
@@ -106,19 +105,26 @@ msgid "Free Member"
 msgstr "Слободен член"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_latitude
-msgid "Geo Latitude"
-msgstr "Гео ширина"
+#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
+msgid ""
+"Gives the probability to assign a lead to this partner. (0 means no "
+"assignation.)"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_localization
-msgid "Geo Localization Date"
-msgstr "Датум на Гео Локализација"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
+msgid "Implementation References"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_longitude
-msgid "Geo Longitude"
-msgstr "Гео должина"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
+msgid "Implemented by"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_account_invoice
+msgid "Invoice"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
@@ -132,10 +138,24 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
-msgstr "Го индицира статусот на членството.\n-Не е член: Партнер кој не аплицирал за членство.\n-Откажан член: Член што го откажал неговото членство.\n-Стар член: Член чиј што датум на членство истекол.\n-Член на чекање: Член којшто аплицирал за членство и чија што фактура ќе се креира.\n-Фактуриран член: Член чија што фактура е креирана.\n-Член што плаќа: Член што ја платил таксата за членство."
+msgstr ""
+"Го индицира статусот на членството.\n"
+"-Не е член: Партнер кој не аплицирал за членство.\n"
+"-Откажан член: Член што го откажал неговото членство.\n"
+"-Стар член: Член чиј што датум на членство истекол.\n"
+"-Член на чекање: Член којшто аплицирал за членство и чија што фактура ќе се "
+"креира.\n"
+"-Фактуриран член: Член чија што фактура е креирана.\n"
+"-Член што плаќа: Член што ја платил таксата за членство."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
+msgid "Latest Partner Review"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
@@ -143,14 +163,19 @@ msgid "Lead/Opportunity"
 msgstr "Lead/Можност"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
+msgid "Level"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_medium_id
-msgid "Medium"
-msgstr "Средно"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
+msgid "Level Weight"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+msgid "Log in the chatter from which opportunity the order originates"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
@@ -178,6 +203,11 @@ msgid "New Quotation"
 msgstr "Нова понуда"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
+msgid "Next Partner Review"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
 msgid "Number of Quotations"
 msgstr "Број на понуди"
@@ -191,6 +221,12 @@ msgstr "Можност"
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
 msgid "Orders"
 msgstr "Налози"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
+#, fuzzy
+msgid "Partnership Date"
+msgstr "Откажи датум на членство"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
@@ -219,11 +255,6 @@ msgid "Select if you want to give free membership."
 msgstr "Означете доколку сакате да дадетебесплатно членство."
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_source_id
-msgid "Source"
-msgstr "Извор"
-
-#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
 msgid "Sum of Orders"
 msgstr "Сума на нарачки"
@@ -244,37 +275,22 @@ msgid "The price negotiated by the partner"
 msgstr "Цената нагодена од партнерот"
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr "Ова е име што ви помага да следите резултати од различни кампањи пр. : Fall_Drive, Christmas_Special"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "Ова е начин на испорака. Пр. Честитка, Е-маил или онлајн реклама"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_source_id
-msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr "ова е извор на врската пр. : пребарувач, друг домен или име од е-маил листа"
-
-#. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
 msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
-msgstr "Оваа локација на залихата ќе биде употребена наместо стандардната, како дестинација на добрата кои ги испраќате на овој партнер"
+msgstr ""
+"Оваа локација на залихата ќе биде употребена наместо стандардната, како "
+"дестинација на добрата кои ги испраќате на овој партнер"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
-msgstr "Оваа локација на залихата ќе биде употребена наместо стандардната, како изворна локација на добрата кои ги примате од тековниот партнер"
+msgstr ""
+"Оваа локација на залихата ќе биде употребена наместо стандардната, како "
+"изворна локација на добрата кои ги примате од тековниот партнер"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -285,3 +301,41 @@ msgstr "Корисници"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
 msgstr "Локација на добавувач"
+
+#~ msgid "# Claims"
+#~ msgstr "#Рекламации"
+
+#~ msgid "Campaign"
+#~ msgstr "Кампања"
+
+#~ msgid "Geo Latitude"
+#~ msgstr "Гео ширина"
+
+#~ msgid "Geo Localization Date"
+#~ msgstr "Датум на Гео Локализација"
+
+#~ msgid "Geo Longitude"
+#~ msgstr "Гео должина"
+
+#~ msgid "Medium"
+#~ msgstr "Средно"
+
+#~ msgid "Source"
+#~ msgstr "Извор"
+
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "Ова е име што ви помага да следите резултати од различни кампањи пр. : "
+#~ "Fall_Drive, Christmas_Special"
+
+#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+#~ msgstr "Ова е начин на испорака. Пр. Честитка, Е-маил или онлајн реклама"
+
+#~ msgid ""
+#~ "This is the source of the link Ex: Search Engine, another domain, or name "
+#~ "of email list"
+#~ msgstr ""
+#~ "ова е извор на врската пр. : пребарувач, друг домен или име од е-маил "
+#~ "листа"

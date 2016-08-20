@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event_sale
-# 
+#
 # Translators:
 # AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-05-31 18:23+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: event_sale
@@ -28,6 +28,12 @@ msgstr "%s bileti ile"
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "Başvuru"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+#, fuzzy
+msgid "Asset Type"
+msgstr "Etkinlik Türü"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -54,14 +60,18 @@ msgstr ""
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "bir etkinlik seçin ve otomatik olarak bunun için bir kayıt oluşturacaktır etkinlik."
+msgstr ""
+"bir etkinlik seçin ve otomatik olarak bunun için bir kayıt oluşturacaktır "
+"etkinlik."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
-msgstr "Bir bilet seçtiğinizde bu bu etkinlik bileti kaydı otomatik olarak oluşturulur."
+msgstr ""
+"Bir bilet seçtiğinizde bu bu etkinlik bileti kaydı otomatik olarak "
+"oluşturulur."
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_2_product
@@ -84,6 +94,11 @@ msgid "Created on"
 msgstr "Oluşturuldu"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
@@ -97,7 +112,9 @@ msgstr ""
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr "Bir ürünün otomatik olarak bir etkinlik kaydı oluşturmak için gerekmediğini belirleme bir satış siparişi satırından onayı da."
+msgstr ""
+"Bir ürünün otomatik olarak bir etkinlik kaydı oluşturmak için gerekmediğini "
+"belirleme bir satış siparişi satırından onayı da."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
@@ -325,9 +342,11 @@ msgstr ""
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
 #: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
 msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
-msgstr "etkinlik türlerini seçin böylece biz satış sipariş satırları bu ürünü kullanırken, o olacak Bu türü sadece etkinlikleri filtrelemede."
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
+msgstr ""
+"etkinlik türlerini seçin böylece biz satış sipariş satırları bu ürünü "
+"kullanırken, o olacak Bu türü sadece etkinlikleri filtrelemede."
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

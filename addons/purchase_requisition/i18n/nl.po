@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * purchase_requisition
-# 
+#
 # Translators:
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
@@ -10,14 +10,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-11 16:13+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_requisition
@@ -81,14 +81,17 @@ msgid ""
 "A Call for Tenders is a procedure for generating competing offers from\n"
 "            different bidders. In the call for tenders, you can record the\n"
 "            products you need to buy and generate the creation of RfQs to\n"
-"            vendors. Once the tenders have been registered, you can review and\n"
+"            vendors. Once the tenders have been registered, you can review "
+"and\n"
 "            compare them and you can validate some and cancel others."
-msgstr "Een aanbesteding is een procedure voor het genereren van concurrerende aanbiedingen voor\nverschillende bieders. In de aanbesteding kan u de\nproducten oplijsten die u moet kopen en kan u de offerteaanvraag genereren\naan leveranciers. Wanneer de aanbestedingen zijn geregistreerd kan u deze controleren\nen vergelijken zodat u sommige kan goedkeuren of annuleren."
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction
-msgid "Action Needed"
-msgstr "Vereist actie"
+msgstr ""
+"Een aanbesteding is een procedure voor het genereren van concurrerende "
+"aanbiedingen voor\n"
+"verschillende bieders. In de aanbesteding kan u de\n"
+"producten oplijsten die u moet kopen en kan u de offerteaanvraag genereren\n"
+"aan leveranciers. Wanneer de aanbestedingen zijn geregistreerd kan u deze "
+"controleren\n"
+"en vergelijken zodat u sommige kan goedkeuren of annuleren."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
@@ -168,7 +171,9 @@ msgstr "Geannuleerd"
 #, python-format
 msgid ""
 "Cancelled by the call for tenders associated to this request for quotation."
-msgstr "Geannuleerd door de aanvraag van aanbestedingen gerelateerd aan deze offerteaanvraag."
+msgstr ""
+"Geannuleerd door de aanvraag van aanbestedingen gerelateerd aan deze "
+"offerteaanvraag."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:67
@@ -186,13 +191,6 @@ msgstr "Wijzig aanbestedingregel hoeveelheid"
 #: model:ir.ui.view,arch_db:purchase_requisition.view_bid_line_qty
 msgid "Change Quantity"
 msgstr "Wijzig hoeveelheid"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_product_template_purchase_requisition
-msgid ""
-"Check this box to generate Call for Tenders instead of generating requests "
-"for quotation from procurement."
-msgstr "Vink dit aan om een aanbesteding te genereren in plaats van een offerte aanvraagt te genereren vanuit deze verwerving."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
@@ -274,11 +272,6 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum van het laatste bericht verstuurt op deze regel."
-
-#. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:22
 #, python-format
 msgid "Define product(s) you want to include in the call for tenders."
@@ -313,21 +306,6 @@ msgid "End Month"
 msgstr "Laatste maand"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_follower_ids
-msgid "Followers"
-msgstr "Volgers"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Volgers (Kanalen)"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
-
-#. module: purchase_requisition
 #. openerp-web
 #: code:addons/purchase_requisition/static/src/xml/purchase_requisition.xml:5
 #, python-format
@@ -346,26 +324,6 @@ msgstr "Groeperen op"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_id
 msgid "ID"
 msgstr "ID"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_is_follower
-msgid "Is Follower"
-msgstr "Is een volger"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_last_post
-msgid "Last Message Date"
-msgstr "Laatste bericht datum"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty___last_update
@@ -397,16 +355,6 @@ msgid "Latest Requisition"
 msgstr "Laatste inkoop"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_ids
-msgid "Messages"
-msgstr "Berichten"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_ids
-msgid "Messages and communication history"
-msgstr "Berichten en communicatie historie"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_multiple_rfq_per_supplier
 msgid "Multiple RFQ per vendor"
 msgstr "Meerdere offerteaanvragen per leverancier"
@@ -425,21 +373,6 @@ msgstr "Nieuw"
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "New Call for Tenders"
 msgstr "Nieuwe aanbesteding"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Aantal acties"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Aantal berichten die actie vereisen"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Aantal ongelezen berichten"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -551,7 +484,7 @@ msgid "Purchase Requisition Partner"
 msgstr "Inkoopaanvraag relatie"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:431
+#: code:addons/purchase_requisition/purchase_requisition.py:435
 #, python-format
 msgid "Purchase Requisition created"
 msgstr "Inkoopaanvraag aangemaakt"
@@ -660,9 +593,16 @@ msgstr "Selecteer maar één offerte (exclusief)"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_exclusive
 msgid ""
-"Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
-"Select multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
-msgstr "Selecteer maar één offerte (exclusief): Bij het bevestigen van de offerte, worden de overige offertes geannuleerd.\nSelecteer meerdere offertes: Geeft u de mogelijkheid om meerdere inkooporders te hebben. Bij het bevestigen van de offerte, worden de overige offertes niet geannuleerd."
+"Select only one RFQ (exclusive):  On the confirmation of a purchase order, "
+"it cancels the remaining purchase order.\n"
+"Select multiple RFQ:  It allows to have multiple purchase orders.On "
+"confirmation of a purchase order it does not cancel the remaining orders"
+msgstr ""
+"Selecteer maar één offerte (exclusief): Bij het bevestigen van de offerte, "
+"worden de overige offertes geannuleerd.\n"
+"Selecteer meerdere offertes: Geeft u de mogelijkheid om meerdere "
+"inkooporders te hebben. Bij het bevestigen van de offerte, worden de overige "
+"offertes niet geannuleerd."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -690,7 +630,9 @@ msgstr "Status"
 msgid ""
 "Technical field for not loosing the initial information about the quantity "
 "proposed in the tender"
-msgstr "Technisch veld om de initiële informatie te behouden over de voorgestelde hoeveelheid in de aanbesteding"
+msgstr ""
+"Technisch veld om de initiële informatie te behouden over de voorgestelde "
+"hoeveelheid in de aanbesteding"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_date_end
@@ -716,7 +658,8 @@ msgstr "Voorwaarden"
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_schedule_date
 msgid ""
 "The expected and scheduled delivery date where all the products are received"
-msgstr "De verwachte en geplande leverdatum waarop alle producten ontvangen zijn"
+msgstr ""
+"De verwachte en geplande leverdatum waarop alle producten ontvangen zijn"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -727,16 +670,6 @@ msgstr "Niet toegewezen"
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned  Requisition"
 msgstr "Niet toegewezen aanvragen"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread
-msgid "Unread Messages"
-msgstr "Ongelezen berichten"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Teller ongelezen berichten"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
@@ -752,16 +685,6 @@ msgstr "Leveranciers"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_warehouse_id
 msgid "Warehouse"
 msgstr "Magazijn"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_website_message_ids
-msgid "Website Messages"
-msgstr "Website berichten"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_website_message_ids
-msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:72
@@ -781,7 +704,9 @@ msgstr "U heeft de inkooporder(s) al gegenereerd."
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
-msgstr "Er is al een een %s inkooporder voor deze relatie. De inkooporder moet eerst geannuleerd worden voordat een nieuwe offerte kan worden gemaakt."
+msgstr ""
+"Er is al een een %s inkooporder voor deze relatie. De inkooporder moet eerst "
+"geannuleerd worden voordat een nieuwe offerte kan worden gemaakt."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:258
@@ -793,3 +718,64 @@ msgstr "U heeft geen regel geselecteerd voor het kopen."
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
 msgstr "Bijv. PO0025"
+
+#~ msgid "Action Needed"
+#~ msgstr "Vereist actie"
+
+#~ msgid ""
+#~ "Check this box to generate Call for Tenders instead of generating "
+#~ "requests for quotation from procurement."
+#~ msgstr ""
+#~ "Vink dit aan om een aanbesteding te genereren in plaats van een offerte "
+#~ "aanvraagt te genereren vanuit deze verwerving."
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
+
+#~ msgid "Followers"
+#~ msgstr "Volgers"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Volgers (Kanalen)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Volgers (Partners)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+
+#~ msgid "Is Follower"
+#~ msgstr "Is een volger"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Laatste bericht datum"
+
+#~ msgid "Messages"
+#~ msgstr "Berichten"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Berichten en communicatie historie"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Aantal acties"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Aantal berichten die actie vereisen"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Aantal ongelezen berichten"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Ongelezen berichten"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Teller ongelezen berichten"
+
+#~ msgid "Website Messages"
+#~ msgstr "Website berichten"
+
+#~ msgid "Website communication history"
+#~ msgstr "Website communicatie geschiedenis"

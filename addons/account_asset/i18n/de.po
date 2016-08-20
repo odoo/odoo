@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_asset
-# 
+#
 # Translators:
 # Fabian Liesch <fabian.liesch@gmail.com>, 2015
 # Henry Mineehen <info@mineehen.de>, 2015
@@ -15,18 +15,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 09:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-06-02 16:26+0000\n"
 "Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:350
+#: code:addons/account_asset/account_asset.py:347
 #, python-format
 msgid " (copy)"
 msgstr " (Kopie)"
@@ -57,18 +57,13 @@ msgid "Account Entry"
 msgstr "Buchungssatz"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_needaction
-msgid "Action Needed"
-msgstr "Aktion notwendig"
-
-#. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_active
 msgid "Active"
 msgstr "Aktiv"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #, python-format
 msgid "Amount"
 msgstr "Betrag"
@@ -99,8 +94,6 @@ msgid "Asset"
 msgstr "Aktiva"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
 msgid "Asset Account"
 msgstr "Anlagenkonto"
@@ -159,7 +152,7 @@ msgid "Asset category"
 msgstr "Anlagenkategorie"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:238
+#: code:addons/account_asset/account_asset.py:235
 #, python-format
 msgid "Asset created"
 msgstr "Anlage erzeugt"
@@ -170,7 +163,7 @@ msgid "Asset depreciation line"
 msgstr "Anlage Abschreibungszeile"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:271
+#: code:addons/account_asset/account_asset.py:268
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr "Anlage verkauft oder vernichtet. Posten erwartet Validierung."
@@ -246,7 +239,9 @@ msgstr "Kategorie Geschäftsausstattung"
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
-msgstr "Aktivieren, wenn die Anlage dieser Kategorie automatisch mit der Verbuchung der Rechnung bestätigt werden soll."
+msgstr ""
+"Aktivieren, wenn die Anlage dieser Kategorie automatisch mit der Verbuchung "
+"der Rechnung bestätigt werden soll."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -255,23 +250,38 @@ msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr "Wählen Sie die Abschreibungsmethode aus, die alle Abschreibungen berechnet.\n  * Lineare AfA: Kalkuliert auf dieser Berechnungsgrundlage: Anschaffungswert / Nutzungsdauer\n  * Degressive AfA: Kalkuliert auf dieser Berechnungsgrundlage: Restwert * Abschreibungsfaktor"
+msgstr ""
+"Wählen Sie die Abschreibungsmethode aus, die alle Abschreibungen berechnet.\n"
+"  * Lineare AfA: Kalkuliert auf dieser Berechnungsgrundlage: "
+"Anschaffungswert / Nutzungsdauer\n"
+"  * Degressive AfA: Kalkuliert auf dieser Berechnungsgrundlage: Restwert * "
+"Abschreibungsfaktor"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_time
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_time
 msgid ""
-"Choose the method to use to compute the dates and number of depreciation lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
-msgstr "Wählen Sie die Methode für Datum und Anzahl der Abschreibungen.\n  * Anzahl der Abschreibungen: Definieren Sie die Anzahl der Abschreibungen und die Perioden zwischen zwei Abschreibungen.\n  * Enddatum: Wählen Sie die Zeit zwischen zwei Abschreibungen und das Enddatum."
+"Choose the method to use to compute the dates and number of depreciation "
+"lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the "
+"time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
+msgstr ""
+"Wählen Sie die Methode für Datum und Anzahl der Abschreibungen.\n"
+"  * Anzahl der Abschreibungen: Definieren Sie die Anzahl der Abschreibungen "
+"und die Perioden zwischen zwei Abschreibungen.\n"
+"  * Enddatum: Wählen Sie die Zeit zwischen zwei Abschreibungen und das "
+"Enddatum."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
 msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
-msgstr "Wählen Sie die Periode für die automatische Abschreibungsbuchungen der aktiven Anlagen erzeugt werden sollen."
+msgstr ""
+"Wählen Sie die Periode für die automatische Abschreibungsbuchungen der "
+"aktiven Anlagen erzeugt werden sollen."
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
@@ -348,7 +358,7 @@ msgid "Cumulative Depreciation"
 msgstr "Kumulierte Abschreibung"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -391,11 +401,6 @@ msgid "Date of depreciation"
 msgstr "Abschreibungsdatum"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum der letzten Nachricht."
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Account"
 msgstr "Konto Noch nicht realisierter Umsatz"
@@ -430,9 +435,13 @@ msgstr "Abschreibung"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Account"
 msgstr "Kum. Wertberichtigungskonto"
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Depreciation Asset Account"
+msgstr "Anlagenabschreibungskonto"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -449,11 +458,6 @@ msgstr "Abschreibungsdatum"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
 msgid "Depreciation Entry"
 msgstr "Abschreibungsbuchung"
-
-#. module: account_asset
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
-msgid "Depreciation Asset Account"
-msgstr "Anlagenabschreibungskonto"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -493,7 +497,7 @@ msgid "Depreciation board modified"
 msgstr "Abschreibungsspiegel verändert"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:489
+#: code:addons/account_asset/account_asset.py:487
 #, python-format
 msgid "Depreciation line posted."
 msgstr "Abschreibungszeile gebucht."
@@ -509,19 +513,19 @@ msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:274
+#: code:addons/account_asset/account_asset.py:271
 #, python-format
 msgid "Disposal Move"
 msgstr "Verschrottungsbuchung"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:277
+#: code:addons/account_asset/account_asset.py:274
 #, python-format
 msgid "Disposal Moves"
 msgstr "Verschrottungsbuchungen"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:468
+#: code:addons/account_asset/account_asset.py:466
 #, python-format
 msgid "Document closed."
 msgstr "Dokument geschlossen"
@@ -556,31 +560,27 @@ msgid "Every"
 msgstr "Jeden"
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
+#, fuzzy
+msgid "Expense Account"
+msgstr "Anlagenkonto"
+
+#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Extended Filters..."
 msgstr "Erweiterter Filter..."
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_follower_ids
-msgid "Followers"
-msgstr "Beobachter"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Beobachter (Kanäle)"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Beobachter (Partner)"
-
-#. module: account_asset
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
 "From this report, you can have an overview on all depreciations. The\n"
-"            search bar can also be used to personalize your assets depreciation reporting."
-msgstr "In diesem Report erhalten Sie einen Überblick über alle Abschreibungen. Die Suche kann auch zur \nindividualsierten Auswertung über die Anlageabschreibungen benutzt werden.\n        "
+"            search bar can also be used to personalize your assets "
+"depreciation reporting."
+msgstr ""
+"In diesem Report erhalten Sie einen Überblick über alle Abschreibungen. Die "
+"Suche kann auch zur \n"
+"individualsierten Auswertung über die Anlageabschreibungen benutzt werden.\n"
+"        "
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
@@ -629,16 +629,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Income Account"
 msgstr "Erlöskonto"
@@ -649,14 +639,18 @@ msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January / Start date of fiscal "
 "year"
-msgstr "Bedeutet, dass Abschreibungsbeginn das Kaufdatum ist und nicht der erste Tag des Kalender-/Geschäftsjahres."
+msgstr ""
+"Bedeutet, dass Abschreibungsbeginn das Kaufdatum ist und nicht der erste Tag "
+"des Kalender-/Geschäftsjahres."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_prorata
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first of January"
-msgstr "Bedeutet, dass der erste Abschreibungsposten zum Kaufdatum und nicht zum ersten Januar angelegt wird"
+msgstr ""
+"Bedeutet, dass der erste Abschreibungsposten zum Kaufdatum und nicht zum "
+"ersten Januar angelegt wird"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
@@ -671,14 +665,10 @@ msgid "Invoice Line"
 msgstr "Rechnungszeile"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_is_follower
-msgid "Is Follower"
-msgstr "Ist Beobachter"
-
-#. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_salvage_value
 msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr "Das ist der geplante Erinnerungswert, der nicht abgeschrieben werden kann."
+msgstr ""
+"Das ist der geplante Erinnerungswert, der nicht abgeschrieben werden kann."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -691,16 +681,11 @@ msgid "Journal"
 msgstr "Journal"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:376
+#: code:addons/account_asset/account_asset.py:374
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
 msgstr "Buchungssätze"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_last_post
-msgid "Last Message Date"
-msgstr "Letzte Benachrichtigung"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset___last_update
@@ -735,11 +720,6 @@ msgstr "Zuletzt aktualisiert am"
 #: selection:account.asset.category,method:0
 msgid "Linear"
 msgstr "Linear"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_ids
-msgid "Messages"
-msgstr "Mitteilungen"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -779,11 +759,6 @@ msgid "Note"
 msgstr "Bemerkung"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Anzahl der Aktionen"
-
-#. module: account_asset
 #: selection:account.asset.asset,method_time:0
 #: selection:account.asset.category,method_time:0
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_number
@@ -803,17 +778,7 @@ msgid "Number of Months in a Period"
 msgstr "Anzahl der Monate in Perioden"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Anzahl ungelesener Nachrichten"
-
-#. module: account_asset
-#: code:addons/account_asset/account_asset.py:488
+#: code:addons/account_asset/account_asset.py:486
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -874,12 +839,14 @@ msgid "Prorata Temporis"
 msgstr "Pro rata temporis"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:316
+#: code:addons/account_asset/account_asset.py:313
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
-msgstr "'Pro rata temporis'-Abschreibung kann nur für die Methode \"Anzahl der Abschreibung\" verwendet werden"
+msgstr ""
+"'Pro rata temporis'-Abschreibung kann nur für die Methode \"Anzahl der "
+"Abschreibung\" verwendet werden"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -981,20 +948,28 @@ msgstr "Status"
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_period
 msgid "The amount of time between two depreciations, in months"
-msgstr "Die Zeitspanne, in Monaten, die zwischen zwei Abschreibungen liegen soll."
+msgstr ""
+"Die Zeitspanne, in Monaten, die zwischen zwei Abschreibungen liegen soll."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_number
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_number
 msgid "The number of depreciations needed to depreciate your asset"
-msgstr "Die Anzahl an Abschreibungen, die das Anlagegut über die Nutzungsdauer vollständig abschreibt."
+msgstr ""
+"Die Anzahl an Abschreibungen, die das Anlagegut über die Nutzungsdauer "
+"vollständig abschreibt."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid ""
-"This wizard will post installment/depreciation lines for the selected month.<br/>\n"
-"                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
-msgstr "Dieser Assistent bucht Zu-/Abschreibungspositionen im gewählten Monat,<br/>\nDies erzeugt auch Buchungssätze für alle zugehörigen, erfolgswirksamen Tilgungs-/Zuschreibungpositionen dieser Periode."
+"This wizard will post installment/depreciation lines for the selected month."
+"<br/>\n"
+"                        This will generate journal entries for all related "
+"installment lines on this period of asset/revenue recognition as well."
+msgstr ""
+"Dieser Assistent bucht Zu-/Abschreibungspositionen im gewählten Monat,<br/>\n"
+"Dies erzeugt auch Buchungssätze für alle zugehörigen, erfolgswirksamen "
+"Tilgungs-/Zuschreibungpositionen dieser Periode."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -1027,16 +1002,6 @@ msgid "Unposted Amount"
 msgstr "Nicht verbuchter Betrag"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_unread
-msgid "Unread Messages"
-msgstr "Ungelesene Mitteilungen"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Zähler der ungelesenen Nachrichten"
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_purchase_tree
 msgid "Vendor"
@@ -1047,9 +1012,16 @@ msgstr "Lieferant"
 #: model:ir.model.fields,help:account_asset.field_account_asset_depreciation_line_parent_state
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
-msgstr "Wenn eine Anlage angelegt wird, ist der Status \"Entwurf\". Nach Bestätigung der Anlage wird diese 'aktiv' und Abschreibungen können verbucht werden. Sie können die Anlage automatisch schließen, wenn die Abschreibungen vorbei sind. Nach Verbuchung der letzen Abschreibung wird die Anlage automatisch geschlossen."
+"If the asset is confirmed, the status goes in 'Running' and the depreciation "
+"lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last "
+"line of depreciation is posted, the asset automatically goes in that status."
+msgstr ""
+"Wenn eine Anlage angelegt wird, ist der Status \"Entwurf\". Nach Bestätigung "
+"der Anlage wird diese 'aktiv' und Abschreibungen können verbucht werden. Sie "
+"können die Anlage automatisch schließen, wenn die Abschreibungen vorbei "
+"sind. Nach Verbuchung der letzen Abschreibung wird die Anlage automatisch "
+"geschlossen."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name
@@ -1057,33 +1029,25 @@ msgid "Year"
 msgstr "Jahr"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset_invoice.py:53
-#, python-format
-msgid ""
-"You already have assets with the reference %s.\n"
-"Please delete these assets before creating new ones for this invoice."
-msgstr "Sie haben bereits Anlagen mit Referenz %s.\nBitte entfernen Sie diese Anlagen, vor der Erstellung Neuer, zu dieser Rechnung."
-
-#. module: account_asset
-#: code:addons/account_asset/account_asset.py:100
+#: code:addons/account_asset/account_asset.py:96
 #, python-format
 msgid "You cannot delete a document is in %s state."
 msgstr "Sie können kein Dokument löschen, welches im %s Staus ist."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:102
+#: code:addons/account_asset/account_asset.py:98
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr "Sie dürfen ein Dokument, mit gebuchten Posten, nicht löschen."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:497
+#: code:addons/account_asset/account_asset.py:495
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr "Sie dürfen gebuchte Abschreibungspositionen nicht löschen."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:499
+#: code:addons/account_asset/account_asset.py:497
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr "Sie dürfen gebuchte Zuschreibungen nicht löschen."
@@ -1108,3 +1072,56 @@ msgstr "z.B. Laptop iBook"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
 msgstr "Monate"
+
+#~ msgid "Action Needed"
+#~ msgstr "Aktion notwendig"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Datum der letzten Nachricht."
+
+#~ msgid "Followers"
+#~ msgstr "Beobachter"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Beobachter (Kanäle)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Beobachter (Partner)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#~ msgid "Is Follower"
+#~ msgstr "Ist Beobachter"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Letzte Benachrichtigung"
+
+#~ msgid "Messages"
+#~ msgstr "Mitteilungen"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Anzahl der Aktionen"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Anzahl ungelesener Nachrichten"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Ungelesene Mitteilungen"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Zähler der ungelesenen Nachrichten"
+
+#~ msgid ""
+#~ "You already have assets with the reference %s.\n"
+#~ "Please delete these assets before creating new ones for this invoice."
+#~ msgstr ""
+#~ "Sie haben bereits Anlagen mit Referenz %s.\n"
+#~ "Bitte entfernen Sie diese Anlagen, vor der Erstellung Neuer, zu dieser "
+#~ "Rechnung."

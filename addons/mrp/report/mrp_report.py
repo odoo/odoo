@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-
+from odoo.tools import drop_view_if_exists
 
 class WorkCenterLoad(models.Model):
     _name = "report.workcenter.load"
@@ -16,8 +16,9 @@ class WorkCenterLoad(models.Model):
 
     @api.model_cr
     def init(self):
+        drop_view_if_exists(self._cr, 'report_workcenter_load')
         self._cr.execute("""
-            create or replace view report_workcenter_load as (
+            create view report_workcenter_load as (
                 SELECT
                     min(wl.id) as id,
                     to_char(p.date_planned_start,'YYYY:mm:dd') as name,
@@ -46,8 +47,9 @@ class ValueVariation(models.Model):
 
     @api.model_cr
     def init(self):
+        drop_view_if_exists(self._cr, 'report_mrp_inout')
         self._cr.execute("""
-            create or replace view report_mrp_inout as (
+            create view report_mrp_inout as (
                 select
                     min(sm.id) as id,
                     to_char(sm.date,'YYYY:IW') as date,

@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment_paypal
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-08 06:27+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: payment_paypal
@@ -28,7 +28,9 @@ msgstr "<span><i>Zruśiť,</i> Vaša platba bola zrušená.</span>"
 msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
-msgstr "<span><i>Hotovo,</i> Vaša online platba bola úspešne spracovaná. Ďakujeme za objednávku.</span>"
+msgstr ""
+"<span><i>Hotovo,</i> Vaša online platba bola úspešne spracovaná. Ďakujeme za "
+"objednávku.</span>"
 
 #. module: payment_paypal
 #: model:payment.acquirer,error_msg:payment_paypal.payment_acquirer_paypal
@@ -36,14 +38,19 @@ msgid ""
 "<span><i>Error,</i> Please be aware that an error occurred during the "
 "transaction. The order has been confirmed but won't be paid. Don't hesitate "
 "to contact us if you have any questions on the status of your order.</span>"
-msgstr "<span><i>Chyba,</i> Upozorňujeme, že počas transakcie došlo k chybe. Objednávka bola potvrdená ale nebude zaplatená. Neváhajte nás kontaktovať ak máte otázky ohľadom stavu vašej objednávky.</span>"
+msgstr ""
+"<span><i>Chyba,</i> Upozorňujeme, že počas transakcie došlo k chybe. "
+"Objednávka bola potvrdená ale nebude zaplatená. Neváhajte nás kontaktovať ak "
+"máte otázky ohľadom stavu vašej objednávky.</span>"
 
 #. module: payment_paypal
 #: model:payment.acquirer,pending_msg:payment_paypal.payment_acquirer_paypal
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr "<span><i>Čakajúce,</i> Vaša online platba bola úspešne spracovaná. Ale vaša objednávka nebola ešte potvrdená.</span>"
+msgstr ""
+"<span><i>Čakajúce,</i> Vaša online platba bola úspešne spracovaná. Ale vaša "
+"objednávka nebola ešte potvrdená.</span>"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token
@@ -101,7 +108,7 @@ msgid "Paypal TX Details"
 msgstr "Paypal TX  detaily"
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/paypal.py:186
+#: code:addons/payment_paypal/models/paypal.py:183
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
 msgstr "Paypal: prijaté dáta s chýbajúcou referenciou (%s) alebo txn_id (%s)"
@@ -121,7 +128,9 @@ msgstr "Rest API meno používateľa"
 msgid ""
 "The Merchant ID is used to ensure communications coming from Paypal are "
 "valid and secured."
-msgstr "ID obchodníka slúži na ubezpečenie že komunikácie prichádzajúce z Paypal sú platné a zaistené."
+msgstr ""
+"ID obchodníka slúži na ubezpečenie že komunikácie prichádzajúce z Paypal sú "
+"platné a zaistené."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction_paypal_txn_type
@@ -143,4 +152,5 @@ msgstr "Použiť Rest API"
 msgid ""
 "You will be redirected to the Paypal website after clicking on the payment "
 "button."
-msgstr "Po kliknutí na tlačidlo platby budete presmerovaný na webstránku Paypal."
+msgstr ""
+"Po kliknutí na tlačidlo platby budete presmerovaný na webstránku Paypal."

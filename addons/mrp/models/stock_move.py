@@ -66,11 +66,11 @@ class StockMove(models.Model):
     # Quantities to process, in normalized UoMs
     quantity_available = fields.Float(
         'Quantity Available', compute="_qty_available",
-        digits_compute=dp.get_precision('Product Unit of Measure'))
+        digits=dp.get_precision('Product Unit of Measure'))
     quantity_done_store = fields.Float('Quantity', digits=0)
     quantity_done = fields.Float(
         'Quantity', compute='_qty_done_compute', inverse='_qty_done_set',
-        digits_compute=dp.get_precision('Product Unit of Measure'))
+        digits=dp.get_precision('Product Unit of Measure'))
     move_lot_ids = fields.One2many('stock.move.lots', 'move_id', string='Lots')
     bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line')
     unit_factor = fields.Float('Unit Factor')

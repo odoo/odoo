@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * note
-# 
+#
 # Translators:
 # Fabian Liesch <fabian.liesch@gmail.com>, 2015
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
@@ -10,20 +10,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-06-01 14:48+0000\n"
 "Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_needaction
-msgid "Action Needed"
-msgstr "Aktion notwendig"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_open
@@ -77,11 +72,6 @@ msgid "Date done"
 msgstr "Datum erledigt"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum der letzten Nachricht."
-
-#. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
 msgstr "Löschen"
@@ -99,21 +89,6 @@ msgid "Folded by Default"
 msgstr "Im Standard zugeklappt"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_follower_ids
-msgid "Followers"
-msgstr "Beobachter"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Beobachter (Kanäle)"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Beobachter (Partner)"
-
-#. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "Gruppiere nach"
@@ -124,26 +99,6 @@ msgstr "Gruppiere nach"
 #: model:ir.model.fields,field_description:note.field_note_tag_id
 msgid "ID"
 msgstr "ID"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_is_follower
-msgid "Is Follower"
-msgstr "Ist Beobachter"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_last_post
-msgid "Last Message Date"
-msgstr "Letzte Benachrichtigung"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note___last_update
@@ -173,22 +128,12 @@ msgid "Later"
 msgstr "Später"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_ids
-msgid "Messages"
-msgstr "Mitteilungen"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_ids
-msgid "Messages and communication history"
-msgstr "Nachrichten und Kommunikations-Historie"
-
-#. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "Neu"
 
 #. module: note
-#: code:addons/note/note.py:163
+#: code:addons/note/note.py:165
 #, python-format
 msgid "New Note"
 msgstr "Neue Notiz"
@@ -227,21 +172,6 @@ msgstr "Notiz 'Tag'"
 #: model:note.stage,name:note.note_stage_04
 msgid "Notes"
 msgstr "Notizen"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Anzahl der Aktionen"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Anzahl ungelesene Nachrichten"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
@@ -327,24 +257,21 @@ msgid "Tomorrow"
 msgstr "Morgen"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_unread
-msgid "Unread Messages"
-msgstr "Ungelesene Mitteilungen"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Zähler der ungelelesen Nachrichten"
-
-#. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. However\n"
-"            you can share some notes with other people by inviting followers\n"
+"            notes are private; no one else will be able to see them. "
+"However\n"
+"            you can share some notes with other people by inviting "
+"followers\n"
 "            on the note. (Useful for meeting minutes, especially if\n"
 "            you activate the pad feature for collaborative writings)."
-msgstr "Verwenden Sie Notizen zu persönlichen Aufgaben oder Notizen zu organisieren. Alle Notizen sind vertraulich; niemand sonst in der Lage, sie zu sehen. Jedoch können Sie Notizen mit anderen Menschen teilen indem Sie sie dazu einladen. (Nützlich für Sitzungsprotokolle, vor allem, wenn Sie die Pad-Funktion für die gemeinsame Schreiben aktiviert haben)."
+msgstr ""
+"Verwenden Sie Notizen zu persönlichen Aufgaben oder Notizen zu organisieren. "
+"Alle Notizen sind vertraulich; niemand sonst in der Lage, sie zu sehen. "
+"Jedoch können Sie Notizen mit anderen Menschen teilen indem Sie sie dazu "
+"einladen. (Nützlich für Sitzungsprotokolle, vor allem, wenn Sie die Pad-"
+"Funktion für die gemeinsame Schreiben aktiviert haben)."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_sequence
@@ -361,4 +288,54 @@ msgstr "Benutzer"
 msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
-msgstr "Sie können anpassen, wie Sie Ihre Notizen / Aufgaben bearbeiten durch das Hinzufügen, Entfernen oder Ändern von Spalten."
+msgstr ""
+"Sie können anpassen, wie Sie Ihre Notizen / Aufgaben bearbeiten durch das "
+"Hinzufügen, Entfernen oder Ändern von Spalten."
+
+#~ msgid "Action Needed"
+#~ msgstr "Aktion notwendig"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Datum der letzten Nachricht."
+
+#~ msgid "Followers"
+#~ msgstr "Beobachter"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Beobachter (Kanäle)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Beobachter (Partner)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#~ msgid "Is Follower"
+#~ msgstr "Ist Beobachter"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Letzte Benachrichtigung"
+
+#~ msgid "Messages"
+#~ msgstr "Mitteilungen"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Nachrichten und Kommunikations-Historie"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Anzahl der Aktionen"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Anzahl ungelesene Nachrichten"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Ungelesene Mitteilungen"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Zähler der ungelelesen Nachrichten"

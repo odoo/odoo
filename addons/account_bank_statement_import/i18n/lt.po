@@ -1,31 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_bank_statement_import
-# 
+#
 # Translators:
 # Rytis Štreimikis <r.streimikis@hotmail.lt>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-11 17:07+0000\n"
 "Last-Translator: Rytis Štreimikis <r.streimikis@hotmail.lt>\n"
-"Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/lt/)\n"
+"Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/"
+"lt/)\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
+"%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:226
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
 msgstr "%d sanodriai jau importuoti todėl ignoruojami."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:226
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
 msgstr ""
@@ -56,7 +58,7 @@ msgid "Allow Cancelling Entries"
 msgstr "Leisti atšaukiančius įrašus"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
 #, python-format
 msgid "Already imported items"
 msgstr ""
@@ -72,7 +74,7 @@ msgid "At least one outbound"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:75
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:76
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_id
 #, python-format
 msgid "Bank"
@@ -104,24 +106,29 @@ msgid "Bank Statement Line"
 msgstr "Banko sąskaitos išrašo eilutė"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
+msgid "Belong to the user's current company"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Cancel"
 msgstr "Atšaukti"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:160
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:165
 #, python-format
 msgid ""
-"Cannot find in which journal import this statement. Please manually select a"
-" journal."
+"Cannot find in which journal import this statement. Please manually select a "
+"journal."
 msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid ""
-"Check this box if you don't want to share the same sequence for invoices and"
-" refunds made from this journal"
+"Check this box if you don't want to share the same sequence for invoices and "
+"refunds made from this journal"
 msgstr ""
 
 #. module: account_bank_statement_import
@@ -129,7 +136,9 @@ msgstr ""
 msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
-msgstr "Pažymėkite šį lauką, jeigu norite leisti įrašų ar S/F atšaukimą, susijusių su šiuo žurnalu."
+msgstr ""
+"Pažymėkite šį lauką, jeigu norite leisti įrašų ar S/F atšaukimą, susijusių "
+"su šiuo žurnalu."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -147,7 +156,7 @@ msgid "Company related to this journal"
 msgstr "Įmonė susieta su šiuo žurnalu"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:105
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:106
 #, python-format
 msgid ""
 "Could not make sense of the given file.\n"
@@ -202,7 +211,9 @@ msgstr "Vaizduojamas pavadinimas"
 msgid ""
 "Display this bank account on the footer of printed documents like invoices "
 "and sales orders."
-msgstr "Rodyti šią banko sąskaitą atspausdintų dokumentų, kaip sąskaita-faktūra, pardavimų užsakymas, poraštyje"
+msgstr ""
+"Rodyti šią banko sąskaitą atspausdintų dokumentų, kaip sąskaita-faktūra, "
+"pardavimų užsakymas, poraštyje"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -215,6 +226,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
 msgid "Entry Sequence"
 msgstr "Įrašų seka"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_filename
+msgid "Filename"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_data_file
@@ -239,7 +255,9 @@ msgstr "ID"
 msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
-msgstr "Pažymėjus šį lauiką, sistema bandys sugrupuoti DK įrašus, kuomet jie kuriami pagal sąskaitą faktūrą."
+msgstr ""
+"Pažymėjus šį lauiką, sistema bandys sugrupuoti DK įrašus, kuomet jie kuriami "
+"pagal sąskaitą faktūrą."
 
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
@@ -287,7 +305,7 @@ msgid "Journal"
 msgstr "Žurnalas"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:66
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:67
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
@@ -360,7 +378,7 @@ msgid ""
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:132
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:136
 #, python-format
 msgid "No currency found matching '%s'."
 msgstr ""
@@ -388,11 +406,11 @@ msgstr "Grąžinimo įrašų seka"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
 msgid ""
-"Select 'Sale' for customer invoices journals. Select 'Purchase' for vendor "
-"bills journals. Select 'Cash' or 'Bank' for journals that are used in "
-"customer or vendor payments. Select 'General' for miscellaneous operations "
-"journals. Select 'Opening/Closing Situation' for entries generated for new "
-"fiscal years."
+"Select 'Sale' for customer invoices journals.\n"
+"Select 'Purchase' for vendor bills journals.\n"
+"Select 'Cash' or 'Bank' for journals that are used in customer or vendor "
+"payments.\n"
+"Select 'General' for miscellaneous operations journals."
 msgstr ""
 
 #. module: account_bank_statement_import
@@ -429,14 +447,13 @@ msgid ""
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:143
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:151
 #, python-format
-msgid ""
-"The account of this statement (%s) is not the same as the journal (%s)."
+msgid "The account of this statement (%s) is not the same as the journal (%s)."
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:156
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:161
 #, python-format
 msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
@@ -458,7 +475,8 @@ msgstr ""
 msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
-msgstr "Šiame lauke saugoma informacija susijusi su šio žurnalo įrašų numeravimu."
+msgstr ""
+"Šiame lauke saugoma informacija susijusi su šio žurnalo įrašų numeravimu."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
@@ -468,13 +486,13 @@ msgid ""
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:110
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:111
 #, python-format
 msgid "This file doesn't contain any statement."
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:118
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:119
 #, python-format
 msgid "This file doesn't contain any transaction."
 msgstr ""
@@ -499,8 +517,8 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
 msgid ""
-"Used to register a profit when the ending balance of a cash register differs"
-" from what the system computes"
+"Used to register a profit when the ending balance of a cash register differs "
+"from what the system computes"
 msgstr ""
 
 #. module: account_bank_statement_import
@@ -509,7 +527,7 @@ msgid "Whether this journal should be displayed on the dashboard or not"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:218
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
 #, python-format
 msgid "You have already imported that file."
 msgstr ""

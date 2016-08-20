@@ -1527,7 +1527,7 @@
                 </div>
             </div>
         </t>
-        <t t-if="order.payment_acquirer_id.auto_confirm == 'at_pay_confirm'">
+        <t t-if="order.payment_acquirer_id.auto_confirm != 'none'">
             <t t-if="order.payment_tx_id.state == 'pending'">
                 <div class="alert alert-info" role="alert">
                     <t t-raw="order.payment_acquirer_id.pending_msg" />

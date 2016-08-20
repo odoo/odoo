@@ -10,7 +10,7 @@ class ScrapProduct(models.TransientModel):
     _description = "Scrap Products"
 
     product_id = fields.Many2one('product.product', 'Product', required=True)
-    product_qty = fields.Float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True)
+    product_qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
     product_uom = fields.Many2one('product.uom', 'Product Unit of Measure', required=True)
     location_id = fields.Many2one('stock.location', 'Location', required=True)
     restrict_lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')

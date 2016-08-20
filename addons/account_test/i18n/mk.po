@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_test
-# 
+#
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-04-20 10:46+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
-"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
+"mk/)\n"
+"Language: mk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mk\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: account_test
@@ -23,7 +24,9 @@ msgstr ""
 msgid ""
 "<br/>\n"
 "                        <strong>Description:</strong>"
-msgstr "<br/>\n                        <strong>Опис:</strong>"
+msgstr ""
+"<br/>\n"
+"                        <strong>Опис:</strong>"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
@@ -50,14 +53,18 @@ msgstr "Активно"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr "Означете доколку ставките на движењето се балансирани и имаат ист датум и период"
+msgstr ""
+"Означете доколку ставките на движењето се балансирани и имаат ист датум и "
+"период"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of"
-" statement lines"
-msgstr "Означете на банкарскиот извод дека Заклучното салдо = Почетно салдо + сума од ставки на изводот"
+"Check on bank statement that the Closing Balance = Starting Balance + sum of "
+"statement lines"
+msgstr ""
+"Означете на банкарскиот извод дека Заклучното салдо = Почетно салдо + сума "
+"од ставки на изводот"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
@@ -69,14 +76,18 @@ msgstr "Означи дека платени/порамнети фактури �
 msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
-msgstr "Проверете дали пребиените ставки, што ги одредуваат контата за обврски и побарувања, припаѓаат на подмирени фактури"
+msgstr ""
+"Проверете дали пребиените ставки, што ги одредуваат контата за обврски и "
+"побарувања, припаѓаат на подмирени фактури"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
-" Payable and Receivable Accounts"
-msgstr "Означете дека порамнетата фактура за Продажби/Набавки има порамнети внесови за Сметките Плаќања и Побарувања"
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
+"Payable and Receivable Accounts"
+msgstr ""
+"Означете дека порамнетата фактура за Продажби/Набавки има порамнети внесови "
+"за Сметките Плаќања и Побарувања"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
@@ -96,23 +107,29 @@ msgstr "Код Помош"
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
-"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
+"Code should always set a variable named `result` with the result of your "
+"test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was "
+"succesful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
-"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
+"If the result of your test is a dictionary, you can set a variable named "
+"`column_order` to choose in\n"
 "what order you want to print `result`'s content.\n"
 "\n"
-"Should you need them, you can also use the following variables into your code:\n"
+"Should you need them, you can also use the following variables into your "
+"code:\n"
 "    * cr: cursor to the database\n"
 "    * uid: ID of the current user\n"
 "\n"
-"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
+"In any ways, the code must be legal python statements with correct "
+"indentation (if needed).\n"
 "\n"
 "Example: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
+"= 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"

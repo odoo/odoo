@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_recruitment
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015-2016
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2016
@@ -9,31 +9,67 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-25 17:38+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: hr_recruitment
-#: model:mail.template,body_html:hr_recruitment.hr_welcome_new_employee
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
 msgid ""
 "\n"
-"            <p>\n"
-"                %if object.department_id:\n"
-"                    I’m very pleased to announce that <strong> ${object.name} </strong> will be joining us as a ${object.job_id.name}\n"
-"                    in ${object.department_id.name}.\n"
-"                %else:\n"
-"                    I’m very pleased to announce that <strong> ${object.name} </strong> will be joining us as a ${object.job_id.name}.\n"
-"                %endif\n"
-"            </p>\n"
-"            <p>Please welcome him/her and help him/her finding his/her marks.</p>\n"
-"            "
-msgstr "\n<p>\n%if object.department_id:\nJe mi veľkou cťou vám oznámiť, že <strong> ${object.name} </strong> sa k nám pridá ako ${object.job_id.name}\nin ${object.department_id.name}.\n%else:\nJe mi veľkou cťou vám oznámiť, že <strong> ${object.name} </strong> sa k nám pridá ako ${object.job_id.name}.\n%endif\n</p>\n<p>Prosím, privítajte ho / ju a pomôžte mu / jej nájsť jeho / jej cieľ.</p>"
+"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+"<p>Thank you for your enquiry.<br />\n"
+"Unfortunately, your profile does not match with our needs</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
+msgid ""
+"\n"
+"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+"<p>Thank you for your enquiry.<br />\n"
+"Your resume got our interest. I will contact you as soon as possible to "
+"plan\n"
+"next steps of the recruitment process.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_employee
+#, fuzzy
+msgid ""
+"\n"
+"<p>Dear all,</p>\n"
+"<p>I’m very pleased to announce that <strong> ${object.name} </strong> will "
+"be\n"
+"joining us as a ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"    in ${object.department_id.name}.\n"
+"%endif\n"
+".</p>\n"
+"<p>Please welcome him/her and help him/her finding his/her marks.</p>"
+msgstr ""
+"\n"
+"<p>\n"
+"%if object.department_id:\n"
+"Je mi veľkou cťou vám oznámiť, že <strong> ${object.name} </strong> sa k nám "
+"pridá ako ${object.job_id.name}\n"
+"in ${object.department_id.name}.\n"
+"%else:\n"
+"Je mi veľkou cťou vám oznámiť, že <strong> ${object.name} </strong> sa k nám "
+"pridá ako ${object.job_id.name}.\n"
+"%endif\n"
+"</p>\n"
+"<p>Prosím, privítajte ho / ju a pomôžte mu / jej nájsť jeho / jej cieľ.</p>"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_1
@@ -91,32 +127,6 @@ msgid "<b>Departement:</b>"
 msgstr "<b>Oddelenie:</b>"
 
 #. module: hr_recruitment
-#: model:mail.template,body_html:hr_recruitment.applicant_interest
-msgid ""
-"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-"        <p>Congrats! Your resume's got our interest!\n"
-"        I will call you as soon as possible to make a 10 minutes phone interview and  plan a first meeting.</p>\n"
-"        <p>If we can’t reach you or if you miss our call, feel free to reach me back on the number 001 312 349 3030\n"
-"        If I do not answer, please let me a message with some schedules to call you back.</p>\n"
-"        <p>Kind regards,</p>\n"
-"        <br/>\n"
-"         ${object.user_id.signature | safe}"
-msgstr "<p>Vážený ${object.partner_name or 'applicant'},</p>\n<p>Gratulujeme! Váš životopis nás zaujal!\nZavoláme Vám čo najskôr, bude to 10 minútový telefónny rozhovor a naplánujeme prvé stretnutie.</p>\n<p>Ak sa Vám nebudeme vedieť s Vami spojiť, prosím neváhajte nás kontaktovať na čísle  001 312 349 3030.\nAk nebudeme odpovedať, zanechajte nám prosím odkaz s približnými časmi kedy Vás môžeme opäť kontaktovať.</p>\n<p>S priateľským pozdravom,</p>\n<br/>\n${object.user_id.signature | safe}"
-
-#. module: hr_recruitment
-#: model:mail.template,body_html:hr_recruitment.applicant_refuse
-msgid ""
-"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-"        <p>We thank you for your interest in our company and for your application.\n"
-"        Unfortunately, your profile does not match with our needs or our recruitment\n"
-"        campaign has reached its term.</p>\n"
-"        <p>If you want more details, feel free to contact us by phone.</p>\n"
-"        <p>Kind regards,</p>\n"
-"        <br/>\n"
-"         ${object.user_id and object.user_id.signature | safe or ''}"
-msgstr "<p>Vážený ${object.partner_name or 'applicant'},</p>\n<p>Ďakujeme Vám za Váš záujem o našu spoločnosť a za Vašu žiadosť.\nŽiaľ, Váš profil nezodpovedá našim potrebám alebo výberové konanie už bolo ukončené.</p>\n<p>Ak si želáte viac informácií, neváhajte nás kontaktovať telefonicky.</p>\n<p>S priateľským pozdravom,</p>\n<br/>\n${object.user_id and object.user_id.signature | safe or ''}"
-
-#. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "<span class=\"o_stat_text\">Meetings</span>"
 msgstr "<span class=\"o_stat_text\">Stretnutia</span>"
@@ -126,14 +136,18 @@ msgstr "<span class=\"o_stat_text\">Stretnutia</span>"
 msgid ""
 "<span class=\"o_stat_text\">Print</span>\n"
 "                            <span class=\"o_stat_text\">Interview</span>"
-msgstr "<span class=\"o_stat_text\">Vytlačiť</span>\n<span class=\"o_stat_text\">Pohovor</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Vytlačiť</span>\n"
+"<span class=\"o_stat_text\">Pohovor</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid ""
 "<span class=\"o_stat_text\">Start</span>\n"
 "                            <span class=\"o_stat_text\">Interview</span>"
-msgstr "<span class=\"o_stat_text\">Začať</span>\n<span class=\"o_stat_text\">Pohovor</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Začať</span>\n"
+"<span class=\"o_stat_text\">Pohovor</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -160,12 +174,9 @@ msgstr "<span>Zobraziť</span>"
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr "Slovník jazyka Python ktorý bude vyhodnotený na  poskytnutie predvolených hodnôt pri vytváraní nových záznamov pre tento alias."
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_needaction
-msgid "Action Needed"
-msgstr "Potrebná akcia"
+msgstr ""
+"Slovník jazyka Python ktorý bude vyhodnotený na  poskytnutie predvolených "
+"hodnôt pri vytváraní nových záznamov pre tento alias."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_active
@@ -254,7 +265,7 @@ msgid "Applicant's Name"
 msgstr "Meno uchádzača"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:85
+#: code:addons/hr_recruitment/models/hr_recruitment.py:92
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_calendar_view
 #, python-format
@@ -264,18 +275,32 @@ msgstr "Uchádzači"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 msgid ""
-"Applicants and their attached CV are created automatically when an email is sent.\n"
-"                If you install the document management modules, all resumes are indexed automatically,\n"
+"Applicants and their attached CV are created automatically when an email is "
+"sent.\n"
+"                If you install the document management modules, all resumes "
+"are indexed automatically,\n"
 "                so that you can easily search through their content."
-msgstr "Uchádzači a ich priložené CV-čka sú automaticky vytvorené keď sa pošle email.\nAk nainštalujete moduly pre správu dokumentov, všetky životopisy sú indexované automaticky,\ntakže môžete ľahko prehľadávať ich obsah."
+msgstr ""
+"Uchádzači a ich priložené CV-čka sú automaticky vytvorené keď sa pošle "
+"email.\n"
+"Ak nainštalujete moduly pre správu dokumentov, všetky životopisy sú "
+"indexované automaticky,\n"
+"takže môžete ľahko prehľadávať ich obsah."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid ""
-"Applicants and their attached CV are created automatically when an email is sent.\n"
-"            If you install the document management modules, all resumes are indexed automatically, \n"
+"Applicants and their attached CV are created automatically when an email is "
+"sent.\n"
+"            If you install the document management modules, all resumes are "
+"indexed automatically, \n"
 "            so that you can easily search through their content."
-msgstr "Uchádzači a ich priložené CV-čka sú automaticky vytvorený keď sa pošle email.\nAk nainštalujete moduly pre správu dokumentov, všetky životopisy sú indexované automaticky,\ntakže môžete ľahko prehľadávať ich obsah."
+msgstr ""
+"Uchádzači a ich priložené CV-čka sú automaticky vytvorený keď sa pošle "
+"email.\n"
+"Ak nainštalujete moduly pre správu dokumentov, všetky životopisy sú "
+"indexované automaticky,\n"
+"takže môžete ľahko prehľadávať ich obsah."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -288,12 +313,12 @@ msgid "Application Summary"
 msgstr "Zhrnutie žiadosti"
 
 #. module: hr_recruitment
-#: model:mail.template,subject:hr_recruitment.applicant_interest
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_interest
 msgid "Application approved"
 msgstr "Žiadosť schválená"
 
 #. module: hr_recruitment
-#: model:mail.template,subject:hr_recruitment.applicant_refuse
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Application refused"
 msgstr "Žiadosť zamietnutá"
 
@@ -393,11 +418,6 @@ msgid "By Recruiter"
 msgstr "Podľa náborového pracovníka"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_campaign_id
-msgid "Campaign"
-msgstr "Kampaň"
-
-#. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_configuration
 msgid "Cancel"
 msgstr "Zrušiť"
@@ -417,17 +437,21 @@ msgstr "Kategória uchádzača"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_survey
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_survey_id
 msgid ""
-"Choose an interview form for this job position and you will be able to "
-"print/answer this interview from all applicants who apply for this job"
-msgstr "Vyberte formulár pohovoru pre túto pracovnú pozíciu a budete môcť tlačiť / odpovedať na tento pohovor zo všetkých uchádzačov, ktorí žiadajú o túto prácu"
+"Choose an interview form for this job position and you will be able to print/"
+"answer this interview from all applicants who apply for this job"
+msgstr ""
+"Vyberte formulár pohovoru pre túto pracovnú pozíciu a budete môcť tlačiť / "
+"odpovedať na tento pohovor zo všetkých uchádzačov, ktorí žiadajú o túto prácu"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid ""
-"Click here to create a new job. You can remove the \"In Recruitment\" filter"
-" to display all the job positions."
-msgstr "Kliknite tu pre vytvorenie novej pracovnej pozície. Môžete odstrániť filter \"V nábore\" pre zobrazenie všetkých pracovných pozícií."
+"Click here to create a new job. You can remove the \"In Recruitment\" filter "
+"to display all the job positions."
+msgstr ""
+"Kliknite tu pre vytvorenie novej pracovnej pozície. Môžete odstrániť filter "
+"\"V nábore\" pre zobrazenie všetkých pracovných pozícií."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
@@ -447,6 +471,7 @@ msgid "Closed"
 msgstr "Uzavreté"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_color
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_color
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_color
 msgid "Color Index"
@@ -475,14 +500,14 @@ msgid "Configure Recruitment"
 msgstr "Nakonfigurovať nábor"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:382
+#: code:addons/hr_recruitment/models/hr_recruitment.py:388
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_id
 #, python-format
 msgid "Contact"
 msgstr "Kontakt"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:384
+#: code:addons/hr_recruitment/models/hr_recruitment.py:390
 #, python-format
 msgid "Contact Email"
 msgstr "Kontaktný email"
@@ -519,17 +544,12 @@ msgstr "Vytvoriť alias"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
+#, fuzzy
 msgid ""
-"Create email and url for each distinct source. <br>\n"
-"                When the applicant will arrive, you will know from wich source the Job position is coming."
-msgstr "Vytvoriť email a URL pre každý jednotlivý zdroj. <br>\nKeď úchádzač dorazí, budete vedieť, z akého zdroja prichádza pracovná pozícia."
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
-msgid ""
-"Create here some alias...\n"
-"                That will allow you to track from where the applicant is coming from..."
-msgstr "Tu vytvorte nejaký alias...\nTo vám umožní sledovať odkiaľ uchádzač prichádza..."
+"Create some aliases that will allow you to track where applicants come from."
+msgstr ""
+"Tu vytvorte nejaký alias...\n"
+"To vám umožní sledovať odkiaľ uchádzač prichádza..."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -562,11 +582,6 @@ msgid "Creation Week"
 msgstr "Týždeň vytvorenia"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Dátum poslednej správy zaslanej záznamu."
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_day_close
 msgid "Days to Close"
 msgstr "Dni do uzatvorenia"
@@ -587,7 +602,10 @@ msgid ""
 "Define a specific contact address for this job position. If you keep it "
 "empty, the default email address will be used which is in human resources "
 "settings"
-msgstr "Definujte špecifickú kontaktnú adresu pre túto pracovnú pozíciu. Ak to necháte prázdne,  bude použitá prednastavená emailová adresa, čo je nastavená v ľudských zdrojoch"
+msgstr ""
+"Definujte špecifickú kontaktnú adresu pre túto pracovnú pozíciu. Ak to "
+"necháte prázdne,  bude použitá prednastavená emailová adresa, čo je "
+"nastavená v ľudských zdrojoch"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -595,7 +613,10 @@ msgid ""
 "Define here your stages of the recruitment process, for example:\n"
 "            qualification call, first interview, second interview, refused,\n"
 "            hired."
-msgstr "Tu zadefinujte vaše fázy náborového proces, napríklad:\nkvalifikačný telefonát, prvý pohovor, druhý pohovor, zamietnutie,\nprijatie."
+msgstr ""
+"Tu zadefinujte vaše fázy náborového proces, napríklad:\n"
+"kvalifikačný telefonát, prvý pohovor, druhý pohovor, zamietnutie,\n"
+"prijatie."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
@@ -604,7 +625,10 @@ msgid ""
 "Define job position profile and manage recruitment in a context of a "
 "particular job: print interview survey, define number of expected new "
 "employees, and manage its recruitment pipe"
-msgstr "Definujte profil pracovnej pozície a spravujte nábor pracovníkov v kontexte konkrétneho zamestnania: vytlačte prieskum pohovoru, definujte predpokladaný počet nových zamestnancov, a riaďťe jeho náborový postup"
+msgstr ""
+"Definujte profil pracovnej pozície a spravujte nábor pracovníkov v kontexte "
+"konkrétneho zamestnania: vytlačte prieskum pohovoru, definujte predpokladaný "
+"počet nových zamestnancov, a riaďťe jeho náborový postup"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -634,6 +658,7 @@ msgid "Delete"
 msgstr "Zmazať"
 
 #. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_department
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_department_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_department_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -701,7 +726,9 @@ msgstr "Dokumenty"
 msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "            is different according to the job position."
-msgstr "Nezabudnite upresniť oddelenie ak sa váš náborový proces  \nlíši v závislosti na pracovnej pozícii."
+msgstr ""
+"Nezabudnite upresniť oddelenie ak sa váš náborový proces  \n"
+"líši v závislosti na pracovnej pozícii."
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_11
@@ -734,7 +761,9 @@ msgstr "Alias Emailu"
 msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
-msgstr "Emailový alias pre túto pracovnú pozíciu. Nové emialy budú automaticky vytvárať nových uchádzačov o túto pracovnú pozíciu."
+msgstr ""
+"Emailový alias pre túto pracovnú pozíciu. Nové emialy budú automaticky "
+"vytvárať nových uchádzačov o túto pracovnú pozíciu."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_employee
@@ -760,8 +789,7 @@ msgid "Employees"
 msgstr "Zamestnanci"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
+#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
 msgid "Excellent"
 msgstr "Výborné"
 
@@ -821,21 +849,6 @@ msgid "Folded in Recruitment Pipe"
 msgstr "Zložené v toku náboru"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_follower_ids
-msgid "Followers"
-msgstr "Odberatelia"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
-
-#. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_8
 msgid "Freebies such as tea, coffee and stationery"
 msgstr "Zadarmo je čaj, káva a písacie potreby"
@@ -861,8 +874,7 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr "Dáva sekvenčné poradie pri zobrazovaní zoznamu fáz."
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
+#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
 msgid "Good"
 msgstr "Dobré"
 
@@ -893,11 +905,6 @@ msgid "Group By"
 msgstr "Zoskupiť podľa"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_department
-msgid "HR Department"
-msgstr "HR oddelenie"
-
-#. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
 msgstr "Najatí zamestnanci"
@@ -916,19 +923,11 @@ msgstr "ID"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
-msgstr "ID nadradeného záznamu obsahujúceho alias (príklad: projekt držiaci alias vytvorenia úlohy)"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
+msgstr ""
+"ID nadradeného záznamu obsahujúceho alias (príklad: projekt držiaci alias "
+"vytvorenia úlohy)"
 
 #. module: hr_recruitment
 #: model:survey.question,comments_message:hr_recruitment.recruitment_1_1
@@ -939,7 +938,8 @@ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 #: model:survey.question,comments_message:hr_recruitment.recruitment_2_3
 #: model:survey.question,comments_message:hr_recruitment.recruitment_2_4
 #: model:survey.question,comments_message:hr_recruitment.recruitment_3_1
-msgid "If other, precise:"
+#, fuzzy
+msgid "If other, please specify:"
 msgstr "Ak iné, konkrétne:"
 
 #. module: hr_recruitment
@@ -947,14 +947,18 @@ msgstr "Ak iné, konkrétne:"
 msgid ""
 "If set, a message is posted on the applicant using the template when the "
 "applicant is set to the stage."
-msgstr "Ak nastavené, správa je zverejnená na uchádzačovi pomocou šablóny keď je žiadateľ nastavený na fázu."
+msgstr ""
+"Ak nastavené, správa je zverejnená na uchádzačovi pomocou šablóny keď je "
+"žiadateľ nastavený na fázu."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_active
 msgid ""
 "If the active field is set to false, it will allow you to hide the case "
 "without removing it."
-msgstr "Ak je aktívne pole nastavené na nepravda, umožní vám schovať prípad bez jeho odtránenia."
+msgstr ""
+"Ak je aktívne pole nastavené na nepravda, umožní vám schovať prípad bez jeho "
+"odtránenia."
 
 #. module: hr_recruitment
 #: model:survey.page,title:hr_recruitment.recruitment_3
@@ -973,13 +977,9 @@ msgstr "Počiatočná kvalifikácia"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Interview Form"
 msgstr "Forma pohovoru"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_is_follower
-msgid "Is Follower"
-msgstr "Je odberateľ"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1024,10 +1024,9 @@ msgid "Job Positions"
 msgstr "Pracovné pozície"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_stage_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_ids
-msgid "Job Stages"
-msgstr "Fázy práce"
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
+msgid "Job Specific"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -1048,11 +1047,6 @@ msgstr "Zdroje práce"
 #: model:survey.question,question:hr_recruitment.recruitment_2_1
 msgid "Knowledge"
 msgstr "Vedomosť"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_last_post
-msgid "Last Message Date"
-msgstr "Dátum poslednej správy"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant___last_update
@@ -1106,8 +1100,14 @@ msgstr "Muž"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_config_settings_module_document
 msgid ""
 "Manage your CV's and motivation letter related to all applicants.\n"
-"-This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)"
-msgstr "Spravujte vaše CV-čka a motivačné listy týkajúce sa všetkých uchádzačov.\n- Toto nainštaluje modul document_ftp. Týmto sa nainštaluje modul pre riadenie znalostí, aby bolo možné vyhľadávať pomocou špecifických kľúčových slov naprieč obsahom všetkých dokumentov (PDF, DOCX ...)"
+"-This installs the module document_ftp. This will install the knowledge "
+"management  module in order to allow you to search using specific keywords "
+"through  the content of all documents (PDF, .DOCx...)"
+msgstr ""
+"Spravujte vaše CV-čka a motivačné listy týkajúce sa všetkých uchádzačov.\n"
+"- Toto nainštaluje modul document_ftp. Týmto sa nainštaluje modul pre "
+"riadenie znalostí, aby bolo možné vyhľadávať pomocou špecifických kľúčových "
+"slov naprieč obsahom všetkých dokumentov (PDF, DOCX ...)"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -1115,20 +1115,9 @@ msgid "Master Degree"
 msgstr "Magisterský titul"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_medium_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_medium_id
 msgid "Medium"
 msgstr "Stredné"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_ids
-msgid "Messages"
-msgstr "Správy"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_ids
-msgid "Messages and communication history"
-msgstr "Správa a história komunikácie"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_mobile
@@ -1161,9 +1150,7 @@ msgid "Name"
 msgstr "Meno"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_job.py:27
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
-#, python-format
 msgid "New"
 msgstr "Nové"
 
@@ -1189,7 +1176,7 @@ msgid "New Applications"
 msgstr "Nové žiadosti"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:428
+#: code:addons/hr_recruitment/models/hr_recruitment.py:438
 #, python-format
 msgid "New Employee %s Hired"
 msgstr "Nový zamestnanec %s prijatý"
@@ -1235,7 +1222,7 @@ msgid "No Interview Form"
 msgstr "Žiadny formulár pohovoru"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:395
+#: code:addons/hr_recruitment/models/hr_recruitment.py:406
 #, python-format
 msgid "No Subject"
 msgstr "Bez predmetu"
@@ -1246,8 +1233,7 @@ msgid "No out of hours working"
 msgstr "Žiadne robenie nadčasov"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
+#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
 msgid "Normal"
 msgstr "Normálna"
 
@@ -1255,11 +1241,6 @@ msgstr "Normálna"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_1
 msgid "Not important"
 msgstr "Nedôležité"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Počet akcií"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_attachment_number
@@ -1272,28 +1253,25 @@ msgid "Number of Days to close the project issue"
 msgstr "Počet dní na uzatvorenie projektového problému"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Počet správ ktoré vyžadujú akciu"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Počet neprečítaných správ"
-
-#. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
-"                process and follow up all operations: meetings, interviews, etc."
-msgstr "Odoo vám pomáha sledovať uchádzačov v náborovom\nprocese a spracovať alebo sledovať všetky aktivity: stretnutia, pohovory, atď."
+"                process and follow up all operations: meetings, interviews, "
+"etc."
+msgstr ""
+"Odoo vám pomáha sledovať uchádzačov v náborovom\n"
+"procese a spracovať alebo sledovať všetky aktivity: stretnutia, pohovory, "
+"atď."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "            process and follow up all operations: meetings, interviews, etc."
-msgstr "Odoo vám pomáha sledovať uchádzačov v náborovom\nprocese a spracovať alebo sledovať všetky aktivity: stretnutia, pohovory, atď."
+msgstr ""
+"Odoo vám pomáha sledovať uchádzačov v náborovom\n"
+"procese a spracovať alebo sledovať všetky aktivity: stretnutia, pohovory, "
+"atď."
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_3
@@ -1306,17 +1284,15 @@ msgid "Office location"
 msgstr "Lokácia kancelárie"
 
 #. module: hr_recruitment
-#: model:ir.actions.client,name:hr_recruitment.action_client_hr_recruitment_menu
-msgid "Open HR Menu"
-msgstr "Otvoriť HR menu"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "Voliteľné ID vlákna (záznam), na ktoré budú pripojené všetky prichádzajúce správy, aj keď na to neodpovedali. Ak je nastavené, úplne to zakáže vytváranie nových záznamov."
+msgstr ""
+"Voliteľné ID vlákna (záznam), na ktoré budú pripojené všetky prichádzajúce "
+"správy, aj keď na to neodpovedali. Ak je nastavené, úplne to zakáže "
+"vytváranie nových záznamov."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_user_id
@@ -1336,10 +1312,13 @@ msgstr "ID nadradeného vlákna záznamu"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
-msgstr "Nadradený model drží alias. Model drží referenciu aliasu nie je nevyhnutne model ktorý zadal alias_model_id (príklad: projekt (parent_model) a úlohy (model))"
+msgstr ""
+"Nadradený model drží alias. Model drží referenciu aliasu nie je nevyhnutne "
+"model ktorý zadal alias_model_id (príklad: projekt (parent_model) a úlohy "
+"(model))"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_partner_id
@@ -1358,12 +1337,18 @@ msgstr "Telefón"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_contact
+#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
-msgstr "Metóda pre zverejnenie správy na dokumente za použitia mailovj brány.\n- všeci: všetci môžu zverejňovať\n- partneri: iba overený partneri\n- odberatelia: iba odberatelia pridruženého dokumentu\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
+msgstr ""
+"Metóda pre zverejnenie správy na dokumente za použitia mailovj brány.\n"
+"- všeci: všetci môžu zverejňovať\n"
+"- partneri: iba overený partneri\n"
+"- odberatelia: iba odberatelia pridruženého dokumentu\n"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1458,6 +1443,12 @@ msgid "Regular meetings"
 msgstr "Pravidelné stretnutia"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#, fuzzy
+msgid "Reopen Application"
+msgstr "Obnoviť žiadosť"
+
+#. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
 msgid "Reports"
 msgstr "Výkazy"
@@ -1467,11 +1458,6 @@ msgstr "Výkazy"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Requirements"
 msgstr "Požiadavky"
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-msgid "Reset Application"
-msgstr "Obnoviť žiadosť"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_response_id
@@ -1569,7 +1555,6 @@ msgid "Somewhat important"
 msgstr "Čistočne dôležité"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_source_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_source_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_source_id
 msgid "Source"
@@ -1596,6 +1581,11 @@ msgstr "Zdroje uchádzačov"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Specific Email Address"
 msgstr "Špecifická emailová adresa"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
+msgid "Specific job that uses this stage. Other jobs will not use this stage."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1636,7 +1626,9 @@ msgstr "Fáza náboru"
 msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
-msgstr "Fáza uchádzača než bol v súčasnej fáze. Používa sa pre analýzu stratených prípadov."
+msgstr ""
+"Fáza uchádzača než bol v súčasnej fáze. Používa sa pre analýzu stratených "
+"prípadov."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
@@ -1700,10 +1692,13 @@ msgstr "Dátum kedy bude uchádzač schopný začať pracovať."
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
-msgstr "Model (Odoo druh dokumentu), ktorému odpovedá toto alias. Každý prichádzajúci email ktorý neodpovie na existujúci záznam spôsobí vytvorenie nového záznamu tohto modelu (napr úlohy projektu)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
+msgstr ""
+"Model (Odoo druh dokumentu), ktorému odpovedá toto alias. Každý "
+"prichádzajúci email ktorý neodpovie na existujúci záznam spôsobí vytvorenie "
+"nového záznamu tohto modelu (napr úlohy projektu)"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.recruitment.degree:0
@@ -1715,7 +1710,9 @@ msgstr "Meno stupňa musí byť jedinečné!"
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "Meno emailového alias, napr. \"práce\", ak chcete zachytiť emaily pre <prace@priklad.odoo.com>"
+msgstr ""
+"Meno emailového alias, napr. \"práce\", ak chcete zachytiť emaily pre "
+"<prace@priklad.odoo.com>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_user_id
@@ -1724,7 +1721,18 @@ msgid ""
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
-msgstr "Majiteľ záznamov vytvorených pri prijímaní emailov na tento alias. Ak toto pole nie je nastavené, systém sa pokúsi nájsť správneho vlastníka na základe adresy odosielateľa (Od), alebo bude používať účet správcu ak nie je užívateľ systému nájdený pre danú adresu."
+msgstr ""
+"Majiteľ záznamov vytvorených pri prijímaní emailov na tento alias. Ak toto "
+"pole nie je nastavené, systém sa pokúsi nájsť správneho vlastníka na základe "
+"adresy odosielateľa (Od), alebo bude používať účet správcu ak nie je "
+"užívateľ systému nájdený pre danú adresu."
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
+msgid ""
+"These aliases can be emails or urls for every source. When the applicant "
+"arrives here through one of these you'll know where he came from."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1732,7 +1740,10 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr "Tieto emailové adresy budú pridané do poľa 'kópia' všetkých odchádzajúcich emailov pre\ntento záznam pred ich poslaním. Oddeľte jednotlivé email adresy čiarkou"
+msgstr ""
+"Tieto emailové adresy budú pridané do poľa 'kópia' všetkých odchádzajúcich "
+"emailov pre\n"
+"tento záznam pred ich poslaním. Oddeľte jednotlivé email adresy čiarkou"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_from
@@ -1751,25 +1762,19 @@ msgid ""
 msgstr "Tento formulár je určený na pomoc zodpovednu za náborový pohovor."
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr "Jedná sa o názov, ktorý vám pomôže sledovať snahu vašich rôznych kampaní. Príklad: Fall_Drive, Christmas_Special"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_medium_id
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_medium_id
 msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "Ide o metódu dodávky. Príklad: Pohľadnice, email, alebo bannerová reklama"
+msgstr ""
+"Ide o metódu dodávky. Príklad: Pohľadnice, email, alebo bannerová reklama"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_source_id
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_source_id
 msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr "Toto je zdroj odkazu. Príklad: vyhľadávaci prostriedok, iná doména, alebo názov emailového zoznamu"
+"This is the source of the link Ex: Search Engine, another domain, or name of "
+"email list"
+msgstr ""
+"Toto je zdroj odkazu. Príklad: vyhľadávaci prostriedok, iná doména, alebo "
+"názov emailového zoznamu"
 
 #. module: hr_recruitment
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_1
@@ -1788,7 +1793,9 @@ msgstr "Táto otázka vyžaduje odpoveď."
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
-msgstr "Táto fáza je zložená v kanban zobrazení keď v tejto fáze nie sú žiadne záznamy na zobrazenie."
+msgstr ""
+"Táto fáza je zložená v kanban zobrazení keď v tejto fáze nie sú žiadne "
+"záznamy na zobrazenie."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1797,17 +1804,11 @@ msgid "Unassigned"
 msgstr "Nepriradené"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_unread
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 #: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
 msgid "Unread Messages"
 msgstr "Neprečítané správy"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Počítadlo neprečítaných správ"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_write_date
@@ -1830,8 +1831,7 @@ msgid "User Email"
 msgstr "Email používateľa"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
+#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
 msgid "Very Good"
 msgstr "Veľmi dobré"
 
@@ -1846,18 +1846,9 @@ msgid "Watchers Emails"
 msgstr "Emaily odberateľov"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_website_message_ids
-msgid "Website Messages"
-msgstr "Správy webovej stránky"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_website_message_ids
-msgid "Website communication history"
-msgstr "História komunikácie webovej stránky"
-
-#. module: hr_recruitment
-#: model:mail.template,subject:hr_recruitment.hr_welcome_new_employee
-msgid "Welcoming ${object.name} "
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
+#, fuzzy
+msgid "Welcome ${object.name} "
 msgstr "Vítanie ${object.name} "
 
 #. module: hr_recruitment
@@ -1874,12 +1865,16 @@ msgstr "Aké je vaše pohlavie?"
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
 msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
-"                can easily find all the information you need for each person;\n"
+"                can easily find all the information you need for each "
+"person;\n"
 "                contact data, job position, availability, etc."
-msgstr "Pri letmom pohľade na Odoo zamestnanckú obrazovku, vy\nmôžet ľahko nájsť všetky informácie, ktoré potrebujete pre každú osobu;\nkontaktné údaje, pracovná pozícia, dostupnosť, atď."
+msgstr ""
+"Pri letmom pohľade na Odoo zamestnanckú obrazovku, vy\n"
+"môžet ľahko nájsť všetky informácie, ktoré potrebujete pre každú osobu;\n"
+"kontaktné údaje, pracovná pozícia, dostupnosť, atď."
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:432
+#: code:addons/hr_recruitment/models/hr_recruitment.py:442
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr "Musíte definovať Uchádzaná práca a Meno kontaktu pre tohoto uchádzača."
@@ -1895,7 +1890,7 @@ msgid "hr.recruitment.config.settings"
 msgstr "hr.recruitment.config.settings"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:300
+#: code:addons/hr_recruitment/models/hr_recruitment.py:298
 #, python-format
 msgid "job applicants"
 msgstr "uchádzači o prácu"
@@ -1904,3 +1899,130 @@ msgstr "uchádzači o prácu"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red "
+
+#~ msgid ""
+#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+#~ "        <p>Congrats! Your resume's got our interest!\n"
+#~ "        I will call you as soon as possible to make a 10 minutes phone "
+#~ "interview and  plan a first meeting.</p>\n"
+#~ "        <p>If we can’t reach you or if you miss our call, feel free to "
+#~ "reach me back on the number 001 312 349 3030\n"
+#~ "        If I do not answer, please let me a message with some schedules "
+#~ "to call you back.</p>\n"
+#~ "        <p>Kind regards,</p>\n"
+#~ "        <br/>\n"
+#~ "         ${object.user_id.signature | safe}"
+#~ msgstr ""
+#~ "<p>Vážený ${object.partner_name or 'applicant'},</p>\n"
+#~ "<p>Gratulujeme! Váš životopis nás zaujal!\n"
+#~ "Zavoláme Vám čo najskôr, bude to 10 minútový telefónny rozhovor a "
+#~ "naplánujeme prvé stretnutie.</p>\n"
+#~ "<p>Ak sa Vám nebudeme vedieť s Vami spojiť, prosím neváhajte nás "
+#~ "kontaktovať na čísle  001 312 349 3030.\n"
+#~ "Ak nebudeme odpovedať, zanechajte nám prosím odkaz s približnými časmi "
+#~ "kedy Vás môžeme opäť kontaktovať.</p>\n"
+#~ "<p>S priateľským pozdravom,</p>\n"
+#~ "<br/>\n"
+#~ "${object.user_id.signature | safe}"
+
+#~ msgid ""
+#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+#~ "        <p>We thank you for your interest in our company and for your "
+#~ "application.\n"
+#~ "        Unfortunately, your profile does not match with our needs or our "
+#~ "recruitment\n"
+#~ "        campaign has reached its term.</p>\n"
+#~ "        <p>If you want more details, feel free to contact us by phone.</"
+#~ "p>\n"
+#~ "        <p>Kind regards,</p>\n"
+#~ "        <br/>\n"
+#~ "         ${object.user_id and object.user_id.signature | safe or ''}"
+#~ msgstr ""
+#~ "<p>Vážený ${object.partner_name or 'applicant'},</p>\n"
+#~ "<p>Ďakujeme Vám za Váš záujem o našu spoločnosť a za Vašu žiadosť.\n"
+#~ "Žiaľ, Váš profil nezodpovedá našim potrebám alebo výberové konanie už "
+#~ "bolo ukončené.</p>\n"
+#~ "<p>Ak si želáte viac informácií, neváhajte nás kontaktovať telefonicky.</"
+#~ "p>\n"
+#~ "<p>S priateľským pozdravom,</p>\n"
+#~ "<br/>\n"
+#~ "${object.user_id and object.user_id.signature | safe or ''}"
+
+#~ msgid "Action Needed"
+#~ msgstr "Potrebná akcia"
+
+#~ msgid "Campaign"
+#~ msgstr "Kampaň"
+
+#~ msgid ""
+#~ "Create email and url for each distinct source. <br>\n"
+#~ "                When the applicant will arrive, you will know from wich "
+#~ "source the Job position is coming."
+#~ msgstr ""
+#~ "Vytvoriť email a URL pre každý jednotlivý zdroj. <br>\n"
+#~ "Keď úchádzač dorazí, budete vedieť, z akého zdroja prichádza pracovná "
+#~ "pozícia."
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Dátum poslednej správy zaslanej záznamu."
+
+#~ msgid "Followers"
+#~ msgstr "Odberatelia"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Odberatelia (Kanály)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Odberatelia (Partneri)"
+
+#~ msgid "HR Department"
+#~ msgstr "HR oddelenie"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "Is Follower"
+#~ msgstr "Je odberateľ"
+
+#~ msgid "Job Stages"
+#~ msgstr "Fázy práce"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Dátum poslednej správy"
+
+#~ msgid "Messages"
+#~ msgstr "Správy"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Správa a história komunikácie"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Počet akcií"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Počet správ ktoré vyžadujú akciu"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Počet neprečítaných správ"
+
+#~ msgid "Open HR Menu"
+#~ msgstr "Otvoriť HR menu"
+
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "Jedná sa o názov, ktorý vám pomôže sledovať snahu vašich rôznych kampaní. "
+#~ "Príklad: Fall_Drive, Christmas_Special"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Počítadlo neprečítaných správ"
+
+#~ msgid "Website Messages"
+#~ msgstr "Správy webovej stránky"
+
+#~ msgid "Website communication history"
+#~ msgstr "História komunikácie webovej stránky"

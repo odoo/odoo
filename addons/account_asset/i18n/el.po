@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_asset
-# 
+#
 # Translators:
 # Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 09:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-05-12 09:34+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:350
+#: code:addons/account_asset/account_asset.py:347
 #, python-format
 msgid " (copy)"
 msgstr " (αντίγραφο)"
@@ -50,18 +50,13 @@ msgid "Account Entry"
 msgstr "Εγγραφή Λογαριασμού"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_needaction
-msgid "Action Needed"
-msgstr "Απαιτείται ενέργεια"
-
-#. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_active
 msgid "Active"
 msgstr "Ενεργό"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #, python-format
 msgid "Amount"
 msgstr "Ποσό"
@@ -92,8 +87,6 @@ msgid "Asset"
 msgstr "Πάγιo"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
 msgid "Asset Account"
 msgstr "Λογαριασμός Παγίου"
@@ -152,7 +145,7 @@ msgid "Asset category"
 msgstr "Κατηγορία Παγίου"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:238
+#: code:addons/account_asset/account_asset.py:235
 #, python-format
 msgid "Asset created"
 msgstr ""
@@ -163,7 +156,7 @@ msgid "Asset depreciation line"
 msgstr "Γραμμή Απόσβεσης Παγίου"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:271
+#: code:addons/account_asset/account_asset.py:268
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
@@ -239,7 +232,9 @@ msgstr ""
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
-msgstr "Ενεργοποιήστε αυτό αν θέλετε να επιβεβαιώνεται αυτόματα τα πάγια αυτής της κατηγορίας, όταν δημιουργούνται από τιμολόγια."
+msgstr ""
+"Ενεργοποιήστε αυτό αν θέλετε να επιβεβαιώνεται αυτόματα τα πάγια αυτής της "
+"κατηγορίας, όταν δημιουργούνται από τιμολόγια."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -248,23 +243,39 @@ msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr "Επιλέξτε την μέθοδο που θα χρησιμοποιηθεί για τον υπολογισμό του ποσού στις γραμμές απόσβεσης.\n* Γραμμική: Υπολογίζεται με βάση την: Ακαθάριστη Αξία / Αριθμός Αποσβέσεων\n* Σταδιακή Μείωση: Υπολογίζεται με βάση την: Εναπομένουσα Αξία / Συντελεστή Σταδιακής Μείωσης"
+msgstr ""
+"Επιλέξτε την μέθοδο που θα χρησιμοποιηθεί για τον υπολογισμό του ποσού στις "
+"γραμμές απόσβεσης.\n"
+"* Γραμμική: Υπολογίζεται με βάση την: Ακαθάριστη Αξία / Αριθμός Αποσβέσεων\n"
+"* Σταδιακή Μείωση: Υπολογίζεται με βάση την: Εναπομένουσα Αξία / Συντελεστή "
+"Σταδιακής Μείωσης"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_time
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_time
 msgid ""
-"Choose the method to use to compute the dates and number of depreciation lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
-msgstr "Επιλέξτε τη μέθοδο που θα  χρησιμοποιηθεί για να υπολογίσει τις ημερομηνίες και τον αριθμό των γραμμών αποσβέσεων.\n* Αριθμός Αποσβέσων: Διόρθωση του αριθμού των γραμμών αποσβέσεων και το χρονικό διάστημα μεταξύ 2 αποσβέσεων.\n* Ημερομηνία λήξης: Επιλογή του χρονικού διαστήματος μεταξύ 2 αποσβέσεων και την μέγιστη ημερομηνία λήξης."
+"Choose the method to use to compute the dates and number of depreciation "
+"lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the "
+"time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
+msgstr ""
+"Επιλέξτε τη μέθοδο που θα  χρησιμοποιηθεί για να υπολογίσει τις ημερομηνίες "
+"και τον αριθμό των γραμμών αποσβέσεων.\n"
+"* Αριθμός Αποσβέσων: Διόρθωση του αριθμού των γραμμών αποσβέσεων και το "
+"χρονικό διάστημα μεταξύ 2 αποσβέσεων.\n"
+"* Ημερομηνία λήξης: Επιλογή του χρονικού διαστήματος μεταξύ 2 αποσβέσεων και "
+"την μέγιστη ημερομηνία λήξης."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
 msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
-msgstr "Επιλέξτε το χρονικό διάστημα για το οποίο θέλετε να καταχωρούνται αυτόματα οι γραμμές απόσβεσης του παγίου που βρίσκεται σε εξέλιξη."
+msgstr ""
+"Επιλέξτε το χρονικό διάστημα για το οποίο θέλετε να καταχωρούνται αυτόματα "
+"οι γραμμές απόσβεσης του παγίου που βρίσκεται σε εξέλιξη."
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
@@ -341,7 +352,7 @@ msgid "Cumulative Depreciation"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -384,11 +395,6 @@ msgid "Date of depreciation"
 msgstr "Ημερομηνία αποσβέσεων"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Ημερομηνία του τελευταίου μηνύματος "
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Account"
 msgstr ""
@@ -423,9 +429,13 @@ msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Account"
 msgstr "Λογαριασμός Απόσβεσης"
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Depreciation Asset Account"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -442,11 +452,6 @@ msgstr "Ημερομηνία Αποσβέσεων"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
 msgid "Depreciation Entry"
 msgstr "Έναρξη Απόσβεσης"
-
-#. module: account_asset
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
-msgid "Depreciation Asset Account"
-msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -486,7 +491,7 @@ msgid "Depreciation board modified"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:489
+#: code:addons/account_asset/account_asset.py:487
 #, python-format
 msgid "Depreciation line posted."
 msgstr ""
@@ -502,19 +507,19 @@ msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:274
+#: code:addons/account_asset/account_asset.py:271
 #, python-format
 msgid "Disposal Move"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:277
+#: code:addons/account_asset/account_asset.py:274
 #, python-format
 msgid "Disposal Moves"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:468
+#: code:addons/account_asset/account_asset.py:466
 #, python-format
 msgid "Document closed."
 msgstr ""
@@ -549,30 +554,22 @@ msgid "Every"
 msgstr ""
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
+#, fuzzy
+msgid "Expense Account"
+msgstr "Λογαριασμός Παγίου"
+
+#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Extended Filters..."
 msgstr "Εκτεταμένα Φίλτρα..."
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_follower_ids
-msgid "Followers"
-msgstr "Ακόλουθοι"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Ακόλουθοι (Κανάλια)"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Ακόλουθοι (Συνεργάτες)"
-
-#. module: account_asset
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
 "From this report, you can have an overview on all depreciations. The\n"
-"            search bar can also be used to personalize your assets depreciation reporting."
+"            search bar can also be used to personalize your assets "
+"depreciation reporting."
 msgstr ""
 
 #. module: account_asset
@@ -622,16 +619,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Income Account"
 msgstr "Λογαριασμός Εσόδων"
@@ -664,14 +651,10 @@ msgid "Invoice Line"
 msgstr "Γραμμή Τιμολογίου"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_is_follower
-msgid "Is Follower"
-msgstr "Είναι Ακόλουθος"
-
-#. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_salvage_value
 msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr "Είναι το ποσό που σκοπεύετε να έχετε το οποίο δεν μπορεί να αποσβεστεί."
+msgstr ""
+"Είναι το ποσό που σκοπεύετε να έχετε το οποίο δεν μπορεί να αποσβεστεί."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -684,16 +667,11 @@ msgid "Journal"
 msgstr "Ημερολόγιο"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:376
+#: code:addons/account_asset/account_asset.py:374
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
 msgstr "Ημερολογιακές Καταχωρίσεις"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_last_post
-msgid "Last Message Date"
-msgstr "Τελευταία ημερομηνία μηνύματος"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset___last_update
@@ -728,11 +706,6 @@ msgstr "Τελευταία Ενημέρωση στις"
 #: selection:account.asset.category,method:0
 msgid "Linear"
 msgstr "Γραμμικό"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_ids
-msgid "Messages"
-msgstr "Μηνύματα"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -772,11 +745,6 @@ msgid "Note"
 msgstr "Σημείωση"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Αριθμός ενεργειών"
-
-#. module: account_asset
 #: selection:account.asset.asset,method_time:0
 #: selection:account.asset.category,method_time:0
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_number
@@ -796,17 +764,7 @@ msgid "Number of Months in a Period"
 msgstr "Αριθμός Μηνών σε μία Περίοδο"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
-
-#. module: account_asset
-#: code:addons/account_asset/account_asset.py:488
+#: code:addons/account_asset/account_asset.py:486
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -867,12 +825,14 @@ msgid "Prorata Temporis"
 msgstr "Aναλογικώς με την πάροδο του χρόνου"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:316
+#: code:addons/account_asset/account_asset.py:313
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
-msgstr "'Aναλογικώς με την πάροδο του χρόνου' μπορεί να εφαρμοστεί μόνο για τη μέθοδο χρόνου \"αριθμός των αποσβέσεων\"."
+msgstr ""
+"'Aναλογικώς με την πάροδο του χρόνου' μπορεί να εφαρμοστεί μόνο για τη "
+"μέθοδο χρόνου \"αριθμός των αποσβέσεων\"."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -980,13 +940,16 @@ msgstr "Το χρονικό διάστημα μεταξύ δύο αποσβέσ�
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_number
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_number
 msgid "The number of depreciations needed to depreciate your asset"
-msgstr "Ο αριθμός των αποσβέσεων που απαιτείται για την απόσβεση του παγίου σας"
+msgstr ""
+"Ο αριθμός των αποσβέσεων που απαιτείται για την απόσβεση του παγίου σας"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid ""
-"This wizard will post installment/depreciation lines for the selected month.<br/>\n"
-"                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
+"This wizard will post installment/depreciation lines for the selected month."
+"<br/>\n"
+"                        This will generate journal entries for all related "
+"installment lines on this period of asset/revenue recognition as well."
 msgstr ""
 
 #. module: account_asset
@@ -1020,16 +983,6 @@ msgid "Unposted Amount"
 msgstr "Μη Καταχωρημένο Ποσό"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_unread
-msgid "Unread Messages"
-msgstr "Αδιάβαστα Μηνύματα"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_purchase_tree
 msgid "Vendor"
@@ -1040,9 +993,17 @@ msgstr ""
 #: model:ir.model.fields,help:account_asset.field_account_asset_depreciation_line_parent_state
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
-msgstr "Όταν δημιουργείται ένα πάγιο, η κατάσταση του είναι 'Πρόχειρο'.\nΌταν το πάγιο επιβεβαιωθεί, η κατάσταση του θα αλλάξει σε 'Σε εξέλιξη' και οι γραμμές αποσβέσεων μπορούν να καταχωρηθούν στην λογιστική.\nΜπορείτε να κλείσετε χειροκίνητα ένα πάγιο, όταν η απόσβεση έχει τελειώσει. Εάν η τελευταία γραμμή της απόσβεσης έχει καταχωρηθεί, το πάγιο αλλάζει αυτόματα σε αυτή την κατάσταση."
+"If the asset is confirmed, the status goes in 'Running' and the depreciation "
+"lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last "
+"line of depreciation is posted, the asset automatically goes in that status."
+msgstr ""
+"Όταν δημιουργείται ένα πάγιο, η κατάσταση του είναι 'Πρόχειρο'.\n"
+"Όταν το πάγιο επιβεβαιωθεί, η κατάσταση του θα αλλάξει σε 'Σε εξέλιξη' και "
+"οι γραμμές αποσβέσεων μπορούν να καταχωρηθούν στην λογιστική.\n"
+"Μπορείτε να κλείσετε χειροκίνητα ένα πάγιο, όταν η απόσβεση έχει τελειώσει. "
+"Εάν η τελευταία γραμμή της απόσβεσης έχει καταχωρηθεί, το πάγιο αλλάζει "
+"αυτόματα σε αυτή την κατάσταση."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name
@@ -1050,33 +1011,25 @@ msgid "Year"
 msgstr "Έτος"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset_invoice.py:53
-#, python-format
-msgid ""
-"You already have assets with the reference %s.\n"
-"Please delete these assets before creating new ones for this invoice."
-msgstr ""
-
-#. module: account_asset
-#: code:addons/account_asset/account_asset.py:100
+#: code:addons/account_asset/account_asset.py:96
 #, python-format
 msgid "You cannot delete a document is in %s state."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:102
+#: code:addons/account_asset/account_asset.py:98
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:497
+#: code:addons/account_asset/account_asset.py:495
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:499
+#: code:addons/account_asset/account_asset.py:497
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr ""
@@ -1101,3 +1054,48 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
 msgstr "μήνες"
+
+#~ msgid "Action Needed"
+#~ msgstr "Απαιτείται ενέργεια"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Ημερομηνία του τελευταίου μηνύματος "
+
+#~ msgid "Followers"
+#~ msgstr "Ακόλουθοι"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Ακόλουθοι (Κανάλια)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Ακόλουθοι (Συνεργάτες)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
+
+#~ msgid "Is Follower"
+#~ msgstr "Είναι Ακόλουθος"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Τελευταία ημερομηνία μηνύματος"
+
+#~ msgid "Messages"
+#~ msgstr "Μηνύματα"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Αριθμός ενεργειών"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Αδιάβαστα Μηνύματα"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"

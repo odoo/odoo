@@ -1243,7 +1243,7 @@ class BaseModel(object):
                 except ValidationError, e:
                     raise
                 except Exception, e:
-                    raise ValidationError("Error while validating constraint\n\n%s" % tools.ustr(e))
+                    raise ValidationError("%s\n\n%s" % (_("Error while validating constraint"), tools.ustr(e)))
 
     @api.model
     def default_get(self, fields_list):
@@ -2838,7 +2838,7 @@ class BaseModel(object):
             other = self.env[column._obj]
             # TODO the condition could use fields_get_keys().
             if column._fields_id not in other._fields:
-                raise UserError(_("There is no reference field '%s' found for '%s'") % (f._fields_id, f._obj))
+                raise UserError(_("There is no reference field '%s' found for '%s'") % (column._fields_id, column._obj))
 
     @api.model_cr
     def _m2m_raise_or_create_relation(self, column):
@@ -3778,7 +3778,8 @@ class BaseModel(object):
                 recs._store_set_values(fields)
 
         # recompute new-style fields
-        self.recompute()
+        if self.env.recompute and self._context.get('recompute', True):
+            self.recompute()
 
         # auditing: deletions are infrequent and leave no trace in the database
         _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)

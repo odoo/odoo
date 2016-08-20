@@ -1,35 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * procurement
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-10 13:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"<b>Procurement Orders</b> represent the need for a certain quantity of "
-"products, at a given time, in a given location."
-msgstr ""
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"<b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
-"                <br>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc..."
-msgstr ""
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
@@ -46,8 +32,10 @@ msgstr ""
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "A <b>procurement order</b> is used to record a need for a specific\n"
-"                product at a specific location. Procurement orders are usually\n"
-"                created automatically from <i>sales orders, pull logistic rules or\n"
+"                product at a specific location. Procurement orders are "
+"usually\n"
+"                created automatically from <i>sales orders, pull logistic "
+"rules or\n"
 "                minimum stock rules.</i>"
 msgstr ""
 
@@ -55,11 +43,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
 msgid "Action"
 msgstr "동작"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction
-msgid "Action Needed"
-msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
@@ -87,7 +70,7 @@ msgid "Cancelled"
 msgstr "취소됨"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:139
+#: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
 msgstr "%s 상태에 있는 조달 주문은 삭제할 수 없습니다."
@@ -100,17 +83,11 @@ msgstr "조달 확인"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but"
-" can be manually set by the procurement manager to force an unusual "
-"behavior."
-msgstr "조달 해결을 위한 선택 규칙. 일반적으로 시스템에 의해 선택되지만 비정상적인 동작을 강제로 조달 관리자에 의해 수동으로 설정할 수 있습니다."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"Click to create a Procurement order in exception state, or remove the filter"
-" on the search bar to display all the procurements."
+"Chosen rule for the procurement resolution. Usually chosen by the system but "
+"can be manually set by the procurement manager to force an unusual behavior."
 msgstr ""
+"조달 해결을 위한 선택 규칙. 일반적으로 시스템에 의해 선택되지만 비정상적인 동"
+"작을 강제로 조달 관리자에 의해 수동으로 설정할 수 있습니다."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -157,13 +134,9 @@ msgid "Created on"
 msgstr "작성일"
 
 #. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "레코드에 게시된 최근 메시지의 날짜."
-
-#. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-msgid "Delivery Method"
+#, fuzzy
+msgid "Delivery Type"
 msgstr "운송 방법"
 
 #. module: procurement
@@ -215,21 +188,6 @@ msgid "Fixed Procurement Group"
 msgstr "고정 조달 그룹"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_follower_ids
-msgid "Followers"
-msgstr "팔로워"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Global"
 msgstr "포괄적"
@@ -254,16 +212,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread
-msgid "If checked new messages require your attention."
-msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
 msgstr ""
@@ -272,16 +220,6 @@ msgstr ""
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr "선택을 해제하면 삭제하지 않고 규칙을 숨길 수 있습니다."
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_is_follower
-msgid "Is Follower"
-msgstr ""
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_last_post
-msgid "Last Message Date"
-msgstr "최근 메시지 날짜"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
@@ -323,14 +261,12 @@ msgid "Logistics"
 msgstr "물류"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_ids
-msgid "Messages"
-msgstr "메시지"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_ids
-msgid "Messages and communication history"
-msgstr "메시지 및 대화 기록"
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"Most common exceptions are products to purchase without\n"
+"                having a vendor defined on the product, and products to\n"
+"                manufacture without having a bill of materials."
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -338,7 +274,7 @@ msgid "Name"
 msgstr "이름"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:206
+#: code:addons/procurement/procurement.py:200
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "이 조달에 일치하는 규칙이 없습니다"
@@ -357,21 +293,6 @@ msgstr "긴급하지 않음"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Notes"
 msgstr "노트"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread_counter
-msgid "Number of unread messages"
-msgstr ""
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
@@ -494,7 +415,9 @@ msgstr "참조"
 msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
-msgstr "이 조달에 작성된 문서의 참조.\nOdoo에 의해 자동으로 완성됩니다."
+msgstr ""
+"이 조달에 작성된 문서의 참조.\n"
+"Odoo에 의해 자동으로 완성됩니다."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -575,16 +498,6 @@ msgid "Unit of Measure"
 msgstr "측정 단위"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread
-msgid "Unread Messages"
-msgstr "읽지 않은 메시지"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Urgent"
 msgstr "긴급"
@@ -595,22 +508,13 @@ msgid "Very Urgent"
 msgstr "매우 긴급"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_website_message_ids
-msgid "Website Messages"
-msgstr "웹사이트 메시지"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_website_message_ids
-msgid "Website communication history"
-msgstr "웹사이트 대화 이력"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: purchase\n"
+"                creates the necessary operations to fulfill the need: "
+"purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
 
@@ -623,3 +527,30 @@ msgstr ""
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr "예 : SO005"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "레코드에 게시된 최근 메시지의 날짜."
+
+#~ msgid "Followers"
+#~ msgstr "팔로워"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
+
+#~ msgid "Last Message Date"
+#~ msgstr "최근 메시지 날짜"
+
+#~ msgid "Messages"
+#~ msgstr "메시지"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "메시지 및 대화 기록"
+
+#~ msgid "Unread Messages"
+#~ msgstr "읽지 않은 메시지"
+
+#~ msgid "Website Messages"
+#~ msgstr "웹사이트 메시지"
+
+#~ msgid "Website communication history"
+#~ msgstr "웹사이트 대화 이력"

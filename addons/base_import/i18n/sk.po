@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_import
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 # Matus Krnac <matus.krnac@gmail.com>, 2015
@@ -9,31 +9,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-18 13:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-02-10 11:02+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:466
+#: code:addons/base_import/static/src/js/import.js:474
 #, python-format
 msgid "(%d more)"
 msgstr "(%d viac)"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:281
+#: code:addons/base_import/static/src/js/import.js:287
 #, python-format
 msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
-msgstr "V súbore bol nájdený jeden stĺpec, často to znamená nekorektný znak oddeľovača."
+msgstr ""
+"V súbore bol nájdený jeden stĺpec, často to znamená nekorektný znak "
+"oddeľovača."
 
 #. module: base_import
 #. openerp-web
@@ -41,10 +43,16 @@ msgstr "V súbore bol nájdený jeden stĺpec, často to znamená nekorektný zn
 #, python-format
 msgid ""
 "According to your need, you should use \n"
-"                        one of these 3 ways to reference records in relations. \n"
+"                        one of these 3 ways to reference records in "
+"relations. \n"
 "                        Here is when you should use one or the other, \n"
 "                        according to your need:"
-msgstr "Podľa vašich požiadaviek môžete použiť jednu\n                        z troch spôsobov ako vzťahy medzi záznamamy. \n                        Tu sú príklady kedy by ste mali použiť niektorý z nich \n                        podľa vašich potrieb:"
+msgstr ""
+"Podľa vašich požiadaviek môžete použiť jednu\n"
+"                        z troch spôsobov ako vzťahy medzi záznamamy. \n"
+"                        Tu sú príklady kedy by ste mali použiť niektorý z "
+"nich \n"
+"                        podľa vašich potrieb:"
 
 #. module: base_import
 #. openerp-web
@@ -52,10 +60,16 @@ msgstr "Podľa vašich požiadaviek môžete použiť jednu\n                   
 #, python-format
 msgid ""
 "As an example, here is \n"
-"                        purchase.order_functional_error_line_cant_adpat.CSV \n"
-"                        file of some quotations you can import, based on demo \n"
+"                        purchase.order_functional_error_line_cant_adpat."
+"CSV \n"
+"                        file of some quotations you can import, based on "
+"demo \n"
 "                        data."
-msgstr "Ako príklad, tu je\npurchase.order_functional_error_line_cant_adpat.CSV\nsúbor niektorých cenových ponúk, ktoré môžete importovať, založené na demo\ndátach."
+msgstr ""
+"Ako príklad, tu je\n"
+"purchase.order_functional_error_line_cant_adpat.CSV\n"
+"súbor niektorých cenových ponúk, ktoré môžete importovať, založené na demo\n"
+"dátach."
 
 #. module: base_import
 #. openerp-web
@@ -65,10 +79,17 @@ msgid ""
 "As an example, suppose you have a SQL database \n"
 "                        with two tables you want to import: companies and \n"
 "                        persons. Each person belong to one company, so you \n"
-"                        will have to recreate the link between a person and \n"
+"                        will have to recreate the link between a person "
+"and \n"
 "                        the company he work for. (If you want to test this \n"
 "                        example, here is a"
-msgstr "Ako príklad, predpokladajme že máte SQL databázu\ns dvoma tabuľkami ktoré chcete importovať: spoločnosti a\nosoby. Každá osoba patrí k jednej spoločnosti,  takže\nbudete musieť vytvoriť spojenie medzi osobou a\nspoločnosťou pre ktorú pracuje, (Ak chcete otestovať tento \npríklad, tu je"
+msgstr ""
+"Ako príklad, predpokladajme že máte SQL databázu\n"
+"s dvoma tabuľkami ktoré chcete importovať: spoločnosti a\n"
+"osoby. Každá osoba patrí k jednej spoločnosti,  takže\n"
+"budete musieť vytvoriť spojenie medzi osobou a\n"
+"spoločnosťou pre ktorú pracuje, (Ak chcete otestovať tento \n"
+"príklad, tu je"
 
 #. module: base_import
 #. openerp-web
@@ -77,14 +98,27 @@ msgstr "Ako príklad, predpokladajme že máte SQL databázu\ns dvoma tabuľkami
 msgid ""
 "As you can see in this file, Fabien and Laurence \n"
 "                        are working for the Bigees company (company_1) and \n"
-"                        Eric is working for the Organi company. The relation \n"
+"                        Eric is working for the Organi company. The "
+"relation \n"
 "                        between persons and companies is done using the \n"
 "                        External ID of the companies. We had to prefix the \n"
-"                        \"External ID\" by the name of the table to avoid a \n"
-"                        conflict of ID between persons and companies (person_1 \n"
-"                        and company_1 who shared the same ID 1 in the orignial \n"
+"                        \"External ID\" by the name of the table to avoid "
+"a \n"
+"                        conflict of ID between persons and companies "
+"(person_1 \n"
+"                        and company_1 who shared the same ID 1 in the "
+"orignial \n"
 "                        database)."
-msgstr "Ako môžete vidieť v tomto súbore, Fabien a Laurence\npracujú pre spoločnosť Bigees (company_1) a\nEric pracuje pre spoločnosť Organi. Vzťah\nmedzi osobami a spoločnosťami  sa robí pomocou\nExtreného ID spoločností. \"Externé ID\" muselo dostať predponu\npodľa názvu tabuľky pre vyhnutie sa \nkonfliktu ID medzi osobami a spoločnosťami (person_1 \na company_1 ktoré zdieľali rovnaké ID 1 v pôvodnej\ndatabáze)."
+msgstr ""
+"Ako môžete vidieť v tomto súbore, Fabien a Laurence\n"
+"pracujú pre spoločnosť Bigees (company_1) a\n"
+"Eric pracuje pre spoločnosť Organi. Vzťah\n"
+"medzi osobami a spoločnosťami  sa robí pomocou\n"
+"Extreného ID spoločností. \"Externé ID\" muselo dostať predponu\n"
+"podľa názvu tabuľky pre vyhnutie sa \n"
+"konfliktu ID medzi osobami a spoločnosťami (person_1 \n"
+"a company_1 ktoré zdieľali rovnaké ID 1 v pôvodnej\n"
+"databáze)."
 
 #. module: base_import
 #. openerp-web
@@ -96,7 +130,12 @@ msgid ""
 "                        significant issue. To limit incorrect\n"
 "                        interpretation of data, they are strictly limited\n"
 "                        to dates following"
-msgstr "Pretože CVS súbory sú používané interne a vo\nviacerých externých procesoch, interoperabilita je\nvýrazný problém. Pre limitovanie neprávnej\ninterpretácie dát, sú striktne limitované\nk dátumom nasledujúcim"
+msgstr ""
+"Pretože CVS súbory sú používané interne a vo\n"
+"viacerých externých procesoch, interoperabilita je\n"
+"výrazný problém. Pre limitovanie neprávnej\n"
+"interpretácie dát, sú striktne limitované\n"
+"k dátumom nasledujúcim"
 
 #. module: base_import
 #. openerp-web
@@ -109,7 +148,13 @@ msgid ""
 "                        settings, you can modify the File Format Options \n"
 "                        (displayed under the Browse CSV file bar after you \n"
 "                        select your file)."
-msgstr "V predvolenom nastavení je import náhľad nastavený na čiarky ako\nseparátory a úvodzovky ako text\noddeľovača. Ak váš csv súbor nemá tieto\nnastavenia, môžete upraviť možnosti formátu súboru\n(zobrazené pod lištou prezerania súboru vo formáte CSV po vašom\nvýbere súboru)."
+msgstr ""
+"V predvolenom nastavení je import náhľad nastavený na čiarky ako\n"
+"separátory a úvodzovky ako text\n"
+"oddeľovača. Ak váš csv súbor nemá tieto\n"
+"nastavenia, môžete upraviť možnosti formátu súboru\n"
+"(zobrazené pod lištou prezerania súboru vo formáte CSV po vašom\n"
+"výbere súboru)."
 
 #. module: base_import
 #. openerp-web
@@ -168,7 +213,9 @@ msgstr "Čiarka"
 msgid ""
 "Country/Database \n"
 "                        ID: 21"
-msgstr "Krajina/Databáza \n                        ID: 21"
+msgstr ""
+"Krajina/Databáza \n"
+"                        ID: 21"
 
 #. module: base_import
 #. openerp-web
@@ -177,7 +224,9 @@ msgstr "Krajina/Databáza \n                        ID: 21"
 msgid ""
 "Country/Database ID: the unique Odoo ID for a \n"
 "                        record, defined by the ID postgresql column"
-msgstr "Krajina/ID databázy : the unique Odoo ID for a \n                        record, defined by the ID postgresql column"
+msgstr ""
+"Krajina/ID databázy : the unique Odoo ID for a \n"
+"                        record, defined by the ID postgresql column"
 
 #. module: base_import
 #. openerp-web
@@ -192,9 +241,13 @@ msgstr "Krajina/Externé ID: base.be"
 #, python-format
 msgid ""
 "Country/External ID: the ID of this record \n"
-"                        referenced in another application (or the .XML file \n"
+"                        referenced in another application (or the .XML "
+"file \n"
 "                        that imported it)"
-msgstr "Krajina/Externé ID: ID tohto záznamu\nodkazovaný v inej aplikácii (alebo .XML súboru\nktorý ho importoval)"
+msgstr ""
+"Krajina/Externé ID: ID tohto záznamu\n"
+"odkazovaný v inej aplikácii (alebo .XML súboru\n"
+"ktorý ho importoval)"
 
 #. module: base_import
 #. openerp-web
@@ -254,7 +307,7 @@ msgid "Customers and their respective contacts"
 msgstr "Zákaznícii a ich príslušné kontakty"
 
 #. module: base_import
-#: code:addons/base_import/models.py:147 code:addons/base_import/models.py:153
+#: code:addons/base_import/models.py:149 code:addons/base_import/models.py:155
 #, python-format
 msgid "Database ID"
 msgstr "ID databázy"
@@ -279,7 +332,7 @@ msgstr "Zobraziť meno"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:315
+#: code:addons/base_import/static/src/js/import.js:321
 #, python-format
 msgid "Don't import"
 msgstr "Neimportovať"
@@ -292,21 +345,21 @@ msgid "Encoding:"
 msgstr "Zakódovanie:"
 
 #. module: base_import
-#: code:addons/base_import/models.py:204
+#: code:addons/base_import/models.py:228
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
 msgstr "Chybná bunka nájdena počas čítania XLS/XLSX súboru: %s"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:443
+#: code:addons/base_import/static/src/js/import.js:451
 #, python-format
 msgid "Everything seems valid."
 msgstr "Všetko vyzerá platne."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/models.py:112 code:addons/base_import/models.py:146
+#: code:addons/base_import/models.py:114 code:addons/base_import/models.py:148
 #: code:addons/base_import/static/src/xml/import.xml:69
 #: code:addons/base_import/static/src/xml/import.xml:74
 #, python-format
@@ -320,7 +373,9 @@ msgstr "Externé ID"
 msgid ""
 "External ID,Name,Is a \n"
 "                        Company,Related Company/External ID"
-msgstr "Externé ID, Názov, Je\nSpoločnosť, Pridružená Spoločnosť/Externé ID"
+msgstr ""
+"Externé ID, Názov, Je\n"
+"Spoločnosť, Pridružená Spoločnosť/Externé ID"
 
 #. module: base_import
 #. openerp-web
@@ -378,7 +433,10 @@ msgid ""
 "For example, to \n"
 "                        reference the country of a contact, Odoo proposes \n"
 "                        you 3 different fields to import:"
-msgstr "Napríklad, pre\nreferenciu krajiny kontaktu, Odoo vám\nnavrhne 3 rôzne polia na import:"
+msgstr ""
+"Napríklad, pre\n"
+"referenciu krajiny kontaktu, Odoo vám\n"
+"navrhne 3 rôzne polia na import:"
 
 #. module: base_import
 #. openerp-web
@@ -390,7 +448,12 @@ msgid ""
 "                        are stored as genuine dates and the familiar and\n"
 "                        locale-aware display of dates is independent from\n"
 "                        the way it is stored."
-msgstr "Pre známejšie alebo\nflexibilné formátovanie, použite Excel súbory, dátové bunky\nsú uložené ako pravé dáta a známy a\nlokality znalý displej termínov je nezávislý od\nspôsobu, akým je uložený."
+msgstr ""
+"Pre známejšie alebo\n"
+"flexibilné formátovanie, použite Excel súbory, dátové bunky\n"
+"sú uložené ako pravé dáta a známy a\n"
+"lokality znalý displej termínov je nezávislý od\n"
+"spôsobu, akým je uložený."
 
 #. module: base_import
 #. openerp-web
@@ -399,7 +462,9 @@ msgstr "Pre známejšie alebo\nflexibilné formátovanie, použite Excel súbory
 msgid ""
 "For the country \n"
 "                        Belgium, you can use one of these 3 ways to import:"
-msgstr "Pre krajinu\nBelgicko, môžete použiť jeden z týchto 3 spôsobov ako importovať:"
+msgstr ""
+"Pre krajinu\n"
+"Belgicko, môžete použiť jeden z týchto 3 spôsobov ako importovať:"
 
 #. module: base_import
 #. openerp-web
@@ -410,14 +475,14 @@ msgstr "Často kladené otázky"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:490
+#: code:addons/base_import/static/src/js/import.js:498
 #, python-format
 msgid "Get all possible values"
 msgstr "Získať všetky možné hodnoty"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:477
+#: code:addons/base_import/static/src/js/import.js:485
 #, python-format
 msgid "Here are the possible values:"
 msgstr "Tu sú možné hodnoty:"
@@ -436,7 +501,9 @@ msgstr "Tu je začiatok súboru ktorý sme nemohli importovať:"
 msgid ""
 "How can I change the CSV file format options when \n"
 "                        saving in my spreadsheet application?"
-msgstr "Ako môžem zmeniť možnostiformátu CSV súboru keď\nukladám svoju aplikáciu  tabuľkového procesoru?"
+msgstr ""
+"Ako môžem zmeniť možnostiformátu CSV súboru keď\n"
+"ukladám svoju aplikáciu  tabuľkového procesoru?"
 
 #. module: base_import
 #. openerp-web
@@ -445,7 +512,9 @@ msgstr "Ako môžem zmeniť možnostiformátu CSV súboru keď\nukladám svoju a
 msgid ""
 "How can I import a many2many relationship field \n"
 "                        (e.g. a customer that has multiple tags)?"
-msgstr "Ako môžem importovať vzťahové pole many2many\n(nep. zákazník ktorý ma viaceré menovky)"
+msgstr ""
+"Ako môžem importovať vzťahové pole many2many\n"
+"(nep. zákazník ktorý ma viaceré menovky)"
 
 #. module: base_import
 #. openerp-web
@@ -454,7 +523,9 @@ msgstr "Ako môžem importovať vzťahové pole many2many\n(nep. zákazník ktor
 msgid ""
 "How can I import a one2many relationship (e.g. several \n"
 "                        Order Lines of a Sales Order)?"
-msgstr "Ako môžem importovať one2many vzťah (napr. viacero\nRiadkov objednávky z Predajnej objednávky)?"
+msgstr ""
+"Ako môžem importovať one2many vzťah (napr. viacero\n"
+"Riadkov objednávky z Predajnej objednávky)?"
 
 #. module: base_import
 #. openerp-web
@@ -463,7 +534,9 @@ msgstr "Ako môžem importovať one2many vzťah (napr. viacero\nRiadkov objedná
 msgid ""
 "How to export/import different tables from an SQL \n"
 "                        application to Odoo?"
-msgstr "Ako exportovať/importovať rôzne tabuľky z SQL\naplikácie do Odoo?"
+msgstr ""
+"Ako exportovať/importovať rôzne tabuľky z SQL\n"
+"aplikácie do Odoo?"
 
 #. module: base_import
 #. openerp-web
@@ -471,10 +544,15 @@ msgstr "Ako exportovať/importovať rôzne tabuľky z SQL\naplikácie do Odoo?"
 #, python-format
 msgid ""
 "However if you do not wish to change your \n"
-"                        configuration of product categories, we recommend you \n"
+"                        configuration of product categories, we recommend "
+"you \n"
 "                        use make use of the external ID for this field \n"
 "                        'Category'."
-msgstr "Ak však nechcete meniť svoju\nkonfiguráciu produktových kategórií, odporúčame vám\nvyužívať externé ID pre toto pole\n\"Kategória\"."
+msgstr ""
+"Ak však nechcete meniť svoju\n"
+"konfiguráciu produktových kategórií, odporúčame vám\n"
+"využívať externé ID pre toto pole\n"
+"\"Kategória\"."
 
 #. module: base_import
 #. openerp-web
@@ -507,13 +585,27 @@ msgid ""
 "                        with the child name \"Sellable\" (ie. \"Misc. \n"
 "                        Products/Sellable\" & \"Other Products/Sellable\"),\n"
 "                        your validation is halted but you may still import \n"
-"                        your data. However, we recommend you do not import the \n"
+"                        your data. However, we recommend you do not import "
+"the \n"
 "                        data because they will all be linked to the first \n"
-"                        'Sellable' category found in the Product Category list \n"
-"                        (\"Misc. Products/Sellable\"). We recommend you modify \n"
-"                        one of the duplicates' values or your product category \n"
+"                        'Sellable' category found in the Product Category "
+"list \n"
+"                        (\"Misc. Products/Sellable\"). We recommend you "
+"modify \n"
+"                        one of the duplicates' values or your product "
+"category \n"
 "                        hierarchy."
-msgstr "Ak napríklad máte dve produktové kategórie\ns podradeným názvom \"Predajné\" (napr. \"Rôz.\nprodukty/Predajné\" & \"Iné Produkty/Predajné\"),\nvaše overenie je zastavené ale stále môžete importovať\nvaše dáta. Avšak, neodporúčame vám importovať tie\ndáta pretože budú všetky prepojené na prvú\n\"Predajnú\" kategóriunájdenú v zozname Produktovej kategórie\n(\"Rôz. produkty). Odporúčame vám upraviť\nhodnoty jedého z duplikátov alebo hierarchiu vašej produktovek\nkategórie."
+msgstr ""
+"Ak napríklad máte dve produktové kategórie\n"
+"s podradeným názvom \"Predajné\" (napr. \"Rôz.\n"
+"produkty/Predajné\" & \"Iné Produkty/Predajné\"),\n"
+"vaše overenie je zastavené ale stále môžete importovať\n"
+"vaše dáta. Avšak, neodporúčame vám importovať tie\n"
+"dáta pretože budú všetky prepojené na prvú\n"
+"\"Predajnú\" kategóriunájdenú v zozname Produktovej kategórie\n"
+"(\"Rôz. produkty). Odporúčame vám upraviť\n"
+"hodnoty jedého z duplikátov alebo hierarchiu vašej produktovek\n"
+"kategórie."
 
 #. module: base_import
 #. openerp-web
@@ -524,7 +616,11 @@ msgid ""
 "                the column names, Odoo can try auto-detecting the\n"
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
-msgstr "Ak súbor obsahuje\nnázvy stĺpca, Odoo sa môže pokúsiť auto-detekovať\npole zodpovedajúce stĺpcu. Toto zjednodušuje \nimporty, zvlášt keď má súbor veľa stĺpcov."
+msgstr ""
+"Ak súbor obsahuje\n"
+"názvy stĺpca, Odoo sa môže pokúsiť auto-detekovať\n"
+"pole zodpovedajúce stĺpcu. Toto zjednodušuje \n"
+"importy, zvlášt keď má súbor veľa stĺpcov."
 
 #. module: base_import
 #. openerp-web
@@ -532,9 +628,11 @@ msgstr "Ak súbor obsahuje\nnázvy stĺpca, Odoo sa môže pokúsiť auto-deteko
 #, python-format
 msgid ""
 "If the model uses openchatter, history tracking                             "
-"will set up subscriptions and send notifications"
-"                             during the import, but lead to a slower import."
-msgstr "Ak model používa openchatter, sledovanie histórie nastaví odbery a pošle notifikácie počas importu, ale vedie to k pomalšiemu importu."
+"will set up subscriptions and send notifications                             "
+"during the import, but lead to a slower import."
+msgstr ""
+"Ak model používa openchatter, sledovanie histórie nastaví odbery a pošle "
+"notifikácie počas importu, ale vedie to k pomalšiemu importu."
 
 #. module: base_import
 #. openerp-web
@@ -544,10 +642,17 @@ msgid ""
 "If you do not set all fields in your CSV file, \n"
 "                        Odoo will assign the default value for every non \n"
 "                        defined fields. But if you\n"
-"                        set fields with empty values in your CSV file, Odoo \n"
+"                        set fields with empty values in your CSV file, "
+"Odoo \n"
 "                        will set the EMPTY value in the field, instead of \n"
 "                        assigning the default value."
-msgstr "Ak nenastavíte všetky polia vášho CVS súboru,\nOdoo pridelí prevolenú hodnotu pre každé \nnezadefinované pole. Ale ak\nnastavíte polia s prázdnymi hodnotami vo vašom CVS súbore, Odoo\nnastaví hodnotu PRÁZDNE v poli, namiesto\npridelenia predvolenej hodnoty."
+msgstr ""
+"Ak nenastavíte všetky polia vášho CVS súboru,\n"
+"Odoo pridelí prevolenú hodnotu pre každé \n"
+"nezadefinované pole. Ale ak\n"
+"nastavíte polia s prázdnymi hodnotami vo vašom CVS súbore, Odoo\n"
+"nastaví hodnotu PRÁZDNE v poli, namiesto\n"
+"pridelenia predvolenej hodnoty."
 
 #. module: base_import
 #. openerp-web
@@ -555,13 +660,22 @@ msgstr "Ak nenastavíte všetky polia vášho CVS súboru,\nOdoo pridelí prevol
 #, python-format
 msgid ""
 "If you edit and save CSV files in speadsheet \n"
-"                        applications, your computer's regional settings will \n"
+"                        applications, your computer's regional settings "
+"will \n"
 "                        be applied for the separator and delimiter. \n"
 "                        We suggest you use OpenOffice or LibreOffice Calc \n"
 "                        as they will allow you to modify all three options \n"
-"                        (in 'Save As' dialog box > Check the box 'Edit filter \n"
+"                        (in 'Save As' dialog box > Check the box 'Edit "
+"filter \n"
 "                        settings' > Save)."
-msgstr "Ak upravíte a uložíte CSV súbory v aplikácii tabuľkového\nprocesora, regionálne nastavenie vášho počítača bude\naplikované pre oddeľovač a obmedzovač.\nOdporúčame vám používať OpenOffice alebo LibreOffice Calc\nktoré vám umožnia upravovať všetky tri možnosti\n(v 'Uložiť ako' dialógovom okne > Zaškrtnúť políčko 'Upraviť nastavenia\nfiltra' > Uložiť). "
+msgstr ""
+"Ak upravíte a uložíte CSV súbory v aplikácii tabuľkového\n"
+"procesora, regionálne nastavenie vášho počítača bude\n"
+"aplikované pre oddeľovač a obmedzovač.\n"
+"Odporúčame vám používať OpenOffice alebo LibreOffice Calc\n"
+"ktoré vám umožnia upravovať všetky tri možnosti\n"
+"(v 'Uložiť ako' dialógovom okne > Zaškrtnúť políčko 'Upraviť nastavenia\n"
+"filtra' > Uložiť). "
 
 #. module: base_import
 #. openerp-web
@@ -569,14 +683,27 @@ msgstr "Ak upravíte a uložíte CSV súbory v aplikácii tabuľkového\nproceso
 #, python-format
 msgid ""
 "If you import a file that contains one of the \n"
-"                        column \"External ID\" or \"Database ID\", records that \n"
-"                        have already been imported will be modified instead of \n"
-"                        being created. This is very usefull as it allows you \n"
-"                        to import several times the same CSV file while having \n"
-"                        made some changes in between two imports. Odoo will \n"
+"                        column \"External ID\" or \"Database ID\", records "
+"that \n"
+"                        have already been imported will be modified instead "
+"of \n"
+"                        being created. This is very usefull as it allows "
+"you \n"
+"                        to import several times the same CSV file while "
+"having \n"
+"                        made some changes in between two imports. Odoo "
+"will \n"
 "                        take care of creating or modifying each record \n"
 "                        depending if it's new or not."
-msgstr "Ak importujete súbor ktorý obsahuje jeden zo\nstĺpcov \"Externé ID\" alebo \"ID databázy\", záznamy ktoré\nuž boli importované budú upravené namiesto\nvytvorenia. toto je veľmi užitočné pretože vám umožňuje\nopakovaný import  z toho istého CVS súboru s úpravami\nmedzi dvoma importami. Odoo sa\npostará o vytvorenie alebo úpravu každého záznamu\nzáležiac či je nový alebo nie."
+msgstr ""
+"Ak importujete súbor ktorý obsahuje jeden zo\n"
+"stĺpcov \"Externé ID\" alebo \"ID databázy\", záznamy ktoré\n"
+"už boli importované budú upravené namiesto\n"
+"vytvorenia. toto je veľmi užitočné pretože vám umožňuje\n"
+"opakovaný import  z toho istého CVS súboru s úpravami\n"
+"medzi dvoma importami. Odoo sa\n"
+"postará o vytvorenie alebo úpravu každého záznamu\n"
+"záležiac či je nový alebo nie."
 
 #. module: base_import
 #. openerp-web
@@ -584,12 +711,20 @@ msgstr "Ak importujete súbor ktorý obsahuje jeden zo\nstĺpcov \"Externé ID\"
 #, python-format
 msgid ""
 "If you need to import data from different tables, \n"
-"                        you will have to recreate relations between records \n"
+"                        you will have to recreate relations between "
+"records \n"
 "                        belonging to different tables. (e.g. if you import \n"
-"                        companies and persons, you will have to recreate the \n"
+"                        companies and persons, you will have to recreate "
+"the \n"
 "                        link between each person and the company they work \n"
 "                        for)."
-msgstr "Ak potrebujete importovať dáta z rôznych tabuliek,\nbudete musieť prevytvoriť spojitosti medzi záznamami\npatriacimi dorôznych tabuliek. (napr. ak importujete\nspoločnosti alebo osoby, budete musieť vytvoriť\nspojenie medzi každou osobou a spoločnosťou pre ktorú\npracujú)."
+msgstr ""
+"Ak potrebujete importovať dáta z rôznych tabuliek,\n"
+"budete musieť prevytvoriť spojitosti medzi záznamami\n"
+"patriacimi dorôznych tabuliek. (napr. ak importujete\n"
+"spoločnosti alebo osoby, budete musieť vytvoriť\n"
+"spojenie medzi každou osobou a spoločnosťou pre ktorú\n"
+"pracujú)."
 
 #. module: base_import
 #. openerp-web
@@ -597,13 +732,25 @@ msgstr "Ak potrebujete importovať dáta z rôznych tabuliek,\nbudete musieť pr
 #, python-format
 msgid ""
 "If you want to import sales order having several \n"
-"                        order lines; for each order line, you need to reserve \n"
-"                        a specific row in the CSV file. The first order line \n"
-"                        will be imported on the same row as the information \n"
-"                        relative to order. Any additional lines will need an \n"
-"                        addtional row that does not have any information in \n"
+"                        order lines; for each order line, you need to "
+"reserve \n"
+"                        a specific row in the CSV file. The first order "
+"line \n"
+"                        will be imported on the same row as the "
+"information \n"
+"                        relative to order. Any additional lines will need "
+"an \n"
+"                        addtional row that does not have any information "
+"in \n"
 "                        the fields relative to the order."
-msgstr "Ak chcete importovať predaje majúce viacero \nriadkov objednávky, pre každý riadok, potrebujete rezervovať\nšpecifický rad v CSV súbore. Prvý riadok objednǘky\nbude importovaný na rovnaký rad ako informácia\npríbuzná k objednávke. Akékoľvek dodatočné riadky budú potrebovať\ndodatočný rad ktorý nemá žiadnu informáciu v\npoliach súvisiacich s objednávkou."
+msgstr ""
+"Ak chcete importovať predaje majúce viacero \n"
+"riadkov objednávky, pre každý riadok, potrebujete rezervovať\n"
+"špecifický rad v CSV súbore. Prvý riadok objednǘky\n"
+"bude importovaný na rovnaký rad ako informácia\n"
+"príbuzná k objednávke. Akékoľvek dodatočné riadky budú potrebovať\n"
+"dodatočný rad ktorý nemá žiadnu informáciu v\n"
+"poliach súvisiacich s objednávkou."
 
 #. module: base_import
 #. openerp-web
@@ -636,7 +783,11 @@ msgid ""
 "                        different records, you should use the unique\n"
 "                        identifier from the original application and\n"
 "                        map it to the"
-msgstr "Aby bolo možné znova vytvoriť vzťahy medzi\nrôznymi záznamami, mali by ste použiť jedinečný\nidentifikátor z pôvodnej aplikácie a\nnamapovať ho na"
+msgstr ""
+"Aby bolo možné znova vytvoriť vzťahy medzi\n"
+"rôznymi záznamami, mali by ste použiť jedinečný\n"
+"identifikátor z pôvodnej aplikácie a\n"
+"namapovať ho na"
 
 #. module: base_import
 #. openerp-web
@@ -715,7 +866,11 @@ msgid ""
 "                        you to modify only the encoding when saving \n"
 "                        (in 'Save As' dialog box > click 'Tools' dropdown \n"
 "                        list > Encoding tab)."
-msgstr "Microsoft Excel vám umožní\nupraviť iba kódovanie pri ukladaní\n(v 'Uloźiť ako' dialógovom okne > kliknite 'Nástroje' rozbaľovací\nzoznam > Kódovacia tabuľka)."
+msgstr ""
+"Microsoft Excel vám umožní\n"
+"upraviť iba kódovanie pri ukladaní\n"
+"(v 'Uloźiť ako' dialógovom okne > kliknite 'Nástroje' rozbaľovací\n"
+"zoznam > Kódovacia tabuľka)."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_res_model
@@ -736,7 +891,7 @@ msgstr "Treba importovať dáta z inej aplikácie?"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:363
+#: code:addons/base_import/static/src/js/import.js:369
 #, python-format
 msgid "Normal Fields"
 msgstr "Normálne polia"
@@ -748,10 +903,17 @@ msgstr "Normálne polia"
 msgid ""
 "Note that if your CSV file \n"
 "                        has a tabulation as separator, Odoo will not \n"
-"                        detect the separations. You will need to change the \n"
-"                        file format options in your spreadsheet application. \n"
+"                        detect the separations. You will need to change "
+"the \n"
+"                        file format options in your spreadsheet "
+"application. \n"
 "                        See the following question."
-msgstr "Všimnite si, že ak váš súbor CSV\nmá tabelovanie ako oddeľovač, Odoo nebude\ndetekovať oddlenia. Budete musieť zmeniť\nvoľby možností formátu v tabuľkovom procesore.\nPozrite sa na nasledujúcu otázku."
+msgstr ""
+"Všimnite si, že ak váš súbor CSV\n"
+"má tabelovanie ako oddeľovač, Odoo nebude\n"
+"detekovať oddlenia. Budete musieť zmeniť\n"
+"voľby možností formátu v tabuľkovom procesore.\n"
+"Pozrite sa na nasledujúcu otázku."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_othervalue
@@ -774,7 +936,7 @@ msgstr "Citácia:"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:364
+#: code:addons/base_import/static/src/js/import.js:370
 #, python-format
 msgid "Relation Fields"
 msgstr "Polia relácie"
@@ -793,7 +955,9 @@ msgstr "Znovunačítanie dát na skontrolovanie zmien."
 msgid ""
 "Select the file to import. If you need a sample importable file, you\n"
 "            can use the export tool to generate one."
-msgstr "Zvoľt súbor na import. Ak potrebujete vzorový importovateľný súbor,\nmôžete použiť nástroj pre export na jeho vygenerovanie."
+msgstr ""
+"Zvoľt súbor na import. Ak potrebujete vzorový importovateľný súbor,\n"
+"môžete použiť nástroj pre export na jeho vygenerovanie."
 
 #. module: base_import
 #. openerp-web
@@ -825,9 +989,18 @@ msgid ""
 "                        want to import such fields, Odoo will have to \n"
 "                        recreate links between the different records. \n"
 "                        To help you import such fields, Odoo provides 3 \n"
-"                        mechanisms. You must use one and only one mechanism \n"
+"                        mechanisms. You must use one and only one "
+"mechanism \n"
 "                        per field you want to import."
-msgstr "Niektoé polia definujú vzťah s iným\nobjektom. Napríklad, krajina kontaktu je\nspojená so záznamom objektu 'Krajina'. Keď chcete\nimportovať také polia, Odoo bude musieť \nobnoviť spojenia medzi jednotlivými záznamami.\nOdoo vám pre pomoc importu takých súborov poskytuje 3\nmechanizmy. Je nutné použiť len a len jeden mechanizmus\npre pole ktoré chcete importovať."
+msgstr ""
+"Niektoé polia definujú vzťah s iným\n"
+"objektom. Napríklad, krajina kontaktu je\n"
+"spojená so záznamom objektu 'Krajina'. Keď chcete\n"
+"importovať také polia, Odoo bude musieť \n"
+"obnoviť spojenia medzi jednotlivými záznamami.\n"
+"Odoo vám pre pomoc importu takých súborov poskytuje 3\n"
+"mechanizmy. Je nutné použiť len a len jeden mechanizmus\n"
+"pre pole ktoré chcete importovať."
 
 #. module: base_import
 #. openerp-web
@@ -857,7 +1030,9 @@ msgstr " "
 msgid ""
 "The first row of the\n"
 "                file contains the label of the column"
-msgstr "Prvý rad súboru\nobsahuje štítok stĺpca"
+msgstr ""
+"Prvý rad súboru\n"
+"obsahuje štítok stĺpca"
 
 #. module: base_import
 #. openerp-web
@@ -866,7 +1041,9 @@ msgstr "Prvý rad súboru\nobsahuje štítok stĺpca"
 msgid ""
 "The following CSV file shows how to import \n"
 "                        customers and their respective contacts"
-msgstr "Nasledovný CSV súbor ukazuje ako importovať\nzákazníkov a ich príslušné kontaky"
+msgstr ""
+"Nasledovný CSV súbor ukazuje ako importovať\n"
+"zákazníkov a ich príslušné kontaky"
 
 #. module: base_import
 #. openerp-web
@@ -875,7 +1052,9 @@ msgstr "Nasledovný CSV súbor ukazuje ako importovať\nzákazníkov a ich prís
 msgid ""
 "The following CSV file shows how to import purchase \n"
 "                        orders with their respective purchase order lines:"
-msgstr "Nasledovný CSV súbor ukazuje ako importovať nákupné\nobjednávky a ich príslušné riadky nákupnej objednávky:"
+msgstr ""
+"Nasledovný CSV súbor ukazuje ako importovať nákupné\n"
+"objednávky a ich príslušné riadky nákupnej objednávky:"
 
 #. module: base_import
 #. openerp-web
@@ -883,11 +1062,17 @@ msgstr "Nasledovný CSV súbor ukazuje ako importovať nákupné\nobjednávky a 
 #, python-format
 msgid ""
 "The tags should be separated by a comma without any \n"
-"                        spacing. For example, if you want your customer to be \n"
+"                        spacing. For example, if you want your customer to "
+"be \n"
 "                        linked to both tags 'Manufacturer' and 'Retailer' \n"
 "                        then you will encode \"Manufacturer,\n"
 "                        Retailer\" in the same column of your CSV file."
-msgstr "Menovky by mali byť oddelené čiarkou bz akejkoľvk\nmedzery. Napríklad, ak chcete aby bol váš zákazník prepojený\nna obe menovky 'Výrobca' a 'Maloobchodník'\ntak zakódujete \"Výrobca, \nMaloobchodník\" do toho istého stĺpca vášho CSV súboru."
+msgstr ""
+"Menovky by mali byť oddelené čiarkou bz akejkoľvk\n"
+"medzery. Napríklad, ak chcete aby bol váš zákazník prepojený\n"
+"na obe menovky 'Výrobca' a 'Maloobchodník'\n"
+"tak zakódujete \"Výrobca, \n"
+"Maloobchodník\" do toho istého stĺpca vášho CSV súboru."
 
 #. module: base_import
 #. openerp-web
@@ -896,11 +1081,19 @@ msgstr "Menovky by mali byť oddelené čiarkou bz akejkoľvk\nmedzery. Napríkl
 msgid ""
 "The two files produced are ready to be imported in \n"
 "                        Odoo without any modifications. After having \n"
-"                        imported these two CSV files, you will have 4 contacts \n"
-"                        and 3 companies. (the firsts two contacts are linked \n"
+"                        imported these two CSV files, you will have 4 "
+"contacts \n"
+"                        and 3 companies. (the firsts two contacts are "
+"linked \n"
 "                        to the first company). You must first import the \n"
 "                        companies and then the persons."
-msgstr "Oba vyprodukované súbory su pripravené byť importované do\nOdoo bez akýchkoľvek úprav. Po importovaní\ntýchto dvpoch CSVsúborov, budete mať 4 kontakty\na 3 spoločnosti. (prvé dva kontakty sú prepojené\nna prvú spoločnosť). Najskôr musíte importovať\nspoločnosti a potom osoby."
+msgstr ""
+"Oba vyprodukované súbory su pripravené byť importované do\n"
+"Odoo bez akýchkoľvek úprav. Po importovaní\n"
+"týchto dvpoch CSVsúborov, budete mať 4 kontakty\n"
+"a 3 spoločnosti. (prvé dva kontakty sú prepojené\n"
+"na prvú spoločnosť). Najskôr musíte importovať\n"
+"spoločnosti a potom osoby."
 
 #. module: base_import
 #. openerp-web
@@ -915,10 +1108,16 @@ msgstr "Tento SQL príkaz vytvorí nasledovný CSV súbor:"
 #, python-format
 msgid ""
 "This feature \n"
-"                        allows you to use the Import/Export tool of Odoo to \n"
-"                        modify a batch of records in your favorite spreadsheet \n"
+"                        allows you to use the Import/Export tool of Odoo "
+"to \n"
+"                        modify a batch of records in your favorite "
+"spreadsheet \n"
 "                        application."
-msgstr "Táto funkcia\nvám umožňuje použiť Odoo Import/Export nástroj na\núpravu várky záznamov vo vašej obľúbenej aplikácii tabuľkového\nprocesoru."
+msgstr ""
+"Táto funkcia\n"
+"vám umožňuje použiť Odoo Import/Export nástroj na\n"
+"úpravu várky záznamov vo vašej obľúbenej aplikácii tabuľkového\n"
+"procesoru."
 
 #. module: base_import
 #. openerp-web
@@ -926,9 +1125,13 @@ msgstr "Táto funkcia\nvám umožňuje použiť Odoo Import/Export nástroj na\n
 #, python-format
 msgid ""
 "To create the CSV file for persons, linked to \n"
-"                        companies, we will use the following SQL command in \n"
+"                        companies, we will use the following SQL command "
+"in \n"
 "                        PSQL:"
-msgstr "Na vytvorenie CSV súboru pre osoby, prepojené na\nspoločnosti, použijeme následovný SQL príkaz v\nPSQL:"
+msgstr ""
+"Na vytvorenie CSV súboru pre osoby, prepojené na\n"
+"spoločnosti, použijeme následovný SQL príkaz v\n"
+"PSQL:"
 
 #. module: base_import
 #. openerp-web
@@ -936,14 +1139,26 @@ msgstr "Na vytvorenie CSV súboru pre osoby, prepojené na\nspoločnosti, použi
 #, python-format
 msgid ""
 "To manage relations between tables, \n"
-"                        you can use the \"External ID\" facilities of Odoo. \n"
-"                        The \"External ID\" of a record is the unique identifier \n"
-"                        of this record in another application. This \"External \n"
+"                        you can use the \"External ID\" facilities of "
+"Odoo. \n"
+"                        The \"External ID\" of a record is the unique "
+"identifier \n"
+"                        of this record in another application. This "
+"\"External \n"
 "                        ID\" must be unique accoss all the records of all \n"
 "                        objects, so it's a good practice to prefix this \n"
-"                        \"External ID\" with the name of the application or \n"
+"                        \"External ID\" with the name of the application "
+"or \n"
 "                        table. (like 'company_1', 'person_1' instead of '1')"
-msgstr "Ak chcete spravovať vzťahy medzi tabuľkami,\nmôžete použiť \"Externé ID\" prostriedky Odoo.\n\"Externé ID\" záznamu je unikátny identifikátor\ntohto záznamu v inej aplikácii. Toto \"Externé \nID\" musí byť unikátne naprieč všetkými záznamami všetkých\nobjektov, takže je dobrý postup dať predponu tomuto\n\"Externé ID\" s názvom aplikácie alebo\ntabuľky. (ako 'spoločnosť_1', 'osoba_1' namiesto '1')"
+msgstr ""
+"Ak chcete spravovať vzťahy medzi tabuľkami,\n"
+"môžete použiť \"Externé ID\" prostriedky Odoo.\n"
+"\"Externé ID\" záznamu je unikátny identifikátor\n"
+"tohto záznamu v inej aplikácii. Toto \"Externé \n"
+"ID\" musí byť unikátne naprieč všetkými záznamami všetkých\n"
+"objektov, takže je dobrý postup dať predponu tomuto\n"
+"\"Externé ID\" s názvom aplikácie alebo\n"
+"tabuľky. (ako 'spoločnosť_1', 'osoba_1' namiesto '1')"
 
 #. module: base_import
 #. openerp-web
@@ -953,17 +1168,20 @@ msgid "Track history during import"
 msgstr "Sledovať históriu počas importu"
 
 #. module: base_import
-#: code:addons/base_import/models.py:173
+#: code:addons/base_import/models.py:195
 #, python-format
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr "Nemožno načítať \"{extension}\" súbor: vyžaduje Python modul \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgstr ""
+"Nemožno načítať \"{extension}\" súbor: vyžaduje Python modul \"{modname}\""
 
 #. module: base_import
-#: code:addons/base_import/models.py:174
+#: code:addons/base_import/models.py:196
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr "Nepodporovaný formát súboru \"{}\", import podporuje iba CSV, ODS, XLS a XLSX"
+msgstr ""
+"Nepodporovaný formát súboru \"{}\", import podporuje iba CSV, ODS, XLS a XLSX"
 
 #. module: base_import
 #. openerp-web
@@ -972,11 +1190,19 @@ msgstr "Nepodporovaný formát súboru \"{}\", import podporuje iba CSV, ODS, XL
 msgid ""
 "Use \n"
 "                        Country/Database ID: You should rarely use this \n"
-"                        notation. It's mostly used by developers as it's main \n"
+"                        notation. It's mostly used by developers as it's "
+"main \n"
 "                        advantage is to never have conflicts (you may have \n"
-"                        several records with the same name, but they always \n"
+"                        several records with the same name, but they "
+"always \n"
 "                        have a unique Database ID)"
-msgstr "Použite\nKrajina/Databáza ID: Mali by ste zriedka používať túto\nnotáciu. Väčšinou ju používaný vývojári, keďže jej hlavná\nvýhoda je, že nikdy nemá konflikty (môžete mať\nniekoľko záznamov s rovnakým názvom, ale vždy\nmajú jedinečné ID Databázy)"
+msgstr ""
+"Použite\n"
+"Krajina/Databáza ID: Mali by ste zriedka používať túto\n"
+"notáciu. Väčšinou ju používaný vývojári, keďže jej hlavná\n"
+"výhoda je, že nikdy nemá konflikty (môžete mať\n"
+"niekoľko záznamov s rovnakým názvom, ale vždy\n"
+"majú jedinečné ID Databázy)"
 
 #. module: base_import
 #. openerp-web
@@ -984,9 +1210,13 @@ msgstr "Použite\nKrajina/Databáza ID: Mali by ste zriedka používať túto\nn
 #, python-format
 msgid ""
 "Use \n"
-"                        Country/External ID: Use External ID when you import \n"
+"                        Country/External ID: Use External ID when you "
+"import \n"
 "                        data from a third party application."
-msgstr "Použite\nKrajinu/Externé ID: Použite Externé ID keď importujete\ndáta   plikácie tretej strany."
+msgstr ""
+"Použite\n"
+"Krajinu/Externé ID: Použite Externé ID keď importujete\n"
+"dáta   plikácie tretej strany."
 
 #. module: base_import
 #. openerp-web
@@ -996,7 +1226,10 @@ msgid ""
 "Use Country: This is \n"
 "                        the easiest way when your data come from CSV files \n"
 "                        that have been created manually."
-msgstr "Použiť Krajinu: Toto je\nnajjednoduchší spôsob ak vaše dáta pochádzajú z CSV súborov\nkoré boli vytvorené manuálne."
+msgstr ""
+"Použiť Krajinu: Toto je\n"
+"najjednoduchší spôsob ak vaše dáta pochádzajú z CSV súborov\n"
+"koré boli vytvorené manuálne."
 
 #. module: base_import
 #. openerp-web
@@ -1011,8 +1244,11 @@ msgstr "Overenie"
 #, python-format
 msgid ""
 "We will first export all companies and their \n"
-"                        \"External ID\". In PSQL, write the following command:"
-msgstr "Najkôr vyexportujeme všetky spoločnosti a ich\n\"Externé ID\". V PSQL, napíšte tento príkaz:"
+"                        \"External ID\". In PSQL, write the following "
+"command:"
+msgstr ""
+"Najkôr vyexportujeme všetky spoločnosti a ich\n"
+"\"Externé ID\". V PSQL, napíšte tento príkaz:"
 
 #. module: base_import
 #. openerp-web
@@ -1028,7 +1264,9 @@ msgstr "Čo môžem robiť, keď mám viacero zhôd v poli?"
 msgid ""
 "What can I do when the Import preview table isn't\n"
 "                        displayed correctly?"
-msgstr "Čo môžem robiť, keď náhľad Import tabuľky nie je\nsprávne zobrazený?"
+msgstr ""
+"Čo môžem robiť, keď náhľad Import tabuľky nie je\n"
+"správne zobrazený?"
 
 #. module: base_import
 #. openerp-web
@@ -1037,7 +1275,9 @@ msgstr "Čo môžem robiť, keď náhľad Import tabuľky nie je\nsprávne zobra
 msgid ""
 "What happens if I do not provide a value for a \n"
 "                        specific field?"
-msgstr "Čo sa stane ak neposkytnem hodnotu pre\nšpecifické pole?"
+msgstr ""
+"Čo sa stane ak neposkytnem hodnotu pre\n"
+"špecifické pole?"
 
 #. module: base_import
 #. openerp-web
@@ -1046,7 +1286,9 @@ msgstr "Čo sa stane ak neposkytnem hodnotu pre\nšpecifické pole?"
 msgid ""
 "What's the difference between Database ID and \n"
 "                        External ID?"
-msgstr "Aký je rozdiel medzi ID Databázy a\nExterným ID?"
+msgstr ""
+"Aký je rozdiel medzi ID Databázy a\n"
+"Externým ID?"
 
 #. module: base_import
 #. openerp-web
@@ -1054,12 +1296,22 @@ msgstr "Aký je rozdiel medzi ID Databázy a\nExterným ID?"
 #, python-format
 msgid ""
 "When you use External IDs, you can import CSV files \n"
-"                        with the \"External ID\" column to define the External \n"
-"                        ID of each record you import. Then, you will be able \n"
-"                        to make a reference to that record with columns like \n"
-"                        \"Field/External ID\". The following two CSV files give \n"
+"                        with the \"External ID\" column to define the "
+"External \n"
+"                        ID of each record you import. Then, you will be "
+"able \n"
+"                        to make a reference to that record with columns "
+"like \n"
+"                        \"Field/External ID\". The following two CSV files "
+"give \n"
 "                        you an example for Products and their Categories."
-msgstr "Ak používate Externé ID, môžete impotovať CSV súbory\nso stĺpcom \"Externé ID\" pre definovanie Externého \nID každého záznamu ktorý importujete. Potom budete vedieť\nspravť odkaz na ten záznam so stĺpcami ako\n\"Pole/ExternéID\". Nasledovné dva CSV súbory vám\ndávajú príklad pre produkty a ich kategórie."
+msgstr ""
+"Ak používate Externé ID, môžete impotovať CSV súbory\n"
+"so stĺpcom \"Externé ID\" pre definovanie Externého \n"
+"ID každého záznamu ktorý importujete. Potom budete vedieť\n"
+"spravť odkaz na ten záznam so stĺpcami ako\n"
+"\"Pole/ExternéID\". Nasledovné dva CSV súbory vám\n"
+"dávajú príklad pre produkty a ich kategórie."
 
 #. module: base_import
 #. openerp-web
@@ -1083,14 +1335,14 @@ msgid "XXX/ID"
 msgstr "XXX/ID"
 
 #. module: base_import
-#: code:addons/base_import/models.py:376
+#: code:addons/base_import/models.py:406
 #, python-format
 msgid "You must configure at least one field to import"
 msgstr "Musíte nakonfigurovať aspoň jedno pole na import"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:460
+#: code:addons/base_import/static/src/js/import.js:468
 #, python-format
 msgid "at row %d"
 msgstr "v rade %d"
@@ -1167,7 +1419,7 @@ msgstr "base_import.tests.models.preview"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:462
+#: code:addons/base_import/static/src/js/import.js:470
 #, python-format
 msgid "between rows %d and %d"
 msgstr "medzi radmi %d a %d"
@@ -1180,7 +1432,10 @@ msgid ""
 "column in Odoo. When you\n"
 "                        import an other record that links to the first\n"
 "                        one, use"
-msgstr "stĺpec v Odoo. Keď importujete\niný záznam ktorý je prepojený na prvý,\npoužite"
+msgstr ""
+"stĺpec v Odoo. Keď importujete\n"
+"iný záznam ktorý je prepojený na prvý,\n"
+"použite"
 
 #. module: base_import
 #. openerp-web
@@ -1209,10 +1464,16 @@ msgstr "company_3,Boum,True"
 #, python-format
 msgid ""
 "copy \n"
-"                        (select 'company_'||id as \"External ID\",company_name \n"
-"                        as \"Name\",'True' as \"Is a Company\" from companies) TO \n"
+"                        (select 'company_'||id as \"External ID\","
+"company_name \n"
+"                        as \"Name\",'True' as \"Is a Company\" from "
+"companies) TO \n"
 "                        '/tmp/company.csv' with CSV HEADER;"
-msgstr "skopírovať\n(vybrať 'company_'||id ako \"Externé ID\",company_name \nako \"Názov\",'True' ako \"Je spoločnosť\" zo spoločností) DO\n'/tmp/company.csv' s CSV HLAVIČKA;"
+msgstr ""
+"skopírovať\n"
+"(vybrať 'company_'||id ako \"Externé ID\",company_name \n"
+"ako \"Názov\",'True' ako \"Je spoločnosť\" zo spoločností) DO\n"
+"'/tmp/company.csv' s CSV HLAVIČKA;"
 
 #. module: base_import
 #. openerp-web
@@ -1221,10 +1482,17 @@ msgstr "skopírovať\n(vybrať 'company_'||id ako \"Externé ID\",company_name \
 msgid ""
 "copy (select \n"
 "                        'person_'||id as \"External ID\",person_name as \n"
-"                        \"Name\",'False' as \"Is a Company\",'company_'||company_id\n"
-"                         as \"Related Company/External ID\" from persons) TO \n"
+"                        \"Name\",'False' as \"Is a Company\",'company_'||"
+"company_id\n"
+"                         as \"Related Company/External ID\" from persons) "
+"TO \n"
 "                        '/tmp/person.csv' with CSV"
-msgstr "skopírovať (vybrať \n'person_'||id as \"External ID\",person_name  ako \n\"Názov\",'False' ako \"Je spoločnosť\",'company_'||company_id\nako \"Pridružená spoločnosť/Externé ID\" z osôb) DO\n'/tmp/person.csv' s CSV"
+msgstr ""
+"skopírovať (vybrať \n"
+"'person_'||id as \"External ID\",person_name  ako \n"
+"\"Názov\",'False' ako \"Je spoločnosť\",'company_'||company_id\n"
+"ako \"Pridružená spoločnosť/Externé ID\" z osôb) DO\n"
+"'/tmp/person.csv' s CSV"
 
 #. module: base_import
 #. openerp-web
@@ -1303,4 +1571,8 @@ msgid ""
 "                        import if you need to re-import modified data\n"
 "                        later, it's thus good practice to specify it\n"
 "                        whenever possible"
-msgstr "bude tiež pouźité na aktualizovanie originálneho\nimportu ak potrebujete re-importovať upravené dáta\nneskôr, preto je dobrou praxou špecifikovať to\nkedykoľvek sa dá"
+msgstr ""
+"bude tiež pouźité na aktualizovanie originálneho\n"
+"importu ak potrebujete re-importovať upravené dáta\n"
+"neskôr, preto je dobrou praxou špecifikovať to\n"
+"kedykoľvek sa dá"

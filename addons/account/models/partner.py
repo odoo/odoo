@@ -310,7 +310,7 @@ class ResPartner(models.Model):
             else:
                 domain += [('partner_id', 'in', self.ids)]
         #adding the overdue lines
-        overdue_domain = ['|', '&', ('date_maturity', '!=', False), ('date_maturity', '<=', date), '&', ('date_maturity', '=', False), ('date', '<=', date)]
+        overdue_domain = ['|', '&', ('date_maturity', '!=', False), ('date_maturity', '<', date), '&', ('date_maturity', '=', False), ('date', '<', date)]
         if overdue_only:
             domain += overdue_domain
         return domain
