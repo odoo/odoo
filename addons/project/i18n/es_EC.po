@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-02-22 05:14+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
@@ -215,7 +215,7 @@ msgstr "N° de Tareas"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:438
+#: code:addons/project/project.py:446
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -1272,9 +1272,9 @@ msgstr "Modelo con Alias"
 
 #. module: project
 #: code:addons/project/project.py:133
-#, fuzzy, python-format
-msgid "All employees"
-msgstr "Para los empleados, la"
+#, python-format
+msgid "All Employees Project: all employees can access"
+msgstr "Todos los empleados del proyecto: todos los empleados pueden acceder"
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -1541,7 +1541,7 @@ msgid "Check this box to manage internal activities through this project"
 msgstr "Marque esta casilla para manejar actividades internas en este proyecto"
 
 #. module: project
-#: code:addons/project/project.py:640
+#: code:addons/project/project.py:648
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1773,7 +1773,7 @@ msgid "Current Timesheet"
 msgstr "Parte de horas actual"
 
 #. module: project
-#: code:addons/project/project.py:860
+#: code:addons/project/project.py:868
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1782,10 +1782,16 @@ msgid "Customer"
 msgstr "Cliente"
 
 #. module: project
-#: code:addons/project/project.py:860
+#: code:addons/project/project.py:868
 #, python-format
 msgid "Customer Email"
 msgstr "Correo del Cliente"
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer Project: visible in portal if the customer is a follower"
+msgstr "Proyecto de Cliente: visible en el portal si el cliente es un seguidor"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1812,12 +1818,6 @@ msgstr "El ciente ha cancelado la reparación"
 #, python-format
 msgid "Customer has reported new issue"
 msgstr "Cliente ha informado de nueva emisión"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, fuzzy, python-format
-msgid "Customer project"
-msgstr "Servicio al cliente"
 
 #. module: project
 #. openerp-web
@@ -2407,7 +2407,7 @@ msgstr ""
 "   está activada, los usuarios del portal ver las tareas o temas seguidos ."
 
 #. module: project
-#: code:addons/project/project.py:791
+#: code:addons/project/project.py:799
 #, python-format
 msgid "I take it"
 msgstr "Lo cojo"
@@ -2877,12 +2877,6 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Más <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-#, fuzzy
-msgid "More Info"
-msgstr "Información Adicional"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr "Una comunicación más eficiente entre los empleados"
@@ -2922,7 +2916,7 @@ msgid "New"
 msgstr "Nuevo(a)"
 
 #. module: project
-#: code:addons/project/project.py:793
+#: code:addons/project/project.py:801
 #, python-format
 msgid "New Task"
 msgstr "Nueva Tarea"
@@ -3173,7 +3167,7 @@ msgid "Planner"
 msgstr "Agenda"
 
 #. module: project
-#: code:addons/project/project.py:953
+#: code:addons/project/project.py:961
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3221,8 +3215,8 @@ msgstr "Privacidad / Visibilidad"
 
 #. module: project
 #: code:addons/project/project.py:134
-#, fuzzy, python-format
-msgid "Private: followers only"
+#, python-format
+msgid "Private Project: followers only"
 msgstr "Proyecto Privado: sólo seguidores"
 
 #. module: project
@@ -3313,12 +3307,6 @@ msgstr "Tareas del proyecto"
 #, python-format
 msgid "Projects"
 msgstr "Proyectos"
-
-#. module: project
-#: model:mail.channel,name:project.mail_channel_project_task
-#, fuzzy
-msgid "Projects & Tasks"
-msgstr "Tareas del Proyecto"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3672,6 +3660,11 @@ msgstr "Fecha de Inicio"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "Fecha de Inicio"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_account_type
+msgid "State"
+msgstr "Estado"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -4519,7 +4512,7 @@ msgid "send us an email"
 msgstr "envíenos un correo"
 
 #. module: project
-#: code:addons/project/project.py:597
+#: code:addons/project/project.py:605
 #, python-format
 msgid "tasks"
 msgstr "tareas"
@@ -4576,19 +4569,11 @@ msgstr "Usted enumeró en el paso anterior"
 #~ msgid "Action Needed"
 #~ msgstr "Acción Requerida"
 
-#~ msgid "All Employees Project: all employees can access"
-#~ msgstr ""
-#~ "Todos los empleados del proyecto: todos los empleados pueden acceder"
-
 #~ msgid "Check this field if this project manages timesheets"
 #~ msgstr "Marque esta casilla si este proyecto administra partes de horas"
 
 #~ msgid "Close"
 #~ msgstr "Cerrar"
-
-#~ msgid "Customer Project: visible in portal if the customer is a follower"
-#~ msgstr ""
-#~ "Proyecto de Cliente: visible en el portal si el cliente es un seguidor"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Fecha del último mensaje publicado en el registro."
@@ -4643,9 +4628,6 @@ msgstr "Usted enumeró en el paso anterior"
 
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "Grabar registro de tiempo para las tareas"
-
-#~ msgid "State"
-#~ msgstr "Estado"
 
 #~ msgid "Subscriptions"
 #~ msgstr "Suscripciones"

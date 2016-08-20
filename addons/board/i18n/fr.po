@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Maxime Solinas <msolinas@t2o.ca>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -44,7 +44,7 @@ msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:409
+#: code:addons/board/static/src/js/dashboard.js:407
 #, python-format
 msgid "'%s' added to dashboard"
 msgstr " %s  Ajouter à votre tableau de bord"
@@ -70,7 +70,7 @@ msgstr "Ajouter à mon tableau de bord"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:141
+#: code:addons/board/static/src/js/dashboard.js:139
 #, python-format
 msgid "Are you sure you want to remove this item ?"
 msgstr "Voulez-vous réellement supprimer cet élément ?"
@@ -79,6 +79,21 @@ msgstr "Voulez-vous réellement supprimer cet élément ?"
 #: model:ir.model,name:board.model_board_board
 msgid "Board"
 msgstr "Tableau"
+
+#. module: board
+#: model:ir.model,name:board.model_board_create
+msgid "Board Creation"
+msgstr "Création de tableau de bord"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_name
+msgid "Board Name"
+msgstr "Nom du tableau de bord"
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Cancel"
+msgstr "Annuler"
 
 #. module: board
 #. openerp-web
@@ -103,13 +118,40 @@ msgstr "Choisissez l'agencement du tableau de bord"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:411
+#: code:addons/board/static/src/js/dashboard.js:409
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Impossible d'ajouter le filtre au tableau de bord"
 
 #. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create"
+msgstr "Créer"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr "Créer un tableau de bord"
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create New Dashboard"
+msgstr "Créer un nouveau tableau de bord"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: board
 #: model:ir.model.fields,field_description:board.field_board_board_display_name
+#: model:ir.model.fields,field_description:board.field_board_create_display_name
 #, fuzzy
 msgid "Display Name"
 msgstr ""
@@ -120,18 +162,20 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:96
+#: code:addons/board/static/src/js/dashboard.js:94
 #, python-format
 msgid "Edit Layout"
 msgstr "Modifier l'agencement"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board_id
+#: model:ir.model.fields,field_description:board.field_board_create_id
 msgid "ID"
 msgstr "ID"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board___last_update
+#: model:ir.model.fields,field_description:board.field_board_create___last_update
 #, fuzzy
 msgid "Last Modified on"
 msgstr ""
@@ -141,14 +185,26 @@ msgstr ""
 "Dernière Modification le"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:32
+#: model:ir.model.fields,field_description:board.field_board_create_write_uid
+msgid "Last Updated by"
+msgstr "Mis à jour par"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_write_date
+msgid "Last Updated on"
+msgstr "Mis à jour le"
+
+#. module: board
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
 #: model:ir.ui.view,arch_db:board.board_my_dash_view
-#, python-format
 msgid "My Dashboard"
 msgstr "Mon tableau de bord"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
+msgid "Parent Menu"
+msgstr "Menu parent"
 
 #. module: board
 #: model:ir.actions.act_window,help:board.open_board_my_dash_action
@@ -171,36 +227,3 @@ msgid ""
 msgstr ""
 "Vous pouvez filtrer et regrouper les données avant de les insérer dans le "
 "tableau de bord en utilisant les options de recherche."
-
-#~ msgid "Board Creation"
-#~ msgstr "Création de tableau de bord"
-
-#~ msgid "Board Name"
-#~ msgstr "Nom du tableau de bord"
-
-#~ msgid "Cancel"
-#~ msgstr "Annuler"
-
-#~ msgid "Create"
-#~ msgstr "Créer"
-
-#~ msgid "Create Board"
-#~ msgstr "Créer un tableau de bord"
-
-#~ msgid "Create New Dashboard"
-#~ msgstr "Créer un nouveau tableau de bord"
-
-#~ msgid "Created by"
-#~ msgstr "Créé par"
-
-#~ msgid "Created on"
-#~ msgstr "Créé le"
-
-#~ msgid "Last Updated by"
-#~ msgstr "Mis à jour par"
-
-#~ msgid "Last Updated on"
-#~ msgstr "Mis à jour le"
-
-#~ msgid "Parent Menu"
-#~ msgstr "Menu parent"

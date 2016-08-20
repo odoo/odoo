@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2015-11-25 14:39+0000\n"
 "Last-Translator: Ricardo Correia <rcorreiavv@gmail.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -76,11 +76,6 @@ msgid "Activities Done"
 msgstr "Atividades concluídas"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
-msgid "Archived"
-msgstr ""
-
-#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
@@ -99,6 +94,11 @@ msgstr "Clique aqui para definir uma nova equipa de vendas."
 #, python-format
 msgid "Click to set"
 msgstr "Clique para definir"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
+msgid "Code"
+msgstr "Código"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
@@ -270,7 +270,7 @@ msgstr "Próximas ações"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "Apenas valores inteiros são válidos."
@@ -359,6 +359,11 @@ msgstr "Lider de Equipa"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "Membros da equipa"
+
+#. module: sales_team
+#: sql_constraint:crm.team:0
+msgid "The code of the sales team must be unique !"
+msgstr "O código da equipa de vendas deve ser único!"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
@@ -479,7 +484,7 @@ msgstr "Ganho nas oportunidades"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
 #, python-format
 msgid "Wrong value entered!"
 msgstr "Valor Introduzido Inválido!"
@@ -492,11 +497,6 @@ msgid "exp. closing"
 msgstr "à espera de fecho"
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_ir_ui_view
-msgid "ir.ui.view"
-msgstr ""
-
-#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
@@ -505,9 +505,6 @@ msgstr "Vencido"
 
 #~ msgid "Action Needed"
 #~ msgstr "Ação Necessária"
-
-#~ msgid "Code"
-#~ msgstr "Código"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Data da Ultmia Mensagem Inserida no Registo"
@@ -547,9 +544,6 @@ msgstr "Vencido"
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Número de mensagens por ler"
-
-#~ msgid "The code of the sales team must be unique !"
-#~ msgstr "O código da equipa de vendas deve ser único!"
 
 #~ msgid "Unread Messages"
 #~ msgstr "Mensagens por ler"

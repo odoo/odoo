@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-14 10:09+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -33,6 +33,26 @@ msgstr ""
 "* Хэрэглэгч цагийн хуудсыг батласан дараа 'Батласан' төлөтэй "
 "байна.                 \n"
 "* Удирдагч цагийн хуудсыг зөвшөөрсөн дараа 'Хийгдсэн' төлөвтэй болно."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
+msgid "# Nbr Timesheet"
+msgstr "# Цагийн хуудсын тоо"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
+msgid "# Total Attendance"
+msgstr "# Нийт ирц"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
+msgid "# Total Diff"
+msgstr "# Нийт зөрүү"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
+msgid "# Total Timesheet"
+msgstr "# Нийт цагийн хуудас"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -108,6 +128,12 @@ msgid "Company"
 msgstr "Компани"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Confirmed"
+msgstr "Баталсан"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr "Нотлогдсон Цагийн Хуудсууд"
@@ -135,18 +161,23 @@ msgid "Date"
 msgstr "Огноо"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr "Эхлэх огноо"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "Дуусах огноо,цаг"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "Хэлтэс"
 
@@ -175,6 +206,18 @@ msgid "Display Name"
 msgstr "Дэлгэцийн Нэр"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Done"
+msgstr "Дууссан"
+
+#. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
@@ -199,6 +242,11 @@ msgstr ""
 "ёстой"
 
 #. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
+msgid "External Timesheet"
+msgstr "Гадны цагийн хуудас"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
 msgstr "Бүлэглэх"
@@ -207,12 +255,6 @@ msgstr "Бүлэглэх"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Цаг"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-#, fuzzy
-msgid "Hr Department"
-msgstr "Хэлтэс"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -237,6 +279,11 @@ msgid ""
 msgstr ""
 "Энэ ажилтан дээр цагийн хуудас үүсгэхийн тулд ажилтанг хэрэглэгчтэй холбох "
 "ёстой."
+
+#. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
+msgid "Internal Timesheet"
+msgstr "Дотоод цагийн хуудас"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -275,6 +322,7 @@ msgid "My Timesheets"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
 msgstr "Шинэ"
@@ -368,7 +416,9 @@ msgid "Sign Out"
 msgstr "Гарсан"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Status"
 msgstr "Төлөв"
 
@@ -391,6 +441,7 @@ msgid ""
 msgstr "Орсон болон гарсан нь тэнцүү биш учир цагийн хуудсыг батлах боломжгүй."
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
@@ -680,41 +731,17 @@ msgstr "дараах руу"
 msgid "waiting approval"
 msgstr ""
 
-#~ msgid "# Nbr Timesheet"
-#~ msgstr "# Цагийн хуудсын тоо"
-
-#~ msgid "# Total Attendance"
-#~ msgstr "# Нийт ирц"
-
-#~ msgid "# Total Diff"
-#~ msgstr "# Нийт зөрүү"
-
-#~ msgid "# Total Timesheet"
-#~ msgstr "# Нийт цагийн хуудас"
-
 #~ msgid "Action Needed"
 #~ msgstr "Үйлдэл Шаардлагатай"
 
 #~ msgid "Cancel"
 #~ msgstr "Цуцлах"
 
-#~ msgid "Confirmed"
-#~ msgstr "Баталсан"
-
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
 
 #~ msgid "Day"
 #~ msgstr "Өдөр"
-
-#~ msgid "Done"
-#~ msgstr "Дууссан"
-
-#~ msgid "Draft"
-#~ msgstr "Ноорог"
-
-#~ msgid "External Timesheet"
-#~ msgstr "Гадны цагийн хуудас"
 
 #~ msgid "Followers"
 #~ msgstr "Дагагчид"
@@ -742,9 +769,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Энэ ажилчинд цагийн хуудас үүсгэхийн тулд ажилчинд барааг холбож өгөх "
 #~ "ёстой."
-
-#~ msgid "Internal Timesheet"
-#~ msgstr "Дотоод цагийн хуудас"
 
 #~ msgid "Is Follower"
 #~ msgstr "Дагагч эсэх"

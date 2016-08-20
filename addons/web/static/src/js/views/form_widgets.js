@@ -445,6 +445,7 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
                 this.$('.o_debug_input').val(this.get('value'));
             }
         } else {
+            this.$('.o_form_input').val('');
             this.$('.o_count').text(_t('No selected record'));
             var $arrow = this.$('button span').detach();
             this.$('button').text(_t('Select records ')).append($("<span/>").addClass('fa fa-arrow-right'));
@@ -969,7 +970,7 @@ var FieldRadio = common.AbstractField.extend(common.ReinitializeFieldMixin, {
         if(this.get('effective_readonly')) {
             this.$el.html(this.get('value')? this.get('value')[1] : "");
         } else {
-            this.$("input").filter(function() {return this.value == self.get_value();}).prop("checked", true);
+            this.$("input").prop("checked", false).filter(function () {return this.value == self.get_value();}).prop("checked", true);
         }
     }
 });
@@ -1404,13 +1405,17 @@ var FieldStatus = common.AbstractField.extend({
             return fields;
         });
     },
-    on_click_stage: function (ev) {
+    on_click_stage: _.debounce(function (ev) {
         var self = this;
         var $li = $(ev.currentTarget);
+        var ul = $li.closest('.oe_form_field_status');
         if (this.view.is_disabled) {
             return;
         }
         var val;
+        if (ul.attr('disabled')) {
+            return;
+        }
         if (this.field.type === "many2one") {
             val = parseInt($li.data("id"), 10);
         } else {
@@ -1426,13 +1431,16 @@ var FieldStatus = common.AbstractField.extend({
                 this.view.recursive_save().done(function() {
                     var change = {};
                     change[self.name] = val;
+                    ul.attr('disabled', true);
                     self.view.dataset.write(self.view.datarecord.id, change).done(function() {
                         self.view.reload();
+                    }).always(function() {
+                        ul.removeAttr('disabled');
                     });
                 });
             }
         }
-    },
+    }, 300),
 });
 
 var FieldMonetary = FieldFloat.extend({

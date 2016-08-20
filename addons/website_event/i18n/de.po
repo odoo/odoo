@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-07-01 09:20+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
@@ -32,6 +32,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_event
+#: code:addons/website_event/controllers/main.py:219
+#, python-format
+msgid "%(month)s %(start_day)s%(end_day)s"
+msgstr "%(month)s %(start_day)s%(end_day)s"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -121,13 +127,13 @@ msgid "Add Content"
 msgstr "Inhalt hinzufügen"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:96
+#: code:addons/website_event/controllers/main.py:106
 #, python-format
 msgid "All Categories"
 msgstr "Alle Kategorien"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:103
+#: code:addons/website_event/controllers/main.py:117
 #, python-format
 msgid "All Countries"
 msgstr "Alle Länder"
@@ -359,15 +365,10 @@ msgid "Free"
 msgstr "Verfügbar"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:54
+#: code:addons/website_event/models/event.py:44
 #, python-format
 msgid "Introduction"
 msgstr "Überblick"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
-msgid "Is Participating"
-msgstr ""
 
 #. module: website_event
 #. openerp-web
@@ -379,7 +380,7 @@ msgstr ""
 "bewältigen."
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:55
+#: code:addons/website_event/models/event.py:45
 #, python-format
 msgid "Location"
 msgstr "Veranstaltungsort"
@@ -396,7 +397,7 @@ msgstr "Bezeichnung"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:184
+#: code:addons/website_event/controllers/main.py:201
 #: code:addons/website_event/static/src/js/website.tour.event.js:32
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
@@ -412,19 +413,19 @@ msgid "New Event Created"
 msgstr "Neue Veranstaltung erstellt"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:34
+#: code:addons/website_event/controllers/main.py:38
 #, python-format
 msgid "Next Events"
 msgstr "Weitere Veranstaltungen"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:43
+#: code:addons/website_event/controllers/main.py:47
 #, python-format
 msgid "Next Week"
 msgstr "Nächste Woche"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:51
+#: code:addons/website_event/controllers/main.py:55
 #, python-format
 msgid "Next month"
 msgstr "Nächster Monat"
@@ -435,7 +436,7 @@ msgid "No event found"
 msgstr "Keine Veranstaltung gefunden"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:55
+#: code:addons/website_event/controllers/main.py:59
 #, python-format
 msgid "Old Events"
 msgstr "Vorherige Veranstaltungen"
@@ -473,12 +474,6 @@ msgid "Our Trainings"
 msgstr "Unsere Trainings"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_details
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "Participating"
-msgstr ""
-
-#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Phone"
 msgstr "Telefon"
@@ -511,7 +506,7 @@ msgid "Reference"
 msgstr "Referenz"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:63
+#: code:addons/website_event/models/event.py:53
 #, python-format
 msgid "Register"
 msgstr "Anmelden"
@@ -574,7 +569,7 @@ msgid "Start Tutorial"
 msgstr "Beginne Tutorial"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:39
+#: code:addons/website_event/controllers/main.py:43
 #, python-format
 msgid "This Week"
 msgstr "Diese Woche"
@@ -598,7 +593,7 @@ msgstr ""
 "gestalten."
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:47
+#: code:addons/website_event/controllers/main.py:51
 #, python-format
 msgid "This month"
 msgstr "Dieser Monat"
@@ -614,7 +609,7 @@ msgid "Ticket Type #"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:35
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "Today"
 msgstr "Heute"
@@ -648,16 +643,6 @@ msgstr ""
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
 msgstr "Website Homepage"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_message_ids
-msgid "Website Messages"
-msgstr "Website Nachrichten"
-
-#. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event_website_message_ids
-msgid "Website communication history"
-msgstr "Website Kommunikationshistorie"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -705,9 +690,6 @@ msgstr "nach rechts verschieben"
 msgid "to"
 msgstr "bis"
 
-#~ msgid "%(month)s %(start_day)s%(end_day)s"
-#~ msgstr "%(month)s %(start_day)s%(end_day)s"
-
 #~ msgid "Drag the 'Text Block' in your event page."
 #~ msgstr "Schieben Sie den 'Text Block' in die Veranstaltungsseite."
 
@@ -715,8 +697,14 @@ msgstr "bis"
 #~ msgstr ""
 #~ "Die vollständige URL mit der das Dokument überall aufgerufen werden kann."
 
+#~ msgid "Website Messages"
+#~ msgstr "Website Nachrichten"
+
 #~ msgid "Website URL"
 #~ msgstr "Webseite URL"
+
+#~ msgid "Website communication history"
+#~ msgstr "Website Kommunikationshistorie"
 
 #~ msgid "Website meta description"
 #~ msgstr "Webseite Meta Beschreibung"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-06-08 12:18+0000\n"
 "Last-Translator: Marko Carević <marko.carevic@live.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -49,8 +49,8 @@ msgid ""
 "% if object.origin:\n"
 "(with reference: ${object.origin} )\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.pricelist_id."
-"currency_id.name}</strong>\n"
+"amounting <strong>${object.amount_total} ${object.pricelist_id.currency_id."
+"name}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -118,12 +118,6 @@ msgstr ""
 "'Ponuda' or 'Narudžba'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "&amp;bull;"
-msgstr ""
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "(update)"
 msgstr "(ažuriraj)"
@@ -158,13 +152,6 @@ msgid "<strong>Shipping address:</strong>"
 msgstr "<strong>Adresa isporuke</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
-msgid "<strong>Subtotal: </strong>"
-msgstr "<strong>Ukupno</strong>"
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Total Without Taxes</strong>"
 msgstr "<strong>Ukupno prije poreza</strong>"
@@ -185,25 +172,9 @@ msgid "A single sale price per product"
 msgstr "Jedinična cijena po proizvodu"
 
 #. module: sale
-#: model:res.groups,name:sale.group_warning_sale
-msgid "A warning can be set on a product or a customer (Sale)"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Account used for deposits"
 msgstr "Račun koji se koristi za polog"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_layout_category_pagebreak
-msgid "Add pagebreak"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_layout_category_subtotal
-#, fuzzy
-msgid "Add subtotal"
-msgstr "Podzbroj"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_delivery_address
@@ -225,11 +196,6 @@ msgstr "Avans od %"
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Advanced pricing based on formula"
 msgstr "Napredna cijena temelji se na formuli"
-
-#. module: sale
-#: selection:sale.config.settings,group_warning_sale:0
-msgid "All the products and the customers can be used in sale orders"
-msgstr ""
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
@@ -271,12 +237,6 @@ msgid "Amount of sales to invoice"
 msgstr "Količina iz ponude za račun"
 
 #. module: sale
-#: selection:sale.config.settings,group_warning_sale:0
-msgid ""
-"An informative or blocking warning can be set on a product or a customer"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_project_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_analytic_account_id
 msgid "Analytic Account"
@@ -286,23 +246,6 @@ msgstr "Konto analitike"
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
 msgstr "Analitičko računovodstvo za prodaju"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line_analytic_tag_ids
-#, fuzzy
-msgid "Analytic Tags"
-msgstr "Analitičke stavke"
-
-#. module: sale
-#: selection:product.template,sale_line_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Blocking Message"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
-msgid "Breaks Page"
-msgstr ""
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
@@ -374,12 +317,6 @@ msgid "Confirm Sale"
 msgstr "Potvrdi prodaju"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_confirmation_date
-#, fuzzy
-msgid "Confirmation Date"
-msgstr "Datum kreiranja"
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Create Invoice"
 msgstr "Kreiraj račun"
@@ -410,7 +347,6 @@ msgstr "Kreiraj i prikaži račun"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_create_uid
-#: model:ir.model.fields,field_description:sale.field_sale_layout_category_create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_create_uid
 msgid "Created by"
@@ -418,7 +354,6 @@ msgstr "Kreirao"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_create_date
-#: model:ir.model.fields,field_description:sale.field_sale_layout_category_create_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_create_date
 msgid "Created on"
 msgstr "Datum kreiranja"
@@ -471,12 +406,6 @@ msgstr "Datum narudžbe"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_create_date
 msgid "Date on which sales order is created."
-msgstr "Datum kreiranja prodajnog naloga"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_confirmation_date
-#, fuzzy
-msgid "Date on which the sale order is confirmed."
 msgstr "Datum kreiranja prodajnog naloga"
 
 #. module: sale
@@ -542,7 +471,6 @@ msgstr "Depozit proizvoda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Description"
 msgstr "Opis"
@@ -553,7 +481,6 @@ msgid "Different prices per customer segment"
 msgstr "Različite cijene po segmentu poslovanja"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 #, fuzzy
 msgid "Disc.(%)"
@@ -583,7 +510,6 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_display_name
-#: model:ir.model.fields,field_description:sale.field_sale_layout_category_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_order_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report_display_name
@@ -601,7 +527,7 @@ msgid "Display margins on quotations and sales orders"
 msgstr "Prikazuj marže na ponudama i prodajnim nalozima"
 
 #. module: sale
-#: selection:sale.config.settings,group_sale_layout:0
+#: selection:sale.config.settings,module_sale_layout:0
 #, fuzzy
 msgid "Do not personalize sale orders and invoice reports"
 msgstr "Pokaži Incoterms na prodajnom nalogu i računima."
@@ -722,14 +648,7 @@ msgid "Group By"
 msgstr "Grupiraj po"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
-#, fuzzy
-msgid "Group By Name"
-msgstr "Grupiraj po"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_id
-#: model:ir.model.fields,field_description:sale.field_sale_layout_category_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_id
@@ -763,7 +682,7 @@ msgid "Invoice"
 msgstr "Račun"
 
 #. module: sale
-#: code:addons/sale/sale.py:916
+#: code:addons/sale/sale.py:840
 #, python-format
 msgid "Invoice %s paid"
 msgstr "Račun plaćen"
@@ -891,9 +810,8 @@ msgstr "Statistike računa"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
-#, fuzzy
 msgid ""
-"Invoices will be created in draft so that you can review\n"
+"Invoices will be created in draft so that you can update\n"
 "                        them before validation."
 msgstr ""
 "Kreirati će se nacrt računa koji može biti modificiran\n"
@@ -937,7 +855,6 @@ msgstr "Omjer izdanih računa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
-#: model:ir.model.fields,field_description:sale.field_sale_layout_category___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_order___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_order_line___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_report___last_update
@@ -946,7 +863,6 @@ msgstr "Zadnja promjena"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_write_uid
-#: model:ir.model.fields,field_description:sale.field_sale_layout_category_write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_write_uid
 msgid "Last Updated by"
@@ -954,18 +870,10 @@ msgstr "Promijenio"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_write_date
-#: model:ir.model.fields,field_description:sale.field_sale_layout_category_write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_write_date
 msgid "Last Updated on"
 msgstr "Vrijeme promjene"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_sequence
-#: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_sequence
-#, fuzzy
-msgid "Layout Sequence"
-msgstr "Sekvenca"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
@@ -1003,29 +911,6 @@ msgid "Margins"
 msgstr "Marže"
 
 #. module: sale
-#: model:sale.layout_category,name:sale.sale_layout_cat_2
-msgid "Material"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_partner_sale_warn_msg
-#, fuzzy
-msgid "Message for Sales Order"
-msgstr "Pretraži prodajne naloge"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_product_sale_line_warn_msg
-#: model:ir.model.fields,field_description:sale.field_product_template_sale_line_warn_msg
-#, fuzzy
-msgid "Message for Sales Order Line"
-msgstr "Moje stavke prodajnog naloga"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_config
-msgid "More Info"
-msgstr ""
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Orders"
 msgstr "Moji nalozi"
@@ -1036,18 +921,12 @@ msgid "My Sales Order Lines"
 msgstr "Moje stavke prodajnog naloga"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_layout_category_name
-#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
-msgid "Name"
-msgstr ""
-
-#. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
 msgid "Never allow to modify a confirmed sale order"
 msgstr "NIkada nemojte dopustiti ažuriranje potvrđene narudžbe"
 
 #. module: sale
-#: code:addons/sale/sale.py:102
+#: code:addons/sale/sale.py:101
 #, python-format
 msgid "New"
 msgstr "Novi"
@@ -1056,13 +935,6 @@ msgstr "Novi"
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
 msgstr "Nova ponuda"
-
-#. module: sale
-#: selection:product.template,sale_line_warn:0
-#: selection:res.partner,sale_warn:0
-#, fuzzy
-msgid "No Message"
-msgstr "Poruke"
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
@@ -1081,16 +953,6 @@ msgstr "Nema varijante na proizvodima"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
-#, fuzzy
-msgid ""
-"Note that once a Quotation becomes a Sale Order, it will be moved\n"
-"                from the Quotations list to the Sales Order list."
-msgstr ""
-"Imajte na umu da jednom kada ponuda postane prodajne nalog, biti će "
-"premještena\n"
-"iz popisa ponuda na popis prodajnih naloga."
-
-#. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved \n"
@@ -1181,7 +1043,6 @@ msgstr "Broj naloga"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_order_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_name
-#: model:ir.model.fields,field_description:sale.field_sale_report_name
 msgid "Order Reference"
 msgstr "Referenca narudžbe"
 
@@ -1262,26 +1123,20 @@ msgid "Payment Term"
 msgstr "Uvjet plaćanja"
 
 #. module: sale
-#: model:res.groups,name:sale.group_sale_layout
-#, fuzzy
-msgid "Personalize sale order and invoice report"
-msgstr "Pokaži Incoterms na prodajnom nalogu i računima."
-
-#. module: sale
-#: selection:sale.config.settings,group_sale_layout:0
+#: selection:sale.config.settings,module_sale_layout:0
 msgid ""
-"Personalize the sale orders and invoice report with categories, subtotals "
-"and page-breaks"
+"Personnalize the sale orders and invoice report with separators, page-breaks "
+"or subtotals"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:246
 #, python-format
 msgid "Please define an accounting sale journal for this company."
 msgstr "Molimo definirajte dnevnik prodaje za ovo poduzeće"
 
 #. module: sale
-#: code:addons/sale/sale.py:764
+#: code:addons/sale/sale.py:703
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -1289,6 +1144,11 @@ msgid ""
 msgstr ""
 "Molimo definirajte konto prihoda za ovaj proizvod \"%s\" (id:%d) - ili za "
 "ovu kategoriju: \"%s\"."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Price"
+msgstr "Cijena"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce
@@ -1403,7 +1263,6 @@ msgstr "Količina za račun"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom_qty
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quantity"
 msgstr "Količina"
@@ -1500,19 +1359,6 @@ msgid "Reinvoice Costs"
 msgstr "Stanje računa"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.report_configuration_action
-#: model:ir.ui.view,arch_db:sale.report_configuration_form_view
-#: model:ir.ui.view,arch_db:sale.report_configuration_tree_view
-msgid "Report Configuration"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.Report_configuration
-#, fuzzy
-msgid "Report Layout Categories"
-msgstr "Grupa proizvoda"
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
 msgstr "Izvještaji"
@@ -1545,7 +1391,7 @@ msgid "Sale Price"
 msgstr "Prodajna cijena"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_layout
+#: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_layout
 msgid "Sale Reports Layout"
 msgstr ""
 
@@ -1593,7 +1439,6 @@ msgstr "Informacije o prodaji"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_order_ids
-#: model:ir.model.fields,field_description:sale.field_res_partner_sale_warn
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:res.request.link,name:sale.req_link_sale_order
@@ -1609,8 +1454,6 @@ msgstr "Prodajni nalog potvrđen"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
-#: model:ir.model.fields,field_description:sale.field_product_product_sale_line_warn
-#: model:ir.model.fields,field_description:sale.field_product_template_sale_line_warn
 msgid "Sales Order Line"
 msgstr "Stavka prodajnog naloga"
 
@@ -1689,33 +1532,10 @@ msgid "Salesperson"
 msgstr "Prodavač"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
-#, fuzzy
-msgid "Search Name"
-msgstr "Pretraži prodajne naloge"
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
 msgstr "Pretraži prodajne naloge"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_id
-#: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_id
-#, fuzzy
-msgid "Section"
-msgstr "Opis"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_product_product_sale_line_warn
-#: model:ir.model.fields,help:sale.field_product_template_sale_line_warn
-#: model:ir.model.fields,help:sale.field_res_partner_sale_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_sale_digital
@@ -1736,16 +1556,9 @@ msgid "Send online quotations based on templates (advanced)"
 msgstr "Pošalji ponudu na temelju predložaka (napredno)"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_sequence
 msgid "Sequence"
 msgstr "Sekvenca"
-
-#. module: sale
-#: model:sale.layout_category,name:sale.sale_layout_cat_1
-#, fuzzy
-msgid "Services"
-msgstr "Prati usluga"
 
 #. module: sale
 #. openerp-web
@@ -1825,17 +1638,9 @@ msgstr ""
 "procjenjuje da može računati ovaj mjesec."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
-msgid "Tax Excluded Price"
-msgstr "Prodajna cijena"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_tax
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_tax_id
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Taxes"
 msgstr "Porezi"
@@ -1917,7 +1722,7 @@ msgstr ""
 "instalirati kontni plan iz računovodstvenih aplikacija, postavke izbornika."
 
 #. module: sale
-#: code:addons/sale/sale.py:362 code:addons/sale/sale.py:366
+#: code:addons/sale/sale.py:330 code:addons/sale/sale.py:334
 #, python-format
 msgid "There is no invoicable line."
 msgstr "Ne postoji stavka računa."
@@ -1999,7 +1804,6 @@ msgstr "Za izdavanje računa"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_total
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_total
-#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 #: model:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Total"
 msgstr "Ukupno"
@@ -2023,7 +1827,6 @@ msgstr "Prati usluga"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Unit Price"
 msgstr "Jed. cijena"
@@ -2091,30 +1894,6 @@ msgid "Volume"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_warning_sale
-#: selection:product.template,sale_line_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:239 code:addons/sale/sale.py:844
-#, python-format
-msgid "Warning for %s"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
-#, fuzzy
-msgid "Warning on the Sales Order"
-msgstr "Pretraži prodajne naloge"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
-msgid "Warning when Selling this Product"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
 msgid "What do you want to invoice?"
 msgstr "Što želite naplatiti?"
@@ -2134,7 +1913,7 @@ msgid "Wrong value entered!"
 msgstr "Unesena pogrešna vrijednost!"
 
 #. module: sale
-#: code:addons/sale/sale.py:164
+#: code:addons/sale/sale.py:163
 #, python-format
 msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
@@ -2142,7 +1921,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:873
+#: code:addons/sale/sale.py:797
 #, python-format
 msgid ""
 "You can not remove a sale order line.\n"
@@ -2166,16 +1945,6 @@ msgstr "Stavke prodajnog naloga spremne za izradu računa"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
-#, fuzzy
-msgid ""
-"Your next actions should flow efficiently: confirm the Quotation\n"
-"                to a Sale Order, then create the Invoice and collect the "
-"Payment."
-msgstr ""
-"Vaši slijedeći postupci trebaju teći kako slijedi: potvrdite ponudu\n"
-"u prodajni nalog, potom kreirajte račun i naplatite."
-
-#. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation \n"
@@ -2210,11 +1979,6 @@ msgstr "dana"
 #: model:ir.model,name:sale.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr "sale.config.settings"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_layout_category
-msgid "sale.layout_category"
-msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
@@ -2439,6 +2203,9 @@ msgstr "nepoznato"
 #~ msgid "Last Message Date"
 #~ msgstr "Datum zadnje poruke"
 
+#~ msgid "Messages"
+#~ msgstr "Poruke"
+
 #~ msgid "Messages and communication history"
 #~ msgstr "Poruke i povijest"
 
@@ -2453,9 +2220,6 @@ msgstr "nepoznato"
 
 #~ msgid "Open Sale Menu"
 #~ msgstr "Otvori izbornik prodaje"
-
-#~ msgid "Price"
-#~ msgstr "Cijena"
 
 #~ msgid ""
 #~ "This account will be used for invoices instead of the default one to "

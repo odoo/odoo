@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2015-10-15 04:17+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -35,12 +35,6 @@ msgstr "Arhiviraj"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Po kategoriji lepljivih beležk"
-
-#. module: note
-#: model:ir.actions.act_window,help:note.note_tag_action
-#, fuzzy
-msgid "Click to add a new tag."
-msgstr "Dodaj svojo opombo."
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -139,7 +133,7 @@ msgid "New"
 msgstr "Novo"
 
 #. module: note
-#: code:addons/note/models/note.py:128
+#: code:addons/note/note.py:165
 #, python-format
 msgid "New Note"
 msgstr "Nova opomba"
@@ -187,8 +181,7 @@ msgstr "Lastnik"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-#, fuzzy
-msgid "Owner of the note stage"
+msgid "Owner of the note stage."
 msgstr "Lastnik faze beležke"
 
 #. module: note
@@ -241,15 +234,13 @@ msgid "Tag name already exists !"
 msgstr "Označba že obstaja!"
 
 #. module: note
-#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
-#: model:ir.ui.menu,name:note.notes_tag_menu
-#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Ključne besede"
 
 #. module: note
+#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "Ta teden"

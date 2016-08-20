@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-01-01 21:45+0000\n"
 "Last-Translator: Grazziano Duarte <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
@@ -564,16 +564,6 @@ msgstr ""
 "<strong>Variantes</strong> do produto como tamanho ou cor (veja abaixo)"
 
 #. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_orders_abandonned_orders
-msgid "Abandonned Orders"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.action_abandonned_orders_ecommerce
-msgid "Abandonned eCommerce Orders"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_accessory_product_ids
 msgid "Accessory Products"
@@ -593,11 +583,6 @@ msgstr "Ativar a opção do 'Suporte a múltiplas variantes por produtos' em"
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Activate the payment options you want to use"
 msgstr "Ative as opções de pagamento que você deseja usar"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_website_sale_delivery
-msgid "Add Delivery Costs to Online Sales"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -625,13 +610,6 @@ msgid "Allow the end user to choose this price list"
 msgstr "Permitir ao usuário final escolher esta lista de preços"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:34
-#, fuzzy, python-format
-msgid "Amount"
-msgstr "País"
-
-#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template_alternative_product_ids
 msgid "Appear on the product page"
@@ -649,21 +627,9 @@ msgid "Apply"
 msgstr "Aplicar"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_available_in_pos
-msgid "Available in the Point of Sale"
-msgstr "Disponível no Ponto de Vendas"
-
-#. module: website_sale
 #: model:product.pricelist,name:website_sale.list_benelux
 msgid "Benelux Pricelist"
 msgstr "Lista de preços Benelux"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:24
-#, python-format
-msgid "Best Sellers"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -692,11 +658,6 @@ msgid "Cart Quantity"
 msgstr "Quantidade no carrinho"
 
 #. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_catalog
-msgid "Catalog"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.product_public_category_action
 msgid ""
 "Categories are used to browse your products through the\n"
@@ -711,19 +672,6 @@ msgstr ""
 #, python-format
 msgid "Change the price"
 msgstr "Alterar o Preço"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_to_weight
-msgid ""
-"Check if the product should be weighted using the hardware scale integration"
-msgstr ""
-"Verifique se o produto deve ser ponderada utilizando a escala de integração "
-"de hardware"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_available_in_pos
-msgid "Check if you want this product to appear in the Point of Sale"
-msgstr "Marque se você deseja que este produto apareça no Ponto de Vendas"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_child_id
@@ -1085,8 +1033,7 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/product.py:57
-#, python-format
+#: constraint:product.public.category:0
 msgid "Error ! You cannot create recursive categories."
 msgstr "Erro! Você não pode criar categorias recursivas."
 
@@ -1193,12 +1140,6 @@ msgid "Free and easy to setup"
 msgstr "Grátis e fácil de configurar"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
-#, fuzzy
-msgid "From Website"
-msgstr "Site"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "From a"
 msgstr "De um"
@@ -1214,11 +1155,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Go to the"
 msgstr "Vá para"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_hs_code
-msgid "HS Code"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style_html_class
@@ -1263,7 +1199,7 @@ msgstr "Oculto"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_id
 #: model:ir.model.fields,field_description:website_sale.field_product_style_id
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_10958
+#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11000
 msgid "ID"
 msgstr "ID"
 
@@ -1343,19 +1279,13 @@ msgstr ""
 "Aumente as suas chances de fazer uma venda, exibindo produtos sugeridos."
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:522
+#: code:addons/website_sale/controllers/main.py:567
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "E-mail inválido! Por favor insira um endereço de e-mail válido."
 
 #. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.action_invoices_ecommerce
-#: model:ir.ui.menu,name:website_sale.menu_orders_invoices
-msgid "Invoices"
-msgstr ""
-
-#. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:87
+#: code:addons/website_sale/models/sale_order.py:86
 #, python-format
 msgid "It is forbidden to modify a sale order which is not in draft status"
 msgstr ""
@@ -1402,11 +1332,6 @@ msgid "Last Updated on"
 msgstr "Última atualização em"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
-msgid "Manage Deliveries"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_medium
 msgid "Medium-sized image"
 msgstr "Imagem de tamanho Médio"
@@ -1428,10 +1353,14 @@ msgid "Merchant Connectors"
 msgstr "Conectores de Comerciante"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
-#, fuzzy
-msgid "More Info"
-msgstr "Informações Adicionais"
+#: model:ir.model.fields,field_description:website_sale.field_product_product_purchase_line_warn_msg
+msgid "Message for Purchase Order Line"
+msgstr "Mensagem para Linha do Pedido de Compra"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_sale_line_warn_msg
+msgid "Message for Sales Order Line"
+msgstr "Mensagem para a Linha do Pedido de Vendas"
 
 #. module: website_sale
 #. openerp-web
@@ -1441,6 +1370,7 @@ msgid "My Cart"
 msgstr "Meu Carrinho"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category_complete_name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_name
 msgid "Name"
 msgstr "Nome"
@@ -1452,7 +1382,7 @@ msgstr "Nome (Entrega)"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:900
+#: code:addons/website_sale/controllers/main.py:976
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:18
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -1546,13 +1476,6 @@ msgstr ""
 "para propósito de somas."
 
 #. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_orders
-#: model:ir.ui.menu,name:website_sale.menu_orders_orders
-#, fuzzy
-msgid "Orders"
-msgstr "Pedido"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_parent_id
 msgid "Parent Category"
 msgstr "Categoria superior(pai)"
@@ -1563,8 +1486,8 @@ msgid "Partner"
 msgstr "Parceiro"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:723
-#: code:addons/website_sale/controllers/main.py:786
+#: code:addons/website_sale/controllers/main.py:779
+#: code:addons/website_sale/controllers/main.py:859
 #, python-format
 msgid "Pay Now"
 msgstr "Pagar agora"
@@ -1577,12 +1500,6 @@ msgstr "Pagar Agora <span class=\"fa fa-long-arrow-right\"/>"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_payment_acquirer_id
 msgid "Payment Acquirer"
-msgstr "Método de Pagamento"
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_acquirers
-#, fuzzy
-msgid "Payment Acquirers"
 msgstr "Método de Pagamento"
 
 #. module: website_sale
@@ -1617,11 +1534,6 @@ msgid "Phone"
 msgstr "Telefone"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_pos_categ_id
-msgid "Point of Sale Category"
-msgstr "Categoria do Ponto de Venda"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Policies"
 msgstr "Políticas"
@@ -1649,23 +1561,9 @@ msgid "Pricelist Name"
 msgstr "Nome da lista de preços"
 
 #. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
-#, fuzzy
-msgid "Pricelists"
-msgstr "Lista de Preços"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_purchase_requisition
-msgid "Procurement"
-msgstr "Aquisição"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:32
 #: model:ir.model,name:website_sale.model_product_product
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.payment
-#, python-format
 msgid "Product"
 msgstr "Produto"
 
@@ -1712,8 +1610,6 @@ msgid "Product not found!"
 msgstr "Produto não encontrado"
 
 #. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.product_template_action
-#: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "Products"
@@ -1743,9 +1639,13 @@ msgstr "Publicar seu produto"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_rating_rating_website_published
-#: model:ir.ui.view,arch_db:website_sale.product_template_search_view_website
 msgid "Published"
 msgstr "Publicado"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_purchase_line_warn
+msgid "Purchase Order Line"
+msgstr "Linha de Pedido de Compra"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
@@ -1776,13 +1676,6 @@ msgstr ""
 "Coloque os detalhes práticos (de envio, opções de pagamento, ...) como links "
 "no rodapé; Dessa forma, eles serão acessíveis a partir de todas as suas "
 "páginas de produtos."
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:33
-#, python-format
-msgid "Qty Sold"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
@@ -1833,13 +1726,6 @@ msgid "Sale"
 msgstr "Venda"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:8
-#, fuzzy, python-format
-msgid "Sales"
-msgstr "Venda"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Sales / Settings"
 msgstr "Vendas / Configurações"
@@ -1851,11 +1737,11 @@ msgstr "Pedido de Venda"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order_line
+#: model:ir.model.fields,field_description:website_sale.field_product_product_sale_line_warn
 msgid "Sales Order Line"
 msgstr "Linha de Pedido de Vendas"
 
 #. module: website_sale
-#: model:ir.model,name:website_sale.model_crm_team
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_salesteam_id
 #: model:ir.model.fields,field_description:website_sale.field_website_salesteam_id
 msgid "Sales Team"
@@ -1916,6 +1802,18 @@ msgstr "Selecione um produto da"
 #: model:ir.model.fields,field_description:website_sale.field_website_pricelist_selectable
 msgid "Selectable"
 msgstr "Selecionável"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product_purchase_line_warn
+#: model:ir.model.fields,help:website_sale.field_product_product_sale_line_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"Selecionando a opção de \"Aviso\" irá notificar o usuário com a mensagem, "
+"marcar \"Mensagem de Bloqueio\" irá lançar uma exceção com a mensagem e "
+"bloquear o fluxo. A mensagem tem de ser escrita no campo a seguir."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2060,7 +1958,7 @@ msgid "Some customers prefer to pay this way"
 msgstr "Alguns clientes preferem pagar desta forma"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:544
+#: code:addons/website_sale/controllers/main.py:589
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Alguns campos obrigatórios estão vazios."
@@ -2074,11 +1972,6 @@ msgstr "Desculpe, este produto não está mais disponível."
 #: model:ir.model.fields,field_description:website_sale.field_product_product_split_method
 msgid "Split Method"
 msgstr "Método de Separação"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_hs_code
-msgid "Standardized code for international shipping and goods declaration"
-msgstr ""
 
 #. module: website_sale
 #. openerp-web
@@ -2174,13 +2067,6 @@ msgid "The payment seems to have been canceled."
 msgstr "O pagamento foi cancelado."
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:26
-#, python-format
-msgid "There is no recent online sale."
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "There seems to be an error with your request."
 msgstr "Existe um erro com sua requisição."
@@ -2212,18 +2098,6 @@ msgid "Those categories are used to group similar products for e-commerce."
 msgstr ""
 "Estas categorias são usadas para agrupar produtos similares para o e-"
 "commerce."
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_pos_categ_id
-msgid "Those categories are used to group similar products for point of sale."
-msgstr ""
-"Essas categorias são usadas para agrupar produtos semelhantes para ponto de "
-"venda."
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_to_weight
-msgid "To Weigh With Scale"
-msgstr "Para Pesar Com Escala"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2268,17 +2142,6 @@ msgstr "Integração USPS"
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Unit Price"
 msgstr "Preço Unitário"
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
-#, fuzzy
-msgid "Unpaid Orders"
-msgstr "Validar pedido"
-
-#. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
-msgid "Unpaid eCommerce Orders"
-msgstr ""
 
 #. module: website_sale
 #. openerp-web
@@ -2344,12 +2207,6 @@ msgid "Website Categories"
 msgstr "Categorias do Site"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_website_message_ids
-#: model:ir.model.fields,field_description:website_sale.field_product_template_website_message_ids
-msgid "Website Comments"
-msgstr "Comentários do website"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_country_group_website_pricelist_ids
 msgid "Website Price Lists"
 msgstr "Lista de Preços do Site"
@@ -2375,9 +2232,7 @@ msgstr "Lista de Preços do Site para %s"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
-#: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 #: model:ir.ui.menu,name:website_sale.menu_product_public_category
-#: model:ir.ui.menu,name:website_sale.menu_product_public_category_product_catalog
 msgid "Website Product Categories"
 msgstr "Categorias de Produto do Site"
 
@@ -2419,17 +2274,6 @@ msgid "Website meta title"
 msgstr "Meta título site"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_crm_team_website_ids
-#, fuzzy
-msgid "Websites"
-msgstr "Site"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_crm_team_website_ids
-msgid "Websites using this sales team"
-msgstr ""
-
-#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:17
 #, python-format
@@ -2452,21 +2296,6 @@ msgid "You can setup 3 types of <strong>payment methods in Odoo:</strong>"
 msgstr ""
 "Você pode configurar 3 tipos de <strong>métodos de pagamento no Odoo:</"
 "strong>"
-
-#. module: website_sale
-#: model:ir.actions.act_window,help:website_sale.action_abandonned_orders_ecommerce
-msgid "You don't have any cancelled order from the website."
-msgstr ""
-
-#. module: website_sale
-#: model:ir.actions.act_window,help:website_sale.action_orders_ecommerce
-msgid "You don't have any confirmed order from the website."
-msgstr ""
-
-#. module: website_sale
-#: model:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
-msgid "You don't have any unpaid order from the website."
-msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2556,15 +2385,8 @@ msgid "eBay connector"
 msgstr "conector eBay"
 
 #. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
 msgid "eCommerce"
-msgstr "eCommerce"
-
-#. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
-#, fuzzy
-msgid "eCommerce Orders"
 msgstr "eCommerce"
 
 #. module: website_sale
@@ -2640,6 +2462,19 @@ msgstr "☑ Processada por Ogone"
 #~ "<span class=\"fa fa-envelope-o\"/> Enviar e-mail ao nosso Especialista em "
 #~ "Website"
 
+#~ msgid "Available in the Point of Sale"
+#~ msgstr "Disponível no Ponto de Vendas"
+
+#~ msgid ""
+#~ "Check if the product should be weighted using the hardware scale "
+#~ "integration"
+#~ msgstr ""
+#~ "Verifique se o produto deve ser ponderada utilizando a escala de "
+#~ "integração de hardware"
+
+#~ msgid "Check if you want this product to appear in the Point of Sale"
+#~ msgstr "Marque se você deseja que este produto apareça no Ponto de Vendas"
+
 #~ msgid ""
 #~ "Check this box to generate Call for Tenders instead of generating "
 #~ "requests for quotation from procurement."
@@ -2647,26 +2482,29 @@ msgstr "☑ Processada por Ogone"
 #~ "Marque esta caixa para gerar o convite à apresentação de propostas em vez "
 #~ "de gerar pedidos de cotação do compras."
 
-#~ msgid "Message for Purchase Order Line"
-#~ msgstr "Mensagem para Linha do Pedido de Compra"
-
-#~ msgid "Message for Sales Order Line"
-#~ msgstr "Mensagem para a Linha do Pedido de Vendas"
+#~ msgid "Extra Info"
+#~ msgstr "Informações Adicionais"
 
 #~ msgid "Payment"
 #~ msgstr "Pagamento"
 
+#~ msgid "Point of Sale Category"
+#~ msgstr "Categoria do Ponto de Venda"
+
+#~ msgid "Procurement"
+#~ msgstr "Aquisição"
+
 #~ msgid "Project"
 #~ msgstr "Projeto"
 
-#~ msgid "Purchase Order Line"
-#~ msgstr "Linha de Pedido de Compra"
-
 #~ msgid ""
-#~ "Selecting the \"Warning\" option will notify user with the message, "
-#~ "Selecting \"Blocking Message\" will throw an exception with the message "
-#~ "and block the flow. The Message has to be written in the next field."
+#~ "Those categories are used to group similar products for point of sale."
 #~ msgstr ""
-#~ "Selecionando a opção de \"Aviso\" irá notificar o usuário com a mensagem, "
-#~ "marcar \"Mensagem de Bloqueio\" irá lançar uma exceção com a mensagem e "
-#~ "bloquear o fluxo. A mensagem tem de ser escrita no campo a seguir."
+#~ "Essas categorias são usadas para agrupar produtos semelhantes para ponto "
+#~ "de venda."
+
+#~ msgid "To Weigh With Scale"
+#~ msgstr "Para Pesar Com Escala"
+
+#~ msgid "Website Comments"
+#~ msgstr "Comentários do website"

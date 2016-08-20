@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-07-15 13:31+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
@@ -20,6 +20,40 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_paypal
+#: model:payment.acquirer,cancel_msg:payment_paypal.payment_acquirer_paypal
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr "<span><i>Annuleer,</i> Uw betaling is geannuleerd.</span>"
+
+#. module: payment_paypal
+#: model:payment.acquirer,done_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr ""
+"<span><i>Klaar,</i> Uw online betaling is succesvol verwerkt. Bedankt voor "
+"uw order.</span>"
+
+#. module: payment_paypal
+#: model:payment.acquirer,error_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr ""
+"<span><i>Fout,</i> Er is een fout opgetreden tijdens de transactie. De order "
+"is bevestigd maar niet betaald. Aarzel niet ommet ons contact op te nemen "
+"indien u vragen heeft over de status van uw order.</span>"
+
+#. module: payment_paypal
+#: model:payment.acquirer,pending_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr ""
+"<span><i>Wachtende,</i> Uw online betaling is succesvol verwerkt. Uw order "
+"is nog niet gevalideerd.</span>"
+
+#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token
 msgid "Access Token"
 msgstr "Toegangstoken"
@@ -28,6 +62,11 @@ msgstr "Toegangstoken"
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token_validity
 msgid "Access Token Validity"
 msgstr "Geldigheid toegangstoken"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_res_company
+msgid "Companies"
+msgstr "Bedrijven"
 
 #. module: payment_paypal
 #: model:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
@@ -43,6 +82,11 @@ msgstr "Betaling verwerver"
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Betalingstransactie"
+
+#. module: payment_paypal
+#: model:payment.acquirer,name:payment_paypal.payment_acquirer_paypal
+msgid "Paypal"
+msgstr "Paypal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_email_account
@@ -65,7 +109,7 @@ msgid "Paypal TX Details"
 msgstr "Paypal TX Details"
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/paypal.py:164
+#: code:addons/payment_paypal/models/paypal.py:183
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
 msgstr "Paypal: data ontvangen met missende referentie (%s) of txn_id (%s)"
@@ -104,42 +148,10 @@ msgstr "Gebruik IPN"
 msgid "Use Rest API"
 msgstr "Gebruik Rest API"
 
-#~ msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-#~ msgstr "<span><i>Annuleer,</i> Uw betaling is geannuleerd.</span>"
-
-#~ msgid ""
-#~ "<span><i>Done,</i> Your online payment has been successfully processed. "
-#~ "Thank you for your order.</span>"
-#~ msgstr ""
-#~ "<span><i>Klaar,</i> Uw online betaling is succesvol verwerkt. Bedankt "
-#~ "voor uw order.</span>"
-
-#~ msgid ""
-#~ "<span><i>Error,</i> Please be aware that an error occurred during the "
-#~ "transaction. The order has been confirmed but won't be paid. Don't "
-#~ "hesitate to contact us if you have any questions on the status of your "
-#~ "order.</span>"
-#~ msgstr ""
-#~ "<span><i>Fout,</i> Er is een fout opgetreden tijdens de transactie. De "
-#~ "order is bevestigd maar niet betaald. Aarzel niet ommet ons contact op te "
-#~ "nemen indien u vragen heeft over de status van uw order.</span>"
-
-#~ msgid ""
-#~ "<span><i>Pending,</i> Your online payment has been successfully "
-#~ "processed. But your order is not validated yet.</span>"
-#~ msgstr ""
-#~ "<span><i>Wachtende,</i> Uw online betaling is succesvol verwerkt. Uw "
-#~ "order is nog niet gevalideerd.</span>"
-
-#~ msgid "Companies"
-#~ msgstr "Bedrijven"
-
-#~ msgid "Paypal"
-#~ msgstr "Paypal"
-
-#~ msgid ""
-#~ "You will be redirected to the Paypal website after clicking on the "
-#~ "payment button."
-#~ msgstr ""
-#~ "U wordt doorverwezen naar de Paypal website na het klikken op de "
-#~ "betaalknop."
+#. module: payment_paypal
+#: model:payment.acquirer,pre_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"You will be redirected to the Paypal website after clicking on the payment "
+"button."
+msgstr ""
+"U wordt doorverwezen naar de Paypal website na het klikken op de betaalknop."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-02-12 16:15+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -60,7 +60,7 @@ msgid "Confirmed"
 msgstr "Potvrdené"
 
 #. module: fetchmail
-#: code:addons/fetchmail/models/fetchmail.py:137
+#: code:addons/fetchmail/fetchmail.py:150
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "Test pripojenia zlyhal: %s"
@@ -80,11 +80,13 @@ msgid "Create a New Record"
 msgstr "Vytvoriť nový záznam"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "Vytvoril"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "Vytvorené"
@@ -95,6 +97,7 @@ msgid "Defines the order of processing, lower values mean higher priority"
 msgstr "Definuje poradie spracovania, nižšie hodnoty znamenjú vyššiu prioritu"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr "Zobraziť meno"
@@ -110,6 +113,7 @@ msgid "Hostname or IP of the mail server"
 msgstr "Názov hostiteľa alebo IP adresa mail servera"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "ID"
@@ -162,16 +166,19 @@ msgid "Last Fetch Date"
 msgstr "Dátum posledného načítania"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
 msgstr "Posledná modifikácia"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
 msgstr "Naposledy upravoval"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "Naposledy upravované"
@@ -358,5 +365,7 @@ msgstr ""
 "Či by mali byť stiahnuté prílohy. Ak to nie je povolené, budú prichádzajúce "
 "emaily zbavené všetkých príloh pred spracovaním"
 
-#~ msgid "fetchmail.config.settings"
-#~ msgstr "fetchmail.config.settings "
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
+msgid "fetchmail.config.settings"
+msgstr "fetchmail.config.settings "

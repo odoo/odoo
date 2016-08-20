@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-06-06 18:04+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
@@ -102,13 +102,6 @@ msgstr "# weergaven op website"
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "${user.name} shared a ${object.slide_type} with you!"
 msgstr "${user.name} deelde een ${object.slide_type} met u!"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-msgid ""
-"(Un)archiving a channel automatically (un)archives its slides. Do you want "
-"to proceed?"
-msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
@@ -334,19 +327,6 @@ msgid "Actions"
 msgstr "Acties"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
-#, fuzzy
-msgid "Active"
-msgstr "Acties"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
-msgid "Archived"
-msgstr ""
-
-#. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authentified Users Only"
 msgstr "Enkel geauthentificeerde gebruikers"
@@ -389,7 +369,6 @@ msgstr "Categorie"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_channel_id
-#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Channel"
@@ -455,7 +434,7 @@ msgstr ""
 "Foutmelding: %serror"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:304
+#: code:addons/website_slides/models/slides.py:294
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -1019,8 +998,8 @@ msgstr ""
 "kunnen stemmen"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:307
-#: code:addons/website_slides/models/slides.py:532
+#: code:addons/website_slides/models/slides.py:297
+#: code:addons/website_slides/models/slides.py:518
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "Geef een geldige Youtube of Google Doc URL in"
@@ -1358,7 +1337,7 @@ msgid "Uncategorized presentation"
 msgstr "Presentatie niet gecategoriseerd"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:521
+#: code:addons/website_slides/models/slides.py:507
 #, python-format
 msgid "Unknown document"
 msgstr "Document onbekend"
@@ -1415,7 +1394,7 @@ msgid "Videos"
 msgstr "Video's"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:446
+#: code:addons/website_slides/models/slides.py:436
 #, fuzzy, python-format
 msgid "View Slide"
 msgstr "Website presentaties"

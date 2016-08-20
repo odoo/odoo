@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-07-12 07:31+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -117,13 +117,6 @@ msgstr ""
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "${user.name} shared a ${object.slide_type} with you!"
 msgstr "${user.name} 向你分享了 ${object.slide_type}!"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-msgid ""
-"(Un)archiving a channel automatically (un)archives its slides. Do you want "
-"to proceed?"
-msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
@@ -342,19 +335,6 @@ msgid "Actions"
 msgstr "动作"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
-#, fuzzy
-msgid "Active"
-msgstr "动作"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
-msgid "Archived"
-msgstr ""
-
-#. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authentified Users Only"
 msgstr "这有认证的用户可以"
@@ -397,7 +377,6 @@ msgstr "类别"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_channel_id
-#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Channel"
@@ -461,7 +440,7 @@ msgstr ""
 "这里是从网址获得的错误信息：%serror"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:304
+#: code:addons/website_slides/models/slides.py:294
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -1005,8 +984,8 @@ msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr "请<a href=\"/web?redirect=%s\">登录</A>投票这张幻灯片"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:307
-#: code:addons/website_slides/models/slides.py:532
+#: code:addons/website_slides/models/slides.py:297
+#: code:addons/website_slides/models/slides.py:518
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "请输入有效的YouTube或谷歌文档的URL"
@@ -1337,7 +1316,7 @@ msgid "Uncategorized presentation"
 msgstr "未分类的演示"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:521
+#: code:addons/website_slides/models/slides.py:507
 #, python-format
 msgid "Unknown document"
 msgstr "未知文档"
@@ -1390,7 +1369,7 @@ msgid "Videos"
 msgstr "视频"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:446
+#: code:addons/website_slides/models/slides.py:436
 #, fuzzy, python-format
 msgid "View Slide"
 msgstr "网站幻灯片"

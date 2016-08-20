@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-15 19:40+0000\n"
 "Last-Translator: Gennady Marchenko <gennadym@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -37,6 +37,26 @@ msgstr ""
 "↵ \n"
 "* Статус \"Готов\" используется, когда табель пользователей принимается его/"
 "ее руководителем."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
+msgid "# Nbr Timesheet"
+msgstr "# Номер Табеля"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
+msgid "# Total Attendance"
+msgstr "Общая посещаемость"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
+msgid "# Total Diff"
+msgstr "# Итого разница"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
+msgid "# Total Timesheet"
+msgstr "# Итого расписание"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -112,6 +132,12 @@ msgid "Company"
 msgstr "Компания"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Confirmed"
+msgstr "Подтверждено"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr "Подтвержденные табели"
@@ -139,18 +165,23 @@ msgid "Date"
 msgstr "Дата"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr "Дата с"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "Дата до"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "Подразделение"
 
@@ -179,6 +210,18 @@ msgid "Display Name"
 msgstr "Отображаемое Имя"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Done"
+msgstr "Сделано"
+
+#. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Draft"
+msgstr "Черновик"
+
+#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
@@ -203,6 +246,11 @@ msgstr ""
 "Входом)"
 
 #. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
+msgid "External Timesheet"
+msgstr "Внешний Табель"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
 msgstr "Группировать по"
@@ -211,12 +259,6 @@ msgstr "Группировать по"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Часы"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-#, fuzzy
-msgid "Hr Department"
-msgstr "Отдел кадров"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -241,6 +283,11 @@ msgid ""
 msgstr ""
 "В целях создания табеля для этого сотрудника, вам необходимо соединить его/"
 "ее с пользователем."
+
+#. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
+msgid "Internal Timesheet"
+msgstr "Внутреннее Расписание"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -279,6 +326,7 @@ msgid "My Timesheets"
 msgstr "Мои табели"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
 msgstr "Новый"
@@ -372,7 +420,9 @@ msgid "Sign Out"
 msgstr "Выход"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Status"
 msgstr "Статус"
 
@@ -397,6 +447,7 @@ msgstr ""
 "входов и выходов."
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
@@ -694,41 +745,17 @@ msgstr "для"
 msgid "waiting approval"
 msgstr "ожидает утверждения"
 
-#~ msgid "# Nbr Timesheet"
-#~ msgstr "# Номер Табеля"
-
-#~ msgid "# Total Attendance"
-#~ msgstr "Общая посещаемость"
-
-#~ msgid "# Total Diff"
-#~ msgstr "# Итого разница"
-
-#~ msgid "# Total Timesheet"
-#~ msgstr "# Итого расписание"
-
 #~ msgid "Action Needed"
 #~ msgstr "Требуется реакция"
 
 #~ msgid "Cancel"
 #~ msgstr "Отмена"
 
-#~ msgid "Confirmed"
-#~ msgstr "Подтверждено"
-
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Дата последнего сообщения"
 
 #~ msgid "Day"
 #~ msgstr "День"
-
-#~ msgid "Done"
-#~ msgstr "Сделано"
-
-#~ msgid "Draft"
-#~ msgstr "Черновик"
-
-#~ msgid "External Timesheet"
-#~ msgstr "Внешний Табель"
 
 #~ msgid "Followers"
 #~ msgstr "Подписчики"
@@ -738,6 +765,9 @@ msgstr "ожидает утверждения"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Подписчики (Партнеры)"
+
+#~ msgid "HR Department"
+#~ msgstr "Отдел кадров"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
@@ -751,9 +781,6 @@ msgstr "ожидает утверждения"
 #~ msgstr ""
 #~ "В целях создания расписания для этого сотрудника, вы должны привязать "
 #~ "сотрудника к продукту."
-
-#~ msgid "Internal Timesheet"
-#~ msgstr "Внутреннее Расписание"
 
 #~ msgid "Is Follower"
 #~ msgstr "Подписчик"

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
@@ -74,7 +74,7 @@ msgid "Confirmed"
 msgstr "Jóváhagyott"
 
 #. module: fetchmail
-#: code:addons/fetchmail/models/fetchmail.py:137
+#: code:addons/fetchmail/fetchmail.py:150
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "Csatlakozás teszt nem sikerült: %s"
@@ -94,11 +94,13 @@ msgid "Create a New Record"
 msgstr "Új rekord létrehozása"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "Készítette"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "Létrehozás dátuma"
@@ -110,6 +112,7 @@ msgstr ""
 "Feldolgozás sorrendjének meghatározása, alacsonyabb érték magasabb prioritás"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 #, fuzzy
 msgid "Display Name"
@@ -130,6 +133,7 @@ msgid "Hostname or IP of the mail server"
 msgstr "Levelező szerver hostneve vagy IP címe"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "Azonosító ID"
@@ -182,6 +186,7 @@ msgid "Last Fetch Date"
 msgstr "Utolsó letöltés időpontja"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 #, fuzzy
 msgid "Last Modified on"
@@ -192,6 +197,7 @@ msgstr ""
 "Utoljára frissítve ekkor"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 #, fuzzy
 msgid "Last Updated by"
@@ -202,6 +208,7 @@ msgstr ""
 "Utoljára frissítette"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "Utoljára frissítve "
@@ -390,6 +397,11 @@ msgstr ""
 "Letöltse-e az e-mail mellékleteket. Ha nincs beállítva, a Beérkező "
 "levelekről le lesz választva a melléklet a műveletek elvégzése előtt."
 
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
+msgid "fetchmail.config.settings"
+msgstr "fetchmail.config.settings"
+
 #~ msgid ""
 #~ "Whether a full original copy of each email should be kept for "
 #~ "referenceand attached to each processed message. This will usually double "
@@ -398,6 +410,3 @@ msgstr ""
 #~ "Megőrizze-e az összes e-mail példányát hivatkozási mellékletként a "
 #~ "feldolgozott üzenetekhez. Ez általában megkétszerezi az üzenet adatbázis "
 #~ "nagyságát."
-
-#~ msgid "fetchmail.config.settings"
-#~ msgstr "fetchmail.config.settings"

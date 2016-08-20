@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:23+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-08-18 08:36+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
@@ -1050,7 +1050,6 @@ msgstr ""
 "订阅时默认激活"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_activity_report_active
 #: model:ir.model.fields,field_description:crm.field_crm_lead_active
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason_active
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_active
@@ -1059,14 +1058,10 @@ msgstr "有效"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_action
-#: model:ir.actions.act_window,name:crm.crm_activity_report_action_tree
-#: model:ir.model.fields,field_description:crm.field_res_partner_activities_count
-#: model:ir.model.fields,field_description:crm.field_res_users_activities_count
 #: model:ir.ui.menu,name:crm.crm_activity_menu
 #: model:ir.ui.menu,name:crm.crm_activity_report_menu
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_form
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_tree
-#: model:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Activities"
 msgstr "活动"
 
@@ -1177,7 +1172,7 @@ msgstr ""
 "人。"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:863
+#: code:addons/crm/crm_lead.py:865
 #, python-format
 msgid ""
 "All email incoming to %(link)s  will automatically create new opportunity.\n"
@@ -1326,6 +1321,11 @@ msgid "Better visibility on team activities"
 msgstr "更好的团队活动的知名度"
 
 #. module: crm
+#: selection:crm.lead,kanban_state:0
+msgid "Blocked"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Boost your online sales with sleek product pages."
 msgstr "提高您在线销售的时尚产品的页面"
@@ -1466,7 +1466,7 @@ msgstr ""
 "归类和分析线索/商机类别， 例如：培训，服务"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:868
+#: code:addons/crm/crm_lead.py:870
 #, python-format
 msgid "Click to add a new opportunity"
 msgstr "点击创建一个新的商机"
@@ -1513,8 +1513,8 @@ msgstr "关闭日期"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_closed
-msgid "Closed Date"
-msgstr "关闭的日期"
+msgid "Closed"
+msgstr "已关闭"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:90
@@ -1784,7 +1784,7 @@ msgid "Current Line"
 msgstr "当前行"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:943
+#: code:addons/crm/crm_lead.py:945
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2projectissue_wizard_partner_id
@@ -1799,7 +1799,7 @@ msgid "Customer"
 msgstr "客户"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:945
+#: code:addons/crm/crm_lead.py:947
 #, python-format
 msgid "Customer Email"
 msgstr "客户邮件"
@@ -2253,7 +2253,7 @@ msgid "Force assignation"
 msgstr "强制分配"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:502
+#: code:addons/crm/crm_lead.py:504
 #, python-format
 msgid "From %s : %s"
 msgstr "来自: %s:%s"
@@ -2621,10 +2621,9 @@ msgstr ""
 "最近更新时间"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:778 selection:crm.activity.report,lead_type:0
+#: code:addons/crm/crm_lead.py:780 selection:crm.activity.report,lead_type:0
 #: selection:crm.lead,type:0 selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_lead_id
-#: model:ir.model.fields,field_description:crm.field_crm_activity_report_lead_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost_lead_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
@@ -2905,7 +2904,7 @@ msgid "Medium"
 msgstr "普通"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1008
+#: code:addons/crm/crm_lead.py:1010
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr "会议安排在 '%s'<br>   主题: %s <br> 时长: %s 小时"
@@ -2987,25 +2986,25 @@ msgid "Merge with existing opportunities"
 msgstr "与已存在的商机合并"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:487
+#: code:addons/crm/crm_lead.py:489
 #, python-format
 msgid "Merged lead"
 msgstr "合并的线索"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:481
+#: code:addons/crm/crm_lead.py:483
 #, python-format
 msgid "Merged leads"
 msgstr "合并的线索"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:483
+#: code:addons/crm/crm_lead.py:485
 #, python-format
 msgid "Merged opportunities"
 msgstr "合并的商机"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:487
+#: code:addons/crm/crm_lead.py:489
 #, python-format
 msgid "Merged opportunity"
 msgstr "合并商机"
@@ -3087,11 +3086,6 @@ msgstr ""
 "月"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
-msgid "More Info"
-msgstr "更多信息"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Motivation letter from the management"
 msgstr "管理部门的激励信"
@@ -3165,17 +3159,7 @@ msgid "Next activity"
 msgstr "下一个活动"
 
 #. module: crm
-#: selection:crm.lead,kanban_state:0
-msgid "Next activity is planned"
-msgstr "下一个活动已计划"
-
-#. module: crm
-#: selection:crm.lead,kanban_state:0
-msgid "Next activity late"
-msgstr "下一个活动迟到"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:964
+#: code:addons/crm/crm_lead.py:966
 #, python-format
 msgid "No Subject"
 msgstr "无主题"
@@ -3186,18 +3170,14 @@ msgid "No activity"
 msgstr "没有活动"
 
 #. module: crm
-#: selection:crm.lead,kanban_state:0
-msgid "No next activity planned"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "No salesperson"
 msgstr "没有销售员"
 
 #. module: crm
-#: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
+#: selection:crm.lead,kanban_state:0 selection:crm.lead,priority:0
+#: selection:crm.opportunity.report,priority:0
 msgid "Normal"
 msgstr "一般"
 
@@ -3416,7 +3396,7 @@ msgid "Opportunities that are assigned to me"
 msgstr "分配给我的商机"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:757 selection:crm.activity.report,lead_type:0
+#: code:addons/crm/crm_lead.py:759 selection:crm.activity.report,lead_type:0
 #: selection:crm.lead,type:0 selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_calendar_event_opportunity_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_name
@@ -3694,7 +3674,7 @@ msgstr ""
 "计划器"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:572
+#: code:addons/crm/crm_lead.py:574
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -3750,7 +3730,6 @@ msgid "Priority Management Explanation"
 msgstr "优先级管理解释"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_activity_report_probability
 #: model:ir.model.fields,field_description:crm.field_crm_lead_probability
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_probability
 msgid "Probability"
@@ -3795,6 +3774,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead_priority
 msgid "Rating"
 msgstr "评级"
+
+#. module: crm
+#: selection:crm.lead,kanban_state:0
+msgid "Ready for next stage"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
@@ -3958,11 +3942,6 @@ msgstr "安排活动"
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 msgid "Schedule Next Activity"
 msgstr "安排下一活动"
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_activity_schedule_action
-msgid "Schedule an Activity"
-msgstr "安排活动"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -4254,7 +4233,6 @@ msgstr "订阅管理"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_title_action
-#: model:ir.model.fields,field_description:crm.field_crm_activity_report_subject
 msgid "Summary"
 msgstr "摘要"
 
@@ -4496,7 +4474,7 @@ msgid ""
 msgstr "当这个阶段中没有任何记录要呈现的时候，这个阶段在看板视图中被折叠起来"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1162
+#: code:addons/crm/crm_lead.py:1164
 #, python-format
 msgid "This target does not exist."
 msgstr "这个目标不存在."
@@ -4725,11 +4703,6 @@ msgstr "非常高"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_crm_voip
 msgid "VoIP integration"
-msgstr "VoIP集成"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
-msgid "Voip integration"
 msgstr "VoIP集成"
 
 #. module: crm
@@ -5072,7 +5045,7 @@ msgid "e.g. Product Pricing"
 msgstr "例如, 产品定价"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:859
+#: code:addons/crm/crm_lead.py:861
 #, python-format
 msgid "opportunities"
 msgstr "商机"
@@ -5157,7 +5130,7 @@ msgstr ""
 "                                  (例如： sales@yourcompany.com)"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1002
+#: code:addons/crm/crm_lead.py:1004
 #, python-format
 msgid "unknown"
 msgstr "未知的"
@@ -5191,9 +5164,6 @@ msgstr "以上你的工作"
 
 #~ msgid "Click to set a new stage in your lead/opportunity pipeline."
 #~ msgstr "点击，为你的线索／商机管道设置一个新的阶段"
-
-#~ msgid "Closed"
-#~ msgstr "已关闭"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "发布到记录上的最后消息的日期"
@@ -5407,6 +5377,9 @@ msgstr "以上你的工作"
 #~ msgid "oe_kanban_text_red"
 #~ msgstr "oe_kanban_text_red"
 
+#~ msgid "Closed Date"
+#~ msgstr "关闭的日期"
+
 #~ msgid "Create"
 #~ msgstr "创建"
 
@@ -5425,14 +5398,29 @@ msgstr "以上你的工作"
 #~ msgid "Expected Closing Date"
 #~ msgstr "预期结束日期"
 
+#~ msgid "More Info"
+#~ msgstr "更多信息"
+
+#~ msgid "Next activity is planned"
+#~ msgstr "下一个活动已计划"
+
+#~ msgid "Next activity late"
+#~ msgstr "下一个活动迟到"
+
 #~ msgid "Opportunity Title"
 #~ msgstr "商机主题"
 
 #~ msgid "Probable Turnover"
 #~ msgstr "可能的营业额"
 
+#~ msgid "Schedule an Activity"
+#~ msgstr "安排活动"
+
 #~ msgid "Use the breadcrumbs to <b>go back to your sales pipeline</b>."
 #~ msgstr "使用面包屑 <b>回到你的销售漏斗</b>."
 
 #~ msgid "Used to log into the system"
 #~ msgstr "用户登录入系统"
+
+#~ msgid "Voip integration"
+#~ msgstr "VoIP集成"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-07-12 10:39+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -24,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:250
+#: code:addons/mrp/stock.py:231
 #, python-format
 msgid " Manufacture"
 msgstr " Произведува"
@@ -42,13 +42,13 @@ msgid "# Manufacturing Orders"
 msgstr "# Налози за производство"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:343
+#: code:addons/mrp/mrp.py:341
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копија)"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1051
+#: code:addons/mrp/mrp.py:1052
 #, python-format
 msgid "%s produced"
 msgstr "%sпроизведено"
@@ -225,13 +225,6 @@ msgid "Approve"
 msgstr "Одобри"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
-msgid "Archived"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product_produce_delay
 #: model:ir.model.fields,help:mrp.field_product_template_produce_delay
 msgid ""
@@ -279,7 +272,7 @@ msgid "BOM lines of the referred bom"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/stock.py:44
+#: code:addons/mrp/stock.py:25
 #, python-format
 msgid ""
 "Because the product %s requires it, you must assign a serial number to your "
@@ -351,7 +344,7 @@ msgid "BoM"
 msgstr "Норматив"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:318
+#: code:addons/mrp/mrp.py:316
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr ""
@@ -382,7 +375,7 @@ msgid "By-Products"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/stock.py:247
+#: code:addons/mrp/stock.py:228
 #, python-format
 msgid "Can't find any generic Manufacture route."
 msgstr "Не е пронајдена ниту една генеричка рута на производство."
@@ -406,19 +399,19 @@ msgid "Cancelled"
 msgstr "Откажано"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:169
+#: code:addons/mrp/stock.py:150
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr "Не може да се конзумира движење со негативна или нула количина."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:651
+#: code:addons/mrp/mrp.py:649
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr "Не може да се избрише налог за производство во состојба '%s'."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:721
+#: code:addons/mrp/mrp.py:719
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr "Нема норматив за овој производ"
@@ -874,6 +867,15 @@ msgstr ""
 "нормативите без да ги одстраните"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"Доколку активното поле е подесено на Грешка, ќе можете да го сокриете "
+"записот на ресурсот без да го отстраните."
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
@@ -886,6 +888,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "In Production"
 msgstr "Во производство"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Inactive"
+msgstr "Неактивен"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
@@ -1023,7 +1031,7 @@ msgid "Manager"
 msgstr "Менаџер"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:244
+#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:225
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
 #, python-format
 msgid "Manufacture"
@@ -1072,7 +1080,7 @@ msgid "Manufacturing Order"
 msgstr "Налог за обработка"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:114
+#: code:addons/mrp/procurement.py:112
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "Налогот за производство <em>%s</em> е креиран."
@@ -1112,7 +1120,7 @@ msgid "Manufacturing Reference"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:786
+#: code:addons/mrp/mrp.py:784
 #, python-format
 msgid "Manufacturing order cancelled."
 msgstr ""
@@ -1163,7 +1171,7 @@ msgid "New"
 msgstr "Ново"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:110
+#: code:addons/mrp/procurement.py:108
 #, python-format
 msgid "No BoM exists for this product!"
 msgstr "Не постоти норматив за овој производ"
@@ -1288,7 +1296,7 @@ msgid "Planning"
 msgstr "Планирање"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:155
+#: code:addons/mrp/stock.py:136
 #, python-format
 msgid "Please provide proper quantity."
 msgstr "Ве молиме обезбедете соодветна количина."
@@ -1523,7 +1531,7 @@ msgstr "Својство"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9622
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1825,7 +1833,7 @@ msgid "Technical field used to make the traceability of produced products"
 msgstr "Техничко поле што се користи за следење на произведените производи"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:353 code:addons/mrp/mrp.py:452
+#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2060,7 +2068,7 @@ msgid "Warehouse"
 msgstr "Магацин"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:353 code:addons/mrp/mrp.py:452
+#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
 #, python-format
 msgid "Warning"
 msgstr "Внимание"
@@ -2218,7 +2226,7 @@ msgstr ""
 "-Ова го инсталира модулот mrp_byproduct."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:359
+#: code:addons/mrp/mrp.py:357
 #, python-format
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
@@ -2294,16 +2302,6 @@ msgstr "непознато"
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
-
-#~ msgid ""
-#~ "If the active field is set to False, it will allow you to hide the "
-#~ "resource record without removing it."
-#~ msgstr ""
-#~ "Доколку активното поле е подесено на Грешка, ќе можете да го сокриете "
-#~ "записот на ресурсот без да го отстраните."
-
-#~ msgid "Inactive"
-#~ msgstr "Неактивен"
 
 #~ msgid "Is Follower"
 #~ msgstr "е следач"

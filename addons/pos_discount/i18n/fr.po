@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:23+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2015-11-11 20:50+0000\n"
 "Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
@@ -26,7 +26,7 @@ msgstr "Permettre au caissier de donner une ristourne sur la commande."
 
 #. module: pos_discount
 #. openerp-web
-#: code:addons/pos_discount/static/src/xml/discount_templates.xml:6
+#: code:addons/pos_discount/static/src/xml/discount.xml:6
 #, python-format
 msgid "Discount"
 msgstr "Remise"
@@ -53,15 +53,21 @@ msgstr "Remises de la commande"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_pc
-msgid "The default discount percentage"
+#, fuzzy
+msgid "The default discount percentage."
 msgstr "Pourcentage de remise par défaut"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id
-msgid "The product used to model the discount"
-msgstr "L'article qui représente la remise"
+msgid ""
+"The product used to record the discount. The ability to discount on the "
+"whole order will be disabled if this field is empty."
+msgstr ""
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config
 msgid "pos.config"
 msgstr "pos.config"
+
+#~ msgid "The product used to model the discount"
+#~ msgstr "L'article qui représente la remise"

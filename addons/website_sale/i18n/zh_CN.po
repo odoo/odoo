@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-07-22 05:53+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -532,16 +532,6 @@ msgid "<strong>Variants</strong> of the product like size or color (see below)"
 msgstr "<STRONG>变体</STRONG>如大小或颜色的产品(见下文)"
 
 #. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_orders_abandonned_orders
-msgid "Abandonned Orders"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.action_abandonned_orders_ecommerce
-msgid "Abandonned eCommerce Orders"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_accessory_product_ids
 msgid "Accessory Products"
@@ -561,11 +551,6 @@ msgstr "激活选项“每个产品都支持多个变种”"
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Activate the payment options you want to use"
 msgstr "激活您要使用的付款方式"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_website_sale_delivery
-msgid "Add Delivery Costs to Online Sales"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -591,13 +576,6 @@ msgid "Allow the end user to choose this price list"
 msgstr "允许最终用户选择此价格表"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:34
-#, fuzzy, python-format
-msgid "Amount"
-msgstr "国家"
-
-#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template_alternative_product_ids
 msgid "Appear on the product page"
@@ -615,21 +593,9 @@ msgid "Apply"
 msgstr "应用"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_available_in_pos
-msgid "Available in the Point of Sale"
-msgstr "可用于POS"
-
-#. module: website_sale
 #: model:product.pricelist,name:website_sale.list_benelux
 msgid "Benelux Pricelist"
 msgstr "比荷卢价格表"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:24
-#, python-format
-msgid "Best Sellers"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -658,11 +624,6 @@ msgid "Cart Quantity"
 msgstr "购物车数量"
 
 #. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_catalog
-msgid "Catalog"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.product_public_category_action
 msgid ""
 "Categories are used to browse your products through the\n"
@@ -675,17 +636,6 @@ msgstr "分类是通过使用触摸屏界面来浏览你的产品。"
 #, python-format
 msgid "Change the price"
 msgstr "改变价格"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_to_weight
-msgid ""
-"Check if the product should be weighted using the hardware scale integration"
-msgstr "请检查此商品是否需要使用集成的测试硬件来称重"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_available_in_pos
-msgid "Check if you want this product to appear in the Point of Sale"
-msgstr "如果你想这个产品适用于POS，勾选此项"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_child_id
@@ -1040,8 +990,7 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/product.py:57
-#, python-format
+#: constraint:product.public.category:0
 msgid "Error ! You cannot create recursive categories."
 msgstr "错误！您不能创建循环的类别。"
 
@@ -1142,12 +1091,6 @@ msgid "Free and easy to setup"
 msgstr "自由和易于设置"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
-#, fuzzy
-msgid "From Website"
-msgstr "网站"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "From a"
 msgstr "从"
@@ -1161,11 +1104,6 @@ msgstr "显示产品列表的序列"
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Go to the"
 msgstr "去"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_hs_code
-msgid "HS Code"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style_html_class
@@ -1209,7 +1147,7 @@ msgstr "隐藏"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_id
 #: model:ir.model.fields,field_description:website_sale.field_product_style_id
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_10958
+#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11000
 msgid "ID"
 msgstr "ID"
 
@@ -1277,19 +1215,13 @@ msgid "Increase your chances to make a sale by displaying suggested products."
 msgstr "通过展示建议的产品来增加行销售可能性"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:522
+#: code:addons/website_sale/controllers/main.py:567
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "不合规电邮！ 请输入有效的电子邮件地址。"
 
 #. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.action_invoices_ecommerce
-#: model:ir.ui.menu,name:website_sale.menu_orders_invoices
-msgid "Invoices"
-msgstr ""
-
-#. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:87
+#: code:addons/website_sale/models/sale_order.py:86
 #, python-format
 msgid "It is forbidden to modify a sale order which is not in draft status"
 msgstr "禁止修改销售订单当它不是处于草案状态时"
@@ -1333,11 +1265,6 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
-msgid "Manage Deliveries"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_medium
 msgid "Medium-sized image"
 msgstr "中等尺寸图像"
@@ -1358,10 +1285,14 @@ msgid "Merchant Connectors"
 msgstr "商家连接器"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
-#, fuzzy
-msgid "More Info"
-msgstr "额外信息"
+#: model:ir.model.fields,field_description:website_sale.field_product_product_purchase_line_warn_msg
+msgid "Message for Purchase Order Line"
+msgstr "采购订单明细消息"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_sale_line_warn_msg
+msgid "Message for Sales Order Line"
+msgstr "销售订单行消息"
 
 #. module: website_sale
 #. openerp-web
@@ -1371,6 +1302,7 @@ msgid "My Cart"
 msgstr "我的购物车"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category_complete_name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_name
 msgid "Name"
 msgstr "名称"
@@ -1382,7 +1314,7 @@ msgstr "名称 (配送)"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:900
+#: code:addons/website_sale/controllers/main.py:976
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:18
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -1467,13 +1399,6 @@ msgid ""
 msgstr "订单明细会显示在网站中，但不能用于统计分析。"
 
 #. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_orders
-#: model:ir.ui.menu,name:website_sale.menu_orders_orders
-#, fuzzy
-msgid "Orders"
-msgstr "订单"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_parent_id
 msgid "Parent Category"
 msgstr "父级分类"
@@ -1484,8 +1409,8 @@ msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:723
-#: code:addons/website_sale/controllers/main.py:786
+#: code:addons/website_sale/controllers/main.py:779
+#: code:addons/website_sale/controllers/main.py:859
 #, python-format
 msgid "Pay Now"
 msgstr "现在付款"
@@ -1498,12 +1423,6 @@ msgstr "现在付款 <span class=\"fa fa-long-arrow-right\"/>"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_payment_acquirer_id
 msgid "Payment Acquirer"
-msgstr "付款收单方"
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_acquirers
-#, fuzzy
-msgid "Payment Acquirers"
 msgstr "付款收单方"
 
 #. module: website_sale
@@ -1538,11 +1457,6 @@ msgid "Phone"
 msgstr "电话"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_pos_categ_id
-msgid "Point of Sale Category"
-msgstr "POS类别"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Policies"
 msgstr "政策"
@@ -1570,23 +1484,9 @@ msgid "Pricelist Name"
 msgstr "价格表名称"
 
 #. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
-#, fuzzy
-msgid "Pricelists"
-msgstr "价格表"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_purchase_requisition
-msgid "Procurement"
-msgstr "补货"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:32
 #: model:ir.model,name:website_sale.model_product_product
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.payment
-#, python-format
 msgid "Product"
 msgstr "产品"
 
@@ -1633,8 +1533,6 @@ msgid "Product not found!"
 msgstr "没有任何商品！"
 
 #. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.product_template_action
-#: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "Products"
@@ -1664,9 +1562,13 @@ msgstr "发布你的产品"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_rating_rating_website_published
-#: model:ir.ui.view,arch_db:website_sale.product_template_search_view_website
 msgid "Published"
 msgstr "已发布"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_purchase_line_warn
+msgid "Purchase Order Line"
+msgstr "采购订单明细"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
@@ -1696,13 +1598,6 @@ msgid ""
 msgstr ""
 "把实用的细节(运费，付款方式，...)作为底部的链接;这样一来，他们将所有的产品页"
 "面访问。"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:33
-#, python-format
-msgid "Qty Sold"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
@@ -1753,13 +1648,6 @@ msgid "Sale"
 msgstr "销售"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:8
-#, fuzzy, python-format
-msgid "Sales"
-msgstr "销售"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Sales / Settings"
 msgstr "销售/设置"
@@ -1771,11 +1659,11 @@ msgstr "销售订单"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order_line
+#: model:ir.model.fields,field_description:website_sale.field_product_product_sale_line_warn
 msgid "Sales Order Line"
 msgstr "销售订单行"
 
 #. module: website_sale
-#: model:ir.model,name:website_sale.model_crm_team
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_salesteam_id
 #: model:ir.model.fields,field_description:website_sale.field_website_salesteam_id
 msgid "Sales Team"
@@ -1834,6 +1722,18 @@ msgstr "从...选择一个产品"
 #: model:ir.model.fields,field_description:website_sale.field_website_pricelist_selectable
 msgid "Selectable"
 msgstr "可选择"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product_purchase_line_warn
+#: model:ir.model.fields,help:website_sale.field_product_product_sale_line_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"选择此“警告“选项，将通知用户此消息。\r\n"
+"选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\r\n"
+"消息写入下一个字段。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1973,7 +1873,7 @@ msgid "Some customers prefer to pay this way"
 msgstr "有些客户宁愿这种方式支付"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:544
+#: code:addons/website_sale/controllers/main.py:589
 #, python-format
 msgid "Some required fields are empty."
 msgstr "一些必须的字段是空的"
@@ -1987,11 +1887,6 @@ msgstr "对不起，此产品已经不存在。"
 #: model:ir.model.fields,field_description:website_sale.field_product_product_split_method
 msgid "Split Method"
 msgstr "拆分方法"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_hs_code
-msgid "Standardized code for international shipping and goods declaration"
-msgstr ""
 
 #. module: website_sale
 #. openerp-web
@@ -2086,13 +1981,6 @@ msgid "The payment seems to have been canceled."
 msgstr "付款看起来被取消了。"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:26
-#, python-format
-msgid "There is no recent online sale."
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "There seems to be an error with your request."
 msgstr "你的请求可能有错误。"
@@ -2121,16 +2009,6 @@ msgstr "此促销代码不可用"
 #: model:ir.model.fields,help:website_sale.field_product_template_public_categ_ids
 msgid "Those categories are used to group similar products for e-commerce."
 msgstr "那些分类是为了将相似的产品进行分组以进行电子商务的销售."
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_pos_categ_id
-msgid "Those categories are used to group similar products for point of sale."
-msgstr "这些分类用于为POS的类似产品分组。"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_to_weight
-msgid "To Weigh With Scale"
-msgstr "称重"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2173,17 +2051,6 @@ msgstr "USPS集成"
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Unit Price"
 msgstr "单价"
-
-#. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
-#, fuzzy
-msgid "Unpaid Orders"
-msgstr "验证订单"
-
-#. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
-msgid "Unpaid eCommerce Orders"
-msgstr ""
 
 #. module: website_sale
 #. openerp-web
@@ -2249,12 +2116,6 @@ msgid "Website Categories"
 msgstr "网站类别"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_website_message_ids
-#: model:ir.model.fields,field_description:website_sale.field_product_template_website_message_ids
-msgid "Website Comments"
-msgstr "网站上的评论"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_country_group_website_pricelist_ids
 msgid "Website Price Lists"
 msgstr "网站价格表"
@@ -2280,9 +2141,7 @@ msgstr "...的网站价格表%s"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
-#: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 #: model:ir.ui.menu,name:website_sale.menu_product_public_category
-#: model:ir.ui.menu,name:website_sale.menu_product_public_category_product_catalog
 msgid "Website Product Categories"
 msgstr "网站产品目录"
 
@@ -2324,17 +2183,6 @@ msgid "Website meta title"
 msgstr "网站meta标题"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_crm_team_website_ids
-#, fuzzy
-msgid "Websites"
-msgstr "网站"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_crm_team_website_ids
-msgid "Websites using this sales team"
-msgstr ""
-
-#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:17
 #, python-format
@@ -2354,21 +2202,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "You can setup 3 types of <strong>payment methods in Odoo:</strong>"
 msgstr "您可以设置3种类型的付款方式在Odoo里："
-
-#. module: website_sale
-#: model:ir.actions.act_window,help:website_sale.action_abandonned_orders_ecommerce
-msgid "You don't have any cancelled order from the website."
-msgstr ""
-
-#. module: website_sale
-#: model:ir.actions.act_window,help:website_sale.action_orders_ecommerce
-msgid "You don't have any confirmed order from the website."
-msgstr ""
-
-#. module: website_sale
-#: model:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
-msgid "You don't have any unpaid order from the website."
-msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2458,15 +2291,8 @@ msgid "eBay connector"
 msgstr "eBay连接器"
 
 #. module: website_sale
-#: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
 msgid "eCommerce"
-msgstr "电子商务"
-
-#. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
-#, fuzzy
-msgid "eCommerce Orders"
 msgstr "电子商务"
 
 #. module: website_sale
@@ -2540,31 +2366,43 @@ msgstr "☑ 由 Ogone 处理"
 #~ msgid "<span class=\"fa fa-envelope-o\"/> Email Our Website Expert"
 #~ msgstr "<span class=\"fa fa-envelope-o\"/> 邮件通知我们网站的专家"
 
+#~ msgid "Available in the Point of Sale"
+#~ msgstr "可用于POS"
+
+#~ msgid ""
+#~ "Check if the product should be weighted using the hardware scale "
+#~ "integration"
+#~ msgstr "请检查此商品是否需要使用集成的测试硬件来称重"
+
+#~ msgid "Check if you want this product to appear in the Point of Sale"
+#~ msgstr "如果你想这个产品适用于POS，勾选此项"
+
 #~ msgid ""
 #~ "Check this box to generate Call for Tenders instead of generating "
 #~ "requests for quotation from procurement."
 #~ msgstr "选中该复选框，从补货生成招标，而不是询价。"
 
-#~ msgid "Message for Purchase Order Line"
-#~ msgstr "采购订单明细消息"
-
-#~ msgid "Message for Sales Order Line"
-#~ msgstr "销售订单行消息"
+#~ msgid "Extra Info"
+#~ msgstr "额外信息"
 
 #~ msgid "Payment"
 #~ msgstr "付款"
 
+#~ msgid "Point of Sale Category"
+#~ msgstr "POS类别"
+
+#~ msgid "Procurement"
+#~ msgstr "补货"
+
 #~ msgid "Project"
 #~ msgstr "项目"
 
-#~ msgid "Purchase Order Line"
-#~ msgstr "采购订单明细"
-
 #~ msgid ""
-#~ "Selecting the \"Warning\" option will notify user with the message, "
-#~ "Selecting \"Blocking Message\" will throw an exception with the message "
-#~ "and block the flow. The Message has to be written in the next field."
-#~ msgstr ""
-#~ "选择此“警告“选项，将通知用户此消息。\r\n"
-#~ "选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\r\n"
-#~ "消息写入下一个字段。"
+#~ "Those categories are used to group similar products for point of sale."
+#~ msgstr "这些分类用于为POS的类似产品分组。"
+
+#~ msgid "To Weigh With Scale"
+#~ msgstr "称重"
+
+#~ msgid "Website Comments"
+#~ msgstr "网站上的评论"

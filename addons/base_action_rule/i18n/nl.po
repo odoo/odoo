@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -138,6 +138,11 @@ msgid "Conditions"
 msgstr "Voorwaarden"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
+msgid "Create Date"
+msgstr "Aanmaakdatum"
+
+#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_uid
@@ -145,7 +150,6 @@ msgid "Created by"
 msgstr "Aangemaakt door"
 
 #. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_date
 msgid "Created on"
@@ -164,12 +168,13 @@ msgstr "Vertraging na activeerdatum"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
 msgid ""
-"Delay after the trigger date.\n"
-"                                    You can put a negative number if you "
-"need a delay before the\n"
-"                                    trigger date, like sending a reminder 15 "
-"minutes before a meeting."
+"Delay after the trigger date.You can put a negative number if you need a "
+"delay before thetrigger date, like sending a reminder 15 minutes before a "
+"meeting."
 msgstr ""
+"Vertraging na de aanroep datum. U kunt een negatieve waarde invoeren, indien "
+"u een actie wilt uitvoeren voor de aanroepdatum, bijvoorbeeld een "
+"herinnering, 15 minuten voor een afspraak."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
@@ -295,6 +300,11 @@ msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
+msgid "Last Run"
+msgstr "Laatst uitgevoerd"
+
+#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_uid
@@ -309,18 +319,8 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
-msgid "Last run"
-msgstr ""
-
-#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
 msgid "Lead id"
-msgstr ""
-
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
-msgid "Line ids"
 msgstr ""
 
 #. module: base_action_rule
@@ -494,7 +494,7 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_user_id
 msgid "User id"
-msgstr "Gebruiker id"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
@@ -508,10 +508,12 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
 msgid ""
-"When should the condition be triggered.\n"
-"                                  If present, will be checked by the "
+"When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Wanneer moet de conditie worden aangeroepen. Indien aanwezig wordt deze "
+"aangevinkt door de planner. Indien leeg, wordt deze aangevinkt bij het "
+"aanmaken of bijwerken."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind
@@ -534,25 +536,7 @@ msgstr ""
 "U kan ook filters gebruiken in plaats van items te kiezen. Om een nieuwe "
 "filter aan te maken:"
 
-#~ msgid "Create Date"
-#~ msgstr "Aanmaakdatum"
-
-#~ msgid ""
-#~ "Delay after the trigger date.You can put a negative number if you need a "
-#~ "delay before thetrigger date, like sending a reminder 15 minutes before a "
-#~ "meeting."
-#~ msgstr ""
-#~ "Vertraging na de aanroep datum. U kunt een negatieve waarde invoeren, "
-#~ "indien u een actie wilt uitvoeren voor de aanroepdatum, bijvoorbeeld een "
-#~ "herinnering, 15 minuten voor een afspraak."
-
-#~ msgid "Last Run"
-#~ msgstr "Laatst uitgevoerd"
-
-#~ msgid ""
-#~ "When should the condition be triggered. If present, will be checked by "
-#~ "the scheduler. If empty, will be checked at creation and update."
-#~ msgstr ""
-#~ "Wanneer moet de conditie worden aangeroepen. Indien aanwezig wordt deze "
-#~ "aangevinkt door de planner. Indien leeg, wordt deze aangevinkt bij het "
-#~ "aanmaken of bijwerken."
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
+msgid "unknown"
+msgstr ""

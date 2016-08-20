@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~11c\n"
+"Project-Id-Version: Odoo Server 9.saas~10c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:25+0000\n"
-"PO-Revision-Date: 2016-08-19 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-08-18 14:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -25,6 +25,26 @@ msgstr ""
 #: code:addons/payment_ogone/models/ogone.py:239
 #, python-format
 msgid "; no order found"
+msgstr ""
+
+#. module: payment_ogone
+#: model:payment.acquirer,cancel_msg:payment_ogone.payment_acquirer_ogone
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr ""
+
+#. module: payment_ogone
+#: model:payment.acquirer,done_msg:payment_ogone.payment_acquirer_ogone
+msgid "<span><i>Done,</i> Your online payment has been successfully processed. Thank you for your order.</span>"
+msgstr ""
+
+#. module: payment_ogone
+#: model:payment.acquirer,error_msg:payment_ogone.payment_acquirer_ogone
+msgid "<span><i>Error,</i> Please be aware that an error occurred during the transaction. The order has been confirmed but won't be paid. Don't hesitate to contact us if you have any questions on the status of your order.</span>"
+msgstr ""
+
+#. module: payment_ogone
+#: model:payment.acquirer,pending_msg:payment_ogone.payment_acquirer_ogone
+msgid "<span><i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.</span>"
 msgstr ""
 
 #. module: payment_ogone
@@ -86,6 +106,11 @@ msgid "Name"
 msgstr ""
 
 #. module: payment_ogone
+#: model:payment.acquirer,name:payment_ogone.payment_acquirer_ogone
+msgid "Ogone"
+msgstr ""
+
+#. module: payment_ogone
 #: code:addons/payment_ogone/models/ogone.py:249
 #, python-format
 msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
@@ -126,6 +151,11 @@ msgstr ""
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_shakey_out
 msgid "SHA Key OUT"
+msgstr ""
+
+#. module: payment_ogone
+#: model:payment.acquirer,pre_msg:payment_ogone.payment_acquirer_ogone
+msgid "You will be redirected to the Ogone website after clicking on the payment button."
 msgstr ""
 
 #. module: payment_ogone

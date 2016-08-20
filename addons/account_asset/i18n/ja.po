@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-07-22 08:38+0000\n"
 "Last-Translator: 高木正勝 <masakatsu.takagi@pro-spire.co.jp>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:369
+#: code:addons/account_asset/account_asset.py:347
 #, fuzzy, python-format
 msgid " (copy)"
 msgstr ""
@@ -33,12 +33,6 @@ msgstr ""
 "(コピー)\n"
 "#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 " （コピー）"
-
-#. module: account_asset
-#: code:addons/account_asset/account_asset.py:495
-#, python-format
-msgid " (grouped)"
-msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_entry_count
@@ -71,35 +65,13 @@ msgid "Account Entry"
 msgstr "会計仕訳"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_id
-msgid "Account used in the depreciation entries, to decrease the asset value."
-msgstr ""
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_expense_id
-msgid ""
-"Account used in the periodical entries, to record a part of the asset as "
-"expense."
-msgstr ""
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
-msgid "Account used to record the purchase of the asset at its original price."
-msgstr ""
-
-#. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_active
 msgid "Active"
 msgstr "有効"
 
 #. module: account_asset
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
-msgid "Additional Options"
-msgstr ""
-
-#. module: account_asset
-#: code:addons/account_asset/account_asset.py:552
+#: code:addons/account_asset/account_asset.py:484
 #, python-format
 msgid "Amount"
 msgstr "金額"
@@ -126,6 +98,7 @@ msgstr "分析勘定"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_asset_id
+#: model:ir.model.fields,field_description:account_asset.field_account_move_asset_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_asset_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -134,7 +107,6 @@ msgid "Asset"
 msgstr "資産"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
 msgid "Asset Account"
 msgstr "資産アカウント"
@@ -193,7 +165,7 @@ msgid "Asset category"
 msgstr "資産分類"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:256
+#: code:addons/account_asset/account_asset.py:235
 #, python-format
 msgid "Asset created"
 msgstr ""
@@ -209,7 +181,7 @@ msgstr ""
 "資産の減価償却行"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:289
+#: code:addons/account_asset/account_asset.py:268
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
@@ -238,16 +210,6 @@ msgid "Assets Analysis"
 msgstr "資産分析"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_move_asset_depreciation_ids
-#, fuzzy
-msgid "Assets Depreciation Lines"
-msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"資産の償却明細\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"資産の減価償却行"
-
-#. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
 msgid "Assets and Revenues"
 msgstr ""
@@ -271,11 +233,6 @@ msgstr "ドラフト状態の資産"
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Assets in running state"
 msgstr "有効な状態の資産"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
-msgid "Auto-confirm Assets"
-msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -303,11 +260,6 @@ msgid ""
 msgstr ""
 "請求書によって作成されたこの分類の資産を自動的に確認したい場合はこれをチェッ"
 "クして下さい。"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
-msgid "Check this if you want to group the generated entries by categories."
-msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -394,7 +346,7 @@ msgid "Created Asset Moves"
 msgstr "作成済資産の移動"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/wizard_asset_compute.py:18
+#: code:addons/account_asset/wizard/wizard_asset_compute.py:20
 #, python-format
 msgid "Created Revenue Moves"
 msgstr ""
@@ -428,7 +380,7 @@ msgstr ""
 "累積減価償却"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:552
+#: code:addons/account_asset/account_asset.py:484
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -519,6 +471,16 @@ msgstr ""
 "減価償却減価償却"
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
+#, fuzzy
+msgid "Depreciation Account"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"償却勘定\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"減価償却アカウント"
+
+#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Asset Account"
 msgstr ""
@@ -543,26 +505,6 @@ msgstr ""
 "償却日\n"
 "#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 "減価償却日"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
-#, fuzzy
-msgid "Depreciation Entries: Asset Account"
-msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"償却勘定\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"減価償却アカウント"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_expense_id
-#, fuzzy
-msgid "Depreciation Entries: Expense Account"
-msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"償却勘定\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"減価償却アカウント"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
@@ -627,7 +569,7 @@ msgid "Depreciation board modified"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:555
+#: code:addons/account_asset/account_asset.py:487
 #, python-format
 msgid "Depreciation line posted."
 msgstr ""
@@ -643,19 +585,19 @@ msgid "Display Name"
 msgstr "表示名"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:292
+#: code:addons/account_asset/account_asset.py:271
 #, python-format
 msgid "Disposal Move"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:295
+#: code:addons/account_asset/account_asset.py:274
 #, python-format
 msgid "Disposal Moves"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:534
+#: code:addons/account_asset/account_asset.py:466
 #, python-format
 msgid "Document closed."
 msgstr ""
@@ -680,9 +622,25 @@ msgid "Ending date"
 msgstr "終了日"
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_account_move_ids
+#, fuzzy
+msgid "Entries"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"仕訳\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"エントリー"
+
+#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Every"
 msgstr "周期"
+
+#. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
+#, fuzzy
+msgid "Expense Account"
+msgstr "資産アカウント"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -739,12 +697,6 @@ msgid "Group By..."
 msgstr "グループ化…"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
-#, fuzzy
-msgid "Group Journal Entries"
-msgstr "仕訳"
-
-#. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_id
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_id
@@ -753,6 +705,11 @@ msgstr "仕訳"
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_id
 msgid "ID"
 msgstr "ID"
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Income Account"
+msgstr "収益勘定"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_prorata
@@ -797,7 +754,7 @@ msgid "Journal"
 msgstr "仕訳帳"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:403
+#: code:addons/account_asset/account_asset.py:374
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
@@ -904,7 +861,7 @@ msgid "Number of Months in a Period"
 msgstr "周期 (月数)"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:554
+#: code:addons/account_asset/account_asset.py:486
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -927,6 +884,11 @@ msgstr "周期設定"
 #: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
 msgid "Post Depreciation Lines"
 msgstr ""
+
+#. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
+msgid "Post Journal Entries"
+msgstr "仕訳の記帳"
 
 #. module: account_asset
 #. openerp-web
@@ -975,7 +937,7 @@ msgstr ""
 "プロラタ トンポリス（期間に応じて）"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:335
+#: code:addons/account_asset/account_asset.py:313
 #, fuzzy, python-format
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
@@ -1008,17 +970,7 @@ msgid "Reason"
 msgstr "理由"
 
 #. module: account_asset
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
-#, fuzzy
-msgid "Recognition Account"
-msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"償却勘定\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"減価償却アカウント"
-
-#. module: account_asset
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_income_recognition_id
 msgid "Recognition Income Account"
 msgstr ""
 
@@ -1182,25 +1134,25 @@ msgid "Year"
 msgstr "年"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:100
+#: code:addons/account_asset/account_asset.py:96
 #, python-format
 msgid "You cannot delete a document is in %s state."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:103
+#: code:addons/account_asset/account_asset.py:98
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr "記帳済仕訳を含むドキュメントは削除できません。"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:563
+#: code:addons/account_asset/account_asset.py:495
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr "記帳済の償却明細は削除できません。"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:565
+#: code:addons/account_asset/account_asset.py:497
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr ""
@@ -1232,14 +1184,6 @@ msgstr "ヶ月"
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "記録上の最後のメッセージが投稿された日"
 
-#, fuzzy
-#~ msgid "Entries"
-#~ msgstr ""
-#~ "#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-#~ "仕訳\n"
-#~ "#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-#~ "エントリー"
-
 #~ msgid "Followers"
 #~ msgstr "フォロワー"
 
@@ -1248,9 +1192,6 @@ msgstr "ヶ月"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "フォロワー(取引先)"
-
-#~ msgid "Income Account"
-#~ msgstr "収益勘定"
 
 #~ msgid "Last Message Date"
 #~ msgstr "最終メッセージ日"
@@ -1263,9 +1204,6 @@ msgstr "ヶ月"
 
 #~ msgid "Number of unread messages"
 #~ msgstr "未読メッセージの件数"
-
-#~ msgid "Post Journal Entries"
-#~ msgstr "仕訳の記帳"
 
 #~ msgid "Unread Messages"
 #~ msgstr "未読メッセージ"

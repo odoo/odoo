@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-21 20:48+0000\n"
 "Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
@@ -28,7 +28,7 @@ msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:409
+#: code:addons/board/static/src/js/dashboard.js:407
 #, python-format
 msgid "'%s' added to dashboard"
 msgstr "'%s' dodane do konsoli"
@@ -54,7 +54,7 @@ msgstr "Dodaj do mojej konsoli"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:141
+#: code:addons/board/static/src/js/dashboard.js:139
 #, python-format
 msgid "Are you sure you want to remove this item ?"
 msgstr "Jesteś pewien, że chcesz usunąć ten element?"
@@ -63,6 +63,21 @@ msgstr "Jesteś pewien, że chcesz usunąć ten element?"
 #: model:ir.model,name:board.model_board_board
 msgid "Board"
 msgstr "Konsola"
+
+#. module: board
+#: model:ir.model,name:board.model_board_create
+msgid "Board Creation"
+msgstr "Tworzenie konsoli"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_name
+msgid "Board Name"
+msgstr "Nazwa konsoli"
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Cancel"
+msgstr "Anuluj"
 
 #. module: board
 #. openerp-web
@@ -87,42 +102,83 @@ msgstr "Wybierz układ konsoli"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:411
+#: code:addons/board/static/src/js/dashboard.js:409
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Nie można dodać filtra do konsoli"
 
 #. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create"
+msgstr "Utwórz"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr "Utwórz konsolę"
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create New Dashboard"
+msgstr "Utwórz nową konsolę"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_uid
+msgid "Created by"
+msgstr "Utworzone przez"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_date
+msgid "Created on"
+msgstr "Utworzono"
+
+#. module: board
 #: model:ir.model.fields,field_description:board.field_board_board_display_name
+#: model:ir.model.fields,field_description:board.field_board_create_display_name
 msgid "Display Name"
 msgstr "Wyświetlana nazwa "
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:96
+#: code:addons/board/static/src/js/dashboard.js:94
 #, python-format
 msgid "Edit Layout"
 msgstr "Edytuj układ"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board_id
+#: model:ir.model.fields,field_description:board.field_board_create_id
 msgid "ID"
 msgstr "ID"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board___last_update
+#: model:ir.model.fields,field_description:board.field_board_create___last_update
 msgid "Last Modified on"
 msgstr "Ostatnio modyfikowano"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:32
+#: model:ir.model.fields,field_description:board.field_board_create_write_uid
+msgid "Last Updated by"
+msgstr "Ostatnio modyfikowane przez"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_write_date
+msgid "Last Updated on"
+msgstr "Ostatnia zmiana"
+
+#. module: board
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
 #: model:ir.ui.view,arch_db:board.board_my_dash_view
-#, python-format
 msgid "My Dashboard"
 msgstr "Moja konsola"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
+msgid "Parent Menu"
+msgstr "Menu nadrzędne"
 
 #. module: board
 #: model:ir.actions.act_window,help:board.open_board_my_dash_action
@@ -145,36 +201,3 @@ msgid ""
 msgstr ""
 "Możesz filtrować lub grupować dane przed dodaniem\n"
 "                    ich do konsoli stosując opcje filtrowania."
-
-#~ msgid "Board Creation"
-#~ msgstr "Tworzenie konsoli"
-
-#~ msgid "Board Name"
-#~ msgstr "Nazwa konsoli"
-
-#~ msgid "Cancel"
-#~ msgstr "Anuluj"
-
-#~ msgid "Create"
-#~ msgstr "Utwórz"
-
-#~ msgid "Create Board"
-#~ msgstr "Utwórz konsolę"
-
-#~ msgid "Create New Dashboard"
-#~ msgstr "Utwórz nową konsolę"
-
-#~ msgid "Created by"
-#~ msgstr "Utworzone przez"
-
-#~ msgid "Created on"
-#~ msgstr "Utworzono"
-
-#~ msgid "Last Updated by"
-#~ msgstr "Ostatnio modyfikowane przez"
-
-#~ msgid "Last Updated on"
-#~ msgstr "Ostatnia zmiana"
-
-#~ msgid "Parent Menu"
-#~ msgstr "Menu nadrzędne"

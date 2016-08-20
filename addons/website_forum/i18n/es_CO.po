@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-02-18 13:46+0000\n"
 "Last-Translator: Felipe Palomino <omega@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/"
@@ -109,20 +109,6 @@ msgstr "&amp;times;"
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "(The above section was adapted from Stackoverflow’s FAQ.)"
 msgstr "(La sección anterior fue adaptada de las PF de Stackoverflow.)"
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
-msgid ""
-"(Un)archiving a forum automatically (un)archives its posts. Do you want to "
-"proceed?"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
-msgid ""
-"(Un)archiving a post automatically (un)archives its answers. Do you want to "
-"proceed?"
-msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -500,7 +486,6 @@ msgstr "Aceptando una respuesta"
 
 #. module: website_forum
 #: selection:forum.post,state:0
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_active
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_active
 msgid "Active"
 msgstr "Activo"
@@ -560,7 +545,7 @@ msgid "Answer"
 msgstr "Responder"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:507
+#: code:addons/website_forum/models/forum.py:498
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -651,12 +636,6 @@ msgstr "Pregunta propia contestada con al menos 4 votos a favor"
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Answers"
 msgstr "Respuestas"
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.forum_view_search
-#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
-msgid "Archived"
-msgstr ""
 
 #. module: website_forum
 #: selection:forum.post,post_type:0
@@ -756,10 +735,15 @@ msgstr "Volver a"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:322
-#: code:addons/website_forum/controllers/main.py:393
+#: code:addons/website_forum/controllers/main.py:389
 #, python-format
 msgid "Bad Request"
 msgstr "Petición Errónea"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.badge_user
+msgid "Badge \""
+msgstr "Insignia \""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_badge_ids
@@ -1471,7 +1455,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_forum_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_forum_id
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
-#: model:ir.ui.view,arch_db:website_forum.forum_view_search
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 #: model:website.menu,name:website_forum.menu_questions
@@ -1965,20 +1948,20 @@ msgid "Nofollow links"
 msgstr "Enlaces nofollow"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:859
-#: code:addons/website_forum/models/forum.py:879
+#: code:addons/website_forum/models/forum.py:833
+#: code:addons/website_forum/models/forum.py:853
 #, python-format
 msgid "Not allowed to vote for its own post"
 msgstr "No se les permite votar para su propia publicación"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:923
+#: code:addons/website_forum/models/forum.py:897
 #, fuzzy, python-format
 msgid "Not enough karma to create a new Tag"
 msgstr "Seleccione esta opción para crear un nuevo foro."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:497
+#: code:addons/website_forum/models/forum.py:488
 #, python-format
 msgid "Not enough karma to retag."
 msgstr ""
@@ -2179,7 +2162,7 @@ msgid "Posted 100 comments"
 msgstr "Publicó 100 comentarios"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:441
+#: code:addons/website_forum/models/forum.py:432
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible"
 msgstr ""
@@ -2248,7 +2231,7 @@ msgid "Question"
 msgstr "Pregunta"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:510
+#: code:addons/website_forum/models/forum.py:501
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2326,7 +2309,7 @@ msgid "Questions"
 msgstr "Preguntas"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:528
+#: code:addons/website_forum/models/forum.py:515
 #, python-format
 msgid "Re: %s"
 msgstr "Re: %s"
@@ -2731,7 +2714,7 @@ msgstr ""
 "desde la creación del mensaje"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:417
+#: code:addons/website_forum/models/forum.py:408
 #, python-format
 msgid "This forum does not allow %s"
 msgstr "Este foro no permite %s"
@@ -2795,7 +2778,7 @@ msgstr "El título no debe estar vacío"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:322
-#: code:addons/website_forum/controllers/main.py:393
+#: code:addons/website_forum/controllers/main.py:389
 #, python-format
 msgid "Title should not be empty."
 msgstr "El título no debería estar vacío."
@@ -2804,6 +2787,11 @@ msgstr "El título no debería estar vacío."
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_recipient_id
 msgid "To"
 msgstr "A"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid "To improve your chance getting an answer:"
+msgstr "Para mejorar su posibilidad de obtener una respuesta:"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2932,7 +2920,7 @@ msgid "Validate question"
 msgstr "Crear una pregunta"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:803
+#: code:addons/website_forum/models/forum.py:777
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #, python-format
 msgid "View"
@@ -2965,12 +2953,6 @@ msgstr "Esperando Validación"
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Waiting for validation"
 msgstr "Esperando por validación"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users_forum_waiting_posts_count
-#, fuzzy
-msgid "Waiting post"
-msgstr "Editar mensajes propios"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
@@ -3034,15 +3016,7 @@ msgid "Why can other people edit my questions/answers?"
 msgstr "Por qué otras personas pueden editar mis preguntas/respuestas?"
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.new_question
-msgid ""
-"You already have one pending post.<br/>\n"
-"            Please wait for a moderator to validate your previous post "
-"before continuing."
-msgstr ""
-
-#. module: website_forum
-#: code:addons/website_forum/models/forum.py:142
+#: code:addons/website_forum/models/forum.py:141
 #, python-format
 msgid "You cannot choose %s as default post since the forum does not allow it."
 msgstr ""
@@ -3375,6 +3349,11 @@ msgid "racist and hate speech"
 msgstr "discurso racista y de odio"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.badge_user
+msgid "received this badge:"
+msgstr "recibió esta insignia:"
+
+#. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "silver"
 msgstr "plata"
@@ -3427,6 +3406,16 @@ msgstr "muy subjetivo y argumentativo"
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "upvote, add comments"
 msgstr "votar a favor, comentar"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.badge_user
+msgid "user"
+msgstr "usuario"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.badge_user
+msgid "users"
+msgstr "usuarios"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3552,9 +3541,6 @@ msgstr "su biografía puede ser vista como un tooltip"
 #~ msgid "Action Needed"
 #~ msgstr "Acción Requerida"
 
-#~ msgid "Badge \""
-#~ msgstr "Insignia \""
-
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Fecha del último mensaje publicado en el registro."
 
@@ -3598,9 +3584,6 @@ msgstr "su biografía puede ser vista como un tooltip"
 #~ msgid "Send a message to the group"
 #~ msgstr "Enviar un mensaje al grupo"
 
-#~ msgid "To improve your chance getting an answer:"
-#~ msgstr "Para mejorar su posibilidad de obtener una respuesta:"
-
 #~ msgid "Unread Messages"
 #~ msgstr "Mensajes sin Leer"
 
@@ -3621,12 +3604,3 @@ msgstr "su biografía puede ser vista como un tooltip"
 
 #~ msgid "Website meta title"
 #~ msgstr "Meta título del sitio web"
-
-#~ msgid "received this badge:"
-#~ msgstr "recibió esta insignia:"
-
-#~ msgid "user"
-#~ msgstr "usuario"
-
-#~ msgid "users"
-#~ msgstr "usuarios"

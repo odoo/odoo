@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Fabri Yohann <psn@fabri.pw>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -160,6 +160,11 @@ msgstr ""
 "suivant pour s'abonner :</strong>"
 
 #. module: auth_signup
+#: selection:res.users,state:0
+msgid "Activated"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
 msgstr "Autorise les utilisateurs externes à se connecter"
@@ -207,11 +212,6 @@ msgstr "Confirmer"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
 msgstr "Confirmez le mot de passe"
-
-#. module: auth_signup
-#: selection:res.users,state:0
-msgid "Confirmed"
-msgstr "Confirmée"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:41
@@ -501,3 +501,6 @@ msgstr "ex. John Doe"
 
 #~ msgid "Signup Token"
 #~ msgstr "Session de connexion"
+
+#~ msgid "Confirmed"
+#~ msgstr "Confirmée"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:23+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-05-19 13:55+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -979,7 +979,6 @@ msgid "Activated by default when subscribing."
 msgstr "Стандардно активирање со претплатување."
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_activity_report_active
 #: model:ir.model.fields,field_description:crm.field_crm_lead_active
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason_active
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_active
@@ -988,14 +987,10 @@ msgstr "Активно"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_action
-#: model:ir.actions.act_window,name:crm.crm_activity_report_action_tree
-#: model:ir.model.fields,field_description:crm.field_res_partner_activities_count
-#: model:ir.model.fields,field_description:crm.field_res_users_activities_count
 #: model:ir.ui.menu,name:crm.crm_activity_menu
 #: model:ir.ui.menu,name:crm.crm_activity_report_menu
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_form
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_tree
-#: model:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Activities"
 msgstr "Активности"
 
@@ -1095,7 +1090,7 @@ msgstr ""
 "спои контакти со различни Е-маил адреси."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:863
+#: code:addons/crm/crm_lead.py:865
 #, python-format
 msgid ""
 "All email incoming to %(link)s  will automatically create new opportunity.\n"
@@ -1237,6 +1232,11 @@ msgid "Better visibility on team activities"
 msgstr "Подобра прегледност на тимски активности"
 
 #. module: crm
+#: selection:crm.lead,kanban_state:0
+msgid "Blocked"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Boost your online sales with sleek product pages."
 msgstr "Подобрете ги вашите онлајн продажби со штосните страни на производите."
@@ -1360,7 +1360,7 @@ msgstr ""
 "Тренинг, Услуга"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:868
+#: code:addons/crm/crm_lead.py:870
 #, python-format
 msgid "Click to add a new opportunity"
 msgstr "Кликнете да додадете нова можност"
@@ -1408,9 +1408,8 @@ msgstr "Затвори датум"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_closed
-#, fuzzy
-msgid "Closed Date"
-msgstr "Затвори датум"
+msgid "Closed"
+msgstr "Затворено"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:90
@@ -1670,7 +1669,7 @@ msgid "Current Line"
 msgstr "Моментална линија"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:943
+#: code:addons/crm/crm_lead.py:945
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2projectissue_wizard_partner_id
@@ -1685,7 +1684,7 @@ msgid "Customer"
 msgstr "Купувач"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:945
+#: code:addons/crm/crm_lead.py:947
 #, python-format
 msgid "Customer Email"
 msgstr "Е-пошта на купувач"
@@ -2128,7 +2127,7 @@ msgid "Force assignation"
 msgstr "Присилно назначување"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:502
+#: code:addons/crm/crm_lead.py:504
 #, python-format
 msgid "From %s : %s"
 msgstr "Од %s : %s"
@@ -2468,10 +2467,9 @@ msgid "Last Updated on"
 msgstr "Последно ажурирање на"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:778 selection:crm.activity.report,lead_type:0
+#: code:addons/crm/crm_lead.py:780 selection:crm.activity.report,lead_type:0
 #: selection:crm.lead,type:0 selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_lead_id
-#: model:ir.model.fields,field_description:crm.field_crm_activity_report_lead_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost_lead_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
@@ -2750,7 +2748,7 @@ msgid "Medium"
 msgstr "Средно"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1008
+#: code:addons/crm/crm_lead.py:1010
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr "Состанок закажан '%s'<br> Тема: %s <br> Времетраење: %s час(ови)"
@@ -2827,25 +2825,25 @@ msgid "Merge with existing opportunities"
 msgstr "Спој со постојните можности"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:487
+#: code:addons/crm/crm_lead.py:489
 #, python-format
 msgid "Merged lead"
 msgstr "Споена трага"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:481
+#: code:addons/crm/crm_lead.py:483
 #, python-format
 msgid "Merged leads"
 msgstr "Споени траги"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:483
+#: code:addons/crm/crm_lead.py:485
 #, python-format
 msgid "Merged opportunities"
 msgstr "Спои можности"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:487
+#: code:addons/crm/crm_lead.py:489
 #, python-format
 msgid "Merged opportunity"
 msgstr "Споена можност"
@@ -2924,12 +2922,6 @@ msgid "Month"
 msgstr "Месец"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
-#, fuzzy
-msgid "More Info"
-msgstr "Додатни информации"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Motivation letter from the management"
 msgstr "Мотивациско писмо од менаџерот"
@@ -3004,19 +2996,7 @@ msgid "Next activity"
 msgstr "Следна активност"
 
 #. module: crm
-#: selection:crm.lead,kanban_state:0
-#, fuzzy
-msgid "Next activity is planned"
-msgstr "Следен датум на активност"
-
-#. module: crm
-#: selection:crm.lead,kanban_state:0
-#, fuzzy
-msgid "Next activity late"
-msgstr "Следен датум на активност"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:964
+#: code:addons/crm/crm_lead.py:966
 #, python-format
 msgid "No Subject"
 msgstr "Без тема"
@@ -3028,19 +3008,14 @@ msgid "No activity"
 msgstr "Следна активност"
 
 #. module: crm
-#: selection:crm.lead,kanban_state:0
-#, fuzzy
-msgid "No next activity planned"
-msgstr "Следен датум на активност"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "No salesperson"
 msgstr "Нема продавач"
 
 #. module: crm
-#: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
+#: selection:crm.lead,kanban_state:0 selection:crm.lead,priority:0
+#: selection:crm.opportunity.report,priority:0
 msgid "Normal"
 msgstr "Нормално"
 
@@ -3260,7 +3235,7 @@ msgid "Opportunities that are assigned to me"
 msgstr "Можности кои ми се доделени мене"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:757 selection:crm.activity.report,lead_type:0
+#: code:addons/crm/crm_lead.py:759 selection:crm.activity.report,lead_type:0
 #: selection:crm.lead,type:0 selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_calendar_event_opportunity_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_name
@@ -3482,7 +3457,7 @@ msgid "Planner"
 msgstr "Планер"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:572
+#: code:addons/crm/crm_lead.py:574
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -3543,7 +3518,6 @@ msgid "Priority Management Explanation"
 msgstr ""
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_activity_report_probability
 #: model:ir.model.fields,field_description:crm.field_crm_lead_probability
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_probability
 msgid "Probability"
@@ -3585,6 +3559,11 @@ msgstr "Квалификувано"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_priority
 msgid "Rating"
 msgstr "Оцена"
+
+#. module: crm
+#: selection:crm.lead,kanban_state:0
+msgid "Ready for next stage"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
@@ -3748,12 +3727,6 @@ msgstr "Закаснети активности"
 #, fuzzy
 msgid "Schedule Next Activity"
 msgstr "Следна активност"
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_activity_schedule_action
-#, fuzzy
-msgid "Schedule an Activity"
-msgstr "Закаснети активности"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -4048,7 +4021,6 @@ msgstr "Менаџирање со претплати"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_title_action
-#: model:ir.model.fields,field_description:crm.field_crm_activity_report_subject
 msgid "Summary"
 msgstr ""
 
@@ -4299,7 +4271,7 @@ msgstr ""
 "да се прикажат."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1162
+#: code:addons/crm/crm_lead.py:1164
 #, python-format
 msgid "This target does not exist."
 msgstr "Овој таргет не постои."
@@ -4523,12 +4495,6 @@ msgstr "Многу високо"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_crm_voip
 msgid "VoIP integration"
-msgstr "VoIP интеграција"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
-#, fuzzy
-msgid "Voip integration"
 msgstr "VoIP интеграција"
 
 #. module: crm
@@ -4884,7 +4850,7 @@ msgid "e.g. Product Pricing"
 msgstr "пр. Одредување цена на производ"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:859
+#: code:addons/crm/crm_lead.py:861
 #, python-format
 msgid "opportunities"
 msgstr "можности"
@@ -4965,7 +4931,7 @@ msgstr ""
 "име (пр. sales@yourcompany.com)"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1002
+#: code:addons/crm/crm_lead.py:1004
 #, python-format
 msgid "unknown"
 msgstr "непознато"
@@ -4996,9 +4962,6 @@ msgstr "со вашата работа нагоре"
 
 #~ msgid "Both"
 #~ msgstr "Двата"
-
-#~ msgid "Closed"
-#~ msgstr "Затворено"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Датум на испраќање на последната порака"

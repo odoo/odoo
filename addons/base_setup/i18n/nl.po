@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -98,6 +98,11 @@ msgstr ""
 "Annuleer"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Client"
+msgstr "Client"
+
+#. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_sale_config
 #: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Configure Sales"
@@ -115,18 +120,26 @@ msgstr "Uw bedrijfsgegevens instellen"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Customer"
+msgstr "Klant"
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 #, fuzzy
 msgid "Display Name"
@@ -135,6 +148,11 @@ msgstr ""
 "Weergave naam\n"
 "#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Schermnaam"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Donor"
+msgstr "Donor"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -173,7 +191,18 @@ msgid "Google Integration"
 msgstr "Google integratie"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Guest"
+msgstr "Gast"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
+msgid "How do you call a Customer"
+msgstr "Hoe belt u een klant"
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
@@ -190,18 +219,21 @@ msgstr "Inter-bedrijf"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Laatst bijgewerkt door"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
@@ -222,6 +254,11 @@ msgid "Manage multiple companies"
 msgstr "Beheer meerdere bedrijven"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Member"
+msgstr "Lid"
+
+#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Multi Company"
 msgstr "Multi-bedrijf"
@@ -239,6 +276,16 @@ msgid ""
 msgstr ""
 "Wanneer geïnstalleerd, kunt u de API instellingen maken voor de Google "
 "Agenda."
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Partner"
+msgstr "Relatie"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Patient"
+msgstr "Geduld"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -292,6 +339,16 @@ msgid "Shared resources"
 msgstr "Gedeelde bronnen"
 
 #. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
+msgid "Specify Your Terminology"
+msgstr "Specificeer uw teminologie"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Tenant"
+msgstr "Huurder"
+
+#. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
 msgid "This installs the module google_calendar."
 msgstr "Dit installeert de module google_calendar."
@@ -319,9 +376,14 @@ msgstr ""
 "uw bedrijven verkoopt/koopt aan één van uw andere bedrijven."
 
 #. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
+msgid "Use another word to say \"Customer\""
+msgstr "Gebruik een ander woord voor \"Klant\""
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers (OAuth)"
-msgstr ""
+msgid "Use external authentication providers, sign in with Google..."
+msgstr "Gebruik externe authenticatie-providers, log in via Google..."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -358,6 +420,15 @@ msgstr ""
 "bedrijven."
 
 #. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
+msgid ""
+"You can use this wizard to change the terminologies for customers in the "
+"whole application."
+msgstr ""
+"U kunt deze wizard gebruiken om de terminologie voor klanten, in de gehele "
+"applicatie, te wijzigen."
+
+#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "You will find more options in your company details: address for the header "
@@ -372,52 +443,11 @@ msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: base_setup
+#: model:ir.model,name:base_setup.model_base_setup_terminology
+msgid "base.setup.terminology"
+msgstr "base.setup.terminology"
+
+#. module: base_setup
 #: model:ir.model,name:base_setup.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr "sale.config.settings"
-
-#~ msgid "Client"
-#~ msgstr "Client"
-
-#~ msgid "Customer"
-#~ msgstr "Klant"
-
-#~ msgid "Donor"
-#~ msgstr "Donor"
-
-#~ msgid "Guest"
-#~ msgstr "Gast"
-
-#~ msgid "How do you call a Customer"
-#~ msgstr "Hoe belt u een klant"
-
-#~ msgid "Member"
-#~ msgstr "Lid"
-
-#~ msgid "Partner"
-#~ msgstr "Relatie"
-
-#~ msgid "Patient"
-#~ msgstr "Geduld"
-
-#~ msgid "Specify Your Terminology"
-#~ msgstr "Specificeer uw teminologie"
-
-#~ msgid "Tenant"
-#~ msgstr "Huurder"
-
-#~ msgid "Use another word to say \"Customer\""
-#~ msgstr "Gebruik een ander woord voor \"Klant\""
-
-#~ msgid "Use external authentication providers, sign in with Google..."
-#~ msgstr "Gebruik externe authenticatie-providers, log in via Google..."
-
-#~ msgid ""
-#~ "You can use this wizard to change the terminologies for customers in the "
-#~ "whole application."
-#~ msgstr ""
-#~ "U kunt deze wizard gebruiken om de terminologie voor klanten, in de "
-#~ "gehele applicatie, te wijzigen."
-
-#~ msgid "base.setup.terminology"
-#~ msgstr "base.setup.terminology"

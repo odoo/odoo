@@ -532,7 +532,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 return $.when([{
                     type: 'error',
                     record: false,
-                    message: error.data.arguments[1],
+                    message: error.data.arguments && error.data.arguments[1] || error.message,
                 }]);
             }) ;
     },

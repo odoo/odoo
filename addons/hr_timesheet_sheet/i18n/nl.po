@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:36+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -50,6 +50,26 @@ msgstr ""
 "bevestigen.                 \n"
 "* De 'Klaar' status wordt gebruikt als de urenstaat is goedgekeurd door zijn "
 "manager."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
+msgid "# Nbr Timesheet"
+msgstr "# Urenstaten"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
+msgid "# Total Attendance"
+msgstr "# Totaal aanwezigheid"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
+msgid "# Total Diff"
+msgstr "# Totaal verschil"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
+msgid "# Total Timesheet"
+msgstr "# Totaal urenstaat"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -125,6 +145,12 @@ msgid "Company"
 msgstr "Bedrijf"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Confirmed"
+msgstr "Bevestigd"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr "Bevestigde urenstaten"
@@ -152,18 +178,23 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr "Datum vanaf"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "Datum t/m"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "Afdeling"
 
@@ -192,6 +223,18 @@ msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Done"
+msgstr "Voltooid"
+
+#. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Draft"
+msgstr "Concept"
+
+#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
@@ -214,6 +257,11 @@ msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr "Fout! Login (resp. Log uit) moet volgen na uitloggen (resp. Inloggen)"
 
 #. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
+msgid "External Timesheet"
+msgstr "Externe urenstaat"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 #, fuzzy
 msgid "Group By"
@@ -227,11 +275,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Uren"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-msgid "Hr Department"
-msgstr "HR afdeling"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -256,6 +299,11 @@ msgid ""
 msgstr ""
 "Om een tijdschema voor deze medewerker aan te maken, moet u hem/haar eerst "
 "linken aan een gebruiker."
+
+#. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
+msgid "Internal Timesheet"
+msgstr "Interne urenstaat"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -299,6 +347,7 @@ msgid "My Timesheets"
 msgstr "Mijn urenstaten"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
 msgstr "Nieuw"
@@ -406,7 +455,9 @@ msgid "Sign Out"
 msgstr "Uitklokken"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 #, fuzzy
 msgid "Status"
 msgstr ""
@@ -436,6 +487,7 @@ msgstr ""
 "aantal in- en uitlogtijden bevat."
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
@@ -780,41 +832,17 @@ msgstr ""
 "#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "wachtend op goedkeuring"
 
-#~ msgid "# Nbr Timesheet"
-#~ msgstr "# Urenstaten"
-
-#~ msgid "# Total Attendance"
-#~ msgstr "# Totaal aanwezigheid"
-
-#~ msgid "# Total Diff"
-#~ msgstr "# Totaal verschil"
-
-#~ msgid "# Total Timesheet"
-#~ msgstr "# Totaal urenstaat"
-
 #~ msgid "Action Needed"
 #~ msgstr "Vereist actie"
 
 #~ msgid "Cancel"
 #~ msgstr "Annuleren"
 
-#~ msgid "Confirmed"
-#~ msgstr "Bevestigd"
-
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
 
 #~ msgid "Day"
 #~ msgstr "Dag"
-
-#~ msgid "Done"
-#~ msgstr "Voltooid"
-
-#~ msgid "Draft"
-#~ msgstr "Concept"
-
-#~ msgid "External Timesheet"
-#~ msgstr "Externe urenstaat"
 
 #~ msgid "Followers"
 #~ msgstr "Volgers"
@@ -843,9 +871,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Om een urenstaat aan te maken voor deze werknemer, dient u de werknemer "
 #~ "te koppelen aan een gebruiker."
-
-#~ msgid "Internal Timesheet"
-#~ msgstr "Interne urenstaat"
 
 #~ msgid "Is Follower"
 #~ msgstr "Is een volger"
@@ -905,6 +930,9 @@ msgstr ""
 
 #~ msgid "Extra features"
 #~ msgstr "Extra opties"
+
+#~ msgid "Hr Department"
+#~ msgstr "HR afdeling"
 
 #~ msgid "More Info"
 #~ msgstr "Meer info"

@@ -38,7 +38,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:36+0000\n"
 "Last-Translator: Fabien Pinckaers <fp@openerp.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -67,6 +67,26 @@ msgstr ""
 "l'utilisateur\n"
 "* Le statut \"Terminée\" est utilisé lorsque les feuilles  de temps sont "
 "acceptées par le/la responsable."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
+msgid "# Nbr Timesheet"
+msgstr "Nb. de feuilles de temps"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
+msgid "# Total Attendance"
+msgstr "Nb. de présence totale"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
+msgid "# Total Diff"
+msgstr "# Différence totale"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
+msgid "# Total Timesheet"
+msgstr "Nb. total de feuilles de temps"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -144,6 +164,12 @@ msgid "Company"
 msgstr "Société"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Confirmed"
+msgstr "Confirmé"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr "Feuilles de temps confirmées"
@@ -171,18 +197,23 @@ msgid "Date"
 msgstr "Date"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr "Date de début"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "Date de fin"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "Département"
 
@@ -216,6 +247,18 @@ msgstr ""
 "Afficher le nom"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Done"
+msgstr "Terminé"
+
+#. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
@@ -239,6 +282,11 @@ msgstr ""
 "Erreur ! Une entrée (une sortie) doit être suivie d'une sortie (une entrée)."
 
 #. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
+msgid "External Timesheet"
+msgstr "Feuille de temps externe"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
 msgstr "Regrouper par"
@@ -247,11 +295,6 @@ msgstr "Regrouper par"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Heures"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-msgid "Hr Department"
-msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -276,6 +319,11 @@ msgid ""
 msgstr ""
 "Pour créer une feuille de temps pour cet employé, vous devez lier l'employé "
 "à un utilisateur."
+
+#. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
+msgid "Internal Timesheet"
+msgstr "Feuille de temps interne"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -329,6 +377,7 @@ msgid "My Timesheets"
 msgstr "Mes feuilles de temps"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
 msgstr "Nouveau"
@@ -429,7 +478,9 @@ msgid "Sign Out"
 msgstr "Pointer la sortie"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Status"
 msgstr "Statut"
 
@@ -459,6 +510,7 @@ msgstr ""
 "nombre égal de pointage d'entrée et de pointage de sortie."
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
@@ -765,41 +817,17 @@ msgstr "au"
 msgid "waiting approval"
 msgstr "En attente d'approbation"
 
-#~ msgid "# Nbr Timesheet"
-#~ msgstr "Nb. de feuilles de temps"
-
-#~ msgid "# Total Attendance"
-#~ msgstr "Nb. de présence totale"
-
-#~ msgid "# Total Diff"
-#~ msgstr "# Différence totale"
-
-#~ msgid "# Total Timesheet"
-#~ msgstr "Nb. total de feuilles de temps"
-
 #~ msgid "Action Needed"
 #~ msgstr "A besoin d'une action"
 
 #~ msgid "Cancel"
 #~ msgstr "Annuler"
 
-#~ msgid "Confirmed"
-#~ msgstr "Confirmé"
-
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Date du dernier message posté sur cet enregistrement"
 
 #~ msgid "Day"
 #~ msgstr "Jour"
-
-#~ msgid "Done"
-#~ msgstr "Terminé"
-
-#~ msgid "Draft"
-#~ msgstr "Brouillon"
-
-#~ msgid "External Timesheet"
-#~ msgstr "Feuille de temps externe"
 
 #~ msgid "Followers"
 #~ msgstr "Abonnés"
@@ -826,9 +854,6 @@ msgstr "En attente d'approbation"
 #~ msgstr ""
 #~ "Pour créer une feuille de temps pour cet employé, vous devez lier "
 #~ "l'employé à un article."
-
-#~ msgid "Internal Timesheet"
-#~ msgstr "Feuille de temps interne"
 
 #~ msgid "Is Follower"
 #~ msgstr "Est un abonné"

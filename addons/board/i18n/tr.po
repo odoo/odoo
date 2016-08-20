@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-02-22 13:42+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -28,7 +28,7 @@ msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:409
+#: code:addons/board/static/src/js/dashboard.js:407
 #, python-format
 msgid "'%s' added to dashboard"
 msgstr "'%s' kontrol paneline eklendi"
@@ -54,7 +54,7 @@ msgstr "Kontrol panelime ekle"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:141
+#: code:addons/board/static/src/js/dashboard.js:139
 #, python-format
 msgid "Are you sure you want to remove this item ?"
 msgstr "Bu öğeyi silmek istediğinizden emin misiniz?"
@@ -63,6 +63,21 @@ msgstr "Bu öğeyi silmek istediğinizden emin misiniz?"
 #: model:ir.model,name:board.model_board_board
 msgid "Board"
 msgstr "Pano"
+
+#. module: board
+#: model:ir.model,name:board.model_board_create
+msgid "Board Creation"
+msgstr "Pano Oluşturma"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_name
+msgid "Board Name"
+msgstr "Pano Adı"
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Cancel"
+msgstr "Vazgeç"
 
 #. module: board
 #. openerp-web
@@ -87,42 +102,83 @@ msgstr "Kontrol Paneli Düzeni Seç"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:411
+#: code:addons/board/static/src/js/dashboard.js:409
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Kontrol paneline süzgeç eklenemiyor"
 
 #. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create"
+msgstr "Oluştur"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr "Pano Oluştur"
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create New Dashboard"
+msgstr "Yeni Kontrol Paneli Oluştur"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_uid
+msgid "Created by"
+msgstr "Oluşturan"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_date
+msgid "Created on"
+msgstr "Oluşturuldu"
+
+#. module: board
 #: model:ir.model.fields,field_description:board.field_board_board_display_name
+#: model:ir.model.fields,field_description:board.field_board_create_display_name
 msgid "Display Name"
 msgstr "Adı Göster"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:96
+#: code:addons/board/static/src/js/dashboard.js:94
 #, python-format
 msgid "Edit Layout"
 msgstr "Yerleşim Planını Düzenle"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board_id
+#: model:ir.model.fields,field_description:board.field_board_create_id
 msgid "ID"
 msgstr "ID"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board___last_update
+#: model:ir.model.fields,field_description:board.field_board_create___last_update
 msgid "Last Modified on"
 msgstr "Son değiştirme tarihi"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:32
+#: model:ir.model.fields,field_description:board.field_board_create_write_uid
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_write_date
+msgid "Last Updated on"
+msgstr "Son Güncellenen"
+
+#. module: board
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
 #: model:ir.ui.view,arch_db:board.board_my_dash_view
-#, python-format
 msgid "My Dashboard"
 msgstr "Kontrol Panelim"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
+msgid "Parent Menu"
+msgstr "Üst Menü"
 
 #. module: board
 #: model:ir.actions.act_window,help:board.open_board_my_dash_action
@@ -146,36 +202,3 @@ msgid ""
 msgstr ""
 "Kontrol paneline eklemeden önce arama seçeneğiyle\n"
 "verileri süzebilir ve gruplandırabilirsiniz."
-
-#~ msgid "Board Creation"
-#~ msgstr "Pano Oluşturma"
-
-#~ msgid "Board Name"
-#~ msgstr "Pano Adı"
-
-#~ msgid "Cancel"
-#~ msgstr "Vazgeç"
-
-#~ msgid "Create"
-#~ msgstr "Oluştur"
-
-#~ msgid "Create Board"
-#~ msgstr "Pano Oluştur"
-
-#~ msgid "Create New Dashboard"
-#~ msgstr "Yeni Kontrol Paneli Oluştur"
-
-#~ msgid "Created by"
-#~ msgstr "Oluşturan"
-
-#~ msgid "Created on"
-#~ msgstr "Oluşturuldu"
-
-#~ msgid "Last Updated by"
-#~ msgstr "Son Güncelleyen"
-
-#~ msgid "Last Updated on"
-#~ msgstr "Son Güncellenen"
-
-#~ msgid "Parent Menu"
-#~ msgstr "Üst Menü"

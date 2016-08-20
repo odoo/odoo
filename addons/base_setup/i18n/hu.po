@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
@@ -91,6 +91,11 @@ msgid "Cancel"
 msgstr "Mégse"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Client"
+msgstr "Ügyfél"
+
+#. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_sale_config
 #: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Configure Sales"
@@ -108,6 +113,7 @@ msgstr "A vállalata adatainak beállítása"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
 #, fuzzy
 msgid "Created by"
@@ -119,12 +125,19 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Customer"
+msgstr "Vevő"
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 #, fuzzy
 msgid "Display Name"
@@ -133,6 +146,11 @@ msgstr ""
 "Megjelenített név \n"
 "#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Megjelenített név"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Donor"
+msgstr "Donor"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -166,7 +184,18 @@ msgid "Google Integration"
 msgstr "Google integráció"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Guest"
+msgstr "Vendég"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
+msgid "How do you call a Customer"
+msgstr "Vevő megszólítása"
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
 #, fuzzy
 msgid "ID"
@@ -188,6 +217,7 @@ msgstr "Belső vállalat"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
 #, fuzzy
 msgid "Last Modified on"
@@ -199,12 +229,14 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Utoljára frissítette"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
 #, fuzzy
 msgid "Last Updated on"
@@ -225,6 +257,11 @@ msgid "Manage multiple companies"
 msgstr "Több vállalkozás kezelése"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Member"
+msgstr "Tag"
+
+#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Multi Company"
 msgstr "Többszintű vállalkozás"
@@ -242,6 +279,16 @@ msgid ""
 msgstr ""
 "Telepítése után beállíthatóak az API interfész engedélyek a \"Google naptár"
 "\" alkalmazáshoz"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Patient"
+msgstr "Páciens"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -280,6 +327,16 @@ msgid "Shared resources"
 msgstr "Megosztott erőforrások "
 
 #. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
+msgid "Specify Your Terminology"
+msgstr "Terminológia meghatározása"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Tenant"
+msgstr "Bérlő"
+
+#. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
 msgid "This installs the module google_calendar."
 msgstr "Ez előkészíti a google_calendar modult."
@@ -302,9 +359,16 @@ msgstr ""
 "vásárol a másik vállalatától."
 
 #. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
+msgid "Use another word to say \"Customer\""
+msgstr "Használjon másik szót amivel kifejezi \"Vevő\""
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers (OAuth)"
+msgid "Use external authentication providers, sign in with Google..."
 msgstr ""
+"Használjon külső azonosító tartalomkezelőt, lépjen be mint Google ... "
+"felhasználó"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -336,6 +400,15 @@ msgstr ""
 "hozzáférésekkel."
 
 #. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
+msgid ""
+"You can use this wizard to change the terminologies for customers in the "
+"whole application."
+msgstr ""
+"Használhatja ezt a varázslót a vevők nyelvezetének megváltoztatásához a "
+"teljes alkalmazásra vonatkozólag."
+
+#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "You will find more options in your company details: address for the header "
@@ -350,54 +423,11 @@ msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: base_setup
+#: model:ir.model,name:base_setup.model_base_setup_terminology
+msgid "base.setup.terminology"
+msgstr "base.setup.terminology"
+
+#. module: base_setup
 #: model:ir.model,name:base_setup.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr "sale.config.settings"
-
-#~ msgid "Client"
-#~ msgstr "Ügyfél"
-
-#~ msgid "Customer"
-#~ msgstr "Vevő"
-
-#~ msgid "Donor"
-#~ msgstr "Donor"
-
-#~ msgid "Guest"
-#~ msgstr "Vendég"
-
-#~ msgid "How do you call a Customer"
-#~ msgstr "Vevő megszólítása"
-
-#~ msgid "Member"
-#~ msgstr "Tag"
-
-#~ msgid "Partner"
-#~ msgstr "Partner"
-
-#~ msgid "Patient"
-#~ msgstr "Páciens"
-
-#~ msgid "Specify Your Terminology"
-#~ msgstr "Terminológia meghatározása"
-
-#~ msgid "Tenant"
-#~ msgstr "Bérlő"
-
-#~ msgid "Use another word to say \"Customer\""
-#~ msgstr "Használjon másik szót amivel kifejezi \"Vevő\""
-
-#~ msgid "Use external authentication providers, sign in with Google..."
-#~ msgstr ""
-#~ "Használjon külső azonosító tartalomkezelőt, lépjen be mint Google ... "
-#~ "felhasználó"
-
-#~ msgid ""
-#~ "You can use this wizard to change the terminologies for customers in the "
-#~ "whole application."
-#~ msgstr ""
-#~ "Használhatja ezt a varázslót a vevők nyelvezetének megváltoztatásához a "
-#~ "teljes alkalmazásra vonatkozólag."
-
-#~ msgid "base.setup.terminology"
-#~ msgstr "base.setup.terminology"

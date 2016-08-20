@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-05-22 07:59+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -43,7 +43,7 @@ msgid ""
 "% if object.origin:\n"
 "(with reference: ${object.origin} )\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</"
+"amounting <strong>${object.amount_total} ${object.currency_id.name}</"
 "strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
@@ -87,7 +87,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1500
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1502
 #, python-format
 msgid " seconds"
 msgstr "sekundy"
@@ -123,7 +123,7 @@ msgid "%d transactions were automatically reconciled."
 msgstr "%d boli automaticky odsúhlasené."
 
 #. module: account
-#: code:addons/account/models/account.py:576
+#: code:addons/account/models/account.py:575
 #, python-format
 msgid "%s (Copy)"
 msgstr "%s (Kópia)"
@@ -880,19 +880,19 @@ msgstr ""
 "odchádzajú z pokladnice."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1335
+#: code:addons/account/models/account_invoice.py:1312
 #, python-format
 msgid "A Payment Term should have its last line of type Balance."
 msgstr "Platobná lehota by mala mať svoj posledný riadok typu Zostatok."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1338
+#: code:addons/account/models/account_invoice.py:1315
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
 msgstr "Platobná lehota by mala mať iba jeden riadok typu Zostatok."
 
 #. module: account
-#: code:addons/account/models/account.py:503
+#: code:addons/account/models/account.py:502
 #, fuzzy, python-format
 msgid "A bank account can only belong to one journal."
 msgstr "Bankový účet môže patriť iba jednej účtovnej knihe."
@@ -958,14 +958,14 @@ msgstr ""
 "Vyberte si ako chcete vytvárať vaše produkty:"
 
 #. module: account
-#: code:addons/account/models/account_move.py:733
+#: code:addons/account/models/account_move.py:732
 #, python-format
 msgid "A reconciliation must involve at least 2 move lines."
 msgstr "Potvrdenie musí obsahovať aspoň 2 riadky pohybov."
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:841
-#: code:addons/account/models/account_bank_statement.py:844
+#: code:addons/account/models/account_bank_statement.py:836
+#: code:addons/account/models/account_bank_statement.py:839
 #, python-format
 msgid "A selected move line was already reconciled."
 msgstr "Zvolený riadok pohybu už bol potvrdený."
@@ -1002,11 +1002,6 @@ msgstr ""
 "bankové účty, šeky), jednu účtovnú knihu nákupov, jednu účtovnú knihu "
 "predajov\n"
 "a jednu pre rôzne informácie."
-
-#. module: account
-#: model:res.groups,name:account.group_warning_account
-msgid "A warning can be set on a partner (Account)"
-msgstr ""
 
 #. module: account
 #. openerp-web
@@ -1624,12 +1619,6 @@ msgstr ""
 "Všetky účtovné vstupy musia byť spracované aby sa mohol uzavrieť výpis."
 
 #. module: account
-#: selection:account.config.settings,group_warning_account:0
-#, fuzzy
-msgid "All the partners can be used in invoices"
-msgstr "Partnerský účet použitý pre túto faktúru."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_update_posted
 msgid "Allow Cancelling Entries"
 msgstr "Povoliť zrušenie položiek"
@@ -1790,11 +1779,6 @@ msgstr ""
 "(zisk/strata alebo výkaz zostatku)."
 
 #. module: account
-#: selection:account.config.settings,group_warning_account:0
-msgid "An informative or blocking warning can be set on a partner"
-msgstr ""
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic"
 msgstr "Analytický"
@@ -1835,8 +1819,6 @@ msgid "Analytic Cost"
 msgstr "Analytické náklady"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.analytic_line_reporting_pivot
-#: model:ir.ui.menu,name:account.menu_action_analytic_lines_reporting
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Entries"
 msgstr "Analytické vstupy"
@@ -1846,12 +1828,6 @@ msgstr "Analytické vstupy"
 #: model:ir.ui.view,arch_db:account.view_move_line_form2
 msgid "Analytic Lines"
 msgstr "Analytické riadky"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_analytic_tag_ids
-#, fuzzy
-msgid "Analytic Tags"
-msgstr "Analytické náklady"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_account_analytic_id
@@ -1867,12 +1843,6 @@ msgstr "Analytické účtovníctvo"
 #: model:ir.model.fields,field_description:account.field_account_move_line_analytic_line_ids
 msgid "Analytic lines"
 msgstr "Analytické riadky"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line_analytic_tag_ids
-#, fuzzy
-msgid "Analytic tags"
-msgstr "Analytické náklady"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_applicability
@@ -2107,7 +2077,7 @@ msgstr "Bankové operácie"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1116
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1118
 #, python-format
 msgid "Bank Reconciliation"
 msgstr "Bankové vyrovnanie"
@@ -2254,11 +2224,6 @@ msgid "Bills to pay"
 msgstr "Účtenky na zaplatenie"
 
 #. module: account
-#: selection:res.partner,invoice_warn:0
-msgid "Blocking Message"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type_include_initial_balance
 msgid "Bring Accounts Balance Forward"
 msgstr "Dostať vyrovnanie účtov vopred"
@@ -2395,7 +2360,7 @@ msgid "Cancelled Invoice"
 msgstr "Zrušená faktúra"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1041
+#: code:addons/account/models/account_move.py:1045
 #, python-format
 msgid ""
 "Cannot create an automatic sequence for this piece.\n"
@@ -2448,7 +2413,7 @@ msgid "Cannot generate an unused account code."
 msgstr "Nemožno  generovať nepouźitý úçtovný kód."
 
 #. module: account
-#: code:addons/account/models/account.py:423
+#: code:addons/account/models/account.py:422
 #, python-format
 msgid ""
 "Cannot generate an unused journal code. Please fill the 'Shortcode' field."
@@ -2683,7 +2648,7 @@ msgstr "Zvoliť účtovnú šablónu"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1865
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1867
 #, python-format
 msgid "Choose counterpart"
 msgstr "Zvoliť proťajšok"
@@ -2696,12 +2661,6 @@ msgstr "Kliknite pridanie bankového účtu."
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
 msgid "Click to add a journal."
-msgstr "Kliknite pre pridanie účtovnej knihy."
-
-#. module: account
-#: model:ir.actions.act_window,help:account.account_tag_action
-#, fuzzy
-msgid "Click to add a new tag."
 msgstr "Kliknite pre pridanie účtovnej knihy."
 
 #. module: account
@@ -3031,7 +2990,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1504
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1506
 #, python-format
 msgid "Congrats, you're all done !"
 msgstr "Gratulujeme, všetko je hotové!"
@@ -3109,7 +3068,7 @@ msgstr "Vytvoriť Predajcov"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1862
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1864
 #, python-format
 msgid "Create Write-off"
 msgstr "Vytvoriť Odpis"
@@ -3120,20 +3079,20 @@ msgid "Create a draft refund"
 msgstr "Vytvoriť koncept odpisu"
 
 #. module: account
-#: code:addons/account/models/account_journal_dashboard.py:248
+#: code:addons/account/models/account_journal_dashboard.py:247
 #, python-format
 msgid "Create cash statement"
 msgstr "Vytvoriť hotovostný výkaz"
 
 #. module: account
-#: code:addons/account/models/account_journal_dashboard.py:234
+#: code:addons/account/models/account_journal_dashboard.py:233
 #, python-format
 msgid "Create invoice/bill"
 msgstr "Vytvoriť faktúru/účtenku"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2464
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2466
 #, python-format
 msgid "Create writeoff"
 msgstr "Vytvoriť odpis"
@@ -3345,8 +3304,8 @@ msgid "Currency as per company's country."
 msgstr "Mena podľa krajiny spoločnosti."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1343
-#: code:addons/account/models/account_move.py:1353
+#: code:addons/account/models/account_move.py:1337
+#: code:addons/account/models/account_move.py:1347
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Rozdiel výmenného kurzu"
@@ -3817,7 +3776,10 @@ msgid "Don't hesitate to"
 msgstr "Neváhajte"
 
 #. module: account
+#. openerp-web
 #: selection:account.invoice.report,state:0
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2453
+#, python-format
 msgid "Done"
 msgstr "Dokončiť"
 
@@ -3909,7 +3871,7 @@ msgid "Due date"
 msgstr "Dátum splatnosti"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:843
+#: code:addons/account/models/account_invoice.py:821
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
@@ -3933,13 +3895,13 @@ msgstr "VÝMENA"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1508
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1510
 #, python-format
 msgid "Efficiency at its finest"
 msgstr "Efektívnosť v tej najlepšej kvalite"
 
 #. module: account
-#: code:addons/account/models/account_move.py:886
+#: code:addons/account/models/account_move.py:885
 #, python-format
 msgid "Either pass both debit and credit or none."
 msgstr "Buď schváľte aj debet aj kredit alebo nič."
@@ -4017,7 +3979,7 @@ msgid "Entries Sorted by"
 msgstr "Vstupy:"
 
 #. module: account
-#: code:addons/account/models/account_move.py:851
+#: code:addons/account/models/account_move.py:850
 #, python-format
 msgid "Entries are not of the same account!"
 msgstr "Vstupy nie sú na tom istom účte!"
@@ -4140,7 +4102,7 @@ msgstr "Extra funkcie"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1515
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1517
 #, python-format
 msgid "Fast reconciler"
 msgstr "Rýchly porovnávač"
@@ -4475,17 +4437,6 @@ msgid ""
 msgstr ""
 "Získajte svoje bankové výpisy a importujte ich cez plaid.com.\n"
 "-to nainštaluje modul account_plaid."
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_csv
-#, fuzzy
-msgid ""
-"Get your bank statements from your bank and import them in Odoo in the .CSV "
-"format.\n"
-"-This installs the module account_bank_statement_import_csv."
-msgstr ""
-"Získajte svoje bankové výpisy a importujte ich do odoo v .OFX formáte.\n"
-"Toto nainštaluje modul account_bank_statement_import_ofx."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_ofx
@@ -4925,12 +4876,6 @@ msgid "Import .qif files"
 msgstr "Importovať .qif súbory"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_csv
-#, fuzzy
-msgid "Import in .csv format"
-msgstr "Importovať v .ofx formáte"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_ofx
 msgid "Import in .ofx format"
 msgstr "Importovať v .ofx formáte"
@@ -5038,7 +4983,7 @@ msgstr "Príjmový účet na šablóne produktu"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1788
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1790
 #, python-format
 msgid "Incorrect Operation"
 msgstr "Nesprávna operácia"
@@ -5123,10 +5068,9 @@ msgid "Invite Users"
 msgstr "Pozvať používateľov"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:893
+#: code:addons/account/models/account_invoice.py:870
 #: model:ir.model,name:account.model_account_invoice
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_invoice_id
-#: model:ir.model.fields,field_description:account.field_res_partner_invoice_warn
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
@@ -5206,7 +5150,7 @@ msgid "Invoice refund"
 msgstr "Refundácia faktúry"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1424
+#: code:addons/account/models/account_invoice.py:1401
 #, python-format
 msgid "Invoice sent"
 msgstr "Faktúra odoslaná"
@@ -5249,7 +5193,7 @@ msgstr "Faktúry"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2097
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2099
 #, python-format
 msgid "Invoices & Payments Matching"
 msgstr "Spárovanie faktúr & platieb"
@@ -5324,7 +5268,7 @@ msgid "It indicates that the invoice has been sent."
 msgstr "Znamená to, že faktúra bola odoslaná."
 
 #. module: account
-#: code:addons/account/models/account_move.py:884
+#: code:addons/account/models/account_move.py:883
 #, python-format
 msgid ""
 "It is mandatory to specify an account and a journal to create a write-off."
@@ -5388,8 +5332,8 @@ msgstr "Január"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2133
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2138
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2135
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2140
 #: code:addons/account/static/src/xml/account_reconciliation.xml:141
 #: model:ir.model,name:account.model_account_journal
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_journal_id
@@ -5473,6 +5417,7 @@ msgstr "Štítok položky účtovnej knihy"
 #: model:ir.actions.act_window,name:account.action_move_line_select
 #: model:ir.actions.act_window,name:account.action_move_line_select_by_partner
 #: model:ir.actions.act_window,name:account.action_move_line_select_by_type
+#: model:ir.actions.act_window,name:account.action_move_line_select_posted
 #: model:ir.model.fields,field_description:account.field_account_move_line_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_issued_total
 #: model:ir.model.fields,field_description:account.field_res_partner_journal_item_count
@@ -5488,7 +5433,7 @@ msgstr "Položky účtovnej knihy"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2096
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2098
 #: model:ir.actions.client,name:account.action_manual_reconcile
 #, python-format
 msgid "Journal Items to Reconcile"
@@ -6067,12 +6012,6 @@ msgid "Memo:"
 msgstr "Pripomienka:"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_partner_invoice_warn_msg
-#, fuzzy
-msgid "Message for Invoice"
-msgstr "Popisok na faktúrach"
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Cost of Revenue"
 msgstr ""
@@ -6145,12 +6084,6 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Viac <i class=\"fa fa-caret-down\"/>"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_account_config_settings
-#, fuzzy
-msgid "More Info"
-msgstr "Iné info"
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Most currencies are already created by default. If you plan\n"
@@ -6182,16 +6115,10 @@ msgid "Move line ids"
 msgstr "Id riadku pohybu"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1168
+#: code:addons/account/models/account_move.py:1172
 #, python-format
 msgid "Move name (id): %s (%s)"
 msgstr "Názov pohybu (id): %s (%s)"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_config_settings
-#, fuzzy
-msgid "Multi Currencies"
-msgstr "Multi-meny"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6250,6 +6177,13 @@ msgid "New"
 msgstr "Nové"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:88
+#, python-format
+msgid "New Operation"
+msgstr "Nová operácia"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New Statement"
 msgstr "Nový výpis"
@@ -6260,7 +6194,7 @@ msgid "New Transactions"
 msgstr "Nové transakcie"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1145
+#: code:addons/account/models/account_move.py:1149
 #, python-format
 msgid "New expected payment date: "
 msgstr "Nový očakávaný dátum transakcie:"
@@ -6288,13 +6222,7 @@ msgid "No Follow-up"
 msgstr "Žiadne naviazanie"
 
 #. module: account
-#: selection:res.partner,invoice_warn:0
-#, fuzzy
-msgid "No Message"
-msgstr "Správy"
-
-#. module: account
-#: code:addons/account/models/account_invoice.py:1011
+#: code:addons/account/models/account_invoice.py:988
 #, python-format
 msgid "No appropriate payment method enabled on journal %s"
 msgstr "Žiadna vhodná metóda platby povolená na účtovnú knihu %s"
@@ -6588,7 +6516,7 @@ msgstr "Iba správcovia môžu zmeniť nastaveni"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1509
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1511
 #, python-format
 msgid "Only use the ctrl-enter shortcut to validate reconciliations."
 msgstr "Používajte iba klávesovú skratku ctrl-enter na overenie zosúladenia."
@@ -6619,9 +6547,9 @@ msgstr "Otvorená platba"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1868
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1900
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2035
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1870
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1902
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2037
 #, python-format
 msgid "Open balance"
 msgstr "Otvorený zostatok"
@@ -6812,7 +6740,7 @@ msgstr "Čiastočne zosúladené"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1729
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1731
 #: code:addons/account/static/src/xml/account_reconciliation.xml:262
 #: model:ir.model,name:account.model_res_partner
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_partner_id
@@ -7099,6 +7027,37 @@ msgid "Payments widget"
 msgstr "Nástroj platieb"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_company_paypal_account
+msgid "Paypal Account"
+msgstr "Paypal Účet"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_paypal_account
+msgid "Paypal account"
+msgstr "Paypal účet"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_config_settings_paypal_account
+msgid ""
+"Paypal account (email) for receiving online payments (credit card, etc.)\n"
+"             If you set a paypal account, the customer  will be able to pay "
+"your invoices or quotations\n"
+"             with a button \"Pay with  Paypal\" in automated emails or "
+"through the Odoo portal."
+msgstr ""
+"Paypal účet (email) pre prijímanie online platieb (kreditné karty, atď.)\n"
+"Ak nastavíte Paypal účet, bude zákazník môcť platiť svoje faktúry alebo "
+"cenové ponuky\n"
+"s tlačidlom \"Platby pomocou Paypal\" v automatizovaných emailoch alebo "
+"prostredníctvom Odoo portálu."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_company_paypal_account
+msgid "Paypal username (usually email) for receiving online payments."
+msgstr ""
+"Paypal používateľské meno (zvyčajne email) pre príjmanie online platieb."
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
 msgid "Pending Invoice"
 msgstr "Čakajúca faktúra"
@@ -7136,7 +7095,7 @@ msgid "Percentage of balance"
 msgstr "Percento zostatku"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1406
+#: code:addons/account/models/account_invoice.py:1383
 #, python-format
 msgid "Percentages for Payment Term Line must be between 0 and 100."
 msgstr "Percento pre riadok termínu platby musí byť medzi 0 a 100."
@@ -7176,7 +7135,7 @@ msgstr ""
 "Prosím skontrolujte že pole 'Prevodný účet' je nastavený na spoločnosti."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:747
+#: code:addons/account/models/account_invoice.py:725
 #, python-format
 msgid "Please create some invoice lines."
 msgstr "Prosím vytvorte nejaké riadky faktúry."
@@ -7188,7 +7147,7 @@ msgid "Please define a sequence on the journal."
 msgstr "Prosím definujte sekvenciu na účtovnej knihe."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:745
+#: code:addons/account/models/account_invoice.py:723
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr ""
@@ -7294,6 +7253,11 @@ msgstr ""
 "platieb"
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Price"
+msgstr "Cena"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
 #: model:ir.ui.view,arch_db:account.account_common_report_view
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -7389,7 +7353,7 @@ msgid "Proforma"
 msgstr "Proforma"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:598
+#: code:addons/account/models/account_bank_statement.py:593
 #, python-format
 msgid ""
 "Programmation error : domain_maker_move_line_amount requires comparator '=' "
@@ -7528,8 +7492,8 @@ msgstr "Obdržať peniaze"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1850
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2448
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1852
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2450
 #: code:addons/account/static/src/xml/account_reconciliation.xml:322
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.account_move_line_reconcile_writeoff
@@ -7576,12 +7540,6 @@ msgid "Reconciled Entries"
 msgstr "Zosúladiť vstupy"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
-msgid "Reconciled entries"
-msgstr "Zosúladiť vstupy"
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 msgid "Reconciliation"
 msgstr "Zosúladenie"
@@ -7611,7 +7569,7 @@ msgstr "Zosúladenie na bankových výpisoch"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2161
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2163
 #, python-format
 msgid "Reconciling "
 msgstr "Zosúlaďovanie"
@@ -7681,7 +7639,7 @@ msgid "Reference/Description"
 msgstr "Referencia/Popis"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:895
+#: code:addons/account/models/account_invoice.py:872
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -7819,8 +7777,12 @@ msgid "Report Value"
 msgstr "Hodnota výkazu"
 
 #. module: account
-#: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
+msgid "Reporting"
+msgstr "Výkazy"
+
+#. module: account
+#: model:ir.ui.menu,name:account.account_report_folder
 msgid "Reports"
 msgstr "Výkazy"
 
@@ -7851,12 +7813,6 @@ msgstr "Reziduálna čiastka v mene"
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Responsible"
 msgstr "Zodpovedný"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_deferred_revenue
-#, fuzzy
-msgid "Revenue Recognition"
-msgstr "<strong>Uznávanie výnosov</strong>"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_date
@@ -7965,13 +7921,6 @@ msgid "Salesperson"
 msgstr "Predajca"
 
 #. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:88
-#, python-format
-msgid "Save and New"
-msgstr ""
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Search Account Journal"
 msgstr "Vyhľadať účtovnú knihu účtu"
@@ -8045,7 +7994,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1757
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1759
 #, python-format
 msgid "Select Partner"
 msgstr "Vybrať partnra"
@@ -8082,14 +8031,6 @@ msgid ""
 msgstr ""
 "Zvolené faktúry nemôžu byť potvrdené pretože nie su v stave 'Koncept' alebo "
 "'Pro forma'."
-
-#. module: account
-#: model:ir.model.fields,help:account.field_res_partner_invoice_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -8223,13 +8164,6 @@ msgstr ""
 "funkciou skupinovej platby."
 
 #. module: account
-#. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2451
-#, python-format
-msgid "Skip"
-msgstr ""
-
-#. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Smallest Text"
 msgstr "Najmenší text"
@@ -8349,11 +8283,8 @@ msgid "TOTAL EQUITY"
 msgstr "CELKOVÝ KAPITÁL"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.account_tag_action
 #: model:ir.model.fields,field_description:account.field_account_account_tag_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_tag_ids
-#: model:ir.ui.menu,name:account.account_tag_menu
-#: model:ir.ui.view,arch_db:account.account_tag_view_form
 msgid "Tags"
 msgstr "Popisky"
 
@@ -8365,7 +8296,7 @@ msgstr "Vybrať peniaze"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1516
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1518
 #, python-format
 msgid "Take on average less than 5 seconds to reconcile a transaction."
 msgstr "Zabere primrne menej ako 5 sekund na zosúladenie transakcie."
@@ -8451,12 +8382,6 @@ msgstr "Popis dane"
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_name
 msgid "Tax Description"
 msgstr "Popis dane"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
-msgid "Tax Excluded Price"
-msgstr "Zahrnuté v cene"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_group_id
@@ -8738,7 +8663,7 @@ msgstr ""
 "spravený z viacerých transakcií."
 
 #. module: account
-#: code:addons/account/models/account_move.py:853
+#: code:addons/account/models/account_move.py:852
 #, python-format
 msgid "The account %s (%s) is not marked as reconciliable !"
 msgstr "Účet %s (%s) nie je označený ako zladiteľný !"
@@ -8767,7 +8692,7 @@ msgstr ""
 "spoločnosti."
 
 #. module: account
-#: code:addons/account/models/account_move.py:422
+#: code:addons/account/models/account_move.py:421
 #, python-format
 msgid ""
 "The amount expressed in the secondary currency must be positive when account "
@@ -8777,7 +8702,7 @@ msgstr ""
 "záporná keď je účet kreditovaný."
 
 #. module: account
-#: code:addons/account/models/account.py:572
+#: code:addons/account/models/account.py:571
 #, python-format
 msgid ""
 "The application scope of taxes in a group must be either the same as the "
@@ -8950,7 +8875,7 @@ msgstr ""
 "faktúr & platieb."
 
 #. module: account
-#: code:addons/account/models/account_move.py:855
+#: code:addons/account/models/account_move.py:854
 #, python-format
 msgid ""
 "The partner has to be the same on all lines for receivable and payable "
@@ -8986,7 +8911,7 @@ msgstr ""
 "Reziduálna suma na položke účtovnej knihy vyjadrená v mene spoločnosti."
 
 #. module: account
-#: code:addons/account/models/account_move.py:407
+#: code:addons/account/models/account_move.py:406
 #, fuzzy, python-format
 msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
@@ -8997,7 +8922,7 @@ msgstr ""
 "účtovnej knihe,"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1268
+#: code:addons/account/models/account_invoice.py:1245
 #, python-format
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
@@ -9048,7 +8973,7 @@ msgstr "Neexistuje nič na zladenie."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1492
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1494
 #, python-format
 msgid "There you go, it's all done !"
 msgstr "Nech sa páči, všetko je hotové !"
@@ -9157,15 +9082,6 @@ msgid ""
 msgstr ""
 "Toto vám umožní zoskupiť obdržané šeky pred ich vložením do banky.\n"
 "-Toto nainštaluje modul account_batch_deposit."
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_config_settings_module_account_deferred_revenue
-msgid ""
-"This allows you to manage the revenue recognition on selling products. It "
-"keeps track of the installments occurred on those revenue recognitions, and "
-"creates account moves for those installment lines\n"
-"-This installs the module account_deferred_revenue."
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_complete_tax_set
@@ -9448,7 +9364,7 @@ msgstr ""
 "alebo účtu v závislosti od krajiny a štátu zákazníka."
 
 #. module: account
-#: code:addons/account/models/account_move.py:849
+#: code:addons/account/models/account_move.py:848
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries!"
 msgstr "Pre zladenie vstupov spoločnosť musí byť rovnaká pre všetky vstupy!"
@@ -9639,16 +9555,10 @@ msgid "Unit of Measure"
 msgstr "Merná jednotka"
 
 #. module: account
-#: code:addons/account/report/account_aged_partner_balance.py:174
+#: code:addons/account/report/account_aged_partner_balance.py:264
 #, fuzzy, python-format
 msgid "Unknown Partner"
 msgstr "Partner"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.act_account_partner_ledger_payable_no_partner
-#: model:ir.actions.act_window,name:account.act_account_partner_ledger_receivable_no_partner
-msgid "Unknown Partner Ledger"
-msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9852,7 +9762,7 @@ msgstr "DPH povinné"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1867
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1869
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 #: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
@@ -9897,7 +9807,7 @@ msgstr "Predajca"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
-#: code:addons/account/models/account_invoice.py:894
+#: code:addons/account/models/account_invoice.py:871
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
@@ -9937,7 +9847,7 @@ msgstr "Referencia predajcu"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
-#: code:addons/account/models/account_invoice.py:896
+#: code:addons/account/models/account_invoice.py:873
 #: code:addons/account/models/account_payment.py:486
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
@@ -9963,6 +9873,12 @@ msgid "View"
 msgstr "Zobrazenie"
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.view_move_form
+#, fuzzy
+msgid "View reconciled entries"
+msgstr "Má nezladené vstupy"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "View supported banks"
 msgstr "Zobraziť podporované banky"
@@ -9973,27 +9889,8 @@ msgid "Volume"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_config_settings_group_warning_account
-#: selection:res.partner,invoice_warn:0
-#, fuzzy
-msgid "Warning"
-msgstr "Varovanie!"
-
-#. module: account
-#: code:addons/account/models/account_invoice.py:484
-#, fuzzy, python-format
-msgid "Warning for %s"
-msgstr "Varovanie!"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.partner_view_buttons
-#, fuzzy
-msgid "Warning on the Invoice"
-msgstr "Popis na Faktúre"
-
-#. module: account
-#: code:addons/account/models/account_invoice.py:1207
-#: code:addons/account/models/account_invoice.py:1267
+#: code:addons/account/models/account_invoice.py:1183
+#: code:addons/account/models/account_invoice.py:1244
 #, python-format
 msgid "Warning!"
 msgstr "Varovanie!"
@@ -10057,7 +9954,7 @@ msgstr "Či má byť táto účtovná kniha zobrazená na nástenke alebo nie"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1503
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1505
 #, python-format
 msgid "Whew, that was fast !"
 msgstr "Fíha, to bolo rýchle!"
@@ -10098,7 +9995,7 @@ msgid "With tax"
 msgstr "S daňou"
 
 #. module: account
-#: code:addons/account/models/account_move.py:890
+#: code:addons/account/models/account_move.py:889
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 #, python-format
 msgid "Write-Off"
@@ -10130,7 +10027,7 @@ msgid "Wrong credit or debit value in accounting entry !"
 msgstr "Zlá hodnota kreditu alebo debetu v účtovnom vstupe !"
 
 #. module: account
-#: code:addons/account/models/account_move.py:847
+#: code:addons/account/models/account_move.py:846
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled!"
 msgstr "Snažíte sa zladiť vstupy ktoré už zladené sú!"
@@ -10154,7 +10051,7 @@ msgstr ""
 "toho, čo ste si zakúpili alebo dostali."
 
 #. module: account
-#: code:addons/account/models/res_config.py:245
+#: code:addons/account/models/res_config.py:238
 #, python-format
 msgid ""
 "You can not change a company chart of account once it has been installed"
@@ -10217,7 +10114,7 @@ msgstr ""
 "'Poradca'"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:875
+#: code:addons/account/models/account_invoice.py:852
 #, python-format
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
@@ -10237,13 +10134,13 @@ msgstr ""
 "knihy."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1134
+#: code:addons/account/models/account_move.py:1138
 #, python-format
 msgid "You cannot change the tax, you should remove and recreate lines."
 msgstr "Nemôžete zmeniť daň, musíte odstrániť a nanovo vytvoriť riadky."
 
 #. module: account
-#: code:addons/account/models/account_move.py:414
+#: code:addons/account/models/account_move.py:413
 #, python-format
 msgid ""
 "You cannot create journal items with a secondary currency without filling "
@@ -10281,7 +10178,7 @@ msgid "You cannot do that on an account that contains journal items."
 msgstr "Nemôžete urobiť toto na účte ktorý obsahuje položky účtovnej knihy."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1170
+#: code:addons/account/models/account_move.py:1174
 #, python-format
 msgid ""
 "You cannot do this modification on a posted journal entry, you can just "
@@ -10295,7 +10192,7 @@ msgstr ""
 "%s."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1172
+#: code:addons/account/models/account_move.py:1176
 #, python-format
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change "
@@ -10336,7 +10233,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1789
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1791
 #, python-format
 msgid "You cannot mix items from receivable and payable accounts."
 msgstr "Nemôžete miešať položky z účtov pohľadávok a záväzkov."
@@ -10367,14 +10264,14 @@ msgstr ""
 "predajcu."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1009
-#: code:addons/account/models/account_move.py:1136
+#: code:addons/account/models/account_move.py:1013
+#: code:addons/account/models/account_move.py:1140
 #, python-format
 msgid "You cannot use deprecated account."
 msgstr "Nemôžete používať zastaraný účet."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1065
+#: code:addons/account/models/account_move.py:1069
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -10396,7 +10293,7 @@ msgid "You must define a Start Date"
 msgstr "Musíte definovať začiatočný dátum"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1208
+#: code:addons/account/models/account_invoice.py:1184
 #, python-format
 msgid "You must first select a partner!"
 msgstr "Najskôr musíte zvoliť partnera!"
@@ -10414,7 +10311,7 @@ msgid "You must set a start date."
 msgstr "Musíte nastaviť začiatočný dátum."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1327
+#: code:addons/account/models/account_move.py:1321
 #, python-format
 msgid ""
 "You should configure the 'Exchange Rate Journal' in the accounting settings, "
@@ -10426,7 +10323,7 @@ msgstr ""
 "rozdielmi medzi výmennými kurzami."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1329
+#: code:addons/account/models/account_move.py:1323
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -10438,7 +10335,7 @@ msgstr ""
 "rozdielmi medzi výmennými kurzami."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1331
+#: code:addons/account/models/account_move.py:1325
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -10611,6 +10508,11 @@ msgstr "zákazníci"
 #: model:ir.ui.view,arch_db:account.view_account_operation_template_form
 msgid "e.g. Bank Fees"
 msgstr "napr. Bankové poplatky"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "e.g. sales@odoo.com"
+msgstr "napr. predaje@odoo.com"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10990,8 +10892,8 @@ msgstr "→ Spočítať"
 #~ msgid "Less Payable Accounts"
 #~ msgstr "Menej splatných účtov"
 
-#~ msgid "New Operation"
-#~ msgstr "Nová operácia"
+#~ msgid "Messages"
+#~ msgstr "Správy"
 
 #~ msgid "Number of Actions"
 #~ msgstr "Počet akcií"
@@ -11004,35 +10906,6 @@ msgstr "→ Spočítať"
 
 #~ msgid "Open account dashboard menu"
 #~ msgstr "Otvoriť menu nástenky účtu"
-
-#~ msgid "Paypal Account"
-#~ msgstr "Paypal Účet"
-
-#~ msgid "Paypal account"
-#~ msgstr "Paypal účet"
-
-#~ msgid ""
-#~ "Paypal account (email) for receiving online payments (credit card, etc.)\n"
-#~ "             If you set a paypal account, the customer  will be able to "
-#~ "pay your invoices or quotations\n"
-#~ "             with a button \"Pay with  Paypal\" in automated emails or "
-#~ "through the Odoo portal."
-#~ msgstr ""
-#~ "Paypal účet (email) pre prijímanie online platieb (kreditné karty, atď.)\n"
-#~ "Ak nastavíte Paypal účet, bude zákazník môcť platiť svoje faktúry alebo "
-#~ "cenové ponuky\n"
-#~ "s tlačidlom \"Platby pomocou Paypal\" v automatizovaných emailoch alebo "
-#~ "prostredníctvom Odoo portálu."
-
-#~ msgid "Paypal username (usually email) for receiving online payments."
-#~ msgstr ""
-#~ "Paypal používateľské meno (zvyčajne email) pre príjmanie online platieb."
-
-#~ msgid "Price"
-#~ msgstr "Cena"
-
-#~ msgid "Reporting"
-#~ msgstr "Výkazy"
 
 #~ msgid "Sales Team"
 #~ msgstr "Predajný tým"
@@ -11062,6 +10935,3 @@ msgstr "→ Spočítať"
 
 #~ msgid "Website communication history"
 #~ msgstr "História komunikácie webovej stránky"
-
-#~ msgid "e.g. sales@odoo.com"
-#~ msgstr "napr. predaje@odoo.com"

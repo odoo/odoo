@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
@@ -70,11 +70,6 @@ msgid ""
 "Check this box if you're using the sandbox mode of Gengo, mainly used for "
 "testing purpose."
 msgstr "如果您使用Gengo沙盒模式 选中这个框,主要是用于测试目的."
-
-#. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
-msgid "Click here to Configure Gengo Parameters"
-msgstr ""
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_comment
@@ -143,11 +138,6 @@ msgstr "Gengo公开密钥"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
-msgid "Gengo Public or Private keys are wrong or missing."
-msgstr ""
-
-#. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Gengo Request Form"
 msgstr "Gengo 申请书"
 
@@ -162,7 +152,7 @@ msgid "Gengo Translation Service Level"
 msgstr "Gengo 翻译服务级别"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:83
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:63
 #, python-format
 msgid ""
 "Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
@@ -172,7 +162,7 @@ msgstr ""
 "权参数."
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:94
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:74
 #, python-format
 msgid ""
 "Gengo connection failed with this message:\n"
@@ -293,17 +283,12 @@ msgid "Sync Type"
 msgstr "同步类型"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:115
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:95
 #, python-format
 msgid ""
 "The number of terms to sync should be between 1 to 200 to work with Gengo "
 "translation services."
 msgstr "同步的条款数量应该介于1到200之间"
-
-#. module: base_gengo
-#: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_authorized_credentials
-msgid "The private and public keys are valid"
-msgstr ""
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_res_company_gengo_comment
@@ -313,7 +298,7 @@ msgid ""
 msgstr "此评论将在每次提交时自动封闭并发给Gengo。"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:110
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:90
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
 msgstr "Gengo 翻译服务不支持这种语言."

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-07-22 05:35+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -27,7 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:250
+#: code:addons/mrp/stock.py:231
 #, python-format
 msgid " Manufacture"
 msgstr "制造"
@@ -45,13 +45,13 @@ msgid "# Manufacturing Orders"
 msgstr "# 制造订单"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:343
+#: code:addons/mrp/mrp.py:341
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1051
+#: code:addons/mrp/mrp.py:1052
 #, python-format
 msgid "%s produced"
 msgstr "%s 生产"
@@ -227,13 +227,6 @@ msgid "Approve"
 msgstr "批准"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
-msgid "Archived"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product_produce_delay
 #: model:ir.model.fields,help:mrp.field_product_template_produce_delay
 msgid ""
@@ -278,7 +271,7 @@ msgid "BOM lines of the referred bom"
 msgstr "参考bom中的BOM行"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:44
+#: code:addons/mrp/stock.py:25
 #, python-format
 msgid ""
 "Because the product %s requires it, you must assign a serial number to your "
@@ -347,7 +340,7 @@ msgid "BoM"
 msgstr "物料清单"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:318
+#: code:addons/mrp/mrp.py:316
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr "BoM \"%s\" 含有产品项目为上级产品: \"%s\"。"
@@ -378,7 +371,7 @@ msgid "By-Products"
 msgstr "按产品"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:247
+#: code:addons/mrp/stock.py:228
 #, python-format
 msgid "Can't find any generic Manufacture route."
 msgstr "未找到工艺路线"
@@ -402,19 +395,19 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:169
+#: code:addons/mrp/stock.py:150
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr "消耗的调拨数量不能小于等于0。"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:651
+#: code:addons/mrp/mrp.py:649
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr "不能删除'%s'状态的生产订单。"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:721
+#: code:addons/mrp/mrp.py:719
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr "找不到这个产品的BOM"
@@ -865,6 +858,13 @@ msgid ""
 msgstr "如果去掉“启用”的勾，可以不用删除就隐藏物料清单"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr "如果这有效字段设为否，那么可以隐藏此记录且并不删除它。"
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
@@ -875,6 +875,12 @@ msgstr "如果去掉这个启用的勾，工艺不需要删除就可以隐藏"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "In Production"
 msgstr "在生产"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Inactive"
+msgstr "不可用"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
@@ -1010,7 +1016,7 @@ msgid "Manager"
 msgstr "管理员"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:244
+#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:225
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
 #, python-format
 msgid "Manufacture"
@@ -1059,7 +1065,7 @@ msgid "Manufacturing Order"
 msgstr "制造订单"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:114
+#: code:addons/mrp/procurement.py:112
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "生产订单 <em>%s</em>  创建。"
@@ -1098,7 +1104,7 @@ msgid "Manufacturing Reference"
 msgstr "制造参考"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:786
+#: code:addons/mrp/mrp.py:784
 #, python-format
 msgid "Manufacturing order cancelled."
 msgstr "生产单取消"
@@ -1149,7 +1155,7 @@ msgid "New"
 msgstr "新建"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:110
+#: code:addons/mrp/procurement.py:108
 #, python-format
 msgid "No BoM exists for this product!"
 msgstr "此产品没有BoM表！"
@@ -1272,7 +1278,7 @@ msgid "Planning"
 msgstr "计划"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:155
+#: code:addons/mrp/stock.py:136
 #, python-format
 msgid "Please provide proper quantity."
 msgstr "输入数量不正确"
@@ -1509,7 +1515,7 @@ msgstr "属性"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9622
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1813,7 +1819,7 @@ msgid "Technical field used to make the traceability of produced products"
 msgstr "技术字段常被用于追溯产品制造"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:353 code:addons/mrp/mrp.py:452
+#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2048,7 +2054,7 @@ msgid "Warehouse"
 msgstr "仓库"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:353 code:addons/mrp/mrp.py:452
+#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
 #, python-format
 msgid "Warning"
 msgstr "警告"
@@ -2216,7 +2222,7 @@ msgstr ""
 "-安装模块 mrp_byproduct。"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:359
+#: code:addons/mrp/mrp.py:357
 #, python-format
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
@@ -2293,14 +2299,6 @@ msgstr "未知的"
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "确认后, 会出现新消息."
-
-#~ msgid ""
-#~ "If the active field is set to False, it will allow you to hide the "
-#~ "resource record without removing it."
-#~ msgstr "如果这有效字段设为否，那么可以隐藏此记录且并不删除它。"
-
-#~ msgid "Inactive"
-#~ msgstr "不可用"
 
 #~ msgid "Is Follower"
 #~ msgstr "是关注者"

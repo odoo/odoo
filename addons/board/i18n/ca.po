@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-11-29 20:48+0000\n"
 "Last-Translator: Marc Tormo i Bochaca <mtbochaca@gmail.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
@@ -27,7 +27,7 @@ msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:409
+#: code:addons/board/static/src/js/dashboard.js:407
 #, python-format
 msgid "'%s' added to dashboard"
 msgstr "'%s' afegit al tauler"
@@ -53,7 +53,7 @@ msgstr "Afegeix al meu tauler"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:141
+#: code:addons/board/static/src/js/dashboard.js:139
 #, python-format
 msgid "Are you sure you want to remove this item ?"
 msgstr "Segur que voleu eliminar aquest element?"
@@ -62,6 +62,21 @@ msgstr "Segur que voleu eliminar aquest element?"
 #: model:ir.model,name:board.model_board_board
 msgid "Board"
 msgstr "Tauler"
+
+#. module: board
+#: model:ir.model,name:board.model_board_create
+msgid "Board Creation"
+msgstr "Creació de Tauler"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_name
+msgid "Board Name"
+msgstr "Nom del Tauler"
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Cancel"
+msgstr "Cancel·la"
 
 #. module: board
 #. openerp-web
@@ -86,42 +101,83 @@ msgstr "Triar disposició del taulell"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:411
+#: code:addons/board/static/src/js/dashboard.js:409
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "No s'ha pogut afegir el filtre al tauler"
 
 #. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create"
+msgstr "Crea"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr "Crear Tauler"
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create New Dashboard"
+msgstr "Crea un Nou Tauler"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_uid
+msgid "Created by"
+msgstr "Creat per"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_date
+msgid "Created on"
+msgstr "Creat el"
+
+#. module: board
 #: model:ir.model.fields,field_description:board.field_board_board_display_name
+#: model:ir.model.fields,field_description:board.field_board_create_display_name
 msgid "Display Name"
 msgstr "Mostra Nom"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:96
+#: code:addons/board/static/src/js/dashboard.js:94
 #, python-format
 msgid "Edit Layout"
 msgstr "Edita la disposició"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board_id
+#: model:ir.model.fields,field_description:board.field_board_create_id
 msgid "ID"
 msgstr "ID"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board___last_update
+#: model:ir.model.fields,field_description:board.field_board_create___last_update
 msgid "Last Modified on"
 msgstr "Darrera modificació feta el"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:32
+#: model:ir.model.fields,field_description:board.field_board_create_write_uid
+msgid "Last Updated by"
+msgstr "Actualitzat per última vegada per"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_write_date
+msgid "Last Updated on"
+msgstr "Actualitzat per última vegada el dia"
+
+#. module: board
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
 #: model:ir.ui.view,arch_db:board.board_my_dash_view
-#, python-format
 msgid "My Dashboard"
 msgstr "El meu Tauler"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
+msgid "Parent Menu"
+msgstr "Menú pare"
 
 #. module: board
 #: model:ir.actions.act_window,help:board.open_board_my_dash_action
@@ -143,36 +199,3 @@ msgid ""
 msgstr ""
 "Podeu reduir i agrupar dades abans d'inserir dins del\n"
 "taulell, utilitzant les opcions de cerca."
-
-#~ msgid "Board Creation"
-#~ msgstr "Creació de Tauler"
-
-#~ msgid "Board Name"
-#~ msgstr "Nom del Tauler"
-
-#~ msgid "Cancel"
-#~ msgstr "Cancel·la"
-
-#~ msgid "Create"
-#~ msgstr "Crea"
-
-#~ msgid "Create Board"
-#~ msgstr "Crear Tauler"
-
-#~ msgid "Create New Dashboard"
-#~ msgstr "Crea un Nou Tauler"
-
-#~ msgid "Created by"
-#~ msgstr "Creat per"
-
-#~ msgid "Created on"
-#~ msgstr "Creat el"
-
-#~ msgid "Last Updated by"
-#~ msgstr "Actualitzat per última vegada per"
-
-#~ msgid "Last Updated on"
-#~ msgstr "Actualitzat per última vegada el dia"
-
-#~ msgid "Parent Menu"
-#~ msgstr "Menú pare"

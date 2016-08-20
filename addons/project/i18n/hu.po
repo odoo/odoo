@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -212,7 +212,7 @@ msgstr "# számú feladat"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:438
+#: code:addons/project/project.py:446
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -1271,9 +1271,9 @@ msgstr "Minta álnév"
 
 #. module: project
 #: code:addons/project/project.py:133
-#, fuzzy, python-format
-msgid "All employees"
-msgstr "Munkavállalóknak, a"
+#, python-format
+msgid "All Employees Project: all employees can access"
+msgstr "Összes munkavállaló projekt feladata: összes munkavállaló hozzáférhet"
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -1541,7 +1541,7 @@ msgstr ""
 "tevékenységek kezeléséhez."
 
 #. module: project
-#: code:addons/project/project.py:640
+#: code:addons/project/project.py:648
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1773,7 +1773,7 @@ msgid "Current Timesheet"
 msgstr "Jelenlegi munkaidő-kiosztás"
 
 #. module: project
-#: code:addons/project/project.py:860
+#: code:addons/project/project.py:868
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1782,10 +1782,16 @@ msgid "Customer"
 msgstr "Vevő"
 
 #. module: project
-#: code:addons/project/project.py:860
+#: code:addons/project/project.py:868
 #, python-format
 msgid "Customer Email"
 msgstr "Vevői e-mail"
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer Project: visible in portal if the customer is a follower"
+msgstr "Vásárlói Projekt témák: látható a portálon, ha a vásárló egy követő"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1812,12 +1818,6 @@ msgstr "Vásárló megszakította a javíttatást"
 #, python-format
 msgid "Customer has reported new issue"
 msgstr "Vásárló új ügyet jelentett be"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, fuzzy, python-format
-msgid "Customer project"
-msgstr "Vásárlói ügyfélszolgálat"
 
 #. module: project
 #. openerp-web
@@ -2407,7 +2407,7 @@ msgstr ""
 "    aktivált, portál felhasználók látják a követett feladatokat, ügyeket."
 
 #. module: project
-#: code:addons/project/project.py:791
+#: code:addons/project/project.py:799
 #, python-format
 msgid "I take it"
 msgstr "Átveszem"
@@ -2874,12 +2874,6 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Tovább <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-#, fuzzy
-msgid "More Info"
-msgstr "Extra információ"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr "Sokkal hatékonyabb munkavállaló közti kommunikáció"
@@ -2919,7 +2913,7 @@ msgid "New"
 msgstr "Új"
 
 #. module: project
-#: code:addons/project/project.py:793
+#: code:addons/project/project.py:801
 #, python-format
 msgid "New Task"
 msgstr "Új Feladat"
@@ -3171,7 +3165,7 @@ msgid "Planner"
 msgstr "Tervező"
 
 #. module: project
-#: code:addons/project/project.py:953
+#: code:addons/project/project.py:961
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3219,8 +3213,8 @@ msgstr "Szabályzat / Láthatóság"
 
 #. module: project
 #: code:addons/project/project.py:134
-#, fuzzy, python-format
-msgid "Private: followers only"
+#, python-format
+msgid "Private Project: followers only"
 msgstr "Privát projekt téma: kizárólag követőknek"
 
 #. module: project
@@ -3311,12 +3305,6 @@ msgstr "Projekt feladatai"
 #, python-format
 msgid "Projects"
 msgstr "Projekt témák"
-
-#. module: project
-#: model:mail.channel,name:project.mail_channel_project_task
-#, fuzzy
-msgid "Projects & Tasks"
-msgstr "Projekt téma feladatok"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3666,6 +3654,11 @@ msgstr "Kezdő dátum"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "Kezdési dátum"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_account_type
+msgid "State"
+msgstr "Állapot"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -4508,7 +4501,7 @@ msgid "send us an email"
 msgstr "küldjön nekünk egy e-mailt"
 
 #. module: project
-#: code:addons/project/project.py:597
+#: code:addons/project/project.py:605
 #, python-format
 msgid "tasks"
 msgstr "feladatok"
@@ -4565,10 +4558,6 @@ msgstr "az előbbi lépésen listáztás"
 #~ msgid "Action Needed"
 #~ msgstr "Művelet szükséges"
 
-#~ msgid "All Employees Project: all employees can access"
-#~ msgstr ""
-#~ "Összes munkavállaló projekt feladata: összes munkavállaló hozzáférhet"
-
 #~ msgid "Check this field if this project manages timesheets"
 #~ msgstr ""
 #~ "Jelölje ki ezt a mezőt, ha ez a projekt téma munkaidő  időkiosztásokat is "
@@ -4576,9 +4565,6 @@ msgstr "az előbbi lépésen listáztás"
 
 #~ msgid "Close"
 #~ msgstr "Bezár"
-
-#~ msgid "Customer Project: visible in portal if the customer is a follower"
-#~ msgstr "Vásárlói Projekt témák: látható a portálon, ha a vásárló egy követő"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
@@ -4633,9 +4619,6 @@ msgstr "az előbbi lépésen listáztás"
 
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "Feladatonkénti időbeosztás sor felvétele"
-
-#~ msgid "State"
-#~ msgstr "Állapot"
 
 #~ msgid "Subscriptions"
 #~ msgstr "Feliratkozások"

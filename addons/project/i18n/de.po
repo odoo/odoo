@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-07-13 06:03+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
@@ -216,7 +216,7 @@ msgstr "# Aufgaben"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:438
+#: code:addons/project/project.py:446
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
@@ -1264,9 +1264,9 @@ msgstr "Aliase Modell"
 
 #. module: project
 #: code:addons/project/project.py:133
-#, fuzzy, python-format
-msgid "All employees"
-msgstr "Für Mitarbeiter, die"
+#, python-format
+msgid "All Employees Project: all employees can access"
+msgstr "Mitarbeiterprojekt: Alle Mitarbeiter haben Zugriff"
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -1528,7 +1528,7 @@ msgstr ""
 "Diese Box aktivieren, um interne Aktivitäten in diesem Projekt zu verfolgen"
 
 #. module: project
-#: code:addons/project/project.py:640
+#: code:addons/project/project.py:648
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1760,7 +1760,7 @@ msgid "Current Timesheet"
 msgstr "Aktuelle Zeiterfassung"
 
 #. module: project
-#: code:addons/project/project.py:860
+#: code:addons/project/project.py:868
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1769,10 +1769,16 @@ msgid "Customer"
 msgstr "Kunde"
 
 #. module: project
-#: code:addons/project/project.py:860
+#: code:addons/project/project.py:868
 #, python-format
 msgid "Customer Email"
 msgstr "E-Mail Kunde"
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer Project: visible in portal if the customer is a follower"
+msgstr "Kundenprojekt: sichtbar im Portal falls der Kunde ein Beobachter ist"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1799,12 +1805,6 @@ msgstr "Kunde hat Reparatur abgebrochen"
 #, python-format
 msgid "Customer has reported new issue"
 msgstr "Kunde hat neuen Fall erzeugt"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, fuzzy, python-format
-msgid "Customer project"
-msgstr "Kundenservice"
 
 #. module: project
 #. openerp-web
@@ -2396,7 +2396,7 @@ msgstr ""
 "Aufgaben oder Fälle."
 
 #. module: project
-#: code:addons/project/project.py:791
+#: code:addons/project/project.py:799
 #, python-format
 msgid "I take it"
 msgstr "Ich nehme es"
@@ -2866,12 +2866,6 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Mehr <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-#, fuzzy
-msgid "More Info"
-msgstr "Weitere Information"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr "Effizientere Mitarbeiterkommunikation"
@@ -2911,7 +2905,7 @@ msgid "New"
 msgstr "Neu"
 
 #. module: project
-#: code:addons/project/project.py:793
+#: code:addons/project/project.py:801
 #, python-format
 msgid "New Task"
 msgstr "Neue Aufgabe"
@@ -3164,7 +3158,7 @@ msgid "Planner"
 msgstr "Planner"
 
 #. module: project
-#: code:addons/project/project.py:953
+#: code:addons/project/project.py:961
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3211,8 +3205,8 @@ msgstr "Privat / Öffentlich"
 
 #. module: project
 #: code:addons/project/project.py:134
-#, fuzzy, python-format
-msgid "Private: followers only"
+#, python-format
+msgid "Private Project: followers only"
 msgstr "Privatprojekt: Nur Beobachter"
 
 #. module: project
@@ -3303,12 +3297,6 @@ msgstr "Projektaufgaben"
 #, python-format
 msgid "Projects"
 msgstr "Projekte"
-
-#. module: project
-#: model:mail.channel,name:project.mail_channel_project_task
-#, fuzzy
-msgid "Projects & Tasks"
-msgstr "Projektaufgaben"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3662,6 +3650,11 @@ msgstr "Startdatum"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "Startdatum"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_account_type
+msgid "State"
+msgstr "Status"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -4508,7 +4501,7 @@ msgid "send us an email"
 msgstr "Senden Sie uns eine E-Mail"
 
 #. module: project
-#: code:addons/project/project.py:597
+#: code:addons/project/project.py:605
 #, python-format
 msgid "tasks"
 msgstr "Aufgaben"
@@ -4568,18 +4561,11 @@ msgstr "Sie im vorherigen Schritt aufgelistet haben."
 #~ msgid "Action Needed"
 #~ msgstr "Aktion notwendig"
 
-#~ msgid "All Employees Project: all employees can access"
-#~ msgstr "Mitarbeiterprojekt: Alle Mitarbeiter haben Zugriff"
-
 #~ msgid "Check this field if this project manages timesheets"
 #~ msgstr "Aktivieren, zur Zeiterfassung in diesem Projekt"
 
 #~ msgid "Close"
 #~ msgstr "Schließen"
-
-#~ msgid "Customer Project: visible in portal if the customer is a follower"
-#~ msgstr ""
-#~ "Kundenprojekt: sichtbar im Portal falls der Kunde ein Beobachter ist"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum der letzten Nachricht."
@@ -4634,9 +4620,6 @@ msgstr "Sie im vorherigen Schritt aufgelistet haben."
 
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "Stundenzettel-Erfassung nach Aufgaben"
-
-#~ msgid "State"
-#~ msgstr "Status"
 
 #~ msgid "Subscriptions"
 #~ msgstr "Abonnements"

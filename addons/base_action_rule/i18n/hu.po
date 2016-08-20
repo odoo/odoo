@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
@@ -135,6 +135,11 @@ msgid "Conditions"
 msgstr "Feltételek"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
+msgid "Create Date"
+msgstr "Létrehozás dátuma"
+
+#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_uid
@@ -142,7 +147,6 @@ msgid "Created by"
 msgstr "Készítette"
 
 #. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_date
 msgid "Created on"
@@ -161,12 +165,13 @@ msgstr "Késleltetés az indítás dátuma után"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
 msgid ""
-"Delay after the trigger date.\n"
-"                                    You can put a negative number if you "
-"need a delay before the\n"
-"                                    trigger date, like sending a reminder 15 "
-"minutes before a meeting."
+"Delay after the trigger date.You can put a negative number if you need a "
+"delay before thetrigger date, like sending a reminder 15 minutes before a "
+"meeting."
 msgstr ""
+"A emlékeztető dátumának késleltetése. Negatív számot is írhat, ha az "
+"emlékeztető indítására az emlékeztető ideje előtt van szüksége. Példa: "
+"emlékeztető küldése 15 perccel a találkozó előtt."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
@@ -296,6 +301,11 @@ msgstr ""
 "Utoljára frissítve ekkor"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
+msgid "Last Run"
+msgstr "Utolsó futás"
+
+#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_uid
@@ -315,18 +325,8 @@ msgstr ""
 "Utoljára frissítve "
 
 #. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
-msgid "Last run"
-msgstr ""
-
-#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
 msgid "Lead id"
-msgstr ""
-
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
-msgid "Line ids"
 msgstr ""
 
 #. module: base_action_rule
@@ -516,10 +516,11 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
 msgid ""
-"When should the condition be triggered.\n"
-"                                  If present, will be checked by the "
+"When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Mikor kell a feltételeket állítani. Ha elérhető, az ütemező jelöli ki. Ha "
+"üres, a frissítés létrehozásakor lesz kijelölve."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind
@@ -540,24 +541,7 @@ msgstr ""
 "Szűrőt is használhat a rekordok kiválasztása helyett. Egy új szűrő "
 "létrehozásához:"
 
-#~ msgid "Create Date"
-#~ msgstr "Létrehozás dátuma"
-
-#~ msgid ""
-#~ "Delay after the trigger date.You can put a negative number if you need a "
-#~ "delay before thetrigger date, like sending a reminder 15 minutes before a "
-#~ "meeting."
-#~ msgstr ""
-#~ "A emlékeztető dátumának késleltetése. Negatív számot is írhat, ha az "
-#~ "emlékeztető indítására az emlékeztető ideje előtt van szüksége. Példa: "
-#~ "emlékeztető küldése 15 perccel a találkozó előtt."
-
-#~ msgid "Last Run"
-#~ msgstr "Utolsó futás"
-
-#~ msgid ""
-#~ "When should the condition be triggered. If present, will be checked by "
-#~ "the scheduler. If empty, will be checked at creation and update."
-#~ msgstr ""
-#~ "Mikor kell a feltételeket állítani. Ha elérhető, az ütemező jelöli ki. Ha "
-#~ "üres, a frissítés létrehozásakor lesz kijelölve."
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
+msgid "unknown"
+msgstr ""

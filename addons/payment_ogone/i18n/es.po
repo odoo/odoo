@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-04 20:30+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
@@ -28,6 +28,41 @@ msgstr "; encontrado pedido múltiple"
 #, python-format
 msgid "; no order found"
 msgstr "; pedido no encontrado"
+
+#. module: payment_ogone
+#: model:payment.acquirer,cancel_msg:payment_ogone.payment_acquirer_ogone
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr "<span><i>Cancelad,</i> Su pago ha sido cancelado.</span>"
+
+#. module: payment_ogone
+#: model:payment.acquirer,done_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr ""
+"<span><i>Aprobado,</i> su pago en línea ha sido porcesado "
+"satisfactoriamente. Gracias por su orden.</span>"
+
+#. module: payment_ogone
+#: model:payment.acquirer,error_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr ""
+"<span><i>Error,</i> considere por favor que ha ocurrido un error durante la "
+"transacción. La orden ha sido confirmada, pero no será pagada. No dude en "
+"contactarnos si usted tiene alguna pregunta sobre el estado de su orden.</"
+"span>"
+
+#. module: payment_ogone
+#: model:payment.acquirer,pending_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr ""
+"<span><i>Pendiente,</i> su orden ha sido procesada satisfactoriamente, pero "
+"no ha sido validada satisfactoriamente.</span>"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_userid
@@ -92,6 +127,11 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: payment_ogone
+#: model:payment.acquirer,name:payment_ogone.payment_acquirer_ogone
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_ogone
 #: code:addons/payment_ogone/models/ogone.py:249
 #, python-format
 msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
@@ -137,37 +177,13 @@ msgid "SHA Key OUT"
 msgstr "Clave de salida SHA"
 
 #. module: payment_ogone
+#: model:payment.acquirer,pre_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"You will be redirected to the Ogone website after clicking on the payment "
+"button."
+msgstr ""
+
+#. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_method
 msgid "payment.method"
 msgstr ""
-
-#~ msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-#~ msgstr "<span><i>Cancelad,</i> Su pago ha sido cancelado.</span>"
-
-#~ msgid ""
-#~ "<span><i>Done,</i> Your online payment has been successfully processed. "
-#~ "Thank you for your order.</span>"
-#~ msgstr ""
-#~ "<span><i>Aprobado,</i> su pago en línea ha sido porcesado "
-#~ "satisfactoriamente. Gracias por su orden.</span>"
-
-#~ msgid ""
-#~ "<span><i>Error,</i> Please be aware that an error occurred during the "
-#~ "transaction. The order has been confirmed but won't be paid. Don't "
-#~ "hesitate to contact us if you have any questions on the status of your "
-#~ "order.</span>"
-#~ msgstr ""
-#~ "<span><i>Error,</i> considere por favor que ha ocurrido un error durante "
-#~ "la transacción. La orden ha sido confirmada, pero no será pagada. No dude "
-#~ "en contactarnos si usted tiene alguna pregunta sobre el estado de su "
-#~ "orden.</span>"
-
-#~ msgid ""
-#~ "<span><i>Pending,</i> Your online payment has been successfully "
-#~ "processed. But your order is not validated yet.</span>"
-#~ msgstr ""
-#~ "<span><i>Pendiente,</i> su orden ha sido procesada satisfactoriamente, "
-#~ "pero no ha sido validada satisfactoriamente.</span>"
-
-#~ msgid "Ogone"
-#~ msgstr "Ogone"

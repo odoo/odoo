@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-07-22 05:15+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -223,7 +223,7 @@ msgstr "#  任务"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:438
+#: code:addons/project/project.py:446
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -1175,9 +1175,9 @@ msgstr "别名模型"
 
 #. module: project
 #: code:addons/project/project.py:133
-#, fuzzy, python-format
-msgid "All employees"
-msgstr "例如，"
+#, python-format
+msgid "All Employees Project: all employees can access"
+msgstr "全员项目：所有的员工都可以登进"
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -1426,7 +1426,7 @@ msgid "Check this box to manage internal activities through this project"
 msgstr "选择这个框来通过这个项目管理内部活动"
 
 #. module: project
-#: code:addons/project/project.py:640
+#: code:addons/project/project.py:648
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1652,7 +1652,7 @@ msgid "Current Timesheet"
 msgstr "当前的工时单"
 
 #. module: project
-#: code:addons/project/project.py:860
+#: code:addons/project/project.py:868
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1661,10 +1661,16 @@ msgid "Customer"
 msgstr "客户"
 
 #. module: project
-#: code:addons/project/project.py:860
+#: code:addons/project/project.py:868
 #, python-format
 msgid "Customer Email"
 msgstr "客户邮件"
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer Project: visible in portal if the customer is a follower"
+msgstr "客户项目：如果客户是关注者，那么他会在门户中看到"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1691,12 +1697,6 @@ msgstr "客户取消了修理"
 #, python-format
 msgid "Customer has reported new issue"
 msgstr "客户汇报了新议题"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, fuzzy, python-format
-msgid "Customer project"
-msgstr "客户服务"
 
 #. module: project
 #. openerp-web
@@ -2249,7 +2249,7 @@ msgstr ""
 "到关注的任务和议题"
 
 #. module: project
-#: code:addons/project/project.py:791
+#: code:addons/project/project.py:799
 #, python-format
 msgid "I take it"
 msgstr "我来做"
@@ -2685,12 +2685,6 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "更多 <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-#, fuzzy
-msgid "More Info"
-msgstr "额外信息"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr "在雇员质检更加有效的交流"
@@ -2730,7 +2724,7 @@ msgid "New"
 msgstr "新建"
 
 #. module: project
-#: code:addons/project/project.py:793
+#: code:addons/project/project.py:801
 #, python-format
 msgid "New Task"
 msgstr "新的任务"
@@ -2963,7 +2957,7 @@ msgid "Planner"
 msgstr "计划"
 
 #. module: project
-#: code:addons/project/project.py:953
+#: code:addons/project/project.py:961
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3008,8 +3002,8 @@ msgstr "隐私/能见度"
 
 #. module: project
 #: code:addons/project/project.py:134
-#, fuzzy, python-format
-msgid "Private: followers only"
+#, python-format
+msgid "Private Project: followers only"
 msgstr "私有项目：只开放给关注者"
 
 #. module: project
@@ -3100,12 +3094,6 @@ msgstr "项目任务"
 #, python-format
 msgid "Projects"
 msgstr "项目"
-
-#. module: project
-#: model:mail.channel,name:project.mail_channel_project_task
-#, fuzzy
-msgid "Projects & Tasks"
-msgstr "项目任务"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3453,6 +3441,11 @@ msgstr "开始日期"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "开始日期"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_account_type
+msgid "State"
+msgstr "状态"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -4237,7 +4230,7 @@ msgid "send us an email"
 msgstr "给我们发邮件"
 
 #. module: project
-#: code:addons/project/project.py:597
+#: code:addons/project/project.py:605
 #, python-format
 msgid "tasks"
 msgstr "任务"
@@ -4292,17 +4285,11 @@ msgstr "先前步骤中你列出的"
 #~ msgid "Action Needed"
 #~ msgstr "所需行动"
 
-#~ msgid "All Employees Project: all employees can access"
-#~ msgstr "全员项目：所有的员工都可以登进"
-
 #~ msgid "Check this field if this project manages timesheets"
 #~ msgstr "如果要用项目管理工时单，就勾选这个字段"
 
 #~ msgid "Close"
 #~ msgstr "关闭"
-
-#~ msgid "Customer Project: visible in portal if the customer is a follower"
-#~ msgstr "客户项目：如果客户是关注者，那么他会在门户中看到"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "发布到记录上的最后消息的日期"
@@ -4357,9 +4344,6 @@ msgstr "先前步骤中你列出的"
 
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "记录每个任务的时间表线"
-
-#~ msgid "State"
-#~ msgstr "状态"
 
 #~ msgid "Subscriptions"
 #~ msgstr "订阅"

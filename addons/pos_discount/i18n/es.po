@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:23+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-01-03 20:54+0000\n"
 "Last-Translator: Carlos rodriguez <carlosalbertor436@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
@@ -26,7 +26,7 @@ msgstr "Permita al cajero ofrecer descuentos en todo el pedido"
 
 #. module: pos_discount
 #. openerp-web
-#: code:addons/pos_discount/static/src/xml/discount_templates.xml:6
+#: code:addons/pos_discount/static/src/xml/discount.xml:6
 #, python-format
 msgid "Discount"
 msgstr "Descuento"
@@ -53,15 +53,21 @@ msgstr "Solicitar descuento"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_pc
-msgid "The default discount percentage"
+#, fuzzy
+msgid "The default discount percentage."
 msgstr "Porcentaje de descuento por defecto"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id
-msgid "The product used to model the discount"
-msgstr "El producto usado para modelar el descuento"
+msgid ""
+"The product used to record the discount. The ability to discount on the "
+"whole order will be disabled if this field is empty."
+msgstr ""
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config
 msgid "pos.config"
 msgstr "Configuración del TPV"
+
+#~ msgid "The product used to model the discount"
+#~ msgstr "El producto usado para modelar el descuento"

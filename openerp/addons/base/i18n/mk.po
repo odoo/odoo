@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-16 08:56+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -372,16 +372,6 @@ msgid ""
 msgstr ""
 "\n"
 "Прикажи информации за испратница (пренос) на веб страната\n"
-
-#. module: base
-#: model:ir.module.module,description:base.module_payment_payumoney
-msgid ""
-"\n"
-"    PayuMoney Payment Acquirer for India.\n"
-"\n"
-"    PayUmoney payment gateway supports only INR currency.\n"
-"    "
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_intrastat
@@ -869,6 +859,65 @@ msgstr ""
 "Овој волшебник ќе ја активира CRON активноста, а преку Распоредите, односно "
 "закажаните активности, ќе започне автоматското преведување преку Gengo "
 "услугите за сите изрази каде што имате назначено."
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_service
+msgid ""
+"\n"
+"Automatically creates project tasks from procurement lines.\n"
+"===========================================================\n"
+"\n"
+"This module will automatically create a new task for each procurement order "
+"line\n"
+"(e.g. for sale order lines), if the corresponding product meets the "
+"following\n"
+"characteristics:\n"
+"\n"
+"    * Product Type = Service\n"
+"    * Create Task Automatically = True\n"
+"\n"
+"If on top of that a project is specified on the product form (in the "
+"Procurement\n"
+"tab), then the new task will be created in that specific project. Otherwise, "
+"the\n"
+"new task will not belong to any project, and may be added to a project "
+"manually\n"
+"later.\n"
+"\n"
+"When the project task is completed or cancelled, the corresponding "
+"procurement\n"
+"is updated accordingly. For example, if this procurement corresponds to a "
+"sale\n"
+"order line, the sale order line will be considered delivered when the task "
+"is\n"
+"completed.\n"
+msgstr ""
+"\n"
+"Автоматски креира проектни задачи од ставките за набавка.\n"
+"===========================================================\n"
+"\n"
+"Овој модул автоматски ќе креира нова задача за секоја ставка од нарачката за "
+"набавка\n"
+"(на пр. за ставките на налогот за продажба), ако соодветниот производ ги "
+"исполнува следните\n"
+"карактеристики:\n"
+"\n"
+"* Тип на производ = Услуга\n"
+"* Автоматско создавање на задача = Точно\n"
+"\n"
+"Ако покрај тоа, имаме проект кој е означен на формата на производот (во "
+"панелот Набавки),\n"
+"тогаш новата задача ќе биде креирана во тој зададен проект. Инаку,\n"
+"новата задача нема да припаѓа на ниеден проект, но може рачно да се додаде "
+"на проект\n"
+"подоцна.\n"
+"\n"
+"Кога проектната задача е завршена или откажана, соодветната набавка\n"
+"е соодветно ажурирана. На пр., ако оваа набавка соодветствува со ставка на "
+"налог\n"
+"за продажба, ставката на налогот за продажба ќе се смета за испратена кога "
+"задачата ќе биде\n"
+"завршена.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_scanner
@@ -2375,7 +2424,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale
-#, fuzzy
 msgid ""
 "\n"
 "Manage sales quotations and orders\n"
@@ -2405,9 +2453,6 @@ msgid ""
 "* *Before Delivery*: A Draft invoice is created and must be paid before "
 "delivery\n"
 "\n"
-"With this module you can personnalize the sale order and invoice report "
-"with\n"
-"categories, subtotals or page-breaks.\n"
 "\n"
 "The Dashboard for the Sales Manager will include\n"
 "------------------------------------------------\n"
@@ -2586,6 +2631,23 @@ msgstr ""
 "* Анализа на работни нарачки"
 
 #. module: base
+#: model:ir.module.module,description:base.module_sale_layout
+msgid ""
+"\n"
+"Manage your sales reports\n"
+"=========================\n"
+"With this module you can personnalize the sale order and invoice report "
+"with\n"
+"separators, page-breaks or subtotals.\n"
+"    "
+msgstr ""
+"\n"
+"Менаџирајте со Вашите продажни извештаи\n"
+"==========================================\n"
+"Со овој модул можете да ги персонализирате налозите за продажба и фактурните "
+"записи со \"separators, page-breaks or subtotals\"."
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_mx
 msgid ""
 "\n"
@@ -2655,6 +2717,27 @@ msgstr ""
 " или работен центар за производствени нарачки). Овој модул менаџира со "
 "календар на ресурсите асоциран со секој постоечки ресурс. Исто така управува "
 "со отказот/дозволата на секој ресурс."
+
+#. module: base
+#: model:ir.module.module,description:base.module_warning
+#, fuzzy
+msgid ""
+"\n"
+"Module to trigger warnings in Odoo objects.\n"
+"==============================================\n"
+"\n"
+"Warning messages can be displayed for objects like sale order, purchase "
+"order,\n"
+"picking and invoice. The message is triggered by the form's onchange event.\n"
+"    "
+msgstr ""
+"\n"
+"Модул за прикажување на предупредувања во Odoo објектите.\n"
+"====================================================\n"
+"\n"
+"Предупредувачките пораки можат да бидат прикажани за објекти како: налози за "
+"продажба, налози за набавка, преноси и фактури. Пораката е активирана од "
+"\"the form's onchange\" настан."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_expense
@@ -5721,7 +5804,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_vat
-#, fuzzy
 msgid ""
 "\n"
 "VAT validation for Partner's VAT numbers.\n"
@@ -5742,7 +5824,7 @@ msgid ""
 "      always available, but allows numbers that are perhaps not truly "
 "allocated,\n"
 "      or not valid anymore.\n"
-"\n"
+"      \n"
 "    * When the \"VAT VIES Check\" option is enabled (in the configuration of "
 "the user's\n"
 "      Company), VAT numbers will be instead submitted to the online EU VIES\n"
@@ -6052,7 +6134,7 @@ msgid "%p - Equivalent of either AM or PM.\""
 msgstr "%p - еквивалент на AM или PM."
 
 #. module: base
-#: code:addons/base/ir/ir_filters.py:36 code:addons/base/res/res_partner.py:296
+#: code:addons/base/ir/ir_filters.py:18 code:addons/base/res/res_partner.py:287
 #: code:addons/base/res/res_users.py:141 code:addons/base/res/res_users.py:406
 #: code:addons/base/res/res_users.py:408
 #, python-format
@@ -6060,7 +6142,7 @@ msgid "%s (copy)"
 msgstr "%s (копија)"
 
 #. module: base
-#: code:addons/models.py:6460
+#: code:addons/models.py:6334
 #, python-format
 msgid ""
 "%s This might be '%s' in the current model, or a field of the same name in "
@@ -6080,7 +6162,7 @@ msgid "%y - Year without century [00,99].\""
 msgstr "%y - Година без век [00,99]."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1006
+#: code:addons/base/ir/ir_model.py:1082
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -6091,25 +6173,25 @@ msgstr ""
 "reference_id"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:187
+#: code:addons/base/ir/ir_fields.py:188
 #, python-format
 msgid "'%s' does not seem to be a number for field '%%(field)s'"
 msgstr "'%s' не е валиден број за полето '%%(field)s'"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:207
+#: code:addons/base/ir/ir_fields.py:208
 #, python-format
 msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
 msgstr "'%s' не е валиден формат за полето '%%(field)s'"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:239
+#: code:addons/base/ir/ir_fields.py:240
 #, python-format
 msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
 msgstr "'%s' не е вадилен датум за полето '%%(field)s'"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:176
+#: code:addons/base/ir/ir_fields.py:177
 #, python-format
 msgid "'%s' does not seem to be an integer for field '%%(field)s'"
 msgstr "'%s' does not seem to be an integer for field '%%(field)s'"
@@ -6457,7 +6539,7 @@ msgid "<u><strong>Views</strong></u>"
 msgstr "<u><strong>Прикази</strong></u>"
 
 #. module: base
-#: code:addons/models.py:3710
+#: code:addons/models.py:3614
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr "После последниот преглед документот бил модифициран (%s:%d)"
@@ -6533,7 +6615,7 @@ msgid "A module with dummy methods."
 msgstr "Модул со прости методи."
 
 #. module: base
-#: code:addons/base/ir/ir_qweb.py:929
+#: code:addons/base/ir/ir_qweb.py:940
 #, python-format
 msgid "A unit must be provided to duration widgets"
 msgstr "Единица мора да биде обезбедена за тековните виџети."
@@ -6713,18 +6795,6 @@ msgid "Action Bindings/Defaults"
 msgstr "Акциски поврзувања/обичните"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_act_client_help
-#: model:ir.model.fields,field_description:base.field_ir_act_report_xml_help
-#: model:ir.model.fields,field_description:base.field_ir_act_server_help
-#: model:ir.model.fields,field_description:base.field_ir_act_url_help
-#: model:ir.model.fields,field_description:base.field_ir_act_window_help
-#: model:ir.model.fields,field_description:base.field_ir_actions_help
-#: model:ir.model.fields,field_description:base.field_ir_actions_help_304
-#, fuzzy
-msgid "Action Description"
-msgstr "Опис на акција"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_name
 #: model:ir.model.fields,field_description:base.field_ir_act_server_name
 #: model:ir.model.fields,field_description:base.field_ir_act_url_name
@@ -6785,6 +6855,17 @@ msgstr ""
 "автоматски ќе Ви ја подеси точната референца."
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_ir_act_client_help
+#: model:ir.model.fields,field_description:base.field_ir_act_report_xml_help
+#: model:ir.model.fields,field_description:base.field_ir_act_server_help
+#: model:ir.model.fields,field_description:base.field_ir_act_url_help
+#: model:ir.model.fields,field_description:base.field_ir_act_window_help
+#: model:ir.model.fields,field_description:base.field_ir_actions_help
+#: model:ir.model.fields,field_description:base.field_ir_actions_help_304
+msgid "Action description"
+msgstr "Опис на акција"
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.ir_cron_view
 msgid "Action to Trigger"
 msgstr "Акција за активирање"
@@ -6796,12 +6877,6 @@ msgstr "Акција за активирање"
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_form
 msgid "Actions"
 msgstr "Акции"
-
-#. module: base
-#: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
-#, fuzzy
-msgid "Activate"
-msgstr "Активно"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_active
@@ -7015,8 +7090,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:568 code:addons/base/ir/ir_model.py:628
-#: code:addons/base/ir/ir_model.py:1112
+#: code:addons/base/ir/ir_model.py:619 code:addons/base/ir/ir_model.py:682
+#: code:addons/base/ir/ir_model.py:1201
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr "Администраторски пристап е потребен за деинсталирањето на модулот"
@@ -7109,7 +7184,7 @@ msgstr ""
 "немаат сметководствени знаења."
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:378
+#: code:addons/base/ir/ir_fields.py:379
 #, python-format
 msgid ""
 "Ambiguous specification for field '%(field)s', only provide one of name, "
@@ -7444,16 +7519,14 @@ msgid "Authorize.Net Payment Acquirer"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_act_window_auto_refresh
-#, fuzzy
-msgid "Auto refresh"
-msgstr "Автоматско освежување"
+#: model:ir.model.fields,field_description:base.field_ir_act_window_auto_search
+msgid "Auto Search"
+msgstr "Автоматско пребарување"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_act_window_auto_search
-#, fuzzy
-msgid "Auto search"
-msgstr "Автоматско пребарување"
+#: model:ir.model.fields,field_description:base.field_ir_act_window_auto_refresh
+msgid "Auto-Refresh"
+msgstr "Автоматско освежување"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_action_rule
@@ -7900,7 +7973,7 @@ msgid "Cameroon"
 msgstr "Камерун"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:375
+#: code:addons/base/ir/ir_fields.py:376
 #, python-format
 msgid ""
 "Can not create Many-To-One records indirectly, import the field separately"
@@ -7915,7 +7988,7 @@ msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "Не може да се ажурира модулот '%s'. Не е инсталиран"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:494
+#: code:addons/base/ir/ir_model.py:543
 #, python-format
 msgid "Can only rename one field at a time!"
 msgstr "Може да се преименува само едно поле од еднаш!"
@@ -7972,7 +8045,7 @@ msgid "Cannot duplicate configuration!"
 msgstr "Не  може да се дуплицира конфигурацијата!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:496
+#: code:addons/base/ir/ir_model.py:545
 #, python-format
 msgid "Cannot rename field to %s, because that field already exists!"
 msgstr "Не може да се преименува полето во %s, бидејќи тоа поле веќе постои!"
@@ -8052,7 +8125,7 @@ msgid "Change the user password."
 msgstr "Промени ја корисничката лозинка"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:309
+#: code:addons/base/res/res_partner.py:300
 #, python-format
 msgid ""
 "Changing the company of a contact should only be done if it was never "
@@ -8067,20 +8140,20 @@ msgstr ""
 "промена."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:482
+#: code:addons/base/ir/ir_model.py:531
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "Менување на моделот на полето е забрането!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:460
+#: code:addons/base/ir/ir_model.py:509
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr ""
 "Поврзувањето на системот за складирање за полето \"%s\" не е дозволено."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:485
+#: code:addons/base/ir/ir_model.py:534
 #, python-format
 msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create "
@@ -8274,6 +8347,11 @@ msgstr "Божиќни острови"
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "City"
 msgstr "Град"
+
+#. module: base
+#: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
+msgid "Click"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_attachment
@@ -8535,8 +8613,7 @@ msgstr "Комплетен ID"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_complete_name
-#, fuzzy
-msgid "Complete name"
+msgid "Complete Name"
 msgstr "Целосно име"
 
 #. module: base
@@ -8659,7 +8736,7 @@ msgid "Connection Security"
 msgstr "Безбеност на врска"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:181
+#: code:addons/base/ir/ir_mail_server.py:192
 #, python-format
 msgid ""
 "Connection Test Failed! Here is what we got instead:\n"
@@ -8670,7 +8747,7 @@ msgstr ""
 " %s."
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:189
+#: code:addons/base/ir/ir_mail_server.py:199
 #, python-format
 msgid "Connection Test Succeeded! Everything seems properly set up!"
 msgstr ""
@@ -8816,7 +8893,7 @@ msgid "Costa Rica - Accounting"
 msgstr "Костарика - Сметководство"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:571
+#: code:addons/base/res/res_partner.py:562
 #, python-format
 msgid "Couldn't create contact without email address!"
 msgstr "Контакт лицето не може да се креира без емаил адреса!"
@@ -8894,6 +8971,8 @@ msgid "Create Access Right"
 msgstr "Креирај права за пристап"
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_ir_logging_create_date
+#: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
@@ -8919,6 +8998,11 @@ msgstr "Креирај траги од контакт формулар"
 #: model:ir.ui.view,arch_db:base.view_model_menu_create
 msgid "Create Menu"
 msgstr "Креирај мени"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_service
+msgid "Create Tasks from SO"
+msgstr "Креирај задачи на SO"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_menu_create
@@ -8964,13 +9048,6 @@ msgstr ""
 "системот."
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_logging_create_date
-#: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
-#, fuzzy
-msgid "Create date"
-msgstr "Датум на креирање"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_survey
 msgid "Create surveys, collect answers and print statistics"
 msgstr "Креирај анкети, собирај одговори и печати статистики"
@@ -9014,6 +9091,7 @@ msgstr "Креирај прегледи"
 #: model:ir.model.fields,field_description:base.field_ir_actions_create_uid
 #: model:ir.model.fields,field_description:base.field_ir_actions_create_uid_301
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo_create_uid
+#: model:ir.model.fields,field_description:base.field_ir_autovacuum_create_uid
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter_create_uid
 #: model:ir.model.fields,field_description:base.field_ir_cron_create_uid
 #: model:ir.model.fields,field_description:base.field_ir_exports_create_uid
@@ -9084,6 +9162,7 @@ msgstr "Креирано од"
 #: model:ir.model.fields,field_description:base.field_ir_actions_create_date
 #: model:ir.model.fields,field_description:base.field_ir_actions_create_date_309
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo_create_date
+#: model:ir.model.fields,field_description:base.field_ir_autovacuum_create_date
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter_create_date
 #: model:ir.model.fields,field_description:base.field_ir_cron_create_date
 #: model:ir.model.fields,field_description:base.field_ir_exports_create_date
@@ -9180,7 +9259,6 @@ msgstr "Curaçao"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_currency_form
-#: model:ir.actions.act_window,name:base.action_currency_form_company
 #: model:ir.ui.menu,name:base.menu_action_currency_form
 #: model:ir.ui.view,arch_db:base.view_currency_search
 #: model:ir.ui.view,arch_db:base.view_currency_tree
@@ -9273,7 +9351,7 @@ msgid "Custom Shortcuts"
 msgstr "Прилагодени кратенки"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:432
+#: code:addons/base/ir/ir_model.py:480
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Прилагодените полиња мора да имаат име кое почнува со 'x_' !"
@@ -9377,7 +9455,7 @@ msgid "Database Structure"
 msgstr "Структура на датабазата"
 
 #. module: base
-#: code:addons/models.py:3637
+#: code:addons/models.py:3541
 #, python-format
 msgid ""
 "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
@@ -9555,7 +9633,7 @@ msgid "Delete Access Right"
 msgstr "Избриши го правото на пристап"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:216 code:addons/base/ir/ir_actions.py:780
+#: code:addons/base/ir/ir_actions.py:179 code:addons/base/ir/ir_actions.py:901
 #, python-format
 msgid "Deletion of the action record failed."
 msgstr "Бришење на неуспешно зачувување на акција."
@@ -9853,7 +9931,7 @@ msgid "Document Management"
 msgstr "Проектен менаџмент"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:775 code:addons/base/ir/ir_model.py:778
+#: code:addons/base/ir/ir_model.py:848 code:addons/base/ir/ir_model.py:851
 #, python-format
 msgid "Document model"
 msgstr "Модел на документ"
@@ -9926,7 +10004,7 @@ msgstr ""
 "работен тек"
 
 #. module: base
-#: code:addons/base/ir/ir_qweb.py:927
+#: code:addons/base/ir/ir_qweb.py:938
 #, python-format
 msgid "Durations can't be negative"
 msgstr "Времетраењата не можат да бидат негативни"
@@ -9992,13 +10070,13 @@ msgid "El Salvador"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:556
+#: code:addons/base/ir/ir_ui_view.py:590
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr "Елементот '%s' не може да биде лоциран во надредниот приказот"
 
 #. module: base
-#: code:addons/base/res/res_company.py:216
+#: code:addons/base/res/res_company.py:215
 #: model:ir.model.fields,field_description:base.field_res_bank_email
 #: model:ir.model.fields,field_description:base.field_res_company_email
 #: model:ir.model.fields,field_description:base.field_res_partner_email
@@ -10048,7 +10126,7 @@ msgid "Employees"
 msgstr "Вработени"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:302
+#: code:addons/base/ir/ir_model.py:352
 #, python-format
 msgid "Empty dependency in %r"
 msgstr ""
@@ -10088,19 +10166,24 @@ msgid "Eritrea"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_partner.py:84
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "Грешка ! Не може да направите рекурзивно мени."
+
+#. module: base
+#: code:addons/base/res/res_partner.py:74
 #, python-format
 msgid "Error ! You can not create recursive tags."
 msgstr "Грешка ! Не може да направите рекурзивни тагови."
 
 #. module: base
-#: code:addons/base/res/res_company.py:354
+#: code:addons/base/res/res_company.py:353
 #, fuzzy, python-format
 msgid "Error ! You cannot create recursive companies."
 msgstr "Грешка! Не може да креирате рекурсивни компании."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:417
+#: code:addons/base/ir/ir_ui_view.py:451
 #, python-format
 msgid ""
 "Error context:\n"
@@ -10110,16 +10193,10 @@ msgstr ""
 "Приказ `%(view_name)s`"
 
 #. module: base
-#: code:addons/models.py:1347
+#: code:addons/models.py:1344
 #, python-format
 msgid "Error details:"
 msgstr "Опис на дисфункцијата/еророт:"
-
-#. module: base
-#: code:addons/base/ir/ir_ui_menu.py:80
-#, fuzzy, python-format
-msgid "Error! You cannot create recursive menus."
-msgstr "Грешка ! Не може да направите рекурзивно мени."
 
 #. module: base
 #: model:res.country,name:base.ee
@@ -10351,7 +10428,7 @@ msgid "Faroe Islands"
 msgstr "Фарски острови"
 
 #. module: base
-#: code:addons/base/res/res_company.py:215
+#: code:addons/base/res/res_company.py:214
 #: model:ir.model.fields,field_description:base.field_res_bank_fax
 #: model:ir.model.fields,field_description:base.field_res_company_fax
 #: model:ir.model.fields,field_description:base.field_res_partner_fax
@@ -10449,19 +10526,19 @@ msgid "Field"
 msgstr "Поле"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:135
+#: code:addons/base/ir/ir_model.py:174
 #, python-format
 msgid "Field \"Model\" cannot be modified on models."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:139
+#: code:addons/base/ir/ir_model.py:178
 #, python-format
 msgid "Field \"Transient Model\" cannot be modified on models."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:137
+#: code:addons/base/ir/ir_model.py:176
 #, python-format
 msgid "Field \"Type\" cannot be modified on models."
 msgstr ""
@@ -10498,7 +10575,7 @@ msgid "Field Type"
 msgstr "Тип на поле"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:868
+#: code:addons/base/ir/ir_ui_view.py:921
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "Полето `%(field_name)s` не постои"
@@ -10735,13 +10812,13 @@ msgid "For relationship fields, the technical name of the target model"
 msgstr "За здружени полиња, техничкото име на таргет моделот"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:425
+#: code:addons/base/ir/ir_model.py:475
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "За избирачки полиња, опцијата за избирање мора да биде прикажена!"
 
 #. module: base
-#: code:addons/models.py:3770
+#: code:addons/models.py:3674
 #, python-format
 msgid ""
 "For this kind of document, you may only access records you created "
@@ -10773,7 +10850,7 @@ msgid "Forum, FAQ, Q&A"
 msgstr "Форум, често поставувани прашања, прашања и одговори"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:343
+#: code:addons/base/ir/ir_fields.py:344
 #, python-format
 msgid "Found multiple matches for field '%%(field)s' (%d matches)"
 msgstr "Пронајди повеќекратни совпаѓања за полето '%%(field)s' (%d matches)"
@@ -10828,12 +10905,6 @@ msgstr "Права на целосен пристап"
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_complete_name
 msgid "Full Path"
 msgstr "Целосна патека"
-
-#. module: base
-#: selection:ir.actions.act_window,target:0
-#, fuzzy
-msgid "Full Screen"
-msgstr "Целосен пристап"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_func
@@ -11691,13 +11762,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view_active
-#, fuzzy
 msgid ""
 "If this view is inherited,\n"
 "* if True, the view always extends its parent\n"
 "* if False, the view currently does not extend its parent but can be "
 "enabled\n"
-"         "
+"             "
 msgstr ""
 "Ако овој приказ е наследен,\n"
 "* Ако е валиден, приказот секогаш го проширува својот надреден елемент\n"
@@ -11839,15 +11909,8 @@ msgid "Incoming Transitions"
 msgstr "Дојдовни премини"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:606
-#, python-format
+#: constraint:ir.actions.server:0
 msgid "Incorrect Write Record Expression"
-msgstr "Погрешно внесен Expression запис"
-
-#. module: base
-#: code:addons/base/ir/ir_actions.py:713
-#, fuzzy, python-format
-msgid "Incorrect expression"
 msgstr "Погрешно внесен Expression запис"
 
 #. module: base
@@ -12004,13 +12067,13 @@ msgstr ""
 "живо."
 
 #. module: base
-#: code:addons/models.py:1551
+#: code:addons/models.py:1549
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "Недоволни полиња за календарски преглед!"
 
 #. module: base
-#: code:addons/models.py:1561
+#: code:addons/models.py:1559
 #, python-format
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
@@ -12059,15 +12122,14 @@ msgid "Internal note..."
 msgstr "Внатрешна белешка..."
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_ir_cron_interval_number
+msgid "Interval Number"
+msgstr "Број на интервал"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_interval_type
 msgid "Interval Unit"
 msgstr "Единица интервал"
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_ir_cron_interval_number
-#, fuzzy
-msgid "Interval number"
-msgstr "Број на интервал"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_report_intrastat
@@ -12080,7 +12142,7 @@ msgid "Introspection report on objects"
 msgstr "Интроспекциски извештај на објекти"
 
 #. module: base
-#: code:addons/models.py:4761
+#: code:addons/models.py:4665
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -12089,13 +12151,12 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_cron.py:70
-#, python-format
+#: constraint:ir.cron:0
 msgid "Invalid arguments"
 msgstr "Погрешни аргументи"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:324
+#: code:addons/base/ir/ir_fields.py:325
 #, python-format
 msgid "Invalid database id '%s' for the field '%%(field)s'"
 msgstr "Неважечки датабазен id '%s' за полето '%%(field)s'"
@@ -12111,13 +12172,7 @@ msgstr ""
 "дозволени директиви, прикажани кога го уредувате вашиот јазик."
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:714
-#, fuzzy, python-format
-msgid "Invalid expression"
-msgstr "Python Израз"
-
-#. module: base
-#: code:addons/models.py:760
+#: code:addons/models.py:757
 #, python-format
 msgid ""
 "Invalid function definition %s in object %s !\n"
@@ -12126,7 +12181,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:2242
+#: code:addons/models.py:2148
 #, python-format
 msgid ""
 "Invalid group_by specification: \"%s\".\n"
@@ -12149,19 +12204,19 @@ msgstr ""
 "друг приказ."
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:248 code:addons/base/ir/ir_actions.py:250
-#, fuzzy, python-format
-msgid "Invalid model name %r in action definition."
+#: code:addons/base/ir/ir_actions.py:272
+#, python-format
+msgid "Invalid model name in the action definition."
 msgstr "Невалидно име на модел во акциската дефиниција."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:548
+#: code:addons/base/ir/ir_ui_view.py:582
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr "Неважечки позициски атрибут: '%s'"
 
 #. module: base
-#: code:addons/base/ir/ir_sequence.py:210
+#: code:addons/base/ir/ir_sequence.py:220
 #, python-format
 msgid "Invalid prefix or suffix for sequence '%s'"
 msgstr "Неважечки префикс или суфикс за секвенца '%s'"
@@ -12179,8 +12234,7 @@ msgid "Invalid type"
 msgstr "Неважечки тип"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:296 code:addons/base/ir/ir_ui_view.py:298
-#, python-format
+#: constraint:ir.ui.view:0
 msgid "Invalid view definition"
 msgstr "Невалидна дефиниција на приказ"
 
@@ -12602,6 +12656,7 @@ msgstr "Последна промена на"
 #: model:ir.model.fields,field_description:base.field_ir_actions_write_uid
 #: model:ir.model.fields,field_description:base.field_ir_actions_write_uid_306
 #: model:ir.model.fields,field_description:base.field_ir_attachment_write_uid
+#: model:ir.model.fields,field_description:base.field_ir_autovacuum_write_uid
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter_write_uid
 #: model:ir.model.fields,field_description:base.field_ir_cron_write_uid
 #: model:ir.model.fields,field_description:base.field_ir_exports_line_write_uid
@@ -12674,6 +12729,7 @@ msgstr "Последно ажурирање од"
 #: model:ir.model.fields,field_description:base.field_ir_actions_write_date
 #: model:ir.model.fields,field_description:base.field_ir_actions_write_date_307
 #: model:ir.model.fields,field_description:base.field_ir_attachment_write_date
+#: model:ir.model.fields,field_description:base.field_ir_autovacuum_write_date
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter_write_date
 #: model:ir.model.fields,field_description:base.field_ir_cron_write_date
 #: model:ir.model.fields,field_description:base.field_ir_exports_line_write_date
@@ -13002,7 +13058,7 @@ msgid "Madam"
 msgstr "Мадам"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:464
+#: code:addons/base/ir/ir_mail_server.py:483
 #, python-format
 msgid "Mail Delivery Failed"
 msgstr "Испораката на е-маил не е успешна"
@@ -13013,7 +13069,7 @@ msgid "Mail Tips"
 msgstr "Поштенски совети"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:462
+#: code:addons/base/ir/ir_mail_server.py:479
 #, python-format
 msgid ""
 "Mail delivery failed via SMTP server '%s'.\n"
@@ -13122,13 +13178,11 @@ msgstr "Менаџер"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_todo_type
-#, fuzzy
 msgid ""
 "Manual: Launched manually.\n"
-"                                    Automatic: Runs whenever the system is "
-"reconfigured.\n"
-"                                    Launch Manually Once: after having been "
-"launched manually, it sets automatically to Done."
+"Automatic: Runs whenever the system is reconfigured.\n"
+"Launch Manually Once: after having been launched manually, it sets "
+"automatically to Done."
 msgstr ""
 "Рачен: Покренато рачно.\n"
 "Автоматски: Се стартува кога системот е повторно конфигуриран.\n"
@@ -13157,7 +13211,7 @@ msgid "Manufacturing Orders, Bill of Materials, Routings"
 msgstr "Налози за изработка, Нормативи, Насочување"
 
 #. module: base
-#: code:addons/models.py:2970
+#: code:addons/models.py:2876
 #, python-format
 msgid "Many2Many destination model does not exist: `%s`"
 msgstr ""
@@ -13168,7 +13222,7 @@ msgid "Many2One"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:439
+#: code:addons/base/ir/ir_model.py:487
 #, python-format
 msgid "Many2one %s on model %s does not exist!"
 msgstr ""
@@ -13378,25 +13432,25 @@ msgid "Miss"
 msgstr "Г-ѓица"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:440
+#: code:addons/base/ir/ir_mail_server.py:458
 #, python-format
 msgid "Missing SMTP Server"
 msgstr "Недостасува SMTP сервер"
 
 #. module: base
-#: code:addons/models.py:3740
+#: code:addons/models.py:3644
 #, python-format
 msgid "Missing document(s)"
 msgstr "Недостасувачки документ(и)"
 
 #. module: base
-#: code:addons/models.py:6445
+#: code:addons/models.py:6319
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "Недостига потребната вредност за полето '%s' (%s)"
 
 #. module: base
-#: code:addons/models.py:6442
+#: code:addons/models.py:6316
 #, python-format
 msgid "Missing required value for the field '%s'."
 msgstr "Недостига потребната вредност за полето '%s'."
@@ -13424,13 +13478,11 @@ msgstr "Мод"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_model
-#: model:ir.model.fields,field_description:base.field_ir_act_server_model_name
 #: model:ir.model.fields,field_description:base.field_ir_filters_model_id
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint_model
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_model_id
 #: model:ir.model.fields,field_description:base.field_ir_model_model
 #: model:ir.model.fields,field_description:base.field_ir_model_relation_model
-#: model:ir.model.fields,field_description:base.field_ir_ui_view_model
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
 #: model:ir.ui.view,arch_db:base.values_view_search_action
 #: model:ir.ui.view,arch_db:base.view_model_search
@@ -13439,13 +13491,13 @@ msgid "Model"
 msgstr "Модел"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:435
+#: code:addons/base/ir/ir_model.py:483
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "Моделот %s не постои!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:115
+#: code:addons/base/ir/ir_model.py:155
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed!"
 msgstr "Моделот '%s' содржи модул дата и не може да биде отстранет!"
@@ -13477,6 +13529,7 @@ msgid "Model Description"
 msgstr "Опис на модел"
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_ir_act_server_model_name
 #: model:ir.model.fields,field_description:base.field_ir_model_data_model
 #: model:ir.model.fields,field_description:base.field_ir_values_model
 msgid "Model Name"
@@ -13497,12 +13550,6 @@ msgstr ""
 "на поразличен модел од базичниот."
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_ui_view_model_ids
-#, fuzzy
-msgid "Model ids"
-msgstr "Модели"
-
-#. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_res_model
 msgid "Model name of the object to open in the view window"
 msgstr "Модел име од објектот што ќе се отвори во прозорецот на приказот"
@@ -13516,7 +13563,7 @@ msgstr ""
 "partner'"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:657 code:addons/base/ir/ir_ui_view.py:819
+#: code:addons/base/ir/ir_ui_view.py:695 code:addons/base/ir/ir_ui_view.py:873
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr "Модулот не е пронајден: %(model)s"
@@ -13828,7 +13875,7 @@ msgid "New Zealand - Accounting"
 msgstr "Генеричко - Сметководство"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:498
+#: code:addons/base/ir/ir_model.py:547
 #, python-format
 msgid "New field name must still start with x_ , because it is a custom field!"
 msgstr ""
@@ -13895,7 +13942,7 @@ msgid "Niue"
 msgstr "Ниуе"
 
 #. module: base
-#: code:addons/models.py:1664
+#: code:addons/models.py:1630
 #, python-format
 msgid "No default view of type '%s' could be found !"
 msgstr ""
@@ -13912,7 +13959,7 @@ msgid "No language with code \"%s\" exists"
 msgstr "Не постои јазик со код \"%s\""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:356
+#: code:addons/base/ir/ir_fields.py:357
 #, python-format
 msgid ""
 "No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"
@@ -13926,13 +13973,13 @@ msgid "Non Updatable"
 msgstr "Не може да се ажурира"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:311
+#: code:addons/base/ir/ir_model.py:361
 #, python-format
 msgid "Non-relational field %r in dependency %r"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:268
+#: code:addons/base/ir/ir_model.py:318
 #, python-format
 msgid "Non-relational field name '%s' in related field '%s'"
 msgstr ""
@@ -14027,6 +14074,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_cron_model
 #: model:ir.model.fields,field_description:base.field_ir_model_access_model_id
 #: model:ir.model.fields,field_description:base.field_ir_rule_model_id
+#: model:ir.model.fields,field_description:base.field_ir_ui_view_model
 #: model:ir.model.fields,field_description:base.field_res_request_link_object
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_model
 #: selection:ir.translation,type:0
@@ -14144,7 +14192,7 @@ msgid "On delete property for many2one fields"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3740
+#: code:addons/models.py:3644
 #, python-format
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
@@ -14154,7 +14202,7 @@ msgstr ""
 "обидете се повторно после обновувањето."
 
 #. module: base
-#: code:addons/models.py:4152
+#: code:addons/models.py:4056
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -14164,7 +14212,7 @@ msgstr ""
 "%s)."
 
 #. module: base
-#: code:addons/base/res/res_partner.py:356
+#: code:addons/base/res/res_partner.py:347
 #, python-format
 msgid ""
 "One2Many fields cannot be synchronized as part of `commercial_fields` or "
@@ -14198,7 +14246,7 @@ msgid "Only administrators can change the settings"
 msgstr "Само администратори можат да ги променат подесувањата"
 
 #. module: base
-#: code:addons/base/ir/ir_attachment.py:56
+#: code:addons/base/ir/ir_attachment.py:62
 #, python-format
 msgid "Only administrators can execute this action."
 msgstr "Само администратори можат да ја извршат оваа наредба"
@@ -14211,16 +14259,17 @@ msgid ""
 "\n"
 "* if extension (default), if this view is requested the closest primary "
 "view\n"
-"is looked up (via inherit_id), then all views inheriting from it with this\n"
-"view's model are applied\n"
+"  is looked up (via inherit_id), then all views inheriting from it with "
+"this\n"
+"  view's model are applied\n"
 "* if primary, the closest primary view is fully resolved (even if it uses a\n"
-"different model than this one), then this view's inheritance specs\n"
-"(<xpath/>) are applied, and the result is used as if it were this view's\n"
-"actual arch.\n"
+"  different model than this one), then this view's inheritance specs\n"
+"  (<xpath/>) are applied, and the result is used as if it were this view's\n"
+"  actual arch.\n"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:775
+#: code:addons/base/ir/ir_model.py:848
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -14491,28 +14540,26 @@ msgid "Parent Company"
 msgstr "Матична компанија"
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_ir_ui_menu_parent_left
+msgid "Parent Left"
+msgstr "Лев надреден елемент"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_parent_id
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_menu_id
 msgid "Parent Menu"
 msgstr "Над-мени"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_ui_menu_parent_left
-#, fuzzy
-msgid "Parent left"
-msgstr "Лев надреден елемент"
+#: model:ir.model.fields,field_description:base.field_ir_ui_menu_parent_right
+msgid "Parent Right"
+msgstr "Десен надреден елемент"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_parent_name
 #: model:ir.model.fields,field_description:base.field_res_users_parent_name
 msgid "Parent name"
 msgstr "Име на надреден елемент"
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_ir_ui_menu_parent_right
-#, fuzzy
-msgid "Parent right"
-msgstr "Десен надреден елемент"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_parser
@@ -14572,7 +14619,7 @@ msgid "Partners Geolocation"
 msgstr "Географска локализација на партнери"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:712
+#: code:addons/base/res/res_partner.py:703
 #, python-format
 msgid "Partners: "
 msgstr "Партнери:"
@@ -14595,7 +14642,6 @@ msgid "Path"
 msgstr "Пат"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_payment_acquirer
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Acquirer"
 msgstr "Стекнувач на плаќање"
@@ -14632,18 +14678,6 @@ msgid "Payment Acquirer: Paypal Implementation"
 msgstr "Примател на средства: Paypal имплементација"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_payment_payumoney
-#, fuzzy
-msgid "Payment Acquirer: PayuMoney Implementation"
-msgstr "Примател на средства: Ogone имплементација"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_payment_stripe
-#, fuzzy
-msgid "Payment Acquirer: Stripe Implementation"
-msgstr "Примател на средства: Ogone имплементација"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_payment_transfer
 msgid "Payment Acquirer: Transfer Implementation"
 msgstr "Примател на средства: префрлувачка имплементација"
@@ -14671,12 +14705,6 @@ msgid "Payroll Accounting"
 msgstr "Сметководство на платни списоци"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_payment_payumoney
-#, fuzzy
-msgid "PayuMoney Payment Acquirer"
-msgstr "Paypal примател на средства"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_calendar
 msgid "Personal & Shared Calendar"
 msgstr "Личен и споделен календар"
@@ -14702,7 +14730,7 @@ msgid "Philippines"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_company.py:214
+#: code:addons/base/res/res_company.py:213
 #: model:ir.model.fields,field_description:base.field_res_bank_phone
 #: model:ir.model.fields,field_description:base.field_res_company_phone
 #: model:ir.model.fields,field_description:base.field_res_partner_phone
@@ -14742,7 +14770,7 @@ msgid "Plano de contas SNC para Portugal"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:778
+#: code:addons/base/ir/ir_model.py:851
 #, python-format
 msgid "Please contact your system administrator if you think this is an error."
 msgstr ""
@@ -14750,7 +14778,7 @@ msgstr ""
 "овде постои некоја системска грешка."
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:440
+#: code:addons/base/ir/ir_mail_server.py:458
 #, python-format
 msgid ""
 "Please define at least one SMTP server, or provide the SMTP parameters "
@@ -14783,7 +14811,7 @@ msgstr ""
 "динамичниот expression градител. "
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:786
+#: code:addons/base/ir/ir_actions.py:906
 #, python-format
 msgid "Please specify an action to launch!"
 msgstr "Ве молиме да одредите акција за извршување!"
@@ -15018,7 +15046,7 @@ msgid "Properties"
 msgstr "Својства"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:477
+#: code:addons/base/ir/ir_model.py:526
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -15246,7 +15274,7 @@ msgid "Record"
 msgstr "Запис"
 
 #. module: base
-#: code:addons/models.py:5085
+#: code:addons/models.py:4989
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
 msgstr "Запис #%d од %s не е пронајден, не може да се копира!"
@@ -15273,7 +15301,7 @@ msgid "Record Rules"
 msgstr "Записни правила"
 
 #. module: base
-#: code:addons/base/ir/ir_cron.py:262
+#: code:addons/base/ir/ir_cron.py:271
 #, python-format
 msgid ""
 "Record cannot be modified right now: This cron task is currently being "
@@ -15284,7 +15312,7 @@ msgstr ""
 "неколку минути повторно."
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:359 code:addons/models.py:5212
+#: code:addons/base/ir/ir_actions.py:411 code:addons/models.py:5116
 #, python-format
 msgid "Record does not exist or has been deleted."
 msgstr "Записот не постои или бил избришан."
@@ -15312,13 +15340,12 @@ msgid "Recursion error in modules dependencies !"
 msgstr "Грешка со рекурзивност во зависностите на модулите!"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:611
-#, python-format
+#: constraint:ir.actions.server:0
 msgid "Recursion found in child server actions"
 msgstr "Повторување е пронајдено во подредените серверски акции"
 
 #. module: base
-#: code:addons/models.py:4264
+#: code:addons/models.py:4168
 #, python-format
 msgid "Recursivity Detected."
 msgstr "Детектирана е рекурзивност."
@@ -15335,7 +15362,7 @@ msgid "Referenceable Models"
 msgstr "Референтни модели"
 
 #. module: base
-#: code:addons/base/res/res_company.py:219
+#: code:addons/base/res/res_company.py:218
 #, python-format
 msgid "Reg"
 msgstr ""
@@ -15362,19 +15389,20 @@ msgid "Related Server Action"
 msgstr "Поврзана серверска акција"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:280
+#: code:addons/base/ir/ir_model.py:330
 #, python-format
 msgid "Related field '%s' does not have comodel '%s'"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:278
+#: code:addons/base/ir/ir_model.py:328
 #, python-format
 msgid "Related field '%s' does not have type '%s'"
 msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_wkf_field_id
+#: model:ir.model.fields,field_description:base.field_ir_model_fields_relation_field
 msgid "Relation Field"
 msgstr "Поле на релација"
 
@@ -15384,15 +15412,8 @@ msgid "Relation Name"
 msgstr "Име на релација"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_model_fields_relation_field
-#, fuzzy
-msgid "Relation field"
-msgstr "Поле на релација"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_relation_table
-#, fuzzy
-msgid "Relation table"
+msgid "Relation Table"
 msgstr "Табела на врска"
 
 #. module: base
@@ -15424,7 +15445,7 @@ msgstr ""
 "акција"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:462
+#: code:addons/base/ir/ir_model.py:511
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Преименување на ретко поле \"%s\" не е дозловено"
@@ -15478,6 +15499,7 @@ msgid "Report Model"
 msgstr "Извештај на модел"
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_type
 #: model:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Type"
 msgstr "Тип на извештај"
@@ -15486,12 +15508,6 @@ msgstr "Тип на извештај"
 #: model:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Xml"
 msgstr "Xml на извештај"
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_type
-#, fuzzy
-msgid "Report type"
-msgstr "Тип на извештај"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view_tree
@@ -15532,7 +15548,7 @@ msgid "Resellers"
 msgstr "Препродавачи"
 
 #. module: base
-#: code:addons/models.py:1166
+#: code:addons/models.py:1163
 #, python-format
 msgid "Resolve other errors first"
 msgstr "Реши други проблеми прво"
@@ -15651,19 +15667,17 @@ msgid "Rules"
 msgstr "Правила"
 
 #. module: base
-#: code:addons/base/ir/ir_rule.py:65
-#, python-format
+#: constraint:ir.rule:0
 msgid "Rules can not be applied on Transient models."
 msgstr "Правилата не можат да бидат аплицирани на Transient модели."
 
 #. module: base
-#: code:addons/base/ir/ir_rule.py:71
-#, python-format
+#: constraint:ir.rule:0
 msgid "Rules can not be applied on the Record Rules model."
 msgstr "Правилата не можат да бидат аплицирани на записните правила на модел."
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:763
+#: code:addons/base/ir/ir_actions.py:883
 #, python-format
 msgid "Run %s"
 msgstr "Изврши %s"
@@ -15777,6 +15791,16 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_uos
 msgid "Sale - Secondary UoM"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_layout
+msgid "Sale Layout"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_sale_layout
+msgid "Sale Layout, page-break, subtotals, separators, report"
 msgstr ""
 
 #. module: base
@@ -15914,6 +15938,11 @@ msgid "Search Partner"
 msgstr "Барај партнер"
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_ir_act_window_search_view
+msgid "Search View"
+msgstr "Пребарувачки приказ"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_search_view_id
 msgid "Search View Ref."
 msgstr ""
@@ -15922,12 +15951,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_module_filter
 msgid "Search modules"
 msgstr "Пребарувај модули"
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_ir_act_window_search_view
-#, fuzzy
-msgid "Search view"
-msgstr "Пребарувачки приказ"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
@@ -15957,7 +15980,7 @@ msgid "See all Leads"
 msgstr "Види ги сите траги"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:305
+#: code:addons/base/ir/ir_fields.py:306
 #, python-format
 msgid "See all possible values"
 msgstr "Види ги сите можни вредности"
@@ -15987,15 +16010,6 @@ msgstr "Одберете го сигналот на работниот тек з
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_selectable
 msgid "Selectable"
 msgstr "Избирачко"
-
-#. module: base
-#: code:addons/base/res/res_partner.py:25
-#, python-format
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
 
 #. module: base
 #: selection:ir.property,type:0 selection:ir.translation,type:0
@@ -16045,7 +16059,6 @@ msgstr "Формат на разделник"
 #: model:ir.model.fields,field_description:base.field_ir_module_module_sequence
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_sequence
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_priority
-#: model:ir.model.fields,field_description:base.field_res_company_sequence
 #: model:ir.model.fields,field_description:base.field_res_partner_bank_sequence
 #: model:ir.model.fields,field_description:base.field_wkf_transition_sequence
 #: model:ir.ui.view,arch_db:base.ir_cron_view_tree
@@ -16090,7 +16103,7 @@ msgid "Serialization Field"
 msgstr "Поле за серијализација"
 
 #. module: base
-#: code:addons/models.py:443
+#: code:addons/models.py:440
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
 msgstr ""
@@ -16272,9 +16285,9 @@ msgid "Size"
 msgstr "Големина"
 
 #. module: base
-#: sql_constraint:ir.model.fields:0
-#, fuzzy
-msgid "Size of the field cannot be negative."
+#: code:addons/base/ir/ir_model.py:302
+#, python-format
+msgid "Size of the field can never be less than 0 !"
 msgstr "Големината на полето не смее да изнесува помалце од 0 !"
 
 #. module: base
@@ -16336,25 +16349,25 @@ msgid "Sometimes called BIC or Swift."
 msgstr "Понекогаш наречен BIC или Swift."
 
 #. module: base
-#: code:addons/base/ir/ir_attachment.py:288 code:addons/base/ir/ir_model.py:769
+#: code:addons/base/ir/ir_attachment.py:323 code:addons/base/ir/ir_model.py:842
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr "Се извинуваме но не ви е дозволен пристап до овој документ."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:771
+#: code:addons/base/ir/ir_model.py:844
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr "Извинете, не ви е дозволено да креирате таков тип на документ"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:772
+#: code:addons/base/ir/ir_model.py:845
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr "Извинете, не ви е дозволено да го избришете овој документ."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:770
+#: code:addons/base/ir/ir_model.py:843
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr "Извинете, не ви е дозволено да го модифицирате овој документ."
@@ -16365,7 +16378,7 @@ msgid "Sort"
 msgstr "Сортирај"
 
 #. module: base
-#: code:addons/models.py:4933
+#: code:addons/models.py:4837
 #, python-format
 msgid "Sorting field %s not found on model %s"
 msgstr ""
@@ -16539,7 +16552,7 @@ msgid "Step"
 msgstr "Чекор"
 
 #. module: base
-#: code:addons/base/ir/ir_sequence.py:16 code:addons/base/ir/ir_sequence.py:32
+#: code:addons/base/ir/ir_sequence.py:20 code:addons/base/ir/ir_sequence.py:43
 #, python-format
 msgid "Step must not be zero."
 msgstr "Чекорот не смее да биде нула."
@@ -16605,13 +16618,6 @@ msgstr "Улица..."
 #: model:ir.model.fields,field_description:base.field_res_users_street2
 msgid "Street2"
 msgstr "Улица2"
-
-#. module: base
-#: model:ir.module.module,description:base.module_payment_stripe
-#: model:ir.module.module,shortdesc:base.module_payment_stripe
-#, fuzzy
-msgid "Stripe Payment Acquirer"
-msgstr "Стекнувач на плаќање"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_sub_model_object_field
@@ -16794,7 +16800,7 @@ msgstr ""
 "ситуирана за аплодирање на Odoo преведувачката платформа"
 
 #. module: base
-#: code:addons/base/res/res_company.py:218
+#: code:addons/base/res/res_company.py:217
 #: model:ir.model.fields,field_description:base.field_res_partner_vat
 #: model:ir.model.fields,field_description:base.field_res_users_vat
 #, python-format
@@ -16812,7 +16818,7 @@ msgid "Tag"
 msgstr "Етикета"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_category_id_970
+#: model:ir.model.fields,field_description:base.field_res_partner_category_id_974
 #: model:ir.model.fields,field_description:base.field_res_users_category_id
 msgid "Tags"
 msgstr "Етикети"
@@ -16903,10 +16909,10 @@ msgid "Technical Settings"
 msgstr "Технички поставки"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:746
+#: code:addons/base/ir/ir_translation.py:759
 #, fuzzy, python-format
-msgid "Technical Translations"
-msgstr "Уреди преводи"
+msgid "Technical Translation"
+msgstr "Синхронизирај го преводот"
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
@@ -16937,11 +16943,6 @@ msgstr "Тестирање на ограничувањата за пристап
 #: model:ir.module.category,name:base.module_category_tests
 msgid "Tests"
 msgstr "Тестови"
-
-#. module: base
-#: model:ir.module.module,description:base.module_test_read_group
-msgid "Tests for read_group"
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_converter
@@ -16975,7 +16976,22 @@ msgstr ""
 "Може да го користите ова поле за брзо пребарување."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:251
+#: code:addons/base/ir/ir_model.py:117
+#, python-format
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:298
+#, python-format
+msgid ""
+"The Selection Options expression is must be in the [('key','Label'), ...] "
+"format!"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:285
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
@@ -17075,8 +17091,7 @@ msgstr "Кодот на валутата мора да биде единстве
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment_res_model
-#, fuzzy
-msgid "The database object this attachment will be attached to."
+msgid "The database object this attachment will be attached to"
 msgstr "Објектот на базата на податоци на кој овој прилог ќе биде прикачен"
 
 #. module: base
@@ -17176,20 +17191,6 @@ msgid ""
 msgstr ""
 "Мени акцијата кон која овој филтер се аплицира. Кога оставена празна, "
 "филтерот се аплицира на сите мениа на овој модел."
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:83
-#, python-format
-msgid ""
-"The model name can only contain lowercase characters, digits, underscores "
-"and dots."
-msgstr ""
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:81
-#, fuzzy, python-format
-msgid "The model name must start with 'x_'."
-msgstr "Прилагодените полиња мора да имаат име кое почнува со 'x_' !"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_wkf_model_id
@@ -17309,13 +17310,12 @@ msgstr "Курс на валутата споредена со валутата 
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment_res_id
-#, fuzzy
-msgid "The record id this is attached to."
+msgid "The record id this is attached to"
 msgstr "ID на запис на кој е прикачено ова"
 
 #. module: base
-#: code:addons/models.py:3375 code:addons/models.py:3646
-#: code:addons/models.py:3730
+#: code:addons/models.py:3281 code:addons/models.py:3550
+#: code:addons/models.py:3634
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -17348,7 +17348,7 @@ msgid "The state code in max. three chars."
 msgstr "Код на држава, максимум три карактери."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:363
+#: code:addons/base/ir/ir_model.py:413
 #, python-format
 msgid "The table %r if used for other, possibly incompatible fields."
 msgstr ""
@@ -17373,7 +17373,7 @@ msgid "The user will be able to manage equipments."
 msgstr "Корисникот ќе биде во можност да управува со опремата."
 
 #. module: base
-#: code:addons/models.py:6457
+#: code:addons/models.py:6331
 #, python-format
 msgid "The value for the field '%s' already exists."
 msgstr "Вредноста за полето '%s' веќе постои."
@@ -17384,7 +17384,7 @@ msgid "Theme"
 msgstr "Тема"
 
 #. module: base
-#: code:addons/base/ir/ir_filters.py:97
+#: code:addons/base/ir/ir_filters.py:79
 #, python-format
 msgid ""
 "There is already a shared filter set as default for %(model)s, delete or "
@@ -17394,13 +17394,13 @@ msgstr ""
 "изменете го пред да сетирате нов стандарден"
 
 #. module: base
-#: code:addons/models.py:2824
+#: code:addons/models.py:2730
 #, python-format
 msgid "There is no reference available for %s"
 msgstr "Нема референца достапна за %s"
 
 #. module: base
-#: code:addons/models.py:2955
+#: code:addons/models.py:2861
 #, python-format
 msgid "There is no reference field '%s' found for '%s'"
 msgstr "Референтното поле '%s' не е пронајдено за '%s'"
@@ -17416,7 +17416,7 @@ msgid "This Window"
 msgstr "Овој прозорец"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:403
+#: code:addons/base/ir/ir_model.py:454
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr "Оваа колона содржи податоци за модул и не може да биде отстранета!"
@@ -17500,6 +17500,11 @@ msgid "Time Format"
 msgstr "Формат на време"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_timesheet
+msgid "Time Tracking"
+msgstr "Следење на време"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue_sheet
 msgid "Timesheet on Issues"
 msgstr "Распоред на изданија"
@@ -17510,25 +17515,13 @@ msgid "Timesheet on Website Project Issue"
 msgstr "Временски таблици на проблем на проект на веб страна"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_hr_timesheet
+#: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet
 msgid "Timesheets"
 msgstr "Временски таблици"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet
-#, fuzzy
-msgid "Timesheets / Attendances"
-msgstr "Временски таблици, Присуствувања, Активности"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet_sheet
 msgid "Timesheets, Attendances, Activities"
-msgstr "Временски таблици, Присуствувања, Активности"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance
-#, fuzzy
-msgid "Timesheets/attendances reporting"
 msgstr "Временски таблици, Присуствувања, Активности"
 
 #. module: base
@@ -17718,7 +17711,7 @@ msgid "Translation comments"
 msgstr "Преведувачки коментари"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:634
+#: code:addons/base/ir/ir_translation.py:648
 #, python-format
 msgid ""
 "Translation features are unavailable until you install an extra translation."
@@ -17732,7 +17725,7 @@ msgid "Translation in Progress"
 msgstr "Прведувањето е во тек"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:555
+#: code:addons/base/ir/ir_translation.py:569
 #, fuzzy, python-format
 msgid ""
 "Translation is not valid:\n"
@@ -17807,10 +17800,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence_implementation
-#, fuzzy
 msgid ""
 "Two sequence object implementations are offered: Standard and 'No gap'. The "
-"later is slower than the former but forbids anygap in the sequence (while "
+"later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
 msgstr ""
 "Два секвенцни објектни имплементации се понудени: Стандардна и 'No gap'. "
@@ -17918,7 +17910,7 @@ msgid "Ukraine"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3857
+#: code:addons/models.py:3761
 #, python-format
 msgid "Unable to delete this document because it is used as a default property"
 msgstr ""
@@ -18000,37 +17992,37 @@ msgid "Unknown"
 msgstr "Непознато"
 
 #. module: base
-#: code:addons/models.py:1311
+#: code:addons/models.py:1308
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:1164
+#: code:addons/models.py:1161
 #, python-format
 msgid "Unknown error during import:"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:309
+#: code:addons/base/ir/ir_model.py:359
 #, python-format
 msgid "Unknown field %r in dependency %r"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:266
+#: code:addons/base/ir/ir_model.py:316
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:349
+#: code:addons/base/ir/ir_fields.py:350
 #, python-format
 msgid "Unknown sub-field '%s'"
 msgstr "Непознато под поле '%s'"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:164
+#: code:addons/base/ir/ir_fields.py:165
 #, python-format
 msgid "Unknown value '%s' for boolean field '%%(field)s', assuming '%s'"
 msgstr ""
@@ -18127,7 +18119,7 @@ msgid "Uruguay - Chart of Accounts"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:166
+#: code:addons/base/ir/ir_fields.py:167
 #, python-format
 msgid "Use '1' for yes and '0' for no"
 msgstr "Користете '1' за да и '0' за не"
@@ -18165,7 +18157,7 @@ msgid "Use the base model of the action"
 msgstr "Користи го основниот модел од акцијата"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:209 code:addons/base/ir/ir_fields.py:241
+#: code:addons/base/ir/ir_fields.py:210 code:addons/base/ir/ir_fields.py:242
 #, python-format
 msgid "Use the format '%s'"
 msgstr "Користи го форматот '%s'"
@@ -18184,11 +18176,6 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_res_users_login
 msgid "Used to log into the system"
 msgstr "Користено за најава во системот"
-
-#. module: base
-#: model:ir.model.fields,help:base.field_res_company_sequence
-msgid "Used to order Companies in the company switcher"
-msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_type
@@ -18303,7 +18290,7 @@ msgid "Value"
 msgstr "Вредност"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:277
+#: code:addons/base/ir/ir_fields.py:278
 #, python-format
 msgid "Value '%s' not found in selection field '%%(field)s'"
 msgstr ""
@@ -18339,6 +18326,7 @@ msgstr "Добавувачи"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
+#: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Vendors"
 msgstr "Добавувачи"
@@ -18385,6 +18373,11 @@ msgid "View Architecture"
 msgstr "Погледни архитектура"
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_ir_act_window_view_mode
+msgid "View Mode"
+msgstr "Режим на преглед"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_name
 msgid "View Name"
 msgstr "Име на преглед"
@@ -18411,12 +18404,6 @@ msgstr "Тип на преглед"
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_mode
 msgid "View inheritance mode"
 msgstr "Прегледај наследен мод"
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_ir_act_window_view_mode
-#, fuzzy
-msgid "View mode"
-msgstr "Режим на преглед"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_view_type
@@ -18500,12 +18487,17 @@ msgid "Warehouse Management: Waves"
 msgstr "Менаџмент на магацин: Бранови"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:474
-#: code:addons/base/ir/ir_model.py:288 code:addons/base/ir/ir_model.py:362
-#: code:addons/base/res/res_partner.py:308
+#: code:addons/base/ir/ir_mail_server.py:490
+#: code:addons/base/ir/ir_model.py:338 code:addons/base/ir/ir_model.py:412
+#: code:addons/base/res/res_partner.py:299
 #, python-format
 msgid "Warning"
 msgstr "Внимание"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_warning
+msgid "Warning Messages and Alerts"
+msgstr "Пораки за предупредување и сигнали"
 
 #. module: base
 #: code:addons/base/res/res_config.py:444
@@ -18514,7 +18506,7 @@ msgid "Warning!"
 msgstr "Внимание!"
 
 #. module: base
-#: code:addons/models.py:6173
+#: code:addons/models.py:6047
 #, python-format
 msgid "Warnings"
 msgstr "Предупредувања"
@@ -18569,7 +18561,7 @@ msgid "Webkit Report Engine"
 msgstr "Webkit погон за извештаи"
 
 #. module: base
-#: code:addons/base/res/res_company.py:217
+#: code:addons/base/res/res_company.py:216
 #: model:ir.model.fields,field_description:base.field_ir_module_module_website
 #: model:ir.model.fields,field_description:base.field_res_company_website
 #: model:ir.model.fields,field_description:base.field_res_partner_website
@@ -18971,16 +18963,15 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment_type
-#, fuzzy
 msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
-"link to your file."
+"link to your file"
 msgstr ""
 "Можете да вчитате датотека од вашиот компјутер или да копирате и пресликате "
 "линк од интернет на вашата датотека"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:479
+#: code:addons/base/res/res_partner.py:470
 #, python-format
 msgid ""
 "You can not change the company as the partner/user has multiple user linked "
@@ -19028,7 +19019,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_partner.py:291
+#: code:addons/base/res/res_partner.py:282
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."
 msgstr "Не може да се креира рекурзивна хиерархија на партнери."
@@ -19062,7 +19053,7 @@ msgid "You cannot delete the language which is User's Preferred Language!"
 msgstr "Не може да се избрише јазикот кој е избран како јазик на корисникот!"
 
 #. module: base
-#: code:addons/base/ir/ir_values.py:412
+#: code:addons/base/ir/ir_values.py:429
 #, python-format
 msgid "You do not have the permission to perform this operation!!!"
 msgstr "Немате авторизација за да ја извршите оваа операција!!!"
@@ -19109,7 +19100,7 @@ msgstr ""
 "подесувањата на новокреираниот корисник под - Подесувања / Корисничко мени."
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:206
+#: code:addons/base/ir/ir_mail_server.py:216
 #, python-format
 msgid ""
 "Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS "
@@ -19118,7 +19109,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:475
+#: code:addons/base/ir/ir_mail_server.py:491
 #, python-format
 msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
@@ -19173,11 +19164,6 @@ msgid "_unknown"
 msgstr ""
 
 #. module: base
-#: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
-msgid "a new currency before creating a new company."
-msgstr ""
-
-#. module: base
 #: model:ir.ui.view,arch_db:base.res_partner_kanban_view
 msgid "at"
 msgstr ""
@@ -19229,7 +19215,7 @@ msgid "cr: database cursor"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:314
+#: code:addons/base/ir/ir_fields.py:315
 #, python-format
 msgid "database id"
 msgstr "ID на базата на податоци"
@@ -19303,13 +19289,13 @@ msgid "email@yourcompany.com"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:328
+#: code:addons/base/ir/ir_fields.py:329
 #, python-format
 msgid "external id"
 msgstr "надворешен id"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:143
+#: code:addons/base/ir/ir_fields.py:144
 #, python-format
 msgid "false"
 msgstr "неточно"
@@ -19605,19 +19591,19 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:414
+#: code:addons/base/ir/ir_ui_view.py:449
 #, python-format
 msgid "n/a"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:338
+#: code:addons/base/ir/ir_fields.py:339
 #, python-format
 msgid "name"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:143
+#: code:addons/base/ir/ir_fields.py:144
 #, python-format
 msgid "no"
 msgstr ""
@@ -19702,11 +19688,6 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_test_access_rights
 msgid "test of access rights and rules"
 msgstr "тест од права за користење и правила"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_test_read_group
-msgid "test read_group"
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_assetsbundle
@@ -19818,7 +19799,13 @@ msgid "title"
 msgstr "Титула"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:143
+#: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
+#, fuzzy
+msgid "to activate a new currency."
+msgstr "Покажи активни валути"
+
+#. module: base
+#: code:addons/base/ir/ir_fields.py:144
 #, python-format
 msgid "true"
 msgstr "Точно"
@@ -19830,6 +19817,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_state
+#: model:ir.model.fields,field_description:base.field_ir_ui_view_model_ids
 #: model:ir.model.fields,field_description:base.field_wkf_instance_transition_ids
 msgid "unknown"
 msgstr "непознато"
@@ -19875,7 +19863,7 @@ msgid "workflow: Workflow engine"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:143
+#: code:addons/base/ir/ir_fields.py:144
 #, python-format
 msgid "yes"
 msgstr "Да"
@@ -20078,63 +20066,6 @@ msgstr ""
 
 #~ msgid ""
 #~ "\n"
-#~ "Automatically creates project tasks from procurement lines.\n"
-#~ "===========================================================\n"
-#~ "\n"
-#~ "This module will automatically create a new task for each procurement "
-#~ "order line\n"
-#~ "(e.g. for sale order lines), if the corresponding product meets the "
-#~ "following\n"
-#~ "characteristics:\n"
-#~ "\n"
-#~ "    * Product Type = Service\n"
-#~ "    * Create Task Automatically = True\n"
-#~ "\n"
-#~ "If on top of that a project is specified on the product form (in the "
-#~ "Procurement\n"
-#~ "tab), then the new task will be created in that specific project. "
-#~ "Otherwise, the\n"
-#~ "new task will not belong to any project, and may be added to a project "
-#~ "manually\n"
-#~ "later.\n"
-#~ "\n"
-#~ "When the project task is completed or cancelled, the corresponding "
-#~ "procurement\n"
-#~ "is updated accordingly. For example, if this procurement corresponds to a "
-#~ "sale\n"
-#~ "order line, the sale order line will be considered delivered when the "
-#~ "task is\n"
-#~ "completed.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Автоматски креира проектни задачи од ставките за набавка.\n"
-#~ "===========================================================\n"
-#~ "\n"
-#~ "Овој модул автоматски ќе креира нова задача за секоја ставка од нарачката "
-#~ "за набавка\n"
-#~ "(на пр. за ставките на налогот за продажба), ако соодветниот производ ги "
-#~ "исполнува следните\n"
-#~ "карактеристики:\n"
-#~ "\n"
-#~ "* Тип на производ = Услуга\n"
-#~ "* Автоматско создавање на задача = Точно\n"
-#~ "\n"
-#~ "Ако покрај тоа, имаме проект кој е означен на формата на производот (во "
-#~ "панелот Набавки),\n"
-#~ "тогаш новата задача ќе биде креирана во тој зададен проект. Инаку,\n"
-#~ "новата задача нема да припаѓа на ниеден проект, но може рачно да се "
-#~ "додаде на проект\n"
-#~ "подоцна.\n"
-#~ "\n"
-#~ "Кога проектната задача е завршена или откажана, соодветната набавка\n"
-#~ "е соодветно ажурирана. На пр., ако оваа набавка соодветствува со ставка "
-#~ "на налог\n"
-#~ "за продажба, ставката на налогот за продажба ќе се смета за испратена "
-#~ "кога задачата ќе биде\n"
-#~ "завршена.\n"
-
-#~ msgid ""
-#~ "\n"
 #~ "Batch Deposit\n"
 #~ "=============\n"
 #~ "Batch deposits allows you to group received checks before you deposit "
@@ -20175,21 +20106,6 @@ msgstr ""
 #~ msgstr ""
 #~ "\n"
 #~ "Дизајнирај прекрасни мејлови со помош на 8 високо квалитетни теми"
-
-#~ msgid ""
-#~ "\n"
-#~ "Manage your sales reports\n"
-#~ "=========================\n"
-#~ "With this module you can personnalize the sale order and invoice report "
-#~ "with\n"
-#~ "separators, page-breaks or subtotals.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Менаџирајте со Вашите продажни извештаи\n"
-#~ "==========================================\n"
-#~ "Со овој модул можете да ги персонализирате налозите за продажба и "
-#~ "фактурните записи со \"separators, page-breaks or subtotals\"."
 
 #~ msgid ""
 #~ "\n"
@@ -20255,25 +20171,6 @@ msgstr ""
 #~ "сметководствен внес, можете да го направите тоа преку менито, во:\n"
 #~ "------------------------------------------------------------------------------------------------------------------------------\n"
 #~ "Известувања / Сметководство / ** Анализа на известувањата\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Module to trigger warnings in OpenERP objects.\n"
-#~ "==============================================\n"
-#~ "\n"
-#~ "Warning messages can be displayed for objects like sale order, purchase "
-#~ "order,\n"
-#~ "picking and invoice. The message is triggered by the form's onchange "
-#~ "event.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Модул за прикажување на предупредувања во Odoo објектите.\n"
-#~ "====================================================\n"
-#~ "\n"
-#~ "Предупредувачките пораки можат да бидат прикажани за објекти како: налози "
-#~ "за продажба, налози за набавка, преноси и фактури. Пораката е активирана "
-#~ "од \"the form's onchange\" настан."
 
 #~ msgid ""
 #~ "\n"
@@ -20717,9 +20614,6 @@ msgstr ""
 #~ msgid "Claims Management"
 #~ msgstr "Бара управување"
 
-#~ msgid "Create Tasks from SO"
-#~ msgstr "Креирај задачи на SO"
-
 #~ msgid "Croatian / hrvatski jezik"
 #~ msgstr "Хрватски / hrvatski jezik"
 
@@ -20885,9 +20779,6 @@ msgstr ""
 #~ "Вториот текст од полето many2many %s мора да биде SQL табела !Вие "
 #~ "употребивте %s, кое не е валидно име на SQL табела."
 
-#~ msgid "Time Tracking"
-#~ msgstr "Следење на време"
-
 #~ msgid "Unknown report type: %s"
 #~ msgstr "Непознат тип на извештај: %s"
 
@@ -20899,9 +20790,6 @@ msgstr ""
 
 #~ msgid "Warehouse Management Barcode Scanning"
 #~ msgstr "Управување со магацин и читање на баркод"
-
-#~ msgid "Warning Messages and Alerts"
-#~ msgstr "Пораки за предупредување и сигнали"
 
 #~ msgid "Web Gantt"
 #~ msgstr "Web Гантограм"

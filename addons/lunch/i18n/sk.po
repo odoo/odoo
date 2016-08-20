@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-03-25 17:49+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -48,6 +48,21 @@ msgstr ""
 "Platba predstavuje náhradu zamestnanca voči firme."
 
 #. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_action_tree
+msgid ""
+"A lunch order is defined by its user, date and order lines.\n"
+"                Each order line corresponds to a product, an additional note "
+"and a price.\n"
+"                Before selecting your order lines, don't forget to read the "
+"warnings displayed in the reddish area."
+msgstr ""
+"Obedná objednávka je definovaná jej užívateľom, dátumom a riadkami "
+"objednávok.\n"
+"Každý riaodk objednávky zodpovedá produktu, dodatočnej poznámke a cene.\n"
+"Pred zvolením vašich riadkov objednávky, nezabudnite si prečítať upozornenia "
+"v červenkastej zóne."
+
+#. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
 msgid "A product is defined by its name, category, price and vendor."
 msgstr "Produkt je definovaný svojim názvom, kategóriou, cenov a predajcom."
@@ -66,7 +81,7 @@ msgid "Add"
 msgstr "Pridať"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:262
+#: code:addons/lunch/models/lunch.py:253
 #, python-format
 msgid "Alert"
 msgstr "Výstraha"
@@ -130,12 +145,6 @@ msgid "By Employee"
 msgstr "Podľa zamestnanca"
 
 #. module: lunch
-#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
-#, fuzzy
-msgid "By Order"
-msgstr "Moje objednávky"
-
-#. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "By User"
 msgstr "Podľa pouźívateľa"
@@ -172,6 +181,7 @@ msgstr "Zrušiť jedlá"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: selection:lunch.order,state:0 selection:lunch.order.line,state:0
 msgid "Cancelled"
 msgstr "Zrušené"
@@ -202,6 +212,11 @@ msgstr "Kliknite pre vytvorenie obedného varovania."
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Click to create a lunch category."
 msgstr "Kliknite pre vytvorenie obedovej kategórie."
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_action_tree
+msgid "Click to create a lunch order."
+msgstr "Kliknite pre vytvorenie obednej objednávky."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
@@ -425,7 +440,7 @@ msgstr "Necítim sa bohatý"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id_1883
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id_1894
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_id
 msgid "ID"
 msgstr "ID"
@@ -485,7 +500,7 @@ msgid "Lunch Alert"
 msgstr "Obedná výstraha"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:233
+#: code:addons/lunch/models/lunch.py:224
 #, python-format
 msgid "Lunch Cashmove"
 msgstr "Obedný hotovostný pohyb"
@@ -532,7 +547,7 @@ msgid "My Lunch"
 msgstr "Môj obed"
 
 #. module: lunch
-#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "My Orders"
 msgstr "Moje objednávky"
 
@@ -542,6 +557,7 @@ msgid "Name/Date"
 msgstr "Meno/Dátum"
 
 #. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: selection:lunch.order,state:0 selection:lunch.order.line,state:0
 msgid "New"
 msgstr "Nové"
@@ -567,24 +583,6 @@ msgstr "Neprijaté"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_note
 msgid "Note"
 msgstr "Poznámka"
-
-#. module: lunch
-#: code:addons/lunch/models/lunch.py:193
-#, python-format
-msgid "Only your lunch manager cancels the orders."
-msgstr ""
-
-#. module: lunch
-#: code:addons/lunch/models/lunch.py:162
-#, python-format
-msgid "Only your lunch manager processes the orders."
-msgstr ""
-
-#. module: lunch
-#: code:addons/lunch/models/lunch.py:182
-#, python-format
-msgid "Only your lunch manager sets the orders as received."
-msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_order_id
@@ -650,7 +648,6 @@ msgstr "ID predchádzjúcich objednávok"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_price
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_price
-#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Price"
 msgstr "Cena"
 
@@ -713,6 +710,7 @@ msgstr "Prijať jedlá"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: selection:lunch.order,state:0 selection:lunch.order.line,state:0
 msgid "Received"
 msgstr "Prijaté"
@@ -800,13 +798,6 @@ msgid "The date of your order is in the past."
 msgstr "Dátum vašej objednávky je v minulosti."
 
 #. module: lunch
-#: model:ir.actions.act_window,help:lunch.lunch_order_line_action
-msgid ""
-"There is no previous order recorded. Click on \"My Lunch\" and then create a "
-"new lunch order."
-msgstr ""
-
-#. module: lunch
 #. openerp-web
 #: code:addons/lunch/static/src/xml/lunch.xml:4
 #, python-format
@@ -856,6 +847,11 @@ msgid "User"
 msgstr "Používateľ"
 
 #. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
+msgid "Users"
+msgstr "Používatelia"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_supplier_ids
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_supplier
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_supplier
@@ -889,7 +885,7 @@ msgid "Your Lunch Account"
 msgstr "Váš obedný účet"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.lunch_order_line_action
+#: model:ir.actions.act_window,name:lunch.lunch_order_action_tree
 msgid "Your Orders"
 msgstr "Vaše objednávky"
 
@@ -927,6 +923,11 @@ msgstr "zamestnanecká obedná platba"
 #: model:ir.model,name:lunch.model_lunch_order_line
 msgid "lunch order line"
 msgstr "riadok obednej objednávky"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
+msgid "lunch orders"
+msgstr "obedné objednávky"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
@@ -977,25 +978,3 @@ msgstr ""
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 msgid "to announce that the order isn't available"
 msgstr "pre oznámenie že objednávka nie je dostupná"
-
-#~ msgid ""
-#~ "A lunch order is defined by its user, date and order lines.\n"
-#~ "                Each order line corresponds to a product, an additional "
-#~ "note and a price.\n"
-#~ "                Before selecting your order lines, don't forget to read "
-#~ "the warnings displayed in the reddish area."
-#~ msgstr ""
-#~ "Obedná objednávka je definovaná jej užívateľom, dátumom a riadkami "
-#~ "objednávok.\n"
-#~ "Každý riaodk objednávky zodpovedá produktu, dodatočnej poznámke a cene.\n"
-#~ "Pred zvolením vašich riadkov objednávky, nezabudnite si prečítať "
-#~ "upozornenia v červenkastej zóne."
-
-#~ msgid "Click to create a lunch order."
-#~ msgstr "Kliknite pre vytvorenie obednej objednávky."
-
-#~ msgid "Users"
-#~ msgstr "Používatelia"
-
-#~ msgid "lunch orders"
-#~ msgstr "obedné objednávky"

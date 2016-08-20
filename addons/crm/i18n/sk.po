@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:23+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-02-21 12:42+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -983,7 +983,6 @@ msgid "Activated by default when subscribing."
 msgstr "Aktivované automaticky pri predplatnom."
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_activity_report_active
 #: model:ir.model.fields,field_description:crm.field_crm_lead_active
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason_active
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_active
@@ -992,14 +991,10 @@ msgstr "Aktívny"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_action
-#: model:ir.actions.act_window,name:crm.crm_activity_report_action_tree
-#: model:ir.model.fields,field_description:crm.field_res_partner_activities_count
-#: model:ir.model.fields,field_description:crm.field_res_users_activities_count
 #: model:ir.ui.menu,name:crm.crm_activity_menu
 #: model:ir.ui.menu,name:crm.crm_activity_report_menu
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_form
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_tree
-#: model:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Activities"
 msgstr "Aktivity"
 
@@ -1099,7 +1094,7 @@ msgstr ""
 "kontakty s odlišným emailom."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:863
+#: code:addons/crm/crm_lead.py:865
 #, python-format
 msgid ""
 "All email incoming to %(link)s  will automatically create new opportunity.\n"
@@ -1238,6 +1233,11 @@ msgid "Better visibility on team activities"
 msgstr "Lepšia viditeľnosť tímových aktivít"
 
 #. module: crm
+#: selection:crm.lead,kanban_state:0
+msgid "Blocked"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Boost your online sales with sleek product pages."
 msgstr "Zvýšte svoje online predaje elegantnými stránkami produktov."
@@ -1361,7 +1361,7 @@ msgstr ""
 "tréning, služba"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:868
+#: code:addons/crm/crm_lead.py:870
 #, python-format
 msgid "Click to add a new opportunity"
 msgstr "Kliknite pre pridanie novej príležitosti"
@@ -1411,9 +1411,8 @@ msgstr "Dátum uzavretia"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_closed
-#, fuzzy
-msgid "Closed Date"
-msgstr "Dátum uzavretia"
+msgid "Closed"
+msgstr "Uzavreté"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:90
@@ -1672,7 +1671,7 @@ msgid "Current Line"
 msgstr "Aktuálny riadok"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:943
+#: code:addons/crm/crm_lead.py:945
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2projectissue_wizard_partner_id
@@ -1687,7 +1686,7 @@ msgid "Customer"
 msgstr "Zákazník"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:945
+#: code:addons/crm/crm_lead.py:947
 #, python-format
 msgid "Customer Email"
 msgstr "Email zákazníka"
@@ -2128,7 +2127,7 @@ msgid "Force assignation"
 msgstr "Silené pridelenie"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:502
+#: code:addons/crm/crm_lead.py:504
 #, python-format
 msgid "From %s : %s"
 msgstr "Od %s : %s"
@@ -2465,10 +2464,9 @@ msgid "Last Updated on"
 msgstr "Naposledy upravované"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:778 selection:crm.activity.report,lead_type:0
+#: code:addons/crm/crm_lead.py:780 selection:crm.activity.report,lead_type:0
 #: selection:crm.lead,type:0 selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_lead_id
-#: model:ir.model.fields,field_description:crm.field_crm_activity_report_lead_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost_lead_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
@@ -2749,7 +2747,7 @@ msgid "Medium"
 msgstr "Stredné"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1008
+#: code:addons/crm/crm_lead.py:1010
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr "Stretnutie naplánované na '%s'<br> Predmet: %s <br> Trvanie: %s hodín"
@@ -2826,25 +2824,25 @@ msgid "Merge with existing opportunities"
 msgstr "Zlúčiť s existujúcimi príležitosťami"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:487
+#: code:addons/crm/crm_lead.py:489
 #, python-format
 msgid "Merged lead"
 msgstr "Zlúčené iniciatívy"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:481
+#: code:addons/crm/crm_lead.py:483
 #, python-format
 msgid "Merged leads"
 msgstr "Zlúčené iniciatívy"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:483
+#: code:addons/crm/crm_lead.py:485
 #, python-format
 msgid "Merged opportunities"
 msgstr "Zlúčené príležitosti"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:487
+#: code:addons/crm/crm_lead.py:489
 #, python-format
 msgid "Merged opportunity"
 msgstr "Zlúčená príležitosť"
@@ -2922,12 +2920,6 @@ msgid "Month"
 msgstr "Mesiac"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
-#, fuzzy
-msgid "More Info"
-msgstr "Ďalšie informácie"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Motivation letter from the management"
 msgstr "Motivačný list od manažmentu"
@@ -3002,19 +2994,7 @@ msgid "Next activity"
 msgstr "Ďalšia aktivita"
 
 #. module: crm
-#: selection:crm.lead,kanban_state:0
-#, fuzzy
-msgid "Next activity is planned"
-msgstr "Dátum ďalšej aktivity"
-
-#. module: crm
-#: selection:crm.lead,kanban_state:0
-#, fuzzy
-msgid "Next activity late"
-msgstr "Dátum ďalšej aktivity"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:964
+#: code:addons/crm/crm_lead.py:966
 #, python-format
 msgid "No Subject"
 msgstr "Bez predmetu"
@@ -3026,19 +3006,14 @@ msgid "No activity"
 msgstr "Ďalšia aktivita"
 
 #. module: crm
-#: selection:crm.lead,kanban_state:0
-#, fuzzy
-msgid "No next activity planned"
-msgstr "Dátum ďalšej aktivity"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "No salesperson"
 msgstr "Žiadny predajca"
 
 #. module: crm
-#: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
+#: selection:crm.lead,kanban_state:0 selection:crm.lead,priority:0
+#: selection:crm.opportunity.report,priority:0
 msgid "Normal"
 msgstr "Normálna"
 
@@ -3254,7 +3229,7 @@ msgid "Opportunities that are assigned to me"
 msgstr "Príležitosti ktoré sú pridelené mne"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:757 selection:crm.activity.report,lead_type:0
+#: code:addons/crm/crm_lead.py:759 selection:crm.activity.report,lead_type:0
 #: selection:crm.lead,type:0 selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_calendar_event_opportunity_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_name
@@ -3484,7 +3459,7 @@ msgid "Planner"
 msgstr "Plánovač"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:572
+#: code:addons/crm/crm_lead.py:574
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -3546,7 +3521,6 @@ msgid "Priority Management Explanation"
 msgstr "Spravovanie priorít vysvetlenie"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_activity_report_probability
 #: model:ir.model.fields,field_description:crm.field_crm_lead_probability
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_probability
 msgid "Probability"
@@ -3587,6 +3561,11 @@ msgstr "Kvalifikovaný"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_priority
 msgid "Rating"
 msgstr "Hodnotenie"
+
+#. module: crm
+#: selection:crm.lead,kanban_state:0
+msgid "Ready for next stage"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
@@ -3750,12 +3729,6 @@ msgstr "Oneskorené aktivity"
 #, fuzzy
 msgid "Schedule Next Activity"
 msgstr "Ďalšia aktivita"
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_activity_schedule_action
-#, fuzzy
-msgid "Schedule an Activity"
-msgstr "Oneskorené aktivity"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -4042,7 +4015,6 @@ msgstr "Spravovanie predplatného"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_title_action
-#: model:ir.model.fields,field_description:crm.field_crm_activity_report_subject
 msgid "Summary"
 msgstr ""
 
@@ -4293,7 +4265,7 @@ msgstr ""
 "záznamy na zobrazenie."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1162
+#: code:addons/crm/crm_lead.py:1164
 #, python-format
 msgid "This target does not exist."
 msgstr "Tento cieľ neexistuje."
@@ -4515,12 +4487,6 @@ msgstr "Veľmi vysoké"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_crm_voip
 msgid "VoIP integration"
-msgstr "VoIP integrácia"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
-#, fuzzy
-msgid "Voip integration"
 msgstr "VoIP integrácia"
 
 #. module: crm
@@ -4872,7 +4838,7 @@ msgid "e.g. Product Pricing"
 msgstr "napr. Ceny produktov"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:859
+#: code:addons/crm/crm_lead.py:861
 #, python-format
 msgid "opportunities"
 msgstr "príležitosti"
@@ -4953,7 +4919,7 @@ msgstr ""
 "domény (napr. predaj@vasaspolocnost.com)"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1002
+#: code:addons/crm/crm_lead.py:1004
 #, python-format
 msgid "unknown"
 msgstr "neznámy"
@@ -4985,9 +4951,6 @@ msgstr "s vašou prácou vyššie"
 
 #~ msgid "Both"
 #~ msgstr "Obe"
-
-#~ msgid "Closed"
-#~ msgstr "Uzavreté"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Dátum poslednej správy zaslanej záznamu."

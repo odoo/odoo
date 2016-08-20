@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
@@ -59,11 +59,6 @@ msgid "Basic Salary of the employee"
 msgstr "alklamazott alap fizetése"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
-msgid "Click here to create new contracts."
-msgstr ""
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
 msgid "Company Vehicle"
 msgstr "Cégautó"
@@ -76,7 +71,7 @@ msgstr "Szerződés hivatkozás"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5636
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -101,12 +96,6 @@ msgstr "Nemsokára lejáró szerződés"
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
 msgstr "Lejárt szerződés"
-
-#. module: hr_contract
-#: code:addons/hr_contract/models/hr_contract.py:84
-#, python-format
-msgid "Contract start date must be less than contract end date."
-msgstr ""
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
@@ -193,6 +182,13 @@ msgstr ""
 "Befejezés dátuma"
 
 #. module: hr_contract
+#: constraint:hr.contract:0
+msgid "Error! Contract start-date must be less than contract end-date."
+msgstr ""
+"Hiba! Szerződés induló dátuma előbb kell legyen a szerződés befejezése "
+"dátumánál."
+
+#. module: hr_contract
 #: selection:hr.contract,state:0
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
@@ -238,11 +234,6 @@ msgstr ""
 "ID\n"
 "#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Azonosító ID"
-
-#. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Important Messages"
-msgstr "Fontos üzenetek"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
@@ -407,6 +398,11 @@ msgid "Trial Start Date"
 msgstr "Próbaidő kezdete"
 
 #. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Unread Messages"
+msgstr "Olvasatlan üzenetek"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
 msgid "Use employee work schedule"
 msgstr "Használja a munkavállaló munka ütemtervét"
@@ -455,11 +451,6 @@ msgstr "Munkabeosztás"
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
 
-#~ msgid "Error! Contract start-date must be less than contract end-date."
-#~ msgstr ""
-#~ "Hiba! Szerződés induló dátuma előbb kell legyen a szerződés befejezése "
-#~ "dátumánál."
-
 #~ msgid "Followers"
 #~ msgstr "Követők"
 
@@ -496,9 +487,6 @@ msgstr "Munkabeosztás"
 #~ msgid "Number of unread messages"
 #~ msgstr "Olvasatlan üzenetek száma"
 
-#~ msgid "Unread Messages"
-#~ msgstr "Olvasatlan üzenetek"
-
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Olvasatlan üzenetek számlálója"
 
@@ -507,3 +495,6 @@ msgstr "Munkabeosztás"
 
 #~ msgid "Website communication history"
 #~ msgstr "Weboldal  kommunikáció történet"
+
+#~ msgid "Important Messages"
+#~ msgstr "Fontos üzenetek"

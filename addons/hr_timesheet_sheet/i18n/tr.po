@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-05-25 08:01+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -34,6 +34,26 @@ msgstr ""
 "*.                 \n"
 "* 'Bitti' durumu, kullanıcılar zaman çizelgesi seçtiğin bu kullanıcı kıdemli "
 "tarafından kabul edildiğinde kullanılır."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
+msgid "# Nbr Timesheet"
+msgstr "Mesai Kart Sayısı"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
+msgid "# Total Attendance"
+msgstr "# Toplam Katılımcı"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
+msgid "# Total Diff"
+msgstr "# Toplam Fark"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
+msgid "# Total Timesheet"
+msgstr "Toplam Mesai Kartı"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -109,6 +129,12 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Confirmed"
+msgstr "Onaylanan"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr "Doğrulanmış Mesai Kartları"
@@ -136,18 +162,23 @@ msgid "Date"
 msgstr "Tarih"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr "Başlangıç Tarihi"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "Tarihi"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "Departmen"
 
@@ -176,6 +207,18 @@ msgid "Display Name"
 msgstr "Adı Göster"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Done"
+msgstr "Biten"
+
+#. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Draft"
+msgstr "Taslak"
+
+#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
@@ -200,6 +243,11 @@ msgstr ""
 "(RESP. birleştirilmiş oturum)"
 
 #. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
+msgid "External Timesheet"
+msgstr "Harici Mesai Kartı"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
 msgstr "Grupla"
@@ -208,12 +256,6 @@ msgstr "Grupla"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Saat"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-#, fuzzy
-msgid "Hr Department"
-msgstr "İK Bölümü"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -238,6 +280,11 @@ msgid ""
 msgstr ""
 "Bu çalışan için bir mesai kartı oluşturmak için/onu bir kullanıcıya "
 "bağlamanız gerekir."
+
+#. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
+msgid "Internal Timesheet"
+msgstr "İç Mesai Kartı"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -276,6 +323,7 @@ msgid "My Timesheets"
 msgstr "Zaman çizelgelerim"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
 msgstr "Yeni"
@@ -369,7 +417,9 @@ msgid "Sign Out"
 msgstr "Çıkış"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Status"
 msgstr "Durumu"
 
@@ -394,6 +444,7 @@ msgstr ""
 "çıkışları."
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
@@ -692,41 +743,17 @@ msgstr "to"
 msgid "waiting approval"
 msgstr "onay bekliyor"
 
-#~ msgid "# Nbr Timesheet"
-#~ msgstr "Mesai Kart Sayısı"
-
-#~ msgid "# Total Attendance"
-#~ msgstr "# Toplam Katılımcı"
-
-#~ msgid "# Total Diff"
-#~ msgstr "# Toplam Fark"
-
-#~ msgid "# Total Timesheet"
-#~ msgstr "Toplam Mesai Kartı"
-
 #~ msgid "Action Needed"
 #~ msgstr "Eylem Gerekiyor"
 
 #~ msgid "Cancel"
 #~ msgstr "Vazgeç"
 
-#~ msgid "Confirmed"
-#~ msgstr "Onaylanan"
-
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Kayıta işlenmiş son mesajın tarihi."
 
 #~ msgid "Day"
 #~ msgstr "Gün"
-
-#~ msgid "Done"
-#~ msgstr "Biten"
-
-#~ msgid "Draft"
-#~ msgstr "Taslak"
-
-#~ msgid "External Timesheet"
-#~ msgstr "Harici Mesai Kartı"
 
 #~ msgid "Followers"
 #~ msgstr "İzleyiciler"
@@ -736,6 +763,9 @@ msgstr "onay bekliyor"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "İzleyiciler (İş ortakları)"
+
+#~ msgid "HR Department"
+#~ msgstr "İK Bölümü"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
@@ -749,9 +779,6 @@ msgstr "onay bekliyor"
 #~ msgstr ""
 #~ "Bu çalışan için bir mesai kartı oluşturmak için, bir ürün için çalışan "
 #~ "bağlantı gerekir."
-
-#~ msgid "Internal Timesheet"
-#~ msgstr "İç Mesai Kartı"
 
 #~ msgid "Is Follower"
 #~ msgstr "Takipçi mi"

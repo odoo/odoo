@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-03-19 10:04+0000\n"
 "Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -210,7 +210,7 @@ msgstr "# úloh"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:438
+#: code:addons/project/project.py:446
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kópia)"
@@ -1221,9 +1221,9 @@ msgstr "Aliasovaný model"
 
 #. module: project
 #: code:addons/project/project.py:133
-#, fuzzy, python-format
-msgid "All employees"
-msgstr "Pre zamestnancov"
+#, python-format
+msgid "All Employees Project: all employees can access"
+msgstr "Projekt všetkých zamestnancov: všetci zamestnanci majú prístup"
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -1485,7 +1485,7 @@ msgstr ""
 "Zaškrtnite, ak chcete riadiť vnútorné činnosti prostredníctvom tohto projektu"
 
 #. module: project
-#: code:addons/project/project.py:640
+#: code:addons/project/project.py:648
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1717,7 +1717,7 @@ msgid "Current Timesheet"
 msgstr "Aktuálny časový rozvrh"
 
 #. module: project
-#: code:addons/project/project.py:860
+#: code:addons/project/project.py:868
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1726,10 +1726,17 @@ msgid "Customer"
 msgstr "Zákazník"
 
 #. module: project
-#: code:addons/project/project.py:860
+#: code:addons/project/project.py:868
 #, python-format
 msgid "Customer Email"
 msgstr "Email zákazníka"
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer Project: visible in portal if the customer is a follower"
+msgstr ""
+"Projekt zákazníka: viditeľný v portáli prípade, že zákazník je odberateľom"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1756,12 +1763,6 @@ msgstr "Zákazník zrušil opravu"
 #, python-format
 msgid "Customer has reported new issue"
 msgstr "Zákazník nahlásil nový problém"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, fuzzy, python-format
-msgid "Customer project"
-msgstr "Zákaznícky servis"
 
 #. module: project
 #. openerp-web
@@ -2342,7 +2343,7 @@ msgstr ""
 "aktivovaný, používatelia vidia odoberané úlohy alebo problémy."
 
 #. module: project
-#: code:addons/project/project.py:791
+#: code:addons/project/project.py:799
 #, python-format
 msgid "I take it"
 msgstr "Beriem to"
@@ -2809,12 +2810,6 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Viac <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-#, fuzzy
-msgid "More Info"
-msgstr "Ďalšie informácie"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr "Efektívnejšia komunikácia medzi zamestnancami"
@@ -2854,7 +2849,7 @@ msgid "New"
 msgstr "Nové"
 
 #. module: project
-#: code:addons/project/project.py:793
+#: code:addons/project/project.py:801
 #, python-format
 msgid "New Task"
 msgstr "Nová úloha"
@@ -3103,7 +3098,7 @@ msgid "Planner"
 msgstr "Plánovač"
 
 #. module: project
-#: code:addons/project/project.py:953
+#: code:addons/project/project.py:961
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3150,8 +3145,8 @@ msgstr "Súkromie / Viditeľnosť"
 
 #. module: project
 #: code:addons/project/project.py:134
-#, fuzzy, python-format
-msgid "Private: followers only"
+#, python-format
+msgid "Private Project: followers only"
 msgstr "Súkromný projekt: iba odberatelia"
 
 #. module: project
@@ -3242,12 +3237,6 @@ msgstr "Úlohy projektov"
 #, python-format
 msgid "Projects"
 msgstr "Projekty"
-
-#. module: project
-#: model:mail.channel,name:project.mail_channel_project_task
-#, fuzzy
-msgid "Projects & Tasks"
-msgstr "Úlohy projektu"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3599,6 +3588,11 @@ msgstr "Počiatočný dátum"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "Dátum začatia"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_account_type
+msgid "State"
+msgstr "Stav"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -4433,7 +4427,7 @@ msgid "send us an email"
 msgstr "pošlite nám email"
 
 #. module: project
-#: code:addons/project/project.py:597
+#: code:addons/project/project.py:605
 #, python-format
 msgid "tasks"
 msgstr "úlohy"
@@ -4490,18 +4484,11 @@ msgstr "ste uviedli v predchádzajúcom kroku"
 #~ msgid "Action Needed"
 #~ msgstr "Potrebná akcia"
 
-#~ msgid "All Employees Project: all employees can access"
-#~ msgstr "Projekt všetkých zamestnancov: všetci zamestnanci majú prístup"
-
 #~ msgid "Check this field if this project manages timesheets"
 #~ msgstr "Zaškrtnite toto pole ak tento projekt riadi časové rozvrhy."
 
 #~ msgid "Close"
 #~ msgstr "Zatvoriť"
-
-#~ msgid "Customer Project: visible in portal if the customer is a follower"
-#~ msgstr ""
-#~ "Projekt zákazníka: viditeľný v portáli prípade, že zákazník je odberateľom"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Dátum poslednej správy zaslanej záznamu."
@@ -4556,9 +4543,6 @@ msgstr "ste uviedli v predchádzajúcom kroku"
 
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "Zaznamenať riadky časových rozvrhov podľa úloh"
-
-#~ msgid "State"
-#~ msgstr "Stav"
 
 #~ msgid "Subscriptions"
 #~ msgstr "Odbery"
