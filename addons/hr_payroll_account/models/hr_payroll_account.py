@@ -54,19 +54,19 @@ class HrPayslip(models.Model):
     @api.multi
     def process_sheet(self):
         precision = self.env['decimal.precision'].precision_get('Payroll')
-        today = fields.Date.today()
 
         for slip in self:
             line_ids = []
             debit_sum = 0.0
             credit_sum = 0.0
+            date = slip.date or slip.date_to
 
             name = _('Payslip of %s') % (slip.employee_id.name)
             move_dict = {
                 'narration': name,
                 'ref': slip.number,
                 'journal_id': slip.journal_id.id,
-                'date': today,
+                'date': date,
             }
             for line in slip.details_by_salary_rule_category:
                 amount = slip.credit_note and -line.total or line.total
@@ -81,7 +81,7 @@ class HrPayslip(models.Model):
                         'partner_id': line._get_partner_id(credit_account=False),
                         'account_id': debit_account_id,
                         'journal_id': slip.journal_id.id,
-                        'date': today,
+                        'date': date,
                         'debit': amount > 0.0 and amount or 0.0,
                         'credit': amount < 0.0 and -amount or 0.0,
                         'analytic_account_id': line.salary_rule_id.analytic_account_id.id,
@@ -96,7 +96,7 @@ class HrPayslip(models.Model):
                         'partner_id': line._get_partner_id(credit_account=True),
                         'account_id': credit_account_id,
                         'journal_id': slip.journal_id.id,
-                        'date': today,
+                        'date': date,
                         'debit': amount < 0.0 and -amount or 0.0,
                         'credit': amount > 0.0 and amount or 0.0,
                         'analytic_account_id': line.salary_rule_id.analytic_account_id.id,
@@ -111,11 +111,10 @@ class HrPayslip(models.Model):
                     raise UserError(_('The Expense Journal "%s" has not properly configured the Credit Account!') % (slip.journal_id.name))
                 adjust_credit = (0, 0, {
                     'name': _('Adjustment Entry'),
-                    'date': today,
                     'partner_id': False,
                     'account_id': acc_id,
                     'journal_id': slip.journal_id.id,
-                    'date': today,
+                    'date': date,
                     'debit': 0.0,
                     'credit': debit_sum - credit_sum,
                 })
@@ -130,14 +129,14 @@ class HrPayslip(models.Model):
                     'partner_id': False,
                     'account_id': acc_id,
                     'journal_id': slip.journal_id.id,
-                    'date': today,
+                    'date': date,
                     'debit': credit_sum - debit_sum,
                     'credit': 0.0,
                 })
                 line_ids.append(adjust_debit)
             move_dict['line_ids'] = line_ids
             move = self.env['account.move'].create(move_dict)
-            slip.write({'move_id': move.id, 'date': today})
+            slip.write({'move_id': move.id, 'date': date})
             move.post()
         return super(HrPayslip, self).process_sheet()
 
