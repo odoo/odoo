@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment_ogone
-# 
+#
 # Translators:
 # zbik2607 <darek@krokus.com.pl>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
@@ -9,24 +9,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-07-11 11:42+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:239
+#: code:addons/payment_ogone/models/ogone.py:241
 #, python-format
 msgid "; multiple order found"
 msgstr "; znaleziono wielokrotne zamówienie"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:237
+#: code:addons/payment_ogone/models/ogone.py:239
 #, python-format
 msgid "; no order found"
 msgstr "; nie znaleziono zamówienia"
@@ -41,7 +42,9 @@ msgstr "<span><i>Anulowano,</i> Twoje zapłata została anulowana.</span>"
 msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
-msgstr "<span><i>Gotowe,</i> Twoja zapłata online została pomyślnie przetworzona. Dziękujemy za Twoje zamówienie.</span>"
+msgstr ""
+"<span><i>Gotowe,</i> Twoja zapłata online została pomyślnie przetworzona. "
+"Dziękujemy za Twoje zamówienie.</span>"
 
 #. module: payment_ogone
 #: model:payment.acquirer,error_msg:payment_ogone.payment_acquirer_ogone
@@ -49,14 +52,20 @@ msgid ""
 "<span><i>Error,</i> Please be aware that an error occurred during the "
 "transaction. The order has been confirmed but won't be paid. Don't hesitate "
 "to contact us if you have any questions on the status of your order.</span>"
-msgstr "<span><i>Błąd,</i> Należy pamiętać, że ten błąd wystąpił podczas transakcji. Zamówienie zostało potwierdzone, ale nie będzie zapłacone. Nie wahaj się aby skontaktować się z nami, jeśli masz jakieś pytania o statusu twojego zamówienia.</span>"
+msgstr ""
+"<span><i>Błąd,</i> Należy pamiętać, że ten błąd wystąpił podczas transakcji. "
+"Zamówienie zostało potwierdzone, ale nie będzie zapłacone. Nie wahaj się aby "
+"skontaktować się z nami, jeśli masz jakieś pytania o statusu twojego "
+"zamówienia.</span>"
 
 #. module: payment_ogone
 #: model:payment.acquirer,pending_msg:payment_ogone.payment_acquirer_ogone
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr "<span><i>W oczekiwaniu,</i> Twoja płatności online została pomyślnie przetworzona. Ale twoje zamówienie nie zostało jeszcze zatwierdzone.</span>"
+msgstr ""
+"<span><i>W oczekiwaniu,</i> Twoja płatności online została pomyślnie "
+"przetworzona. Ale twoje zamówienie nie zostało jeszcze zatwierdzone.</span>"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_userid
@@ -102,9 +111,12 @@ msgstr "Jak konfigurować twoje konto Ogone?"
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer_ogone_alias_usage
 msgid ""
 "If you want to use Ogone Aliases,\n"
-"                                                                this default Alias Usage will be presented to\n"
-"                                                                the customer as the reason you want to\n"
-"                                                                keep his payment data"
+"                                                                this default "
+"Alias Usage will be presented to\n"
+"                                                                the customer "
+"as the reason you want to\n"
+"                                                                keep his "
+"payment data"
 msgstr ""
 
 #. module: payment_ogone
@@ -123,24 +135,26 @@ msgid "Ogone"
 msgstr "Ogone"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:247
+#: code:addons/payment_ogone/models/ogone.py:249
 #, python-format
 msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
 msgstr ""
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:235
+#: code:addons/payment_ogone/models/ogone.py:237
 #, python-format
 msgid "Ogone: received data for reference %s"
 msgstr ""
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:228
+#: code:addons/payment_ogone/models/ogone.py:230
 #, python-format
 msgid ""
 "Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
 "(%s)"
-msgstr "Ogone: odebrane dane z brakującą referencją (%s) lub pay_id (%s) lub shasign (%s)"
+msgstr ""
+"Ogone: odebrane dane z brakującą referencją (%s) lub pay_id (%s) lub shasign "
+"(%s)"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_pspid

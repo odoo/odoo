@@ -25,18 +25,13 @@ import werkzeug.utils
 import werkzeug.wrappers
 from openerp.api import Environment
 
-try:
-    import xlwt
-except ImportError:
-    xlwt = None
-
 import openerp
 import openerp.modules.registry
 from openerp.modules import get_resource_path
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp.tools import ustr
-from openerp.tools.misc import str2bool
+from openerp.tools.misc import str2bool, xlwt
 from openerp import http
 from openerp.http import request, serialize_exception as _serialize_exception
 from openerp.exceptions import AccessError

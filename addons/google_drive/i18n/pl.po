@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * google_drive
-# 
+#
 # Translators:
 # zbik2607 <darek@krokus.com.pl>, 2016
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2015
@@ -9,25 +9,34 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-24 16:42+0000\n"
 "Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "<b>To create a new filter:</b><br/>\n"
-"                                - Go to the Odoo document you want to filter. For instance, go to Opportunities and search on Sales Department.<br/>\n"
-"                                - In this \"Search\" view, select the option \"Save Current Filter\", enter the name (Ex: Sales Department)<br/>\n"
-"                                - If you select \"Share with all users\", link of google document in \"More\" options will appear for all users in opportunities of Sales Department.<br/>\n"
-"                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
-"                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
+"                                - Go to the Odoo document you want to "
+"filter. For instance, go to Opportunities and search on Sales Department.<br/"
+">\n"
+"                                - In this \"Search\" view, select the option "
+"\"Save Current Filter\", enter the name (Ex: Sales Department)<br/>\n"
+"                                - If you select \"Share with all users\", "
+"link of google document in \"More\" options will appear for all users in "
+"opportunities of Sales Department.<br/>\n"
+"                                - If you don't select \"Share with all users"
+"\", link of google document in \"More\" options will not appear for other "
+"users in opportunities of Sales Department.<br/>\n"
+"                                - If filter is not specified, link of google "
+"document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
 
 #. module: google_drive
@@ -39,7 +48,9 @@ msgstr "Aktywne"
 #: code:addons/google_drive/google_drive.py:34
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
-msgstr "Co najmniej jeden przycisk nie może zostać znaleziony we wzorze twojej nazwy Google Drive"
+msgstr ""
+"Co najmniej jeden przycisk nie może zostać znaleziony we wzorze twojej nazwy "
+"Google Drive"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_authorization_code
@@ -49,9 +60,11 @@ msgstr "Kod autoryzacyjny"
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config_name_template
 msgid ""
-"Choose how the new google drive will be named, on google side. Eg. "
-"gdoc_%(field_name)s"
-msgstr "Wybierz, jak nowy dysk Google zostanie nazwany na stronie Google. Np. gdoc_%(field_name)s"
+"Choose how the new google drive will be named, on google side. Eg. gdoc_"
+"%(field_name)s"
+msgstr ""
+"Wybierz, jak nowy dysk Google zostanie nazwany na stronie Google. Np. gdoc_"
+"%(field_name)s"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
@@ -127,7 +140,9 @@ msgstr "Wzór nazwy dysku Google"
 #: code:addons/google_drive/google_drive.py:75
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
-msgstr "Dysk Google nie został jeszcze skonfigurowany. Skontaktuj się z administratorem"
+msgstr ""
+"Dysk Google nie został jeszcze skonfigurowany. Skontaktuj się z "
+"administratorem"
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
@@ -193,7 +208,9 @@ msgstr "ID zasobu"
 msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
-msgstr "Coś poszło nie tak podczas generowania tokena. Poproś o ponowne nadanie kodu autoryzacji."
+msgstr ""
+"Coś poszło nie tak podczas generowania tokena. Poproś o ponowne nadanie kodu "
+"autoryzacji."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name
@@ -225,11 +242,21 @@ msgstr "Adres do generowania kodu autoryzacji w Google"
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
-"The name of the attached document can use fixed or variable data. To distinguish between documents in\n"
-"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
-"                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
+"The name of the attached document can use fixed or variable data. To "
+"distinguish between documents in\n"
+"                                Google Drive, use fixed words and fields. "
+"For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
+"                                in the Google Drive name field, the document "
+"in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
-msgstr "Nazwa załączonego dokumentu może używać stałych lub zmiennych danych. Aby rozróżniać dokumenty w\n                                dysku Google, użyj stałych słów i pól. Np. w przykładzie powyżej, jeśli napisałeś Agrolait_%(name)s_Sales\n                                w polu nazwy dysku Google, dokument w dysku Google i załączniku Odoo zostanie nazwany\n                                'Agrolait_SO0001_Sales'."
+msgstr ""
+"Nazwa załączonego dokumentu może używać stałych lub zmiennych danych. Aby "
+"rozróżniać dokumenty w\n"
+"                                dysku Google, użyj stałych słów i pól. Np. w "
+"przykładzie powyżej, jeśli napisałeś Agrolait_%(name)s_Sales\n"
+"                                w polu nazwy dysku Google, dokument w dysku "
+"Google i załączniku Odoo zostanie nazwany\n"
+"                                'Agrolait_SO0001_Sales'."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:117
@@ -237,7 +264,9 @@ msgstr "Nazwa załączonego dokumentu może używać stałych lub zmiennych dany
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr "Zezwolenie 'czytelnik' dla 'każdy z linkiem' nie zostało umieszczone w dokumencie"
+msgstr ""
+"Zezwolenie 'czytelnik' dla 'każdy z linkiem' nie zostało umieszczone w "
+"dokumencie"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_uri
@@ -250,7 +279,9 @@ msgstr "Adres URI"
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
-msgstr "Nie skonfigurowałeś 'Kodu autoryzacji' generowanego w Google, wygeneruj go i skonfiguruj."
+msgstr ""
+"Nie skonfigurowałeś 'Kodu autoryzacji' generowanego w Google, wygeneruj go i "
+"skonfiguruj."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
@@ -265,5 +296,8 @@ msgstr "base.config.settings"
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
-"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
-msgstr "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
+"https://docs.google.com/document/"
+"d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
+msgstr ""
+"https://docs.google.com/document/"
+"d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"

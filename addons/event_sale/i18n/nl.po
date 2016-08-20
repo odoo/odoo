@@ -1,21 +1,35 @@
+# #-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event_sale
-# 
+#
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# #-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * event_sale
+#
+# Translators:
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-19 09:14+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: event_sale
@@ -28,6 +42,11 @@ msgstr "met ticket %s"
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "Toepassen"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+msgid "Asset Type"
+msgstr "Soort activa"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -54,14 +73,18 @@ msgstr "Voor bevestiging"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "Kies een evenement en het zal automatisch een registratie voor dit evenement aanmaken."
+msgstr ""
+"Kies een evenement en het zal automatisch een registratie voor dit evenement "
+"aanmaken."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
-msgstr "Kies een evenement ticket en het zal automatisch een registratie aanmaken voor dit evenement ticket."
+msgstr ""
+"Kies een evenement ticket en het zal automatisch een registratie aanmaken "
+"voor dit evenement ticket."
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_2_product
@@ -84,12 +107,20 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr "Soort uitgestelde inkomsten"
+
+#. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
-msgstr "Definieer het aantal beschikbare zitplaatsen. Als u te veel registraties heeft zal u niet meer tickets kunnen verkopen. Zet op 0 om deze regel te negeren en ongelimiteerde ticketten aan te bieden."
+msgstr ""
+"Definieer het aantal beschikbare zitplaatsen. Als u te veel registraties "
+"heeft zal u niet meer tickets kunnen verkopen. Zet op 0 om deze regel te "
+"negeren en ongelimiteerde ticketten aan te bieden."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_ok
@@ -97,7 +128,9 @@ msgstr "Definieer het aantal beschikbare zitplaatsen. Als u te veel registraties
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr "Bepalen of een product, automatisch een evenement registratie moet aanmaken bij het bevestiging van een verkooporderregel."
+msgstr ""
+"Bepalen of een product, automatisch een evenement registratie moet aanmaken "
+"bij het bevestiging van een verkooporderregel."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
@@ -113,16 +146,26 @@ msgstr "Editor id"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_email
+#, fuzzy
 msgid "Email"
-msgstr "Email"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Email\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"E-mail"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_event_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_event_id
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_id
+#, fuzzy
 msgid "Event"
-msgstr "Evenement"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Evenement\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Gebeurtenis"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
@@ -251,8 +294,13 @@ msgstr "Telefoon"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price
+#, fuzzy
 msgid "Price"
-msgstr "Bedrag"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Bedrag\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Prijs"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price_reduce
@@ -308,8 +356,13 @@ msgstr "Einde verkoop"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
+#, fuzzy
 msgid "Sales Order"
-msgstr "Verkooporders"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Verkooporders\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Verkooporder"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
@@ -325,9 +378,11 @@ msgstr "gebruikte zitplaatsen"
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
 #: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
 msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
-msgstr "Selecteer evenement soorten, voor als we dit product willen gebruiken in de verkoop orderregels, zal het evenementen van dit soort filteren."
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
+msgstr ""
+"Selecteer evenement soorten, voor als we dit product willen gebruiken in de "
+"verkoop orderregels, zal het evenementen van dit soort filteren."
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -365,13 +420,20 @@ msgstr "Technische training"
 msgid ""
 "The registration has been created for event %(event_name)s%(ticket)s from "
 "sale order %(order)s"
-msgstr "De registratie is aangemaakt voor het evenement %(event_name)s%(ticket)s van verkooporder %(order)s"
+msgstr ""
+"De registratie is aangemaakt voor het evenement %(event_name)s%(ticket)s van "
+"verkooporder %(order)s"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_search
+#, fuzzy
 msgid "Ticket Type"
-msgstr "Ticket type"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Ticket type\n"
+"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Soort ticket"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
@@ -420,3 +482,9 @@ msgstr "registration.editor"
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "registration.editor.line"
 msgstr "registration.editor.line"
+
+#~ msgid "Event Name"
+#~ msgstr "Naam evenement"
+
+#~ msgid "Event Registration"
+#~ msgstr "Evenementregistratie"

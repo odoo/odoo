@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_sale_delivery
-# 
+#
 # Translators:
 # Bohdan Lisnenko, 2015-2016
 # Bohdan Lisnenko, 2016
@@ -9,22 +9,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-04-23 09:01+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
+"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
+"uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
 msgid ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
 "updated after choosing a new delivery method\"> Delivery:</span>"
-msgstr "<span class=\"col-xs-6 text-right text-muted\" title=\"Вартість доставки буде оновлено коли ви оберете новий спосіб доставки\"> Доставка:</span>"
+msgstr ""
+"<span class=\"col-xs-6 text-right text-muted\" title=\"Вартість доставки "
+"буде оновлено коли ви оберете новий спосіб доставки\"> Доставка:</span>"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -63,13 +67,6 @@ msgid "Check if you want this product to appear in the Point of Sale"
 msgstr "Позначте, якщо хочете, щоб цей товар з’явився у касовому терміналі"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_purchase_requisition
-msgid ""
-"Check this box to generate Call for Tenders instead of generating requests "
-"for quotation from procurement."
-msgstr "Поставте галочку, щоб створювати тендери замість звичайних запитів комерційної пропозиції під час збезпечення."
-
-#. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose your Delivery Method"
 msgstr "Оберіть спосіб доставки"
@@ -80,17 +77,22 @@ msgid "Country..."
 msgstr "Країна..."
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_project_id
+msgid "Create a task under this project on sale order validation."
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
 msgstr "Вартість доставки"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form
+#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description"
 msgstr "Опис"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form
+#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on the Online Quotations."
 msgstr "Опис, що відображається у веб-магазині та онлайн пропозиціях."
 
@@ -108,6 +110,21 @@ msgstr "Опис пропозиції"
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_sequence
 msgid "Determine the display order in the Website E-commerce"
 msgstr "Визначте порядок відображення в інтернет-магазині"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_split_method
+msgid ""
+"Equal : Cost will be equally divided.\n"
+"By Quantity : Cost will be divided according to product's quantity.\n"
+"By Current cost : Cost will be divided according to product's current cost.\n"
+"By Weight : Cost will be divided depending on its weight.\n"
+"By Volume : Cost will be divided depending on its volume."
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_attachment_count
+msgid "File"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
@@ -140,12 +157,19 @@ msgid "Message for Sales Order Line"
 msgstr "Повідомлення для рядка замовлення на продаж"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:127
+#: code:addons/website_sale_delivery/models/sale_order.py:138
 #, python-format
 msgid ""
-"No shipping method is available for your current order and shipping address."
-" Please contact us for more information."
-msgstr "Немає жодного способу доставки для вашого замовлення та адреси доставки. Будь ласка, зв’яжіться з нам для отримання детальної інформації."
+"No shipping method is available for your current order and shipping address. "
+"Please contact us for more information."
+msgstr ""
+"Немає жодного способу доставки для вашого замовлення та адреси доставки. "
+"Будь ласка, зв’яжіться з нам для отримання детальної інформації."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_optional_product_ids
+msgid "Optional Products"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_pos_categ_id
@@ -156,6 +180,11 @@ msgstr "Категорія у торговому терміналі"
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_requisition
 msgid "Procurement"
 msgstr "Забезпечення"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_optional_product_ids
+msgid "Products to propose when add to cart."
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_project_id
@@ -194,7 +223,11 @@ msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
-msgstr "Обираючи \"Попередження\" ви надішлете повідомлення користувачу. Якщо обрати \"Повідомлення блокування\", то буде запущено виключення з відповідним повідомленням користувачу та процес зупиниться. Повідомлення потрібно вказати у наступному полі."
+msgstr ""
+"Обираючи \"Попередження\" ви надішлете повідомлення користувачу. Якщо обрати "
+"\"Повідомлення блокування\", то буде запущено виключення з відповідним "
+"повідомленням користувачу та процес зупиниться. Повідомлення потрібно "
+"вказати у наступному полі."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
@@ -212,7 +245,7 @@ msgid "Size Y"
 msgstr "Розмір Y"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:126
+#: code:addons/website_sale_delivery/models/sale_order.py:137
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr "Вибачте, ми не можемо доставити ваше замовлення"
@@ -238,19 +271,18 @@ msgid "The amount without tax."
 msgstr "Сума без податків"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_url
-msgid "The full URL to access the document through the website."
-msgstr "URL-адреса повністю, для доступу до документації через сайт"
-
-#. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Those categories are used to group similar products for e-commerce."
-msgstr "Ці категорії використовуються для групування подібних товарів у інтернет-магазині."
+msgstr ""
+"Ці категорії використовуються для групування подібних товарів у інтернет-"
+"магазині."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_pos_categ_id
 msgid "Those categories are used to group similar products for point of sale."
-msgstr "Ці категорії використовуються для групування подібних товарів у касовому терміналі."
+msgstr ""
+"Ці категорії використовуються для групування подібних товарів у касовому "
+"терміналі."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_to_weight
@@ -258,24 +290,14 @@ msgid "To Weigh With Scale"
 msgstr "Для зважування на вагах"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
-msgid "Visible in Website"
-msgstr "Видимий на сайті"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
-msgid "Website Comments"
-msgstr "Коментарі вебсайту"
+#: model:ir.ui.view,arch_db:website_sale_delivery.shipping_tracking
+msgid "Tracking:"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Website Product Category"
 msgstr "Категорія товару на сайті"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_url
-msgid "Website URL"
-msgstr "URL сайту"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
@@ -291,3 +313,22 @@ msgstr "Мета-ключі сайту"
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_title
 msgid "Website meta title"
 msgstr "Мета-заголовок сайту"
+
+#~ msgid ""
+#~ "Check this box to generate Call for Tenders instead of generating "
+#~ "requests for quotation from procurement."
+#~ msgstr ""
+#~ "Поставте галочку, щоб створювати тендери замість звичайних запитів "
+#~ "комерційної пропозиції під час збезпечення."
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "URL-адреса повністю, для доступу до документації через сайт"
+
+#~ msgid "Visible in Website"
+#~ msgstr "Видимий на сайті"
+
+#~ msgid "Website Comments"
+#~ msgstr "Коментарі вебсайту"
+
+#~ msgid "Website URL"
+#~ msgstr "URL сайту"

@@ -1,63 +1,102 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_forum
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-26 14:10+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-05-02 19:48+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: website_forum
 #: model:mail.template,body_html:website_forum.validation_email
 msgid ""
 "\n"
-"<p>\n"
-"    Hello ${object.name},\n"
-"</p>\n"
-"<p>\n"
-"    You have been invited to validate your email in order to get access to \"${object.company_id.name}\" Q/A Forums.\n"
-"</p>\n"
-"<p>\n"
-"    To validate your email, please click on the following link:\n"
-"</p>\n"
-"<ul>\n"
-"    <li><a href=\"${ctx.get('token_url')}\">Validate my account for \"${object.company_id.name}\" Q/A Forums</a></li>\n"
-"</ul>\n"
-"<p>\n"
-"    Thanks,\n"
-"</p>\n"
-"<pre>\n"
-"--\n"
-"${object.company_id.name or ''}\n"
-"${object.company_id.email or ''}\n"
-"${object.company_id.phone or ''}\n"
-"</pre>"
-msgstr "\n<p>\nDobrý deň ${object.name},\n</p>\n<p>\nBoli ste pozvaní na overenie emailu za účelom získania prístupu do \"${object.company_id.name}\" fóra Otázky/Odpovde.\n</p>\n<p>\nPre overenie Vášho emailu, kliknite prosím na nasledovný odkaz:\n</p>\n<ul>\n<li><a href=\"${ctx.get('token_url')}\">Overiť môj účet pre \"${object.company_id.name}\" fóra Otázky/Odpovde</a></li>\n</ul>\n<p>\nVďaka,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
+"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
+"collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px "
+"5px; font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
+"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; "
+"padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;"
+"\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:"
+"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
+"min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
+"background: #FFFFFF repeat top /100%; color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-"
+"align:justify; margin:0 auto; border-collapse:collapse; background:inherit; "
+"color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                <p>Dear ${object.name},</p>\n"
+"                <p>You have been invited to validate your email in order to "
+"get access to\n"
+"                \"${object.company_id.name}\" Q/A Forums.</p>\n"
+"                <p>To validate your email, please click on the following "
+"link:</p>\n"
+"                <a style=\"margin-left: 15px; padding:5px 10px; border-"
+"radius: 3px; background-color:#a24689; text-align:center; text-decoration:"
+"none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
+"                    Validate my account for \"${object.company_id.name}\" Q/"
+"A Forums\n"
+"                </a>\n"
+"                <p>Thanks for your participation!</p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
+msgstr ""
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_forum.js:23
 #, python-format
 msgid ""
-" karma is required to perform this action. You can earn karma by having your"
-" answers upvoted by the community."
-msgstr "karma je potrebná pre vykonanie tejto akcie. Karmu môžete získať tým, že komunita dá hlasy vašim odpovediam."
+" karma is required to perform this action. You can earn karma by having your "
+"answers upvoted by the community."
+msgstr ""
+"karma je potrebná pre vykonanie tejto akcie. Karmu môžete získať tým, že "
+"komunita dá hlasy vašim odpovediam."
 
 #. module: website_forum
 #: model:mail.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
 msgstr "${object.company_id.name} Overenie fór"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.tag
+msgid "&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\"/>&amp;nbsp;&amp;nbsp;"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -93,7 +132,9 @@ msgstr "45% otázok zdieľaných"
 msgid ""
 "65% more chance to get an\n"
 "        answer"
-msgstr "65% väčšia šanca získať\nodpoveď"
+msgstr ""
+"65% väčšia šanca získať\n"
+"odpoveď"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -124,46 +165,67 @@ msgstr "<b> odznaky:</b>"
 msgid ""
 "<b>Answers should not add or expand questions</b>. Instead\n"
 "    either edit the question or add a comment."
-msgstr "<b>Odpovede by nemali dopĺnať alebo rozširovať otázky</b>. Namiesto toho\nbuďto upravte otázku alebo pridajte komentár. "
+msgstr ""
+"<b>Odpovede by nemali dopĺnať alebo rozširovať otázky</b>. Namiesto toho\n"
+"buďto upravte otázku alebo pridajte komentár. "
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
+#, fuzzy
 msgid ""
 "<b>Answers should not add or expand questions</b>. Instead either edit the "
-"question edit or add a question comment."
-msgstr "<b>Odpovede by nemali dopĺnať alebo rozširovať otázky</b>. Namiesto toho\nbuďto upravte otázku alebo pridajte komentár s otázkou. "
+"question or add a question comment."
+msgstr ""
+"<b>Odpovede by nemali dopĺnať alebo rozširovať otázky</b>. Namiesto toho\n"
+"buďto upravte otázku alebo pridajte komentár s otázkou. "
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "<b>Answers should not comment other answers</b>. Instead\n"
 "    add a comment on the other answers."
-msgstr "<b>Odpovede by nemali komentovať iné odpovede</b>. Namiesto too\npridajte komentár k tým iným odpovediam."
+msgstr ""
+"<b>Odpovede by nemali komentovať iné odpovede</b>. Namiesto too\n"
+"pridajte komentár k tým iným odpovediam."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "<b>Answers should not comment other answers</b>. Instead add a comment on "
 "the other answers."
-msgstr "<b>Odpovede by nemali komentovať iné odpovede</b>. Namiesto too\npridajte komentár k tým iným odpovediam."
+msgstr ""
+"<b>Odpovede by nemali komentovať iné odpovede</b>. Namiesto too\n"
+"pridajte komentár k tým iným odpovediam."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "<b>Answers should not start debates</b>\n"
-"    This community Q&amp;A is not a discussion group. Please avoid holding debates in\n"
-"    your answers as they tend to dilute the essence of questions and answers. For\n"
+"    This community Q&amp;A is not a discussion group. Please avoid holding "
+"debates in\n"
+"    your answers as they tend to dilute the essence of questions and "
+"answers. For\n"
 "    brief discussions please use commenting facility."
-msgstr "<b>Odpovede by nemali začínať diskusie</b>\nTáto Q&amp;A komunita nie je diskusnou skupinou. Prosím zdržte sa dikusií vo\nvašich odpovediach, keďže to má tendenciu mínať sa účinkom otázk a odpovedí. Pre\nkrátke diskusie použite prosím komentovacie zariadenie."
+msgstr ""
+"<b>Odpovede by nemali začínať diskusie</b>\n"
+"Táto Q&amp;A komunita nie je diskusnou skupinou. Prosím zdržte sa dikusií "
+"vo\n"
+"vašich odpovediach, keďže to má tendenciu mínať sa účinkom otázk a odpovedí. "
+"Pre\n"
+"krátke diskusie použite prosím komentovacie zariadenie."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "<b>Answers shouldn't just point to other Questions</b>. Instead add a "
 "question comment indication \"Possible duplicate of...\". However, it's ok "
-"to include links to other questions or answers providing relevant additional"
-" information."
-msgstr "<b>Odpovede by nemali iba smerovať na ďalšie Otázky</b>. Namiesto toho pridajte komentár s otázkou \"Možný duplikát...\". Avšak, je v poriadku, ak sa pridajú odkazy na iné otázky alebo odpovede, ktoré poskytujú dôležité dodatočné informácie."
+"to include links to other questions or answers providing relevant additional "
+"information."
+msgstr ""
+"<b>Odpovede by nemali iba smerovať na ďalšie Otázky</b>. Namiesto toho "
+"pridajte komentár s otázkou \"Možný duplikát...\". Avšak, je v poriadku, ak "
+"sa pridajú odkazy na iné otázky alebo odpovede, ktoré poskytujú dôležité "
+"dodatočné informácie."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -173,34 +235,55 @@ msgid ""
 "    of...\"</i>. However, it's fine to include links to other\n"
 "    questions or answers providing relevant additional\n"
 "    information."
-msgstr "<b>Odpovede by nemali iba smerovať na ďalšie Otázky</b>.\nNamiesto toho pridajte komentár <i>\"Možný duplikát\n...\"</i>. Avšak, je v poriadku, ak sa pridajú odkazy na iné\notázky alebo odpovede, ktoré poskytujú dôležité dodatočné\ninformácie."
+msgstr ""
+"<b>Odpovede by nemali iba smerovať na ďalšie Otázky</b>.\n"
+"Namiesto toho pridajte komentár <i>\"Možný duplikát\n"
+"...\"</i>. Avšak, je v poriadku, ak sa pridajú odkazy na iné\n"
+"otázky alebo odpovede, ktoré poskytujú dôležité dodatočné\n"
+"informácie."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
+#, fuzzy
 msgid ""
 "<b>Answers shouldn't just provide a\n"
 "    link a solution</b>. Instead provide the solution\n"
 "    description text in your answer, even if it's just a\n"
-"    copy/paste. Links are welcome, but should complementary to\n"
+"    copy/paste. Links are welcome, but should be complementary to\n"
 "    answer, referring sources or additional reading."
-msgstr "<b>Odpovede by nemali iba poskytovať\nodkaz na riešenie</b>. Namiesto toho poskytnite popis\nriešenia v texte vašej odpovede, aj kebyže sa jedná iba o\nvloženie skopírovaného textu. Odkazy sú vítané, ale mali by byť iba doplnkom k\nodpovedi, odkazujúc na zdroje alebo ďalšie čítanie."
+msgstr ""
+"<b>Odpovede by nemali iba poskytovať\n"
+"odkaz na riešenie</b>. Namiesto toho poskytnite popis\n"
+"riešenia v texte vašej odpovede, aj kebyže sa jedná iba o\n"
+"vloženie skopírovaného textu. Odkazy sú vítané, ale mali by byť iba doplnkom "
+"k\n"
+"odpovedi, odkazujúc na zdroje alebo ďalšie čítanie."
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+#, fuzzy
+msgid ""
+"<b>Answers shouldn't just provide a link a solution</b>. Instead provide the "
+"solution description text in your answer, even if it's just a copy/paste. "
+"Links are welcome, but should be complementary to answer, referring sources "
+"or additional reading."
+msgstr ""
+"<b>Odpovede by nemali iba poskytovať odkaz na riešenie</b>. Namiesto toho "
+"poskytnite popis riešenia v texte vašej odpovede, aj kebyže sa jedná iba o "
+"vloženie skopírovaného textu. Odkazy sú vítané, ale mali by byť iba doplnkom "
+"k odpovedi, odkazujúc na zdroje alebo ďalšie čítanie."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"<b>Answers shouldn't just provide a link a solution</b>. Instead provide the"
-" solution description text in your answer, even if it's just a copy/paste. "
-"Links are welcome, but should complementary to answer, referring sources or "
-"additional reading."
-msgstr "<b>Odpovede by nemali iba poskytovať odkaz na riešenie</b>. Namiesto toho poskytnite popis riešenia v texte vašej odpovede, aj kebyže sa jedná iba o vloženie skopírovaného textu. Odkazy sú vítané, ale mali by byť iba doplnkom k odpovedi, odkazujúc na zdroje alebo ďalšie čítanie."
-
-#. module: website_forum
-#: model:forum.forum,faq:website_forum.forum_help
-msgid ""
-"<b>Before you ask - please make sure to search for a similar question.</b> You can\n"
+"<b>Before you ask - please make sure to search for a similar question.</b> "
+"You can\n"
 "    search questions by their title or tags.  It’s also OK to\n"
 "    answer your own question."
-msgstr "<b>Než sa opýtate - prosím hľadajte najskôr podobnú otázku.</b> Môžete\nhľadať otázky podľa ich nadpisu alebo menovky. Tiež je v poriadku\nodpovedať na vlastnú otázku."
+msgstr ""
+"<b>Než sa opýtate - prosím hľadajte najskôr podobnú otázku.</b> Môžete\n"
+"hľadať otázky podľa ich nadpisu alebo menovky. Tiež je v poriadku\n"
+"odpovedať na vlastnú otázku."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_badges
@@ -217,16 +300,29 @@ msgstr "<b>Zatiaľ ste nedali svoj hlas!</b>"
 msgid ""
 "<b>Please avoid asking questions that are too subjective\n"
 "    and argumentative</b> or not relevant to this community."
-msgstr "<b>Prosím vyhýbajte sa otázkam ktoré sú príliš subjektívne\na implicitné</b> alebo nesúvisiace s touto komunitou."
+msgstr ""
+"<b>Prosím vyhýbajte sa otázkam ktoré sú príliš subjektívne\n"
+"a implicitné</b> alebo nesúvisiace s touto komunitou."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 msgid ""
-"<b>Please try to give a substantial answer.</b> If you wanted to comment on the question or answer, just\n"
-"        <b>use the commenting tool.</b> Please remember that you can always <b>revise your answers</b>\n"
-"        - no need to answer the same question twice. Also, please <b>don't forget to vote</b>\n"
+"<b>Please try to give a substantial answer.</b> If you wanted to comment on "
+"the question or answer, just\n"
+"        <b>use the commenting tool.</b> Please remember that you can always "
+"<b>revise your answers</b>\n"
+"        - no need to answer the same question twice. Also, please <b>don't "
+"forget to vote</b>\n"
 "        - it really helps to select the best questions and answers!"
-msgstr "<b>Prosím snažte sa podať dôkladnú odpoveď.</b> Ak ste chceli komentovať otázku alebo\nodpoveď, stačí\n<b>použiť komentovací nástroj.</b> Pamätajte že vždy môžete <b>revidovať svoje odpovede</b>\n- nie je potrebné odpovedať na rovnakú otázku dvakrát. Taktiež prosím <b>nezabudnite hlasovať</b>\n- naozaj pomáha vybrať tie najlepšie otázky a odpovede!"
+msgstr ""
+"<b>Prosím snažte sa podať dôkladnú odpoveď.</b> Ak ste chceli komentovať "
+"otázku alebo\n"
+"odpoveď, stačí\n"
+"<b>použiť komentovací nástroj.</b> Pamätajte že vždy môžete <b>revidovať "
+"svoje odpovede</b>\n"
+"- nie je potrebné odpovedať na rovnakú otázku dvakrát. Taktiež prosím "
+"<b>nezabudnite hlasovať</b>\n"
+"- naozaj pomáha vybrať tie najlepšie otázky a odpovede!"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_discussion
@@ -249,37 +345,15 @@ msgid "<i class=\"text-muted\">awarded users</i>"
 msgstr "<i class=\"text-muted\">ocenený používatelia</i>"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:483
-#, python-format
-msgid ""
-"<p>A new answer for <i>%s</i> has been posted. <a "
-"href=\"%s/forum/%s/question/%s\">Click here to access the post.</a></p>"
-msgstr "<p>Nová odpoveď pre <i>%s</i> bola zverejnená. <a href=\"%s/forum/%s/question/%s\">Kliknite sem pre prístup k príspevku.</a></p>"
-
-#. module: website_forum
-#: code:addons/website_forum/models/forum.py:499
-#, python-format
-msgid ""
-"<p>A new question <i>%s</i> has been asked on %s and require your "
-"validation. <a href=\"%s/forum/%s/question/%s\">Click here to access the "
-"question.</a></p>"
-msgstr "na<p>Nová otázka <i>%s</i> bola opýtaná %s a vyžaduje vaše overenie. <a href=\"%s/forum/%s/question/%s\">Kliknite sem pre prístup k otázke.</a></p>"
-
-#. module: website_forum
-#: code:addons/website_forum/models/forum.py:489
-#, python-format
-msgid ""
-"<p>A new question <i>%s</i> has been asked on %s. <a "
-"href=\"%s/forum/%s/question/%s\">Click here to access the question.</a></p>"
-msgstr "na<p>Nová otázka <i>%s</i> bola opýtaná %s. <a href=\"%s/forum/%s/question/%s\">Kliknite sem pre prístup k otázke.</a></p>"
-
-#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
 msgid ""
 "<small class=\"text-muted\">\n"
 "                    Flagged\n"
 "                </small>"
-msgstr "<small class=\"text-muted\">\nOznačené\n</small>"
+msgstr ""
+"<small class=\"text-muted\">\n"
+"Označené\n"
+"</small>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -291,7 +365,9 @@ msgstr "<small>profil</small>"
 msgid ""
 "<span class=\"caret\"/>\n"
 "                                <span class=\"sr-only\">Select Post</span>"
-msgstr "<span class=\"caret\"/>\n<span class=\"sr-only\">Zvoliť príspevok</span>"
+msgstr ""
+"<span class=\"caret\"/>\n"
+"<span class=\"sr-only\">Zvoliť príspevok</span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -299,13 +375,17 @@ msgid ""
 "<span class=\"sr-only\">Toggle navigation</span>\n"
 "                        <span class=\"icon-bar\"/>\n"
 "                        <span class=\"icon-bar\"/>"
-msgstr "<span class=\"sr-only\">Prepnúť navigáciu</span>\n<span class=\"icon-bar\"/>\n<span class=\"icon-bar\"/>"
+msgstr ""
+"<span class=\"sr-only\">Prepnúť navigáciu</span>\n"
+"<span class=\"icon-bar\"/>\n"
+"<span class=\"icon-bar\"/>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid ""
 "<span class=\"text-muted\">(only one answer per question is allowed)</span>"
-msgstr "<span class=\"text-muted\">(je povolená iba jedna odpoveď na otázku)</span>"
+msgstr ""
+"<span class=\"text-muted\">(je povolená iba jedna odpoveď na otázku)</span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -332,7 +412,9 @@ msgstr "<span> na </span>"
 msgid ""
 "<span> • </span>\n"
 "                Flagged"
-msgstr "<span> • </span>\nOznačené"
+msgstr ""
+"<span> • </span>\n"
+"Označené"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -341,12 +423,30 @@ msgid "<span>By </span>"
 msgstr "<span>Od </span>"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
+#, fuzzy
+msgid "A new answer on"
+msgstr "Nová odpoveď"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
+#, fuzzy
+msgid "A new question"
+msgstr "Zodpovedať otázky"
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.tag
+#, fuzzy
 msgid ""
 "A tag is a label that categorizes your question with other,\n"
 "            similar questions. Using the right tags makes it easier for\n"
-"            others to find and answer your question."
-msgstr "Menovka je štítok, ktorý kategorizuje vašu otázku s inými,\npodobnými otázkami. Použitie správnych značiek uľahčuje\niným nájsť a zodpovedať vašu otázku."
+"            others to find and answer your question. (Hover the mouse to "
+"follow/unfollow tag(s))"
+msgstr ""
+"Menovka je štítok, ktorý kategorizuje vašu otázku s inými,\n"
+"podobnými otázkami. Použitie správnych značiek uľahčuje\n"
+"iným nájsť a zodpovedať vašu otázku."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -386,12 +486,6 @@ msgid "Accepting an answer"
 msgstr "Prijímanie odpovede"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_needaction
-#: model:ir.model.fields,field_description:website_forum.field_forum_post_message_needaction
-msgid "Action Needed"
-msgstr "Potrebná akcia"
-
-#. module: website_forum
 #: selection:forum.post,state:0
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_active
 msgid "Active"
@@ -426,7 +520,10 @@ msgstr "Pridať stranu v menu"
 msgid ""
 "After posting the user will be proposed to share its question or answer on "
 "social networks, enabling social network propagation of the forum content."
-msgstr "Po zverejnení bude používateľovi navrhnuté zdieľanie svojej otázky alebo odpovede na sociálnych sieťach, umožňujúc propagáciu obsahu fóra na sociálnych sieťach.."
+msgstr ""
+"Po zverejnení bude používateľovi navrhnuté zdieľanie svojej otázky alebo "
+"odpovede na sociálnych sieťach, umožňujúc propagáciu obsahu fóra na "
+"sociálnych sieťach.."
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:187
@@ -449,7 +546,7 @@ msgid "Answer"
 msgstr "Odpoveď"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:478
+#: code:addons/website_forum/models/forum.py:498
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -637,8 +734,8 @@ msgid "Back to"
 msgstr "Späť na"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:323
-#: code:addons/website_forum/controllers/main.py:386
+#: code:addons/website_forum/controllers/main.py:322
+#: code:addons/website_forum/controllers/main.py:389
 #, python-format
 msgid "Bad Request"
 msgstr "Zlá požiadavka"
@@ -662,7 +759,10 @@ msgid ""
 "Besides gaining reputation with your questions and answers,\n"
 "            you receive badges for being especially helpful. Badges\n"
 "            appear on your profile page, and your posts."
-msgstr "Okrem získania reputácie so svojimi otázkami a odpoveďami,\nobdržíte odznaky za to, že ste obzvlášť užitočný. Odznaky\nsa zobrazia na vašej stránke profilu, a vašich príspevkoch."
+msgstr ""
+"Okrem získania reputácie so svojimi otázkami a odpoveďami,\n"
+"obdržíte odznaky za to, že ste obzvlášť užitočný. Odznaky\n"
+"sa zobrazia na vašej stránke profilu, a vašich príspevkoch."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
@@ -682,8 +782,8 @@ msgstr "Posunuté"
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:34
-#, python-format
-msgid "By sharing you answer, you will get additionnal"
+#, fuzzy, python-format
+msgid "By sharing you answer, you will get additional"
 msgstr "Zdeľaním svojej odpovede získate dodatočné"
 
 #. module: website_forum
@@ -757,7 +857,7 @@ msgid "Can View"
 msgstr "Môže zobrazovať"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_retag
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_retag
 msgid "Change question tags"
 msgstr "Zmeniť menovky otázky"
 
@@ -772,7 +872,10 @@ msgid ""
 "Check this box to display a popup for posts older than 10 days without any "
 "given answer. The popup will offer to share it on social networks. When "
 "shared, a question is bumped at the top of the forum."
-msgstr "Zaškrtnite, ak chcete zobrazovať pop-up okno pre príspevky staršie ako 10 dní bez akejkoľvek danej odpovede. Pop-up ponúkne jej zdieľať na sociálnych sieťach. Keď je zdieľaná, otázka bude posunutá do hornej časti fóra."
+msgstr ""
+"Zaškrtnite, ak chcete zobrazovať pop-up okno pre príspevky staršie ako 10 "
+"dní bez akejkoľvek danej odpovede. Pop-up ponúkne jej zdieľať na sociálnych "
+"sieťach. Keď je zdieľaná, otázka bude posunutá do hornej časti fóra."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_4
@@ -804,7 +907,9 @@ msgstr "Kliknite sem pre prijatie tejto odpovede."
 msgid ""
 "Click here to send a verification email allowing you to participate to the "
 "forum."
-msgstr "Kliknite sem pre zaslanie ovrovacieho emailu umožnujúceho vám participovať vo fóre."
+msgstr ""
+"Kliknite sem pre zaslanie ovrovacieho emailu umožnujúceho vám participovať "
+"vo fóre."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
@@ -936,14 +1041,17 @@ msgstr "Gratulujeme"
 #, python-format
 msgid ""
 "Congratulations! You just created and post your first question and answer."
-msgstr "Gratulujeme! Práve ste vytvorili a publikovali vašu prvú otázku a odpoveď."
+msgstr ""
+"Gratulujeme! Práve ste vytvorili a publikovali vašu prvú otázku a odpoveď."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid ""
-"Congratulations! Your email has just been validated. You may now participate"
-" to our forums."
-msgstr "Gratulujeme! Váš email bol práve schválený. Teraz sa môžete podielať na našich fórach."
+"Congratulations! Your email has just been validated. You may now participate "
+"to our forums."
+msgstr ""
+"Gratulujeme! Váš email bol práve schválený. Teraz sa môžete podielať na "
+"našich fórach."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_content
@@ -1022,6 +1130,12 @@ msgid "Create a question"
 msgstr "Vytvoriť otázku"
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_tag_create
+#, fuzzy
+msgid "Create new tags"
+msgstr "Vytvorené"
+
+#. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_32
 msgid "Created a tag used by 15 questions"
 msgstr "Vytvorená menovka použitá pri 15 otázkach"
@@ -1054,12 +1168,6 @@ msgstr "Dôveryhodná otázka"
 #: model:gamification.goal.definition,name:website_forum.definition_critic
 msgid "Critic"
 msgstr "Kritik"
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum_message_last_post
-#: model:ir.model.fields,help:website_forum.field_forum_post_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Dátum poslednej správy zaslanej záznamu."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_default_order
@@ -1200,6 +1308,16 @@ msgid "Email"
 msgstr "Email"
 
 #. module: website_forum
+#: model:ir.model,name:website_forum.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_survey_mail_compose_message
+msgid "Email composition wizard for Survey"
+msgstr ""
+
+#. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_5
 #: model:gamification.challenge,name:website_forum.challenge_enlightened
 #: model:gamification.goal.definition,name:website_forum.definition_enlightened
@@ -1209,8 +1327,8 @@ msgstr "Osvietené"
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:37
-#, python-format
-msgid "Enter a name for your new forum then click 'Continue'."
+#, fuzzy, python-format
+msgid "Enter a name for your new forum."
 msgstr "Zadajte názov pre vaše nové fórum a potom kliknite na 'Pokračovať'."
 
 #. module: website_forum
@@ -1308,33 +1426,29 @@ msgid "Followed Questions"
 msgstr "Odberané otázky"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_follower_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_post_message_follower_ids
-msgid "Followers"
-msgstr "Odberatelia"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_channel_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_post_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_partner_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_post_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
-
-#. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"For example, if you ask an interesting question or give a helpful answer, your\n"
-"    input will be upvoted. On the other hand if the answer is misleading - it will\n"
-"    be downvoted. Each vote in favor will generate 10 points, each vote against\n"
-"    will subtract 10 points. There is a limit of 200 points that can be accumulated\n"
-"    for a question or answer per day. The table given at the end explains reputation point\n"
+"For example, if you ask an interesting question or give a helpful answer, "
+"your\n"
+"    input will be upvoted. On the other hand if the answer is misleading - "
+"it will\n"
+"    be downvoted. Each vote in favor will generate 10 points, each vote "
+"against\n"
+"    will subtract 10 points. There is a limit of 200 points that can be "
+"accumulated\n"
+"    for a question or answer per day. The table given at the end explains "
+"reputation point\n"
 "    requirements for each type of moderation task."
-msgstr "Napríklad, ak sa spýtate zaujímavú otázku alebo poskytnúť užitočnú odpoveď, váš\nvstup bude zvolený hlasovaním. Na druhej strane v prípade, ak je odpoveď zavádzajúca - to bude hlasovaním zamietnuté. Každé hlasovanie v prospech prinesie 10 bodov, z ktorých každý hlas proti\nodpočíta 10 bodov. Limit 200 bodov, ktoré môžu byť nahromadené\nna otázku alebo odpoveď na deň. Tabuľka uvedená na konci vysvetľuje požiadavky bodov\nreputácie pre každý typ úlohy moderácie."
+msgstr ""
+"Napríklad, ak sa spýtate zaujímavú otázku alebo poskytnúť užitočnú odpoveď, "
+"váš\n"
+"vstup bude zvolený hlasovaním. Na druhej strane v prípade, ak je odpoveď "
+"zavádzajúca - to bude hlasovaním zamietnuté. Každé hlasovanie v prospech "
+"prinesie 10 bodov, z ktorých každý hlas proti\n"
+"odpočíta 10 bodov. Limit 200 bodov, ktoré môžu byť nahromadené\n"
+"na otázku alebo odpoveď na deň. Tabuľka uvedená na konci vysvetľuje "
+"požiadavky bodov\n"
+"reputácie pre každý typ úlohy moderácie."
 
 #. module: website_forum
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
@@ -1513,29 +1627,23 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum_message_unread
-#: model:ir.model.fields,help:website_forum.field_forum_post_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum_message_needaction
-#: model:ir.model.fields,help:website_forum.field_forum_post_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_karma_dofollow
 msgid ""
 "If the author has not enough karma, a nofollow attribute is added to links"
-msgstr "V prípade, že autor nemá dostatočnú karmu, atribút neodberania sa pridá k odkazom"
+msgstr ""
+"V prípade, že autor nemá dostatočnú karmu, atribút neodberania sa pridá k "
+"odkazom"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"If this approach is not for you, please respect the community and use Google+\n"
+"If this approach is not for you, please respect the community and use Google"
+"+\n"
 "    communities instead."
-msgstr "Ak tento prístup nie je pre vás, prosím rešpektujte komunitu a použite Google+\nkomunity miesto toho."
+msgstr ""
+"Ak tento prístup nie je pre vás, prosím rešpektujte komunitu a použite Google"
+"+\n"
+"komunity miesto toho."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
@@ -1543,17 +1651,29 @@ msgid ""
 "If you close this post, it will be hidden for most users. Only\n"
 "            users having a high karma can see closed posts to moderate\n"
 "            them."
-msgstr "Ak zavriete tento príspevok, bude skrytý pre väčšinu používateľov. Iba\npoužívatelia s vysokou karmou môžu vidieť zavreté príspevky na ich\nmoderáciu."
+msgstr ""
+"Ak zavriete tento príspevok, bude skrytý pre väčšinu používateľov. Iba\n"
+"používatelia s vysokou karmou môžu vidieť zavreté príspevky na ich\n"
+"moderáciu."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "If you fit in one of these example or if your motivation for asking the\n"
-"    question is “I would like to participate in a discussion about ______”, then\n"
+"    question is “I would like to participate in a discussion about ______”, "
+"then\n"
 "    you should not be asking here but on our mailing lists.\n"
-"    However, if your motivation is “I would like others to explain ______ to me”,\n"
+"    However, if your motivation is “I would like others to explain ______ to "
+"me”,\n"
 "    then you are probably OK."
-msgstr "Ak na vás sedí niektorý z uvedených príkladov, alebo ak je vaša motivácia na \npýtanie sa \"Chcel by som sa zúčastniť diskusie o ______”, tak potom\nby ste sa nemali pýtať tu, ale na našich mailing listoch.\nAvšak, ak je vaša motivácia \"Chcel by som aby mi ostatní vysvetlili ______”,\ntak ste na správnom mieste."
+msgstr ""
+"Ak na vás sedí niektorý z uvedených príkladov, alebo ak je vaša motivácia "
+"na \n"
+"pýtanie sa \"Chcel by som sa zúčastniť diskusie o ______”, tak potom\n"
+"by ste sa nemali pýtať tu, ale na našich mailing listoch.\n"
+"Avšak, ak je vaša motivácia \"Chcel by som aby mi ostatní vysvetlili "
+"______”,\n"
+"tak ste na správnom mieste."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
@@ -1561,7 +1681,11 @@ msgid ""
 "If you mark this post as offensive, it will be hidden for most users. Only\n"
 "            users having a high karma can see offensive posts to moderate\n"
 "            them."
-msgstr "Ak označíte tento príspevok ako ofenzívny, bude skrytý pre väčšinu používateľov. Iba\npoužívatelia s vysokou karmou môžu vidieť ofenzívne príspevky na ich\nmoderáciu."
+msgstr ""
+"Ak označíte tento príspevok ako ofenzívny, bude skrytý pre väčšinu "
+"používateľov. Iba\n"
+"používatelia s vysokou karmou môžu vidieť ofenzívne príspevky na ich\n"
+"moderáciu."
 
 #. module: website_forum
 #. openerp-web
@@ -1574,12 +1698,6 @@ msgstr "Vložte menovky súvisiace s vašou otázkou."
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_user_favourite
 msgid "Is Favourite"
 msgstr "Je obľúbené"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_is_follower
-#: model:ir.model.fields,field_description:website_forum.field_forum_post_message_is_follower
-msgid "Is Follower"
-msgstr "Je odberateľ"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_has_validated_answer
@@ -1643,12 +1761,6 @@ msgid "Keep Informed"
 msgstr "Zostať informovaný"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_last_post
-#: model:ir.model.fields,field_description:website_forum.field_forum_post_message_last_post
-msgid "Last Message Date"
-msgstr "Dátum poslednej správy"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum___last_update
 #: model:ir.model.fields,field_description:website_forum.field_forum_post___last_update
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason___last_update
@@ -1684,6 +1796,11 @@ msgid "Last activity date"
 msgstr "Dátum poslednej aktivity"
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_calendar_last_notif_ack
+msgid "Last notification marked as read from base Calendar"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Last updated:"
 msgstr "Naposledy aktualizované:"
@@ -1712,16 +1829,10 @@ msgid "Links"
 msgstr "Odkazy"
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_post_message_ids
-msgid "Messages"
+#: model:ir.model,name:website_forum.model_mail_message
+#, fuzzy
+msgid "Message"
 msgstr "Správy"
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum_message_ids
-#: model:ir.model.fields,help:website_forum.field_forum_post_message_ids
-msgid "Messages and communication history"
-msgstr "Správa a história komunikácie"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_moderate
@@ -1841,23 +1952,29 @@ msgid "Nofollow links"
 msgstr "Neodberový odkaz"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:781
-#: code:addons/website_forum/models/forum.py:801
+#: code:addons/website_forum/models/forum.py:833
+#: code:addons/website_forum/models/forum.py:853
 #, python-format
 msgid "Not allowed to vote for its own post"
 msgstr "Nepovolené hlasovať za vlastný príspevok"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:897
+#, fuzzy, python-format
+msgid "Not enough karma to create a new Tag"
+msgstr "Zvoľte túto položku menu pre vytvorenie nového fóra."
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:488
+#, python-format
+msgid "Not enough karma to retag."
+msgstr ""
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_2
 #: model:gamification.challenge,name:website_forum.challenge_notable_question
 msgid "Notable Question"
 msgstr "Pozoruhodná otázka"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_needaction_counter
-#: model:ir.model.fields,field_description:website_forum.field_forum_post_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Počet akcií"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_posts_count
@@ -1880,21 +1997,9 @@ msgid "Number of flagged posts"
 msgstr "Počet označených príspevkov"
 
 #. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum_message_needaction_counter
-#: model:ir.model.fields,help:website_forum.field_forum_post_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Počet správ ktoré vyžadujú akciu"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_count_posts_waiting_validation
 msgid "Number of posts waiting for validation"
 msgstr "Počet príspevkov čakajúcich na potvrdenie"
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum_message_unread_counter
-#: model:ir.model.fields,help:website_forum.field_forum_post_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Počet neprečítaných správ"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -1961,7 +2066,9 @@ msgstr "Prosím zadajte popisnú otázku (mala by končiť s '?')"
 msgid ""
 "Please enter a valid email address in order to receive notifications from "
 "answers or comments."
-msgstr "Prosím zadajte platnú emailovú adresu aby ste dostávali notifikácie z odpovedí alebo komentárov."
+msgstr ""
+"Prosím zadajte platnú emailovú adresu aby ste dostávali notifikácie z "
+"odpovedí alebo komentárov."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_1
@@ -2044,12 +2151,6 @@ msgid "Post Your Topic"
 msgstr "Zverejnite svoju tému"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:146
-#, python-format
-msgid "Post type in \"Default post\" must be activated"
-msgstr "Typ príspevku v \"Predvolený príspevok\" musí byť aktivovaný"
-
-#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
 msgid "Post:"
 msgstr "Príspevok:"
@@ -2065,10 +2166,11 @@ msgid "Posted 100 comments"
 msgstr "Zverejnených 100 komentárov"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:406
+#: code:addons/website_forum/models/forum.py:432
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible"
-msgstr "Zverejnenie odpovede na [Zmazané] alebo  [Zatvorené] otázky nie je možné"
+msgstr ""
+"Zverejnenie odpovede na [Zmazané] alebo  [Zatvorené] otázky nie je možné"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_post_ids
@@ -2100,7 +2202,8 @@ msgstr "Vedátor"
 #, python-format
 msgid ""
 "Put this question back in the top list by sharing it on social networks."
-msgstr "Dajte túto otázku späť na vrch zoznamu jej zdieľaním na sociálnych sieťach."
+msgstr ""
+"Dajte túto otázku späť na vrch zoznamu jej zdieľaním na sociálnych sieťach."
 
 #. module: website_forum
 #. openerp-web
@@ -2131,7 +2234,7 @@ msgid "Question"
 msgstr "Otázka"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:481
+#: code:addons/website_forum/models/forum.py:501
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2209,7 +2312,7 @@ msgid "Questions"
 msgstr "Otázky"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:421
+#: code:addons/website_forum/models/forum.py:515
 #, python-format
 msgid "Re: %s"
 msgstr "Re: %s"
@@ -2311,6 +2414,18 @@ msgid "Second Relevance Parameter"
 msgstr "Druhý parameter relevancie"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
+#, fuzzy
+msgid "See post"
+msgstr "príspevok"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
+#, fuzzy
+msgid "See question"
+msgstr "Vytvoriť otázku"
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Seen:"
 msgstr "Videné:"
@@ -2330,17 +2445,13 @@ msgid "Self-Learner"
 msgstr "Samouk"
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
-#: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
-msgid "Send a message to the group"
-msgstr "Poslať správu skupine"
-
-#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid ""
 "Set a clear, explicit and concise question title\n"
 "                (check"
-msgstr "Nastavte jasný, explicitný a výstižný názov otázky\n(skontrolujte"
+msgstr ""
+"Nastavte jasný, explicitný a výstižný názov otázky\n"
+"(skontrolujte"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2351,18 +2462,26 @@ msgstr "Zdieľať"
 #: model:ir.ui.view,arch_db:website_forum.new_link
 msgid ""
 "Share an awesome link. Your post will appear in the 'Newest' top-menu.\n"
-"            If the community vote on your post, it will get traction by being promoted\n"
+"            If the community vote on your post, it will get traction by "
+"being promoted\n"
 "            in the homepage."
-msgstr "Zdieľať úžasný odkaz. Váš príspevok bude zobrazený v hornom menu \"Najnovšie\".\nV prípade, že komunita bude hlasovať za váš príspevok, získa to trakciu podporou\nna domovskej stránke."
+msgstr ""
+"Zdieľať úžasný odkaz. Váš príspevok bude zobrazený v hornom menu \"Najnovšie"
+"\".\n"
+"V prípade, že komunita bude hlasovať za váš príspevok, získa to trakciu "
+"podporou\n"
+"na domovskej stránke."
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:39
 #, python-format
 msgid ""
-"Share this content to increase your chances to be featured on the front page"
-" and attract more visitors."
-msgstr "Zdieľať tento obsah zvýšte svoje šance byť uvedený na titulnej strane a prilákať viac návštevníkov."
+"Share this content to increase your chances to be featured on the front page "
+"and attract more visitors."
+msgstr ""
+"Zdieľať tento obsah zvýšte svoje šance byť uvedený na titulnej strane a "
+"prilákať viac návštevníkov."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_share
@@ -2383,21 +2502,21 @@ msgstr "Preskočiť to"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:58
+#: code:addons/website_forum/static/src/js/website_forum.js:66
 #, python-format
 msgid "Sorry you must be logged to flag a post"
 msgstr "Musíte byť prihlásený pre označenie príspevku"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:106
+#: code:addons/website_forum/static/src/js/website_forum.js:114
 #, python-format
 msgid "Sorry you must be logged to vote"
 msgstr "Musíte byť prihlásený na hlasovanie"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:137
+#: code:addons/website_forum/static/src/js/website_forum.js:145
 #, python-format
 msgid "Sorry, anonymous users cannot choose correct answer."
 msgstr "Anonymný používatelia nemôžu vybrať správnu odpoveď."
@@ -2409,7 +2528,7 @@ msgstr "Táto otázka už nie je k dispozícii."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:101
+#: code:addons/website_forum/static/src/js/website_forum.js:109
 #, python-format
 msgid "Sorry, you cannot vote for your own posts"
 msgstr "Prepáčte, nemôžete hlasovať za svoj vlastný príspevok"
@@ -2462,6 +2581,10 @@ msgid "Supporter"
 msgstr "Podporovateľ"
 
 #. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.forum_tag_action
+#: model:ir.ui.menu,name:website_forum.menu_forum_tag
+#: model:ir.ui.view,arch_db:website_forum.forum_tag_view_form
+#: model:ir.ui.view,arch_db:website_forum.forum_tag_view_list
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Tag"
 msgstr "Menovka"
@@ -2503,7 +2626,10 @@ msgid ""
 "Technical field allowing to bump a question. Writing on this field will "
 "trigger a write on write_date and therefore bump the post. Directly writing "
 "on write_date is currently not supported and this field is a workaround."
-msgstr "Technické pole umožňujúce posun otázky. Písanie do tohto poľa spustí zápis na write_date a tým pádon posunie tento príspevok. Priame zapisovanie do write_date ni je v súčasnej dobe podporované, a too pole je riešenie."
+msgstr ""
+"Technické pole umožňujúce posun otázky. Písanie do tohto poľa spustí zápis "
+"na write_date a tým pádon posunie tento príspevok. Priame zapisovanie do "
+"write_date ni je v súčasnej dobe podporované, a too pole je riešenie."
 
 #. module: website_forum
 #. openerp-web
@@ -2527,7 +2653,10 @@ msgstr "Fronta označených príspevkov je prázdna."
 msgid ""
 "The goal of this site is create a relevant knowledge base that would answer\n"
 "    questions related to Odoo."
-msgstr "Cieľom týchto stránok je vytvoriť relevantnú vedomostnú základňu, ktorá zodpovie\notázky týkajúce sa Odoo."
+msgstr ""
+"Cieľom týchto stránok je vytvoriť relevantnú vedomostnú základňu, ktorá "
+"zodpovie\n"
+"otázky týkajúce sa Odoo."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2542,18 +2671,28 @@ msgstr "Fronta potvrdení je prázdna."
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"Therefore questions and answers can be edited like wiki pages by experienced users of\n"
-"    this site in order to improve the overall quality of the knowledge base content.\n"
-"    Such privileges are granted based on user karma level: you will be able to do the same\n"
+"Therefore questions and answers can be edited like wiki pages by experienced "
+"users of\n"
+"    this site in order to improve the overall quality of the knowledge base "
+"content.\n"
+"    Such privileges are granted based on user karma level: you will be able "
+"to do the same\n"
 "    once your karma gets high enough."
-msgstr "Preto otázky a odpovede môžu byť upravené ako wiki skúsenými užívateľmi\ntejto stránky za účelom zlepšiť celkovú kvalitu obsahu znalostnej bázy.\nTakéto výsady sú poskytované na základe užívateľskej karma úrovne: budete môcť robiť to isté\nakonáhle bude vaša karma dostatočne vysoká."
+msgstr ""
+"Preto otázky a odpovede môžu byť upravené ako wiki skúsenými užívateľmi\n"
+"tejto stránky za účelom zlepšiť celkovú kvalitu obsahu znalostnej bázy.\n"
+"Takéto výsady sú poskytované na základe užívateľskej karma úrovne: budete "
+"môcť robiť to isté\n"
+"akonáhle bude vaša karma dostatočne vysoká."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "This community is for professional and enthusiast users,\n"
 "    partners and programmers. You can ask questions about:"
-msgstr "Táto komunita je pre profesionálnych a nadšených používateľov,\npartnermov a programátorov. Môžete klásť otázky týkajúce sa:"
+msgstr ""
+"Táto komunita je pre profesionálnych a nadšených používateľov,\n"
+"partnermov a programátorov. Môžete klásť otázky týkajúce sa:"
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
@@ -2561,7 +2700,10 @@ msgid ""
 "This community is for professionals and enthusiasts of our products and "
 "services. Share and discuss the best content and new marketing ideas, build "
 "your professional profile and become a better marketer together."
-msgstr "Táto komunita je pre profesionálov a nadšencov našich produktov a služieb. Zdieľať a diskutovať o najlepšom obsahu a nových marketingových nápadoch, budovať svoj profesijný profil a stať sa lepším obchodníkom."
+msgstr ""
+"Táto komunita je pre profesionálov a nadšencov našich produktov a služieb. "
+"Zdieľať a diskutovať o najlepšom obsahu a nových marketingových nápadoch, "
+"budovať svoj profesijný profil a stať sa lepším obchodníkom."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_relevancy_post_vote
@@ -2569,27 +2711,16 @@ msgid ""
 "This formula is used in order to sort by relevance. The variable 'votes' "
 "represents number of votes for a post, and 'days' is number of days since "
 "the post creation"
-msgstr "Tento vzorec sa používa pre triedenie podľa relevantnosti. Variabilné 'hlasy' predstavujú počet hlasov pre príspevok, a \"dni\" je uvedený počet dní od vzniku príspevku"
+msgstr ""
+"Tento vzorec sa používa pre triedenie podľa relevantnosti. Variabilné "
+"'hlasy' predstavujú počet hlasov pre príspevok, a \"dni\" je uvedený počet "
+"dní od vzniku príspevku"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:383
+#: code:addons/website_forum/models/forum.py:408
 #, python-format
 msgid "This forum does not allow %s"
 msgstr "Toto fórum nedovoľuje  %s"
-
-#. module: website_forum
-#. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:110
-#, python-format
-msgid "This page contain new created question and its answer."
-msgstr "Táto stránka obsahuje novovytvorenú otázku a jej odpoveď."
-
-#. module: website_forum
-#. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:90
-#, python-format
-msgid "This page contain new created question."
-msgstr "Táto stránka obsahuje novovytvorenú otázku."
 
 #. module: website_forum
 #. openerp-web
@@ -2600,14 +2731,28 @@ msgstr "Táto stránka obsahuje všetky informácie súvisiace s novým fórom."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:68
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:110
+#, fuzzy, python-format
+msgid "This page contains the newly created questions and its answers."
+msgstr "Táto stránka obsahuje novovytvorenú otázku a jej odpoveď."
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:90
+#, fuzzy, python-format
+msgid "This page contains the newly created questions."
+msgstr "Táto stránka obsahuje novovytvorenú otázku."
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:76
 #, python-format
 msgid "This post can not be flagged"
 msgstr "Tento príspevok nemôže byť označený"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:63
+#: code:addons/website_forum/static/src/js/website_forum.js:71
 #, python-format
 msgid "This post is already flagged"
 msgstr "Tento príspevok už je označený"
@@ -2634,8 +2779,8 @@ msgid "Title must not be empty"
 msgstr "Nadpis nemôže byť prázdny"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:323
-#: code:addons/website_forum/controllers/main.py:386
+#: code:addons/website_forum/controllers/main.py:322
+#: code:addons/website_forum/controllers/main.py:389
 #, python-format
 msgid "Title should not be empty."
 msgstr "Nadpis by nemal byť prázdny."
@@ -2653,9 +2798,13 @@ msgstr "Pre zlepšenie vašich šancí získať odpoveď:"
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"To prevent your question from being flagged and possibly removed, avoid asking\n"
+"To prevent your question from being flagged and possibly removed, avoid "
+"asking\n"
 "    subjective questions where …"
-msgstr "Pre predídenie označenia a možného odtránnia vašej otázky, vyhnite sa pýtaniu\nsubjektívnych otázok kde ..."
+msgstr ""
+"Pre predídenie označenia a možného odtránnia vašej otázky, vyhnite sa "
+"pýtaniu\n"
+"subjektívnych otázok kde ..."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -2696,18 +2845,6 @@ msgstr "Odpojiť odkazy všetkých komentárov"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_unlink_own
 msgid "Unlink own comments"
 msgstr "Odpojiť odkazy vlastných komentárov"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_unread
-#: model:ir.model.fields,field_description:website_forum.field_forum_post_message_unread
-msgid "Unread Messages"
-msgstr "Neprečítané správy"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_unread_counter
-#: model:ir.model.fields,field_description:website_forum.field_forum_post_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Počítadlo neprečítaných správ"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
@@ -2752,11 +2889,13 @@ msgstr "Súhlasne odhlasované otázky (6)"
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:22
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"Use this <em>'Content'</em> menu to create a new forum like any other "
-"document (page, menu, products, event, ...)."
-msgstr "Použite toto menu <em>'Obsah'</em> na vytvorenie nového fóra ako akéhokoľvek iného dokumentu (stránka, menu, produkty, udalosti, ...)."
+"Use this button to create a new forum like any other document (page, menu, "
+"products, event, ...)."
+msgstr ""
+"Použite toto menu <em>'Obsah'</em> na vytvorenie nového fóra ako akéhokoľvek "
+"iného dokumentu (stránka, menu, produkty, udalosti, ...)."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_user_id
@@ -2773,10 +2912,18 @@ msgstr "Používatelia"
 msgid ""
 "Users can answer only once per question. Contributors can edit answers and "
 "mark the right ones."
-msgstr "Užívatelia môžu odpovedať na otázku iba raz. Prispievatelia môžu upravovať odpovede a označiť tie správne."
+msgstr ""
+"Užívatelia môžu odpovedať na otázku iba raz. Prispievatelia môžu upravovať "
+"odpovede a označiť tie správne."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:726
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
+#, fuzzy
+msgid "Validate question"
+msgstr "Vytvoriť otázku"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:777
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #, python-format
 msgid "View"
@@ -2813,45 +2960,18 @@ msgstr "Čaká na potvrdenie"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
 msgid ""
-"We keep a high level of quality in showcased posts, around 20% of the submited\n"
+"We keep a high level of quality in showcased posts, around 20% of the "
+"submited\n"
 "            posts will be featured."
-msgstr "Držíme vysokú úroveň kvality vo zverejnených príspevkoch, zhruba 20% predložených\npríspevkov bude zverejnených."
+msgstr ""
+"Držíme vysokú úroveň kvality vo zverejnených príspevkoch, zhruba 20% "
+"predložených\n"
+"príspevkov bude zverejnených."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Website"
 msgstr "Webová stránka"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_website_message_ids
-msgid "Website Messages"
-msgstr "Správy webovej stránky"
-
-#. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_forum_website_message_ids
-msgid "Website communication history"
-msgstr "História komunikácie webovej stránky"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_website_meta_description
-#: model:ir.model.fields,field_description:website_forum.field_forum_post_website_meta_description
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag_website_meta_description
-msgid "Website meta description"
-msgstr "Website meta popis"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_website_meta_keywords
-#: model:ir.model.fields,field_description:website_forum.field_forum_post_website_meta_keywords
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Website meta kľúčové slová"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_website_meta_title
-#: model:ir.model.fields,field_description:website_forum.field_forum_post_website_meta_title
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag_website_meta_title
-msgid "Website meta title"
-msgstr "Website meta názov"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_welcome_message
@@ -2876,11 +2996,18 @@ msgstr "Čomu by som sa mal vyhnúť vo svojich otázkach?"
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"When a question or answer is upvoted, the user who posted them will gain some\n"
-"    points, which are called \"karma points\". These points serve as a rough\n"
+"When a question or answer is upvoted, the user who posted them will gain "
+"some\n"
+"    points, which are called \"karma points\". These points serve as a "
+"rough\n"
 "    measure of the community trust to him/her. Various moderation tasks are\n"
 "    gradually assigned to the users based on those points."
-msgstr "Ak je otázka alebo odpoveď kladne odhlasovaná, používateľ, ktorý ich zverejnil získa \nbody, ktoré sa nazývajú \"karma body\". Tieto body slúžia ako hrubá\nmierka dôvery komunity voči používateľovi. Rôzne úlohy moderácie sú \npostupne priradené užívateľom na základe týchto bodov."
+msgstr ""
+"Ak je otázka alebo odpoveď kladne odhlasovaná, používateľ, ktorý ich "
+"zverejnil získa \n"
+"body, ktoré sa nazývajú \"karma body\". Tieto body slúžia ako hrubá\n"
+"mierka dôvery komunity voči používateľovi. Rôzne úlohy moderácie sú \n"
+"postupne priradené užívateľom na základe týchto bodov."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_allow_link
@@ -2893,11 +3020,16 @@ msgid "Why can other people edit my questions/answers?"
 msgstr "Prečo môźu iný ľudia upravovať moje otázky/odpovede?"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:140
+#: code:addons/website_forum/models/forum.py:141
 #, python-format
-msgid ""
-"You cannot choose %s as default post since the forum does not allow it."
-msgstr "Nemôžete zvoliť %s ako predvolený príspevok, keďže to fórum nepovoľuje."
+msgid "You cannot choose %s as default post since the forum does not allow it."
+msgstr ""
+"Nemôžete zvoliť %s ako predvolený príspevok, keďže to fórum nepovoľuje."
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answer
+msgid "You cannot post an empty answer"
+msgstr ""
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2906,7 +3038,11 @@ msgid ""
 "    on actual problems that you face. Chatty, open-ended\n"
 "    questions diminish the usefulness of this site and push\n"
 "    other questions off the front page."
-msgstr "Mali by ste sa pýtať praktické, zodpovedateľné otázky založené\nna skutočných probémoch ktorým čelíte. Ukecané, otvorené\notázky znižujú nápomocnosť tejto stránky a vytláčajú\niné otázky z titulnej strany."
+msgstr ""
+"Mali by ste sa pýtať praktické, zodpovedateľné otázky založené\n"
+"na skutočných probémoch ktorým čelíte. Ukecané, otvorené\n"
+"otázky znižujú nápomocnosť tejto stránky a vytláčajú\n"
+"iné otázky z titulnej strany."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
@@ -3069,6 +3205,26 @@ msgid "has been closed"
 msgstr "bolo zavreté"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
+#, fuzzy
+msgid ""
+"has been posted and require your validation. Click here to access the "
+"question :"
+msgstr ""
+"na<p>Nová otázka <i>%s</i> bola opýtaná %s a vyžaduje vaše overenie. <a href="
+"\"%s/forum/%s/question/%s\">Kliknite sem pre prístup k otázke.</a></p>"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
+msgid "has been posted. Click here to access the post :"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
+msgid "has been posted. Click here to access the question :"
+msgstr ""
+
+#. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:36
 #, python-format
@@ -3078,7 +3234,8 @@ msgstr "tu"
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "how to configure or customize Odoo to specific business needs,"
-msgstr "ako konfigurovať alebo prispôsobiť Odoo špecifickým obchodným potrebám,"
+msgstr ""
+"ako konfigurovať alebo prispôsobiť Odoo špecifickým obchodným potrebám,"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -3097,7 +3254,9 @@ msgstr "ako nainštalovať Odoo na špecifickej infraštruktúre,"
 msgid ""
 "if your\n"
 "        answer is selected as the right one. See what you can do with karma"
-msgstr "ak je vaša\nodpoveď vybraná ako správna. Pozrite sa, čo môžete robiť s karmou"
+msgstr ""
+"ak je vaša\n"
+"odpoveď vybraná ako správna. Pozrite sa, čo môžete robiť s karmou"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_13
@@ -3162,6 +3321,8 @@ msgid "off-topic or not relevant"
 msgstr "mimo tému alebo nerelevantné"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 #: model:ir.ui.view,arch_db:website_forum.post_comment
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "on"
@@ -3174,7 +3335,9 @@ msgstr "na"
 msgid ""
 "on social networks get an answer within\n"
 "        5 hours. Questions shared on two social networks have"
-msgstr "na sociálnych sieťach dostanete odpoveď v rámci\n5 hodín. Otázky zdieľané na dvoch sociálnych sieťach majú"
+msgstr ""
+"na sociálnych sieťach dostanete odpoveď v rámci\n"
+"5 hodín. Otázky zdieľané na dvoch sociálnych sieťach majú"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -3211,7 +3374,9 @@ msgstr "konkrétne otázky týkajúce sa ponuky služieb Odoo atď."
 msgid ""
 "there is no actual problem to be solved: “I’m curious if other people feel "
 "like I do.”"
-msgstr "nie je žiadny skutočný problém ktorý je potrebné riešiť: \"Som zvedavý, či sa ostatní ľudia cítia ako ja.\""
+msgstr ""
+"nie je žiadny skutočný problém ktorý je potrebné riešiť: \"Som zvedavý, či "
+"sa ostatní ľudia cítia ako ja.\""
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_14
@@ -3278,7 +3443,9 @@ msgstr "čaká na potvrdenie"
 msgid ""
 "we are being asked an open-ended, hypothetical question: “What if ______ "
 "happened?”"
-msgstr "sme vystavený  hypotetickú otázke s otvoreným koncom: \"Čo keby sa stalo ______?\""
+msgstr ""
+"sme vystavený  hypotetickú otázke s otvoreným koncom: \"Čo keby sa stalo "
+"______?\""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -3295,9 +3462,142 @@ msgstr "čo je najlepší spôsob, ako využiť Odoo pre konkrétne obchodné po
 msgid ""
 "your answer is provided along with the question, and you expect more "
 "answers: “I use ______ for ______, what do you use?”"
-msgstr "vaša odpoveď je poskytnutá spolu s otázkou, a vy očakávate viac odpovedí: \"Používam ______ pre ______, čo používate vy?\""
+msgstr ""
+"vaša odpoveď je poskytnutá spolu s otázkou, a vy očakávate viac odpovedí: "
+"\"Používam ______ pre ______, čo používate vy?\""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "your biography can be seen as tooltip"
 msgstr "vaša biografia môže byť videná ako nápoveda"
+
+#~ msgid ""
+#~ "\n"
+#~ "<p>\n"
+#~ "    Hello ${object.name},\n"
+#~ "</p>\n"
+#~ "<p>\n"
+#~ "    You have been invited to validate your email in order to get access "
+#~ "to \"${object.company_id.name}\" Q/A Forums.\n"
+#~ "</p>\n"
+#~ "<p>\n"
+#~ "    To validate your email, please click on the following link:\n"
+#~ "</p>\n"
+#~ "<ul>\n"
+#~ "    <li><a href=\"${ctx.get('token_url')}\">Validate my account for "
+#~ "\"${object.company_id.name}\" Q/A Forums</a></li>\n"
+#~ "</ul>\n"
+#~ "<p>\n"
+#~ "    Thanks,\n"
+#~ "</p>\n"
+#~ "<pre>\n"
+#~ "--\n"
+#~ "${object.company_id.name or ''}\n"
+#~ "${object.company_id.email or ''}\n"
+#~ "${object.company_id.phone or ''}\n"
+#~ "</pre>"
+#~ msgstr ""
+#~ "\n"
+#~ "<p>\n"
+#~ "Dobrý deň ${object.name},\n"
+#~ "</p>\n"
+#~ "<p>\n"
+#~ "Boli ste pozvaní na overenie emailu za účelom získania prístupu do "
+#~ "\"${object.company_id.name}\" fóra Otázky/Odpovde.\n"
+#~ "</p>\n"
+#~ "<p>\n"
+#~ "Pre overenie Vášho emailu, kliknite prosím na nasledovný odkaz:\n"
+#~ "</p>\n"
+#~ "<ul>\n"
+#~ "<li><a href=\"${ctx.get('token_url')}\">Overiť môj účet pre \"${object."
+#~ "company_id.name}\" fóra Otázky/Odpovde</a></li>\n"
+#~ "</ul>\n"
+#~ "<p>\n"
+#~ "Vďaka,\n"
+#~ "</p>\n"
+#~ "<pre>\n"
+#~ "--\n"
+#~ "${object.company_id.name or ''}\n"
+#~ "${object.company_id.email or ''}\n"
+#~ "${object.company_id.phone or ''}\n"
+#~ "</pre>"
+
+#~ msgid ""
+#~ "<p>A new answer for <i>%s</i> has been posted. <a href=\"%s/forum/%s/"
+#~ "question/%s\">Click here to access the post.</a></p>"
+#~ msgstr ""
+#~ "<p>Nová odpoveď pre <i>%s</i> bola zverejnená. <a href=\"%s/forum/%s/"
+#~ "question/%s\">Kliknite sem pre prístup k príspevku.</a></p>"
+
+#~ msgid ""
+#~ "<p>A new question <i>%s</i> has been asked on %s. <a href=\"%s/forum/%s/"
+#~ "question/%s\">Click here to access the question.</a></p>"
+#~ msgstr ""
+#~ "na<p>Nová otázka <i>%s</i> bola opýtaná %s. <a href=\"%s/forum/%s/"
+#~ "question/%s\">Kliknite sem pre prístup k otázke.</a></p>"
+
+#~ msgid "Action Needed"
+#~ msgstr "Potrebná akcia"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Dátum poslednej správy zaslanej záznamu."
+
+#~ msgid "Followers"
+#~ msgstr "Odberatelia"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Odberatelia (Kanály)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Odberatelia (Partneri)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "Is Follower"
+#~ msgstr "Je odberateľ"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Dátum poslednej správy"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Správa a história komunikácie"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Počet akcií"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Počet správ ktoré vyžadujú akciu"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Počet neprečítaných správ"
+
+#~ msgid "Post type in \"Default post\" must be activated"
+#~ msgstr "Typ príspevku v \"Predvolený príspevok\" musí byť aktivovaný"
+
+#~ msgid "Send a message to the group"
+#~ msgstr "Poslať správu skupine"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Neprečítané správy"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Počítadlo neprečítaných správ"
+
+#~ msgid "Website Messages"
+#~ msgstr "Správy webovej stránky"
+
+#~ msgid "Website communication history"
+#~ msgstr "História komunikácie webovej stránky"
+
+#~ msgid "Website meta description"
+#~ msgstr "Website meta popis"
+
+#~ msgid "Website meta keywords"
+#~ msgstr "Website meta kľúčové slová"
+
+#~ msgid "Website meta title"
+#~ msgstr "Website meta názov"

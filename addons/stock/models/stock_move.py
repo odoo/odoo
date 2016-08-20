@@ -43,14 +43,14 @@ class StockMove(models.Model):
         'product.product', 'Product',
         domain=[('type', 'in', ['product', 'consu'])], index=True, required=True,
         states={'done': [('readonly', True)]})
-    ordered_qty = fields.Float('Ordered Quantity', digits_compute=dp.get_precision('Product Unit of Measure'))
+    ordered_qty = fields.Float('Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'))
     product_qty = fields.Float(
         'Real Quantity', compute='_compute_product_qty', inverse='_set_product_qty',
         digits=0, store=True,
         help='Quantity in the default UoM of the product')
     product_uom_qty = fields.Float(
         'Quantity',
-        digits_compute=dp.get_precision('Product Unit of Measure'),
+        digits=dp.get_precision('Product Unit of Measure'),
         default=1.0, required=True, states={'done': [('readonly', True)]},
         help="This is the quantity of products from an inventory "
              "point of view. For moves in the state 'done', this is the "
@@ -356,9 +356,10 @@ class StockMove(models.Model):
         if any(move.state in ('done', 'cancel') for move in self):
             raise UserError(_('Cannot unreserve a done move'))
         self.quants_unreserve()
-        waiting = self.filtered(lambda move: move.get_ancestors())
-        waiting.write({'state': 'waiting'})
-        (self - waiting).write({'state': 'confirmed'})
+        if not self.env.context.get('no_state_change'):
+            waiting = self.filtered(lambda move: move.get_ancestors())
+            waiting.write({'state': 'waiting'})
+            (self - waiting).write({'state': 'confirmed'})
 
     def _push_apply(self):
         # TDE CLEANME: I am quite sure I already saw this code somewhere ... in routing ??
@@ -775,6 +776,8 @@ class StockMove(models.Model):
         remaining_move_qty = {}
 
         for move in self:
+            if move.picking_id:
+                pickings |= move.picking_id
             remaining_move_qty[move.id] = move.product_qty
             for link in move.linked_move_operation_ids:
                 operations |= link.operation_id

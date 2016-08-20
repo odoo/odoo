@@ -1,64 +1,130 @@
+# #-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_signup
-# 
+#
 # Translators:
 # krnkris, 2015-2016
 # Oregional <geza.nagy@oregional.hu>, 2016
+# #-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_signup
+#
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-06 07:13+0000\n"
-"PO-Revision-Date: 2016-05-22 09:27+0000\n"
-"Last-Translator: Oregional <geza.nagy@oregional.hu>\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: auth_signup
-#: model:mail.template,body_html:auth_signup.set_password_email
-msgid ""
-"\n"
-"                \n"
-"                    <p>\n"
-"                        ${object.name},\n"
-"                    </p>\n"
-"                    <p>\n"
-"                        You have been invited to connect to \"${object.company_id.name}\" in order to get access to your documents in Odoo.\n"
-"                    </p>\n"
-"                    <p>\n"
-"                        To accept the invitation, click on the following link:\n"
-"                    </p>\n"
-"                    <ul>\n"
-"                        <li><a href=\"${object.signup_url}\">Accept invitation to \"${object.company_id.name}\"</a></li>\n"
-"                    </ul>\n"
-"                    <p>\n"
-"                        Thanks,\n"
-"                    </p>\n"
-"                    <pre>\n"
-"--\n"
-"${object.company_id.name or ''}\n"
-"${object.company_id.email or ''}\n"
-"${object.company_id.phone or ''}\n"
-"                    </pre>\n"
-"                \n"
-"            "
-msgstr "\n                \n                    <p>\n                        ${object.name},\n                    </p>\n                    <p>\n                        Meghívást kapott egy tartalomhoz a \"${object.company_id.name}\" adataiban, hogy hozzáférhessen az Odoo rendszeren belüli dokumentumaihoz.\n                    </p>\n                    <p>\n                        A meghívás elfogadásához, kattintson a következő hivatkozásra:\n                    </p>\n                    <ul>\n                        <li><a href=\"${object.signup_url}\">Meghívás elfogadása ide \"${object.company_id.name}\"</a></li>\n                    </ul>\n                    <p>\n                        Köszönjük,\n                    </p>\n                    <pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n                    </pre>\n                \n            "
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.reset_password_email
 msgid ""
 "\n"
-"<p>A password reset was requested for the Odoo account linked to this email.</p>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
+"top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px "
+"10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
+"top /100%;color:#777777\">\n"
+"    <p>Dear ${object.name},</p>\n"
+"    <p>A password reset was requested for the Odoo account linked to this "
+"email.</p>\n"
+"    <p>You may change your password by following this link which will remain "
+"valid during 24 hours:</p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-"
+"size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-"
+"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
+"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
+"space: nowrap; background-image: none; background-color: #a24689; border: "
+"1px solid #a24689; border-radius:3px\">Change password</a>\n"
+"    </div>\n"
+"    <p>If you do not expect this, you can safely ignore this email.</p>\n"
+"    <p>Best regards,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; "
+"background: #fff repeat top /100%;color:#777777\">\n"
+"    ${user.signature | safe}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com"
+"\" style=\"text-decoration:none; color: #a24689;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,body_html:auth_signup.set_password_email
+msgid ""
 "\n"
-"<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>, which will remain valid during 24 hours.</p>\n"
-"\n"
-"<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr "\n<p>Egy jelszó visszaállítás szükséges az email-ben elküldött Odoo rendszer fiókhoz..</p>\n\n<p>Megváltoztathatja a jelszavát a következő <a href=\"${object.signup_url}\">hivatkozást követve</a>, mely 24 órán keresztül elérhető.</p>\n\n<p>Megjegyzés: Ha ez az üzenet váratlanul érte, biztonsággal figyelmen kívül hagyhatja ezt az email-t.</p>"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
+"top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px "
+"10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
+"top /100%;color:#777777\">\n"
+"<p>Dear ${object.name},</p>\n"
+"    <p>\n"
+"        You have been invited to connect to \"${object.company_id.name}\" in "
+"order to get access to your documents in Odoo.\n"
+"    </p>\n"
+"    <p>\n"
+"        To accept the invitation, click on the following link:\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"         <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-"
+"size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-"
+"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
+"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
+"space: nowrap; background-image: none; background-color: #a24689; border: "
+"1px solid #a24689; border-radius:3px\">Accept invitation to \"${object."
+"company_id.name}\"</a>\n"
+"    </div>\n"
+"    <p>Best regards,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; "
+"background: #fff repeat top /100%;color:#777777\">\n"
+"    ${user.signature | safe}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com"
+"\" style=\"text-decoration:none; color: #a24689;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
+msgstr ""
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -70,14 +136,23 @@ msgstr "${object.company_id.name} meghívás az Odoo rendszer tartalmához"
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr "<strong>Ez a felhasználó igényel egy jelszó visszaállítást. A következő elérési úttal/linkkel küldtünk egy e-mail-t:</strong>"
+msgstr ""
+"<strong>Ez a felhasználó igényel egy jelszó visszaállítást. A következő "
+"elérési úttal/linkkel küldtünk egy e-mail-t:</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr "<strong>Egy meghívó e-mail-t küldtünk a következő feliratkozási linkkel:</strong>"
+msgstr ""
+"<strong>Egy meghívó e-mail-t küldtünk a következő feliratkozási linkkel:</"
+"strong>"
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Activated"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -85,19 +160,19 @@ msgid "Allow external users to sign up"
 msgstr "Külső felhasználók bejelentkezésének engedélyezése"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:64
+#: code:addons/auth_signup/controllers/main.py:61
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "Egy e-mail lett kiküldve a jelszava visszaállításának biztosítására"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:40
+#: code:addons/auth_signup/controllers/main.py:38
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr "Ezzel az email címmel már regisztrált egy másik felhasználó."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:115
+#: code:addons/auth_signup/controllers/main.py:111
 #, python-format
 msgid "Authentication Failed."
 msgstr "Azonosítás nem sikerült"
@@ -109,15 +184,20 @@ msgid "Back to Login"
 msgstr "Vissza a bejelentkezéshez"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:277
+#: code:addons/auth_signup/models/res_users.py:135
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr "Nem küldhető e-mail: a %s felhasználónak nincs e-mail címe."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
+#, fuzzy
 msgid "Confirm"
-msgstr "Megerősítés"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Megerősítés\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Megerősít"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -125,18 +205,13 @@ msgid "Confirm Password"
 msgstr "Jelszó megerõsítése"
 
 #. module: auth_signup
-#: selection:res.users,state:0
-msgid "Connected"
-msgstr "Kapcsolódott"
-
-#. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:43
+#: code:addons/auth_signup/controllers/main.py:41
 #, python-format
 msgid "Could not create a new account."
 msgstr "Nem tudta létrehozni az új fiókot."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:66
+#: code:addons/auth_signup/controllers/main.py:63
 #, python-format
 msgid "Could not reset your password"
 msgstr "Nem lehetett visszaállítani a jelszaát"
@@ -183,10 +258,15 @@ msgid "Reset Password"
 msgstr "Jelszó visszaállítása"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:253
+#: code:addons/auth_signup/models/res_users.py:108
 #, python-format
 msgid "Reset password: invalid username or email"
 msgstr "Jelszó visszaállító: hibás felhasználónév vagy jelszó"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_self
+msgid "Self"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -203,18 +283,6 @@ msgstr "Egy meghívó email küldése"
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
 msgstr "Regisztrál"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
-msgid "Signup Expiration"
-msgstr "Bejelentkezési határidő"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
-msgid "Signup Token"
-msgstr "Regisztrációs token"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
@@ -235,6 +303,18 @@ msgid "Signup URL"
 msgstr "Bejelentkezési URL elérési útvonal"
 
 #. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
+msgid "Signup expiration"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
+msgid "Signup token"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
 msgid "Status"
 msgstr "Állapot"
@@ -245,14 +325,57 @@ msgid "Template user for new users created through signup"
 msgstr "Sablon felhasználó amit a új felhasznlók létrehozásához használ"
 
 #. module: auth_signup
+#: model:ir.model.fields,help:auth_signup.field_res_users_website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+"A teljes elérési út/URL  a dokumentum weboldalon keresztüli eléréséhez."
+
+#. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
 msgid "This allows users to trigger a password reset from the Login page."
-msgstr "Ez lehetővé teszi a felhasználó részére a jelszó megváltoztatásának elindítását a bejelentkezési oldalról."
+msgstr ""
+"Ez lehetővé teszi a felhasználó részére a jelszó megváltoztatásának "
+"elindítását a bejelentkezési oldalról."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
 msgid "Users"
 msgstr "Felhasználók"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
+msgid "Visible in Website"
+msgstr "Látható a weboldalon"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
+msgid "Website Partner Full Description"
+msgstr "Honlap partnerek részletes leírása"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
+msgid "Website Partner Short Description"
+msgstr "Honlap partnerek rövid leírása"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
+msgid "Website URL"
+msgstr "Honlap URL"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
+msgid "Website meta description"
+msgstr "Honlap meta leírás"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Honlap meta kulcsszavai"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
+msgid "Website meta title"
+msgstr "Honlap meta cím"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -274,3 +397,97 @@ msgstr "base.config.settings"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
 msgstr "pl. Gipsz Jakab"
+
+#~ msgid ""
+#~ "\n"
+#~ "                \n"
+#~ "                    <p>\n"
+#~ "                        ${object.name},\n"
+#~ "                    </p>\n"
+#~ "                    <p>\n"
+#~ "                        You have been invited to connect to \"${object."
+#~ "company_id.name}\" in order to get access to your documents in Odoo.\n"
+#~ "                    </p>\n"
+#~ "                    <p>\n"
+#~ "                        To accept the invitation, click on the following "
+#~ "link:\n"
+#~ "                    </p>\n"
+#~ "                    <ul>\n"
+#~ "                        <li><a href=\"${object.signup_url}\">Accept "
+#~ "invitation to \"${object.company_id.name}\"</a></li>\n"
+#~ "                    </ul>\n"
+#~ "                    <p>\n"
+#~ "                        Thanks,\n"
+#~ "                    </p>\n"
+#~ "                    <pre>\n"
+#~ "--\n"
+#~ "${object.company_id.name or ''}\n"
+#~ "${object.company_id.email or ''}\n"
+#~ "${object.company_id.phone or ''}\n"
+#~ "                    </pre>\n"
+#~ "                \n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "                \n"
+#~ "                    <p>\n"
+#~ "                        ${object.name},\n"
+#~ "                    </p>\n"
+#~ "                    <p>\n"
+#~ "                        Meghívást kapott egy tartalomhoz a \"${object."
+#~ "company_id.name}\" adataiban, hogy hozzáférhessen az Odoo rendszeren "
+#~ "belüli dokumentumaihoz.\n"
+#~ "                    </p>\n"
+#~ "                    <p>\n"
+#~ "                        A meghívás elfogadásához, kattintson a következő "
+#~ "hivatkozásra:\n"
+#~ "                    </p>\n"
+#~ "                    <ul>\n"
+#~ "                        <li><a href=\"${object.signup_url}\">Meghívás "
+#~ "elfogadása ide \"${object.company_id.name}\"</a></li>\n"
+#~ "                    </ul>\n"
+#~ "                    <p>\n"
+#~ "                        Köszönjük,\n"
+#~ "                    </p>\n"
+#~ "                    <pre>\n"
+#~ "--\n"
+#~ "${object.company_id.name or ''}\n"
+#~ "${object.company_id.email or ''}\n"
+#~ "${object.company_id.phone or ''}\n"
+#~ "                    </pre>\n"
+#~ "                \n"
+#~ "            "
+
+#~ msgid ""
+#~ "\n"
+#~ "<p>A password reset was requested for the Odoo account linked to this "
+#~ "email.</p>\n"
+#~ "\n"
+#~ "<p>You may change your password by following <a href=\"${object."
+#~ "signup_url}\">this link</a>, which will remain valid during 24 hours.</"
+#~ "p>\n"
+#~ "\n"
+#~ "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
+#~ msgstr ""
+#~ "\n"
+#~ "<p>Egy jelszó visszaállítás szükséges az email-ben elküldött Odoo "
+#~ "rendszer fiókhoz..</p>\n"
+#~ "\n"
+#~ "<p>Megváltoztathatja a jelszavát a következő <a href=\"${object."
+#~ "signup_url}\">hivatkozást követve</a>, mely 24 órán keresztül elérhető.</"
+#~ "p>\n"
+#~ "\n"
+#~ "<p>Megjegyzés: Ha ez az üzenet váratlanul érte, biztonsággal figyelmen "
+#~ "kívül hagyhatja ezt az email-t.</p>"
+
+#~ msgid "Connected"
+#~ msgstr "Kapcsolódott"
+
+#~ msgid "Signup Expiration"
+#~ msgstr "Bejelentkezési határidő"
+
+#~ msgid "Signup Token"
+#~ msgstr "Regisztrációs token"
+
+#~ msgid "Confirmed"
+#~ msgstr "Jóváhagyott"

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~10c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2015-10-01 06:27+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-08-18 14:08+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -82,6 +82,16 @@ msgid "Enable Route on Sales Order Line"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_product_product_expense_policy
+msgid "Expense Invoice Policy"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_product_product_expense_policy
+msgid "If you invoice at cost, the expense will be invoiced on the sale order at the cost of the analytic line;if you invoice at sales price, the price of the product will be used instead."
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
 msgid "Incoterms"
@@ -128,7 +138,7 @@ msgid "No shipping costs on sales orders"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:141
+#: code:addons/sale_stock/sale_stock.py:156
 #, python-format
 msgid "Not enough inventory!"
 msgstr ""
@@ -145,7 +155,7 @@ msgid "Order Routing"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:152
+#: code:addons/sale_stock/sale_stock.py:167
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr ""
@@ -163,6 +173,11 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_order
 msgid "Procurement"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_product
+msgid "Product"
 msgstr ""
 
 #. module: sale_stock
@@ -247,9 +262,9 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:194
+#: code:addons/sale_stock/sale_stock.py:213
 #, python-format
-msgid "This product is packaged by %d . You should sell %d ."
+msgid "This product is packaged by %s %s. You should sell %s %s."
 msgstr ""
 
 #. module: sale_stock
@@ -264,19 +279,19 @@ msgid "Warehouse"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:193
+#: code:addons/sale_stock/sale_stock.py:212
 #, python-format
 msgid "Warning"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:153
+#: code:addons/sale_stock/sale_stock.py:168
 #, python-format
 msgid "You are decreasing the ordered quantity! Do not forget to manually update the delivery order if needed."
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:142
+#: code:addons/sale_stock/sale_stock.py:157
 #, python-format
 msgid "You plan to sell %.2f %s but you only have %.2f %s available!\n"
 "The stock on hand is %.2f %s."

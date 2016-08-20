@@ -1,7 +1,8 @@
+# #-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event
-# 
+#
 # Translators:
 # Eddie Lim <bhweelim@yahoo.com>, 2016
 # fausthuang, 2015
@@ -13,19 +14,77 @@
 # Rona Lin <ssauapw@qq.com>, 2015
 # Xia Fajin <xia.fajin@elico-corp.com>, 2015
 # liAnGjiA <liangjia@qq.com>, 2015
+# #-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * event
+#
+# Translators:
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2016-07-12 07:31+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: event
+#: model:mail.template,body_html:event.event_registration_mail_template_badge
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your inquiry.</p>\n"
+"<p>Here is your badge for the event ${object.event_id.name}.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: event
+#: model:mail.template,body_html:event.event_subscription
+#, fuzzy
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your inquiry.</p>\n"
+"<p>We confirm your subscription to the event <b>${object.event_id.name}</b>. "
+"You will receive emails with practical information.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+"<p>你好 ${object.name},</p>\n"
+"<p>我们在此通知您对我们活动的订阅 ${object.event_id.name} 已经记录好了\n"
+"请查看本邮件相关附件<b>Event Badge</b> </p>\n"
+"<p>多谢您的参与!</p>\n"
+"<p>此致</p>"
+
+#. module: event
+#: model:mail.template,body_html:event.event_reminder
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your registration to the event ${object.event_id.name}.</"
+"p>\n"
+"<p>The event will take place at ${object.event_id.address_id.city}\n"
+"% if object.event_id.address_id.street\n"
+", ${object.event_id.address_id.street}\n"
+"% endif\n"
+"from ${object.event_id.date_begin_located} to ${object.event_id."
+"date_end_located}.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_cancel_state
@@ -60,17 +119,22 @@ msgstr "紧张的5天"
 
 #. module: event
 #: model:event.event,description:event.event_2
+#, fuzzy
 msgid ""
-"<em>(Chamber Works reserves the right to cancel, re-name or re-"
-"locate<br/>the event or change the dates on which it is held.)</em>"
-msgstr "<em>(Chamber Works 保留取消的权利,重命名或者重定位<br/>该事件或者更改举办的日期)</em>"
+"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the "
+"event or change the dates on which it is held.)</em>"
+msgstr ""
+"<em>(Chamber Works 保留取消的权利,重命名或者重定位<br/>该事件或者更改举办的日"
+"期)</em>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid ""
 "<i class=\"fa fa-clock-o\"/>\n"
 "                                        <b>To</b>"
-msgstr "<i class=\"fa fa-clock-o\"/>\n<b>To</b>"
+msgstr ""
+"<i class=\"fa fa-clock-o\"/>\n"
+"<b>To</b>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -104,74 +168,31 @@ msgid "<i>to</i>"
 msgstr "<i>到</i>"
 
 #. module: event
-#: model:mail.template,body_html:event.event_reminder
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>This is a reminder for ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located} to ${object.event_id.date_end_located}.\n"
-"For any further information please contact our event department.</p>\n"
-"<p>Thank you for your participation!</p>\n"
-"<p>Best regards</p>"
-msgstr "<p>您好${object.name},</p>\n<p>这是一个提醒邮件${object.event_id.name} 您的注册已经确认并且被保存从 ${object.event_id.date_begin_located} 到 ${object.event_id.date_end_located}.\n如想进一步咨询，请联系我们的活动相关部门</p>\n<p>多谢您的参与!</p>\n<p>此致</p>"
-
-#. module: event
-#: model:mail.template,body_html:event.event_registration_mail_template_badge
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.\n"
-"Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
-"<p>Thank you for your participation!</p>\n"
-"<p>Best regards</p>"
-msgstr "<p>你好 ${object.name},</p>\n<p>我们在此通知您对我们活动的订阅 ${object.event_id.name} 已经记录好了\n请查看本邮件相关附件<b>Event Badge</b> </p>\n<p>多谢您的参与!</p>\n<p>此致</p>"
-
-#. module: event
-#: model:mail.template,body_html:event.event_subscription
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.\n"
-"You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
-"<p>Thank you for your participation!</p>\n"
-"<p>Best regards</p>"
-msgstr "<p>你好 ${object.name},</p>\n<p>我们在此通知您对我们活动的订阅 ${object.event_id.name} 已经记录好了\n你将自动的收到相关的邮件(例如计划,排程...) 在活动确认之后</p>\n<p>多谢您的参与!</p>\n<p>此致</p>"
-
-#. module: event
-#: model:mail.template,body_html:event.event_thanks
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>We would like to thank you for your presence at our event ${object.event_id.name}.\n"
-"<br/><br/>\n"
-"    % if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n"
-"        <strong>The ${object.event_id.organizer_id.name} Team</strong>\n"
-"    % elif object.event_id.organizer_id:\n"
-"        <strong>${object.event_id.organizer_id.name}</strong>\n"
-"    % endif\n"
-"</p>"
-msgstr "<p>你好 ${object.name},</p>\n<p>非常感谢你能出席我们的活动${object.event_id.name}.\n<br/><br/>\n% if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n<strong>该 ${object.event_id.organizer_id.name} 团队</strong>\n% elif object.event_id.organizer_id:\n<strong>${object.event_id.organizer_id.name}</strong>\n% endif\n</p>"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "<small>John Doe, CEO</small>"
-msgstr "<small>John Doe, CEO</small>"
-
-#. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid ""
-"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" "
+"class=\"oe_read_only\">\n"
 "                                                to \n"
 "                                            </span>"
-msgstr "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n到\n</span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" "
+"class=\"oe_read_only\">\n"
+"到\n"
+"</span>"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
-"developers who need to grasp knowledge of the <strong>business applications "
-"development </strong>process. This course is for new developers or for IT "
-"professionals eager to learn more about technical aspects.</span>"
-msgstr "<span style=\"text-align: -webkit-center; \">本课程是专门为那些需要掌握 <strong>业务应用发展 </strong>的开发者。本课程是针对新的开发人员，或者是专为专业人士，希望更多地了解技术方面的内容。</span>"
+"<span style=\"text-align: -webkit-center; \">This course is dedicated "
+"to developers who need to grasp knowledge of the <strong>business "
+"applications development </strong>process. This course is for new developers "
+"or for IT professionals eager to learn more about technical aspects.</span>"
+msgstr ""
+"<span style=\"text-align: -webkit-center; \">本课程是专门为那些需要掌握 "
+"<strong>业务应用发展 </strong>的开发者。本课程是针对新的开发人员，或者是专为"
+"专业人士，希望更多地了解技术方面的内容。</span>"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -183,8 +204,7 @@ msgstr "<strong>商务应用会议</strong>"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<strong>Having attended this course, participants should be able "
-"to:</strong>"
+"<strong>Having attended this course, participants should be able to:</strong>"
 msgstr "<strong>已参加过这次课程的学员应该能够：</strong>"
 
 #. module: event
@@ -218,12 +238,6 @@ msgstr "<strong>需求:</strong>"
 #: model:event.event,description:event.event_2
 msgid "<strong>Where to find us:</strong>"
 msgstr "<strong>能找到我们的地方:</strong>"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_needaction
-#: model:ir.model.fields,field_description:event.field_event_registration_message_needaction
-msgid "Action Needed"
-msgstr "所需行动"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_active
@@ -274,8 +288,13 @@ msgstr "应用"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
+#, fuzzy
 msgid "Archived"
-msgstr "存档"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"存档\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"已归档"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -305,8 +324,13 @@ msgstr "参加活动"
 #: model:ir.model,name:event.model_event_registration
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_registration_id
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
+#, fuzzy
 msgid "Attendee"
-msgstr "参与者"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"参与者\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"出席者"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -325,8 +349,13 @@ msgstr "与会者姓名"
 #: model:ir.model.fields,field_description:event.field_event_event_registration_ids
 #: model:ir.ui.menu,name:event.menu_action_registration
 #: model:ir.ui.view,arch_db:event.view_event_form
+#, fuzzy
 msgid "Attendees"
-msgstr "出席"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"出席\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"与会者"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_auto_confirmation
@@ -344,14 +373,14 @@ msgid "Badge Front"
 msgstr "徽章字体"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
+msgid "Badge Inner Left"
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
 msgid "Badge Inner Right"
 msgstr "徽章内部右边"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
-msgid "Badge Innner Left"
-msgstr "徽章内部左边"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -438,7 +467,7 @@ msgid "Click to add a new event."
 msgstr "点击创建一个新的事件"
 
 #. module: event
-#: code:addons/event/models/event.py:204
+#: code:addons/event/models/event.py:206
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
 msgstr "结束日期不能在开始日期前。"
@@ -452,10 +481,14 @@ msgid "Company"
 msgstr "公司"
 
 #. module: event
-#: code:addons/event/models/event.py:397
-#, python-format
+#: code:addons/event/models/event.py:402
+#, fuzzy, python-format
 msgid "Compose Email"
-msgstr "撰写电子邮件"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"撰写电子邮件\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"撰写邮件"
 
 #. module: event
 #: model:event.type,name:event.event_type_2
@@ -523,14 +556,20 @@ msgstr "已确认的活动"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_partner_id
+#, fuzzy
 msgid "Contact"
-msgstr "联系人"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"联系人\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"联系"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
-msgid "Controlers and Views"
+#, fuzzy
+msgid "Controllers and Views"
 msgstr "控制器和视图"
 
 #. module: event
@@ -548,8 +587,8 @@ msgstr "课程总结"
 #. module: event
 #: model:web.tip,description:event.event_tip_1
 msgid ""
-"Create and manage registrations for this event, send emails to attendees and"
-" print identification badges."
+"Create and manage registrations for this event, send emails to attendees and "
+"print identification badges."
 msgstr ""
 
 #. module: event
@@ -571,8 +610,13 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_create_date
 #: model:ir.model.fields,field_description:event.field_event_registration_create_date
 #: model:ir.model.fields,field_description:event.field_event_type_create_date
+#, fuzzy
 msgid "Created on"
-msgstr "创建时间"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"创建时间\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"创建于"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_create_date
@@ -580,22 +624,16 @@ msgid "Creation Date"
 msgstr "创建日期"
 
 #. module: event
-#: code:addons/event/models/event.py:378
+#: code:addons/event/models/event.py:379
 #, python-format
 msgid "Customer"
 msgstr "客户"
 
 #. module: event
-#: code:addons/event/models/event.py:376
+#: code:addons/event/models/event.py:381
 #, python-format
 msgid "Customer Email"
 msgstr "客户邮件"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_last_post
-#: model:ir.model.fields,help:event.field_event_registration_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "发布到记录上的最后消息的日期"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -620,8 +658,13 @@ msgstr "Day 3"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
+#, fuzzy
 msgid "Day(s)"
-msgstr "天"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"天\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"天(s)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_registration_max
@@ -664,8 +707,13 @@ msgstr "显示名称"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_sequence
+#, fuzzy
 msgid "Display order"
-msgstr "显示排序"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"显示排序\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"现实顺序"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -691,7 +739,8 @@ msgstr "草稿"
 msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
-msgstr "在该会议中，我们的团队将会非常详细的介绍该应用，你也会了解到该应用的优点"
+msgstr ""
+"在该会议中，我们的团队将会非常详细的介绍该应用，你也会了解到该应用的优点"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
@@ -715,8 +764,13 @@ msgstr "要发送的电子邮件"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
+#, fuzzy
 msgid "End Date"
-msgstr "终止日期"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"终止日期\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"结束日期"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end_located
@@ -904,24 +958,6 @@ msgid "Finish Event"
 msgstr "结束活动"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_follower_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_follower_ids
-msgid "Followers"
-msgstr "关注者"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_channel_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "关注者(频道)"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_partner_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "关注者（业务伙伴）"
-
-#. module: event
 #: model:event.event,description:event.event_2
 msgid "For any additional information, please contact us at"
 msgstr "对于任何额外的信息，请和我们取得联系"
@@ -931,7 +967,9 @@ msgstr "对于任何额外的信息，请和我们取得联系"
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
-msgstr "对于每一个事件，你可以定义一个注册人数的最大值（与会者的人数），高于这个数字的注册将不被接受。"
+msgstr ""
+"对于每一个事件，你可以定义一个注册人数的最大值（与会者的人数），高于这个数字"
+"的注册将不被接受。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_min
@@ -939,7 +977,9 @@ msgid ""
 "For each event you can define a minimum reserved seats (number of "
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
-msgstr "对于每一个事件你都可以定义一个最小的座位数（与会者）如果注册的人数没有达到这个数目，该时间讲不被确认（最小值设为0将不受该条件限制）"
+msgstr ""
+"对于每一个事件你都可以定义一个最小的座位数（与会者）如果注册的人数没有达到这"
+"个数目，该时间讲不被确认（最小值设为0将不受该条件限制）"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -990,15 +1030,6 @@ msgid "How to Debug"
 msgstr "怎样Debug"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"I did not expect such a great learning experience. I feel like I can develop"
-" anything now."
-msgstr "过去我没有预计到会有如此美妙的学习经验，现在我觉得我可以开发所有的东西"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_id
 #: model:ir.model.fields,field_description:event.field_event_confirm_id
 #: model:ir.model.fields,field_description:event.field_event_event_id
@@ -1007,29 +1038,24 @@ msgstr "过去我没有预计到会有如此美妙的学习经验，现在我觉
 #: model:ir.model.fields,field_description:event.field_event_registration_id
 #: model:ir.model.fields,field_description:event.field_event_type_id
 #: model:ir.model.fields,field_description:event.field_report_event_registration_id
+#, fuzzy
 msgid "ID"
-msgstr "ID"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_unread
-#: model:ir.model.fields,help:event.field_event_registration_message_unread
-msgid "If checked new messages require your attention."
-msgstr "查看是否有需要留意的新信息。"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_needaction
-#: model:ir.model.fields,help:event.field_event_registration_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "确认后, 会出现新消息."
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"ID\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"标识"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_state
 msgid ""
 "If event is created, the status is 'Draft'. If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the"
-" status is set to 'Done'. If event is cancelled the status is set to "
+"particular dates the status is set to 'Confirmed'. If the event is over, the "
+"status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
-msgstr "如果活动被创建，则状态变为“草稿”。如果活动日期确定，则状态变为为“已确认”。如果活动结束，则状态变为“完成”。如果活动被取消，则状态变为“已取消”。"
+msgstr ""
+"如果活动被创建，则状态变为“草稿”。如果活动日期确定，则状态变为为“已确认”。如"
+"果活动结束，则状态变为“完成”。如果活动被取消，则状态变为“已取消”。"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1097,12 +1123,6 @@ msgid "Introduction, CRM, Sales Management"
 msgstr "简介，CRM，销售管理"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_is_follower
-#: model:ir.model.fields,field_description:event.field_event_registration_message_is_follower
-msgid "Is Follower"
-msgstr "是否为关注者"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_max
 msgid "It will select this default maximum value when you choose this event"
 msgstr "当你选择这个活动，将选择默认最大值"
@@ -1118,12 +1138,6 @@ msgid "Kanban Color Index"
 msgstr "看板颜色索引"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_last_post
-#: model:ir.model.fields,field_description:event.field_event_registration_message_last_post
-msgid "Last Message Date"
-msgstr "最后消息日期"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings___last_update
 #: model:ir.model.fields,field_description:event.field_event_confirm___last_update
 #: model:ir.model.fields,field_description:event.field_event_event___last_update
@@ -1132,8 +1146,13 @@ msgstr "最后消息日期"
 #: model:ir.model.fields,field_description:event.field_event_registration___last_update
 #: model:ir.model.fields,field_description:event.field_event_type___last_update
 #: model:ir.model.fields,field_description:event.field_report_event_registration___last_update
+#, fuzzy
 msgid "Last Modified on"
-msgstr "最后修改时间"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"最后修改时间\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"最后修改日"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_write_uid
@@ -1143,8 +1162,13 @@ msgstr "最后修改时间"
 #: model:ir.model.fields,field_description:event.field_event_mail_write_uid
 #: model:ir.model.fields,field_description:event.field_event_registration_write_uid
 #: model:ir.model.fields,field_description:event.field_event_type_write_uid
+#, fuzzy
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"最后更新者\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"最后更新人"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_write_date
@@ -1154,8 +1178,13 @@ msgstr "最后更新者"
 #: model:ir.model.fields,field_description:event.field_event_mail_write_date
 #: model:ir.model.fields,field_description:event.field_event_registration_write_date
 #: model:ir.model.fields,field_description:event.field_event_type_write_date
+#, fuzzy
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"最后更新时间\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"最近更新时间"
 
 #. module: event
 #: selection:event.event,seats_availability:0
@@ -1211,8 +1240,13 @@ msgstr "电子邮箱注册的ids"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
+#, fuzzy
 msgid "Manager"
-msgstr "管理员"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"管理员\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"经理"
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
@@ -1234,18 +1268,6 @@ msgstr "与会者最多人数"
 #: model:ir.model.fields,field_description:event.field_event_event_seats_max
 msgid "Maximum Attendees Number"
 msgstr "与会者最多人数"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_ids
-msgid "Messages"
-msgstr "消息"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_ids
-#: model:ir.model.fields,help:event.field_event_registration_message_ids
-msgid "Messages and communication history"
-msgstr "消息和通信历史"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
@@ -1271,8 +1293,13 @@ msgstr "我的活动"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#, fuzzy
 msgid "New"
-msgstr "新建"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"新建\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"新的"
 
 #. module: event
 #: selection:event.config.settings,group_email_scheduling:0
@@ -1290,13 +1317,13 @@ msgid "No mini website per event"
 msgstr "每个时间的mini网站号码"
 
 #. module: event
-#: code:addons/event/models/event.py:198
+#: code:addons/event/models/event.py:200
 #, python-format
 msgid "No more available seats."
 msgstr "没有更多可用的席位"
 
 #. module: event
-#: code:addons/event/models/event.py:298
+#: code:addons/event/models/event.py:300
 #, python-format
 msgid "No more seats available for this event."
 msgstr "该时间没有更多可用座位"
@@ -1305,12 +1332,6 @@ msgstr "该时间没有更多可用座位"
 #: selection:event.config.settings,auto_confirmation:0
 msgid "No validation step on subscription"
 msgstr "该订阅没有审批步骤"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_needaction_counter
-#: model:ir.model.fields,field_description:event.field_event_registration_message_needaction_counter
-msgid "Number of Actions"
-msgstr "动作的序列号"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_nbevent
@@ -1333,18 +1354,6 @@ msgid "Number of Registrations"
 msgstr "登记数量"
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_needaction_counter
-#: model:ir.model.fields,help:event.field_event_registration_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要动作的消息编号"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_unread_counter
-#: model:ir.model.fields,help:event.field_event_registration_message_unread_counter
-msgid "Number of unread messages"
-msgstr "未读电子邮件的数量"
-
-#. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
@@ -1362,19 +1371,17 @@ msgstr "ODoo 的Web客户端"
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid ""
 "Odoo helps you schedule and efficiently organize your events:\n"
-"    track subscriptions and participations, automate the confirmation emails,\n"
+"    track subscriptions and participations, automate the confirmation "
+"emails,\n"
 "    sell tickets, etc."
-msgstr "Odoo帮你计划和有效氯的组织你的事件\n跟踪订阅和参与，自动确认邮件，卖票等等"
+msgstr ""
+"Odoo帮你计划和有效氯的组织你的事件\n"
+"跟踪订阅和参与，自动确认邮件，卖票等等"
 
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Open Days in Los Angeles"
 msgstr "洛杉矶的开源大会"
-
-#. module: event
-#: model:ir.actions.client,name:event.action_client_event_menu
-msgid "Open Event Menu"
-msgstr "打开活动菜单"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
@@ -1440,13 +1447,6 @@ msgstr "采购，销售和采购管理，财务会计"
 #: model:event.event,description:event.event_3
 msgid "Python Objects"
 msgstr "Python 对象"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Read Great Contents"
-msgstr "阅读伟大的内容"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration_origin
@@ -1547,8 +1547,13 @@ msgstr "报表引擎"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
+#, fuzzy
 msgid "Reports"
-msgstr "报告"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"报告\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"报表"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1600,8 +1605,13 @@ msgstr "以邮件发送"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_done
+#, fuzzy
 msgid "Sent"
-msgstr "送出"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"送出\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"已汇"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1625,8 +1635,13 @@ msgstr "显示"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_origin
+#, fuzzy
 msgid "Source Document"
-msgstr "源单据"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"源单据\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"源文档"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin
@@ -1667,27 +1682,15 @@ msgid "Technical Training"
 msgstr "技术培训"
 
 #. module: event
-#: model:mail.template,subject:event.event_thanks
-msgid "Thanks for attending ${object.event_id.name}"
-msgstr "多谢你的出席${object.event_id.name}"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event_reply_to
 msgid ""
-"The email address of the organizer is likely to be put here, with the effect"
-" to be in the 'Reply-To' of the mails sent automatically at event or "
+"The email address of the organizer is likely to be put here, with the effect "
+"to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
-msgstr "在这里添写组织者的邮件地址,当活动或注册确认时，它会自动出现在在邮件的‘回复给’一栏里。如果你电子邮件地址使用的不是默认网关的话，则需要添写邮件网关。"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"This course help me build my first application within a month. Definetly "
-"worth its price."
-msgstr "该课程帮助我们在一个月内创建第一个应用，肯定值这个价格"
+msgstr ""
+"在这里添写组织者的邮件地址,当活动或注册确认时，它会自动出现在在邮件的‘回复"
+"给’一栏里。如果你电子邮件地址使用的不是默认网关的话，则需要添写邮件网关。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
@@ -1697,8 +1700,13 @@ msgstr "这个字段包含自动发送的邮件模板"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_sale
+#, fuzzy
 msgid "Tickets"
-msgstr "票"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"票\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"入场券"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_tz
@@ -1761,8 +1769,13 @@ msgstr "了解不同的模块"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_unit
+#, fuzzy
 msgid "Unit"
-msgstr "单件"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"单件\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"单位"
 
 #. module: event
 #: selection:event.event,seats_availability:0
@@ -1770,18 +1783,10 @@ msgid "Unlimited"
 msgstr "无限制的"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_unread
-#: model:ir.model.fields,field_description:event.field_event_registration_message_unread
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
 msgstr "未读消息"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_unread_counter
-#: model:ir.model.fields,field_description:event.field_event_registration_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "未读消息计数器"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
@@ -1824,26 +1829,9 @@ msgid ""
 msgstr "警告：这活动没有达到最低登记记录的规定，你肯定要确认它？"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_website_message_ids
-msgid "Website Messages"
-msgstr "网站消息"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_website_message_ids
-msgid "Website communication history"
-msgstr "网站沟通历史"
-
-#. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Week(s)"
 msgstr "周"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "What do people say about this course?"
-msgstr "人们怎么评价这个课程"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1865,15 +1853,16 @@ msgid "Workflows"
 msgstr "工作流"
 
 #. module: event
-#: code:addons/event/models/event.py:230
+#: code:addons/event/models/event.py:232
 #, python-format
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
-msgstr "鉴于你已经注册该事件为“参加”。如果你想取消这次活动。请首先将其状态改为草稿。"
+msgstr ""
+"鉴于你已经注册该事件为“参加”。如果你想取消这次活动。请首先将其状态改为草稿。"
 
 #. module: event
-#: code:addons/event/models/event.py:355
+#: code:addons/event/models/event.py:357
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
 msgstr "你必须等待活动开始才能做这些动作"
@@ -1883,7 +1872,8 @@ msgstr "你必须等待活动开始才能做这些动作"
 msgid ""
 "You will be able to configure emails, and to schedule them to be "
 "automatically sent to the attendees on subscription and/or attendance"
-msgstr "你将能来可能要配置电子邮件，并设置邮件能按计划将它们自动发送到订阅者或与会者"
+msgstr ""
+"你将能来可能要配置电子邮件，并设置邮件能按计划将它们自动发送到订阅者或与会者"
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
@@ -1953,3 +1943,152 @@ msgstr "学习技术方面"
 #: model:event.event,description:event.event_3
 msgid "training material."
 msgstr "培训资料"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
+#~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
+#~ "to ${object.event_id.date_end_located}.\n"
+#~ "For any further information please contact our event department.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>您好${object.name},</p>\n"
+#~ "<p>这是一个提醒邮件${object.event_id.name} 您的注册已经确认并且被保存从 "
+#~ "${object.event_id.date_begin_located} 到 ${object.event_id."
+#~ "date_end_located}.\n"
+#~ "如想进一步咨询，请联系我们的活动相关部门</p>\n"
+#~ "<p>多谢您的参与!</p>\n"
+#~ "<p>此致</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
+#~ "has been recorded.\n"
+#~ "You will automatically receive an email providing you more practical "
+#~ "information (such as the schedule, the agenda...) as soon as the event is "
+#~ "confirmed.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>你好 ${object.name},</p>\n"
+#~ "<p>我们在此通知您对我们活动的订阅 ${object.event_id.name} 已经记录好了\n"
+#~ "你将自动的收到相关的邮件(例如计划,排程...) 在活动确认之后</p>\n"
+#~ "<p>多谢您的参与!</p>\n"
+#~ "<p>此致</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We would like to thank you for your presence at our event ${object."
+#~ "event_id.name}.\n"
+#~ "<br/><br/>\n"
+#~ "    % if object.event_id.organizer_id and object.event_id.organizer_id."
+#~ "is_company:\n"
+#~ "        <strong>The ${object.event_id.organizer_id.name} Team</strong>\n"
+#~ "    % elif object.event_id.organizer_id:\n"
+#~ "        <strong>${object.event_id.organizer_id.name}</strong>\n"
+#~ "    % endif\n"
+#~ "</p>"
+#~ msgstr ""
+#~ "<p>你好 ${object.name},</p>\n"
+#~ "<p>非常感谢你能出席我们的活动${object.event_id.name}.\n"
+#~ "<br/><br/>\n"
+#~ "% if object.event_id.organizer_id and object.event_id.organizer_id."
+#~ "is_company:\n"
+#~ "<strong>该 ${object.event_id.organizer_id.name} 团队</strong>\n"
+#~ "% elif object.event_id.organizer_id:\n"
+#~ "<strong>${object.event_id.organizer_id.name}</strong>\n"
+#~ "% endif\n"
+#~ "</p>"
+
+#~ msgid "<small>John Doe, CEO</small>"
+#~ msgstr "<small>John Doe, CEO</small>"
+
+#~ msgid "Action Needed"
+#~ msgstr "所需行动"
+
+#~ msgid "Badge Innner Left"
+#~ msgstr "徽章内部左边"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "发布到记录上的最后消息的日期"
+
+#~ msgid "Followers"
+#~ msgstr "关注者"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "关注者(频道)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "关注者（业务伙伴）"
+
+#~ msgid ""
+#~ "I did not expect such a great learning experience. I feel like I can "
+#~ "develop anything now."
+#~ msgstr ""
+#~ "过去我没有预计到会有如此美妙的学习经验，现在我觉得我可以开发所有的东西"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "查看是否有需要留意的新信息。"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "确认后, 会出现新消息."
+
+#~ msgid "Is Follower"
+#~ msgstr "是否为关注者"
+
+#~ msgid "Last Message Date"
+#~ msgstr "最后消息日期"
+
+#~ msgid "Messages"
+#~ msgstr "消息"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "消息和通信历史"
+
+#~ msgid "Number of Actions"
+#~ msgstr "动作的序列号"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "需要动作的消息编号"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "未读电子邮件的数量"
+
+#~ msgid "Open Event Menu"
+#~ msgstr "打开活动菜单"
+
+#~ msgid "Read Great Contents"
+#~ msgstr "阅读伟大的内容"
+
+#~ msgid "Thanks for attending ${object.event_id.name}"
+#~ msgstr "多谢你的出席${object.event_id.name}"
+
+#~ msgid ""
+#~ "This course help me build my first application within a month. Definetly "
+#~ "worth its price."
+#~ msgstr "该课程帮助我们在一个月内创建第一个应用，肯定值这个价格"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "未读消息计数器"
+
+#~ msgid "Website Messages"
+#~ msgstr "网站消息"
+
+#~ msgid "Website communication history"
+#~ msgstr "网站沟通历史"
+
+#~ msgid "What do people say about this course?"
+#~ msgstr "人们怎么评价这个课程"
+
+#~ msgid "Available Seats"
+#~ msgstr "可用席位"
+
+#~ msgid "Barcode Interface"
+#~ msgstr "条码接口"
+
+#~ msgid "Event Category"
+#~ msgstr "活动类别"
+
+#~ msgid "Your registration at ${object.event_id.name}"
+#~ msgstr "你的登记在${object.event_id.name}"

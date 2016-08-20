@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * report
-# 
+#
 # Translators:
 # Esteban Echeverry <tebanep@nubark.com>, 2015
 # Luis Triana <luistriana.28@gmail.com>, 2015
@@ -11,14 +11,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-12-02 13:59+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: report
@@ -27,7 +27,6 @@ msgid "&amp;bull;"
 msgstr "&amp;bull;"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.layout
 #: model:ir.ui.view,arch_db:report.minimal_layout
 msgid "&lt;!DOCTYPE html&gt;"
 msgstr "&lt;!DOCTYPE html&gt;"
@@ -148,7 +147,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 mm"
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:288
 #, python-format
 msgid "Bad Report Reference"
 msgstr "Referencia de informe errónea"
@@ -201,6 +200,7 @@ msgid "Default paper format ?"
 msgstr "¿Formato de papel por defecto?"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_paperformat_display_name
@@ -234,8 +234,11 @@ msgstr "Correo electrónico:"
 
 #. module: report
 #: constraint:report.paperformat:0
-msgid "Error ! You cannot select a format AND speficic page width/height."
-msgstr "Error. No puede seleccionar un formato y un ancho/alto de página específico a la vez."
+#, fuzzy
+msgid "Error ! You cannot select a format AND specific page width/height."
+msgstr ""
+"Error. No puede seleccionar un formato y un ancho/alto de página específico "
+"a la vez."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -263,6 +266,7 @@ msgid "Header spacing"
 msgstr "Espaciado de la cabecera"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_id
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_id
 #: model:ir.model.fields,field_description:report.field_report_id
 #: model:ir.model.fields,field_description:report.field_report_paperformat_id
@@ -275,6 +279,7 @@ msgid "Landscape"
 msgstr "Apaisado"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode___last_update
 #: model:ir.model.fields,field_description:report.field_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_abstract_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_paperformat___last_update
@@ -445,7 +450,7 @@ msgid "This is a sample of an internal report."
 msgstr "Esta es una muestra de un informe interno."
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:288
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr "Este informe no está cargado en la base de datos: %s."
@@ -461,9 +466,15 @@ msgstr "Margen superior (mm)"
 #, python-format
 msgid ""
 "Unable to find Wkhtmltopdf on this \n"
-"system. The report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
+"system. The report will be shown in html.<br><br><a href=\"http://"
+"wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
-msgstr "Imposible encontrar Wkhtmltopdf en el sistema. El informe será mostrado en HTML.\n<br>\n<br>\n<a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
+msgstr ""
+"Imposible encontrar Wkhtmltopdf en el sistema. El informe será mostrado en "
+"HTML.\n"
+"<br>\n"
+"<br>\n"
+"<a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -471,7 +482,7 @@ msgid "Website:"
 msgstr "Sitio web:"
 
 #. module: report
-#: code:addons/report/models/report.py:413
+#: code:addons/report/models/report.py:459
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf falló (error code: %s). Mensaje: %s"
@@ -483,7 +494,9 @@ msgstr "Wkhtmltopdf falló (error code: %s). Mensaje: %s"
 msgid ""
 "You need to start OpenERP with at least two \n"
 "workers to print a pdf version of the reports."
-msgstr "Necesita iniciar Odoo con al menos dos hilos para poder imprimir una versión PDF de los informes."
+msgstr ""
+"Necesita iniciar Odoo con al menos dos hilos para poder imprimir una versión "
+"PDF de los informes."
 
 #. module: report
 #. openerp-web
@@ -491,15 +504,30 @@ msgstr "Necesita iniciar Odoo con al menos dos hilos para poder imprimir una ver
 #, python-format
 msgid ""
 "You should upgrade your version of\n"
-"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
-"support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
+"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers "
+"and footers as well as\n"
+"support for table-breaking between pages.<br><br><a href=\"http://"
+"wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
-msgstr "Debería actualizar su versión de\nWkhtmltopdf a por lo menos la 0.12.0 para tener una visualización correcta de los encabezados y los pies de página\nasí cómo\nsoportar quiebres de página entre páginas.<br><br><a href=\"http://wkhtmltopdf.org/\" \n\ntarget=\"_blank\">wkhtmltopdf.org</a>"
+msgstr ""
+"Debería actualizar su versión de\n"
+"Wkhtmltopdf a por lo menos la 0.12.0 para tener una visualización correcta "
+"de los encabezados y los pies de página\n"
+"así cómo\n"
+"soportar quiebres de página entre páginas.<br><br><a href=\"http://"
+"wkhtmltopdf.org/\" \n"
+"\n"
+"target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.acciones.informe.xml"
+
+#. module: report
+#: model:ir.model,name:report.model_ir_qweb_field_barcode
+msgid "ir.qweb.field.barcode"
+msgstr ""
 
 #. module: report
 #: model:ir.model,name:report.model_report_abstract_report

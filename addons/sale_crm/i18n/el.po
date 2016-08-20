@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_crm
-# 
+#
 # Translators:
 # Alex Yo <omikr0n@hotmail.com>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012
@@ -10,20 +10,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-13 10:35+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_claim_count
-msgid "# Claims"
-msgstr "# Απαιτήσεις"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
@@ -58,14 +53,15 @@ msgid ""
 msgstr ""
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
+#, fuzzy
+msgid "Activation"
+msgstr "Προσφορά"
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
 msgid "Associate Member"
 msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_campaign_id
-msgid "Campaign"
-msgstr "Εκστρατεία"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
@@ -108,19 +104,26 @@ msgid "Free Member"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_latitude
-msgid "Geo Latitude"
-msgstr "Γεωγραφικό Πλάτος"
+#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
+msgid ""
+"Gives the probability to assign a lead to this partner. (0 means no "
+"assignation.)"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_localization
-msgid "Geo Localization Date"
-msgstr "Ημερομηνία Γεωγραφικής Χωροθέτησης"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
+msgid "Implementation References"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_longitude
-msgid "Geo Longitude"
-msgstr "Γεωγραφικό Μήκος"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
+msgid "Implemented by"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_account_invoice
+msgid "Invoice"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
@@ -134,9 +137,15 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
+msgid "Latest Partner Review"
 msgstr ""
 
 #. module: sale_crm
@@ -145,14 +154,19 @@ msgid "Lead/Opportunity"
 msgstr "Σύσταση/Ευκαιρία"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
+msgid "Level"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_medium_id
-msgid "Medium"
-msgstr "Μέτρια"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
+msgid "Level Weight"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+msgid "Log in the chatter from which opportunity the order originates"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
@@ -180,6 +194,11 @@ msgid "New Quotation"
 msgstr "Νέα Προσφορά"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
+msgid "Next Partner Review"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
 msgid "Number of Quotations"
 msgstr "Αριθμός Προσφορών"
@@ -193,6 +212,12 @@ msgstr "Ευκαιρία"
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
 msgid "Orders"
 msgstr "Πωλήσεις"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
+#, fuzzy
+msgid "Partnership Date"
+msgstr "Ημερομηνία Ακύρωσης Μέλους"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
@@ -221,11 +246,6 @@ msgid "Select if you want to give free membership."
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_source_id
-msgid "Source"
-msgstr "Κώδικας"
-
-#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
 msgid "Sum of Orders"
 msgstr ""
@@ -246,37 +266,23 @@ msgid "The price negotiated by the partner"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr "Αυτό είναι το όνομα που θα σας βοηθήσει να ανιχνεύετε τις προσπάθειες των διαφορετικών εκστρατειών σας π.χ.: Φθινόπωρο_Κίνητρο, Χριστούγεννα_Ειδικό"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "Αυτή είναι μια μέθοδος παράδοσης. Π.χ.:Κάρτ ποστάλ, Email, ή Διαφημιστικό Πλαίσιο"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_source_id
-msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr "Αυτή είναι μια πηγή του συνδέσμου Π.χ. Μηχανή Αναζήτησης, άλλος τομέας ή όνομα λίστας με email"
-
-#. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
 msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
-msgstr "Αυτή η τοποθεσία θα χρησιμοποιείται αντί της προεπιλεγμένης σαν τοποθεσία προορισμού αγαθών που αποστέλλονται σε αυτό τον συνεργάτη"
+msgstr ""
+"Αυτή η τοποθεσία θα χρησιμοποιείται αντί της προεπιλεγμένης σαν τοποθεσία "
+"προορισμού αγαθών που αποστέλλονται σε αυτό τον συνεργάτη"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
-msgstr "Αυτή η τοποθεσία αποθήκευσης θα χρησιμοποιηθεί (αντί για την προεπιλεγμένη) σαν προεπιλεγμένη τοποθεσία για προϊόντα που παραλαμβάνετε από το συγκεκριμένο προμηθευτή."
+msgstr ""
+"Αυτή η τοποθεσία αποθήκευσης θα χρησιμοποιηθεί (αντί για την προεπιλεγμένη) "
+"σαν προεπιλεγμένη τοποθεσία για προϊόντα που παραλαμβάνετε από το "
+"συγκεκριμένο προμηθευτή."
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -287,3 +293,43 @@ msgstr "Χρήστες"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
 msgstr ""
+
+#~ msgid "# Claims"
+#~ msgstr "# Απαιτήσεις"
+
+#~ msgid "Campaign"
+#~ msgstr "Εκστρατεία"
+
+#~ msgid "Geo Latitude"
+#~ msgstr "Γεωγραφικό Πλάτος"
+
+#~ msgid "Geo Localization Date"
+#~ msgstr "Ημερομηνία Γεωγραφικής Χωροθέτησης"
+
+#~ msgid "Geo Longitude"
+#~ msgstr "Γεωγραφικό Μήκος"
+
+#~ msgid "Medium"
+#~ msgstr "Μέτρια"
+
+#~ msgid "Source"
+#~ msgstr "Κώδικας"
+
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "Αυτό είναι το όνομα που θα σας βοηθήσει να ανιχνεύετε τις προσπάθειες των "
+#~ "διαφορετικών εκστρατειών σας π.χ.: Φθινόπωρο_Κίνητρο, Χριστούγεννα_Ειδικό"
+
+#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+#~ msgstr ""
+#~ "Αυτή είναι μια μέθοδος παράδοσης. Π.χ.:Κάρτ ποστάλ, Email, ή Διαφημιστικό "
+#~ "Πλαίσιο"
+
+#~ msgid ""
+#~ "This is the source of the link Ex: Search Engine, another domain, or name "
+#~ "of email list"
+#~ msgstr ""
+#~ "Αυτή είναι μια πηγή του συνδέσμου Π.χ. Μηχανή Αναζήτησης, άλλος τομέας ή "
+#~ "όνομα λίστας με email"

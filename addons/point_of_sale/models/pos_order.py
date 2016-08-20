@@ -720,7 +720,7 @@ class PosOrderLine(models.Model):
     notice = fields.Char(string='Discount Notice')
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
     price_unit = fields.Float(string='Unit Price', digits=0)
-    qty = fields.Float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), default=1)
+    qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), default=1)
     price_subtotal = fields.Float(compute='_compute_amount_line_all', digits=0, string='Subtotal w/o Tax')
     price_subtotal_incl = fields.Float(compute='_compute_amount_line_all', digits=0, string='Subtotal')
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)

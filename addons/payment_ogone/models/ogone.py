@@ -422,8 +422,8 @@ class PaymentTxOgone(osv.Model):
                 'acquirer_reference': tree.get('PAYID'),
                 'html_3ds': str(tree.HTML_ANSWER).decode('base64')
             })
-        elif (not status or status in self._ogone_wait_tx_status) and tries > 0:
-            time.sleep(500)
+        elif status in self._ogone_wait_tx_status and tries > 0:
+            time.sleep(0.5)
             tx.write({'acquirer_reference': tree.get('PAYID')})
             tree = self._ogone_s2s_get_tx_status(tx)
             return self._ogone_s2s_validate_tree(tx, tree, tries - 1)

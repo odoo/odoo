@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event_sale
-# 
+#
 # Translators:
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
@@ -9,15 +9,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-27 12:41+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:170
@@ -29,6 +30,12 @@ msgstr " z biletem %s"
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "Zastosuj"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+#, fuzzy
+msgid "Asset Type"
+msgstr "Typ wydarzenia"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -55,14 +62,18 @@ msgstr "Przed potwierdzeniem"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "Wybierz wydarzenie, a to automatycznie utworzy rejestrację dla tego wydarzenia."
+msgstr ""
+"Wybierz wydarzenie, a to automatycznie utworzy rejestrację dla tego "
+"wydarzenia."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
-msgstr "Wybierz bilet na wydarzenie, aby automatycznie utworzyć rejestrację na ten bilet na wydarzenie"
+msgstr ""
+"Wybierz bilet na wydarzenie, aby automatycznie utworzyć rejestrację na ten "
+"bilet na wydarzenie"
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_2_product
@@ -85,6 +96,11 @@ msgid "Created on"
 msgstr "Utworzono"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
@@ -98,7 +114,9 @@ msgstr ""
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr "Ustal, czy produkt ma automatycznie tworzyć rejestrację na wydarzenie po potwierdzeniu pozycji zamówienia sprzedaży."
+msgstr ""
+"Ustal, czy produkt ma automatycznie tworzyć rejestrację na wydarzenie po "
+"potwierdzeniu pozycji zamówienia sprzedaży."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
@@ -326,9 +344,11 @@ msgstr ""
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
 #: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
 msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
-msgstr "Wybierz typy wydarzenia, aby gdy będziemy używać tego produktu w pozycjach zamówień sprzedaży, można było filtrować tylko wydarzenia tego typu."
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
+msgstr ""
+"Wybierz typy wydarzenia, aby gdy będziemy używać tego produktu w pozycjach "
+"zamówień sprzedaży, można było filtrować tylko wydarzenia tego typu."
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

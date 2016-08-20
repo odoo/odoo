@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * report
-# 
+#
 # Translators:
 # Goutoudis Kostas <goutoudis@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-12-17 10:46+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: report
@@ -24,7 +24,6 @@ msgid "&amp;bull;"
 msgstr "&amp;bull;"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.layout
 #: model:ir.ui.view,arch_db:report.minimal_layout
 msgid "&lt;!DOCTYPE html&gt;"
 msgstr "&lt;!DOCTYPE html&gt;"
@@ -145,7 +144,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9  23  33 x 62 mm"
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:288
 #, python-format
 msgid "Bad Report Reference"
 msgstr "Λάθος Αναφορά Έκθεσης"
@@ -198,6 +197,7 @@ msgid "Default paper format ?"
 msgstr "Προεπιλεγμένη μορφή χαρτιού ;"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_paperformat_display_name
@@ -231,8 +231,11 @@ msgstr "E-mail:"
 
 #. module: report
 #: constraint:report.paperformat:0
-msgid "Error ! You cannot select a format AND speficic page width/height."
-msgstr "Σφάλμα! Δεν μπορείτε να επιλέξετε μια μορφοποίηση ΚΑΙ συγκεκριμένο μήκος/ύψος σελίδας."
+#, fuzzy
+msgid "Error ! You cannot select a format AND specific page width/height."
+msgstr ""
+"Σφάλμα! Δεν μπορείτε να επιλέξετε μια μορφοποίηση ΚΑΙ συγκεκριμένο μήκος/"
+"ύψος σελίδας."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -260,6 +263,7 @@ msgid "Header spacing"
 msgstr "Διάστημα Κεφαλίδας"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_id
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_id
 #: model:ir.model.fields,field_description:report.field_report_id
 #: model:ir.model.fields,field_description:report.field_report_paperformat_id
@@ -272,6 +276,7 @@ msgid "Landscape"
 msgstr "Οριζόντιος"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode___last_update
 #: model:ir.model.fields,field_description:report.field_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_abstract_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_paperformat___last_update
@@ -442,7 +447,7 @@ msgid "This is a sample of an internal report."
 msgstr ""
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:288
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr "Αυτή η έκθεση δεν έχει φορτωθεί στη βάση δεδομένων: %s."
@@ -458,9 +463,14 @@ msgstr "Πάνω Περιθώριο (mm)"
 #, python-format
 msgid ""
 "Unable to find Wkhtmltopdf on this \n"
-"system. The report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
+"system. The report will be shown in html.<br><br><a href=\"http://"
+"wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
-msgstr "Δεν ήταν δυνατόν να βρεθεί το Wkhtmltopdf σε αυτό το σύστημα.\nΗ έκθεση θα εμφανιστεί σε μορφή html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\nwkhtmltopdf.org</a>"
+msgstr ""
+"Δεν ήταν δυνατόν να βρεθεί το Wkhtmltopdf σε αυτό το σύστημα.\n"
+"Η έκθεση θα εμφανιστεί σε μορφή html.<br><br><a href=\"http://wkhtmltopdf."
+"org/\" target=\"_blank\">\n"
+"wkhtmltopdf.org</a>"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -468,7 +478,7 @@ msgid "Website:"
 msgstr "Ιστότοπος:"
 
 #. module: report
-#: code:addons/report/models/report.py:413
+#: code:addons/report/models/report.py:459
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Το Wkhtmltopdf απέτυχε (αριθμός λάθους: %s). Μήνυμα: %s"
@@ -480,7 +490,9 @@ msgstr "Το Wkhtmltopdf απέτυχε (αριθμός λάθους: %s). Μή�
 msgid ""
 "You need to start OpenERP with at least two \n"
 "workers to print a pdf version of the reports."
-msgstr "Θα πρέπει να ξεκινήσετε OpenERP με τουλάχιστον δύο\n'workers' για να εκτυπώσετε σε αρχείο pdf τις αναφορές."
+msgstr ""
+"Θα πρέπει να ξεκινήσετε OpenERP με τουλάχιστον δύο\n"
+"'workers' για να εκτυπώσετε σε αρχείο pdf τις αναφορές."
 
 #. module: report
 #. openerp-web
@@ -488,8 +500,10 @@ msgstr "Θα πρέπει να ξεκινήσετε OpenERP με τουλάχι�
 #, python-format
 msgid ""
 "You should upgrade your version of\n"
-"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
-"support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
+"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers "
+"and footers as well as\n"
+"support for table-breaking between pages.<br><br><a href=\"http://"
+"wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
 msgstr ""
 
@@ -497,6 +511,11 @@ msgstr ""
 #: model:ir.model,name:report.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
+
+#. module: report
+#: model:ir.model,name:report.model_ir_qweb_field_barcode
+msgid "ir.qweb.field.barcode"
+msgstr ""
 
 #. module: report
 #: model:ir.model,name:report.model_report_abstract_report

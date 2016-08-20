@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_stock
-# 
+#
 # Translators:
 # Renko Spiekermann <renkosp@gmail.com>, 2015
 # Wolfgang Taferner, 2016
@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:27+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-01-19 06:36+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
@@ -33,7 +33,9 @@ msgstr "Ermögliche hinzufügen von Versandkosten"
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Allow setting manufacturing order properties per order line (advanced)"
-msgstr "Erlaube das Einstellen der Einstellungen eines Arbeitsauftrags pro Bestellzeile (erweitert)."
+msgstr ""
+"Erlaube das Einstellen der Einstellungen eines Arbeitsauftrags pro "
+"Bestellzeile (erweitert)."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
@@ -43,7 +45,8 @@ msgstr "Spezifikation der Produkt Merkmale in Auftragszeilen."
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
 msgid "Choose specific routes on sales order lines (advanced)"
-msgstr "Ermöglichen Sie individuelle Routen für Auftragszeilen (für Fortgeschrittene)"
+msgstr ""
+"Ermöglichen Sie individuelle Routen für Auftragszeilen (für Fortgeschrittene)"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -86,6 +89,19 @@ msgid "Enable Route on Sales Order Line"
 msgstr "Aktiviere Routenauswahl in Auftragszeilen"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_product_product_expense_policy
+msgid "Expense Invoice Policy"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_product_product_expense_policy
+msgid ""
+"If you invoice at cost, the expense will be invoiced on the sale order at "
+"the cost of the analytic line;if you invoice at sales price, the price of "
+"the product will be used instead."
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
 msgid "Incoterms"
@@ -95,16 +111,20 @@ msgstr "Lieferbedingungen"
 #: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
-msgstr "Lieferbedingungen sind eine Zusammenfassung der Konditionen & Bedingungen, die z.B. auch eine Kostenaufteilung ermöglicht."
+"costs and responsibilities between buyer and seller and reflect state-of-the-"
+"art transportation practices."
+msgstr ""
+"Lieferbedingungen sind eine Zusammenfassung der Konditionen & Bedingungen, "
+"die z.B. auch eine Kostenaufteilung ermöglicht."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "International Lieferbedingungen sind vordefinierte Konditionen und Bedingungen, die zumeist im internationalen Handel eingesetzt werden."
+msgstr ""
+"International Lieferbedingungen sind vordefinierte Konditionen und "
+"Bedingungen, die zumeist im internationalen Handel eingesetzt werden."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
@@ -125,9 +145,13 @@ msgstr "Rechungsposition"
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
-msgstr "Toleranztage bei Zusagen für Lieferversprechen. Produkte werden um diesen Toleranzzeitraum (in Tagen) früher beschafft und ausgeliefert als vereinbart um unerwartetem Verzug in der Versorgungskette entgegen zu wirken. (Je nach Kunde mit Vorsicht einsetzen!)"
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
+msgstr ""
+"Toleranztage bei Zusagen für Lieferversprechen. Produkte werden um diesen "
+"Toleranzzeitraum (in Tagen) früher beschafft und ausgeliefert als vereinbart "
+"um unerwartetem Verzug in der Versorgungskette entgegen zu wirken. (Je nach "
+"Kunde mit Vorsicht einsetzen!)"
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
@@ -140,7 +164,7 @@ msgid "No shipping costs on sales orders"
 msgstr "Keine Liefergebühren auf Verkaufsaufträgen"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:141
+#: code:addons/sale_stock/sale_stock.py:156
 #, python-format
 msgid "Not enough inventory!"
 msgstr "Nicht genug Bestand!"
@@ -157,7 +181,7 @@ msgid "Order Routing"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:152
+#: code:addons/sale_stock/sale_stock.py:167
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Bestellte Menge verringert!"
@@ -176,6 +200,12 @@ msgstr "Packauftrag für diesen Auftrag"
 #: model:ir.model,name:sale_stock.model_procurement_order
 msgid "Procurement"
 msgstr "Beschaffung"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_product
+#, fuzzy
+msgid "Product"
+msgstr "Produktvorlage"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
@@ -259,9 +289,9 @@ msgid "Stock Move"
 msgstr "Lagerbuchung"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:194
+#: code:addons/sale_stock/sale_stock.py:213
 #, python-format
-msgid "This product is packaged by %d . You should sell %d ."
+msgid "This product is packaged by %s %s. You should sell %s %s."
 msgstr ""
 
 #. module: sale_stock
@@ -276,26 +306,30 @@ msgid "Warehouse"
 msgstr "Lager"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:193
+#: code:addons/sale_stock/sale_stock.py:212
 #, python-format
 msgid "Warning"
 msgstr "Warnung"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:153
+#: code:addons/sale_stock/sale_stock.py:168
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr "Sie verringern die bestellte Menge! Vergessen Sie nicht, den Lieferauftrag manuell zu aktualisieren falls notwendig."
+msgstr ""
+"Sie verringern die bestellte Menge! Vergessen Sie nicht, den Lieferauftrag "
+"manuell zu aktualisieren falls notwendig."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:142
+#: code:addons/sale_stock/sale_stock.py:157
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available!\n"
 "The stock on hand is %.2f %s."
-msgstr "Sie möchten %.2f %s verkaufen, aber Sie haben nur %.2f %s verfügbar! Der Bestand beträgt %.2f %s."
+msgstr ""
+"Sie möchten %.2f %s verkaufen, aber Sie haben nur %.2f %s verfügbar! Der "
+"Bestand beträgt %.2f %s."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings

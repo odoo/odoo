@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_analytic_default
-# 
+#
 # Translators:
 # Fabian Liesch <fabian.liesch@gmail.com>, 2015
 # Ralf Hilgenstock <rh@dialoge.info>, 2015
@@ -10,14 +10,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-11-18 21:36+0000\n"
 "Last-Translator: Fabian Liesch <fabian.liesch@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_analytic_default
@@ -106,11 +106,6 @@ msgid "Entries"
 msgstr "Buchungen"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_product_product_expense_policy
-msgid "Expense Invoice Policy"
-msgstr "Regeln zur Spesenabrechnung"
-
-#. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
@@ -125,14 +120,6 @@ msgstr "Gruppiere nach"
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_id
 msgid "ID"
 msgstr "ID"
-
-#. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_product_product_expense_policy
-msgid ""
-"If you invoice at cost, the expense will be invoiced on the sale order at "
-"the cost of the analytic line;if you invoice at sales price, the price of "
-"the product will be used instead."
-msgstr "Wenn Sie eine Rechnung über die Kosten erstellen, wird der Aufwand abgerechnet über den Vertriebsauftrag basierend auf den Kosten der analytischen Linie; Wenn sie die Rechnung über den Verkaufspreis erstellen, wird stattdessen der Preis des Produkts verwendet werden."
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
@@ -183,7 +170,11 @@ msgid ""
 "Select a company which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "company, it will automatically take this as an analytic account)"
-msgstr "Wählen Sie das Unternehmen aus, bei dem diese Kostenstelle als Standard bei einer Buchung eingetragen werden soll (z.B. bei einer Rechnung oder einem Auftrag soll dann diese Kostenstelle automatisch eingetragen werden, wenn das entsprechende Unternehmen ausgewählt wird)."
+msgstr ""
+"Wählen Sie das Unternehmen aus, bei dem diese Kostenstelle als Standard bei "
+"einer Buchung eingetragen werden soll (z.B. bei einer Rechnung oder einem "
+"Auftrag soll dann diese Kostenstelle automatisch eingetragen werden, wenn "
+"das entsprechende Unternehmen ausgewählt wird)."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_partner_id
@@ -191,7 +182,11 @@ msgid ""
 "Select a partner which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "partner, it will automatically take this as an analytic account)"
-msgstr "Wählen Sie den Partner aus, bei dem diese Kostenstelle als Standard bei einer Buchung eingetragen werden soll (z.B. bei einer Rechnung oder einem Auftrag soll dann diese Kostenstelle automatisch eingetragen werden, wenn der entsprechende Partner ausgewählt wird)."
+msgstr ""
+"Wählen Sie den Partner aus, bei dem diese Kostenstelle als Standard bei "
+"einer Buchung eingetragen werden soll (z.B. bei einer Rechnung oder einem "
+"Auftrag soll dann diese Kostenstelle automatisch eingetragen werden, wenn "
+"der entsprechende Partner ausgewählt wird)."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_product_id
@@ -199,7 +194,11 @@ msgid ""
 "Select a product which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "product, it will automatically take this as an analytic account)"
-msgstr "Wählen Sie das Produkt, welches diese Kostenstelle als Standard bei einer Buchung eintragen soll (z.B. bei einer Rechnung oder einem Auftrag soll dann diese Kostenstelle automatisch eingetragen werden, wenn das entsprechende Produkt ausgewählt wird)."
+msgstr ""
+"Wählen Sie das Produkt, welches diese Kostenstelle als Standard bei einer "
+"Buchung eintragen soll (z.B. bei einer Rechnung oder einem Auftrag soll dann "
+"diese Kostenstelle automatisch eingetragen werden, wenn das entsprechende "
+"Produkt ausgewählt wird)."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_user_id
@@ -218,12 +217,23 @@ msgid "Start Date"
 msgstr "Startdatum"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_stock_picking
-msgid "Transfer"
-msgstr "Lieferung vornehmen"
-
-#. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_user_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
 msgstr "Benutzer"
+
+#~ msgid "Expense Invoice Policy"
+#~ msgstr "Regeln zur Spesenabrechnung"
+
+#~ msgid ""
+#~ "If you invoice at cost, the expense will be invoiced on the sale order at "
+#~ "the cost of the analytic line;if you invoice at sales price, the price of "
+#~ "the product will be used instead."
+#~ msgstr ""
+#~ "Wenn Sie eine Rechnung über die Kosten erstellen, wird der Aufwand "
+#~ "abgerechnet über den Vertriebsauftrag basierend auf den Kosten der "
+#~ "analytischen Linie; Wenn sie die Rechnung über den Verkaufspreis "
+#~ "erstellen, wird stattdessen der Preis des Produkts verwendet werden."
+
+#~ msgid "Transfer"
+#~ msgstr "Lieferung vornehmen"

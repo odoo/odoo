@@ -263,7 +263,7 @@ class Partner(models.Model, FormatAddress):
 
         colorize, img_path, image = False, False, False
 
-        if partner_type in ['contact', 'other'] and parent_id:
+        if partner_type in ['other'] and parent_id:
             parent_image = self.browse(parent_id).image
             image = parent_image and parent_image.decode('base64') or None
 

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_landed_costs
-# 
+#
 # Translators:
 # Andre de Kock <adekock11@gmail.com>, 2015
 # Somarie <somariedk@gmail.com>, 2015
@@ -9,19 +9,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2015-11-16 19:31+0000\n"
 "Last-Translator: Andre de Kock <adekock11@gmail.com>\n"
-"Language-Team: Afrikaans (http://www.transifex.com/odoo/odoo-9/language/af/)\n"
+"Language-Team: Afrikaans (http://www.transifex.com/odoo/odoo-9/language/"
+"af/)\n"
+"Language: af\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: af\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:126
-#: code:addons/stock_landed_costs/stock_landed_costs.py:130
+#: code:addons/stock_landed_costs/stock_landed_costs.py:127
+#: code:addons/stock_landed_costs/stock_landed_costs.py:131
+#: code:addons/stock_landed_costs/stock_landed_costs.py:147
+#: code:addons/stock_landed_costs/stock_landed_costs.py:151
 #, python-format
 msgid " already out"
 msgstr "alreeds uit"
@@ -35,11 +38,6 @@ msgstr "Rekening"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_account_journal_id
 msgid "Account Journal"
 msgstr ""
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_needaction
-msgid "Action Needed"
-msgstr "Aksie word benodig"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_additional_landed_cost
@@ -131,11 +129,6 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum van die laaste boodskap wat op die rekord gepos is."
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_name
 msgid "Description"
@@ -175,24 +168,19 @@ msgid "Equal"
 msgstr "Gelyk aan"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_product_template_split_method
+msgid ""
+"Equal : Cost will be equally divided.\n"
+"By Quantity : Cost will be divided according to product's quantity.\n"
+"By Current cost : Cost will be divided according to product's current cost.\n"
+"By Weight : Cost will be divided depending on its weight.\n"
+"By Volume : Cost will be divided depending on its volume."
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
 msgid "Final Cost"
 msgstr "Finale Koste"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_follower_ids
-msgid "Followers"
-msgstr "Volgelinge"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Volgelinge (Kanale)"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Volgelinge (Venote)"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_former_cost
@@ -217,24 +205,9 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_unread
-msgid "If checked new messages require your attention."
-msgstr "As dit gekies is vereis nuwe boodskappe jou aandag."
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "As dit gekies is, vereis nuwe boodskappe jou aandag."
-
-#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Information"
 msgstr "Inligting"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_is_follower
-msgid "Is Follower"
-msgstr "Is Volgeling"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_description
@@ -274,14 +247,14 @@ msgid "Landed Costs"
 msgstr ""
 
 #. module: stock_landed_costs
-#: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
-msgid "Landed cost validated"
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Landed cost are computed based on the purchase unit of measure."
 msgstr ""
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_last_post
-msgid "Last Message Date"
-msgstr "Laaste Boodskap Datum"
+#: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
+msgid "Landed cost validated"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost___last_update
@@ -305,16 +278,6 @@ msgid "Last Updated on"
 msgstr "Laas Opgedateer op"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_ids
-msgid "Messages"
-msgstr "Boodskappe"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_ids
-msgid "Messages and communication history"
-msgstr "Boodskap-en kommunikasiegeskiedenis"
-
-#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Month"
 msgstr "Maand"
@@ -326,22 +289,7 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Hoeveelheid Aksies"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Hoeveelheid boodskappe wat aksie vereis"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Hoeveelheid ongeleesde boodskappe"
-
-#. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:181
+#: code:addons/stock_landed_costs/stock_landed_costs.py:203
 #, python-format
 msgid "Only draft landed costs can be validated"
 msgstr ""
@@ -430,8 +378,8 @@ msgstr ""
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
-"landed costs. Landed costs are only possible for products configured in real"
-" time valuation with real price costing method. Please make sure it is the "
+"landed costs. Landed costs are only possible for products configured in real "
+"time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
 msgstr ""
 
@@ -441,22 +389,12 @@ msgid "Total"
 msgstr "Totaal"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_unread
-msgid "Unread Messages"
-msgstr "Ongeleesde Boodskappe"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Ongeleesde Boodskappe Teller"
-
-#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Validate"
 msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:212
+#: code:addons/stock_landed_costs/stock_landed_costs.py:261
 #, python-format
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
@@ -481,22 +419,12 @@ msgid "Warning!"
 msgstr "Waarskuwing!"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_website_message_ids
-msgid "Website Messages"
-msgstr "Webtuiste Boodskappe"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_website_message_ids
-msgid "Website communication history"
-msgstr "Webtuiste kommunikasie geskiedenis"
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_weight
 msgid "Weight"
 msgstr "Gewig"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:183
+#: code:addons/stock_landed_costs/stock_landed_costs.py:205
 #, python-format
 msgid ""
 "You cannot validate a landed cost which has no valid valuation adjustments "
@@ -512,3 +440,57 @@ msgstr "beskryf die produk se karaktereienskappe..."
 #: model:ir.model,name:stock_landed_costs.model_purchase_config_settings
 msgid "purchase.config.settings"
 msgstr "purchase.config.settings"
+
+#~ msgid "Action Needed"
+#~ msgstr "Aksie word benodig"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Datum van die laaste boodskap wat op die rekord gepos is."
+
+#~ msgid "Followers"
+#~ msgstr "Volgelinge"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Volgelinge (Kanale)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Volgelinge (Venote)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "As dit gekies is vereis nuwe boodskappe jou aandag."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "As dit gekies is, vereis nuwe boodskappe jou aandag."
+
+#~ msgid "Is Follower"
+#~ msgstr "Is Volgeling"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Laaste Boodskap Datum"
+
+#~ msgid "Messages"
+#~ msgstr "Boodskappe"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Boodskap-en kommunikasiegeskiedenis"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Hoeveelheid Aksies"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Hoeveelheid boodskappe wat aksie vereis"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Hoeveelheid ongeleesde boodskappe"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Ongeleesde Boodskappe"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Ongeleesde Boodskappe Teller"
+
+#~ msgid "Website Messages"
+#~ msgstr "Webtuiste Boodskappe"
+
+#~ msgid "Website communication history"
+#~ msgstr "Webtuiste kommunikasie geskiedenis"

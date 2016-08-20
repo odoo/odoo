@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * utm
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-06-15 15:08+0000\n"
 "Last-Translator: Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>\n"
-"Language-Team: Spanish (Peru) (http://www.transifex.com/odoo/odoo-9/language/es_PE/)\n"
+"Language-Team: Spanish (Peru) (http://www.transifex.com/odoo/odoo-9/language/"
+"es_PE/)\n"
+"Language: es_PE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_PE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: utm
@@ -24,6 +25,11 @@ msgstr "Activo"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
+#: model:ir.model.fields,field_description:utm.field_account_invoice_campaign_id
+#: model:ir.model.fields,field_description:utm.field_crm_lead_campaign_id
+#: model:ir.model.fields,field_description:utm.field_hr_applicant_campaign_id
+#: model:ir.model.fields,field_description:utm.field_link_tracker_campaign_id
+#: model:ir.model.fields,field_description:utm.field_sale_order_campaign_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_campaign_id
 #: model:ir.ui.view,arch_db:utm.utm_campaign_form
 #: model:ir.ui.view,arch_db:utm.utm_campaign_tree
@@ -95,11 +101,6 @@ msgid "Display Name"
 msgstr "Nombre a Mostrar"
 
 #. module: utm
-#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
-msgid "Email Campaign - Products"
-msgstr ""
-
-#. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_services
 msgid "Email Campaign - Services"
 msgstr ""
@@ -156,6 +157,11 @@ msgstr ""
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
+#: model:ir.model.fields,field_description:utm.field_account_invoice_medium_id
+#: model:ir.model.fields,field_description:utm.field_crm_lead_medium_id
+#: model:ir.model.fields,field_description:utm.field_hr_applicant_medium_id
+#: model:ir.model.fields,field_description:utm.field_link_tracker_medium_id
+#: model:ir.model.fields,field_description:utm.field_sale_order_medium_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_medium_id
 #: model:ir.ui.menu,name:utm.menu_utm_medium
 #: model:ir.ui.view,arch_db:utm.utm_medium_view_tree
@@ -164,6 +170,7 @@ msgid "Medium"
 msgstr "Medio"
 
 #. module: utm
+#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
 #: model:utm.source,name:utm.utm_source_newsletter
 msgid "Newsletter"
 msgstr "Noticias"
@@ -180,6 +187,11 @@ msgstr ""
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source
+#: model:ir.model.fields,field_description:utm.field_account_invoice_source_id
+#: model:ir.model.fields,field_description:utm.field_crm_lead_source_id
+#: model:ir.model.fields,field_description:utm.field_hr_applicant_source_id
+#: model:ir.model.fields,field_description:utm.field_link_tracker_source_id
+#: model:ir.model.fields,field_description:utm.field_sale_order_source_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_source_id
 msgid "Source"
 msgstr "Fuente"
@@ -196,23 +208,44 @@ msgid "Sources"
 msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_account_invoice_campaign_id
+#: model:ir.model.fields,help:utm.field_crm_lead_campaign_id
+#: model:ir.model.fields,help:utm.field_hr_applicant_campaign_id
+#: model:ir.model.fields,help:utm.field_link_tracker_campaign_id
+#: model:ir.model.fields,help:utm.field_sale_order_campaign_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_campaign_id
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts "
 "Ex: Fall_Drive, Christmas_Special"
-msgstr "Este es un nombre que lo ayuda a hacer el seguimiento a sus diferentes esfuerzos por campañas Ej: Fall_Drive, Christmas_Special"
+msgstr ""
+"Este es un nombre que lo ayuda a hacer el seguimiento a sus diferentes "
+"esfuerzos por campañas Ej: Fall_Drive, Christmas_Special"
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_account_invoice_medium_id
+#: model:ir.model.fields,help:utm.field_crm_lead_medium_id
+#: model:ir.model.fields,help:utm.field_hr_applicant_medium_id
+#: model:ir.model.fields,help:utm.field_link_tracker_medium_id
+#: model:ir.model.fields,help:utm.field_sale_order_medium_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+#, fuzzy
+msgid "This is the method of delivery.Ex: Postcard, Email, or Banner Ad"
 msgstr "Este es el método de envio. Ej. Postal, Email, o Báner Publicitario"
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_account_invoice_source_id
+#: model:ir.model.fields,help:utm.field_crm_lead_source_id
+#: model:ir.model.fields,help:utm.field_hr_applicant_source_id
+#: model:ir.model.fields,help:utm.field_link_tracker_source_id
+#: model:ir.model.fields,help:utm.field_sale_order_source_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_source_id
+#, fuzzy
 msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr "Esta es la fuente del enlace Ej: Motor de Búsqueda, otro dominio, o el nombre de la lista de correos"
+"This is the source of the link Ex:Search Engine, another domain,or name of "
+"email list"
+msgstr ""
+"Esta es la fuente del enlace Ej: Motor de Búsqueda, otro dominio, o el "
+"nombre de la lista de correos"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_twitter

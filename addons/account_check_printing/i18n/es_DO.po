@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_check_printing
-# 
+#
 # Translators:
 # Angel Moya - Domatix <angel.moya@domatix.com>, 2015
 # Eneldo Serrata <eneldoserrata@gmail.com>, 2016
@@ -10,18 +10,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-01 05:28+0000\n"
 "Last-Translator: Eneldo Serrata <eneldoserrata@gmail.com>\n"
-"Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
+"Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/"
+"odoo-9/language/es_DO/)\n"
+"Language: es_DO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_DO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_journal.py:55
+#: code:addons/account_check_printing/account_journal.py:56
 #, python-format
 msgid " : Check Number Sequence"
 msgstr ": Secuencia de numeración de cheques"
@@ -128,9 +129,11 @@ msgstr "ID (identificación)"
 #: code:addons/account_check_printing/account_payment.py:101
 #, python-format
 msgid ""
-"In order to print multiple checks at once, they must belong to the same bank"
-" journal."
-msgstr "Para poder imprimir múltiples cheques de una, deben pertenecer al mismo diario bancario."
+"In order to print multiple checks at once, they must belong to the same bank "
+"journal."
+msgstr ""
+"Para poder imprimir múltiples cheques de una, deben pertenecer al mismo "
+"diario bancario."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
@@ -168,10 +171,13 @@ msgstr "Nº del próximo cheque"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_register_payments_check_number
 msgid ""
-"Number of the check corresponding to this payment. If your pre-printed check"
-" are not already numbered, you can manage the numbering in the journal "
+"Number of the check corresponding to this payment. If your pre-printed check "
+"are not already numbered, you can manage the numbering in the journal "
 "configuration page."
-msgstr "Número del cheque correspondiente a este pago. Si su cheque pre-impreso no están ya numerado, puede configurar la numeración en la página de configuración del diario."
+msgstr ""
+"Número del cheque correspondiente a este pago. Si su cheque pre-impreso no "
+"están ya numerado, puede configurar la numeración en la página de "
+"configuración del diario."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
@@ -184,13 +190,15 @@ msgstr "Pagos"
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
-msgstr "Los pagos para imprimir como cheques deben tener \"Cheque\" seleccionado como método de pago y no estar conciliados."
+msgstr ""
+"Los pagos para imprimir como cheques deben tener \"Cheque\" seleccionado "
+"como método de pago y no estar conciliados."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
-"Please enter the number of the first pre-printed check that you are about to"
-" print on."
+"Please enter the number of the first pre-printed check that you are about to "
+"print on."
 msgstr "Por favor, introduzca el número del siguiente cheque pre-impreso."
 
 #. module: account_check_printing
@@ -229,9 +237,11 @@ msgstr "Número de secuencia del próximo cheque impreso."
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_printing_payment_method_selected
 msgid ""
-"Technical feature used to know whether check printing was enabled as payment"
-" method."
-msgstr "Campo técnico usado para saber si la impresión de cheques se habilitó como método de pago."
+"Technical feature used to know whether check printing was enabled as payment "
+"method."
+msgstr ""
+"Campo técnico usado para saber si la impresión de cheques se habilitó como "
+"método de pago."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/account_journal.py:25
@@ -239,7 +249,9 @@ msgstr "Campo técnico usado para saber si la impresión de cheques se habilitó
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
-msgstr "El último número de cheque fue %s. Con el fin de evitar que un cheque sea rechazado por el banco, sólo se puede utilizar un número mayor."
+msgstr ""
+"El último número de cheque fue %s. Con el fin de evitar que un cheque sea "
+"rechazado por el banco, sólo se puede utilizar un número mayor."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment_check_number
@@ -247,21 +259,30 @@ msgid ""
 "The selected journal is configured to print check numbers. If your pre-"
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
-msgstr "El diario seleccionado está configurado para imprimir números de cheque . Si sus cheques pre-impresos ya tienen números o si la numeración actual es incorrecta, puede cambiarla en la página de configuración del diario."
+msgstr ""
+"El diario seleccionado está configurado para imprimir números de cheque . Si "
+"sus cheques pre-impresos ya tienen números o si la numeración actual es "
+"incorrecta, puede cambiarla en la página de configuración del diario."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/account_payment.py:135
 #, python-format
 msgid ""
 "There is no check layout configured.\n"
-"Make sure the proper check printing module is installed and its configuration (in company settings > 'Configuration' tab) is correct."
-msgstr "No hay una plantilla de cheques configurada.\nAsegúrese de que está instalado el módulo de impresión de cheques y de que su configuración (en la pestaña \"Configuración\" de la configuración de la empresa) es correcta ."
+"Make sure the proper check printing module is installed and its "
+"configuration (in company settings > 'Configuration' tab) is correct."
+msgstr ""
+"No hay una plantilla de cheques configurada.\n"
+"Asegúrese de que está instalado el módulo de impresión de cheques y de que "
+"su configuración (en la pestaña \"Configuración\" de la configuración de la "
+"empresa) es correcta ."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
-msgstr "Esto permitirá guardar en los pagos el número del cheque correspondiente."
+msgstr ""
+"Esto permitirá guardar en los pagos el número del cheque correspondiente."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited

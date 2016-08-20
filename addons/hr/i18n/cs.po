@@ -1,25 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr
-# 
+#
 # Translators:
 # xlu <xlu@seznam.cz>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 10:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-08 11:28+0000\n"
 "Last-Translator: xlu <xlu@seznam.cz>\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
+"#-#-#-#-#  cs.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"#-#-#-#-#  cs.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: hr
-#: code:addons/hr/hr.py:119
+#: code:addons/hr/hr.py:120
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -65,7 +69,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid ""
 "<span class=\"o_unfollow\">Unfollow</span>\n"
-"                                    <span class=\"o_following\">Following</span>"
+"                                    <span class=\"o_following\">Following</"
+"span>"
 msgstr ""
 
 #. module: hr
@@ -110,13 +115,6 @@ msgid "A good job in a young and dynamic team"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_needaction
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_needaction
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_needaction
-msgid "Action Needed"
-msgstr "Vyžadována akce"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "Aktivní"
@@ -153,8 +151,8 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 msgid ""
 "Because of our constant growth, we're now looking for people to reinforce "
-"our team of enthusiastic developers. So if working on an open source project"
-" in a friendly and cooperative atmosphere sounds like fun to you, read on..."
+"our team of enthusiastic developers. So if working on an open source project "
+"in a friendly and cooperative atmosphere sounds like fun to you, read on..."
 msgstr ""
 
 #. module: hr
@@ -310,19 +308,12 @@ msgstr "Vytvořeno"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_employee
 msgid "Current Number of Employees"
-msgstr ""
+msgstr "Současný počet zaměstnanců"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_birthday
 msgid "Date of Birth"
 msgstr "Datum narození"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_last_post
-#: model:ir.model.fields,help:hr.field_hr_employee_message_last_post
-#: model:ir.model.fields,help:hr.field_hr_job_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum posledního vzkazu u tohoto záznamu."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -342,6 +333,7 @@ msgid "Deliver generic Odoo functional training sessions"
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -394,14 +386,14 @@ msgstr "Kategorie zaměstnanců"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_name
 msgid "Employee Tag"
-msgstr ""
+msgstr "Štítek zaměstnance"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 #: model:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
-msgstr ""
+msgstr "Štítky zaměstnanců"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_bank_account_id
@@ -439,27 +431,28 @@ msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/hr.py:299 constraint:hr.department:0
+#: code:addons/hr/hr.py:294 constraint:hr.department:0
 #, python-format
 msgid "Error! You cannot create recursive departments."
-msgstr ""
+msgstr "Chyba! Nemůžete vytvářet rekurzivní oddělení."
 
 #. module: hr
-#: code:addons/hr/hr.py:269 constraint:hr.employee:0
+#: code:addons/hr/hr.py:264 constraint:hr.employee:0
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
+msgstr "Chyba! Nemůžete vytvářet rekurzivní strom zaměstnanců."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
 msgid "Expected New Employees"
-msgstr ""
+msgstr "Očekávaní nový zaměstnanci."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
 msgstr ""
+"Očekávaný počet zaměstnanců pro tuto pracovní pozici po novém příjímání."
 
 #. module: hr
 #: model:hr.job,name:hr.job_developer
@@ -482,31 +475,19 @@ msgid "Follow and check the development part"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_follower_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_follower_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_follower_ids
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr "Sledující"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_channel_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_channel_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_partner_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_partner_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
 msgstr "Pohlaví"
+
+#. module: hr
+#: model:web.tip,description:hr.hr_tip_1
+msgid "Get all applications related to this job position."
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -555,14 +536,9 @@ msgid "Group By"
 msgstr "Seskupit podle"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "HR Department"
-msgstr ""
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
-msgstr ""
+msgstr "Nastavení personalistiky"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -587,7 +563,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_hired_employee
 msgid "Hired Employees"
-msgstr ""
+msgstr "Najatí zaměstnanci"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
@@ -618,25 +594,13 @@ msgid "Identification No"
 msgstr "Identifikační č."
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_unread
-#: model:ir.model.fields,help:hr.field_hr_employee_message_unread
-#: model:ir.model.fields,help:hr.field_hr_job_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_needaction
-#: model:ir.model.fields,help:hr.field_hr_employee_message_needaction
-#: model:ir.model.fields,help:hr.field_hr_job_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr "Pokud je pole aktivní nastaveno na Nepravda, umožní vám to skrýt záznam zdroje bez jeho odstranění."
+msgstr ""
+"Pokud je pole aktivní nastaveno na Nepravda, umožní vám to skrýt záznam "
+"zdroje bez jeho odstranění."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -667,13 +631,6 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase the visibility of the product"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_is_follower
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_is_follower
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_is_follower
-msgid "Is Follower"
 msgstr ""
 
 #. module: hr
@@ -715,8 +672,10 @@ msgstr "Pracovní pozice"
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid ""
 "Job Positions are used to define jobs and their requirements.\n"
-"                You can keep track of the number of employees you have per job\n"
-"                position and follow the evolution according to what you planned\n"
+"                You can keep track of the number of employees you have per "
+"job\n"
+"                position and follow the evolution according to what you "
+"planned\n"
 "                for the future."
 msgstr ""
 
@@ -732,24 +691,12 @@ msgid "Jobs"
 msgstr "Místa"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_last_post
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_last_post
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_last_post
-msgid "Last Message Date"
-msgstr "Datum posledního vzkazu"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_job___last_update
 msgid "Last Modified on"
 msgstr "Naposled upraveno"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_last_website_so_id
-msgid "Last Online Sale Order"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
@@ -763,18 +710,19 @@ msgstr "Naposled upraveno"
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_date
+#: model:ir.model.fields,field_description:hr.field_hr_job_write_date
 msgid "Last Updated on"
 msgstr "Naposled upraveno"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_last_login
 msgid "Latest Connection"
-msgstr ""
+msgstr "Poslední připojení"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Launch Recruitment"
-msgstr ""
+msgstr "Spusť nábor"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
@@ -842,6 +790,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Středně velká fotografie zaměstnance. Velikost se automaticky změní na "
+"128x128px se zachováním poměru stran. Použijte toto pole v zobrazeních "
+"'formulář' nebo 'kanban'."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_member_ids
@@ -849,9 +800,6 @@ msgid "Members"
 msgstr "Členové"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_ids
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Messages"
 msgstr "Zprávy"
@@ -906,16 +854,9 @@ msgid "Notes"
 msgstr "Poznámky"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_needaction_counter
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_needaction_counter
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
 msgid "Number of employees currently occupying this job position."
-msgstr ""
+msgstr "Současný počet zaměstnanců na této pracovní pozici."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_hired_employee
@@ -924,23 +865,9 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_needaction_counter
-#: model:ir.model.fields,help:hr.field_hr_employee_message_needaction_counter
-#: model:ir.model.fields,help:hr.field_hr_job_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_recruitment
 msgid "Number of new employees you expect to recruit."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_unread_counter
-#: model:ir.model.fields,help:hr.field_hr_employee_message_unread_counter
-#: model:ir.model.fields,help:hr.field_hr_job_message_unread_counter
-msgid "Number of unread messages"
-msgstr ""
+msgstr "Předpokládaný počet nových zaměstnanců"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -951,11 +878,6 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.client,name:hr.action_client_hr_menu
-msgid "Open HR Menu"
-msgstr ""
-
-#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Other"
 msgstr "Jiné"
@@ -963,7 +885,7 @@ msgstr "Jiné"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Other Information ..."
-msgstr ""
+msgstr "Jiné informace"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -980,6 +902,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department_parent_id
 msgid "Parent Department"
 msgstr "Nadřazené oddělení"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Partner"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -1027,7 +954,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Public Information"
-msgstr ""
+msgstr "Veřejné informace"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1042,22 +969,22 @@ msgstr ""
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment Closed"
-msgstr ""
+msgstr "Ukončené nábory"
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment in Progress"
-msgstr ""
+msgstr "Probíhající nábor"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Related User"
-msgstr ""
+msgstr "Příslušný uživatel"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users_employee_ids
 msgid "Related employees"
-msgstr ""
+msgstr "Příslušní zaměstnanci"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_user_id
@@ -1148,9 +1075,12 @@ msgstr "Malý obrázek"
 #: model:ir.model.fields,help:hr.field_hr_employee_image_small
 msgid ""
 "Small-sized photo of the employee. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
+"Malý obrázek zaměstnance. Je automaticky zmenšen na rozměr 64x64 bodů se "
+"zachováním poměru stran. Použijte toto pole kdekoli je požadován malý "
+"obrázek."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_sinid
@@ -1172,22 +1102,17 @@ msgstr "Stav"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Stop Recruitment"
-msgstr ""
+msgstr "Ukonči nábor"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_employee_action_subordinate_hierachy
 msgid "Subordinate Hierarchy"
-msgstr ""
+msgstr "Hierarchie podřízených"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_child_ids
 msgid "Subordinates"
 msgstr "Podřízení"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_subscription_count
-msgid "Subscriptions"
-msgstr ""
 
 #. module: hr
 #: sql_constraint:hr.employee.category:0
@@ -1213,15 +1138,19 @@ msgstr ""
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
 msgstr ""
+"Název pracovní pozice musí být jedinečný v každém oddělení společnosti!"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
-msgstr "Toto pole zobrazuje účinnost zdroje při plnění úkolů. Např. zdroj sám byl na fázi 5 dní s 5 úkoly, které mu ukáží zatížení 100% pro tuto fázi ve výchozím nastavení, ale pokud dáme účinnost 200%, pak jeho zatížení bude pouze 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
+msgstr ""
+"Toto pole zobrazuje účinnost zdroje při plnění úkolů. Např. zdroj sám byl na "
+"fázi 5 dní s 5 úkoly, které mu ukáží zatížení 100% pro tuto fázi ve výchozím "
+"nastavení, ale pokud dáme účinnost 200%, pak jeho zatížení bude pouze 50%."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
@@ -1229,11 +1158,13 @@ msgid ""
 "This field holds the image used as photo for the employee, limited to "
 "1024x1024px."
 msgstr ""
+"Pole obsahuje obrázek používaný jako fotografii zaměstnance, maximálně "
+"1024x1024 bodů."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_expected_employees
 msgid "Total Forecasted Employees"
-msgstr ""
+msgstr "Celkem očekávaných zaměstnanců"
 
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
@@ -1246,27 +1177,12 @@ msgid "Transform our product into a suite of well positioned business Apps"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_unread
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_unread
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "Nepřečtené zprávy"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_message_unread_counter
-#: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread_counter
-#: model:ir.model.fields,field_description:hr.field_hr_job_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Počítadlo nepřečtených zpráv"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_write_date
-msgid "Update Date"
-msgstr "Datum aktualizace"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1281,12 +1197,12 @@ msgstr "Uživatelé"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid ""
-"We are looking for a motivated and results-driven Functional Consultant! You"
-" will take part in the consulting services we provide to our partners and "
+"We are looking for a motivated and results-driven Functional Consultant! You "
+"will take part in the consulting services we provide to our partners and "
 "customers, on the functional side. Your job start from the quotation to the "
-"customer to the delivery to the customer. You listen the customer and try to"
-" give him the best service. You report to the head of consulting service and"
-" will be coached by a senior consultant."
+"customer to the delivery to the customer. You listen the customer and try to "
+"give him the best service. You report to the head of consulting service and "
+"will be coached by a senior consultant."
 msgstr ""
 
 #. module: hr
@@ -1294,24 +1210,23 @@ msgstr ""
 msgid ""
 "We are looking for a passionated Human Resources Manager to help us make "
 "products people love to use. We need someone who is ambitious, passionated, "
-"and ..... not afraid to start new things, a lot of new things and scale "
-"them."
+"and ..... not afraid to start new things, a lot of new things and scale them."
 msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 msgid ""
 "We are looking for a passionated executive manager to help us make products "
-"people love to use. We need someone who is ambitious, passionated, and ....."
-" not afraid to start new things, a lot of new things and scale them."
+"people love to use. We need someone who is ambitious, passionated, and ..... "
+"not afraid to start new things, a lot of new things and scale them."
 msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
 msgid ""
 "We are looking for a passionated marketer manager to help us make products "
-"people love to use. We need someone who is ambitious, passionated, and ....."
-" not afraid to start new things, a lot of new things and scale them."
+"people love to use. We need someone who is ambitious, passionated, and ..... "
+"not afraid to start new things, a lot of new things and scale them."
 msgstr ""
 
 #. module: hr
@@ -1351,7 +1266,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
-"                can easily find all the information you need for each person;\n"
+"                can easily find all the information you need for each "
+"person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
 
@@ -1372,7 +1288,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
 msgid "Work Email"
-msgstr ""
+msgstr "Pracovní email"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
@@ -1459,7 +1375,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid ""
 "You can attach a survey to a job position. It will be used in\n"
-"                the recruitment process to evaluate the applicants for this job\n"
+"                the recruitment process to evaluate the applicants for this "
+"job\n"
 "                position."
 msgstr ""
 
@@ -1505,19 +1422,19 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_trainee
 msgid ""
-"You will be responsible for developing and improving applications, such as "
-"the You will work autonomously as well as                     coordinate and"
-" supervise small distributed development teams for specific projects. You "
-"will become a technical                 expert of the product."
+"You will be responsible for developing and improving applications. You will "
+"work autonomously as well as                     coordinate and supervise "
+"small distributed development teams for specific projects. You will become a "
+"technical                 expert of the product."
 msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid ""
-"You will be responsible for developing and improving applications, such as "
-"the You will work autonomously as well as coordinate and supervise small "
-"distributed development teams for specific projects. You will become a "
-"technical expert of the product."
+"You will be responsible for developing and improving applications. You will "
+"work autonomously as well as coordinate and supervise small distributed "
+"development teams for specific projects. You will become a technical expert "
+"of the product."
 msgstr ""
 
 #. module: hr
@@ -1579,7 +1496,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
 msgid ""
 "Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and timesheets,\n"
+"                related to employees by departments: expenses and "
+"timesheets,\n"
 "                leaves and holidays, recruitments, etc."
 msgstr ""
 
@@ -1591,4 +1509,25 @@ msgstr "oddělení"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Part Time"
-msgstr ""
+msgstr "např. částečný úvazek"
+
+#~ msgid "Action Needed"
+#~ msgstr "Vyžadována akce"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Datum posledního vzkazu u tohoto záznamu."
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
+
+#~ msgid "Last Message Date"
+#~ msgstr "Datum posledního vzkazu"
+
+#~ msgid "Open HR Menu"
+#~ msgstr "Otevřít menu HR"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Počítadlo nepřečtených zpráv"
+
+#~ msgid "Update Date"
+#~ msgstr "Datum aktualizace"

@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * project_issue
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2015-12-03 00:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/id/)\n"
+"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
+"id/)\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: project_issue
@@ -33,7 +34,7 @@ msgid "# of Issues"
 msgstr "# of Masalah"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:212
+#: code:addons/project_issue/project_issue.py:215
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
@@ -59,13 +60,13 @@ msgid ""
 "A Issue's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the next stage"
-msgstr "Masalah kanban negara menunjukkan keadaan-keadaan khusus yang mempengaruhi itu: * Normal adalah situasi default * diblokir menunjukkan sesuatu adalah mencegah perkembangan masalah ini * siap untuk tahap berikutnya menunjukkan masalah siap untuk ditarik ke tahap berikutnya"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction
-msgid "Action Needed"
-msgstr "Tindakan diperlukan"
+" * Ready for next stage indicates the issue is ready to be pulled to the "
+"next stage"
+msgstr ""
+"Masalah kanban negara menunjukkan keadaan-keadaan khusus yang mempengaruhi "
+"itu: * Normal adalah situasi default * diblokir menunjukkan sesuatu adalah "
+"mencegah perkembangan masalah ini * siap untuk tahap berikutnya menunjukkan "
+"masalah siap untuk ditarik ke tahap berikutnya"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -205,13 +206,13 @@ msgid "Creation Date"
 msgstr "Tanggal Pembuatan"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:367
+#: code:addons/project_issue/project_issue.py:384
 #, python-format
 msgid "Customer"
 msgstr "Pelanggan"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:369
+#: code:addons/project_issue/project_issue.py:386
 #, python-format
 msgid "Customer Email"
 msgstr "Email Supporter"
@@ -235,11 +236,6 @@ msgstr "Tanggal penutupan"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_opening_date
 msgid "Date of Opening"
 msgstr "Tanggal pembukaan"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Tanggal pesan terakhir diposting pada catatan."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_days_since_creation
@@ -328,34 +324,18 @@ msgid "Feature description"
 msgstr "Deskripsi fitur"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_follower_ids
-msgid "Followers"
-msgstr "Pengikut"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Pengikut (saluran)"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Pengikut (mitra)"
-
-#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Group By"
 msgstr "Dikelompokan berdasarkan .."
 
 #. module: project_issue
-#: selection:project.issue,priority:0
-#: selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
 msgid "High"
 msgstr "Tinggi"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:345
+#: code:addons/project_issue/project_issue.py:362
 #, python-format
 msgid "I take it"
 msgstr "Saya mengambil"
@@ -365,27 +345,6 @@ msgstr "Saya mengambil"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_id
 msgid "ID"
 msgstr "ID"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
-
-#. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
-#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
-msgid "Important Messages"
-msgstr "Pesan penting"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_is_follower
-msgid "Is Follower"
-msgstr "Adalah pengikut"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_name
@@ -444,8 +403,9 @@ msgstr ""
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
-msgid "Issue ready for next sStage"
-msgstr ""
+#, fuzzy
+msgid "Issue ready for next stage"
+msgstr "Siap untuk tahap berikutnya"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -455,6 +415,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
+#: model:ir.model.fields,field_description:project_issue.field_project_project_issue_needaction_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
 #: model:ir.ui.menu,name:project_issue.portal_services_issues
@@ -503,11 +464,6 @@ msgid "Last Message"
 msgstr "Pesan yang lalu"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_last_post
-msgid "Last Message Date"
-msgstr "Tanggal pesan terakhir"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue___last_update
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report___last_update
 msgid "Last Modified on"
@@ -525,20 +481,9 @@ msgid "Last Updated by"
 msgstr "Diperbaharui oleh"
 
 #. module: project_issue
-#: selection:project.issue,priority:0
-#: selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
 msgid "Low"
 msgstr "Rendah"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_ids
-msgid "Messages"
-msgstr "Pesan"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_ids
-msgid "Messages and communication history"
-msgstr "Pesan dan riwayat komunikasi"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -552,7 +497,7 @@ msgid "New"
 msgstr "Baru"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:347
+#: code:addons/project_issue/project_issue.py:364
 #, python-format
 msgid "New Issue"
 msgstr ""
@@ -563,7 +508,7 @@ msgid "Next Action"
 msgstr "Aksi Selanjutnya"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:390
+#: code:addons/project_issue/project_issue.py:413
 #, python-format
 msgid "No Subject"
 msgstr "Tidak ada subjek"
@@ -573,11 +518,6 @@ msgstr "Tidak ada subjek"
 #: selection:project.issue.report,priority:0
 msgid "Normal"
 msgstr "Normal"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Jumlah tindakan"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -590,26 +530,16 @@ msgid "Number of Days to open the project issue."
 msgstr "Jumlah hari untuk membuka masalah proyek."
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Jumlah pesan yang memerlukan tindakan"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Jumlah pesan yang belum dibaca"
-
-#. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
 msgid "Partner"
 msgstr "Rekanan"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:480
+#: code:addons/project_issue/project_issue.py:530
 #, python-format
 msgid ""
-"Please remove existing issues in the project linked to the accounts you want"
-" to delete."
+"Please remove existing issues in the project linked to the accounts you want "
+"to delete."
 msgstr ""
 
 #. module: project_issue
@@ -637,7 +567,6 @@ msgid "Project"
 msgstr "Proyek"
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_graph
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_pivot
 msgid "Project Issue"
@@ -669,7 +598,9 @@ msgstr "Team Sales"
 msgid ""
 "Sales team to which Case belongs to.                             Define "
 "Responsible user and Email account for mail gateway."
-msgstr "Tim penjualan yang kasus milik.                             Menentukan pengguna bertanggung jawab dan account Email untuk mail gateway."
+msgstr ""
+"Tim penjualan yang kasus milik.                             Menentukan "
+"pengguna bertanggung jawab dan account Email untuk mail gateway."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -708,11 +639,18 @@ msgid "Task"
 msgstr "Tugas"
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_project_task_type
+#, fuzzy
+msgid "Task Stage"
+msgstr "Tingkat"
+
+#. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
 msgid ""
 "The Odoo issues tacker allows you to efficiently manage things\n"
-"                    like internal requests, software development bugs, customer\n"
+"                    like internal requests, software development bugs, "
+"customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
 
@@ -730,7 +668,10 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr "Email ini akan di tambahkan ke kolom CC dari semua email masuk dan keluar sebagai arsip sebelum di kirim. Alamat email yang banyak akan dipisahkan dengan koma."
+msgstr ""
+"Email ini akan di tambahkan ke kolom CC dari semua email masuk dan keluar "
+"sebagai arsip sebelum di kirim. Alamat email yang banyak akan dipisahkan "
+"dengan koma."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
@@ -745,7 +686,12 @@ msgid ""
 "support or after-sales services. You can track the issues per age. You can "
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
-msgstr "Laporan ini pada isu-isu proyek memungkinkan Anda untuk menganalisa kualitas Anda dukungan atau purna jual layanan. Anda dapat melacak masalah setiap usia. Anda dapat menganalisis waktu yang dibutuhkan untuk membuka atau menutup masalah, jumlah email pertukaran dan waktu yang dihabiskan rata-rata oleh isu-isu."
+msgstr ""
+"Laporan ini pada isu-isu proyek memungkinkan Anda untuk menganalisa kualitas "
+"Anda dukungan atau purna jual layanan. Anda dapat melacak masalah setiap "
+"usia. Anda dapat menganalisis waktu yang dibutuhkan untuk membuka atau "
+"menutup masalah, jumlah email pertukaran dan waktu yang dihabiskan rata-rata "
+"oleh isu-isu."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -754,14 +700,10 @@ msgid "Unassigned"
 msgstr "Tak ditugaskan"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Unread Messages"
 msgstr "Pesan Belum Dibaca"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Pesan yang belum dibaca Counter"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
@@ -789,16 +731,6 @@ msgid "Watchers Emails"
 msgstr "Email Watchers"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_website_message_ids
-msgid "Website Messages"
-msgstr "Pesan situs"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_website_message_ids
-msgid "Website communication history"
-msgstr "Sejarah komunikasi situs"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_open
 msgid "Working Hours to assign the Issue"
 msgstr "Bekerja jam untuk menetapkan masalah"
@@ -823,12 +755,72 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:260
+#: code:addons/project_issue/project_issue.py:263
 #, python-format
 msgid "issues"
 msgstr "Masalah"
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue
+#, fuzzy
+msgid "project issue"
+msgstr "Masalah proyek"
+
+#. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
 msgstr ""
+
+#~ msgid "Action Needed"
+#~ msgstr "Tindakan diperlukan"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Tanggal pesan terakhir diposting pada catatan."
+
+#~ msgid "Followers"
+#~ msgstr "Pengikut"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Pengikut (saluran)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Pengikut (mitra)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
+
+#~ msgid "Important Messages"
+#~ msgstr "Pesan penting"
+
+#~ msgid "Is Follower"
+#~ msgstr "Adalah pengikut"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Tanggal pesan terakhir"
+
+#~ msgid "Messages"
+#~ msgstr "Pesan"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Pesan dan riwayat komunikasi"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Jumlah tindakan"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Jumlah pesan yang memerlukan tindakan"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Jumlah pesan yang belum dibaca"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Pesan yang belum dibaca Counter"
+
+#~ msgid "Website Messages"
+#~ msgstr "Pesan situs"
+
+#~ msgid "Website communication history"
+#~ msgstr "Sejarah komunikasi situs"

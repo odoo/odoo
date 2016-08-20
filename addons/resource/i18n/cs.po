@@ -1,24 +1,36 @@
+# #-#-#-#-#  cs.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * resource
-# 
+#
 # Translators:
+# xlu <xlu@seznam.cz>, 2015
+# #-#-#-#-#  cs.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * resource
+#
+# Translators:
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-10-23 14:09+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
+"#-#-#-#-#  cs.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"#-#-#-#-#  cs.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:689
+#: code:addons/resource/resource.py:686
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -79,6 +91,7 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
+"Definujte pracovní dobu a rozvrh který může být naplánován členům projektu"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
@@ -86,7 +99,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Zobrazovaný název"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -107,7 +120,8 @@ msgstr "Datum ukončení"
 #. module: resource
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
-msgstr "Chyba! počáteční datum uvolnění musí být menší než konečné datum uvolnění"
+msgstr ""
+"Chyba! počáteční datum uvolnění musí být menší než konečné datum uvolnění"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -143,14 +157,18 @@ msgstr "ID"
 msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
-msgstr "Pokud je prázdné, jedná se o obecnou dovolenou společnosti. Pokud je zdroj nastaven, dovolená/uvolnění je pouze pro tento zdroj"
+msgstr ""
+"Pokud je prázdné, jedná se o obecnou dovolenou společnosti. Pokud je zdroj "
+"nastaven, dovolená/uvolnění je pouze pro tento zdroj"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr "Pokud je pole aktivní nastaveno na Nepravda, umožní vám to skrýt záznam zdroje bez jeho odstranění."
+msgstr ""
+"Pokud je pole aktivní nastaveno na Nepravda, umožní vám to skrýt záznam "
+"zdroje bez jeho odstranění."
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -191,7 +209,7 @@ msgstr "Podrobnosti uvolnění"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Month"
-msgstr ""
+msgstr "Volný měsíc"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
@@ -282,7 +300,10 @@ msgid ""
 "Resources allow you to create and manage resources that should be involved "
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
-msgstr "Zdroje umožňují vytvořit a spravovat zdroje, které by měly být zapojené v určitých fázích projektu. Můžete také nastavit jejich úroveň účinnosti a základní zatížení na jejich týdeních pracovních hodinách."
+msgstr ""
+"Zdroje umožňují vytvořit a spravovat zdroje, které by měly být zapojené v "
+"určitých fázích projektu. Můžete také nastavit jejich úroveň účinnosti a "
+"základní zatížení na jejich týdeních pracovních hodinách."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -312,7 +333,7 @@ msgstr "Počáteční datum"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance_hour_from
 msgid "Start and End time of working."
-msgstr ""
+msgstr "Začátek a konec pracovní doby."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_from
@@ -322,7 +343,7 @@ msgstr "Počáteční datum"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave by Month"
-msgstr ""
+msgstr "Začátek dovolené podle měsíce"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -334,9 +355,12 @@ msgstr "Neděle"
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
 msgstr ""
+"Toto pole zobrazuje účinnost zdroje při plnění úkolů. Např. zdroj sám byl na "
+"fázi 5 dní s 5 úkoly, které mu ukáží zatížení 100% pro tuto fázi ve výchozím "
+"nastavení, ale pokud dáme účinnost 200%, pak jeho zatížení bude pouze 50%."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
