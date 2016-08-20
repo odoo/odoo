@@ -292,12 +292,12 @@ class ProductTemplate(models.Model):
             return super(ProductTemplate, self).name_search(name=name, args=args, operator=operator, limit=limit)
 
         Product = self.env['product.product']
-        products = Product.search(name, args, operator=operator, limit=limit)
+        products = Product.search(args + [('name', operator, name)], limit=limit)
         templates = products.mapped('product_tmpl_id')
         while products and len(templates) < limit:
             domain = [('product_tmpl_id', 'not in', templates.ids)]
             args = args if args is not None else []
-            products = Product.search(name, args+domain, operator=operator)
+            products = Product.search(args + domain + [('name', operator, name)])
             templates |= products.mapped('product_tmpl_id')
 
         # re-apply product.template order + name_get
