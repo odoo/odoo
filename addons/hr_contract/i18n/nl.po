@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -53,11 +53,6 @@ msgid "Basic Salary of the employee"
 msgstr "Basissalaris van de werknemer"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
-msgid "Click here to create new contracts."
-msgstr ""
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
 msgid "Company Vehicle"
 msgstr "Auto v/d zaak"
@@ -70,7 +65,7 @@ msgstr "Contractreferentie"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5636
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -95,12 +90,6 @@ msgstr "Contract gaat vervallen"
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
 msgstr "Contract verlopen"
-
-#. module: hr_contract
-#: code:addons/hr_contract/models/hr_contract.py:84
-#, python-format
-msgid "Contract start date must be less than contract end date."
-msgstr ""
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
@@ -182,6 +171,11 @@ msgid "End Date"
 msgstr "Einddatum"
 
 #. module: hr_contract
+#: constraint:hr.contract:0
+msgid "Error! Contract start-date must be less than contract end-date."
+msgstr "Fout! Contract startdatum moet voor de einddatum liggen."
+
+#. module: hr_contract
 #: selection:hr.contract,state:0
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
@@ -222,11 +216,6 @@ msgstr "Reisafstand woon-werkverkeer"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id
 msgid "ID"
 msgstr "ID"
-
-#. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Important Messages"
-msgstr "Belangrijke berichten"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
@@ -386,6 +375,11 @@ msgid "Trial Start Date"
 msgstr "Startdatum proeftijd"
 
 #. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Unread Messages"
+msgstr "Ongelezen berichten"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
 msgid "Use employee work schedule"
 msgstr "Gebruik medewerker werkplanning"
@@ -434,9 +428,6 @@ msgstr "Werktijden"
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
 
-#~ msgid "Error! Contract start-date must be less than contract end-date."
-#~ msgstr "Fout! Contract startdatum moet voor de einddatum liggen."
-
 #~ msgid "Followers"
 #~ msgstr "Volgers"
 
@@ -473,9 +464,6 @@ msgstr "Werktijden"
 #~ msgid "Number of unread messages"
 #~ msgstr "Aantal ongelezen berichten"
 
-#~ msgid "Unread Messages"
-#~ msgstr "Ongelezen berichten"
-
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Teller ongelezen berichten"
 
@@ -484,3 +472,6 @@ msgstr "Werktijden"
 
 #~ msgid "Website communication history"
 #~ msgstr "Website communicatie geschiedenis"
+
+#~ msgid "Important Messages"
+#~ msgstr "Belangrijke berichten"

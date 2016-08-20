@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:36+0000\n"
 "Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -37,7 +37,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:76
+#: code:addons/hr/hr.py:120
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -135,7 +135,6 @@ msgid "A good job in a young and dynamic team"
 msgstr "Een goede job in een jong en dynamisch team"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "Actief"
@@ -146,7 +145,6 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr "Analyseer de node, schrijf specificatie documentatie en offerte"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Gearchiveerd"
@@ -249,6 +247,11 @@ msgid "Click to create a department."
 msgstr "Klik om een nieuw departement aan te maken."
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
+msgid "Click to define a new department."
+msgstr "Klik om een nieuw departement te definiëren."
+
+#. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid "Click to define a new job position."
 msgstr "Klik om een nieuwe job positie te definiëren."
@@ -324,6 +327,11 @@ msgid "Contributions to open source projects"
 msgstr "Bijdrages aan open source projecten"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.view_department_form_installer
+msgid "Create Your Departments"
+msgstr "Maak uw afdelingen aan"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
@@ -367,6 +375,7 @@ msgid "Deliver generic Odoo functional training sessions"
 msgstr "Lever generieke functionele trainingssessies over Odoo"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -474,13 +483,13 @@ msgid "Employees Tags"
 msgstr "Werknemer labels"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:264
+#: code:addons/hr/hr.py:294 constraint:hr.department:0
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Fout! het is niet toegestaan recursieve afdelingen aan te maken."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:177
+#: code:addons/hr/hr.py:264 constraint:hr.employee:0
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
@@ -618,11 +627,6 @@ msgstr "Aangenomen werknemers"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
 msgid "Home Address"
 msgstr "Privé-adres"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "Hr Department"
-msgstr "HR afdeling"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -894,6 +898,7 @@ msgid "Must have ..."
 msgstr "Moet hebben ..."
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
@@ -1292,11 +1297,6 @@ msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_login
-msgid "Used to log into the system"
-msgstr "Gebruikt voor aanmelding aan het systeem"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
 msgid "User"
 msgstr "Gebruiker"
@@ -1647,6 +1647,18 @@ msgid "You will work closely with all trainees"
 msgstr "U werkt nauw samen met alle cursisten"
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
+msgid ""
+"Your departments structure is used to manage all documents\n"
+"                related to employees by departments: expenses and "
+"timesheets,\n"
+"                leaves and holidays, recruitments, etc."
+msgstr ""
+"Odoo's departement structuur is gebruikt om alle documenten te beheren\n"
+"die gerelateerd zijn aan werknemers per departement: uitgaven, urenstaten,\n"
+"afwezigheden en vakanties, aanwervingen, enz."
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "afdeling"
@@ -1658,12 +1670,6 @@ msgstr "Bijv. Parttime"
 
 #~ msgid "Action Needed"
 #~ msgstr "Vereist actie"
-
-#~ msgid "Click to define a new department."
-#~ msgstr "Klik om een nieuw departement te definiëren."
-
-#~ msgid "Create Your Departments"
-#~ msgstr "Maak uw afdelingen aan"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
@@ -1713,16 +1719,11 @@ msgstr "Bijv. Parttime"
 #~ msgid "Update Date"
 #~ msgstr "Wijzigingsdatum"
 
-#~ msgid ""
-#~ "Your departments structure is used to manage all documents\n"
-#~ "                related to employees by departments: expenses and "
-#~ "timesheets,\n"
-#~ "                leaves and holidays, recruitments, etc."
-#~ msgstr ""
-#~ "Odoo's departement structuur is gebruikt om alle documenten te beheren\n"
-#~ "die gerelateerd zijn aan werknemers per departement: uitgaven, "
-#~ "urenstaten,\n"
-#~ "afwezigheden en vakanties, aanwervingen, enz."
+#~ msgid "Hr Department"
+#~ msgstr "HR afdeling"
 
 #~ msgid "Resource Name"
 #~ msgstr "Resourcenaam"
+
+#~ msgid "Used to log into the system"
+#~ msgstr "Gebruikt voor aanmelding aan het systeem"

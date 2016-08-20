@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-30 12:31+0000\n"
 "Last-Translator: Gennady Marchenko <gennadym@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -153,6 +153,11 @@ msgstr ""
 "<strong>Отправлено email, содержащее следующую ссылку с подпиской:</strong>"
 
 #. module: auth_signup
+#: selection:res.users,state:0
+msgid "Activated"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
 msgstr "Разрешить регистрацию внешним пользователям"
@@ -196,12 +201,6 @@ msgstr "Подтвердить"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
 msgstr "Подтвердите пароль"
-
-#. module: auth_signup
-#: selection:res.users,state:0
-#, fuzzy
-msgid "Confirmed"
-msgstr "Подтвердить"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:41

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-07-21 11:10+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
@@ -32,7 +32,7 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:76
+#: code:addons/hr/hr.py:120
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (نسخة)"
@@ -124,7 +124,6 @@ msgid "A good job in a young and dynamic team"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "نشط"
@@ -135,7 +134,6 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "مؤرشف"
@@ -221,6 +219,11 @@ msgid "Click to create a department."
 msgstr "أنقر هنا لإضافة قسم جديد."
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
+msgid "Click to define a new department."
+msgstr "أنقر هنا لإضافة قسم جديد."
+
+#. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid "Click to define a new job position."
 msgstr "أنقر هنا لإضافة منصب جديد."
@@ -291,6 +294,11 @@ msgid "Contributions to open source projects"
 msgstr ""
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.view_department_form_installer
+msgid "Create Your Departments"
+msgstr "قم بإنشاء الأقسام"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
@@ -334,6 +342,7 @@ msgid "Deliver generic Odoo functional training sessions"
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -431,13 +440,13 @@ msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:264
+#: code:addons/hr/hr.py:294 constraint:hr.department:0
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "خطأ! لا يمكنك انشاء أقسام متداخلة."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:177
+#: code:addons/hr/hr.py:264 constraint:hr.employee:0
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "خطأ! لا يمكنك إنشاء التسلسل الهرمي العودي من الموظف ."
@@ -568,12 +577,6 @@ msgstr "الموظفون المعينون"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
 msgid "Home Address"
 msgstr "عنوان المنزل"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_department
-#, fuzzy
-msgid "Hr Department"
-msgstr "قسم الموارد البشرية"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -823,6 +826,7 @@ msgid "Must have ..."
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
@@ -1179,11 +1183,6 @@ msgid "Unread Messages"
 msgstr "رسائل غير مقروءة"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_login
-msgid "Used to log into the system"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
 msgid "User"
 msgstr "المستخدم"
@@ -1492,6 +1491,15 @@ msgid "You will work closely with all trainees"
 msgstr ""
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
+msgid ""
+"Your departments structure is used to manage all documents\n"
+"                related to employees by departments: expenses and "
+"timesheets,\n"
+"                leaves and holidays, recruitments, etc."
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "قسم"
@@ -1504,12 +1512,6 @@ msgstr "على سبيل المثال دوام جزئي"
 #~ msgid "Action Needed"
 #~ msgstr "الاجراء المطلوب"
 
-#~ msgid "Click to define a new department."
-#~ msgstr "أنقر هنا لإضافة قسم جديد."
-
-#~ msgid "Create Your Departments"
-#~ msgstr "قم بإنشاء الأقسام"
-
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "تاريخ آخر رسالة في هذا السجل."
 
@@ -1518,6 +1520,9 @@ msgstr "على سبيل المثال دوام جزئي"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "المتابعون (الشرماء)"
+
+#~ msgid "HR Department"
+#~ msgstr "قسم الموارد البشرية"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"

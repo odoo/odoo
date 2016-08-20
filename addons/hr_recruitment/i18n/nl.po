@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:36+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -485,11 +485,6 @@ msgid "Click to add a new stage in the recruitment process."
 msgstr "Klik om een nieuwe fase in het wervingsproces toe te voegen."
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
-msgid "Click to add a new tag."
-msgstr "Klik om een nieuw label toe te voegen."
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_closed
 #, fuzzy
@@ -699,6 +694,7 @@ msgstr ""
 "Verwijder"
 
 #. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_department
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_department_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_department_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -958,11 +954,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
 msgstr "Aangenomen werknemers"
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_department
-msgid "Hr Department"
-msgstr "HR afdeling"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -1758,10 +1749,7 @@ msgstr ""
 "Labelnaam bestaat al!"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_categ_ids
-#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 msgid "Tags"
 msgstr "Labels"
 
@@ -2199,6 +2187,9 @@ msgstr "oe_kanban_text_red"
 #~ msgid "Welcoming ${object.name} "
 #~ msgstr "Verwelkoming ${object.name}"
 
+#~ msgid "Click to add a new tag."
+#~ msgstr "Klik om een nieuw label toe te voegen."
+
 #~ msgid "Content"
 #~ msgstr "Inhoud"
 
@@ -2210,6 +2201,9 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "Discard"
 #~ msgstr "Negeren"
+
+#~ msgid "Hr Department"
+#~ msgstr "HR afdeling"
 
 #~ msgid "Refused"
 #~ msgstr "Geweigerd"

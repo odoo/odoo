@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:36+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
@@ -43,7 +43,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:76
+#: code:addons/hr/hr.py:120
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -140,7 +140,6 @@ msgid "A good job in a young and dynamic team"
 msgstr "一个好的工作是在一个年轻而充满活力的团队"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "有效"
@@ -151,7 +150,6 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr "分析需求，编写规范文件和报价单"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #, fuzzy
 msgid "Archived"
@@ -248,6 +246,11 @@ msgid "Click to create a department."
 msgstr "单击创建一个部门"
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
+msgid "Click to define a new department."
+msgstr "单击定义一个新的部门"
+
+#. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid "Click to define a new job position."
 msgstr "点击定义一个新的职位"
@@ -323,6 +326,11 @@ msgid "Contributions to open source projects"
 msgstr "贡献开源项目"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.view_department_form_installer
+msgid "Create Your Departments"
+msgstr "创建您的部门"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
@@ -371,6 +379,7 @@ msgid "Deliver generic Odoo functional training sessions"
 msgstr "提供通用的Odoo功能培训会议"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -473,13 +482,13 @@ msgid "Employees Tags"
 msgstr "员工标签"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:264
+#: code:addons/hr/hr.py:294 constraint:hr.department:0
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "错误！你不能创建递归的部门"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:177
+#: code:addons/hr/hr.py:264 constraint:hr.employee:0
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "错误！您不能创建递归的员工层级。"
@@ -610,11 +619,6 @@ msgstr "已雇用员工"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
 msgid "Home Address"
 msgstr "家庭地址"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "Hr Department"
-msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -911,6 +915,7 @@ msgid "Must have ..."
 msgstr "一定有..."
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
@@ -1286,11 +1291,6 @@ msgid "Unread Messages"
 msgstr "未读消息"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_login
-msgid "Used to log into the system"
-msgstr "用户登录入系统"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
 msgid "User"
 msgstr "用户"
@@ -1620,6 +1620,17 @@ msgid "You will work closely with all trainees"
 msgstr "你将会和所有的学员紧密合作"
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
+msgid ""
+"Your departments structure is used to manage all documents\n"
+"                related to employees by departments: expenses and "
+"timesheets,\n"
+"                leaves and holidays, recruitments, etc."
+msgstr ""
+"部门结构用来管理所有的不同部门员工的相关文档：费用和工时单，休假和假期，招聘"
+"等等"
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "部门"
@@ -1631,12 +1642,6 @@ msgstr "例如： 部分时间"
 
 #~ msgid "Action Needed"
 #~ msgstr "所需动作"
-
-#~ msgid "Click to define a new department."
-#~ msgstr "单击定义一个新的部门"
-
-#~ msgid "Create Your Departments"
-#~ msgstr "创建您的部门"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "发布到记录上的最后消息的日期"
@@ -1686,14 +1691,8 @@ msgstr "例如： 部分时间"
 #~ msgid "Update Date"
 #~ msgstr "更新日期"
 
-#~ msgid ""
-#~ "Your departments structure is used to manage all documents\n"
-#~ "                related to employees by departments: expenses and "
-#~ "timesheets,\n"
-#~ "                leaves and holidays, recruitments, etc."
-#~ msgstr ""
-#~ "部门结构用来管理所有的不同部门员工的相关文档：费用和工时单，休假和假期，招"
-#~ "聘等等"
-
 #~ msgid "Resource Name"
 #~ msgstr "资源名称"
+
+#~ msgid "Used to log into the system"
+#~ msgstr "用户登录入系统"

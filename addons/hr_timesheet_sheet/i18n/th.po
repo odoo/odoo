@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-07-08 03:24+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
@@ -32,6 +32,26 @@ msgid ""
 "* The 'Done' status is used when users timesheet is accepted by his/her "
 "senior."
 msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
+msgid "# Nbr Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
+msgid "# Total Attendance"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
+msgid "# Total Diff"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
+msgid "# Total Timesheet"
+msgstr "# สมุดจดเวลาทำงานทั้งหมด"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -105,6 +125,12 @@ msgid "Company"
 msgstr "บริษัท"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Confirmed"
+msgstr "ยืนยันแล้ว"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr "สมุดจดเวลาทำงานที่ยืนยันแล้ว"
@@ -132,18 +158,23 @@ msgid "Date"
 msgstr "วันที่"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr "จากวันที่"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "ถึงวันที่"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "แผนก"
 
@@ -172,6 +203,18 @@ msgid "Display Name"
 msgstr "ชื่อที่ใช้แสดง"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Done"
+msgstr "เสร็จสมบูรณ์"
+
+#. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Draft"
+msgstr "ฉบับร่าง"
+
+#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
@@ -194,6 +237,11 @@ msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
+msgid "External Timesheet"
+msgstr "สมุดจดเวลาทำงานภายนอก"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
 msgstr "จัดกลุ่มโดย"
@@ -202,12 +250,6 @@ msgstr "จัดกลุ่มโดย"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "ชั่วโมง"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-#, fuzzy
-msgid "Hr Department"
-msgstr "แผนก HR"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -230,6 +272,11 @@ msgid ""
 "In order to create a timesheet for this employee, you must link him/her to a "
 "user."
 msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
+msgid "Internal Timesheet"
+msgstr "สมุดจดเวลาทำงานภายใน"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -268,6 +315,7 @@ msgid "My Timesheets"
 msgstr "สมุดจดเวลาทำงานของฉัน"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
 msgstr "ใหม่"
@@ -361,7 +409,9 @@ msgid "Sign Out"
 msgstr "ออกจากระบบ"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Status"
 msgstr "สถานะ"
 
@@ -384,6 +434,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
@@ -668,32 +719,17 @@ msgstr "ถึง"
 msgid "waiting approval"
 msgstr ""
 
-#~ msgid "# Total Timesheet"
-#~ msgstr "# สมุดจดเวลาทำงานทั้งหมด"
-
 #~ msgid "Action Needed"
 #~ msgstr "ต้องดำเนินการ"
 
 #~ msgid "Cancel"
 #~ msgstr "ยกเลิก"
 
-#~ msgid "Confirmed"
-#~ msgstr "ยืนยันแล้ว"
-
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "วันที่ข้อความล่าสุดโพสต์ในระเบียน"
 
 #~ msgid "Day"
 #~ msgstr "วัน"
-
-#~ msgid "Done"
-#~ msgstr "เสร็จสมบูรณ์"
-
-#~ msgid "Draft"
-#~ msgstr "ฉบับร่าง"
-
-#~ msgid "External Timesheet"
-#~ msgstr "สมุดจดเวลาทำงานภายนอก"
 
 #~ msgid "Followers"
 #~ msgstr "ผู้ติดตาม"
@@ -704,14 +740,14 @@ msgstr ""
 #~ msgid "Followers (Partners)"
 #~ msgstr "ผู้ติดตาม (คู่ค้า)"
 
+#~ msgid "HR Department"
+#~ msgstr "แผนก HR"
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
-
-#~ msgid "Internal Timesheet"
-#~ msgstr "สมุดจดเวลาทำงานภายใน"
 
 #~ msgid "Is Follower"
 #~ msgstr "เป็นผู้ติดตาม"

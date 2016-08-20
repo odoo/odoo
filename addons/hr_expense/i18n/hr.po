@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-02-20 10:40+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -53,11 +53,6 @@ msgstr "<strong>Ukupno</strong>"
 #, fuzzy
 msgid "Account"
 msgstr "Analitički konto"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_accounting_date
-msgid "Accounting Date"
-msgstr ""
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
@@ -178,6 +173,7 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_department_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Department"
@@ -294,13 +290,13 @@ msgid "Expenses by Month"
 msgstr "Troškovi po mjesecima"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:210
+#: code:addons/hr_expense/models/hr_expense.py:209
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "Konto i period moraju pripadati istom djelatniku."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:213
+#: code:addons/hr_expense/models/hr_expense.py:212
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -366,12 +362,6 @@ msgstr "HR troškovi"
 #: model:product.template,name:hr_expense.hotel_rent_product_template
 msgid "Hotel Accommodation"
 msgstr "Troškovi smještaja u hotelu"
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
-#, fuzzy
-msgid "Hr Department"
-msgstr "Odjel ljudskih resursa"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -447,7 +437,7 @@ msgid "New Mail"
 msgstr "Nova pošta"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:278
+#: code:addons/hr_expense/models/hr_expense.py:276
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
@@ -457,14 +447,14 @@ msgstr ""
 "molimo konfigurirajte jedan."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:246
+#: code:addons/hr_expense/models/hr_expense.py:244
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr ""
 "Nije pronađena adresa za ovog djelatnika  %s, molimo konfigurirajte jednu."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:242
+#: code:addons/hr_expense/models/hr_expense.py:240
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr "Nije pronađen kreditni račun za %s dnevnika, konfigurirajte jedan."
@@ -499,7 +489,7 @@ msgid "Payment By"
 msgstr "Plaćanje po"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:282
+#: code:addons/hr_expense/models/hr_expense.py:280
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -568,8 +558,7 @@ msgstr "Odbijen"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense
-#, fuzzy
-msgid "Reports"
+msgid "Reporting"
 msgstr "Izvještaji"
 
 #. module: hr_expense
@@ -578,7 +567,7 @@ msgid "Select the lines you want to submit to be reimbursed."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:78
+#: code:addons/hr_expense/models/hr_expense.py:77
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -599,7 +588,6 @@ msgstr "Navedite da li proizvod može biti odabran u HR trošak."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_state
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Status"
 msgstr "Status"
 
@@ -723,25 +711,25 @@ msgstr ""
 "nalazi se u statusu 'Čeka plaćanje'. "
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:112
+#: code:addons/hr_expense/models/hr_expense.py:111
 #, python-format
 msgid "You can only delete draft or refused expenses!"
 msgstr "Možete izbrisati samo nacrt ili odbiti troškove!"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:207
+#: code:addons/hr_expense/models/hr_expense.py:206
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr "Možete generirati knjiženje za odobrene troškov(e)."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:118
+#: code:addons/hr_expense/models/hr_expense.py:117
 #, python-format
 msgid "You can only submit draft expenses!"
 msgstr "Možete poslati samo nacrte troškova."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:129
+#: code:addons/hr_expense/models/hr_expense.py:128
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
@@ -787,6 +775,9 @@ msgstr ""
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Pratitelji (Partneri)"
+
+#~ msgid "HR Department"
+#~ msgstr "Odjel ljudskih resursa"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."

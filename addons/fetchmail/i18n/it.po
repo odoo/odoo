@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-10-23 18:03+0000\n"
 "Last-Translator: Francesco <francesco.bianchi.88@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
@@ -60,7 +60,7 @@ msgid "Confirmed"
 msgstr "Confermato"
 
 #. module: fetchmail
-#: code:addons/fetchmail/models/fetchmail.py:137
+#: code:addons/fetchmail/fetchmail.py:150
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "Test connessione fallito: %s"
@@ -80,11 +80,13 @@ msgid "Create a New Record"
 msgstr "Crea un nuovo record"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "Creato da"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "Creato il"
@@ -96,6 +98,7 @@ msgstr ""
 "Definisce l'ordine di esecuzione, valori bassi significano priorità alta"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr "Visualizza Nome"
@@ -111,6 +114,7 @@ msgid "Hostname or IP of the mail server"
 msgstr "Hostname o IP del mail server"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "ID"
@@ -163,16 +167,19 @@ msgid "Last Fetch Date"
 msgstr "Ultima data prelievo mail"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
 msgstr "Data di ultima modifica"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
 msgstr "Ultima modifica di"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "Ultima modifica il"
@@ -360,5 +367,7 @@ msgstr ""
 "Se gli allegati devono essere scaricati. Se non abilitato, le mail in "
 "entrata verranno prelevate senza alcun allegato prima di essere processate"
 
-#~ msgid "fetchmail.config.settings"
-#~ msgstr "fetchmail.config.settings"
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
+msgid "fetchmail.config.settings"
+msgstr "fetchmail.config.settings"

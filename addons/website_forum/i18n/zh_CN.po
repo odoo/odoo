@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-07-12 07:31+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -111,20 +111,6 @@ msgstr "次数"
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "(The above section was adapted from Stackoverflow’s FAQ.)"
 msgstr "(以上部分是改编自堆栈溢出的常见问题解答)"
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
-msgid ""
-"(Un)archiving a forum automatically (un)archives its posts. Do you want to "
-"proceed?"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
-msgid ""
-"(Un)archiving a post automatically (un)archives its answers. Do you want to "
-"proceed?"
-msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -463,7 +449,6 @@ msgstr "接受一个答案"
 
 #. module: website_forum
 #: selection:forum.post,state:0
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum_active
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_active
 msgid "Active"
 msgstr "有效"
@@ -521,7 +506,7 @@ msgid "Answer"
 msgstr "回复"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:507
+#: code:addons/website_forum/models/forum.py:498
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -612,12 +597,6 @@ msgstr "回复的问题获得至少4次以上投票"
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Answers"
 msgstr "答案"
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.forum_view_search
-#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
-msgid "Archived"
-msgstr ""
 
 #. module: website_forum
 #: selection:forum.post,post_type:0
@@ -716,10 +695,15 @@ msgstr "返回"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:322
-#: code:addons/website_forum/controllers/main.py:393
+#: code:addons/website_forum/controllers/main.py:389
 #, python-format
 msgid "Bad Request"
 msgstr "不好的请求"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.badge_user
+msgid "Badge \""
+msgstr "徽章 \""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_badge_ids
@@ -1422,7 +1406,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_forum_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_forum_id
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
-#: model:ir.ui.view,arch_db:website_forum.forum_view_search
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 #: model:website.menu,name:website_forum.menu_questions
@@ -1906,20 +1889,20 @@ msgid "Nofollow links"
 msgstr "不能跟贴的链接"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:859
-#: code:addons/website_forum/models/forum.py:879
+#: code:addons/website_forum/models/forum.py:833
+#: code:addons/website_forum/models/forum.py:853
 #, python-format
 msgid "Not allowed to vote for its own post"
 msgstr "不能给自己的贴子投票"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:923
+#: code:addons/website_forum/models/forum.py:897
 #, fuzzy, python-format
 msgid "Not enough karma to create a new Tag"
 msgstr "选择这个菜单项来新建一个论坛"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:497
+#: code:addons/website_forum/models/forum.py:488
 #, python-format
 msgid "Not enough karma to retag."
 msgstr ""
@@ -2118,7 +2101,7 @@ msgid "Posted 100 comments"
 msgstr "张贴的100个评论"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:441
+#: code:addons/website_forum/models/forum.py:432
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible"
 msgstr "张贴回复在[删除]或[关闭]的问题是不可能的"
@@ -2184,7 +2167,7 @@ msgid "Question"
 msgstr "疑问"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:510
+#: code:addons/website_forum/models/forum.py:501
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2262,7 +2245,7 @@ msgid "Questions"
 msgstr "问题"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:528
+#: code:addons/website_forum/models/forum.py:515
 #, python-format
 msgid "Re: %s"
 msgstr "回复: %s"
@@ -2649,7 +2632,7 @@ msgstr ""
 "的天数"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:417
+#: code:addons/website_forum/models/forum.py:408
 #, python-format
 msgid "This forum does not allow %s"
 msgstr "这个论坛不允许%s"
@@ -2712,7 +2695,7 @@ msgstr "标题不能为空"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:322
-#: code:addons/website_forum/controllers/main.py:393
+#: code:addons/website_forum/controllers/main.py:389
 #, python-format
 msgid "Title should not be empty."
 msgstr "标题不能为空"
@@ -2721,6 +2704,11 @@ msgstr "标题不能为空"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_recipient_id
 msgid "To"
 msgstr "到"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid "To improve your chance getting an answer:"
+msgstr "为了提高你得到一个答案的机会："
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2845,7 +2833,7 @@ msgid "Validate question"
 msgstr "生成一个问题!"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:803
+#: code:addons/website_forum/models/forum.py:777
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #, python-format
 msgid "View"
@@ -2878,12 +2866,6 @@ msgstr "等待验证"
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Waiting for validation"
 msgstr "等待验证"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users_forum_waiting_posts_count
-#, fuzzy
-msgid "Waiting post"
-msgstr "编辑自己的帖子"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
@@ -2942,15 +2924,7 @@ msgid "Why can other people edit my questions/answers?"
 msgstr "为什么其他人能编辑我的问题/回答？"
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.new_question
-msgid ""
-"You already have one pending post.<br/>\n"
-"            Please wait for a moderator to validate your previous post "
-"before continuing."
-msgstr ""
-
-#. module: website_forum
-#: code:addons/website_forum/models/forum.py:142
+#: code:addons/website_forum/models/forum.py:141
 #, python-format
 msgid "You cannot choose %s as default post since the forum does not allow it."
 msgstr "你不能选择%s作为默认帖子，论坛不允许这样做。"
@@ -3272,6 +3246,11 @@ msgid "racist and hate speech"
 msgstr "种族主义和仇恨言论"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.badge_user
+msgid "received this badge:"
+msgstr "收到此徽章："
+
+#. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "silver"
 msgstr "银"
@@ -3322,6 +3301,16 @@ msgstr "过于主观和争论"
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "upvote, add comments"
 msgstr "赞成，添加注释"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.badge_user
+msgid "user"
+msgstr "用户"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.badge_user
+msgid "users"
+msgstr "用户"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3441,9 +3430,6 @@ msgstr "您的基础资料可以被视为提示"
 #~ msgid "Action Needed"
 #~ msgstr "所需行动"
 
-#~ msgid "Badge \""
-#~ msgstr "徽章 \""
-
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "发布到记录上的最后消息的日期"
 
@@ -3486,9 +3472,6 @@ msgstr "您的基础资料可以被视为提示"
 #~ msgid "Send a message to the group"
 #~ msgstr "发送信息到该组"
 
-#~ msgid "To improve your chance getting an answer:"
-#~ msgstr "为了提高你得到一个答案的机会："
-
 #~ msgid "Unread Messages"
 #~ msgstr "未读消息"
 
@@ -3509,12 +3492,3 @@ msgstr "您的基础资料可以被视为提示"
 
 #~ msgid "Website meta title"
 #~ msgstr "网站meta标题"
-
-#~ msgid "received this badge:"
-#~ msgstr "收到此徽章："
-
-#~ msgid "user"
-#~ msgstr "用户"
-
-#~ msgid "users"
-#~ msgstr "用户"

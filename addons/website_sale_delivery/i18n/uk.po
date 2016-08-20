@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-04-23 09:01+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -29,14 +29,6 @@ msgid ""
 msgstr ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Вартість доставки "
 "буде оновлено коли ви оберете новий спосіб доставки\"> Доставка:</span>"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
-msgid ""
-"A description of the Product that you want to communicate to your customers. "
-"This description will be copied to every Sale Order, Delivery Order and "
-"Customer Invoice/Refund"
-msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -85,15 +77,14 @@ msgid "Country..."
 msgstr "Країна..."
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_project_id
+msgid "Create a task under this project on sale order validation."
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
 msgstr "Вартість доставки"
-
-#. module: website_sale_delivery
-#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
-#, fuzzy
-msgid "Delivery Methods"
-msgstr "Оберіть спосіб доставки"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -102,8 +93,7 @@ msgstr "Опис"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
-#, fuzzy
-msgid "Description displayed on the eCommerce and on online quotations."
+msgid "Description displayed on the eCommerce and on the Online Quotations."
 msgstr "Опис, що відображається у веб-магазині та онлайн пропозиціях."
 
 #. module: website_sale_delivery
@@ -157,7 +147,17 @@ msgid "Landed Costs"
 msgstr "Додаткові витрати"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:104
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn_msg
+msgid "Message for Purchase Order Line"
+msgstr "Повідомлення для рядка замовлення на купівлю"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn_msg
+msgid "Message for Sales Order Line"
+msgstr "Повідомлення для рядка замовлення на продаж"
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/models/sale_order.py:138
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address. "
@@ -187,6 +187,16 @@ msgid "Products to propose when add to cart."
 msgstr ""
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_project_id
+msgid "Project"
+msgstr "Проект"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn
+msgid "Purchase Order Line"
+msgstr "Рядок замовлення на купівлю"
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
 msgid "Rating"
 msgstr "Оцінка"
@@ -197,9 +207,27 @@ msgid "Sales Order"
 msgstr "Sales Order"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn
+msgid "Sales Order Line"
+msgstr "Рядок замовлення на продаж"
+
+#. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
 msgid "Select..."
 msgstr "Оберіть..."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_purchase_line_warn
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_sale_line_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"Обираючи \"Попередження\" ви надішлете повідомлення користувачу. Якщо обрати "
+"\"Повідомлення блокування\", то буде запущено виключення з відповідним "
+"повідомленням користувачу та процес зупиниться. Повідомлення потрібно "
+"вказати у наступному полі."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
@@ -217,7 +245,7 @@ msgid "Size Y"
 msgstr "Розмір Y"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:103
+#: code:addons/website_sale_delivery/models/sale_order.py:137
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr "Вибачте, ми не можемо доставити ваше замовлення"
@@ -267,16 +295,6 @@ msgid "Tracking:"
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
-msgid "Visible in Website"
-msgstr "Видимий на сайті"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
-msgid "Website Comments"
-msgstr "Коментарі вебсайту"
-
-#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Website Product Category"
 msgstr "Категорія товару на сайті"
@@ -303,33 +321,14 @@ msgstr "Мета-заголовок сайту"
 #~ "Поставте галочку, щоб створювати тендери замість звичайних запитів "
 #~ "комерційної пропозиції під час збезпечення."
 
-#~ msgid "Message for Purchase Order Line"
-#~ msgstr "Повідомлення для рядка замовлення на купівлю"
-
-#~ msgid "Message for Sales Order Line"
-#~ msgstr "Повідомлення для рядка замовлення на продаж"
-
-#~ msgid "Project"
-#~ msgstr "Проект"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Рядок замовлення на купівлю"
-
-#~ msgid "Sales Order Line"
-#~ msgstr "Рядок замовлення на продаж"
-
-#~ msgid ""
-#~ "Selecting the \"Warning\" option will notify user with the message, "
-#~ "Selecting \"Blocking Message\" will throw an exception with the message "
-#~ "and block the flow. The Message has to be written in the next field."
-#~ msgstr ""
-#~ "Обираючи \"Попередження\" ви надішлете повідомлення користувачу. Якщо "
-#~ "обрати \"Повідомлення блокування\", то буде запущено виключення з "
-#~ "відповідним повідомленням користувачу та процес зупиниться. Повідомлення "
-#~ "потрібно вказати у наступному полі."
-
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr "URL-адреса повністю, для доступу до документації через сайт"
+
+#~ msgid "Visible in Website"
+#~ msgstr "Видимий на сайті"
+
+#~ msgid "Website Comments"
+#~ msgstr "Коментарі вебсайту"
 
 #~ msgid "Website URL"
 #~ msgstr "URL сайту"

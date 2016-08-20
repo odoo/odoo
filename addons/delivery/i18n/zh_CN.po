@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
@@ -87,15 +87,6 @@ msgid "# of Product Variants"
 msgstr "# 产品变型"
 
 #. module: delivery
-#: code:addons/delivery/models/delivery_carrier.py:73
-#, python-format
-msgid ""
-"<p class=\"oe_view_nocontent\">\n"
-"                    Buy Odoo Enterprise now to get more providers.\n"
-"                </p>"
-msgstr ""
-
-#. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "<span>kg</span>"
 msgstr "<span>kg</span>"
@@ -116,6 +107,15 @@ msgstr ""
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
 msgstr "<strong>重量</strong>"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_product_type
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_type
+msgid ""
+"A consumable is a product for which you don't manage stock, a service is a "
+"non-material product provided by a company or an individual."
+msgstr ""
+"消费品是一种你不用管理库存的产品，服务是由个公司或个人提供的非物质产品。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
@@ -160,21 +160,6 @@ msgstr ""
 "产品的精确说明，仅用于内部备注。"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_product_type
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_type
-msgid ""
-"A stockable product is a product for which you manage stock. The \"Inventory"
-"\" app has to be installed.\n"
-"A consumable product, on the other hand, is a product for which stock is not "
-"managed.\n"
-"A service is a non-material product you provide.\n"
-"A digital content is a non-material product you sell online. The files "
-"attached to the products are the one that are sold on the e-commerce such as "
-"e-books, music, pictures,... The \"Digital Product\" module has to be "
-"installed."
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
 #, fuzzy
 msgid "Action Needed"
@@ -183,11 +168,6 @@ msgstr ""
 "所需行动\n"
 "#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "需要行动"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
-msgid "Action while validating Delivery Orders"
-msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -210,6 +190,11 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr "免费送货的订单金额，以公司本位币显示"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Archived"
+msgstr "已归档"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
@@ -338,6 +323,7 @@ msgstr "取消"
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_id
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 #, fuzzy
 msgid "Carrier"
@@ -423,11 +409,6 @@ msgstr "成本方法"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_country_ids
 msgid "Countries"
 msgstr "国家"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_project_id
-msgid "Create a task under this project on sale order validation."
-msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
@@ -552,7 +533,8 @@ msgstr "交货"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
-msgid "Delivery Carrier"
+#, fuzzy
+msgid "Delivery Carrier Search"
 msgstr "交货承运商"
 
 #. module: delivery
@@ -737,13 +719,6 @@ msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr "如果你打算根据发货的实际数量开票的话，就填写这一字段"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid ""
-"Filling this form allows you to filter delivery carriers according to the "
-"delivery address of your customer."
-msgstr ""
-
-#. module: delivery
 #: selection:delivery.carrier,delivery_type:0
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_fixed_price
 msgid "Fixed Price"
@@ -812,16 +787,6 @@ msgstr "免费运输"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_if_more_than
 msgid "Free if Order total is more than"
 msgstr "免费当订单总额大于"
-
-#. module: delivery
-#: selection:delivery.carrier,integration_level:0
-msgid "Get Rate"
-msgstr ""
-
-#. module: delivery
-#: selection:delivery.carrier,integration_level:0
-msgid "Get Rate and Create Shipment"
-msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
@@ -962,16 +927,6 @@ msgstr ""
 "入库\n"
 "#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "将要来的"
-
-#. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Install more Providers"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
-msgid "Integration Level"
-msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
@@ -1131,13 +1086,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
-#, fuzzy
 msgid "Manufacturing Lead Time"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"生产提前期(日)\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"制造提前期(日)"
+msgstr "生产提前期(日)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
@@ -1218,16 +1168,6 @@ msgstr ""
 "成员开始日期\n"
 "#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "会籍开始日期"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn_msg
-msgid "Message for Purchase Order Line"
-msgstr "采购订单明细的消息"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn_msg
-msgid "Message for Sales Order Line"
-msgstr "销售订单行消息"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_ids
@@ -1375,7 +1315,7 @@ msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
-#: code:addons/delivery/models/stock_picking.py:129
+#: code:addons/delivery/models/stock_picking.py:128
 #, python-format
 msgid "Package Details"
 msgstr ""
@@ -1413,6 +1353,13 @@ msgid "Price"
 msgstr "价格"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Price Computation"
+msgstr "价格计算"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_creditor_price_difference
 msgid "Price Difference Account"
 msgstr "价格差异科目"
@@ -1430,7 +1377,6 @@ msgstr "价格表"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_item_ids
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_item_ids
 msgid "Pricelist Items"
 msgstr "价格表项目"
 
@@ -1512,18 +1458,6 @@ msgid "Products"
 msgstr "产品"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_project_id
-msgid "Project"
-msgstr "项目"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
-#: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
-msgid "Provider"
-msgstr "服务商"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_purchase
 msgid "Purchase Description"
 msgstr "采购说明"
@@ -1537,11 +1471,6 @@ msgstr ""
 "采购差额\n"
 "#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "采购差距"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn
-msgid "Purchase Order Line"
-msgstr "采购订单行"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
@@ -1622,16 +1551,6 @@ msgid "Reordering Rules"
 msgstr "订货规则"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
-msgid "Reordering max qty"
-msgstr "订货最大数量"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
-msgid "Reordering min qty"
-msgstr "订货最小数量"
-
-#. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
 msgstr "退货分拣"
@@ -1682,7 +1601,6 @@ msgstr "销售订单"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn
 msgid "Sales Order Line"
 msgstr "销售订单行"
 
@@ -1706,24 +1624,12 @@ msgstr ""
 "滤。"
 
 #. module: delivery
-#: code:addons/delivery/models/delivery_carrier.py:296
+#: code:addons/delivery/models/delivery_carrier.py:284
 #, python-format
 msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
 "carrier(s) criteria."
 msgstr "这个运输方式选出来的产品不能满足承运人(们)的标准"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_line_warn
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_line_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
-"选择此“警告“选项，将通知用户此消息。\r\n"
-"选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\r\n"
-"消息写入下一个字段。"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -1747,7 +1653,7 @@ msgid "Set to True if your credentials are certified for production."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:148
+#: code:addons/delivery/models/stock_picking.py:147
 #, python-format
 msgid ""
 "Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost: "
@@ -1763,6 +1669,11 @@ msgstr "发货成本"
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
 msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_shipping_enabled
+msgid "Shipping enabled"
+msgstr "能发货的"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
@@ -1838,16 +1749,6 @@ msgid "Stock Output Account"
 msgstr "仓库出货科目"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
-msgid "Stock move ids"
-msgstr "仓库移动 ids"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
-msgid "Stock quant ids"
-msgstr "库存份ids "
-
-#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
 msgstr "供应商发票成本价和数量的相乘的总和"
@@ -1880,12 +1781,6 @@ msgid "Sum of Quantity in Vendor Bills"
 msgstr "供应商发票中数量总和"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_quant_ids
-msgid "Technical: used to compute quantities."
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name_template
 msgid "Template Name"
 msgstr "模板名称"
@@ -1914,6 +1809,11 @@ msgstr ""
 "只能对草稿状态的订单增加送货明细\n"
 "#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "只能对草稿状态的订单增加交货明细"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_partner_id
+msgid "The partner that is doing the delivery service."
+msgstr "提供送货服务的业务伙伴"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
@@ -2092,6 +1992,11 @@ msgstr ""
 "转账"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_id
+msgid "Transporter Company"
+msgstr "运输公司"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_turnover
 msgid "Turnover"
 msgstr "营业额"
@@ -2110,6 +2015,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_type_id
 msgid "Type of Event"
 msgstr "活动类型"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_shipping_enabled
+msgid ""
+"Uncheck this box to disable package shipping while validating Delivery Orders"
+msgstr "在确认发货单的时候，不勾选这个选相框就不能发货"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_id
@@ -2207,6 +2118,22 @@ msgid "Warranty"
 msgstr "质保"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_website_message_ids
+#, fuzzy
+msgid "Website Messages"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"消息\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"信息"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_website_message_ids
+#, fuzzy
+msgid "Website communication history"
+msgstr "消息和通信历史"
+
+#. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_weight
@@ -2302,7 +2229,7 @@ msgid "Width must be positive"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:188
+#: code:addons/delivery/models/stock_picking.py:187
 #, python-format
 msgid ""
 "You are shipping different packaging types in the same shipment.\n"
@@ -2310,7 +2237,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:164
+#: code:addons/delivery/models/stock_picking.py:163
 #, python-format
 msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
@@ -2334,15 +2261,11 @@ msgstr "例如，UPS　快递"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "未知的"
-
-#~ msgid ""
-#~ "A consumable is a product for which you don't manage stock, a service is "
-#~ "a non-material product provided by a company or an individual."
-#~ msgstr ""
-#~ "消费品是一种你不用管理库存的产品，服务是由个公司或个人提供的非物质产品。"
 
 #~ msgid "Carrier Information"
 #~ msgstr "承运方信息"
@@ -2353,40 +2276,17 @@ msgstr "未知的"
 #~ msgid "Gross Weight"
 #~ msgstr "毛重"
 
-#~ msgid "Messages and communication history"
-#~ msgstr "消息和通信历史"
-
-#~ msgid "Price Computation"
-#~ msgstr "价格计算"
-
 #~ msgid "Shipment sent to carrier %s for expedition with tracking number %s"
 #~ msgstr "带有跟踪号码 %s的货物发送给承运人 %s，之后运输"
 
-#~ msgid "Shipping enabled"
-#~ msgstr "能发货的"
-
 #~ msgid "Status"
 #~ msgstr "状态"
-
-#~ msgid "The partner that is doing the delivery service."
-#~ msgstr "提供送货服务的业务伙伴"
-
-#~ msgid "Transporter Company"
-#~ msgstr "运输公司"
-
-#~ msgid ""
-#~ "Uncheck this box to disable package shipping while validating Delivery "
-#~ "Orders"
-#~ msgstr "在确认发货单的时候，不勾选这个选相框就不能发货"
 
 #~ msgid "Vendor"
 #~ msgstr "供应商"
 
 #~ msgid "# Product Variants"
 #~ msgstr "# 产品变型"
-
-#~ msgid "Archived"
-#~ msgstr "已归档"
 
 #~ msgid "Can be Expensed"
 #~ msgstr "报销"
@@ -2400,8 +2300,44 @@ msgstr "未知的"
 #~ msgid "Event Registration"
 #~ msgstr "事件记录"
 
+#~ msgid "Message for Purchase Order Line"
+#~ msgstr "采购订单明细的消息"
+
+#~ msgid "Message for Sales Order Line"
+#~ msgstr "销售订单行消息"
+
 #~ msgid "Pricelist item ids"
 #~ msgstr "价格表项目 ids "
+
+#~ msgid "Project"
+#~ msgstr "项目"
+
+#~ msgid "Provider"
+#~ msgstr "服务商"
+
+#~ msgid "Purchase Order Line"
+#~ msgstr "采购订单行"
+
+#~ msgid "Reordering max qty"
+#~ msgstr "订货最大数量"
+
+#~ msgid "Reordering min qty"
+#~ msgstr "订货最小数量"
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "选择此“警告“选项，将通知用户此消息。\r\n"
+#~ "选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\r\n"
+#~ "消息写入下一个字段。"
+
+#~ msgid "Stock move ids"
+#~ msgstr "仓库移动 ids"
+
+#~ msgid "Stock quant ids"
+#~ msgstr "库存份ids "
 
 #~ msgid "Valuation"
 #~ msgstr "估值"

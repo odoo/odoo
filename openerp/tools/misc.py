@@ -14,6 +14,7 @@ import subprocess
 import logging
 import os
 import passlib.utils
+import re
 import socket
 import sys
 import threading
@@ -331,6 +332,26 @@ def topological_sort(elems):
     map(visit, elems)
 
     return result
+
+
+try:
+    import xlwt
+
+    # add some sanitizations to respect the excel sheet name restrictions
+    # as the sheet name is often translatable, can not control the input
+    class PatchedWorkbook(xlwt.Workbook):
+        def add_sheet(self, name):
+            # invalid Excel character: []:*?/\
+            name = re.sub(r'[\[\]:*?/\\]', '', name)
+
+            # maximum size is 31 characters
+            name = name[:31]
+            return super(PatchedWorkbook, self).add_sheet(name)
+
+    xlwt.Workbook = PatchedWorkbook
+
+except ImportError:
+    xlwt = None
 
 
 class UpdateableStr(local):
@@ -928,7 +949,7 @@ class CountingStream(object):
 
 def stripped_sys_argv(*strip_args):
     """Return sys.argv with some arguments stripped, suitable for reexecution or subprocesses"""
-    strip_args = sorted(set(strip_args) | set(['-s', '--save', '-u', '--update', '-i', '--init']))
+    strip_args = sorted(set(strip_args) | set(['-s', '--save', '-u', '--update', '-i', '--init', '--i18n-overwrite']))
     assert all(config.parser.has_option(s) for s in strip_args)
     takes_value = dict((s, config.parser.get_option(s).takes_value()) for s in strip_args)
 

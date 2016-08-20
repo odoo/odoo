@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-12-29 08:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -71,6 +71,11 @@ msgid "Cancel"
 msgstr "Hủy"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Client"
+msgstr "Client"
+
+#. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_sale_config
 #: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Configure Sales"
@@ -88,21 +93,34 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Được tạo bởi"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Được tạo vào"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Customer"
+msgstr "Khách hàng"
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Donor"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -136,7 +154,18 @@ msgid "Google Integration"
 msgstr ""
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Guest"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
+msgid "How do you call a Customer"
+msgstr ""
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
@@ -153,18 +182,21 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "Sửa lần cuối vào"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Last Updated by"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
@@ -178,6 +210,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
 msgid "Manage multiple companies"
 msgstr ""
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Member"
+msgstr "Thành viên"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -194,6 +231,16 @@ msgstr ""
 msgid ""
 "Once installed, you can configure your API credentials for \"Google calendar"
 "\""
+msgstr ""
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Partner"
+msgstr "Đối tác"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Patient"
 msgstr ""
 
 #. module: base_setup
@@ -227,6 +274,16 @@ msgid "Shared resources"
 msgstr ""
 
 #. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
+msgid "Specify Your Terminology"
+msgstr ""
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Tenant"
+msgstr ""
+
+#. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
 msgid "This installs the module google_calendar."
 msgstr ""
@@ -245,8 +302,13 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
+msgid "Use another word to say \"Customer\""
+msgstr ""
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers (OAuth)"
+msgid "Use external authentication providers, sign in with Google..."
 msgstr ""
 
 #. module: base_setup
@@ -270,6 +332,13 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
+msgid ""
+"You can use this wizard to change the terminologies for customers in the "
+"whole application."
+msgstr ""
+
+#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "You will find more options in your company details: address for the header "
@@ -282,18 +351,11 @@ msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: base_setup
+#: model:ir.model,name:base_setup.model_base_setup_terminology
+msgid "base.setup.terminology"
+msgstr ""
+
+#. module: base_setup
 #: model:ir.model,name:base_setup.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr "sale.config.settings"
-
-#~ msgid "Client"
-#~ msgstr "Client"
-
-#~ msgid "Customer"
-#~ msgstr "Khách hàng"
-
-#~ msgid "Member"
-#~ msgstr "Thành viên"
-
-#~ msgid "Partner"
-#~ msgstr "Đối tác"

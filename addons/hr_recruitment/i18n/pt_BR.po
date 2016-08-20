@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-14 03:01+0000\n"
 "Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
@@ -473,12 +473,6 @@ msgid "Click to add a new stage in the recruitment process."
 msgstr "Clique para adicionar uma nova etapa no processo de recrutamento."
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
-#, fuzzy
-msgid "Click to add a new tag."
-msgstr "Clique para adicionar um novo funcionário"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_closed
 msgid "Closed"
@@ -673,6 +667,7 @@ msgid "Delete"
 msgstr "Excluir"
 
 #. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_department
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_department_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_department_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -924,12 +919,6 @@ msgstr "Agrupar por"
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
 msgstr "Funcionários Contratados"
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_department
-#, fuzzy
-msgid "Hr Department"
-msgstr "Departamento de RH"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -1688,10 +1677,7 @@ msgid "Tag name already exists !"
 msgstr "Essa tag já existe !"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_categ_ids
-#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 msgid "Tags"
 msgstr "Marcadores"
 
@@ -1994,6 +1980,9 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Seguidores (Parceiros)"
+
+#~ msgid "HR Department"
+#~ msgstr "Departamento de RH"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Se marcado novas mensagens solicitarão sua atenção."

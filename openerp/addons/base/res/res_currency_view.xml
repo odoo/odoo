@@ -23,6 +23,28 @@
             </field>
         </record>
 
+        <record id="view_currency_rate_form" model="ir.ui.view">
+            <field name="name">res.currency.rate.form</field>
+            <field name="model">res.currency.rate</field>
+            <field name="arch" type="xml">
+                <form string="Currency Rate">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="rate"/>
+                            </group>
+                            <group>
+                                <field name="currency_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <act_window
            id="act_view_currency_rates"
            name="Currency Rates"

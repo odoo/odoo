@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
@@ -41,6 +41,29 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+#, fuzzy
+msgid ""
+"<br/>\n"
+"                                    - Create a new project<br/>\n"
+"                                    - Go to Api Access<br/>\n"
+"                                    - Create an oauth client_id<br/>\n"
+"                                    - Edit settings and set both Authorized "
+"Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
+"                                    <br/>\n"
+"                                    Now copy paste the client_id here:"
+msgstr ""
+"<br/>\n"
+"                                    - Cree un nuevo proyecto<br/>\n"
+"                                    - Dirijase al Acceso de la API<br/>\n"
+"                                    - Cree un oauth client_id<br/>\n"
+"                                    - Edite la configuración y asigne "
+"Authorized Redirect URIs y Authorized JavaScript Origins hacia su hostname."
+"<br/>\n"
+"                                    <br/>\n"
+"                                    Ahora copie y pegue el client_id aqui:"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:98
@@ -60,7 +83,6 @@ msgstr "Cuenta a cobrar"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_enabled
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Allow users to sign in with Google"
 msgstr "Permitir a los usuarios ingresar con Google"
 
@@ -68,11 +90,6 @@ msgstr "Permitir a los usuarios ingresar con Google"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_enabled
 msgid "Allowed"
 msgstr "Permitido"
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Authentication"
-msgstr "Autentificación"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
@@ -95,26 +112,6 @@ msgid "CSS class"
 msgstr "Clase CSS"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"Check that the application type is set on <b>Web Application</b>. \n"
-"                                        Now configure the allowed pages on "
-"which you will be redirected."
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"Click on <b>Create Project</b> and enter the project name and \n"
-"                                        other details."
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Click on <b>Use Google APIs</b>"
-msgstr ""
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_client_id
 msgid "Client ID"
@@ -124,11 +121,6 @@ msgstr "Id. de cliente"
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_ref_company_ids
 msgid "Companies that refers to partner"
 msgstr "Compañías que se refieren a la empresa"
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Connect to your Google account and go to"
-msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contract_ids
@@ -182,21 +174,14 @@ msgstr ""
 "Nombre a mostrar"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"Fill in your address, email and the product name (for example odoo) \n"
-"                                        and then save."
-msgstr ""
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
 msgid "Fiscal Position"
 msgstr "Posición fiscal"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Google Client ID:"
-msgstr ""
+msgid "Google APIs console"
+msgstr "Consola API de Google"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
@@ -212,11 +197,6 @@ msgstr ""
 "ID (identificación)\n"
 "#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "ID"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
-msgid "Invoice"
-msgstr "Factura"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
@@ -277,11 +257,6 @@ msgid "Latest Invoices & Payments Matching Date"
 msgstr "Fecha de la última conciliación de facturas y pagos"
 
 #. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
-msgid "Message for Invoice"
-msgstr "Mensaje para factura"
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
 msgid "OAuth Access Token"
 msgstr "Palabra de acceso (token) OAuth"
@@ -322,23 +297,6 @@ msgid "Oauth Provider user_id"
 msgstr "Id. de usuario OAuth para el proveedor"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"On the left side menu, select the sub menu <b>Credentials</b> \n"
-"                                        (from <b>API Manager</b>) then "
-"select <b>OAuth consent screen</b>."
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"Once done, you receive two information (your <b>Client ID</b> and <b>\n"
-"                                        Client Secret</b>). You have to "
-"insert your <b>Client ID</b> in \n"
-"                                        the field below."
-msgstr ""
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
 msgid "Payable Limit"
 msgstr "Límite a pagar"
@@ -354,41 +312,9 @@ msgid "Providers"
 msgstr "Proveedores"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Return to Top"
-msgstr ""
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
 msgid "Scope"
 msgstr "Ámbito"
-
-#. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_invoice_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
-"Si selecciona la opción \"Aviso\" se notificará a los usuarios con el "
-"mensaje, si selecciona \"Mensaje de bloqueo\" se lanzará una excepción con "
-"el mensaje y se bloqueará el flujo. El mensaje debe escribirse en el "
-"siguiente campo."
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
-msgid "Server uri"
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Show Tutorial"
-msgstr "Mostrar tutorial"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
-msgid "Show tutorial"
-msgstr ""
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:96
@@ -417,18 +343,6 @@ msgid ""
 msgstr ""
 "El asociado tiene al menos un débito o crédito no conciliado desde la última "
 "vez que se realizó la conciliación de facturas y pagos."
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"Then click on <b>Add Credentials</b> and select the second option \n"
-"                                        (OAuth 2.0 Client ID)."
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Then click on <b>Create</b>."
-msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
@@ -489,17 +403,15 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
-"To achieve this, complete the field <b>Authorized redirect URIs</b>.\n"
-"                                        Copy paste the following link in the "
-"box"
+"To setup the signin process with Google, first you have to perform the "
+"following steps:<br/>\n"
+"                                    <br/>\n"
+"                                    - Go to the"
 msgstr ""
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"To setup the sign in process with Google, you have to perform \n"
-"                                    the following steps first."
-msgstr ""
+"Para configurar el proceso de registro con Google, primero debe realizar los "
+"siguientes pasos:<br/>\n"
+"                                    <br/>\n"
+"                                    - Dirijase a"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
@@ -552,6 +464,16 @@ msgid "Vendor Payment Term"
 msgstr "Condiciones de pago a proveedor"
 
 #. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:100
 #, python-format
 msgid ""
@@ -580,11 +502,6 @@ msgid "e.g. 1234-xyz.apps.googleusercontent.com"
 msgstr "ej.. 1234-xyz.apps.googleusercontent.com"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "https://console.developers.google.com/"
-msgstr "https://console.developers.google.com/"
-
-#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "ir.config_parameter"
 msgstr "ir.config_parameter"
@@ -594,43 +511,33 @@ msgstr "ir.config_parameter"
 msgid "unknown"
 msgstr "desconocido"
 
-#~ msgid ""
-#~ "<br/>\n"
-#~ "                                    - Ceate a new project<br/>\n"
-#~ "                                    - Go to Api Access<br/>\n"
-#~ "                                    - Create an oauth client_id<br/>\n"
-#~ "                                    - Edit settings and set both "
-#~ "Authorized Redirect URIs and Authorized JavaScript Origins to your "
-#~ "hostname.<br/>\n"
-#~ "                                    <br/>\n"
-#~ "                                    Now copy paste the client_id here:"
-#~ msgstr ""
-#~ "<br/>\n"
-#~ "                                    - Cree un nuevo proyecto<br/>\n"
-#~ "                                    - Dirijase al Acceso de la API<br/>\n"
-#~ "                                    - Cree un oauth client_id<br/>\n"
-#~ "                                    - Edite la configuración y asigne "
-#~ "Authorized Redirect URIs y Authorized JavaScript Origins hacia su "
-#~ "hostname.<br/>\n"
-#~ "                                    <br/>\n"
-#~ "                                    Ahora copie y pegue el client_id aqui:"
-
 #~ msgid "Currency id"
 #~ msgstr "Moneda"
 
-#~ msgid "Google APIs console"
-#~ msgstr "Consola API de Google"
+#~ msgid "Authentication"
+#~ msgstr "Autentificación"
+
+#~ msgid "Invoice"
+#~ msgstr "Factura"
+
+#~ msgid "Message for Invoice"
+#~ msgstr "Mensaje para factura"
 
 #~ msgid ""
-#~ "To setup the signin process with Google, first you have to perform the "
-#~ "following steps:<br/>\n"
-#~ "                                    <br/>\n"
-#~ "                                    - Go to the"
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
 #~ msgstr ""
-#~ "Para configurar el proceso de registro con Google, primero debe realizar "
-#~ "los siguientes pasos:<br/>\n"
-#~ "                                    <br/>\n"
-#~ "                                    - Dirijase a"
+#~ "Si selecciona la opción \"Aviso\" se notificará a los usuarios con el "
+#~ "mensaje, si selecciona \"Mensaje de bloqueo\" se lanzará una excepción "
+#~ "con el mensaje y se bloqueará el flujo. El mensaje debe escribirse en el "
+#~ "siguiente campo."
 
 #~ msgid "Sequence"
 #~ msgstr "Secuencia"
+
+#~ msgid "Show Tutorial"
+#~ msgstr "Mostrar tutorial"
+
+#~ msgid "https://console.developers.google.com/"
+#~ msgstr "https://console.developers.google.com/"

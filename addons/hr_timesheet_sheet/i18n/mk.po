@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-03 14:54+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -39,6 +39,26 @@ msgstr ""
 "страна на корисникот.                 \n"
 "* Статусот 'Завршено' се користи кога временската таблица на корисникот е "
 "прифатена од неговиот претпоставен."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
+msgid "# Nbr Timesheet"
+msgstr "# Број на распоред"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
+msgid "# Total Attendance"
+msgstr "# Вкупно присутност"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
+msgid "# Total Diff"
+msgstr "# Вкупно разлика"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
+msgid "# Total Timesheet"
+msgstr "# Вкупно распоред"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -115,6 +135,12 @@ msgid "Company"
 msgstr "Компанија"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Confirmed"
+msgstr "Потврдено"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr "Потврдени временски таблици"
@@ -142,18 +168,23 @@ msgid "Date"
 msgstr "Датум"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr "Датум од"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "Датум до"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "Одделение"
 
@@ -182,6 +213,18 @@ msgid "Display Name"
 msgstr "Прикажи име"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Done"
+msgstr "Завршено"
+
+#. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Draft"
+msgstr "Нацрт"
+
+#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
@@ -206,6 +249,11 @@ msgstr ""
 "(соодветно Најавата)"
 
 #. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
+msgid "External Timesheet"
+msgstr "Надворешен распоред"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
 msgstr "Групирај по"
@@ -214,12 +262,6 @@ msgstr "Групирај по"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Часови"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-#, fuzzy
-msgid "Hr Department"
-msgstr "Оддел на ЧР"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -243,6 +285,11 @@ msgid ""
 "user."
 msgstr ""
 "За да креирате распоред за овој вработен мора до го/ја поврзете со корисник."
+
+#. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
+msgid "Internal Timesheet"
+msgstr "Интерен распоред"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -281,6 +328,7 @@ msgid "My Timesheets"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
 msgstr "Ново"
@@ -374,7 +422,9 @@ msgid "Sign Out"
 msgstr "Одјава"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Status"
 msgstr "Статус"
 
@@ -399,6 +449,7 @@ msgstr ""
 "на пријави и одјави."
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
@@ -695,41 +746,17 @@ msgstr "до"
 msgid "waiting approval"
 msgstr ""
 
-#~ msgid "# Nbr Timesheet"
-#~ msgstr "# Број на распоред"
-
-#~ msgid "# Total Attendance"
-#~ msgstr "# Вкупно присутност"
-
-#~ msgid "# Total Diff"
-#~ msgstr "# Вкупно разлика"
-
-#~ msgid "# Total Timesheet"
-#~ msgstr "# Вкупно распоред"
-
 #~ msgid "Action Needed"
 #~ msgstr "Потребна е акција"
 
 #~ msgid "Cancel"
 #~ msgstr "Откажи"
 
-#~ msgid "Confirmed"
-#~ msgstr "Потврдено"
-
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Датум на испраќање на последната порака"
 
 #~ msgid "Day"
 #~ msgstr "Ден"
-
-#~ msgid "Done"
-#~ msgstr "Завршено"
-
-#~ msgid "Draft"
-#~ msgstr "Нацрт"
-
-#~ msgid "External Timesheet"
-#~ msgstr "Надворешен распоред"
 
 #~ msgid "Followers"
 #~ msgstr "Пратители"
@@ -739,6 +766,9 @@ msgstr ""
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Пратители (Партнери)"
+
+#~ msgid "HR Department"
+#~ msgstr "Оддел на ЧР"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
@@ -752,9 +782,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Со цел да креирате временска таблица за овој вработен, мора да го "
 #~ "поврзете вработениот за производ."
-
-#~ msgid "Internal Timesheet"
-#~ msgstr "Интерен распоред"
 
 #~ msgid "Is Follower"
 #~ msgstr "е следач"

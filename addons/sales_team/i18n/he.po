@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-07-23 16:37+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
@@ -77,11 +77,6 @@ msgid "Activities Done"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
-msgid "Archived"
-msgstr ""
-
-#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
@@ -100,6 +95,11 @@ msgstr ""
 #, python-format
 msgid "Click to set"
 msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
+msgid "Code"
+msgstr "קוד"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
@@ -267,7 +267,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr ""
@@ -355,6 +355,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
+msgstr ""
+
+#. module: sales_team
+#: sql_constraint:crm.team:0
+msgid "The code of the sales team must be unique !"
 msgstr ""
 
 #. module: sales_team
@@ -469,7 +474,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
 #, python-format
 msgid "Wrong value entered!"
 msgstr "הוכנס ערך שגוי!"
@@ -482,11 +487,6 @@ msgid "exp. closing"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_ir_ui_view
-msgid "ir.ui.view"
-msgstr ""
-
-#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
@@ -495,9 +495,6 @@ msgstr ""
 
 #~ msgid "Action Needed"
 #~ msgstr "נדרשת פעולה"
-
-#~ msgid "Code"
-#~ msgstr "קוד"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "תאריך הודעה אחרונה שפורסמה ברשומה."

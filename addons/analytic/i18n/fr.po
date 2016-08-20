@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:36+0000\n"
 "Last-Translator: Fabien Pinckaers <fp@openerp.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -43,12 +43,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "(Keep empty to open the current situation)"
+msgstr "(Laisser vide pour consulter la situation courante)"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_chart
+msgid "Account Analytic Chart"
+msgstr "Plan comptable analytique"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
 msgid "Account Currency"
 msgstr "Devise du compte"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_active
+#: selection:account.analytic.account,account_type:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Active"
 msgstr "Actif"
 
@@ -67,6 +78,11 @@ msgstr "Montant"
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Account"
 msgstr "Compte analytique"
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Analytic Account Charts"
+msgstr "Plans de Comptes Analytiques"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
@@ -108,7 +124,7 @@ msgid "Analytic Tags"
 msgstr "Étiquettes analytiques"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: selection:account.analytic.account,account_type:0
 msgid "Archived"
 msgstr "Archivé"
 
@@ -123,6 +139,12 @@ msgid "Balance"
 msgstr "Balance"
 
 #. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.action_account_analytic_chart
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
 msgstr "Plan comptable analytiques"
@@ -165,6 +187,7 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_uid
 msgid "Created by"
@@ -172,6 +195,7 @@ msgstr "Créé par"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
 msgid "Created on"
@@ -214,6 +238,7 @@ msgstr "Description"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
 #, fuzzy
@@ -225,6 +250,11 @@ msgstr ""
 "Afficher le nom"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
+msgid "From"
+msgstr "De"
+
+#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Group By..."
@@ -232,19 +262,11 @@ msgstr "Regrouper par..."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
 msgid "ID"
 msgstr "ID"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_active
-msgid ""
-"If the active field is set to False, it will allow you to hide the account "
-"without removing it."
-msgstr ""
-"Si le champ actif est à \"Faux\", cela vous permet de cacher le compte sans "
-"le supprimer."
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -261,6 +283,7 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
 #, fuzzy
@@ -273,6 +296,7 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
 #, fuzzy
@@ -285,6 +309,7 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_date
 #, fuzzy
@@ -304,6 +329,11 @@ msgstr "Pas encore d'activité sur ce compte."
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet."
 msgstr "Pas encore d'activité."
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Open Charts"
+msgstr "Ouvrir le plan comptable"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
@@ -345,6 +375,16 @@ msgid "Search Analytic Lines"
 msgstr "Chercher des lignes analytiques"
 
 #. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Select the Period for Analysis"
+msgstr "Sélectionnez la période à analyser"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
+msgid "State"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_tag_ids
 msgid "Tags"
@@ -359,6 +399,11 @@ msgstr "Tâches Mois"
 #: model:ir.model.fields,help:analytic.field_account_analytic_line_currency_id
 msgid "The related account currency if not equal to the company one."
 msgstr "La devise du compte correspondant si ce n'est pas celle de la société"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_to_date
+msgid "To"
+msgstr "Vers"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -381,23 +426,14 @@ msgstr "Plan comptable analytique"
 msgid "e.g. Project XYZ"
 msgstr "ex. Projet XYZ"
 
-#~ msgid "(Keep empty to open the current situation)"
-#~ msgstr "(Laisser vide pour consulter la situation courante)"
-
 #~ msgid "Action Needed"
 #~ msgstr "A besoin d'une action"
-
-#~ msgid "Analytic Account Charts"
-#~ msgstr "Plans de Comptes Analytiques"
 
 #~ msgid "Analytic Line"
 #~ msgstr "Ligne analytique"
 
 #~ msgid "Analytic View"
 #~ msgstr "Vue analytique"
-
-#~ msgid "Cancel"
-#~ msgstr "Annuler"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Date du dernier message posté sur cet enregistrement"
@@ -410,9 +446,6 @@ msgstr "ex. Projet XYZ"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Abonnés (Partenaires)"
-
-#~ msgid "From"
-#~ msgstr "De"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Si coché, de nouveaux messages demandent votre attention."
@@ -441,15 +474,6 @@ msgstr "ex. Projet XYZ"
 #~ msgid "Number of unread messages"
 #~ msgstr "Nombre de messages non lus"
 
-#~ msgid "Open Charts"
-#~ msgstr "Ouvrir le plan comptable"
-
-#~ msgid "Select the Period for Analysis"
-#~ msgstr "Sélectionnez la période à analyser"
-
-#~ msgid "To"
-#~ msgstr "Vers"
-
 #~ msgid "Type of Account"
 #~ msgstr "Type de compte"
 
@@ -461,3 +485,10 @@ msgstr "ex. Projet XYZ"
 
 #~ msgid "Click to add a new tag."
 #~ msgstr "Cliquez sur pour ajouter une nouvelle étiquette."
+
+#~ msgid ""
+#~ "If the active field is set to False, it will allow you to hide the "
+#~ "account without removing it."
+#~ msgstr ""
+#~ "Si le champ actif est à \"Faux\", cela vous permet de cacher le compte "
+#~ "sans le supprimer."

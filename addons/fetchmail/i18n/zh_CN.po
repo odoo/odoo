@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
@@ -96,7 +96,7 @@ msgid "Confirmed"
 msgstr "已确认"
 
 #. module: fetchmail
-#: code:addons/fetchmail/models/fetchmail.py:137
+#: code:addons/fetchmail/fetchmail.py:150
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "连接测试失败：%s"
@@ -114,11 +114,13 @@ msgid "Create a New Record"
 msgstr "创建新记录"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "创建者"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 #, fuzzy
 msgid "Created on"
@@ -139,6 +141,7 @@ msgstr ""
 "定义处理的顺序，值越小意味着优先级越高。"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr "显示名称"
@@ -154,6 +157,7 @@ msgid "Hostname or IP of the mail server"
 msgstr "邮件服务器的主机名或IP"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 #, fuzzy
 msgid "ID"
@@ -226,6 +230,7 @@ msgid "Last Fetch Date"
 msgstr "最后收取日期"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 #, fuzzy
 msgid "Last Modified on"
@@ -236,6 +241,7 @@ msgstr ""
 "最后修改日"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 #, fuzzy
 msgid "Last Updated by"
@@ -246,6 +252,7 @@ msgstr ""
 "最后更新人"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 #, fuzzy
 msgid "Last Updated on"
@@ -445,6 +452,11 @@ msgid ""
 "will be stripped of any attachments before being processed"
 msgstr "是否应该下载附件。如果不勾这里，收到的邮件会在被处理前去掉附件。"
 
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
+msgid "fetchmail.config.settings"
+msgstr "fetchmail.config.settings"
+
 #~ msgid ""
 #~ "Whether a full original copy of each email should be kept for "
 #~ "referenceand attached to each processed message. This will usually double "
@@ -452,6 +464,3 @@ msgstr "是否应该下载附件。如果不勾这里，收到的邮件会在被
 #~ msgstr ""
 #~ "是不是把每个邮件的内容复制并附加到每次处理内容上。这一般会占用双倍的消息数"
 #~ "据库。"
-
-#~ msgid "fetchmail.config.settings"
-#~ msgstr "fetchmail.config.settings"

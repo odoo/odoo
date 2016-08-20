@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:36+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -36,12 +36,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "(Keep empty to open the current situation)"
+msgstr "(laat leeg om de huidige situatie te behouden)"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_chart
+msgid "Account Analytic Chart"
+msgstr "Kostenplaatsschema"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
 msgid "Account Currency"
 msgstr "Rekening valuta"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_active
+#: selection:account.analytic.account,account_type:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Active"
 msgstr "Actief"
 
@@ -65,6 +76,11 @@ msgstr ""
 "Kostenplaatsen\n"
 "#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Kostenplaats"
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Analytic Account Charts"
+msgstr "Kostenplaatsschema's"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
@@ -106,7 +122,7 @@ msgid "Analytic Tags"
 msgstr "Labels kostenplaats"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: selection:account.analytic.account,account_type:0
 msgid "Archived"
 msgstr "Gearchiveerd"
 
@@ -121,6 +137,12 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.action_account_analytic_chart
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
 msgstr "Kostenplaatsenschema"
@@ -168,6 +190,7 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_uid
 msgid "Created by"
@@ -175,6 +198,7 @@ msgstr "Aangemaakt door"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
 msgid "Created on"
@@ -212,6 +236,7 @@ msgstr "Omschrijving"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
 #, fuzzy
@@ -223,6 +248,11 @@ msgstr ""
 "Schermnaam"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
+msgid "From"
+msgstr "Van"
+
+#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Group By..."
@@ -230,19 +260,11 @@ msgstr "Groepeer op..."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
 msgid "ID"
 msgstr "ID"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_active
-msgid ""
-"If the active field is set to False, it will allow you to hide the account "
-"without removing it."
-msgstr ""
-"Als het veld \"actief\" uitstaat, kunt u de grootboekrekening verbergen "
-"zonder deze te verwijderen."
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -259,6 +281,7 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
 msgid "Last Modified on"
@@ -266,6 +289,7 @@ msgstr "Laatst gewijzigd op"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
 msgid "Last Updated by"
@@ -273,6 +297,7 @@ msgstr "Laatst bijgewerkt door"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_date
 msgid "Last Updated on"
@@ -287,6 +312,11 @@ msgstr "Nog geen activiteit voor deze kostenplaats."
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet."
 msgstr "Nog geen activiteit."
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Open Charts"
+msgstr "Open rekeningschema"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
@@ -327,6 +357,16 @@ msgid "Search Analytic Lines"
 msgstr "Zoek kostenplaats boekingen"
 
 #. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Select the Period for Analysis"
+msgstr "Kies de analyseperiode"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
+msgid "State"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_tag_ids
 msgid "Tags"
@@ -342,6 +382,11 @@ msgstr "Taken maand"
 msgid "The related account currency if not equal to the company one."
 msgstr ""
 "De valuta van de rekening is niet gelijk aan de valuta van het bedrijf."
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_to_date
+msgid "To"
+msgstr "Aan"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -364,14 +409,8 @@ msgstr "Kostenplaatsschema"
 msgid "e.g. Project XYZ"
 msgstr "bijv. Project XYZ"
 
-#~ msgid "(Keep empty to open the current situation)"
-#~ msgstr "(laat leeg om de huidige situatie te behouden)"
-
 #~ msgid "Action Needed"
 #~ msgstr "Vereist actie"
-
-#~ msgid "Analytic Account Charts"
-#~ msgstr "Kostenplaatsschema's"
 
 #, fuzzy
 #~ msgid "Analytic Line"
@@ -384,9 +423,6 @@ msgstr "bijv. Project XYZ"
 #~ msgid "Analytic View"
 #~ msgstr "Kostenplaats weergave"
 
-#~ msgid "Cancel"
-#~ msgstr "Annuleren"
-
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
 
@@ -398,9 +434,6 @@ msgstr "bijv. Project XYZ"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Volgers (Partners)"
-
-#~ msgid "From"
-#~ msgstr "Van"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
@@ -429,15 +462,6 @@ msgstr "bijv. Project XYZ"
 #~ msgid "Number of unread messages"
 #~ msgstr "Aantal ongelezen berichten"
 
-#~ msgid "Open Charts"
-#~ msgstr "Open rekeningschema"
-
-#~ msgid "Select the Period for Analysis"
-#~ msgstr "Kies de analyseperiode"
-
-#~ msgid "To"
-#~ msgstr "Aan"
-
 #~ msgid "Type of Account"
 #~ msgstr "Type Rekening"
 
@@ -452,3 +476,10 @@ msgstr "bijv. Project XYZ"
 
 #~ msgid "Click to add a new tag."
 #~ msgstr "Klik om een nieuw label toe te voegen."
+
+#~ msgid ""
+#~ "If the active field is set to False, it will allow you to hide the "
+#~ "account without removing it."
+#~ msgstr ""
+#~ "Als het veld \"actief\" uitstaat, kunt u de grootboekrekening verbergen "
+#~ "zonder deze te verwijderen."

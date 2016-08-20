@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-11-21 09:40+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -19,12 +19,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "(Keep empty to open the current situation)"
+msgstr "(Одоогийн төлөвийг нээхийн тулд хоосон байлгана уу)"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_chart
+msgid "Account Analytic Chart"
+msgstr "Шинжилгээний дансны төлөвлөгөө"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
 msgid "Account Currency"
 msgstr "Дансны валют"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_active
+#: selection:account.analytic.account,account_type:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Active"
 msgstr ""
 
@@ -43,6 +54,11 @@ msgstr "Дүн"
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Account"
 msgstr "Шинжилгээний Данс"
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Analytic Account Charts"
+msgstr "Шинжилгээний дансны төлөвлөгөө"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
@@ -84,7 +100,7 @@ msgid "Analytic Tags"
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: selection:account.analytic.account,account_type:0
 msgid "Archived"
 msgstr ""
 
@@ -99,6 +115,12 @@ msgid "Balance"
 msgstr "Тэнцэл"
 
 #. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.action_account_analytic_chart
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
 msgstr "Шинжилгээний дансны төлөвлөгөө"
@@ -139,6 +161,7 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_uid
 msgid "Created by"
@@ -146,6 +169,7 @@ msgstr "Үүсгэгч"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
 msgid "Created on"
@@ -183,10 +207,16 @@ msgstr "Тодорхойлолт"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
 msgid "Display Name"
 msgstr "Дэлгэцийн Нэр"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
+msgid "From"
+msgstr "Хаанаас"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -196,17 +226,11 @@ msgstr "Бүлэглэх..."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
 msgid "ID"
 msgstr "ID"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_active
-msgid ""
-"If the active field is set to False, it will allow you to hide the account "
-"without removing it."
-msgstr ""
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -220,6 +244,7 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
 msgid "Last Modified on"
@@ -227,6 +252,7 @@ msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
 msgid "Last Updated by"
@@ -234,6 +260,7 @@ msgstr "Сүүлийн засвар хийсэн"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_date
 msgid "Last Updated on"
@@ -248,6 +275,11 @@ msgstr ""
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet."
 msgstr ""
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Open Charts"
+msgstr "нээлттэй хүснэгтүүд"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
@@ -283,6 +315,16 @@ msgid "Search Analytic Lines"
 msgstr "Шинжилгээний бичилт хайх"
 
 #. module: analytic
+#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
+msgid "Select the Period for Analysis"
+msgstr "Анализ хийх мөчлөгөө сонго"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
+msgid "State"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_tag_ids
 msgid "Tags"
@@ -297,6 +339,11 @@ msgstr "Сараар"
 #: model:ir.model.fields,help:analytic.field_account_analytic_line_currency_id
 msgid "The related account currency if not equal to the company one."
 msgstr "Холбогдох дансны валют нь компаний валютаас өөр бол."
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_to_date
+msgid "To"
+msgstr "Хүртэл"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -319,23 +366,14 @@ msgstr "Шинжилгээний дансны төлөвлөгөө"
 msgid "e.g. Project XYZ"
 msgstr ""
 
-#~ msgid "(Keep empty to open the current situation)"
-#~ msgstr "(Одоогийн төлөвийг нээхийн тулд хоосон байлгана уу)"
-
 #~ msgid "Action Needed"
 #~ msgstr "Үйлдэл Шаардлагатай"
-
-#~ msgid "Analytic Account Charts"
-#~ msgstr "Шинжилгээний дансны төлөвлөгөө"
 
 #~ msgid "Analytic Line"
 #~ msgstr "Шинжилгээний мөр"
 
 #~ msgid "Analytic View"
 #~ msgstr "Шинжилгээний Харагдац"
-
-#~ msgid "Cancel"
-#~ msgstr "Цуцлах"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
@@ -348,9 +386,6 @@ msgstr ""
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Дагагчид (Харилцагчид)"
-
-#~ msgid "From"
-#~ msgstr "Хаанаас"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr ""
@@ -380,15 +415,6 @@ msgstr ""
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Уншаагүй зурвасын тоо"
-
-#~ msgid "Open Charts"
-#~ msgstr "нээлттэй хүснэгтүүд"
-
-#~ msgid "Select the Period for Analysis"
-#~ msgstr "Анализ хийх мөчлөгөө сонго"
-
-#~ msgid "To"
-#~ msgstr "Хүртэл"
 
 #~ msgid "Type of Account"
 #~ msgstr "Дансны Төрөл"

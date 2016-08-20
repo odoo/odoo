@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-06-08 13:24+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -214,7 +214,7 @@ msgstr "# од Задачи"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:438
+#: code:addons/project/project.py:446
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копија)"
@@ -1037,7 +1037,7 @@ msgstr "Модел на алијас"
 #. module: project
 #: code:addons/project/project.py:133
 #, python-format
-msgid "All employees"
+msgid "All Employees Project: all employees can access"
 msgstr ""
 
 #. module: project
@@ -1271,7 +1271,7 @@ msgid "Check this box to manage internal activities through this project"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:640
+#: code:addons/project/project.py:648
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1495,7 +1495,7 @@ msgid "Current Timesheet"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:860
+#: code:addons/project/project.py:868
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1504,10 +1504,16 @@ msgid "Customer"
 msgstr "Купувач"
 
 #. module: project
-#: code:addons/project/project.py:860
+#: code:addons/project/project.py:868
 #, python-format
 msgid "Customer Email"
 msgstr "Е-пошта на купувач"
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer Project: visible in portal if the customer is a follower"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1534,12 +1540,6 @@ msgstr ""
 #, python-format
 msgid "Customer has reported new issue"
 msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:132
-#, fuzzy, python-format
-msgid "Customer project"
-msgstr "Техничка поддршка"
 
 #. module: project
 #. openerp-web
@@ -2082,7 +2082,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:791
+#: code:addons/project/project.py:799
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -2502,12 +2502,6 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Повеќе <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-#, fuzzy
-msgid "More Info"
-msgstr "Додатни информации"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr ""
@@ -2547,7 +2541,7 @@ msgid "New"
 msgstr "Ново"
 
 #. module: project
-#: code:addons/project/project.py:793
+#: code:addons/project/project.py:801
 #, python-format
 msgid "New Task"
 msgstr ""
@@ -2771,7 +2765,7 @@ msgid "Planner"
 msgstr "Планер"
 
 #. module: project
-#: code:addons/project/project.py:953
+#: code:addons/project/project.py:961
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -2817,7 +2811,7 @@ msgstr "Приватност / Видливост"
 #. module: project
 #: code:addons/project/project.py:134
 #, python-format
-msgid "Private: followers only"
+msgid "Private Project: followers only"
 msgstr ""
 
 #. module: project
@@ -2908,12 +2902,6 @@ msgstr "Задачи на проектот"
 #, python-format
 msgid "Projects"
 msgstr "Проекти"
-
-#. module: project
-#: model:mail.channel,name:project.mail_channel_project_task
-#, fuzzy
-msgid "Projects & Tasks"
-msgstr "Проектни задачи"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3260,6 +3248,11 @@ msgstr "Почетен датум"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "Датум на започнување"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_account_type
+msgid "State"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -4036,7 +4029,7 @@ msgid "send us an email"
 msgstr "Испратете ни е-порака"
 
 #. module: project
-#: code:addons/project/project.py:597
+#: code:addons/project/project.py:605
 #, python-format
 msgid "tasks"
 msgstr "задачи"

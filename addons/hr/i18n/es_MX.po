@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-02-20 10:36+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:76
+#: code:addons/hr/hr.py:120
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -117,7 +117,6 @@ msgid "A good job in a young and dynamic team"
 msgstr "Un buen trabajo en un joven y dinámico equipo"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "Activo"
@@ -130,7 +129,6 @@ msgstr ""
 "presupuesto"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Archivado"
@@ -228,6 +226,11 @@ msgid "Click to create a department."
 msgstr "Da clic para crear un departamento"
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
+msgid "Click to define a new department."
+msgstr ""
+
+#. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid "Click to define a new job position."
 msgstr ""
@@ -298,6 +301,11 @@ msgid "Contributions to open source projects"
 msgstr "Contribuciones para abrir proyectos de código"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.view_department_form_installer
+msgid "Create Your Departments"
+msgstr "Crear tus Departamentos"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
@@ -341,6 +349,7 @@ msgid "Deliver generic Odoo functional training sessions"
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -438,13 +447,13 @@ msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:264
+#: code:addons/hr/hr.py:294 constraint:hr.department:0
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:177
+#: code:addons/hr/hr.py:264 constraint:hr.employee:0
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
@@ -575,12 +584,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
 msgid "Home Address"
 msgstr "Dirección particular"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_department
-#, fuzzy
-msgid "Hr Department"
-msgstr "Departamento RH"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -830,6 +833,7 @@ msgid "Must have ..."
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
@@ -1188,11 +1192,6 @@ msgid "Unread Messages"
 msgstr "Mensajes sin leer"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_login
-msgid "Used to log into the system"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
 msgid "User"
 msgstr "Usuario"
@@ -1501,6 +1500,15 @@ msgid "You will work closely with all trainees"
 msgstr ""
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
+msgid ""
+"Your departments structure is used to manage all documents\n"
+"                related to employees by departments: expenses and "
+"timesheets,\n"
+"                leaves and holidays, recruitments, etc."
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "departamento"
@@ -1513,9 +1521,6 @@ msgstr ""
 #~ msgid "Action Needed"
 #~ msgstr "Acción Requerida"
 
-#~ msgid "Create Your Departments"
-#~ msgstr "Crear tus Departamentos"
-
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Fecha de último trabajo realizado en esta cuenta"
 
@@ -1524,6 +1529,9 @@ msgstr ""
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Seguidores (Socios)"
+
+#~ msgid "HR Department"
+#~ msgstr "Departamento RH"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Si se marca, los nuevos mensajes requieren su atención"

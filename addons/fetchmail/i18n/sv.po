@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-09-07 18:22+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
@@ -60,7 +60,7 @@ msgid "Confirmed"
 msgstr "Bekräftad"
 
 #. module: fetchmail
-#: code:addons/fetchmail/models/fetchmail.py:137
+#: code:addons/fetchmail/fetchmail.py:150
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "Anslutningstestet misslyckades: %s"
@@ -80,11 +80,13 @@ msgid "Create a New Record"
 msgstr "Skapa ny post"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "Skapad av"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "Skapad den"
@@ -95,6 +97,7 @@ msgid "Defines the order of processing, lower values mean higher priority"
 msgstr "Ange bearbetningsordningen, lägre värde betyder högre prioritet"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr "Visa namn"
@@ -110,6 +113,7 @@ msgid "Hostname or IP of the mail server"
 msgstr "Hostnamn eller IP för e-postservern"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "ID"
@@ -162,16 +166,19 @@ msgid "Last Fetch Date"
 msgstr "Senaste hämtningsdatum"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
 msgstr "Modifierades senast"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
 msgstr "Senast uppdaterad av"
 
 #. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "Senast uppdaterad"
@@ -358,5 +365,7 @@ msgstr ""
 "Om bilagor skall laddas ned. Om ej aktiverad, hämtas endast texten och "
 "bilagorna lämnas kvar."
 
-#~ msgid "fetchmail.config.settings"
-#~ msgstr "fetchmail.config.settings"
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
+msgid "fetchmail.config.settings"
+msgstr "fetchmail.config.settings"

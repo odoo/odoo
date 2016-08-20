@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-07-06 08:35+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -22,7 +22,7 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:250
+#: code:addons/mrp/stock.py:231
 #, python-format
 msgid " Manufacture"
 msgstr "Proizvodnja"
@@ -40,13 +40,13 @@ msgid "# Manufacturing Orders"
 msgstr "# Nalozi za proizvodnju"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:343
+#: code:addons/mrp/mrp.py:341
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1051
+#: code:addons/mrp/mrp.py:1052
 #, python-format
 msgid "%s produced"
 msgstr "%s proizvedeno"
@@ -223,13 +223,6 @@ msgid "Approve"
 msgstr "Odobri"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
-msgid "Archived"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product_produce_delay
 #: model:ir.model.fields,help:mrp.field_product_template_produce_delay
 msgid ""
@@ -274,7 +267,7 @@ msgid "BOM lines of the referred bom"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/stock.py:44
+#: code:addons/mrp/stock.py:25
 #, python-format
 msgid ""
 "Because the product %s requires it, you must assign a serial number to your "
@@ -341,7 +334,7 @@ msgid "BoM"
 msgstr "Sastavnica"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:318
+#: code:addons/mrp/mrp.py:316
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr ""
@@ -372,7 +365,7 @@ msgid "By-Products"
 msgstr "Nusproizvodi"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:247
+#: code:addons/mrp/stock.py:228
 #, python-format
 msgid "Can't find any generic Manufacture route."
 msgstr ""
@@ -396,19 +389,19 @@ msgid "Cancelled"
 msgstr "Otkazano"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:169
+#: code:addons/mrp/stock.py:150
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:651
+#: code:addons/mrp/mrp.py:649
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr "Ne možete obrisati proizvodni nalog u statusu '%s'."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:721
+#: code:addons/mrp/mrp.py:719
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr ""
@@ -858,6 +851,14 @@ msgstr ""
 "material without removing it."
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"Ako je ovo polje postavljeno na NE, moežte sakriti resurs bez da ga uklonite."
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
@@ -870,6 +871,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "In Production"
 msgstr "U proizvodnji"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Inactive"
+msgstr "Neaktivno"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
@@ -1006,7 +1013,7 @@ msgid "Manager"
 msgstr "Voditelj"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:244
+#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:225
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
 #, python-format
 msgid "Manufacture"
@@ -1055,7 +1062,7 @@ msgid "Manufacturing Order"
 msgstr "Nalog za proizvodnju"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:114
+#: code:addons/mrp/procurement.py:112
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "Nalog za proizvodnju <em>%s</em> kreiran."
@@ -1094,7 +1101,7 @@ msgid "Manufacturing Reference"
 msgstr "Referenca proizvodnje"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:786
+#: code:addons/mrp/mrp.py:784
 #, python-format
 msgid "Manufacturing order cancelled."
 msgstr "Nalog za proizvodnju otkazan"
@@ -1145,7 +1152,7 @@ msgid "New"
 msgstr "Novi"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:110
+#: code:addons/mrp/procurement.py:108
 #, python-format
 msgid "No BoM exists for this product!"
 msgstr "Ne postoji sastavnica za ovaj proizvod!"
@@ -1270,7 +1277,7 @@ msgid "Planning"
 msgstr "Planiranje"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:155
+#: code:addons/mrp/stock.py:136
 #, python-format
 msgid "Please provide proper quantity."
 msgstr "Molimo unesite ispravnu količinu"
@@ -1507,7 +1514,7 @@ msgstr "Svojstvo"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9622
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1807,7 +1814,7 @@ msgid "Technical field used to make the traceability of produced products"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:353 code:addons/mrp/mrp.py:452
+#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2043,7 +2050,7 @@ msgid "Warehouse"
 msgstr "Skladište"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:353 code:addons/mrp/mrp.py:452
+#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
 #, python-format
 msgid "Warning"
 msgstr "Upozorenje"
@@ -2195,7 +2202,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:359
+#: code:addons/mrp/mrp.py:357
 #, python-format
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
@@ -2272,16 +2279,6 @@ msgstr "nepoznato"
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Ako je označeno, nove poruke zahtijevaju vašu pažnju."
-
-#~ msgid ""
-#~ "If the active field is set to False, it will allow you to hide the "
-#~ "resource record without removing it."
-#~ msgstr ""
-#~ "Ako je ovo polje postavljeno na NE, moežte sakriti resurs bez da ga "
-#~ "uklonite."
-
-#~ msgid "Inactive"
-#~ msgstr "Neaktivno"
 
 #~ msgid "Is Follower"
 #~ msgstr "Je pratitelj"

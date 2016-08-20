@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Florian Hatat <mininet@wanadoo.fr>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -103,6 +103,11 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Client"
+msgstr "Client"
+
+#. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_sale_config
 #: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Configure Sales"
@@ -120,18 +125,26 @@ msgstr "Configurer les données de la société"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Créé par"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Créé le"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Customer"
+msgstr "Client"
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 #, fuzzy
 msgid "Display Name"
@@ -140,6 +153,11 @@ msgstr ""
 "Nom affiché\n"
 "#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Afficher le nom"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Donor"
+msgstr "Donateur"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -183,7 +201,18 @@ msgid "Google Integration"
 msgstr "Intégration Google"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Guest"
+msgstr "Invité"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
+msgid "How do you call a Customer"
+msgstr "Comment appelez-vous un client"
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
@@ -205,6 +234,7 @@ msgstr "inter-compagnie"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
 #, fuzzy
 msgid "Last Modified on"
@@ -216,6 +246,7 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
 #, fuzzy
 msgid "Last Updated by"
@@ -227,6 +258,7 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
 #, fuzzy
 msgid "Last Updated on"
@@ -252,6 +284,11 @@ msgid "Manage multiple companies"
 msgstr "Gérer plusieurs sociétés"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Member"
+msgstr "Membre"
+
+#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Multi Company"
 msgstr "Multi société"
@@ -269,6 +306,16 @@ msgid ""
 msgstr ""
 "Une fois l'API installée, vous pouvez la configurer avec les informations "
 "d'identification pour \"Google Calendar\""
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Patient"
+msgstr "Patient"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -312,6 +359,16 @@ msgid "Shared resources"
 msgstr "Ressources partagées"
 
 #. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
+msgid "Specify Your Terminology"
+msgstr "Précisez votre terminologie"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Tenant"
+msgstr "Résident"
+
+#. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
 msgid "This installs the module google_calendar."
 msgstr "Ceci installe le module google_calendar."
@@ -334,9 +391,16 @@ msgstr ""
 "sociétés."
 
 #. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
+msgid "Use another word to say \"Customer\""
+msgstr "Utiliser un autre mot pour dire \"client\""
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers (OAuth)"
+msgid "Use external authentication providers, sign in with Google..."
 msgstr ""
+"Utilisez des fournisseurs d'authentification externes pour vous connecter "
+"(Google ...)"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -368,6 +432,15 @@ msgstr ""
 "entre les sociétés."
 
 #. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
+msgid ""
+"You can use this wizard to change the terminologies for customers in the "
+"whole application."
+msgstr ""
+"Vous pouvez lancer cet assistant pour modifier dans toute l'application  la "
+"terminologie que vous souhaitez utiliser pour les clients."
+
+#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "You will find more options in your company details: address for the header "
@@ -383,54 +456,11 @@ msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: base_setup
+#: model:ir.model,name:base_setup.model_base_setup_terminology
+msgid "base.setup.terminology"
+msgstr "base.setup.terminology"
+
+#. module: base_setup
 #: model:ir.model,name:base_setup.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr "sale.config.settings"
-
-#~ msgid "Client"
-#~ msgstr "Client"
-
-#~ msgid "Customer"
-#~ msgstr "Client"
-
-#~ msgid "Donor"
-#~ msgstr "Donateur"
-
-#~ msgid "Guest"
-#~ msgstr "Invité"
-
-#~ msgid "How do you call a Customer"
-#~ msgstr "Comment appelez-vous un client"
-
-#~ msgid "Member"
-#~ msgstr "Membre"
-
-#~ msgid "Partner"
-#~ msgstr "Partenaire"
-
-#~ msgid "Patient"
-#~ msgstr "Patient"
-
-#~ msgid "Specify Your Terminology"
-#~ msgstr "Précisez votre terminologie"
-
-#~ msgid "Tenant"
-#~ msgstr "Résident"
-
-#~ msgid "Use another word to say \"Customer\""
-#~ msgstr "Utiliser un autre mot pour dire \"client\""
-
-#~ msgid "Use external authentication providers, sign in with Google..."
-#~ msgstr ""
-#~ "Utilisez des fournisseurs d'authentification externes pour vous connecter "
-#~ "(Google ...)"
-
-#~ msgid ""
-#~ "You can use this wizard to change the terminologies for customers in the "
-#~ "whole application."
-#~ msgstr ""
-#~ "Vous pouvez lancer cet assistant pour modifier dans toute l'application  "
-#~ "la terminologie que vous souhaitez utiliser pour les clients."
-
-#~ msgid "base.setup.terminology"
-#~ msgstr "base.setup.terminology"

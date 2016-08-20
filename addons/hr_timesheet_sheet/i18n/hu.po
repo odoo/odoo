@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-18 08:36+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
@@ -49,6 +49,26 @@ msgstr ""
 "az időkimutatást.                 \n"
 "* Az 'Elvégezve' állapotot használja, ha a felhasználó időkimutatását "
 "elfogadta egy felettese."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
+msgid "# Nbr Timesheet"
+msgstr "# Nbr munkaórabeosztás"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
+msgid "# Total Attendance"
+msgstr "# Összes résztvevő"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
+msgid "# Total Diff"
+msgstr "# Összes különbözet"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
+msgid "# Total Timesheet"
+msgstr "# Összes munkaidő beosztás"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -125,6 +145,12 @@ msgid "Company"
 msgstr "Vállalat"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Confirmed"
+msgstr "Jóváhagyott"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr "Jóváhagyott munkaidő kimutatások"
@@ -152,18 +178,23 @@ msgid "Date"
 msgstr "Dátum"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr "Dátumtól"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "Dátumig"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "Osztály, részleg"
 
@@ -197,6 +228,18 @@ msgstr ""
 "Megjelenített név"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Done"
+msgstr "Kész"
+
+#. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
+msgid "Draft"
+msgstr "Tervezet"
+
+#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
@@ -221,6 +264,11 @@ msgstr ""
 "Bejelentkezésnek)kell követnie."
 
 #. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
+msgid "External Timesheet"
+msgstr "Külső munkaidőbeosztás"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 #, fuzzy
 msgid "Group By"
@@ -234,11 +282,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Órák"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-msgid "Hr Department"
-msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -268,6 +311,11 @@ msgid ""
 msgstr ""
 "Ahhoz, hogy munkaidőbeosztás tudjon ennek a munkavállalónak készíteni, "
 "előszöz hozzá kell rendelnie egy felhasználóhoz."
+
+#. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
+msgid "Internal Timesheet"
+msgstr "Belső munkaidő beosztás"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -316,6 +364,7 @@ msgid "My Timesheets"
 msgstr "Munkaidő-kimutatásaim"
 
 #. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
 msgstr "Új"
@@ -416,7 +465,9 @@ msgid "Sign Out"
 msgstr "Kijelentkezés"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Status"
 msgstr "Állapot"
 
@@ -441,6 +492,7 @@ msgstr ""
 "számokat a ki és belépésekhez."
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
@@ -760,41 +812,17 @@ msgstr "ig"
 msgid "waiting approval"
 msgstr "Jóváhagyásra váró"
 
-#~ msgid "# Nbr Timesheet"
-#~ msgstr "# Nbr munkaórabeosztás"
-
-#~ msgid "# Total Attendance"
-#~ msgstr "# Összes résztvevő"
-
-#~ msgid "# Total Diff"
-#~ msgstr "# Összes különbözet"
-
-#~ msgid "# Total Timesheet"
-#~ msgstr "# Összes munkaidő beosztás"
-
 #~ msgid "Action Needed"
 #~ msgstr "Művelet szükséges"
 
 #~ msgid "Cancel"
 #~ msgstr "Megszakítás"
 
-#~ msgid "Confirmed"
-#~ msgstr "Jóváhagyott"
-
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
 
 #~ msgid "Day"
 #~ msgstr "Nap"
-
-#~ msgid "Done"
-#~ msgstr "Kész"
-
-#~ msgid "Draft"
-#~ msgstr "Tervezet"
-
-#~ msgid "External Timesheet"
-#~ msgstr "Külső munkaidőbeosztás"
 
 #~ msgid "Followers"
 #~ msgstr "Követők"
@@ -820,9 +848,6 @@ msgstr "Jóváhagyásra váró"
 #~ msgstr ""
 #~ "Ahhoz, hogy időkimutatást tudjon készíteni ehhez az alkalmazotthoz, az "
 #~ "alkalmazottat egy termékhez kell rendelnie."
-
-#~ msgid "Internal Timesheet"
-#~ msgstr "Belső munkaidő beosztás"
 
 #~ msgid "Is Follower"
 #~ msgstr "Ez egy követő"

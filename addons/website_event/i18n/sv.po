@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-07-01 09:20+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
@@ -17,6 +17,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_event
+#: code:addons/website_event/controllers/main.py:219
+#, python-format
+msgid "%(month)s %(start_day)s%(end_day)s"
+msgstr "%(month)s %(start_day)s%(end_day)s"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -99,13 +105,13 @@ msgid "Add Content"
 msgstr "Lägg till innehåll"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:96
+#: code:addons/website_event/controllers/main.py:106
 #, python-format
 msgid "All Categories"
 msgstr "Alla kategorier"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:103
+#: code:addons/website_event/controllers/main.py:117
 #, python-format
 msgid "All Countries"
 msgstr "Alla länder"
@@ -335,15 +341,10 @@ msgid "Free"
 msgstr "Fri"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:54
+#: code:addons/website_event/models/event.py:44
 #, python-format
 msgid "Introduction"
 msgstr "Introduktion"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
-msgid "Is Participating"
-msgstr ""
 
 #. module: website_event
 #. openerp-web
@@ -354,7 +355,7 @@ msgstr ""
 "Låt oss gå igenom de första stegen för att publicera ett nytt evenemang."
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:55
+#: code:addons/website_event/models/event.py:45
 #, python-format
 msgid "Location"
 msgstr "Plats"
@@ -371,7 +372,7 @@ msgstr "Namn"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:184
+#: code:addons/website_event/controllers/main.py:201
 #: code:addons/website_event/static/src/js/website.tour.event.js:32
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
@@ -387,19 +388,19 @@ msgid "New Event Created"
 msgstr "Nytt evenemang skapat"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:34
+#: code:addons/website_event/controllers/main.py:38
 #, python-format
 msgid "Next Events"
 msgstr "Nästa evenemang"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:43
+#: code:addons/website_event/controllers/main.py:47
 #, python-format
 msgid "Next Week"
 msgstr "Nästa vecka"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:51
+#: code:addons/website_event/controllers/main.py:55
 #, python-format
 msgid "Next month"
 msgstr "Nästa månad"
@@ -410,7 +411,7 @@ msgid "No event found"
 msgstr "Inga evenemang funna"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:55
+#: code:addons/website_event/controllers/main.py:59
 #, python-format
 msgid "Old Events"
 msgstr "Genomförda evenemang"
@@ -448,12 +449,6 @@ msgid "Our Trainings"
 msgstr "Våra utbildningar"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_details
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "Participating"
-msgstr ""
-
-#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Phone"
 msgstr "Telefon"
@@ -486,7 +481,7 @@ msgid "Reference"
 msgstr "Referens"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:63
+#: code:addons/website_event/models/event.py:53
 #, python-format
 msgid "Register"
 msgstr "Registrera"
@@ -548,7 +543,7 @@ msgid "Start Tutorial"
 msgstr "Starta guiden"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:39
+#: code:addons/website_event/controllers/main.py:43
 #, python-format
 msgid "This Week"
 msgstr "Denna vecka"
@@ -570,7 +565,7 @@ msgstr ""
 "evenemangspresentationen."
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:47
+#: code:addons/website_event/controllers/main.py:51
 #, python-format
 msgid "This month"
 msgstr "Denna månad"
@@ -586,7 +581,7 @@ msgid "Ticket Type #"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:35
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "Today"
 msgstr "Idag"
@@ -620,16 +615,6 @@ msgstr ""
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
 msgstr "Tillbaka till webbplats"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_message_ids
-msgid "Website Messages"
-msgstr "Webbplatsmeddelanden"
-
-#. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event_website_message_ids
-msgid "Website communication history"
-msgstr "Webbplatsens kommunikationshistorik"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -676,14 +661,17 @@ msgstr "pull-right"
 msgid "to"
 msgstr "till"
 
-#~ msgid "%(month)s %(start_day)s%(end_day)s"
-#~ msgstr "%(month)s %(start_day)s%(end_day)s"
-
 #~ msgid "Drag the 'Text Block' in your event page."
 #~ msgstr "Dra 'Textblocket' till din evenemangssida."
 
+#~ msgid "Website Messages"
+#~ msgstr "Webbplatsmeddelanden"
+
 #~ msgid "Website URL"
 #~ msgstr "Webbplatsens URL"
+
+#~ msgid "Website communication history"
+#~ msgstr "Webbplatsens kommunikationshistorik"
 
 #~ msgid "Website meta description"
 #~ msgstr "Webbplatsens metabeskrivning"

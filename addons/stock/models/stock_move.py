@@ -352,9 +352,10 @@ class StockMove(models.Model):
         if any(move.state in ('done', 'cancel') for move in self):
             raise UserError(_('Cannot unreserve a done move'))
         self.quants_unreserve()
-        waiting = self.filtered(lambda move: move.get_ancestors())
-        waiting.write({'state': 'waiting'})
-        (self - waiting).write({'state': 'confirmed'})
+        if not self.env.context.get('no_state_change'):
+            waiting = self.filtered(lambda move: move.get_ancestors())
+            waiting.write({'state': 'waiting'})
+            (self - waiting).write({'state': 'confirmed'})
 
     def _push_apply(self):
         # TDE CLEANME: I am quite sure I already saw this code somewhere ... in routing ??
@@ -771,6 +772,8 @@ class StockMove(models.Model):
         remaining_move_qty = {}
 
         for move in self:
+            if move.picking_id:
+                pickings |= move.picking_id
             remaining_move_qty[move.id] = move.product_qty
             for link in move.linked_move_operation_ids:
                 operations |= link.operation_id

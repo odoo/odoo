@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2015-10-12 12:56+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -32,14 +32,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_by_project
-#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
 msgid "Activities"
-msgstr "Etkinlikler"
-
-#. module: hr_timesheet
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_activity_analysis
-#, fuzzy
-msgid "Activity Analysis"
 msgstr "Etkinlikler"
 
 #. module: hr_timesheet
@@ -49,7 +42,6 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project_subtask_project_id
-#: model:ir.model.fields,help:hr_timesheet.field_project_task_subtask_project_id
 msgid ""
 "Choosing a sub-tasks project will both enable sub-tasks and set their "
 "default project (possibly the project itself)"
@@ -63,9 +55,14 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
-#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
 msgid "Click to record activities."
 msgstr "Etkinlikleri kayıt için tıklayın."
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_company_id
+#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
+msgid "Company"
+msgstr "Firma"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_delay_hours
@@ -85,6 +82,16 @@ msgid "Computed using the sum of the task work done."
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_cost
+msgid "Cost"
+msgstr "Maliyet"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_date
+msgid "Date"
+msgstr "Tarih"
+
+#. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
 msgid "Define your Analytic Structure"
 msgstr "Analiz Yapısını Tanımlama"
@@ -95,15 +102,15 @@ msgid "Delay Hours"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_department_id
-msgid "Department"
-msgstr ""
-
-#. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 #, fuzzy
 msgid "Detailed Activities"
 msgstr "Etkinlikler"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_display_name
+msgid "Display Name"
+msgstr "Adı Göster"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
@@ -117,9 +124,20 @@ msgid "Effective Hours"
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
+msgid "Extended Filters..."
+msgstr "Gelişmiş Filtreler..."
+
+#. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group By"
 msgstr "Grupla"
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
+msgid "Group by month of date"
+msgstr "Tarihi aya göre grupla"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_effective_hours
@@ -127,11 +145,26 @@ msgid "Hours Spent"
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_progress
 msgid ""
 "If the task has a progress of 99.99% you should close the task if it's "
 "finished or reevaluate the time"
 msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report___last_update
+msgid "Last Modified on"
+msgstr "Son değiştirme tarihi"
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
+msgid "Month"
+msgstr "Ay"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
@@ -150,6 +183,7 @@ msgid "Planned Hours"
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_product_id
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Product"
 msgstr "Ürünler"
@@ -160,13 +194,9 @@ msgid "Progress"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_project_task_progress
-msgid "Progress (%)"
-msgstr ""
-
-#. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_project
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_project_id
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_project_id
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Project"
 msgstr ""
@@ -234,8 +264,21 @@ msgid "Tasks by user and project"
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
+msgid "This Month"
+msgstr "Bu Ay"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_quantity
+msgid "Time"
+msgstr "Zaman"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_timesheet_report
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
+#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_graph
+#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_pivot
+#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
 msgid "Timesheet"
 msgstr "Mesai Kartı"
 
@@ -244,6 +287,12 @@ msgstr "Mesai Kartı"
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Timesheet Activities"
 msgstr "Mesai Kartı Etkinlikler"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_all
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_filtered
+msgid "Timesheet Analysis"
+msgstr "Mesai Kart Analizi"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -257,6 +306,7 @@ msgstr "Mesai Kart Ay olarak"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_timesheet_ids
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_report_all
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_root
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_department_view_kanban
 #: model:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
@@ -282,14 +332,24 @@ msgid "Total time"
 msgstr "Toplam zaman"
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_user_id
+#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
+msgid "User"
+msgstr "Kullanıcı"
+
+#. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Users"
 msgstr "Kullanıcılar"
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task_progress
+msgid "Working Time Progress (%)"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
-#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
 #, fuzzy
 msgid ""
 "You can register and track your workings hours by project every\n"
@@ -319,6 +379,11 @@ msgstr ""
 msgid "account analytic line"
 msgstr "Analiz Satır"
 
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
+msgid "month"
+msgstr "ay"
+
 #~ msgid "Accounting"
 #~ msgstr "Muhasebe"
 
@@ -334,29 +399,8 @@ msgstr "Analiz Satır"
 #~ msgid "Companies"
 #~ msgstr "Firmalar"
 
-#~ msgid "Company"
-#~ msgstr "Firma"
-
 #~ msgid "Configuration"
 #~ msgstr "Yapılandırma"
-
-#~ msgid "Cost"
-#~ msgstr "Maliyet"
-
-#~ msgid "Date"
-#~ msgstr "Tarih"
-
-#~ msgid "Display Name"
-#~ msgstr "Adı Göster"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Gelişmiş Filtreler..."
-
-#~ msgid "Group by month of date"
-#~ msgstr "Tarihi aya göre grupla"
-
-#~ msgid "ID"
-#~ msgstr "ID"
 
 #~ msgid "Information"
 #~ msgstr "Bilgi"
@@ -364,26 +408,5 @@ msgstr "Analiz Satır"
 #~ msgid "Is a Timesheet"
 #~ msgstr "Bir zaman çizelgesidir"
 
-#~ msgid "Last Modified on"
-#~ msgstr "Son değiştirme tarihi"
-
-#~ msgid "Month"
-#~ msgstr "Ay"
-
-#~ msgid "This Month"
-#~ msgstr "Bu Ay"
-
-#~ msgid "Time"
-#~ msgstr "Zaman"
-
 #~ msgid "Timesheet Accounts"
 #~ msgstr "Mesai Kart Hesapları"
-
-#~ msgid "Timesheet Analysis"
-#~ msgstr "Mesai Kart Analizi"
-
-#~ msgid "User"
-#~ msgstr "Kullanıcı"
-
-#~ msgid "month"
-#~ msgstr "ay"

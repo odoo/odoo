@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-09-19 08:21+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/"
@@ -63,11 +63,6 @@ msgid "Basic Salary of the employee"
 msgstr "Osnovica plate zaposlenog"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
-msgid "Click here to create new contracts."
-msgstr ""
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
 msgid "Company Vehicle"
 msgstr "Vozilo firme"
@@ -85,7 +80,7 @@ msgstr ""
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5636
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -115,12 +110,6 @@ msgstr "Ugovor ubrzo ističe"
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
 msgstr "Ugovor istekao"
-
-#. module: hr_contract
-#: code:addons/hr_contract/models/hr_contract.py:84
-#, fuzzy, python-format
-msgid "Contract start date must be less than contract end date."
-msgstr "Greška! Početni datum mora biti manji od datuma isteka."
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
@@ -218,6 +207,11 @@ msgstr ""
 "Završni Datum"
 
 #. module: hr_contract
+#: constraint:hr.contract:0
+msgid "Error! Contract start-date must be less than contract end-date."
+msgstr "Greška! Početni datum mora biti manji od datuma isteka."
+
+#. module: hr_contract
 #: selection:hr.contract,state:0
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
@@ -253,11 +247,6 @@ msgstr "Udaljenost od posla do kuće"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id
 msgid "ID"
 msgstr "ID"
-
-#. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Important Messages"
-msgstr "Važne poruke"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
@@ -442,6 +431,11 @@ msgstr ""
 "Datum početka Probnog Perioda"
 
 #. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Unread Messages"
+msgstr "Nepročitane poruke"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
 msgid "Use employee work schedule"
 msgstr "Koristi raspored zaposlenog"
@@ -505,6 +499,9 @@ msgstr "Raspored rada"
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
 
+#~ msgid "Important Messages"
+#~ msgstr "Važne poruke"
+
 #~ msgid "Is Follower"
 #~ msgstr "Je pratioc"
 
@@ -525,9 +522,6 @@ msgstr "Raspored rada"
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Broj nepročitanih poruka"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nepročitane poruke"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Brojač nepročitanih poruka"

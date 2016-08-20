@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-19 10:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-06-24 04:54+0000\n"
 "Last-Translator: Deddy ddr <deddy.ddr@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -212,7 +212,7 @@ msgstr "# Kegiatans"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:438
+#: code:addons/project/project.py:446
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
@@ -1246,9 +1246,9 @@ msgstr "Alias Model"
 
 #. module: project
 #: code:addons/project/project.py:133
-#, fuzzy, python-format
-msgid "All employees"
-msgstr "Bagi karyawan,"
+#, python-format
+msgid "All Employees Project: all employees can access"
+msgstr "Semua karyawan proyek: semua karyawan yang dapat mengakses"
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -1512,7 +1512,7 @@ msgstr ""
 "Centang kotak ini untuk mengelola pelaksanaan kegiatan melalui proyek ini"
 
 #. module: project
-#: code:addons/project/project.py:640
+#: code:addons/project/project.py:648
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1743,7 +1743,7 @@ msgid "Current Timesheet"
 msgstr "Saat ini absen"
 
 #. module: project
-#: code:addons/project/project.py:860
+#: code:addons/project/project.py:868
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1752,10 +1752,16 @@ msgid "Customer"
 msgstr "Pelanggan"
 
 #. module: project
-#: code:addons/project/project.py:860
+#: code:addons/project/project.py:868
 #, python-format
 msgid "Customer Email"
 msgstr "Email Supporter"
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer Project: visible in portal if the customer is a follower"
+msgstr "Proyek pelanggan: terlihat di portal jika pelanggan adalah pengikut"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1782,12 +1788,6 @@ msgstr "Pelanggan telah dibatalkan perbaikan"
 #, python-format
 msgid "Customer has reported new issue"
 msgstr "Pelanggan telah melaporkan masalah baru"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, fuzzy, python-format
-msgid "Customer project"
-msgstr "Layanan Pelanggan:"
 
 #. module: project
 #. openerp-web
@@ -2368,7 +2368,7 @@ msgstr ""
 "melihat tugas-tugas yang diikuti atau masalah."
 
 #. module: project
-#: code:addons/project/project.py:791
+#: code:addons/project/project.py:799
 #, python-format
 msgid "I take it"
 msgstr "Saya mengambil"
@@ -2839,12 +2839,6 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Lebih<i class=\"fa fa-caret-down\"></i>"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-#, fuzzy
-msgid "More Info"
-msgstr "Info tambahan"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr "Lebih efisien komunikasi antara karyawan"
@@ -2884,7 +2878,7 @@ msgid "New"
 msgstr "Baru"
 
 #. module: project
-#: code:addons/project/project.py:793
+#: code:addons/project/project.py:801
 #, python-format
 msgid "New Task"
 msgstr "Tugas baru"
@@ -3132,7 +3126,7 @@ msgid "Planner"
 msgstr "Perencana"
 
 #. module: project
-#: code:addons/project/project.py:953
+#: code:addons/project/project.py:961
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3180,8 +3174,8 @@ msgstr "Privasi / visibilitas"
 
 #. module: project
 #: code:addons/project/project.py:134
-#, fuzzy, python-format
-msgid "Private: followers only"
+#, python-format
+msgid "Private Project: followers only"
 msgstr "Proyek pribadi: pengikut hanya"
 
 #. module: project
@@ -3272,12 +3266,6 @@ msgstr "Kegiatan-kegiatan proyek"
 #, python-format
 msgid "Projects"
 msgstr "Proyek"
-
-#. module: project
-#: model:mail.channel,name:project.mail_channel_project_task
-#, fuzzy
-msgid "Projects & Tasks"
-msgstr "Kegiatan-kegiatan proyek"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3629,6 +3617,11 @@ msgstr "Tanggal Mulai"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "Tanggal Awal"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_account_type
+msgid "State"
+msgstr "Pernyataan"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -4475,7 +4468,7 @@ msgid "send us an email"
 msgstr "Kirim email"
 
 #. module: project
-#: code:addons/project/project.py:597
+#: code:addons/project/project.py:605
 #, python-format
 msgid "tasks"
 msgstr "Kegiatan"
@@ -4532,17 +4525,11 @@ msgstr "Anda terdaftar di langkah sebelumnya"
 #~ msgid "Action Needed"
 #~ msgstr "Tindakan diperlukan"
 
-#~ msgid "All Employees Project: all employees can access"
-#~ msgstr "Semua karyawan proyek: semua karyawan yang dapat mengakses"
-
 #~ msgid "Check this field if this project manages timesheets"
 #~ msgstr "Periksa bidang ini jika proyek ini mengelola timesheets"
 
 #~ msgid "Close"
 #~ msgstr "Tutup"
-
-#~ msgid "Customer Project: visible in portal if the customer is a follower"
-#~ msgstr "Proyek pelanggan: terlihat di portal jika pelanggan adalah pengikut"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Tanggal pesan terakhir diposting pada catatan."
@@ -4597,9 +4584,6 @@ msgstr "Anda terdaftar di langkah sebelumnya"
 
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "Catatan absen baris per kegiatan"
-
-#~ msgid "State"
-#~ msgstr "Pernyataan"
 
 #~ msgid "Subscriptions"
 #~ msgstr "Langganan"
