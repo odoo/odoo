@@ -1,70 +1,114 @@
+# #-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * portal
-# 
+#
 # Translators:
+# Kaloyan Naumov <kaloyan@lumnus.net>, 2016
+# #-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * portal
+#
+# Translators:
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-09-08 06:39+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
+"Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/"
+"bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
+"#-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: portal
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
+#, fuzzy
 msgid ""
+"\n"
+"<p>\n"
+"    Dear ${object.user_id.name or ''},\n"
+"</p>\n"
+"<p>\n"
+"    You have been given access to ${user.company_id.name}'s ${object."
+"wizard_id.portal_id.name}.\n"
+"</p>\n"
+"<p>\n"
+"    Your login account data is:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Username: ${object.user_id.login or ''}</li>\n"
+"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or "
+"''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"\t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"\tYou can set or change your password via the following url:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}"
+"</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
+msgstr ""
 "\n"
 "            \t<p>\n"
 "                    Dear ${object.user_id.name or ''},\n"
 "                </p>\n"
 "                <p>\n"
-"                    You have been given access to ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
+"                    Беше ви даден достъп до ${user.company_id.name}'s "
+"${object.wizard_id.portal_id.name}.\n"
 "                </p>\n"
 "                <p>\n"
-"                    Your login account data is:\n"
+"                    Данните за вход са:\n"
 "                </p>\n"
 "                <ul>\n"
-"                    <li>Username: ${object.user_id.login or ''}</li>\n"
+"                    <li>Потребител: ${object.user_id.login or ''}</li>\n"
 "                </ul>\n"
 "                <ul>\n"
-"                    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"                    <li>Портал: <a href=\"${'portal_url' in ctx and "
+"ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}"
+"</a></li>\n"
 "                </ul>\n"
 "                <ul>\n"
-"                \t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"                \t<li>База: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
 "                </ul>\n"
 "                <p>\n"
-"                \tYou can set or change your password via the following url:\n"
+"                \tМожете да промените вашата парола на следния адрес:\n"
 "                </p>\n"
 "                <ul>\n"
-"                    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"                    <li><a href=\"${object.user_id.signup_url}\">${object."
+"user_id.signup_url}</a></li>\n"
 "                </ul>\n"
 "                <p>\n"
 "                \t${object.wizard_id.welcome_message or ''}\n"
 "                </p>\n"
 "                <p>---<br />\n"
-"                    Odoo - Open Source Business Applications<br />\n"
+"                    Odoo - Бизнес Приложения с Отворен Код<br />\n"
 "                    http://www.odoo.com<br />\n"
 "                </p>\n"
 "            \n"
 "            "
-msgstr ""
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Групи за достъп"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_after_sales
 msgid "After Sale Services"
-msgstr ""
+msgstr "След гаранционно обслужване."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -87,7 +131,7 @@ msgid "Contact"
 msgstr "Контакт"
 
 #. module: portal
-#: model:ir.ui.view,arch_db:portal.wizard_user_tree_view
+#: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
 msgstr "Контакти"
 
@@ -107,7 +151,7 @@ msgstr "Създадено на"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Име за показване"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
@@ -123,12 +167,12 @@ msgstr "ID"
 #. module: portal
 #: model:ir.model.fields,help:portal.field_res_groups_is_portal
 msgid "If checked, this group is usable as a portal."
-msgstr ""
+msgstr "Ако е избрано, групата е използваема за портал."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
 msgid "In Portal"
-msgstr ""
+msgstr "В Портала"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
@@ -139,7 +183,7 @@ msgstr "Съобщение за покана"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard___last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Последно променено на"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_write_uid
@@ -156,36 +200,36 @@ msgstr "Последно обновено на"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
 msgid "Login User"
-msgstr ""
+msgstr "Потребителски Вход"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.group_search_view
 msgid "Non-Portal Groups"
-msgstr ""
+msgstr "Не-портални Групи"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
 #: model:ir.model.fields,field_description:portal.field_res_groups_is_portal
 #: model:ir.ui.menu,name:portal.portal_menu
 msgid "Portal"
-msgstr ""
+msgstr "Портал"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: model:ir.model,name:portal.model_portal_wizard
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Portal Access Management"
-msgstr ""
+msgstr "Контрол за достъп за Портала"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.group_search_view
 msgid "Portal Groups"
-msgstr ""
+msgstr "Портални Групи"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr ""
+msgstr "Потребителска конфигурация за портала"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_projects
@@ -196,42 +240,53 @@ msgstr "Проекти"
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
-"                        The email address of each selected contact must be valid and unique.\n"
-"                        If necessary, you can fix any contact's email address directly in the list."
+"                        The email address of each selected contact must be "
+"valid and unique.\n"
+"                        If necessary, you can fix any contact's email "
+"address directly in the list."
 msgstr ""
+"Изберете кои контакти принадлежат на портала в списъка по-долу.\n"
+"                        Емейлът на всеки избран контакт трябва да е валиден "
+"и уникален.\n"
+"                        Ако е неободимо, можете да емейл адресът на всеки "
+"контакт директно в списъка."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:114
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "Няколко контакта имат един и същ емейл адрес:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:111
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "Някой контакти нямат валиден емейл адрес:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:117
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr ""
+msgstr "Няколко контакта имат един и същ емейл адрес с портални потребители:"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
 msgid "The portal that users can be added in or removed from."
-msgstr ""
+msgstr "Портални потребители, които могат да бъдат добавени или премахнати."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
+"Текстът съдържащ се в емейлите, които се изпращат към нови портални "
+"потребители."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
+"Този текст се съдържащ се в емейлите, които се изпращат към нови портални "
+"потребители."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:120
@@ -240,7 +295,10 @@ msgid ""
 "To resolve this error, you can: \n"
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
-msgstr "За да коригирате тази грешка, можете да: \n- Корегирате имейлите на съответните контакти\n- Предоставяне на достъп само на контакти с уникални имейли"
+msgstr ""
+"За да коригирате тази грешка, можете да: \n"
+"- Корегирате имейлите на съответните контакти\n"
+"- Предоставяне на достъп само на контакти с уникални имейли"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
@@ -253,13 +311,15 @@ msgid "Wizard"
 msgstr "Помощник"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:179
+#: code:addons/portal/wizard/portal_wizard.py:189
 #, python-format
-msgid ""
-"You must have an email address in your User Preferences to send emails."
+msgid "You must have an email address in your User Preferences to send emails."
 msgstr ""
+"Трябва да имате емйл адрес в потребителския профил, за да изпращате емейл "
+"съобщения."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
-msgid "Your Odoo account at ${user.company_id.name|safe}"
-msgstr ""
+#, fuzzy
+msgid "Your Odoo account at ${user.company_id.name}"
+msgstr "Вашия Odoo акаунт в ${user.company_id.name|safe}"

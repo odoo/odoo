@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_oauth
-# 
+#
 # Translators:
 # Bohdan Lisnenko, 2015-2016
 # Bohdan Lisnenko, 2016
@@ -9,30 +9,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-05-06 12:24+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
+"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
+"uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
 "<br/>\n"
-"                                    - Ceate a new project<br/>\n"
+"                                    - Create a new project<br/>\n"
 "                                    - Go to Api Access<br/>\n"
 "                                    - Create an oauth client_id<br/>\n"
-"                                    - Edit settings and set both Authorized Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
+"                                    - Edit settings and set both Authorized "
+"Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
 "                                    <br/>\n"
 "                                    Now copy paste the client_id here:"
 msgstr ""
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:99
+#: code:addons/auth_oauth/controllers/main.py:98
 #, python-format
 msgid "Access Denied"
 msgstr "У доступі відмовлено"
@@ -106,7 +109,8 @@ msgstr "Дата створення"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
-msgid "Currency id"
+#, fuzzy
+msgid "Currency"
 msgstr "ІД валюти"
 
 #. module: auth_oauth
@@ -118,6 +122,11 @@ msgstr "Термін оплати для клієнта"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
 msgid "Data URL"
 msgstr "URL даних"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
+msgid "Degree of trust you have in this debtor"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
@@ -244,7 +253,7 @@ msgid "Scope"
 msgstr "Сфера"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:97
+#: code:addons/auth_oauth/controllers/main.py:96
 #, python-format
 msgid "Sign up is not allowed on this database."
 msgstr ""
@@ -293,7 +302,8 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
-"To setup the signin process with Google, first you have to perform the following steps:<br/>\n"
+"To setup the signin process with Google, first you have to perform the "
+"following steps:<br/>\n"
 "                                    <br/>\n"
 "                                    - Go to the"
 msgstr ""
@@ -344,7 +354,17 @@ msgid "Vendor Payment Term"
 msgstr "Термін оплати постачальника"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:101
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:100
 #, python-format
 msgid ""
 "You do not have access to this database or your invitation has expired. "

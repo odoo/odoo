@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp.tools.misc import xlwt
 from collections import deque
 import json
 
 from odoo import http
 from odoo.http import request
 
-try:
-    import xlwt
-except ImportError:
-    xlwt = None
 
 
 class TableExporter(http.Controller):
@@ -24,7 +21,7 @@ class TableExporter(http.Controller):
         jdata = json.loads(data)
         nbr_measures = jdata['nbr_measures']
         workbook = xlwt.Workbook()
-        worksheet = workbook.add_sheet(jdata['title'][:30])
+        worksheet = workbook.add_sheet(jdata['title'])
         header_bold = xlwt.easyxf("font: bold on; pattern: pattern solid, fore_colour gray25;")
         header_plain = xlwt.easyxf("pattern: pattern solid, fore_colour gray25;")
         bold = xlwt.easyxf("font: bold on;")

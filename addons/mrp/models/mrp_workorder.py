@@ -53,11 +53,11 @@ class MrpWorkorder(models.Model):
     qty_produced = fields.Float(
         'Quantity', default=0.0,
         readonly=True,
-        digits_compute=dp.get_precision('Product Unit of Measure'),
+        digits=dp.get_precision('Product Unit of Measure'),
         help="The number of products already handled by this work order")
     qty_producing = fields.Float(
         'Currently Produced Quantity', default=1.0,
-        digits_compute=dp.get_precision('Product Unit of Measure'),
+        digits=dp.get_precision('Product Unit of Measure'),
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     is_produced = fields.Boolean(compute='_compute_is_produced')
 
@@ -136,8 +136,8 @@ class MrpWorkorder(models.Model):
     def _compute_duration(self):
         self.duration = sum(self.time_ids.mapped('duration'))
         self.duration_unit = round(self.duration / max(self.qty_produced, 1), 2)  # rounding 2 because it is a time
-        if self.duration:
-            self.duration_percent = 100 * (self.duration_expected - self.duration) / self.duration
+        if self.duration_expected:
+            self.duration_percent = 100 * (self.duration_expected - self.duration) / self.duration_expected
         else:
             self.duration_percent = 0
 

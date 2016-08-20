@@ -16,7 +16,6 @@
             <field name="res_model">mrp.workorder</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,gantt,pivot,graph,calendar</field>
-            <!--<field name="context">{'default_workcenter_id': }</field>-->
             <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
             <field name="domain">[('workcenter_id', '=', active_id), ('state', '!=', 'done')]</field>
             <field name="help" type="html">
@@ -79,8 +78,11 @@
             <field name="res_model">mrp.workcenter.productivity</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph,pivot</field>
-            <field name="domain">[('loss_type','&lt;&gt;', 'productive'), ('workcenter_id','=',active_id')]</field>
-            <field name="context">{}</field>
+            <field name="context">{'search_default_availability': '1', 
+                                   'search_default_performance': '1',
+                                   'search_default_quality': '1',
+                                   'default_workcenter_id': active_id,
+                                   'search_default_workcenter_id': [active_id]}</field>
             <field name="help" type="html">
               <p>
                 No productivity loss for this equipment.
@@ -282,7 +284,7 @@
                             </group>
                             <group>
                                 <field name="code"/>
-                                <field name="calendar_id" widget="selection"/>
+                                <field name="calendar_id"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             </group>
                         </group>

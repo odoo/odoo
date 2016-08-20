@@ -1,31 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_bank_statement_import
-# 
+#
 # Translators:
 # Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-15 20:16+0000\n"
 "Last-Translator: Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>\n"
-"Language-Team: Spanish (Peru) (http://www.transifex.com/odoo/odoo-9/language/es_PE/)\n"
+"Language-Team: Spanish (Peru) (http://www.transifex.com/odoo/odoo-9/language/"
+"es_PE/)\n"
+"Language: es_PE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_PE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:226
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
 msgstr "%d transacciones ya han sido importadas y han sido ignoradas."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:226
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
 msgstr "1 transacción ya ha sido importada y ha sido ignorada."
@@ -56,7 +57,7 @@ msgid "Allow Cancelling Entries"
 msgstr "Permitir Cancelar Entradas"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
 #, python-format
 msgid "Already imported items"
 msgstr "Ítems ya importados"
@@ -72,7 +73,7 @@ msgid "At least one outbound"
 msgstr "Al menos una salida"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:75
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:76
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_id
 #, python-format
 msgid "Bank"
@@ -104,32 +105,43 @@ msgid "Bank Statement Line"
 msgstr "Línea de Extracto Bancario"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
+msgid "Belong to the user's current company"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:160
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:165
 #, python-format
 msgid ""
-"Cannot find in which journal import this statement. Please manually select a"
-" journal."
-msgstr "No se puede encontrar en qué diario importar este extracto. Por favor seleccione manualmente un diario."
+"Cannot find in which journal import this statement. Please manually select a "
+"journal."
+msgstr ""
+"No se puede encontrar en qué diario importar este extracto. Por favor "
+"seleccione manualmente un diario."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid ""
-"Check this box if you don't want to share the same sequence for invoices and"
-" refunds made from this journal"
-msgstr "Marque esta casilla si no desea compartir la misma secuenca y reembolsos hechos por este diario"
+"Check this box if you don't want to share the same sequence for invoices and "
+"refunds made from this journal"
+msgstr ""
+"Marque esta casilla si no desea compartir la misma secuenca y reembolsos "
+"hechos por este diario"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
 msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
-msgstr "Marque esta casilla si desea permitir la cancelación de los asientos ralacionados a este diario o a la factura relacionada a este diario"
+msgstr ""
+"Marque esta casilla si desea permitir la cancelación de los asientos "
+"ralacionados a este diario o a la factura relacionada a este diario"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -147,12 +159,14 @@ msgid "Company related to this journal"
 msgstr "Compañía relacionada a este diario"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:105
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:106
 #, python-format
 msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file ?"
-msgstr "No se puede comprender el archivo proporcionado.\n¿Ha instalado el módulo para soportar este archivo?"
+msgstr ""
+"No se puede comprender el archivo proporcionado.\n"
+"¿Ha instalado el módulo para soportar este archivo?"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_uid
@@ -202,14 +216,18 @@ msgstr "Nombre a Mostrar"
 msgid ""
 "Display this bank account on the footer of printed documents like invoices "
 "and sales orders."
-msgstr "Mostrar esta cuenta bancaria en el pie de documentos impresos como facturas o pedidos de venta."
+msgstr ""
+"Mostrar esta cuenta bancaria en el pie de documentos impresos como facturas "
+"o pedidos de venta."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
-msgstr "Descargue un extracto bancario desde su banco e importelo aquí. Formatos soportados:"
+msgstr ""
+"Descargue un extracto bancario desde su banco e importelo aquí. Formatos "
+"soportados:"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -217,11 +235,18 @@ msgid "Entry Sequence"
 msgstr "Secuenta de Registro"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_filename
+msgid "Filename"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_data_file
 msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
-msgstr "Obtenga sus extractos bancarios en un formato electrónico de su banco y selecciónelo aquí."
+msgstr ""
+"Obtenga sus extractos bancarios en un formato electrónico de su banco y "
+"selecciónelo aquí."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_group_invoice_lines
@@ -239,7 +264,9 @@ msgstr "ID"
 msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
-msgstr "Si esta casilla está marcada, el sistema va a tratar de agrupar las líneas contables al generárlas desde facturas."
+msgstr ""
+"Si esta casilla está marcada, el sistema va a tratar de agrupar las líneas "
+"contables al generárlas desde facturas."
 
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
@@ -287,7 +314,7 @@ msgid "Journal"
 msgstr "Diario"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:66
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:67
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
@@ -308,7 +335,9 @@ msgstr "Id de Diario"
 msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
-msgstr "Sólo cliquee OK para crear la cuenta/diario y terminar la importación. Si es un error, presione cancelar para abortar la importación."
+msgstr ""
+"Sólo cliquee OK para crear la cuenta/diario y terminar la importación. Si es "
+"un error, presione cancelar para abortar la importación."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
@@ -349,7 +378,10 @@ msgid ""
 "Means of payment for collecting money. Odoo modules offer various payments "
 "handling facilities, but you can always use the 'Manual' payment method in "
 "order to manage payments outside of the software."
-msgstr "Medios de pago para colección de dinero. Los módulos de Odoo ofrecen varias facilidades de manejo de pagos, pero siempre puede usar el método de pago 'Manual' a fin de administrar los pagos fuera de este software."
+msgstr ""
+"Medios de pago para colección de dinero. Los módulos de Odoo ofrecen varias "
+"facilidades de manejo de pagos, pero siempre puede usar el método de pago "
+"'Manual' a fin de administrar los pagos fuera de este software."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
@@ -357,10 +389,13 @@ msgid ""
 "Means of payment for sending money. Odoo modules offer various payments "
 "handling facilities, but you can always use the 'Manual' payment method in "
 "order to manage payments outside of the software."
-msgstr "Medios de pago para envío de dinero. Los módulos de Odoo ofrecen varias facilidades de manejo de pagos, pero siempre puede usar el método de pago 'Manual' a fin de administrar los pagos fuera de este software."
+msgstr ""
+"Medios de pago para envío de dinero. Los módulos de Odoo ofrecen varias "
+"facilidades de manejo de pagos, pero siempre puede usar el método de pago "
+"'Manual' a fin de administrar los pagos fuera de este software."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:132
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:136
 #, python-format
 msgid "No currency found matching '%s'."
 msgstr "No encontró moneda que encaje '%s'."
@@ -387,13 +422,19 @@ msgstr "Secuencia de Entrada de Reembolso"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
+#, fuzzy
 msgid ""
-"Select 'Sale' for customer invoices journals. Select 'Purchase' for vendor "
-"bills journals. Select 'Cash' or 'Bank' for journals that are used in "
-"customer or vendor payments. Select 'General' for miscellaneous operations "
-"journals. Select 'Opening/Closing Situation' for entries generated for new "
-"fiscal years."
-msgstr "Seleccione 'Venta' para diarios de factura de clientes. Selecione 'Compra' para diarios de facturas de proveedor. Seleccione 'Efectivo' o 'Banco' para diarios que son usados en pagos de clientes o proveedores. Seleccione 'General' para diarios de operaciones misceláneas. Seleccione 'Situación de Apertura/Cierre' para asientos generados por nuevos años fiscales."
+"Select 'Sale' for customer invoices journals.\n"
+"Select 'Purchase' for vendor bills journals.\n"
+"Select 'Cash' or 'Bank' for journals that are used in customer or vendor "
+"payments.\n"
+"Select 'General' for miscellaneous operations journals."
+msgstr ""
+"Seleccione 'Venta' para diarios de factura de clientes. Selecione 'Compra' "
+"para diarios de facturas de proveedor. Seleccione 'Efectivo' o 'Banco' para "
+"diarios que son usados en pagos de clientes o proveedores. Seleccione "
+"'General' para diarios de operaciones misceláneas. Seleccione 'Situación de "
+"Apertura/Cierre' para asientos generados por nuevos años fiscales."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -426,22 +467,27 @@ msgid ""
 "The account of the statement you are importing is not yet recorded in Odoo. "
 "In order to proceed with the import, you need to create a bank journal for "
 "this account."
-msgstr "La cuenta del extracto que usted está importando no se encuentra registrado en Odoo. A fin de proceder con la importación, usted necesita crear un diario bancario para esta cuenta."
+msgstr ""
+"La cuenta del extracto que usted está importando no se encuentra registrado "
+"en Odoo. A fin de proceder con la importación, usted necesita crear un "
+"diario bancario para esta cuenta."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:143
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:151
 #, python-format
-msgid ""
-"The account of this statement (%s) is not the same as the journal (%s)."
-msgstr "La cuenta para este extracto (%s) no es el mismo que en el diario (%s)."
+msgid "The account of this statement (%s) is not the same as the journal (%s)."
+msgstr ""
+"La cuenta para este extracto (%s) no es el mismo que en el diario (%s)."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:156
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:161
 #, python-format
 msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
 "the journal (%s) !"
-msgstr "¡ La moneda para este extracto bancario (%s) no es el mismo que la moneda en el diario (%s) !"
+msgstr ""
+"¡ La moneda para este extracto bancario (%s) no es el mismo que la moneda en "
+"el diario (%s) !"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
@@ -458,23 +504,27 @@ msgstr "Los asientos de diario serán nombrados usando este prefijo."
 msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
-msgstr "Este campo contiene la información relacionada con la numeración de los asientos de diario de este diario."
+msgstr ""
+"Este campo contiene la información relacionada con la numeración de los "
+"asientos de diario de este diario."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
 msgid ""
 "This field contains the information related to the numbering of the refund "
 "entries of this journal."
-msgstr "Este campo contiene la información relacionada con la numeración de los asientos de reembolso de este diario."
+msgstr ""
+"Este campo contiene la información relacionada con la numeración de los "
+"asientos de reembolso de este diario."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:110
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:111
 #, python-format
 msgid "This file doesn't contain any statement."
 msgstr "Este archivo no contiene ningún extracto."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:118
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:119
 #, python-format
 msgid "This file doesn't contain any transaction."
 msgstr "Este archivo no contiene ninguna transacción."
@@ -494,14 +544,18 @@ msgstr "Usado para ordernar los Diarios en la vista de tablero"
 msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
-msgstr "Usado para registrar una pérdida cuando el balance final de una caja registradora difiere de lo calculado por el sistema"
+msgstr ""
+"Usado para registrar una pérdida cuando el balance final de una caja "
+"registradora difiere de lo calculado por el sistema"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
 msgid ""
-"Used to register a profit when the ending balance of a cash register differs"
-" from what the system computes"
-msgstr "Usado para registrar una ganancia cuando el balance final de una caja registradora difiere de lo calculado por el sistema"
+"Used to register a profit when the ending balance of a cash register differs "
+"from what the system computes"
+msgstr ""
+"Usado para registrar una ganancia cuando el balance final de una caja "
+"registradora difiere de lo calculado por el sistema"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
@@ -509,7 +563,7 @@ msgid "Whether this journal should be displayed on the dashboard or not"
 msgstr "Ya sea que este diario debe mostrarse en el tablero o no"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:218
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
 #, python-format
 msgid "You have already imported that file."
 msgstr "Ya ha importado ese archivo."

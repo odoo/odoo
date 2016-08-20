@@ -1,32 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * google_drive
-# 
+#
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-10 05:53+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "<b>To create a new filter:</b><br/>\n"
-"                                - Go to the Odoo document you want to filter. For instance, go to Opportunities and search on Sales Department.<br/>\n"
-"                                - In this \"Search\" view, select the option \"Save Current Filter\", enter the name (Ex: Sales Department)<br/>\n"
-"                                - If you select \"Share with all users\", link of google document in \"More\" options will appear for all users in opportunities of Sales Department.<br/>\n"
-"                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
-"                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
+"                                - Go to the Odoo document you want to "
+"filter. For instance, go to Opportunities and search on Sales Department.<br/"
+">\n"
+"                                - In this \"Search\" view, select the option "
+"\"Save Current Filter\", enter the name (Ex: Sales Department)<br/>\n"
+"                                - If you select \"Share with all users\", "
+"link of google document in \"More\" options will appear for all users in "
+"opportunities of Sales Department.<br/>\n"
+"                                - If you don't select \"Share with all users"
+"\", link of google document in \"More\" options will not appear for other "
+"users in opportunities of Sales Department.<br/>\n"
+"                                - If filter is not specified, link of google "
+"document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
 
 #. module: google_drive
@@ -38,7 +46,8 @@ msgstr "Aktiivinen"
 #: code:addons/google_drive/google_drive.py:34
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
-msgstr "Vähintään yhtä avainta ei löydy annetusta Google Driven nimirakenteesta"
+msgstr ""
+"Vähintään yhtä avainta ei löydy annetusta Google Driven nimirakenteesta"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_authorization_code
@@ -48,9 +57,11 @@ msgstr "Valtuutusavain"
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config_name_template
 msgid ""
-"Choose how the new google drive will be named, on google side. Eg. "
-"gdoc_%(field_name)s"
-msgstr "Valitse miten uusi Google Drive nimetään Googlen päässä. Esim. gdoc_%(field_name)s"
+"Choose how the new google drive will be named, on google side. Eg. gdoc_"
+"%(field_name)s"
+msgstr ""
+"Valitse miten uusi Google Drive nimetään Googlen päässä. Esim. gdoc_"
+"%(field_name)s"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
@@ -126,7 +137,9 @@ msgstr "Google Driven nimirakenne"
 #: code:addons/google_drive/google_drive.py:75
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
-msgstr "Google Drive ei ole vielä konfiguroitu. Ole hyvä ja ota yhteyttä hallinnoijaan."
+msgstr ""
+"Google Drive ei ole vielä konfiguroitu. Ole hyvä ja ota yhteyttä "
+"hallinnoijaan."
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
@@ -192,7 +205,9 @@ msgstr "Resurssi ID"
 msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
-msgstr "Jotain meni pieleen tokenin luonnissa. Ole hyvä ja pyydä valtuutusavain uudelleen."
+msgstr ""
+"Jotain meni pieleen tokenin luonnissa. Ole hyvä ja pyydä valtuutusavain "
+"uudelleen."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name
@@ -224,11 +239,19 @@ msgstr "URL, josta Googlen valtuutusavain luodaan"
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
-"The name of the attached document can use fixed or variable data. To distinguish between documents in\n"
-"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
-"                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
+"The name of the attached document can use fixed or variable data. To "
+"distinguish between documents in\n"
+"                                Google Drive, use fixed words and fields. "
+"For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
+"                                in the Google Drive name field, the document "
+"in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
-msgstr "Liitetyn dokumentin nimi voi käyttää kiinteää tai muuttuvaa dataa. Erotellaksesi dokumentit Google Drivessä, käytä kiinteitä sanoja ja kenttiä. Jos yllä olevaan esimerkkiin kirjoittaa Agrolait_%(name)s_Myynnit Google Driven nimikenttään, dokumentit Google Drivessä nimetään 'Agrolait_SO00001_Myynnit'."
+msgstr ""
+"Liitetyn dokumentin nimi voi käyttää kiinteää tai muuttuvaa dataa. "
+"Erotellaksesi dokumentit Google Drivessä, käytä kiinteitä sanoja ja kenttiä. "
+"Jos yllä olevaan esimerkkiin kirjoittaa Agrolait_%(name)s_Myynnit Google "
+"Driven nimikenttään, dokumentit Google Drivessä nimetään "
+"'Agrolait_SO00001_Myynnit'."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:117
@@ -236,7 +259,9 @@ msgstr "Liitetyn dokumentin nimi voi käyttää kiinteää tai muuttuvaa dataa. 
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr "Oikeus \"lukija\" käyttäjille \"kuka tahansa jolla on linkki\" ei ole annettu tälle dokumentille"
+msgstr ""
+"Oikeus \"lukija\" käyttäjille \"kuka tahansa jolla on linkki\" ei ole "
+"annettu tälle dokumentille"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_uri
@@ -249,7 +274,9 @@ msgstr "URI"
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
-msgstr "Et ole konfiguroinut Googlesta luotua valtuutusavainta. Ole hyvä ja luo ja konfiguroi se."
+msgstr ""
+"Et ole konfiguroinut Googlesta luotua valtuutusavainta. Ole hyvä ja luo ja "
+"konfiguroi se."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
@@ -264,5 +291,8 @@ msgstr "base.config.settings"
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
-"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
-msgstr "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
+"https://docs.google.com/document/"
+"d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
+msgstr ""
+"https://docs.google.com/document/"
+"d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"

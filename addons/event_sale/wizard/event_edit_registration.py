@@ -67,7 +67,7 @@ class RegistrationEditorLine(models.TransientModel):
     event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket')
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
-    name = fields.Char(string='Name', select=True)
+    name = fields.Char(string='Name', index=True)
 
     @api.multi
     def get_registration_data(self):

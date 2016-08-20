@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_setup
-# 
+#
 # Translators:
 # m m <neniu@mailbox.org>, 2016
 # darenkster <renkosp@gmail.com>, 2015
@@ -10,14 +10,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-02 16:12+0000\n"
 "Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_setup
@@ -31,6 +31,11 @@ msgid "Allow documents sharing"
 msgstr "Ermögliche Dokumentenfreigabe"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_currency
+msgid "Allow multi currencies"
+msgstr ""
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
 msgstr "Benutzer können ihren Kalender mit dem Google Kalender synchronisieren"
@@ -39,6 +44,11 @@ msgstr "Benutzer können ihren Kalender mit dem Google Kalender synchronisieren"
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_base_import
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
 msgstr "Erlaube Benutzern Daten mit CSV/XLS/XLSX/ODS-Datein zu importieren."
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_currency
+msgid "Allows to work in a multi currency environment"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -199,7 +209,7 @@ msgid "Manage Inter Company"
 msgstr "Inter-Company verwalten"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_light_multi_company
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
 msgid "Manage multiple companies"
 msgstr "Multi-Unternehmen Verwaltung"
 
@@ -215,10 +225,17 @@ msgstr "Multi-Company"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Multi Currencies"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
-"Once installed, you can configure your API credentials for \"Google "
-"calendar\""
-msgstr "Sobald die Installation abgeschlossen ist, können Sie Ihre API Einstellungen für den \"Google Kalender\" konfigurieren"
+"Once installed, you can configure your API credentials for \"Google calendar"
+"\""
+msgstr ""
+"Sobald die Installation abgeschlossen ist, können Sie Ihre API Einstellungen "
+"für den \"Google Kalender\" konfigurieren"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -249,9 +266,17 @@ msgstr "Veröffentlichen Sie Ihre Geschäftspartner"
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_company_share_partner
 msgid ""
 "Share your partners to all companies defined in your instance.\n"
-" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
-msgstr "Veröffentlichen Sie Ihre Partner in der aktuellen Instanz.\n* Angekreuzt: Partner sind für alle Unternehmen sichtbar, auch wenn ein Unternehmen für diesen Partner definiert ist\n* Nicht angekreuzt: Jedes Unternehmen sieht nur seine Partner (d.h. Partner die für dieses Unternehmen definiert sind). Partner die keinen Bezug zu einem Unternehmen haben sind für alle Unternehmen sichtbar."
+" * Checked : Partners are visible for every companies, even if a company is "
+"defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company "
+"is defined). Partners not related to a company are visible for all companies."
+msgstr ""
+"Veröffentlichen Sie Ihre Partner in der aktuellen Instanz.\n"
+"* Angekreuzt: Partner sind für alle Unternehmen sichtbar, auch wenn ein "
+"Unternehmen für diesen Partner definiert ist\n"
+"* Nicht angekreuzt: Jedes Unternehmen sieht nur seine Partner (d.h. Partner "
+"die für dieses Unternehmen definiert sind). Partner die keinen Bezug zu "
+"einem Unternehmen haben sind für alle Unternehmen sichtbar."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -282,8 +307,13 @@ msgstr "Bei Aktivierung wird das Modul Google Docs installiert."
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_inter_company_rules
 msgid ""
 "This installs the module inter_company_rules.\n"
-" Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
-msgstr "Dies installiert das Modul 'inter_company_rules'.\nKonfigurieren Sie unternehmensübergreifende Regeln, um automatisch SOs oder POs anzulegen wenn eines Ihrer Unternehmen Käufe bzw. Verkäufe an ein anderes Ihrer Unternehmen tätigt."
+" Configure company rules to automatically create SO/PO when one of your "
+"company sells/buys to another of your company."
+msgstr ""
+"Dies installiert das Modul 'inter_company_rules'.\n"
+"Konfigurieren Sie unternehmensübergreifende Regeln, um automatisch SOs oder "
+"POs anzulegen wenn eines Ihrer Unternehmen Käufe bzw. Verkäufe an ein "
+"anderes Ihrer Unternehmen tätigt."
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
@@ -293,38 +323,52 @@ msgstr "Verwenden Sie ein anderes Wort für \"Kunde\""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
 msgid "Use external authentication providers, sign in with Google..."
-msgstr "Verwenden Sie externe Benutzer-Authentifizierung,  melden Sie sich mit ihrem  Google-Konto an..."
+msgstr ""
+"Verwenden Sie externe Benutzer-Authentifizierung,  melden Sie sich mit "
+"ihrem  Google-Konto an..."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "When you send a document to a customer\n"
-"                                    (quotation, invoice), your customer will be\n"
-"                                    able to signup to get all his documents,\n"
-"                                    read your company news, check his projects,\n"
+"                                    (quotation, invoice), your customer will "
+"be\n"
+"                                    able to signup to get all his "
+"documents,\n"
+"                                    read your company news, check his "
+"projects,\n"
 "                                    etc."
-msgstr "Wenn Sie ein Dokument zu einem Kunden senden wollen\n                                        (Angebot, Rechnung) können sich die Kunden auch zu allen anderen Dokumenten anmelden."
+msgstr ""
+"Wenn Sie ein Dokument zu einem Kunden senden wollen\n"
+"                                        (Angebot, Rechnung) können sich die "
+"Kunden auch zu allen anderen Dokumenten anmelden."
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_light_multi_company
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_company
 msgid ""
-"Work in multi-company environments, with appropriate security access between"
-" companies."
-msgstr "Für Umgebungen mit mehreren Unternehmen unter Berücksichtigung des entsprechenden Zugriffsschutzes"
+"Work in multi-company environments, with appropriate security access between "
+"companies."
+msgstr ""
+"Für Umgebungen mit mehreren Unternehmen unter Berücksichtigung des "
+"entsprechenden Zugriffsschutzes"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
 msgid ""
 "You can use this wizard to change the terminologies for customers in the "
 "whole application."
-msgstr "Sie können mit diesem Assistenten die Terminologie des gesamten Systems im Sinne der Kunden verändern."
+msgstr ""
+"Sie können mit diesem Assistenten die Terminologie des gesamten Systems im "
+"Sinne der Kunden verändern."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "You will find more options in your company details: address for the header "
 "and footer, overdue payments texts, etc."
-msgstr "Sie finden weitere Optionen unter Ihren Unternehmenseinstellungen: Adresse für Kopf- und Fußzeile, Mahntexte, u.s.w."
+msgstr ""
+"Sie finden weitere Optionen unter Ihren Unternehmenseinstellungen: Adresse "
+"für Kopf- und Fußzeile, Mahntexte, u.s.w."
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_config_settings

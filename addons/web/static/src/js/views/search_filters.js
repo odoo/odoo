@@ -222,7 +222,7 @@ ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
     },
     toString: function () {
         var str = formats.format_value(this.get_value(), { type:this.attributes['type'] });
-        if (this.datewidget_2.get_value()) {
+        if (this.datewidget_2 && this.datewidget_2.get_value()) {
             str += ' and ' + formats.format_value(this.datewidget_2.get_value(), { type:this.attributes['type'] });
         }
         return str;

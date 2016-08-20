@@ -10,7 +10,7 @@ from odoo.tools import pickle as cPickle
 class pos_cache(models.Model):
     _name = 'pos.cache'
 
-    cache = fields.Binary()
+    cache = fields.Binary(attachment=True)
     product_domain = fields.Text(required=True)
     product_fields = fields.Text(required=True)
 

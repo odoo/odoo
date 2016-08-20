@@ -1,21 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product_extended
-# 
+#
 # Translators:
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-09-12 22:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: product_extended
 #: code:addons/product_extended/wizard/wizard_price.py:24
@@ -51,6 +57,7 @@ msgstr "تغيير الأسعار لقوائم الخامات التابعة أ�
 
 #. module: product_extended
 #: model:ir.actions.act_window,name:product_extended.action_view_compute_price_wizard
+#: model:ir.model,name:product_extended.model_wizard_price
 msgid "Compute Price Wizard"
 msgstr "معالج حساب السعر"
 
@@ -58,11 +65,6 @@ msgstr "معالج حساب السعر"
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
 msgid "Compute from BOM"
 msgstr ""
-
-#. module: product_extended
-#: model:ir.model,name:product_extended.model_wizard_price
-msgid "Compute price wizard"
-msgstr "معالج احتساب السعر"
 
 #. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
@@ -84,7 +86,7 @@ msgstr "أنشئ في"
 #. module: product_extended
 #: model:ir.model.fields,field_description:product_extended.field_wizard_price_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "اسم العرض"
 
 #. module: product_extended
 #: model:ir.model.fields,field_description:product_extended.field_wizard_price_real_time_accounting
@@ -117,6 +119,11 @@ msgid "Last Updated on"
 msgstr "آخر تحديث في"
 
 #. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_get_variant_count
+msgid "Number of variant for the product"
+msgstr ""
+
+#. module: product_extended
 #: model:ir.model,name:product_extended.model_product_template
 msgid "Product Template"
 msgstr "قالب المنتج"
@@ -140,8 +147,12 @@ msgstr "يحتسب السعر من بنود قائمة الخامات والتي
 
 #. module: product_extended
 #: code:addons/product_extended/wizard/wizard_price.py:38
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"This wizard is build for product templates, while you are currently running "
+"This wizard is built for product templates, while you are currently running "
 "it from a product variant."
-msgstr "صمم هذا المعالج ليعمل مع قالب المنتج، بينما أنت حالياً تعمل على موديل المنتج."
+msgstr ""
+"صمم هذا المعالج ليعمل مع قالب المنتج، بينما أنت حالياً تعمل على موديل المنتج."
+
+#~ msgid "Compute price wizard"
+#~ msgstr "معالج احتساب السعر"

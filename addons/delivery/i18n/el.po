@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * delivery
-# 
+#
 # Translators:
 # Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-16 22:33+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: delivery
@@ -59,6 +59,11 @@ msgid "# of Product Variants"
 msgstr "# Παραλλαγές Προϊόντων"
 
 #. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "<span>kg</span>"
+msgstr ""
+
+#. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
@@ -81,10 +86,13 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sale Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr "Μια περιγραφή του προϊόντος που θέλετε να γνωστοποιήσετε στους πελάτες σας. Αυτή η περιγραφή θα πρέπει να αντιγραφεί σε κάθε παραγγελία, εντολή παράδοσης και κάθε Τιμολόγιο / Επιστροφή"
+msgstr ""
+"Μια περιγραφή του προϊόντος που θέλετε να γνωστοποιήσετε στους πελάτες σας. "
+"Αυτή η περιγραφή θα πρέπει να αντιγραφεί σε κάθε παραγγελία, εντολή "
+"παράδοσης και κάθε Τιμολόγιο / Επιστροφή"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_purchase
@@ -99,7 +107,9 @@ msgstr ""
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
-msgstr "Μια ακριβής περιγραφή του Προϊόντος, χρησιμοποιείται μόνο για σκοπούς εσωτερικής πληροφόρησης."
+msgstr ""
+"Μια ακριβής περιγραφή του Προϊόντος, χρησιμοποιείται μόνο για σκοπούς "
+"εσωτερικής πληροφόρησης."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
@@ -121,7 +131,14 @@ msgstr "Ποσό"
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr "Ποσό της παραγγελίας για να επωφεληθεί από δωρεάν αποστολή, εκφραζόμενο στο νόμισμα της εταιρίας"
+msgstr ""
+"Ποσό της παραγγελίας για να επωφεληθεί από δωρεάν αποστολή, εκφραζόμενο στο "
+"νόμισμα της εταιρίας"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Archived"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
@@ -169,9 +186,10 @@ msgstr "Γραμμογράφηση"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_list_price
 msgid ""
-"Base price to compute the customer price. Sometimes called the catalog "
-"price."
-msgstr "Βασική τιμή για τον υπολογισμό της τιμής του πελάτη. Μερικές φορές ονομάζεται η τιμή καταλόγου."
+"Base price to compute the customer price. Sometimes called the catalog price."
+msgstr ""
+"Βασική τιμή για τον υπολογισμό της τιμής του πελάτη. Μερικές φορές "
+"ονομάζεται η τιμή καταλόγου."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -210,34 +228,31 @@ msgid "Can be Sold"
 msgstr "Μπορεί να Πωληθεί"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
+msgid ""
+"Can be changed during the 'put in pack' to adjust the weight of the shipping."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
 msgid "Can be expensed"
 msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form_shipping
 msgid "Cancel"
 msgstr "Ακύρωση"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_id
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
 msgstr "Μεταφορέας"
-
-#. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
-msgid "Carrier Information"
-msgstr "Πληροφορίες Μεταφορέα"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
-msgid "Carrier Tracking Ref"
-msgstr "Παραπομπή Ιχνηλάτησης Μεταφορέα"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_from_categ_ids
@@ -259,7 +274,9 @@ msgstr ""
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
 "coeff"
-msgstr "Συντελεστής για τη μετατροπή προεπιλεγμένης Μονάδας Μέτρησης (UOM) σε Μονάδα Πώλησης (UOS) UOS = UoM * συντελεστής"
+msgstr ""
+"Συντελεστής για τη μετατροπή προεπιλεγμένης Μονάδας Μέτρησης (UOM) σε Μονάδα "
+"Πώλησης (UOS) UOS = UoM * συντελεστής"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_color
@@ -294,8 +311,8 @@ msgstr "Τιμή Κόστους"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_standard_price
 msgid ""
-"Cost of the product template used for standard stock valuation in accounting"
-" and used as a base price on purchase orders. Expressed in the default unit "
+"Cost of the product template used for standard stock valuation in accounting "
+"and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
 msgstr ""
 
@@ -330,11 +347,28 @@ msgstr "Νόμισμα"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_qty_available
 msgid ""
 "Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr "Τρέχουσα ποσότητα των προϊόντων.\n\nΣε ένα πλαίσιο με μια μόνο Θέση Αποθέματος, συμπεριλαμβανομένων των προϊόντων που αποθηκεύονται σε αυτήν τη Θέση, ή σε οποιαδήποτε από τις θυγατρικές.\n\nΣε ένα πλαίσιο με μία μόνο Αποθήκη, συμπεριλαμβανομένων των προϊόντων που αποθηκεύονται στη Θέση Αποθέματος της αποθήκης αυτού του καταστήματος, ή σε οποιαδήποτε από τις θυγατρικές της.\n\n\nΔιαφορετικά, αυτό συμπεριλαμβάνει προϊόντα που αποθηκεύονται σε οποιοδήποτε Θέση Αποθέματος με «εσωτερικό» τύπο."
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its "
+"children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
+msgstr ""
+"Τρέχουσα ποσότητα των προϊόντων.\n"
+"\n"
+"Σε ένα πλαίσιο με μια μόνο Θέση Αποθέματος, συμπεριλαμβανομένων των "
+"προϊόντων που αποθηκεύονται σε αυτήν τη Θέση, ή σε οποιαδήποτε από τις "
+"θυγατρικές.\n"
+"\n"
+"Σε ένα πλαίσιο με μία μόνο Αποθήκη, συμπεριλαμβανομένων των προϊόντων που "
+"αποθηκεύονται στη Θέση Αποθέματος της αποθήκης αυτού του καταστήματος, ή σε "
+"οποιαδήποτε από τις θυγατρικές της.\n"
+"\n"
+"\n"
+"Διαφορετικά, αυτό συμπεριλαμβάνει προϊόντα που αποθηκεύονται σε οποιοδήποτε "
+"Θέση Αποθέματος με «εσωτερικό» τύπο."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_delay
@@ -369,14 +403,18 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_id
 msgid "Default Unit of Measure used for all stock operation."
-msgstr "Προεπιλεγμένη Μονάδα Μέτρησης που χρησιμοποιείται από όλες τις λειτουργίες αποθήκευσης"
+msgstr ""
+"Προεπιλεγμένη Μονάδα Μέτρησης που χρησιμοποιείται από όλες τις λειτουργίες "
+"αποθήκευσης"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_po_id
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr "Προεπιλεγμένη Μονάδα Μέτρησης για Παραγγελίες Αγορών. Θα πρέπει να είναι στην ίδια κατηγορία με την προεπιλεγμένη μονάδα μέτρησης."
+msgstr ""
+"Προεπιλεγμένη Μονάδα Μέτρησης για Παραγγελίες Αγορών. Θα πρέπει να είναι "
+"στην ίδια κατηγορία με την προεπιλεγμένη μονάδα μέτρησης."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_deferred_revenue_category_id
@@ -389,6 +427,17 @@ msgstr ""
 #: model:ir.ui.menu,name:delivery.sale_menu_delivery
 msgid "Delivery"
 msgstr "Παράδοση"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Delivery Carrier Search"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#, fuzzy
+msgid "Delivery Information"
+msgstr "Πληροφορίες Μεταφορέα"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -418,7 +467,10 @@ msgstr "Προϊόν Παράδοσης"
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
-msgstr "Ανάλογα με τα εγκατεστημένα αρθρώματα, αυτό θα σας επιτρέψει να ορίσετε τη διαδρομή του προϊόντος: εάν πρόκειται να αγοραστούν, να παραχθούν, ΠκΠ/ΠγΑ, ..."
+msgstr ""
+"Ανάλογα με τα εγκατεστημένα αρθρώματα, αυτό θα σας επιτρέψει να ορίσετε τη "
+"διαδρομή του προϊόντος: εάν πρόκειται να αγοραστούν, να παραχθούν, ΠκΠ/"
+"ΠγΑ, ..."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description
@@ -448,6 +500,11 @@ msgid "Determine the display order"
 msgstr "Καθορισμός σειράς εμφάνισης"
 
 #. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "Discard"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_display_name
 msgid "Display Name"
@@ -457,8 +514,14 @@ msgstr "Εμφάνιση Ονόματος"
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules attached\n"
+"                UPS Express, UPS Standard) with a set of pricing rules "
+"attached\n"
 "                to each method."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
+msgid "Environment"
 msgstr ""
 
 #. module: delivery
@@ -551,10 +614,22 @@ msgstr "Πρόβλεψη Ποσότητας"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_virtual_available
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr "Πρόβλεψη ποσότητας (υπολογίζεται ώς Διαθέσιμη Πόσοτητα - Εξερχόμενη + Εισερχόμενη)\nΣε ένα πλαίσιο με μία μοναδική Τοποθεσία Αποθέματος, αυτό περιλαμβάνει αποθηκευμένα αγαθά σε αυτήν την τοποθεσία ή οποιοδήποτε απο τα παιδιά του. \nΣε ένα πλαίσιο με μια μοναδική Αποθήκη, αυτό περιλαμβάνει αποθηκευμένα αγαθά σε μια Τοποθεσία Αποθέματος αυτής της Αποθήκης, ή οποιοδήποτε απο τα παιδιά του.\nΑλλιώς, αυτό περιλαμβάνει αγαθά αποθηκευμένα σε κάθε Τοποθεσία Αποθέματος με 'εσωτερικό' τύπο."
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
+msgstr ""
+"Πρόβλεψη ποσότητας (υπολογίζεται ώς Διαθέσιμη Πόσοτητα - Εξερχόμενη + "
+"Εισερχόμενη)\n"
+"Σε ένα πλαίσιο με μία μοναδική Τοποθεσία Αποθέματος, αυτό περιλαμβάνει "
+"αποθηκευμένα αγαθά σε αυτήν την τοποθεσία ή οποιοδήποτε απο τα παιδιά του. \n"
+"Σε ένα πλαίσιο με μια μοναδική Αποθήκη, αυτό περιλαμβάνει αποθηκευμένα αγαθά "
+"σε μια Τοποθεσία Αποθέματος αυτής της Αποθήκης, ή οποιοδήποτε απο τα παιδιά "
+"του.\n"
+"Αλλιώς, αυτό περιλαμβάνει αγαθά αποθηκευμένα σε κάθε Τοποθεσία Αποθέματος με "
+"'εσωτερικό' τύπο."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -572,7 +647,10 @@ msgstr ""
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
-msgstr "Δίνει τις διάφορες επιλογές συσκευασίας του ίδιου προϊόντος. Δεν έχει κανένα αντίκτυπο στην σειρά επιλογής και χρησιμοποιείται κυρίως εάν χρησιμοποιείτε την εφαρμογή EDI."
+msgstr ""
+"Δίνει τις διάφορες επιλογές συσκευασίας του ίδιου προϊόντος. Δεν έχει κανένα "
+"αντίκτυπο στην σειρά επιλογής και χρησιμοποιείται κυρίως εάν χρησιμοποιείτε "
+"την εφαρμογή EDI."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_price_rule_sequence
@@ -580,9 +658,26 @@ msgid "Gives the sequence order when calculating delivery carrier."
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_weight
-msgid "Gross Weight"
-msgstr "Μικτό βάρος"
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Group By"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
+#: model:ir.model.fields,field_description:delivery.field_product_template_hs_code
+msgid "HS Code"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_height
+#, fuzzy
+msgid "Height"
+msgstr "Βάρος"
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Height must be positive"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
@@ -616,13 +711,17 @@ msgstr ""
 msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
-msgstr "Εάν η παραγγελία είναι μεγαλύτερη από ένα συγκεκριμένο ποσό, ο πελάτης μπορεί να  επωφεληθεί από μια δωρεάν αποστολή"
+msgstr ""
+"Εάν η παραγγελία είναι μεγαλύτερη από ένα συγκεκριμένο ποσό, ο πελάτης "
+"μπορεί να  επωφεληθεί από μια δωρεάν αποστολή"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_active
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr "Εάν αποεπιλεγεί, θα σας επιτρέψει να κρύψετε ένα προϊόν χωρίς να το διαγράψετε."
+msgstr ""
+"Εάν αποεπιλεγεί, θα σας επιτρέψει να κρύψετε ένα προϊόν χωρίς να το "
+"διαγράψετε."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_expense_policy
@@ -635,24 +734,32 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image
 msgid ""
-"Image of the product variant (Big-sized image of product template if false)."
-" It is automatically resized as a 1024x1024px image, with aspect ratio "
+"Image of the product variant (Big-sized image of product template if false). "
+"It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr "Εικόνα της παραλλαγής προϊόντος (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η μεγάλου μεγέθους εικόνα του προτύπου προϊόντος). Θα αλλάξει αυτόματα το μέγεθός τους ως 1024x1024 εικονοστοιχεία, με διατήρηση της αναλογίας διαστάσεων."
+msgstr ""
+"Εικόνα της παραλλαγής προϊόντος (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η "
+"μεγάλου μεγέθους εικόνα του προτύπου προϊόντος). Θα αλλάξει αυτόματα το "
+"μέγεθός τους ως 1024x1024 εικονοστοιχεία, με διατήρηση της αναλογίας "
+"διαστάσεων."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr "Εικόνα της παραλλαγής προϊόντος (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η μεσαίου μεγέθους εικόνα του προτύπου προϊόντος)."
+msgstr ""
+"Εικόνα της παραλλαγής προϊόντος (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η "
+"μεσαίου μεγέθους εικόνα του προτύπου προϊόντος)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr "Εικόνα της παραλλαγής προϊόντος (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η μικρού μεγέθους εικόνα του προτύπου προϊόντος)."
+msgstr ""
+"Εικόνα της παραλλαγής προϊόντος (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η "
+"μικρού μεγέθους εικόνα του προτύπου προϊόντος)."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_income_id
@@ -678,7 +785,8 @@ msgstr "Εσωτερική Αναφορά"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_barcode
 msgid "International Article Number used for product identification."
-msgstr "Διεθνής Αριθμός Είδους που χρησιμοποιείται για την αναγνώριση προϊόντος"
+msgstr ""
+"Διεθνής Αριθμός Είδους που χρησιμοποιείται για την αναγνώριση προϊόντος"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_inventory
@@ -724,7 +832,9 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_fixed_price
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
-msgstr "Κρατήστε το κενό εάν η χρέωση εξαρτάται από την προκαταβολική χρέωση ανά προορισμό"
+msgstr ""
+"Κρατήστε το κενό εάν η χρέωση εξαρτάται από την προκαταβολική χρέωση ανά "
+"προορισμό"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_last_post
@@ -750,6 +860,16 @@ msgid "Last Updated on"
 msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_length
+msgid "Length"
+msgstr ""
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Length must be positive"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
 msgid "Location"
 msgstr "Τοποθεσία"
@@ -760,9 +880,31 @@ msgid "Logistical Units"
 msgstr "Μονάδες Εφοδιαστικής"
 
 #. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Manage Package Type"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_track_service
+msgid ""
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sale order validation "
+"and track the work hours."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
 msgid "Manufacturing Lead Time"
 msgstr "Προηγμένος χρόνος παραγωγής"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
+#, fuzzy
+msgid "Margin"
+msgstr "Σύνολο Περιθωρίων"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
@@ -775,9 +917,30 @@ msgid "Margin Date To"
 msgstr "Περιθώριο Ημερομηνίας Έως"
 
 #. module: delivery
+#: sql_constraint:delivery.carrier:0
+msgid "Margin cannot be lower than -100%"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
+#, fuzzy
+msgid "Max Weight"
+msgstr "Βάρος"
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Max Weight must be positive"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
 msgid "Maximum Value"
 msgstr "Μέγιστη Τιμή"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
+msgid "Maximum weight shippable in this packaging"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
@@ -805,11 +968,6 @@ msgid "Messages"
 msgstr "Μηνύματα"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_ids
-msgid "Messages and communication history"
-msgstr "Μηνύματα και ιστορικό επικοινωνίας"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_orderpoint_ids
 msgid "Minimum Stock Rules"
 msgstr "Κανόνες Ελάχιστου Αποθέματος"
@@ -822,13 +980,19 @@ msgid "Name"
 msgstr "Όνομα"
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:62
+#: selection:product.packaging,package_carrier_type:0
+#, fuzzy
+msgid "No carrier integration"
+msgstr "Πληροφορίες Μεταφορέα"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:63
 #, python-format
 msgid "No carrier matching."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:70
+#: code:addons/delivery/models/sale_order.py:72
 #, python-format
 msgid "No carrier set for this order."
 msgstr ""
@@ -870,9 +1034,25 @@ msgid "Number of unread messages"
 msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_method
+msgid ""
+"On ordered quantities: Invoice this product based on ordered quantities.\n"
+"On received quantities: Invoice this product based on received quantity."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_operator
 msgid "Operator"
 msgstr "Χειριστής"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_invoice_policy
+msgid ""
+"Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
+"Delivered Quantity: Invoiced based on the quantity the vendor delivered.\n"
+"Reinvoice Costs: Invoice with some additional charges (product transfer, "
+"labour charges,...)"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_outgoing_qty
@@ -880,9 +1060,39 @@ msgid "Outgoing"
 msgstr "Εξερχόμενο"
 
 #. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+#, fuzzy
+msgid "Package"
+msgstr "Συσκευασίες"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
+#, fuzzy
+msgid "Package Code"
+msgstr "Συσκευασίες"
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:35
+#: code:addons/delivery/models/stock_picking.py:128
+#, fuzzy, python-format
+msgid "Package Details"
+msgstr "Συσκευασίες"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
 msgid "Packages"
 msgstr "Συσκευασίες"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_product_packaging
+#, fuzzy
+msgid "Packaging"
+msgstr "Συσκευασίες"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_pack_operation
+msgid "Packing Operation"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -904,6 +1114,7 @@ msgstr "Τιμή"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Price Computation"
 msgstr "Υπολογισμός Τιμής"
 
@@ -1018,6 +1229,7 @@ msgstr "Μ.Μ Αγοράς"
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line_product_qty
 msgid "Quantity"
 msgstr "Ποσότητα"
 
@@ -1030,19 +1242,37 @@ msgstr "Διαθέσιμη Ποσότητα"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_incoming_qty
 msgid ""
 "Quantity of products that are planned to arrive.\n"
-"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr "Ποσότητα των προϊόντων που προγραμματίστηκε να φθάσει.\nΣε ένα πλαίσιο με μια μόνο Τοποθεσία Αποθέματος αυτό περιλαμβάνει τα εμπορεύματα που φθάνουν σε αυτήν την τοποθεσία, ή κάποιο από τα τμήματα τους"
+"In a context with a single Stock Location, this includes goods arriving to "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with "
+"'internal' type."
+msgstr ""
+"Ποσότητα των προϊόντων που προγραμματίστηκε να φθάσει.\n"
+"Σε ένα πλαίσιο με μια μόνο Τοποθεσία Αποθέματος αυτό περιλαμβάνει τα "
+"εμπορεύματα που φθάνουν σε αυτήν την τοποθεσία, ή κάποιο από τα τμήματα τους"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_outgoing_qty
 msgid ""
 "Quantity of products that are planned to leave.\n"
-"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr "Ποσότητα των προϊόντων που προγραμματίστηκαν να φύγουν.\nΣε ένα πλαίσιο με μια μόνο Τοποθεσία Αποθέματος, αυτό περιλαμβάνει εμπορεύματα που εξέρχονται από αυτήν την τοποθεσία, ή κάποιο από τα τμήματα τους.\nΣε ένα πλαίσιο με μια μόνο Αποθήκη, αυτό περιλαμβάνει εμπορεύματα που εξέρχονται από το  Θέση Αποθέματος αυτής της αποθήκης, ή κάποιο από τα τμήματα του.\nΑλλιώς, αυτό περιλαμβάνει προϊόντα που εξέρχονται από οποιαδήποτε Θέση Αποθέματος με 'εσωτερικό' τύπο."
+"In a context with a single Stock Location, this includes goods leaving this "
+"Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving the Stock "
+"Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods leaving any Stock Location with 'internal' "
+"type."
+msgstr ""
+"Ποσότητα των προϊόντων που προγραμματίστηκαν να φύγουν.\n"
+"Σε ένα πλαίσιο με μια μόνο Τοποθεσία Αποθέματος, αυτό περιλαμβάνει "
+"εμπορεύματα που εξέρχονται από αυτήν την τοποθεσία, ή κάποιο από τα τμήματα "
+"τους.\n"
+"Σε ένα πλαίσιο με μια μόνο Αποθήκη, αυτό περιλαμβάνει εμπορεύματα που "
+"εξέρχονται από το  Θέση Αποθέματος αυτής της αποθήκης, ή κάποιο από τα "
+"τμήματα του.\n"
+"Αλλιώς, αυτό περιλαμβάνει προϊόντα που εξέρχονται από οποιαδήποτε Θέση "
+"Αποθέματος με 'εσωτερικό' τύπο."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
@@ -1053,6 +1283,11 @@ msgstr "Απόδειξη"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
 msgid "Reordering Rules"
 msgstr "Κανόνες Επαναλαμβανόμενης Παραγγελίας"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_return_picking
+msgid "Return Picking"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
@@ -1094,6 +1329,11 @@ msgid "Sales Order Line"
 msgstr "Γραμμή Παραγγελίας"
 
 #. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "Save"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_categ_id
 msgid "Select category for the current product"
 msgstr "Επιλέξτε κατηγορία για το τρέχον προϊόν"
@@ -1101,12 +1341,12 @@ msgstr "Επιλέξτε κατηγορία για το τρέχον προϊό�
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_event_type_id
 msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/delivery_carrier.py:250
+#: code:addons/delivery/models/delivery_carrier.py:284
 #, python-format
 msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
@@ -1130,22 +1370,26 @@ msgid "Set price"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:88
-#, python-format
-msgid "Shipment sent to carrier %s for expedition with tracking number %s"
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
+msgid "Set to True if your credentials are certified for production."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:106
+#: code:addons/delivery/models/stock_picking.py:147
 #, python-format
 msgid ""
-"Your delivery method has no redirect on courier provider's website to track "
-"this order."
+"Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost: "
+"%.2f %s"
 msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
 msgid "Shipping Cost"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
+msgid "Shipping Weight"
 msgstr ""
 
 #. module: delivery
@@ -1163,7 +1407,10 @@ msgstr "Μικρού-Μεγέθους Εικόνα"
 msgid ""
 "Specify a unit of measure here if invoicing is made in another unit of "
 "measure than inventory. Keep empty to use the default unit of measure."
-msgstr "Καθορίστε εδώ μια μονάδα μέτρησης εάν η τιμολόγηση γίνεται σε άλλη μονάδα μέτρησης από την Αποθήκη. \nΕάν είναι κενό τότε θα χρησιμοποιηθεί η προεπιλεγμένη μονάδα μέτρησης."
+msgstr ""
+"Καθορίστε εδώ μια μονάδα μέτρησης εάν η τιμολόγηση γίνεται σε άλλη μονάδα "
+"μέτρησης από την Αποθήκη. \n"
+"Εάν είναι κενό τότε θα χρησιμοποιηθεί η προεπιλεγμένη μονάδα μέτρησης."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_product_sale_ok
@@ -1179,20 +1426,24 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
-"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
-"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific "
+"period (usually once a year).\n"
+"                    Average Price: The cost price is recomputed at each "
+"incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the "
+"last outgoing product (will be use in case of inventory loss for example)."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
+#: model:ir.model.fields,help:delivery.field_product_template_hs_code
+msgid "Standardized code for international shipping and goods declaration"
 msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
 msgid "States"
 msgstr "Καταστάσεις"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state
-msgid "Status"
-msgstr "Κατάσταση"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_input
@@ -1228,8 +1479,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_expected
 msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer "
-"Invoices"
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
 msgstr ""
 
 #. module: delivery
@@ -1256,16 +1506,21 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
 msgid ""
-"The average delay in days between the confirmation of the customer order and"
-" the delivery of the finished products. It's the time you promise to your "
+"The average delay in days between the confirmation of the customer order and "
+"the delivery of the finished products. It's the time you promise to your "
 "customers."
-msgstr "Η μέση καθυστέρηση σε ημέρες μεταξύ της επιβεβαίωσης της παραγγελίας του πελάτη και της παράδοσης των τελικών προϊόντων.  Αυτός είναι ο χρόνος  που υπόσχεστε στους πελάτες σας."
+msgstr ""
+"Η μέση καθυστέρηση σε ημέρες μεταξύ της επιβεβαίωσης της παραγγελίας του "
+"πελάτη και της παράδοσης των τελικών προϊόντων.  Αυτός είναι ο χρόνος  που "
+"υπόσχεστε στους πελάτες σας."
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:53
+#: code:addons/delivery/models/sale_order.py:54
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr "Η κατάσταση εντολής θα πρέπει να είναι πρόχειρη για να προστεθούν επιπλέον γραμμές."
+msgstr ""
+"Η κατάσταση εντολής θα πρέπει να είναι πρόχειρη για να προστεθούν επιπλέον "
+"γραμμές."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_partner_id
@@ -1286,7 +1541,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "These methods allow to automatically compute the delivery price\n"
-"                according to your settings; on the sales order (based on the\n"
+"                according to your settings; on the sales order (based on "
+"the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 
@@ -1295,33 +1551,42 @@ msgstr ""
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr "Αυτός ο λογαριασμός θα χρησιμοποιείται για τα τιμολόγια αντί για την προκαθορισμένη αξιολόγηση των εξόδων για το τρέχον προϊόν."
+msgstr ""
+"Αυτός ο λογαριασμός θα χρησιμοποιείται για τα τιμολόγια αντί για την "
+"προκαθορισμένη αξιολόγηση των εξόδων για το τρέχον προϊόν."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr "Αυτός ο λογαριασμός θα χρησιμοποιείται για τα τιμολόγια αντί για την προκαθορισμένη αξιολόγηση των πωλήσεων για το τρέχον προϊόν."
+msgstr ""
+"Αυτός ο λογαριασμός θα χρησιμοποιείται για τα τιμολόγια αντί για την "
+"προκαθορισμένη αξιολόγηση των πωλήσεων για το τρέχον προϊόν."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_creditor_price_difference
 msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
-msgstr "Αυτός ο λογαριασμός θα χρησιμοποιείται να μετράει τη διαφορά μεταξύ τιμής αγοράς και τιμή κόστους."
+msgstr ""
+"Αυτός ο λογαριασμός θα χρησιμοποιείται να μετράει τη διαφορά μεταξύ τιμής "
+"αγοράς και τιμή κόστους."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
-msgstr "Αυτή η μέθοδος παράδοσης θα χρησιμοποιηθεί όταν τιμολογείτε από στην συλλογή"
+msgstr ""
+"Αυτή η μέθοδος παράδοσης θα χρησιμοποιηθεί όταν τιμολογείτε από στην συλλογή"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_variant
 msgid ""
-"This field holds the image used as image for the product variant, limited to"
-" 1024x1024px."
-msgstr "Στο πεδίο περιέχεται η εικόνα της παραλλαγής του προϊόντος, με περιορισμό σε 1024x1024px."
+"This field holds the image used as image for the product variant, limited to "
+"1024x1024px."
+msgstr ""
+"Στο πεδίο περιέχεται η εικόνα της παραλλαγής του προϊόντος, με περιορισμό σε "
+"1024x1024px."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_price_extra
@@ -1329,25 +1594,37 @@ msgid "This is the sum of the extra price of all attributes"
 msgstr "Αυτό είναι το άθροισμα όλων των επιπλέον τιμών των χαρακτηριστικών"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
+msgid "This percentage will be added to the shipping price."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
-msgstr "Θα χρησιμοποιηθεί αυτή η τοποθεσία αποθέματος, αντί της προκαθορισμένης, ως η τοποθεσία προέλευσης για κινήσεις που δημιουργούνται από εντολές παραγωγής."
+msgstr ""
+"Θα χρησιμοποιηθεί αυτή η τοποθεσία αποθέματος, αντί της προκαθορισμένης, ως "
+"η τοποθεσία προέλευσης για κινήσεις που δημιουργούνται από εντολές παραγωγής."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_procurement
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
-msgstr "Θα χρησιμοποιηθεί αυτή η τοποθεσία αποθέματος, αντί της προκαθορισμένης, ως η τοποθεσία προέλευσης για κινήσεις που δημιουργούνται από προμήθειες."
+msgstr ""
+"Θα χρησιμοποιηθεί αυτή η τοποθεσία αποθέματος, αντί της προκαθορισμένης, ως "
+"η τοποθεσία προέλευσης για κινήσεις που δημιουργούνται από προμήθειες."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_inventory
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr "Αυτή η τοποθεσία των αποθεμάτων θα χρησιμοποιηθεί, αντί για την προκαθορισμένη, όταν η θέση προέλευσης για τις κινήσεις των αποθεμάτων που δημιουργούνται όταν κάνετε μια απογραφή."
+msgstr ""
+"Αυτή η τοποθεσία των αποθεμάτων θα χρησιμοποιηθεί, αντί για την "
+"προκαθορισμένη, όταν η θέση προέλευσης για τις κινήσεις των αποθεμάτων που "
+"δημιουργούνται όταν κάνετε μια απογραφή."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
@@ -1381,6 +1658,12 @@ msgid "Tracking"
 msgstr "Ανίχνευση"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
+#, fuzzy
+msgid "Tracking Reference"
+msgstr "Εσωτερική Αναφορά"
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Transfer"
 msgstr "Μεταφορά"
@@ -1408,8 +1691,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_shipping_enabled
 msgid ""
-"Uncheck this box to disable package shipping while validating Delivery "
-"Orders"
+"Uncheck this box to disable package shipping while validating Delivery Orders"
 msgstr ""
 
 #. module: delivery
@@ -1421,9 +1703,9 @@ msgstr "Μονάδα Μέτρησης"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_move_weight_uom_id
-msgid ""
-"Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr "Μονάδα Μέτρησης(Μονάδα Μέτρησης) είναι μία μονάδα για μέτρηση του Βάρους"
+msgid "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
+msgstr ""
+"Μονάδα Μέτρησης(Μονάδα Μέτρησης) είναι μία μονάδα για μέτρηση του Βάρους"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uos_coeff
@@ -1471,13 +1753,14 @@ msgid "Variant Image"
 msgstr "Εικόνα Παραλλαγής"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
-msgid "Vendor"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
 msgid "Vendor Taxes"
+msgstr "Φόροι Προμηθευτή"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
+#, fuzzy
+msgid "Vendors"
 msgstr "Φόροι Προμηθευτή"
 
 #. module: delivery
@@ -1499,8 +1782,21 @@ msgid "Warranty"
 msgstr "Εγγύηση"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_website_message_ids
+#, fuzzy
+msgid "Website Messages"
+msgstr "Μηνύματα"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_website_message_ids
+#, fuzzy
+msgid "Website communication history"
+msgstr "Μηνύματα και ιστορικό επικοινωνίας"
+
+#. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_weight
@@ -1515,6 +1811,11 @@ msgid "Weight * Volume"
 msgstr "Βάρος * Όγκος"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
+msgid "Weight for Shipping"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
@@ -1526,7 +1827,9 @@ msgstr ""
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr "Όταν ένα νέος Σειριακός Αριθμός εκδοθεί, αυτός είναι ο αριθμός των ημερών πριν τα αγαθά μπορεί να γίνουν επικίνδυνα και δεν πρέπει να καταναλωθούν."
+msgstr ""
+"Όταν ένα νέος Σειριακός Αριθμός εκδοθεί, αυτός είναι ο αριθμός των ημερών "
+"πριν τα αγαθά μπορεί να γίνουν επικίνδυνα και δεν πρέπει να καταναλωθούν."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
@@ -1549,7 +1852,12 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr "Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο, τα αντίστοιχα είδη του ημερολογίου για όλες τις εισερχόμενες κινήσεις αποθέματος θα αναρτηθεί σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος λογαριασμός αποτίμησης στη θέση προέλευσης. Όταν δεν έχει οριστεί επί του προϊόντος, ένα από την κατηγορία προϊόντος θα  χρησιμοποιηθεί."
+msgstr ""
+"Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο, τα αντίστοιχα "
+"είδη του ημερολογίου για όλες τις εισερχόμενες κινήσεις αποθέματος θα "
+"αναρτηθεί σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος "
+"λογαριασμός αποτίμησης στη θέση προέλευσης. Όταν δεν έχει οριστεί επί του "
+"προϊόντος, ένα από την κατηγορία προϊόντος θα  χρησιμοποιηθεί."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_output
@@ -1558,14 +1866,45 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr "Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο,τα αντίστοιχά είδη του ημερολογίου  για όλες τις εξερχόμενες κινήσεις των αποθεμάτων θα αναρτηθούν σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος λογαριασμός αποτίμησης στην τοποθεσία προορισμού. Όταν δεν έχει οριστεί επί του προϊόντος, ένα από την κατηγορία προϊόντος θα χρησιμοποιηθεί."
+msgstr ""
+"Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο,τα αντίστοιχά "
+"είδη του ημερολογίου  για όλες τις εξερχόμενες κινήσεις των αποθεμάτων θα "
+"αναρτηθούν σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος "
+"λογαριασμός αποτίμησης στην τοποθεσία προορισμού. Όταν δεν έχει οριστεί επί "
+"του προϊόντος, ένα από την κατηγορία προϊόντος θα χρησιμοποιηθεί."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id
 msgid ""
 "When validating an invoice, an email will be sent to the customer based on "
-"this template. The customer will receive an email for each product linked to"
-" an email template."
+"this template. The customer will receive an email for each product linked to "
+"an email template."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_width
+msgid "Width"
+msgstr ""
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Width must be positive"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:187
+#, python-format
+msgid ""
+"You are shipping different packaging types in the same shipment.\n"
+"Packaging Types: %s"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:163
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
 msgstr ""
 
 #. module: delivery
@@ -1590,3 +1929,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "άγνωστο"
+
+#~ msgid "Carrier Tracking Ref"
+#~ msgstr "Παραπομπή Ιχνηλάτησης Μεταφορέα"
+
+#~ msgid "Gross Weight"
+#~ msgstr "Μικτό βάρος"
+
+#~ msgid "Status"
+#~ msgstr "Κατάσταση"

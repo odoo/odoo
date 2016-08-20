@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product_extended
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-05-19 06:01+0000\n"
 "Last-Translator: Juliano Henriquez <juliano@consultoriahenca.com>\n"
-"Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
+"Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/"
+"odoo-9/language/es_DO/)\n"
+"Language: es_DO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_DO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_extended
@@ -51,6 +52,7 @@ msgstr "Cambio de precios de hijo de la LDM"
 
 #. module: product_extended
 #: model:ir.actions.act_window,name:product_extended.action_view_compute_price_wizard
+#: model:ir.model,name:product_extended.model_wizard_price
 msgid "Compute Price Wizard"
 msgstr "Asistente de Calculo de  precio"
 
@@ -60,16 +62,13 @@ msgid "Compute from BOM"
 msgstr "Calcular desde LDM"
 
 #. module: product_extended
-#: model:ir.model,name:product_extended.model_wizard_price
-msgid "Compute price wizard"
-msgstr "Asistente de Calculo de  precio"
-
-#. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
-msgstr "Calcular el precio del producto usando productos y operaciones relacionados con lista de materiales, sólo de productos manufacturados."
+msgstr ""
+"Calcular el precio del producto usando productos y operaciones relacionados "
+"con lista de materiales, sólo de productos manufacturados."
 
 #. module: product_extended
 #: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_uid
@@ -117,6 +116,11 @@ msgid "Last Updated on"
 msgstr "Última actualización en"
 
 #. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_get_variant_count
+msgid "Number of variant for the product"
+msgstr ""
+
+#. module: product_extended
 #: model:ir.model,name:product_extended.model_product_template
 msgid "Product Template"
 msgstr "Plantilla producto"
@@ -136,12 +140,19 @@ msgstr "Precio estándar"
 msgid ""
 "The price is computed from the bill of material lines which are not variant "
 "specific"
-msgstr "El precio se calcula de la  lista de materiales que no son específicas de variante"
+msgstr ""
+"El precio se calcula de la  lista de materiales que no son específicas de "
+"variante"
 
 #. module: product_extended
 #: code:addons/product_extended/wizard/wizard_price.py:38
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"This wizard is build for product templates, while you are currently running "
+"This wizard is built for product templates, while you are currently running "
 "it from a product variant."
-msgstr "Este asistente es para las plantillas de producto, mientras que se están ejecutando de una variante de producto."
+msgstr ""
+"Este asistente es para las plantillas de producto, mientras que se están "
+"ejecutando de una variante de producto."
+
+#~ msgid "Compute price wizard"
+#~ msgstr "Asistente de Calculo de  precio"

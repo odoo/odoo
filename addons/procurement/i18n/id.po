@@ -1,35 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * procurement
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-10 13:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/id/)\n"
+"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
+"id/)\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"<b>Procurement Orders</b> represent the need for a certain quantity of "
-"products, at a given time, in a given location."
-msgstr ""
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"<b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
-"                <br>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc..."
-msgstr ""
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
@@ -46,8 +33,10 @@ msgstr ""
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "A <b>procurement order</b> is used to record a need for a specific\n"
-"                product at a specific location. Procurement orders are usually\n"
-"                created automatically from <i>sales orders, pull logistic rules or\n"
+"                product at a specific location. Procurement orders are "
+"usually\n"
+"                created automatically from <i>sales orders, pull logistic "
+"rules or\n"
 "                minimum stock rules.</i>"
 msgstr ""
 
@@ -55,11 +44,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
 msgid "Action"
 msgstr "Tindakan"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction
-msgid "Action Needed"
-msgstr "Tindakan diperlukan"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
@@ -87,7 +71,7 @@ msgid "Cancelled"
 msgstr "Dibatalkan"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:139
+#: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
 msgstr "Tidak dapat menghapus Pengadaan Order (s) yang berada dalam keadaan%s."
@@ -100,17 +84,12 @@ msgstr "Periksa Pengadaan"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but"
-" can be manually set by the procurement manager to force an unusual "
-"behavior."
-msgstr "Aturan dipilih untuk resolusi pengadaan. Biasanya dipilih oleh sistem tetapi dapat secara manual ditetapkan oleh manajer pengadaan untuk memaksa perilaku yang tidak biasa."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"Click to create a Procurement order in exception state, or remove the filter"
-" on the search bar to display all the procurements."
+"Chosen rule for the procurement resolution. Usually chosen by the system but "
+"can be manually set by the procurement manager to force an unusual behavior."
 msgstr ""
+"Aturan dipilih untuk resolusi pengadaan. Biasanya dipilih oleh sistem tetapi "
+"dapat secara manual ditetapkan oleh manajer pengadaan untuk memaksa perilaku "
+"yang tidak biasa."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -157,13 +136,9 @@ msgid "Created on"
 msgstr "Dibuat pada"
 
 #. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Tanggal pesan terakhir diposting pada catatan."
-
-#. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-msgid "Delivery Method"
+#, fuzzy
+msgid "Delivery Type"
 msgstr "Metode Pengiriman"
 
 #. module: procurement
@@ -215,21 +190,6 @@ msgid "Fixed Procurement Group"
 msgstr "Pengadaan Grup tetap"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_follower_ids
-msgid "Followers"
-msgstr "Pengikut"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Pengikut (saluran)"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Pengikut (mitra)"
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Global"
 msgstr "Global"
@@ -254,16 +214,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
 msgstr "Jika rute global"
@@ -271,17 +221,9 @@ msgstr "Jika rute global"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr "Jika dicentang, itu akan memungkinkan Anda untuk menyembunyikan aturan tanpa menghapusnya."
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_is_follower
-msgid "Is Follower"
-msgstr "Adalah pengikut"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_last_post
-msgid "Last Message Date"
-msgstr "Tanggal pesan terakhir"
+msgstr ""
+"Jika dicentang, itu akan memungkinkan Anda untuk menyembunyikan aturan tanpa "
+"menghapusnya."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
@@ -323,14 +265,12 @@ msgid "Logistics"
 msgstr "Logistik"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_ids
-msgid "Messages"
-msgstr "Pesan"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_ids
-msgid "Messages and communication history"
-msgstr "Pesan dan riwayat komunikasi"
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"Most common exceptions are products to purchase without\n"
+"                having a vendor defined on the product, and products to\n"
+"                manufacture without having a bill of materials."
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -338,7 +278,7 @@ msgid "Name"
 msgstr "Nama"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:206
+#: code:addons/procurement/procurement.py:200
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Tidak ada aturan yang cocok pengadaan ini"
@@ -357,21 +297,6 @@ msgstr "Not urgent"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Notes"
 msgstr "Catatan"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Jumlah tindakan"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Jumlah pesan yang memerlukan tindakan"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Jumlah pesan yang belum dibaca"
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
@@ -494,7 +419,9 @@ msgstr "Referensi"
 msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
-msgstr "Referensi dari dokumen yang dibuat Pengadaan ini. Hal ini secara otomatis diisi oleh Odoo."
+msgstr ""
+"Referensi dari dokumen yang dibuat Pengadaan ini. Hal ini secara otomatis "
+"diisi oleh Odoo."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -575,16 +502,6 @@ msgid "Unit of Measure"
 msgstr "Satuan Ukuran"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread
-msgid "Unread Messages"
-msgstr "Pesan Belum Dibaca"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Pesan yang belum dibaca Counter"
-
-#. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Urgent"
 msgstr "Penting"
@@ -595,22 +512,13 @@ msgid "Very Urgent"
 msgstr "Sangat mendesak"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_website_message_ids
-msgid "Website Messages"
-msgstr "Pesan situs"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_website_message_ids
-msgid "Website communication history"
-msgstr "Sejarah komunikasi situs"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: purchase\n"
+"                creates the necessary operations to fulfill the need: "
+"purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
 
@@ -623,3 +531,57 @@ msgstr ""
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr "misalnya SO005"
+
+#~ msgid "Action Needed"
+#~ msgstr "Tindakan diperlukan"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Tanggal pesan terakhir diposting pada catatan."
+
+#~ msgid "Followers"
+#~ msgstr "Pengikut"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Pengikut (saluran)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Pengikut (mitra)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
+
+#~ msgid "Is Follower"
+#~ msgstr "Adalah pengikut"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Tanggal pesan terakhir"
+
+#~ msgid "Messages"
+#~ msgstr "Pesan"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Pesan dan riwayat komunikasi"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Jumlah tindakan"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Jumlah pesan yang memerlukan tindakan"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Jumlah pesan yang belum dibaca"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Pesan Belum Dibaca"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Pesan yang belum dibaca Counter"
+
+#~ msgid "Website Messages"
+#~ msgstr "Pesan situs"
+
+#~ msgid "Website communication history"
+#~ msgstr "Sejarah komunikasi situs"

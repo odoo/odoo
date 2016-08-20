@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_bank_statement_import
-# 
+#
 # Translators:
 # Andrey Skabelin <andrey.skabelin@gmail.com>, 2015
 # Sergey Vilizhanin <sv@grimmette.ru>, 2015
@@ -11,24 +11,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-04-06 20:39+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:226
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
 msgstr "%d транзакций уже импортировались ранее и были проигнорированы"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:226
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
 msgstr "1 транзакция уже импортировалась ранее и была проигнорирована"
@@ -59,7 +61,7 @@ msgid "Allow Cancelling Entries"
 msgstr "Разрешить отменяющие проводки"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
 #, python-format
 msgid "Already imported items"
 msgstr "Уже импортированные позиции"
@@ -75,7 +77,7 @@ msgid "At least one outbound"
 msgstr "По крайней мере, один исходящий"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:75
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:76
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_id
 #, python-format
 msgid "Bank"
@@ -107,32 +109,43 @@ msgid "Bank Statement Line"
 msgstr "Позиция банковской выписки"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
+msgid "Belong to the user's current company"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Cancel"
 msgstr "Отмена"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:160
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:165
 #, python-format
 msgid ""
-"Cannot find in which journal import this statement. Please manually select a"
-" journal."
-msgstr "Непонятно, в какой журнал импортировать эту выписку. Пожалуйста, вручную выберите журнал."
+"Cannot find in which journal import this statement. Please manually select a "
+"journal."
+msgstr ""
+"Непонятно, в какой журнал импортировать эту выписку. Пожалуйста, вручную "
+"выберите журнал."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid ""
-"Check this box if you don't want to share the same sequence for invoices and"
-" refunds made from this journal"
-msgstr "Поставьте этот флажок, если Вы не хотите смешивать счета и возмещения, сделанные из этого журнала"
+"Check this box if you don't want to share the same sequence for invoices and "
+"refunds made from this journal"
+msgstr ""
+"Поставьте этот флажок, если Вы не хотите смешивать счета и возмещения, "
+"сделанные из этого журнала"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
 msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
-msgstr "Отметьте, если вы хотите включить возможность отмены проводок, связанных с этим журналом, или позиций из счетов, связанных с этим журналом"
+msgstr ""
+"Отметьте, если вы хотите включить возможность отмены проводок, связанных с "
+"этим журналом, или позиций из счетов, связанных с этим журналом"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -150,12 +163,14 @@ msgid "Company related to this journal"
 msgstr "Организация, связанная с этим журналом"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:105
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:106
 #, python-format
 msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file ?"
-msgstr "Нет представления для данного файла.\nХотите установить модуль для поддержки данного типа файлов?"
+msgstr ""
+"Нет представления для данного файла.\n"
+"Хотите установить модуль для поддержки данного типа файлов?"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_uid
@@ -205,14 +220,18 @@ msgstr "Отображаемое имя"
 msgid ""
 "Display this bank account on the footer of printed documents like invoices "
 "and sales orders."
-msgstr "Отображать этот банковский счет в подвале (нижней части страницы) напечатанных документов, таких как выставленные счета и заявки на продажу."
+msgstr ""
+"Отображать этот банковский счет в подвале (нижней части страницы) "
+"напечатанных документов, таких как выставленные счета и заявки на продажу."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
-msgstr "Скачать Банковскую Выписку из Вашего банка и импортировать можно здесь. Поддерживаемые форматы:"
+msgstr ""
+"Скачать Банковскую Выписку из Вашего банка и импортировать можно здесь. "
+"Поддерживаемые форматы:"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -220,11 +239,17 @@ msgid "Entry Sequence"
 msgstr "Нумерация проводок"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_filename
+msgid "Filename"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_data_file
 msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
-msgstr "Получайте выписки из вашего банка в электронном формате и выбирайте их здесь."
+msgstr ""
+"Получайте выписки из вашего банка в электронном формате и выбирайте их здесь."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_group_invoice_lines
@@ -242,7 +267,9 @@ msgstr "ID"
 msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
-msgstr "Если отмечено, система попытается сгруппировать проводки при создании их из счета."
+msgstr ""
+"Если отмечено, система попытается сгруппировать проводки при создании их из "
+"счета."
 
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
@@ -290,7 +317,7 @@ msgid "Journal"
 msgstr "Журнал"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:66
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:67
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
@@ -311,7 +338,9 @@ msgstr "ID Журнала"
 msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
-msgstr "Для создания Счёта/Журнала нажмите OK и завершите импорт. Если Вы ошиблись, нажмите cancel для отмены импорта."
+msgstr ""
+"Для создания Счёта/Журнала нажмите OK и завершите импорт. Если Вы ошиблись, "
+"нажмите cancel для отмены импорта."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
@@ -352,7 +381,10 @@ msgid ""
 "Means of payment for collecting money. Odoo modules offer various payments "
 "handling facilities, but you can always use the 'Manual' payment method in "
 "order to manage payments outside of the software."
-msgstr "Способ оплаты для сбора денег. Модули Odoo предлагают различное платежное оборудование, но Вы можете всегда использовать 'Ручной' способ оплаты, чтобы управлять платежами за пределами программного обеспечения."
+msgstr ""
+"Способ оплаты для сбора денег. Модули Odoo предлагают различное платежное "
+"оборудование, но Вы можете всегда использовать 'Ручной' способ оплаты, чтобы "
+"управлять платежами за пределами программного обеспечения."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
@@ -360,10 +392,13 @@ msgid ""
 "Means of payment for sending money. Odoo modules offer various payments "
 "handling facilities, but you can always use the 'Manual' payment method in "
 "order to manage payments outside of the software."
-msgstr "Способы оплаты по отправке денег. Модули Odoo предлагают различное платежное оборудование, но Вы можете всегда использовать 'Ручной' способ оплаты, чтобы управлять платежами за пределами программного обеспечения."
+msgstr ""
+"Способы оплаты по отправке денег. Модули Odoo предлагают различное платежное "
+"оборудование, но Вы можете всегда использовать 'Ручной' способ оплаты, чтобы "
+"управлять платежами за пределами программного обеспечения."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:132
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:136
 #, python-format
 msgid "No currency found matching '%s'."
 msgstr "Не найдено валюты, содержащей '%s'."
@@ -390,13 +425,19 @@ msgstr "Последовательность записей возмещений
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
+#, fuzzy
 msgid ""
-"Select 'Sale' for customer invoices journals. Select 'Purchase' for vendor "
-"bills journals. Select 'Cash' or 'Bank' for journals that are used in "
-"customer or vendor payments. Select 'General' for miscellaneous operations "
-"journals. Select 'Opening/Closing Situation' for entries generated for new "
-"fiscal years."
-msgstr "Выберите «Продажа» для журналов счетов-фактур клиента. Выберите 'Покупку' для журналов счетов-фактур поставщика. Выберите \"Наличные\" или \"Банк\" для журналов, которые используются в платежах клиента или поставщика. Выберите 'Разное' для журналов прочих операций. Выберите 'Состояние Открытия/Закрытия' для записей созданных для нового финансового года."
+"Select 'Sale' for customer invoices journals.\n"
+"Select 'Purchase' for vendor bills journals.\n"
+"Select 'Cash' or 'Bank' for journals that are used in customer or vendor "
+"payments.\n"
+"Select 'General' for miscellaneous operations journals."
+msgstr ""
+"Выберите «Продажа» для журналов счетов-фактур клиента. Выберите 'Покупку' "
+"для журналов счетов-фактур поставщика. Выберите \"Наличные\" или \"Банк\" "
+"для журналов, которые используются в платежах клиента или поставщика. "
+"Выберите 'Разное' для журналов прочих операций. Выберите 'Состояние Открытия/"
+"Закрытия' для записей созданных для нового финансового года."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -429,17 +470,19 @@ msgid ""
 "The account of the statement you are importing is not yet recorded in Odoo. "
 "In order to proceed with the import, you need to create a bank journal for "
 "this account."
-msgstr "Счёт для импортируемой Вами Выписки ещё не записан в системе Odoo. Для того, чтобы продолжить импортирование, Вы должны создать Банковский Журнал для данного Счёта."
+msgstr ""
+"Счёт для импортируемой Вами Выписки ещё не записан в системе Odoo. Для того, "
+"чтобы продолжить импортирование, Вы должны создать Банковский Журнал для "
+"данного Счёта."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:143
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:151
 #, python-format
-msgid ""
-"The account of this statement (%s) is not the same as the journal (%s)."
+msgid "The account of this statement (%s) is not the same as the journal (%s)."
 msgstr "Счёт этой Выписки (%s) не совпадает с Журналом (%s)."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:156
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:161
 #, python-format
 msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
@@ -461,23 +504,26 @@ msgstr "Записи этого журнала будут называться �
 msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
-msgstr "Это поле содержит информацию, связанную с нумерацией проводок этого журнала."
+msgstr ""
+"Это поле содержит информацию, связанную с нумерацией проводок этого журнала."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
 msgid ""
 "This field contains the information related to the numbering of the refund "
 "entries of this journal."
-msgstr "Это поле содержит информацию, связанную с нумерацией записей возврата этого журнала."
+msgstr ""
+"Это поле содержит информацию, связанную с нумерацией записей возврата этого "
+"журнала."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:110
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:111
 #, python-format
 msgid "This file doesn't contain any statement."
 msgstr "Данный файл не содержит ни одной выписки"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:118
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:119
 #, python-format
 msgid "This file doesn't contain any transaction."
 msgstr "Данный файл не содержит ни одного перевода."
@@ -490,21 +536,26 @@ msgstr "Тип"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr "Используется, чтобы упорядочить журналы в представлении информационной панели"
+msgstr ""
+"Используется, чтобы упорядочить журналы в представлении информационной панели"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_loss_account_id
 msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
-msgstr "Используется для регистрации потери, когда конечный баланс  кассового аппарата отличается от того, что вычисляет система"
+msgstr ""
+"Используется для регистрации потери, когда конечный баланс  кассового "
+"аппарата отличается от того, что вычисляет система"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
 msgid ""
-"Used to register a profit when the ending balance of a cash register differs"
-" from what the system computes"
-msgstr "Используется для регистрации прибыли, когда конечный баланс  кассового аппарата отличается от того, что вычисляет система"
+"Used to register a profit when the ending balance of a cash register differs "
+"from what the system computes"
+msgstr ""
+"Используется для регистрации прибыли, когда конечный баланс  кассового "
+"аппарата отличается от того, что вычисляет система"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
@@ -512,7 +563,7 @@ msgid "Whether this journal should be displayed on the dashboard or not"
 msgstr "Должен ли этот журнал быть показан на информационной панели или нет"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:218
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
 #, python-format
 msgid "You have already imported that file."
 msgstr "Вы уже импортировали данный файл."

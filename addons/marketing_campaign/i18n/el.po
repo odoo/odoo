@@ -1,22 +1,58 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * marketing_campaign
-# 
+#
 # Translators:
 # Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-03 14:18+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_3
+#, fuzzy
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to let you know that you have entered the select circle "
+"of our Gold Partners!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"Γεια σας, είμαστε στην ευχάριστη θέση να σας πληροφορήσουμε ότι έχετε "
+"ενταχθεί στον επιλεγμένο κύκλο των Χρυσών μας Συνεργατών"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_2
+#, fuzzy
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to welcome you among our Silver Partners as of today!</"
+"p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"Γεια σας, είμαστε στην ευχάριστη θέση να σας καλωσορίσουμε στους Αργυρούς "
+"μας Συνεργάτες απο σήμερα!"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_1
+#, fuzzy
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>You will receive your welcome pack via email shortly.</p>\n"
+"<p>Thank you,</p>\n"
+msgstr "Γεια σας, θα λάβετε σύντομα μέσω email το πακέτο καλωσορίσματος."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -34,7 +70,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
 msgid ""
 "A campaign can have many activities like sending an email, printing\n"
-"            a letter, assigning to a team, etc. These activities are triggered\n"
+"            a letter, assigning to a team, etc. These activities are "
+"triggered\n"
 "            from specific situations; contact form, 10 days after first\n"
 "            contact, if a lead is not closed yet, etc."
 msgstr ""
@@ -81,7 +118,10 @@ msgstr "Όλα τα αρχεία (όχι διπλότυπα)"
 msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
-msgstr "Μια δραστηριότητα με ένα σήμα μπορεί να κληθεί προγραμματιστικά. Να είστε προσεκτικοί, ένα αντικείμενο εργασίας δημιουργείται πάντα όταν ένα μήνυμα έχει σταλεί"
+msgstr ""
+"Μια δραστηριότητα με ένα σήμα μπορεί να κληθεί προγραμματιστικά. Να είστε "
+"προσεκτικοί, ένα αντικείμενο εργασίας δημιουργείται πάντα όταν ένα μήνυμα "
+"έχει σταλεί"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -109,7 +149,10 @@ msgstr "Αυτόματη μετάβαση"
 msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
-msgstr "Με την ενεργοποίηση αυτής της επιλογής, τα αντικείμενα εργασίας που δεν εκτελούνται διότι η προϋπόθεση αυτή δεν πληρείται επισημένονται ως ακυρωμένα αντί για να διαγραφούν."
+msgstr ""
+"Με την ενεργοποίηση αυτής της επιλογής, τα αντικείμενα εργασίας που δεν "
+"εκτελούνται διότι η προϋπόθεση αυτή δεν πληρείται επισημένονται ως ακυρωμένα "
+"αντί για να διαγραφούν."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_campaign_id
@@ -274,7 +317,9 @@ msgstr "Προσαρμοσμένη Δράση"
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
-msgstr "Ημερομηνία κατά την οποία το τμήμα αυτό είχε συγχρονιστεί την τελευταία φορά (αυτόματα ή χειροκίνητα)"
+msgstr ""
+"Ημερομηνία κατά την οποία το τμήμα αυτό είχε συγχρονιστεί την τελευταία φορά "
+"(αυτόματα ή χειροκίνητα)"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_done
@@ -298,9 +343,16 @@ msgid ""
 "records to inject in the campaign. \"No duplicates\" prevents selecting "
 "records which have already entered the campaign previously.If the campaign "
 "has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
-"records which have the same value for the unique field as other records that"
-" already entered the campaign."
-msgstr "Καθορίζει ένα πρόσθετο κριτήριο για να προσθέσετε στο φίλτρο κατά την επιλογή των νέων εγγραφών για να εισφέρει στην εκστρατεία. \"Δεν υπάρχουν διπλότυπα\" αποτρέπει την επιλογή των αρχείων που έχουν ήδη εισέλθει στην εκστρατεία προηγουμένως.Αν η εκστρατεία έχει ορίσει ένα «μοναδικό πεδίο\", \"δεν υπάρχουν διπλότυπα\" θα αποτρέψει επίσης την επιλογή αρχείων τα οποία έχουν την ίδια αξία για το μοναδικό πεδίο καθώς και άλλα αρχεία έχουν ήδη εισαχθεί στην εκστρατεία."
+"records which have the same value for the unique field as other records that "
+"already entered the campaign."
+msgstr ""
+"Καθορίζει ένα πρόσθετο κριτήριο για να προσθέσετε στο φίλτρο κατά την "
+"επιλογή των νέων εγγραφών για να εισφέρει στην εκστρατεία. \"Δεν υπάρχουν "
+"διπλότυπα\" αποτρέπει την επιλογή των αρχείων που έχουν ήδη εισέλθει στην "
+"εκστρατεία προηγουμένως.Αν η εκστρατεία έχει ορίσει ένα «μοναδικό πεδίο\", "
+"\"δεν υπάρχουν διπλότυπα\" θα αποτρέψει επίσης την επιλογή αρχείων τα οποία "
+"έχουν την ίδια αξία για το μοναδικό πεδίο καθώς και άλλα αρχεία έχουν ήδη "
+"εισαχθεί στην εκστρατεία."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_display_name
@@ -353,6 +405,12 @@ msgstr "Προεπισκόπηση email"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
+msgstr "Πρότυπο email"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_email_template_preview
+#, fuzzy
+msgid "Email Template Preview"
 msgstr "Πρότυπο email"
 
 #. module: marketing_campaign
@@ -423,7 +481,13 @@ msgid ""
 "New filters can be created and saved using the advanced search on the list "
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
-msgstr "Φίλτρο για να επιλέξετε τα αντίστοιχα αρχεία πόρων  που ανήκουν σε αυτό το τμήμα. Νέα φίλτρα μπορούν να δημιουργηθούν και να αποθηκευτούν χρησιμοποιώντας την προηγμένη αναζήτηση στην προβολή λίστας του Πόρου. Εάν δεν έχει οριστεί κανένα φίλτρο, όλα τα αρχεία  επιλέγονται χωρίς φιλτράρισμα. Η λειτουργία συγχρονισμού μπορεί επίσης να προσθέσει ένα κριτήριο στο φίλτρο."
+msgstr ""
+"Φίλτρο για να επιλέξετε τα αντίστοιχα αρχεία πόρων  που ανήκουν σε αυτό το "
+"τμήμα. Νέα φίλτρα μπορούν να δημιουργηθούν και να αποθηκευτούν "
+"χρησιμοποιώντας την προηγμένη αναζήτηση στην προβολή λίστας του Πόρου. Εάν "
+"δεν έχει οριστεί κανένα φίλτρο, όλα τα αρχεία  επιλέγονται χωρίς "
+"φιλτράρισμα. Η λειτουργία συγχρονισμού μπορεί επίσης να προσθέσει ένα "
+"κριτήριο στο φίλτρο."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_fixed_cost
@@ -433,10 +497,14 @@ msgstr "Σταθερό Κόστος"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_fixed_cost
 msgid ""
-"Fixed cost for running this campaign. You may also specify variable cost and"
-" revenue on each campaign activity. Cost and Revenue statistics are included"
-" in Campaign Reporting."
-msgstr "Σταθερό κόστος για την εκτέλεση αυτής της εκστρατείας. Μπορείτε επίσης να ορίσετε μεταβλητό κόστος και έσοδα για κάθε δραστηριότητα της εκστρατείας. Στατιστικά στοιχεία για τα κόστη και τα έσοδα περιλαμβάνονται στις Αναφορές της Εκστρατείας."
+"Fixed cost for running this campaign. You may also specify variable cost and "
+"revenue on each campaign activity. Cost and Revenue statistics are included "
+"in Campaign Reporting."
+msgstr ""
+"Σταθερό κόστος για την εκτέλεση αυτής της εκστρατείας. Μπορείτε επίσης να "
+"ορίσετε μεταβλητό κόστος και έσοδα για κάθε δραστηριότητα της εκστρατείας. "
+"Στατιστικά στοιχεία για τα κόστη και τα έσοδα περιλαμβάνονται στις Αναφορές "
+"της Εκστρατείας."
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -456,24 +524,6 @@ msgstr "Follow-up"
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Group By"
 msgstr "Ομαδοποίηση Ανά"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_1
-msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr "Γεια σας, θα λάβετε σύντομα μέσω email το πακέτο καλωσορίσματος."
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_3
-msgid ""
-"Hi, we are delighted to let you know that you have entered the select circle"
-" of our Gold Partners"
-msgstr "Γεια σας, είμαστε στην ευχάριστη θέση να σας πληροφορήσουμε ότι έχετε ενταχθεί στον επιλεγμένο κύκλο των Χρυσών μας Συνεργατών"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_2
-msgid ""
-"Hi, we are delighted to welcome you among our Silver Partners as of today!"
-msgstr "Γεια σας, είμαστε στην ευχάριστη θέση να σας καλωσορίσουμε στους Αργυρούς μας Συνεργάτες απο σήμερα!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -498,20 +548,32 @@ msgstr "ID"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_workitem_date
 msgid "If date is not set, this workitem has to be run manually"
-msgstr "Αν η ημερομηνία δεν οριστεί, το στοιχείο εργασίας θα πρέπει να εκτελεστεί χειροκίνητα"
+msgstr ""
+"Αν η ημερομηνία δεν οριστεί, το στοιχείο εργασίας θα πρέπει να εκτελεστεί "
+"χειροκίνητα"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_unique_field_id
 msgid ""
-"If set, this field will help segments that work in \"no duplicates\" mode to"
-" avoid selecting similar records twice. Similar records are records that "
-"have the same value for this unique field. For example by choosing the "
+"If set, this field will help segments that work in \"no duplicates\" mode to "
+"avoid selecting similar records twice. Similar records are records that have "
+"the same value for this unique field. For example by choosing the "
 "\"email_from\" field for CRM Leads you would prevent sending the same "
 "campaign to the same email address again. If not set, the \"no duplicates\" "
 "segments will only avoid selecting the same record again if it entered the "
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
-msgstr "Εάν οριστεί, αυτό το πεδίο θα βοηθήσει τα τμήματα που λειτουργούν σε κατάσταση \"δεν υπάρχουν διπλότυπα\" να αποφύγουν την επιλογή παρόμοιων εγγραφών δύο φορές. Παρόμοιες εγγραφές είναι τα αρχεία που έχουν την ίδια τιμή για αυτό το μοναδικό πεδίο. Για παράδειγμα, με την επιλογή του πεδίου \"email_from\" για τις  Συστάσεις CRM θα εμποδίσετε την αποστολή της ίδιας εκστρατείας στην ίδια διεύθυνση ηλεκτρονικού ταχυδρομείου και πάλι. Αν δεν έχει οριστεί, το «όχι διπλότυπα\" τμήματα θα αποφεχθεί μόνο η επιλογή του ίδιου αρχείου ξανά αν έχει εισαγάγει την εκστρατεία προηγουμένως.\nΜπορούν να χρησιμοποιηθούν μόνο εύκολα συγκρινόμενα πεδία όπως πεδία κειμένου, ακέραιοι, επιλογές ή  μεμονωμένες σχέσεις."
+msgstr ""
+"Εάν οριστεί, αυτό το πεδίο θα βοηθήσει τα τμήματα που λειτουργούν σε "
+"κατάσταση \"δεν υπάρχουν διπλότυπα\" να αποφύγουν την επιλογή παρόμοιων "
+"εγγραφών δύο φορές. Παρόμοιες εγγραφές είναι τα αρχεία που έχουν την ίδια "
+"τιμή για αυτό το μοναδικό πεδίο. Για παράδειγμα, με την επιλογή του πεδίου "
+"\"email_from\" για τις  Συστάσεις CRM θα εμποδίσετε την αποστολή της ίδιας "
+"εκστρατείας στην ίδια διεύθυνση ηλεκτρονικού ταχυδρομείου και πάλι. Αν δεν "
+"έχει οριστεί, το «όχι διπλότυπα\" τμήματα θα αποφεχθεί μόνο η επιλογή του "
+"ίδιου αρχείου ξανά αν έχει εισαγάγει την εκστρατεία προηγουμένως.\n"
+"Μπορούν να χρησιμοποιηθούν μόνο εύκολα συγκρινόμενα πεδία όπως πεδία "
+"κειμένου, ακέραιοι, επιλογές ή  μεμονωμένες σχέσεις."
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
@@ -597,6 +659,11 @@ msgid "Lead Automation"
 msgstr ""
 
 #. module: marketing_campaign
+#: model:res.groups,name:marketing_campaign.group_lead_automation_manager
+msgid "Manager"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
 msgid "Manual Mode"
 msgstr "Χειροκίνητη λειτουργία"
@@ -655,7 +722,9 @@ msgstr "Μοντέλο"
 #. module: marketing_campaign
 #: constraint:marketing.campaign.segment:0
 msgid "Model of filter must be same as resource model of Campaign "
-msgstr "Το πρότυπο του φίλτρου πρέπει να είναι το ίδιο με το μοντέλο πηγή της Εκστρατείας"
+msgstr ""
+"Το πρότυπο του φίλτρου πρέπει να είναι το ίδιο με το μοντέλο πηγή της "
+"Εκστρατείας"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -705,7 +774,9 @@ msgstr "Επόμενος Συγχρονισμός"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_next_sync
 msgid "Next time the synchronization job is scheduled to run automatically"
-msgstr "Την επόμενη φορά η εργασία συγχρονισμού θα προγραμματιστεί να εκτελεστεί αυτόματα"
+msgstr ""
+"Την επόμενη φορά η εργασία συγχρονισμού θα προγραμματιστεί να εκτελεστεί "
+"αυτόματα"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -731,8 +802,9 @@ msgstr "Οκτώβριος"
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
 msgid ""
 "Odoo's marketing campaign allows you to automate communication\n"
-"            to your prospects. You can define a segment (set of conditions) on\n"
-"            your leads and partners to fullfil the campaign."
+"            to your prospects. You can define a segment (set of conditions) "
+"on\n"
+"            your leads and partners to fulfill the campaign."
 msgstr ""
 
 #. module: marketing_campaign
@@ -743,12 +815,9 @@ msgstr "Μόνο αρχεία που δημιουργήθηκαν μετά το�
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
-msgstr "Μόνο αρχεία που τροποποιήθηκαν μετά τον τελευταίο συγχρονισμό (δεν υπάρχουν διπλότυπα)"
-
-#. module: marketing_campaign
-#: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
-msgid "Open Marketing Menu"
-msgstr "Άνοιγμα Μενού Marketing"
+msgstr ""
+"Μόνο αρχεία που τροποποιήθηκαν μετά τον τελευταίο συγχρονισμό (δεν υπάρχουν "
+"διπλότυπα)"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
@@ -797,13 +866,29 @@ msgstr "Διεργασία"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_condition
 msgid ""
-"Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled.The expression may use the following [browsable] variables:\n"
+"Python expression to decide whether the activity can be executed, otherwise "
+"it will be deleted or cancelled.The expression may use the following "
+"[browsable] variables:\n"
 "   - activity: the campaign activity\n"
 "   - workitem: the campaign workitem\n"
 "   - resource: the resource object this campaign item represents\n"
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
-msgstr "Έκφραση Python για να αποφασιστεί αν μπορεί να εκτελεστεί η δραστηριότητα, διαφορετικά θα πρέπει να διαγραφεί ή να ακυρωθεί. Η έκφραση μπορεί να χρησιμοποιήσει τις ακόλουθες [browsable] μεταβλητές: \n\n- Δραστηριότητα: η δραστηριότητα εκστρατείας\n\n- Στοιχείο Εργασίας: Στοιχείο Εργασίας εκστρατείας \n\n- Πηγή: το αντικείμενο της πηγής αυτό το στοιχείο της εκστρατείας αντιπροσωπεύει\n\n- Μεταβάσεις: κατάλογος των μεταβάσεων της εκστρατείας που εξέρχονται απο αυτήν την δραστηριότητα\n...- Re: Python κανονικό άρθρωμα  έκφρασης"
+msgstr ""
+"Έκφραση Python για να αποφασιστεί αν μπορεί να εκτελεστεί η δραστηριότητα, "
+"διαφορετικά θα πρέπει να διαγραφεί ή να ακυρωθεί. Η έκφραση μπορεί να "
+"χρησιμοποιήσει τις ακόλουθες [browsable] μεταβλητές: \n"
+"\n"
+"- Δραστηριότητα: η δραστηριότητα εκστρατείας\n"
+"\n"
+"- Στοιχείο Εργασίας: Στοιχείο Εργασίας εκστρατείας \n"
+"\n"
+"- Πηγή: το αντικείμενο της πηγής αυτό το στοιχείο της εκστρατείας "
+"αντιπροσωπεύει\n"
+"\n"
+"- Μεταβάσεις: κατάλογος των μεταβάσεων της εκστρατείας που εξέρχονται απο "
+"αυτήν την δραστηριότητα\n"
+"...- Re: Python κανονικό άρθρωμα  έκφρασης"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_report_id
@@ -895,7 +980,10 @@ msgid ""
 "Set a variable cost if you consider that every campaign item that has "
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
-msgstr "Ορίστε ένα μεταβλητό κόστος, αν σκεφτεί κανείς ότι κάθε στοιχείο της εκστρατείας που έχει φτάσει σε αυτό το σημείο συνεπάγεται κάποιο κόστος. Μπορείτε να δείτε τα στατιστικά  στοιχεία του κόστους στο τμήμα των Αναφορών"
+msgstr ""
+"Ορίστε ένα μεταβλητό κόστος, αν σκεφτεί κανείς ότι κάθε στοιχείο της "
+"εκστρατείας που έχει φτάσει σε αυτό το σημείο συνεπάγεται κάποιο κόστος. "
+"Μπορείτε να δείτε τα στατιστικά  στοιχεία του κόστους στο τμήμα των Αναφορών"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_revenue
@@ -903,7 +991,11 @@ msgid ""
 "Set an expected revenue if you consider that every campaign item that has "
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
-msgstr "Ορίστε τα αναμενόμενα έσοδα, αν σκεφτεί κανείς ότι κάθε στοιχείο της εκστρατείας που έχει φτάσει σε αυτό το σημείο έχει δημιουργήσει ορισμένα έσοδα. Μπορείτε να δείτε τα στατιστικά στοιχεία για τα  έσοδα  στο τμήμα των Αναφορών"
+msgstr ""
+"Ορίστε τα αναμενόμενα έσοδα, αν σκεφτεί κανείς ότι κάθε στοιχείο της "
+"εκστρατείας που έχει φτάσει σε αυτό το σημείο έχει δημιουργήσει ορισμένα "
+"έσοδα. Μπορείτε να δείτε τα στατιστικά στοιχεία για τα  έσοδα  στο τμήμα των "
+"Αναφορών"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -941,12 +1033,16 @@ msgstr "Λειτουργία Συγχρονισμού: όλα τα αρχεία"
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records created after last sync"
-msgstr "Λειτουργία Συγχρονισμού: μόνο αρχεία που δημιουργήθηκαν μετά τον τελευταίο συγχρονισμό"
+msgstr ""
+"Λειτουργία Συγχρονισμού: μόνο αρχεία που δημιουργήθηκαν μετά τον τελευταίο "
+"συγχρονισμό"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records updated after last sync"
-msgstr "Λειτουργία Συγχρονισμού: μόνο αρχεία που ενημερώθηκαν μετά τον τελευταίο συγχρονισμό"
+msgstr ""
+"Λειτουργία Συγχρονισμού: μόνο αρχεία που ενημερώθηκαν μετά τον τελευταίο "
+"συγχρονισμό"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_sync_mode
@@ -961,11 +1057,28 @@ msgstr "Χειροκίνητος Συγχρονισμός"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_mode
 msgid ""
-"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.\n"
-"Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.\n"
-"Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
-msgstr "Δοκιμή - Δημιουργεί και επεξεργάζετε όλες τις δραστηριότητες απευθείας (χωρίς να περιμένει για την καθυστέρηση της μετάβασης), αλλά δεν στέλνει emails ή δεν παράγει αναφορές.\n\nΔοκιμή σε Πραγματικό Χρόνο - Δημιουργεί και επεξεργάζεται όλες τις δραστηριότητες άμεσα, αλλά δεν στέλνει emails ή δεν παράγει αναφορές\n\nΜε Χειροκίνητη Επιβεβαίωση - οι εκστρατείες εκτελούνται κανονικά, αλλά ο χρήστης θα πρέπει να επικυρώσει όλα τα στοιχεία εργασίας χειροκίνητα.\n\nΚανονική - η εκστρατεία εκτελείται κανονικά και στέλνει αυτόματα όλα τα emails   και τις αναφορές (να είστε πολύ προσεκτικοί με αυτή την λειτουργία, είστε ζωντανά!)"
+"Test - It creates and process all the activities directly (without waiting "
+"for the delay on transitions) but does not send emails or produce reports.\n"
+"Test in Realtime - It creates and processes all the activities directly but "
+"does not send emails or produce reports.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has to "
+"validate all workitem manually.\n"
+"Normal - the campaign runs normally and automatically sends all emails and "
+"reports (be very careful with this mode, you're live!)"
+msgstr ""
+"Δοκιμή - Δημιουργεί και επεξεργάζετε όλες τις δραστηριότητες απευθείας "
+"(χωρίς να περιμένει για την καθυστέρηση της μετάβασης), αλλά δεν στέλνει "
+"emails ή δεν παράγει αναφορές.\n"
+"\n"
+"Δοκιμή σε Πραγματικό Χρόνο - Δημιουργεί και επεξεργάζεται όλες τις "
+"δραστηριότητες άμεσα, αλλά δεν στέλνει emails ή δεν παράγει αναφορές\n"
+"\n"
+"Με Χειροκίνητη Επιβεβαίωση - οι εκστρατείες εκτελούνται κανονικά, αλλά ο "
+"χρήστης θα πρέπει να επικυρώσει όλα τα στοιχεία εργασίας χειροκίνητα.\n"
+"\n"
+"Κανονική - η εκστρατεία εκτελείται κανονικά και στέλνει αυτόματα όλα τα "
+"emails   και τις αναφορές (να είστε πολύ προσεκτικοί με αυτή την λειτουργία, "
+"είστε ζωντανά!)"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -985,18 +1098,24 @@ msgstr "Δοκιμή σε Πραγματικό Χρόνο"
 #. module: marketing_campaign
 #: constraint:marketing.campaign.transition:0
 msgid "The To/From Activity of transition must be of the same Campaign "
-msgstr "Η Δραστηριότητα Προς/Από της μετάβασης θα πρέπει να είναι της ίδιας Εκστρατείας"
+msgstr ""
+"Η Δραστηριότητα Προς/Από της μετάβασης θα πρέπει να είναι της ίδιας "
+"Εκστρατείας"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
 msgid "The action to perform when this activity is activated"
-msgstr "Η ενέργεια που θα πραγματοποιηθεί όταν  αυτή η δραστηριότητα είναι ενεργοποιημένη"
+msgstr ""
+"Η ενέργεια που θα πραγματοποιηθεί όταν  αυτή η δραστηριότητα είναι "
+"ενεργοποιημένη"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:114
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
-msgstr "Η εκστρατεία δεν μπορεί να μαρκαριστεί ώς ολοκληρωμένη πριν όλα τα τμήματα κλείσουν"
+msgstr ""
+"Η εκστρατεία δεν μπορεί να μαρκαριστεί ώς ολοκληρωμένη πριν όλα τα τμήματα "
+"κλείσουν"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:104
@@ -1004,19 +1123,25 @@ msgstr "Η εκστρατεία δεν μπορεί να μαρκαριστεί 
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
-msgstr "Η εκστρατεία δεν μπορεί να ξεκινήσει. Δεν έχει καμία δραστηριότητα έναρξης. Τροποποιήστε τις δραστηριότητες της εκστρατείας για να μαρκάρετε μια ώς το σημείο έναρξης."
+msgstr ""
+"Η εκστρατεία δεν μπορεί να ξεκινήσει. Δεν έχει καμία δραστηριότητα έναρξης. "
+"Τροποποιήστε τις δραστηριότητες της εκστρατείας για να μαρκάρετε μια ώς το "
+"σημείο έναρξης."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:92
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
-msgstr "Η εκστρατεία δεν μπορεί να ξεκινήσει. Δεν υπάρχουν δραστηριότητες σε αυτή."
+msgstr ""
+"Η εκστρατεία δεν μπορεί να ξεκινήσει. Δεν υπάρχουν δραστηριότητες σε αυτή."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:777
 #, python-format
 msgid "The current step for this item has no email or report to preview."
-msgstr "Το τρέχων βήμα για αυτό το αντικείμενο δεν έχει email ή αναφορά για επαλήθευση."
+msgstr ""
+"Το τρέχων βήμα για αυτό το αντικείμενο δεν έχει email ή αναφορά για "
+"επαλήθευση."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_email_template_id
@@ -1026,11 +1151,15 @@ msgstr "Το email να σταλεί όταν η δραστηριότητα εί
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid ""
-"The generated workitems will be linked to the partner related to the record."
-" If the record is the partner itself leave this field empty. This is useful "
+"The generated workitems will be linked to the partner related to the record. "
+"If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
-msgstr "Τα στοιχεία εργασίας που δημιουργήθηκαν θα συνδεθούν με τον εταίρο που σχετίζεται με το αρχείο. Αν το αρχείο είναι ο ίδιος ο εταίρος αφήστε το πεδίο κενό. Αυτό είναι χρήσιμο για λόγους αναφοράς, μέσω των προβολών της Ανάλυσης Εκστρατείας ή της παρακολούθησης Εκστρατείας. "
+msgstr ""
+"Τα στοιχεία εργασίας που δημιουργήθηκαν θα συνδεθούν με τον εταίρο που "
+"σχετίζεται με το αρχείο. Αν το αρχείο είναι ο ίδιος ο εταίρος αφήστε το "
+"πεδίο κενό. Αυτό είναι χρήσιμο για λόγους αναφοράς, μέσω των προβολών της "
+"Ανάλυσης Εκστρατείας ή της παρακολούθησης Εκστρατείας. "
 
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
@@ -1047,10 +1176,20 @@ msgstr "Η αναφορά να δημιουργηθεί όταν η δραστη
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
 "   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record\n"
+"   - Report: print an existing Report defined on the resource item and save "
+"it into a specific directory\n"
+"   - Custom Action: execute a predefined action, e.g. to modify the fields "
+"of the resource record\n"
 "  "
-msgstr "Ο τύπος της δράσης προς εκτέλεση όταν το είδος εισάχθεί στην δραστηριότητα, όπως:\n- Email: αποστολή ενός email  χρησιμοποιώντας ένα προκαθορισμένο πρότυπο email\n- Αναφορά: εκτύπωση μίας υπάρχουσας Αναφοράς που έχει ορισθεί σε ένα είδος προέλευσης και αποθηκεύσετε την σε ένα συγκεκριμένο κατάλογο\n-Προσαρμοσμένη Δράση: εκτελεί μια προκαθορισμένη δράση, π.χ. να τροποποιεί τα πεδία  ενός αρχείου προέλευσης"
+msgstr ""
+"Ο τύπος της δράσης προς εκτέλεση όταν το είδος εισάχθεί στην δραστηριότητα, "
+"όπως:\n"
+"- Email: αποστολή ενός email  χρησιμοποιώντας ένα προκαθορισμένο πρότυπο "
+"email\n"
+"- Αναφορά: εκτύπωση μίας υπάρχουσας Αναφοράς που έχει ορισθεί σε ένα είδος "
+"προέλευσης και αποθηκεύσετε την σε ένα συγκεκριμένο κατάλογο\n"
+"-Προσαρμοσμένη Δράση: εκτελεί μια προκαθορισμένη δράση, π.χ. να τροποποιεί "
+"τα πεδία  ενός αρχείου προέλευσης"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start
@@ -1086,6 +1225,11 @@ msgid "Unique Field"
 msgstr "Μοναδικό Πεδίο"
 
 #. module: marketing_campaign
+#: model:res.groups,name:marketing_campaign.group_lead_automation_user
+msgid "User"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_variable_cost
 msgid "Variable Cost"
 msgstr "Μεταβλητό Κόστος"
@@ -1114,3 +1258,6 @@ msgstr "Έτος(η)"
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
+
+#~ msgid "Open Marketing Menu"
+#~ msgstr "Άνοιγμα Μενού Marketing"

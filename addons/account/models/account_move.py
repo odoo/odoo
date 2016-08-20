@@ -90,7 +90,7 @@ class AccountMove(models.Model):
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env.user.company_id)
     matched_percentage = fields.Float('Percentage Matched', compute='_compute_matched_percentage', digits=0, store=True, readonly=True, help="Technical field used in cash basis method")
-    statement_line_id = fields.Many2one('account.bank.statement.line', string='Bank statement line reconciled with this entry', copy=False, readonly=True)
+    statement_line_id = fields.Many2one('account.bank.statement.line', index=True, string='Bank statement line reconciled with this entry', copy=False, readonly=True)
     # Dummy Account field to search on account.move by account_id
     dummy_account_id = fields.Many2one('account.account', related='line_ids.account_id', string='Account', store=False)
 
@@ -239,6 +239,16 @@ class AccountMoveLine(models.Model):
     _description = "Journal Item"
     _order = "date desc, id desc"
 
+    def init(self, cr):
+        """ change index on partner_id to a multi-column index on (partner_id, ref), the new index will behave in the
+            same way when we search on partner_id, with the addition of being optimal when having a query that will
+            search on partner_id and ref at the same time (which is the case when we open the bank reconciliation widget)
+        """
+        cr.execute('DROP INDEX IF EXISTS account_move_line_partner_id_index')
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_partner_id_ref_idx',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX account_move_line_partner_id_ref_idx ON account_move_line (partner_id, ref)')
+
     @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids', 'matched_credit_ids', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'account_id.currency_id', 'move_id.state')
     def _amount_residual(self):
         """ Computes the residual amount of a move line from a reconciliable account in the company currency and the line's currency.
@@ -372,7 +382,7 @@ class AccountMoveLine(models.Model):
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade",
         help="The move of this entry line.", index=True, required=True, auto_join=True)
     narration = fields.Text(related='move_id.narration', string='Narration')
-    ref = fields.Char(related='move_id.ref', string='Reference', store=True, copy=False)
+    ref = fields.Char(related='move_id.ref', string='Reference', store=True, copy=False, index=True)
     payment_id = fields.Many2one('account.payment', string="Originator Payment", help="Payment that created this entry")
     statement_id = fields.Many2one('account.bank.statement', string='Statement',
         help="The bank statement used for bank reconciliation", index=True, copy=False)
@@ -399,7 +409,7 @@ class AccountMoveLine(models.Model):
 
     # TODO: put the invoice link and partner_id on the account_move
     invoice_id = fields.Many2one('account.invoice', oldname="invoice")
-    partner_id = fields.Many2one('res.partner', string='Partner', index=True, ondelete='restrict')
+    partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
     user_type_id = fields.Many2one('account.account.type', related='account_id.user_type_id', index=True, store=True, oldname="user_type")
 
     _sql_constraints = [
@@ -941,6 +951,8 @@ class AccountMoveLine(models.Model):
         currency = False
         aml_to_balance_currency = self.env['account.move.line']
         partial_rec_set = self.env['account.partial.reconcile']
+        aml_id = False
+        partial_rec_id = False
         maxdate = None
         for aml in self:
             total_debit += aml.debit
@@ -952,13 +964,16 @@ class AccountMoveLine(models.Model):
                 currency = aml.currency_id
             if aml.currency_id and aml.currency_id == currency:
                 total_amount_currency += aml.amount_currency
-                partial_rec_set |= aml.matched_debit_ids | aml.matched_credit_ids
+            partial_rec_set |= aml.matched_debit_ids | aml.matched_credit_ids
 
         if currency and aml_to_balance_currency:
             aml = aml_to_balance_currency[0]
             #eventually create journal entries to book the difference due to foreign currency's exchange rate that fluctuates
             partial_rec = aml.credit and aml.matched_debit_ids[0] or aml.matched_credit_ids[0]
             aml_id, partial_rec_id = partial_rec.with_context(skip_full_reconcile_check=True).create_exchange_rate_entry(aml_to_balance_currency, 0.0, total_amount_currency, currency, maxdate)
+            self |= aml_id
+            partial_rec_set |= partial_rec_id
+            total_amount_currency += aml_id.amount_currency
 
         partial_rec_ids = [x.id for x in list(partial_rec_set)]
         #if the total debit and credit are equal, and the total amount in currency is 0, the reconciliation is full
@@ -968,7 +983,9 @@ class AccountMoveLine(models.Model):
             #in that case, mark the reference on the partial reconciliations and the entries
             self.env['account.full.reconcile'].with_context(check_move_validity=False).create({
                 'partial_reconcile_ids': [(6, 0, partial_rec_ids)],
-                'reconciled_line_ids': [(6, 0, self.ids)]})
+                'reconciled_line_ids': [(6, 0, self.ids)],
+                'exchange_move_id': aml_id.move_id.id if aml_id else False,
+                'exchange_partial_rec_id': partial_rec_id.id if partial_rec_id else False})
 
     @api.multi
     def remove_move_reconcile(self):
@@ -1130,8 +1147,6 @@ class AccountMoveLine(models.Model):
 
     @api.multi
     def write(self, vals):
-        if vals.get('tax_line_id') or vals.get('tax_ids'):
-            raise UserError(_('You cannot change the tax, you should remove and recreate lines.'))
         if ('account_id' in vals) and self.env['account.account'].browse(vals['account_id']).deprecated:
             raise UserError(_('You cannot use deprecated account.'))
         if any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit')):
@@ -1425,19 +1440,20 @@ class AccountPartialReconcile(models.Model):
                 exchange_partial_rec_id = rate_diff_partial_rec.id
             #mark the reference of the full reconciliation on the partial ones and on the entries
             self.env['account.full.reconcile'].with_context(check_move_validity=False).create({
-                'partial_reconcile_ids': [(6, 0, partial_rec_ids)],
-                'reconciled_line_ids': [(6, 0, aml_ids)],
+                'partial_reconcile_ids': [(4, p_id) for p_id in partial_rec_ids],
+                'reconciled_line_ids': [(4, a_id) for a_id in aml_ids],
                 'exchange_move_id': exchange_move_id,
                 'exchange_partial_rec_id': exchange_partial_rec_id,
-                })
+            })
         return res
 
     @api.multi
     def unlink(self):
         """ When removing a partial reconciliation, also unlink its full reconciliation if it exists """
         to_unlink = self
+        full_to_unlink = self.env['account.full.reconcile']
+        res = True
         if self._context.get('full_rec_lookup', True):
-            full_to_unlink = self.env['account.full.reconcile']
             for rec in self:
                 #exclude partial reconciliations related to an exchange rate entry, because the unlink of the full reconciliation will already do it
                 if self.env['account.full.reconcile'].search([('exchange_partial_rec_id', '=', rec.id)]):
@@ -1445,11 +1461,11 @@ class AccountPartialReconcile(models.Model):
                 #without the deleted partial reconciliations, the full reconciliation won't be full anymore
                 if rec.full_reconcile_id:
                     full_to_unlink |= rec.full_reconcile_id
-            if full_to_unlink:
-                full_to_unlink.unlink()
         if to_unlink:
-            return super(AccountPartialReconcile, to_unlink).unlink()
-        return True
+            res = super(AccountPartialReconcile, to_unlink).unlink()
+        if full_to_unlink:
+            full_to_unlink.unlink()
+        return res
 
 class AccountFullReconcile(models.Model):
     _name = "account.full.reconcile"
@@ -1480,7 +1496,8 @@ class AccountFullReconcile(models.Model):
                 if aml.account_id.reconcile:
                     break
             if aml:
-                if aml.debit:
+                precision = aml.currency_id and aml.currency_id.rounding or aml.company_id.currency_id.rounding
+                if aml.debit or float_compare(aml.amount_currency, 0, precision_rounding=precision) == 1:
                     pair_to_rec = aml | rec.exchange_partial_rec_id.credit_move_id
                 else:
                     pair_to_rec = aml | rec.exchange_partial_rec_id.debit_move_id

@@ -1,22 +1,62 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * marketing_campaign
-# 
+#
 # Translators:
 # Harry <harrierr@mail.ru>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-10-20 07:04+0000\n"
 "Last-Translator: Harry <harrierr@mail.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_3
+#, fuzzy
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to let you know that you have entered the select circle "
+"of our Gold Partners!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"<p>Привет, мы рады сообщить, что вы вошли в избранный круг наших Золотых "
+"партнеров</p>"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_2
+#, fuzzy
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to welcome you among our Silver Partners as of today!</"
+"p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"<p>Привет, на сегодня мы рады приветствовать вас среди наших Серебряных "
+"партнеров!</p>"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_1
+#, fuzzy
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>You will receive your welcome pack via email shortly.</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"<p>Здравствуйте, вы получите свой комплект информационных материалов для "
+"новых клиентов по электронной почте в ближайшее время.</p>"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -28,16 +68,24 @@ msgstr "# действий"
 msgid ""
 "<span class=\"o_stat_text\">Campaign</span>\n"
 "                            <span class=\"o_stat_text\">Statistics</span>"
-msgstr "<span class=\"o_stat_text\">Мероприятие</span>\n                            <span class=\"o_stat_text\">Статистика</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Мероприятие</span>\n"
+"                            <span class=\"o_stat_text\">Статистика</span>"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
 msgid ""
 "A campaign can have many activities like sending an email, printing\n"
-"            a letter, assigning to a team, etc. These activities are triggered\n"
+"            a letter, assigning to a team, etc. These activities are "
+"triggered\n"
 "            from specific situations; contact form, 10 days after first\n"
 "            contact, if a lead is not closed yet, etc."
-msgstr "Мероприятие может состоять из множества действий, таких как отправка электронной почты, печать\nписем, присоединение к команде и т.д. Эти мероприятия запускаются\nиз конкретных ситуаций: контактная форма, через 10 дней после первого\nконтакта, если инициатива ещё не закрыта и т.д."
+msgstr ""
+"Мероприятие может состоять из множества действий, таких как отправка "
+"электронной почты, печать\n"
+"писем, присоединение к команде и т.д. Эти мероприятия запускаются\n"
+"из конкретных ситуаций: контактная форма, через 10 дней после первого\n"
+"контакта, если инициатива ещё не закрыта и т.д."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -81,7 +129,9 @@ msgstr "Все записи (без копий)"
 msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
-msgstr "Задачу с сигналом можно вызвать программно. Будьте осторожны, рабочий элемент создается всегда, когда посылается сигнал"
+msgstr ""
+"Задачу с сигналом можно вызвать программно. Будьте осторожны, рабочий "
+"элемент создается всегда, когда посылается сигнал"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -109,7 +159,9 @@ msgstr "Автоматический переход"
 msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
-msgstr "Активируя эту опцию, рабочие элементы, которые не выполнены, потому что условие не соблюдено, вместо удаления отмечаются как отмененные."
+msgstr ""
+"Активируя эту опцию, рабочие элементы, которые не выполнены, потому что "
+"условие не соблюдено, вместо удаления отмечаются как отмененные."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_campaign_id
@@ -274,7 +326,9 @@ msgstr "Дополнительное действие"
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
-msgstr "Дата, когда этот сегмент был синхронизирован последний раз (автоматически или вручную)"
+msgstr ""
+"Дата, когда этот сегмент был синхронизирован последний раз (автоматически "
+"или вручную)"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_done
@@ -298,9 +352,15 @@ msgid ""
 "records to inject in the campaign. \"No duplicates\" prevents selecting "
 "records which have already entered the campaign previously.If the campaign "
 "has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
-"records which have the same value for the unique field as other records that"
-" already entered the campaign."
-msgstr "Определяет дополнительный критерий для добавления к фильтру при выборе новых записей для ввода в кампанию. \"Без копий\" предотвращает выбор записей, которые уже вошли в кампанию ранее. Если у кампании будет стоять настройка \"уникальное поле\", то \"без копий\" также предотвратит выбор записей, у которых то же самое значение для уникального поля, как и у других записей, которые уже вошли в кампанию."
+"records which have the same value for the unique field as other records that "
+"already entered the campaign."
+msgstr ""
+"Определяет дополнительный критерий для добавления к фильтру при выборе новых "
+"записей для ввода в кампанию. \"Без копий\" предотвращает выбор записей, "
+"которые уже вошли в кампанию ранее. Если у кампании будет стоять настройка "
+"\"уникальное поле\", то \"без копий\" также предотвратит выбор записей, у "
+"которых то же самое значение для уникального поля, как и у других записей, "
+"которые уже вошли в кампанию."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_display_name
@@ -353,6 +413,12 @@ msgstr "Предпросмотр письма"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
+msgstr "Шаблон письма"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_email_template_preview
+#, fuzzy
+msgid "Email Template Preview"
 msgstr "Шаблон письма"
 
 #. module: marketing_campaign
@@ -423,7 +489,12 @@ msgid ""
 "New filters can be created and saved using the advanced search on the list "
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
-msgstr "Фильтр для выбора совпадающих записей ресурса, которые принадлежат этому сегменту. Новые фильтры можно создать и сохранить, используя расширенный поиск по списку Ресурса. Если ни один фильтр не установлен, все записи выбираются без фильтрации. Способ синхронизации может также добавить критерий к фильтру."
+msgstr ""
+"Фильтр для выбора совпадающих записей ресурса, которые принадлежат этому "
+"сегменту. Новые фильтры можно создать и сохранить, используя расширенный "
+"поиск по списку Ресурса. Если ни один фильтр не установлен, все записи "
+"выбираются без фильтрации. Способ синхронизации может также добавить "
+"критерий к фильтру."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_fixed_cost
@@ -433,10 +504,13 @@ msgstr "Фиксированные затраты"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_fixed_cost
 msgid ""
-"Fixed cost for running this campaign. You may also specify variable cost and"
-" revenue on each campaign activity. Cost and Revenue statistics are included"
-" in Campaign Reporting."
-msgstr "Фиксированные расходы для управления этой кампанией. Вы можете также указать переменные затраты и доход по каждому действию кампании. Статистика расходов и дохода включена в отчетность кампании."
+"Fixed cost for running this campaign. You may also specify variable cost and "
+"revenue on each campaign activity. Cost and Revenue statistics are included "
+"in Campaign Reporting."
+msgstr ""
+"Фиксированные расходы для управления этой кампанией. Вы можете также указать "
+"переменные затраты и доход по каждому действию кампании. Статистика расходов "
+"и дохода включена в отчетность кампании."
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -456,24 +530,6 @@ msgstr "Напоминание"
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Group By"
 msgstr "Группировать по"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_1
-msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr "<p>Здравствуйте, вы получите свой комплект информационных материалов для новых клиентов по электронной почте в ближайшее время.</p>"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_3
-msgid ""
-"Hi, we are delighted to let you know that you have entered the select circle"
-" of our Gold Partners"
-msgstr "<p>Привет, мы рады сообщить, что вы вошли в избранный круг наших Золотых партнеров</p>"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_2
-msgid ""
-"Hi, we are delighted to welcome you among our Silver Partners as of today!"
-msgstr "<p>Привет, на сегодня мы рады приветствовать вас среди наших Серебряных партнеров!</p>"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -503,15 +559,24 @@ msgstr "Если дата не установлена, этот рабочий �
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_unique_field_id
 msgid ""
-"If set, this field will help segments that work in \"no duplicates\" mode to"
-" avoid selecting similar records twice. Similar records are records that "
-"have the same value for this unique field. For example by choosing the "
+"If set, this field will help segments that work in \"no duplicates\" mode to "
+"avoid selecting similar records twice. Similar records are records that have "
+"the same value for this unique field. For example by choosing the "
 "\"email_from\" field for CRM Leads you would prevent sending the same "
 "campaign to the same email address again. If not set, the \"no duplicates\" "
 "segments will only avoid selecting the same record again if it entered the "
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
-msgstr "Если установлено, это поле поможет сегментам, которые работают в режиме \"без копий\", избежать отбора подобных записей дважды. Подобные записи - записи, у которых одинаковое значение для этого уникального поля. Например, выбирая поле \"email_from\" для потенциальных клиентов CRM, вы предотвратили бы отправку той же самой кампании на тот же самый адрес электронной почты снова. Если не установлено, сегменты \"без копий\" просто избегут отбора той же самой записи снова, если она входила в кампанию ранее. Только легко сопоставимые поля, как текстовые поля, целые числа, выборочные совокупности или единичные соотношения могут использоваться."
+msgstr ""
+"Если установлено, это поле поможет сегментам, которые работают в режиме "
+"\"без копий\", избежать отбора подобных записей дважды. Подобные записи - "
+"записи, у которых одинаковое значение для этого уникального поля. Например, "
+"выбирая поле \"email_from\" для потенциальных клиентов CRM, вы предотвратили "
+"бы отправку той же самой кампании на тот же самый адрес электронной почты "
+"снова. Если не установлено, сегменты \"без копий\" просто избегут отбора той "
+"же самой записи снова, если она входила в кампанию ранее. Только легко "
+"сопоставимые поля, как текстовые поля, целые числа, выборочные совокупности "
+"или единичные соотношения могут использоваться."
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
@@ -595,6 +660,11 @@ msgstr "Месяц запуска"
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_root
 msgid "Lead Automation"
 msgstr "Лидер Автоматизации"
+
+#. module: marketing_campaign
+#: model:res.groups,name:marketing_campaign.group_lead_automation_manager
+msgid "Manager"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
@@ -705,7 +775,8 @@ msgstr "Следующая синхронизация"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_next_sync
 msgid "Next time the synchronization job is scheduled to run automatically"
-msgstr "В следующий раз задание на синхронизацию запустится по плану автоматически"
+msgstr ""
+"В следующий раз задание на синхронизацию запустится по плану автоматически"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -729,11 +800,17 @@ msgstr "Октябрь"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+#, fuzzy
 msgid ""
 "Odoo's marketing campaign allows you to automate communication\n"
-"            to your prospects. You can define a segment (set of conditions) on\n"
-"            your leads and partners to fullfil the campaign."
-msgstr "Маркетинговые мероприятия Odoo позволяют  вам автоматизировать связи\nс вашими перспективами. Вы можете определить сегмент (набор условий) для\nвашего руководства и партнеров, чтобы в полной мере получить результат от мероприятия."
+"            to your prospects. You can define a segment (set of conditions) "
+"on\n"
+"            your leads and partners to fulfill the campaign."
+msgstr ""
+"Маркетинговые мероприятия Odoo позволяют  вам автоматизировать связи\n"
+"с вашими перспективами. Вы можете определить сегмент (набор условий) для\n"
+"вашего руководства и партнеров, чтобы в полной мере получить результат от "
+"мероприятия."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -744,11 +821,6 @@ msgstr "Только записи, созданные после последн�
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
 msgstr "Только записи, измененные после последней синхронизации (без копий)"
-
-#. module: marketing_campaign
-#: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
-msgid "Open Marketing Menu"
-msgstr "Открыть меню маркетинга"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
@@ -797,13 +869,23 @@ msgstr "Выполняется"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_condition
 msgid ""
-"Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled.The expression may use the following [browsable] variables:\n"
+"Python expression to decide whether the activity can be executed, otherwise "
+"it will be deleted or cancelled.The expression may use the following "
+"[browsable] variables:\n"
 "   - activity: the campaign activity\n"
 "   - workitem: the campaign workitem\n"
 "   - resource: the resource object this campaign item represents\n"
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
-msgstr "Выражение Python, чтобы решить, может ли быть выполнено действие, иначе оно будет удалено или отменено. Выражение может использовать следующие [просматриваемые] переменные:\n   - действие: действие кампании\n   - рабочий элемент: рабочий элемент кампании\n   - ресурс: ресурсный объект, который представляет этот элемент кампании\n   - переходы: список переходов кампании, исходящих из этого действия\n...- РВ: модуль регулярного выражения Python"
+msgstr ""
+"Выражение Python, чтобы решить, может ли быть выполнено действие, иначе оно "
+"будет удалено или отменено. Выражение может использовать следующие "
+"[просматриваемые] переменные:\n"
+"   - действие: действие кампании\n"
+"   - рабочий элемент: рабочий элемент кампании\n"
+"   - ресурс: ресурсный объект, который представляет этот элемент кампании\n"
+"   - переходы: список переходов кампании, исходящих из этого действия\n"
+"...- РВ: модуль регулярного выражения Python"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_report_id
@@ -895,7 +977,10 @@ msgid ""
 "Set a variable cost if you consider that every campaign item that has "
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
-msgstr "Установите переменные затраты, если вы полагаете, что каждый элемент кампании, который достиг этой точки, повлек за собой определенные расходы. Вы можете получить статистику расходов в разделе \"Отчетность\""
+msgstr ""
+"Установите переменные затраты, если вы полагаете, что каждый элемент "
+"кампании, который достиг этой точки, повлек за собой определенные расходы. "
+"Вы можете получить статистику расходов в разделе \"Отчетность\""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_revenue
@@ -903,7 +988,10 @@ msgid ""
 "Set an expected revenue if you consider that every campaign item that has "
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
-msgstr "Установите ожидаемый доход, если вы полагаете, что каждый элемент кампании, который достиг этой точки, произвел определенный доход. Вы можете получить статистику доходов в разделе \"Отчетность\""
+msgstr ""
+"Установите ожидаемый доход, если вы полагаете, что каждый элемент кампании, "
+"который достиг этой точки, произвел определенный доход. Вы можете получить "
+"статистику доходов в разделе \"Отчетность\""
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -941,12 +1029,14 @@ msgstr "Режим синхронизации: все записи"
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records created after last sync"
-msgstr "Режим синхронизации: только записи, созданные после последней синхронизации"
+msgstr ""
+"Режим синхронизации: только записи, созданные после последней синхронизации"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records updated after last sync"
-msgstr "Режим синхронизации: только записи, обновленные после последней синхронизации"
+msgstr ""
+"Режим синхронизации: только записи, обновленные после последней синхронизации"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_sync_mode
@@ -961,11 +1051,23 @@ msgstr "Синхронизировать вручную"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_mode
 msgid ""
-"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.\n"
-"Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.\n"
-"Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
-msgstr "Тест - Создает и обрабатывает все действия напрямую (не ожидая задержки на переходах), но не отправляет письма и не производит отчеты.\nТест в реальном времени - Создает и обрабатывает все действия напрямую, но не отправляет письма и не производит отчеты.\nС подтверждением вручную - кампания проходит как обычно, но пользователь должен утвердить все  рабочие элементы вручную.\nНормальный - кампания проходит как обычно и автоматически отправляет все письма и отчеты (будьте очень осторожны с этим режимом, вы онлайн!)"
+"Test - It creates and process all the activities directly (without waiting "
+"for the delay on transitions) but does not send emails or produce reports.\n"
+"Test in Realtime - It creates and processes all the activities directly but "
+"does not send emails or produce reports.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has to "
+"validate all workitem manually.\n"
+"Normal - the campaign runs normally and automatically sends all emails and "
+"reports (be very careful with this mode, you're live!)"
+msgstr ""
+"Тест - Создает и обрабатывает все действия напрямую (не ожидая задержки на "
+"переходах), но не отправляет письма и не производит отчеты.\n"
+"Тест в реальном времени - Создает и обрабатывает все действия напрямую, но "
+"не отправляет письма и не производит отчеты.\n"
+"С подтверждением вручную - кампания проходит как обычно, но пользователь "
+"должен утвердить все  рабочие элементы вручную.\n"
+"Нормальный - кампания проходит как обычно и автоматически отправляет все "
+"письма и отчеты (будьте очень осторожны с этим режимом, вы онлайн!)"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -996,7 +1098,9 @@ msgstr "Действие, которое нужно выполнить, когд
 #: code:addons/marketing_campaign/marketing_campaign.py:114
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
-msgstr "Кампания не может быть отмечена, как выполненная, пока все сегменты не будут закрыты."
+msgstr ""
+"Кампания не может быть отмечена, как выполненная, пока все сегменты не будут "
+"закрыты."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:104
@@ -1004,7 +1108,9 @@ msgstr "Кампания не может быть отмечена, как вы�
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
-msgstr "Кампания не может быть начата. У нее нет никакого стартового действия. Измените действия кампании и отметьте одно в качестве начального пункта."
+msgstr ""
+"Кампания не может быть начата. У нее нет никакого стартового действия. "
+"Измените действия кампании и отметьте одно в качестве начального пункта."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:92
@@ -1016,7 +1122,9 @@ msgstr "Кампания не может быть начата. В ней нет
 #: code:addons/marketing_campaign/marketing_campaign.py:777
 #, python-format
 msgid "The current step for this item has no email or report to preview."
-msgstr "Текущий шаг для этого элемента не имеет доступных для предварительного просмотра отчетов иили шаблонов электронной почты"
+msgstr ""
+"Текущий шаг для этого элемента не имеет доступных для предварительного "
+"просмотра отчетов иили шаблонов электронной почты"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_email_template_id
@@ -1026,11 +1134,15 @@ msgstr "Письмо, которое нужно отправить, когда �
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid ""
-"The generated workitems will be linked to the partner related to the record."
-" If the record is the partner itself leave this field empty. This is useful "
+"The generated workitems will be linked to the partner related to the record. "
+"If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
-msgstr "Произведенные рабочие элементы будут сопряжены с партнером, связанным с записью. Если запись - это сам партнер, оставьте это поле пустым. Это полезно в целях отчетности через представления анализа кампании или контроля исполнения кампании."
+msgstr ""
+"Произведенные рабочие элементы будут сопряжены с партнером, связанным с "
+"записью. Если запись - это сам партнер, оставьте это поле пустым. Это "
+"полезно в целях отчетности через представления анализа кампании или контроля "
+"исполнения кампании."
 
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
@@ -1047,10 +1159,20 @@ msgstr "Отчет, который нжно произвести, когда э�
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
 "   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record\n"
+"   - Report: print an existing Report defined on the resource item and save "
+"it into a specific directory\n"
+"   - Custom Action: execute a predefined action, e.g. to modify the fields "
+"of the resource record\n"
 "  "
-msgstr "Тип действия, которое нужно выполнить, когда элемент входит в эту задачу, например:\n   - Email: отправить письмо, используя предопределенный почтовый шаблон\n   - Отчет: напечатать существующий отчет, определенный в элементе ресурса, и сохранить его в конкретную директорию\n   - Дополнительное действие: выполнить предопределенное действие, например, изменить поля ресурсной записи\n  "
+msgstr ""
+"Тип действия, которое нужно выполнить, когда элемент входит в эту задачу, "
+"например:\n"
+"   - Email: отправить письмо, используя предопределенный почтовый шаблон\n"
+"   - Отчет: напечатать существующий отчет, определенный в элементе ресурса, "
+"и сохранить его в конкретную директорию\n"
+"   - Дополнительное действие: выполнить предопределенное действие, например, "
+"изменить поля ресурсной записи\n"
+"  "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start
@@ -1086,6 +1208,11 @@ msgid "Unique Field"
 msgstr "Уникальное поле"
 
 #. module: marketing_campaign
+#: model:res.groups,name:marketing_campaign.group_lead_automation_user
+msgid "User"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_variable_cost
 msgid "Variable Cost"
 msgstr "Переменные затраты"
@@ -1114,3 +1241,6 @@ msgstr "Год (а)"
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
+
+#~ msgid "Open Marketing Menu"
+#~ msgstr "Открыть меню маркетинга"

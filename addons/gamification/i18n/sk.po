@@ -1,30 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * gamification
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-30 12:39+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-02-21 12:43+0000\n"
 "Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_badge_received
 msgid ""
 "\n"
-"        <p>Congratulation, you have received the badge <strong>${object.badge_id.name}</strong> !\n"
+"        <p>Congratulation, you have received the badge <strong>${object."
+"badge_id.name}</strong> !\n"
 "            % if object.sender_id\n"
-"                This badge was granted by <strong>${object.sender_id.name}</strong>.\n"
+"                This badge was granted by <strong>${object.sender_id.name}</"
+"strong>.\n"
 "            % endif\n"
 "        </p>\n"
 "\n"
@@ -32,28 +34,52 @@ msgid ""
 "            <p><em>${object.comment}</em></p>\n"
 "        % endif\n"
 "        "
-msgstr "\n<p>Gratulujeme, získali ste odznak <strong>${object.badge_id.name}</strong> !\n% if object.sender_id\nTento odznak udelil <strong>${object.sender_id.name}</strong>.\n% endif\n</p>\n\n% if object.comment\n<p><em>${object.comment}</em></p>\n% endif"
+msgstr ""
+"\n"
+"<p>Gratulujeme, získali ste odznak <strong>${object.badge_id.name}</"
+"strong> !\n"
+"% if object.sender_id\n"
+"Tento odznak udelil <strong>${object.sender_id.name}</strong>.\n"
+"% endif\n"
+"</p>\n"
+"\n"
+"% if object.comment\n"
+"<p><em>${object.comment}</em></p>\n"
+"% endif"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
+#, fuzzy
 msgid ""
 "\n"
-"    <header>\n"
+"    <p>\n"
 "        <strong>Reminder ${object.name}</strong>\n"
-"    </header>\n"
+"    </p>\n"
 "    \n"
-"    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
+"    <p>You have not updated your progress for the goal ${object."
+"definition_id.name} (currently reached at ${object.completeness}%) for at "
+"least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
-msgstr "\n<header>\n<strong>Pripomienka ${object.name}</strong>\n</header>\n\n<p>Neaktualizovali ste svoj progres pre cieľ ${object.definition_id.name} (moemntálne dosiahnutý ${object.completeness}%) aspoň ${object.remind_update_delay} dní. Nezabudnite tak urobiť.</p>"
+msgstr ""
+"\n"
+"<header>\n"
+"<strong>Pripomienka ${object.name}</strong>\n"
+"</header>\n"
+"\n"
+"<p>Neaktualizovali ste svoj progres pre cieľ ${object.definition_id.name} "
+"(moemntálne dosiahnutý ${object.completeness}%) aspoň ${object."
+"remind_update_delay} dní. Nezabudnite tak urobiť.</p>"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
+#, fuzzy
 msgid ""
 "\n"
-"<header>\n"
+"<p>\n"
 "    <strong>${object.name}</strong>\n"
-"</header>\n"
-"<p class=\"oe_grey\">The following message contains the current progress for the challenge ${object.name}</p>\n"
+"</p>\n"
+"<p class=\"oe_grey\">The following message contains the current progress for "
+"the challenge ${object.name}</p>\n"
 "\n"
 "% if object.visibility_mode == 'personal':\n"
 "    <table width=\"100%\" border=\"1\">\n"
@@ -119,21 +145,94 @@ msgid ""
 "    % endfor\n"
 "% endif\n"
 "            "
-msgstr "\n<header>\n<strong>${object.name}</strong>\n</header>\n<p class=\"oe_grey\">Nasledujúca správa obsahuje aktuálny progres pre výzvu ${object.name}</p>\n\n% if object.visibility_mode == 'personal':\n<table width=\"100%\" border=\"1\">\n<tr>\n<th>Cieľ</th>\n<th>Cieľové</th>\n<th>Aktuálne</th>\n<th>Úplnosť</th>\n</tr>\n% pre riadok v ctx[\"challenge_lines\"]:\n<tr\n% if line['completeness'] >= 100:\nstyle=\"font-weight:bold;\"\n% endif\n>\n<td>${line['name']}</td>\n<td>${line['target']}\n% if line['suffix']:\n${line['suffix']}\n% endif\n</td>\n<td>${line['current']}\n% if line['suffix']:\n${line['suffix']}\n% endif\n</td>\n<td>${line['completeness']} %</td>\n</tr>\n% endfor\n</table>\n% iné:\n% pre riadok v ctx[\"challenge_lines\"]:\n<table width=\"100%\" border=\"1\">\n<tr>\n<th colspan=\"4\">${line['name']}</th>\n</tr>\n<tr>\n<th>#</th>\n<th>Osoba</th>\n<th>Úplnosť</th>\n<th>Aktuálny</th>\n</tr>\n% pre cieľ v riadku['goals']:\n<tr\n% if goal.completeness >= 100:\nstyle=\"font-weight:bold;\"\n% endif\n>\n<td>${goal['rank']}</td>\n<td>${goal['name']}</td>\n<td>${goal['completeness']}%</td>\n<td>${goal['current']}/${line['target']}\n% if line['suffix']:\n${line['suffix']}\n% endif\n</td>\n</tr>\n% endfor\n</table>\n\n<br/><br/>\n\n% endfor\n% endif"
+msgstr ""
+"\n"
+"<header>\n"
+"<strong>${object.name}</strong>\n"
+"</header>\n"
+"<p class=\"oe_grey\">Nasledujúca správa obsahuje aktuálny progres pre výzvu "
+"${object.name}</p>\n"
+"\n"
+"% if object.visibility_mode == 'personal':\n"
+"<table width=\"100%\" border=\"1\">\n"
+"<tr>\n"
+"<th>Cieľ</th>\n"
+"<th>Cieľové</th>\n"
+"<th>Aktuálne</th>\n"
+"<th>Úplnosť</th>\n"
+"</tr>\n"
+"% pre riadok v ctx[\"challenge_lines\"]:\n"
+"<tr\n"
+"% if line['completeness'] >= 100:\n"
+"style=\"font-weight:bold;\"\n"
+"% endif\n"
+">\n"
+"<td>${line['name']}</td>\n"
+"<td>${line['target']}\n"
+"% if line['suffix']:\n"
+"${line['suffix']}\n"
+"% endif\n"
+"</td>\n"
+"<td>${line['current']}\n"
+"% if line['suffix']:\n"
+"${line['suffix']}\n"
+"% endif\n"
+"</td>\n"
+"<td>${line['completeness']} %</td>\n"
+"</tr>\n"
+"% endfor\n"
+"</table>\n"
+"% iné:\n"
+"% pre riadok v ctx[\"challenge_lines\"]:\n"
+"<table width=\"100%\" border=\"1\">\n"
+"<tr>\n"
+"<th colspan=\"4\">${line['name']}</th>\n"
+"</tr>\n"
+"<tr>\n"
+"<th>#</th>\n"
+"<th>Osoba</th>\n"
+"<th>Úplnosť</th>\n"
+"<th>Aktuálny</th>\n"
+"</tr>\n"
+"% pre cieľ v riadku['goals']:\n"
+"<tr\n"
+"% if goal.completeness >= 100:\n"
+"style=\"font-weight:bold;\"\n"
+"% endif\n"
+">\n"
+"<td>${goal['rank']}</td>\n"
+"<td>${goal['name']}</td>\n"
+"<td>${goal['completeness']}%</td>\n"
+"<td>${goal['current']}/${line['target']}\n"
+"% if line['suffix']:\n"
+"${line['suffix']}\n"
+"% endif\n"
+"</td>\n"
+"</tr>\n"
+"% endfor\n"
+"</table>\n"
+"\n"
+"<br/><br/>\n"
+"\n"
+"% endfor\n"
+"% endif"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:746
 #, python-format
 msgid ""
-"<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
-" challenge."
-msgstr "<br/>Nikto neuspel v splnení každého cieľa, žiadny odznak nebol udelený pre túto výzvu."
+"<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this "
+"challenge."
+msgstr ""
+"<br/>Nikto neuspel v splnení každého cieľa, žiadny odznak nebol udelený pre "
+"túto výzvu."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:744
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
-msgstr "<br/>Odmena (odznak %s) za každého úspešného používateľa bol poslaný %s."
+msgstr ""
+"<br/>Odmena (odznak %s) za každého úspešného používateľa bol poslaný %s."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:753
@@ -141,43 +240,63 @@ msgstr "<br/>Odmena (odznak %s) za každého úspešného používateľa bol pos
 msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
 "this challenge is :"
-msgstr "<br/>Špeciálne odmeny boli poslané používateľom ktorí sa umiestnili na špici. Poradie pre túto výzvu je:"
+msgstr ""
+"<br/>Špeciálne odmeny boli poslané používateľom ktorí sa umiestnili na "
+"špici. Poradie pre túto výzvu je:"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid ""
 "<span class=\"o_stat_text\">Related</span>\n"
 "                                    <span class=\"o_stat_text\">Goals</span>"
-msgstr "<span class=\"o_stat_text\">Pridružené</span>\n<span class=\"o_stat_text\">Ciele</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Pridružené</span>\n"
+"<span class=\"o_stat_text\">Ciele</span>"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
 msgid ""
 "A badge is a symbolic token granted to a user as a sign of reward.\n"
-"                    It can be deserved automatically when some conditions are met or manually by users.\n"
-"                    Some badges are harder than others to get with specific conditions."
-msgstr "Odznak je symbolický token udelený užívateľovi ako znamenie odmeny.\nTo môže byť zaslúžené automaticky ak sú splnené niektoré podmienky, alebo manuálne používateľom.\nNiektoré odznaky sú ťažsie na získanie ako ostatné, so špecifickými podmienkami."
+"                    It can be deserved automatically when some conditions "
+"are met or manually by users.\n"
+"                    Some badges are harder than others to get with specific "
+"conditions."
+msgstr ""
+"Odznak je symbolický token udelený užívateľovi ako znamenie odmeny.\n"
+"To môže byť zaslúžené automaticky ak sú splnené niektoré podmienky, alebo "
+"manuálne používateľom.\n"
+"Niektoré odznaky sú ťažsie na získanie ako ostatné, so špecifickými "
+"podmienkami."
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_definition_list_action
 msgid ""
-"A goal definition is a technical model of goal defining a condition to reach.\n"
-"                    The dates, values to reach or users are defined in goal instance."
-msgstr "Definícia cieľa je technický model cieľa definujúci cieľ na dosiahnutie.\nDátumy, hodnoty na dosiahnutie alebo používatelia sú definované v cieľovej inštancii."
+"A goal definition is a technical model of goal defining a condition to "
+"reach.\n"
+"                    The dates, values to reach or users are defined in goal "
+"instance."
+msgstr ""
+"Definícia cieľa je technický model cieľa definujúci cieľ na dosiahnutie.\n"
+"Dátumy, hodnoty na dosiahnutie alebo používatelia sú definované v cieľovej "
+"inštancii."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition
 msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
-msgstr "Cieľ je považovaný za dosiahnutý ked je aktuálna hodnota porovnaná s hodnotou na dosiahnutie"
+msgstr ""
+"Cieľ je považovaný za dosiahnutý ked je aktuálna hodnota porovnaná s "
+"hodnotou na dosiahnutie"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_list_action
 msgid ""
 "A goal is defined by a user and a goal definition.\n"
 "                    Goals can be created automatically by using challenges."
-msgstr "Cieľ je definovaný používateľom a definíciou cieľa.\nCiele môžu byť vytvorené automaticky použitím výziev."
+msgstr ""
+"Cieľ je definovaný používateľom a definíciou cieľa.\n"
+"Ciele môžu byť vytvorené automaticky použitím výziev."
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -193,12 +312,6 @@ msgstr "Akceptovať"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_action_id
 msgid "Action"
 msgstr "Akcia"
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_needaction
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_needaction
-msgid "Action Needed"
-msgstr "Potrebná akcia"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_active
@@ -234,9 +347,15 @@ msgstr "Prdeliť výzvu"
 #: model:ir.actions.act_window,help:gamification.challenge_list_action
 msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
-"                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
-"                    The goals are created for the specified users or member of the group."
-msgstr "Prideľte zoznam cieľov vybraným používateľom na ich zhodnotenie.\nVýzva môže používať obdobie (týždenne, mesačne...0 pre automatické vytváranie cieľov.\nCieľe su vytvorené pre špecifickovaných používateľov, alebo členov skupiny,"
+"                    The challenge can use a period (weekly, monthly...) for "
+"automatic creation of goals.\n"
+"                    The goals are created for the specified users or member "
+"of the group."
+msgstr ""
+"Prideľte zoznam cieľov vybraným používateľom na ich zhodnotenie.\n"
+"Výzva môže používať obdobie (týždenne, mesačne...0 pre automatické "
+"vytváranie cieľov.\n"
+"Cieľe su vytvorené pre špecifickovaných používateľov, alebo členov skupiny,"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth_user_ids
@@ -301,7 +420,11 @@ msgid ""
 "of a running period (eg: end of the month for a monthly challenge), at the "
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
-msgstr "Odznaky sú udeľované keď je výzva dokončená. To je buď na konci prebiehajúceho obdobia (napr: koniec mesiaca pre mesačnú výzvu), k dátumu konca výzvy (ak nie je nastavená žiadna periodicita), alebo keď je výzva manuálne uzavretá."
+msgstr ""
+"Odznaky sú udeľované keď je výzva dokončená. To je buď na konci "
+"prebiehajúceho obdobia (napr: koniec mesiaca pre mesačnú výzvu), k dátumu "
+"konca výzvy (ak nie je nastavená žiadna periodicita), alebo keď je výzva "
+"manuálne uzavretá."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_mode
@@ -319,7 +442,7 @@ msgid "Can not grant"
 msgstr "Nemožno udeliť"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:442
+#: code:addons/gamification/models/goal.py:461
 #, python-format
 msgid "Can not modify the configuration of a started goal"
 msgstr "Nedá sa upraviť konfigurácia začatého cieľa"
@@ -378,7 +501,9 @@ msgstr "Pôvod výzvy"
 msgid ""
 "Challenge that generated the goal, assign challenge to users to generate "
 "goals with a value in this field."
-msgstr "Výzva ktorá vytvorila cieľ, prideľte výzvu pouźívateľom pre vytvorenie cieľov s hodnotou v tomto poli,"
+msgstr ""
+"Výzva ktorá vytvorila cieľ, prideľte výzvu pouźívateľom pre vytvorenie "
+"cieľov s hodnotou v tomto poli,"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
@@ -390,7 +515,8 @@ msgstr "Výzvy"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_rule_max
 msgid "Check to set a monthly limit per person of sending this badge"
-msgstr "Zaškrtnite pre nastavenie mesačného limitu na osobu posielania tohoto odznaku"
+msgstr ""
+"Zaškrtnite pre nastavenie mesačného limitu na osobu posielania tohoto odznaku"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
@@ -466,7 +592,11 @@ msgid ""
 "deactivated should there be a period of time during which they will/should "
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
-msgstr "Vytvorenie a správa používateľov, ktorí sa môžu pripojiť do systému. Používatelia môžu byť deaktivovaný, takže sa danú dobu nebudú môcť pripojiť do systému. Môžte im prirpadiť skupiny aby získali prístup k aplikáciám v systéme, ktoré potrebujú."
+msgstr ""
+"Vytvorenie a správa používateľov, ktorí sa môžu pripojiť do systému. "
+"Používatelia môžu byť deaktivovaný, takže sa danú dobu nebudú môcť pripojiť "
+"do systému. Môžte im prirpadiť skupiny aby získali prístup k aplikáciám v "
+"systéme, ktoré potrebujú."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_create_date
@@ -527,12 +657,6 @@ msgid "Date Field"
 msgstr "Pole dátumu"
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_message_last_post
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Dátum poslednej správy zaslanej záznamu."
-
-#. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_category
 msgid "Define the visibility of the challenge through menus"
 msgstr "Definujte viditeľnosť výzvy v menu"
@@ -542,27 +666,29 @@ msgstr "Definujte viditeľnosť výzvy v menu"
 msgid ""
 "Defined how will be computed the goals. The result of the operation will be "
 "stored in the field 'Current'."
-msgstr "Definované, ako budú vypočítané ciele. Výsledok operácie budú uložené v poli \"Aktuálne\"."
+msgstr ""
+"Definované, ako budú vypočítané ciele. Výsledok operácie budú uložené v poli "
+"\"Aktuálne\"."
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_2090
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_3136
 msgid "Definition Condition"
 msgstr "Podmienka definície"
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_2099
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3145
 msgid "Definition Description"
 msgstr "Popis definície"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Depending on the Display mode, reports will be individual or shared."
-msgstr "V závislosti od módu zobrazenia, výkazy budú individuálne alebo zdieľané."
+msgstr ""
+"V závislosti od módu zobrazenia, výkazy budú individuálne alebo zdieľané."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
-msgid ""
-"Describe the challenge: what is does, who it targets, why it matters..."
+msgid "Describe the challenge: what is does, who it targets, why it matters..."
 msgstr "Popíšte výzvu: čo robí, kto je cieľom, prečo na nej záleží..."
 
 #. module: gamification
@@ -610,7 +736,11 @@ msgid ""
 "Domain for filtering records. General rule, not user depending, e.g. "
 "[('state', '=', 'done')]. The expression can contain reference to 'user' "
 "which is a browse record of the current user if not in batch mode."
-msgstr "Doména na filtrovanie záznamov. Všeobecné pravidlo, nie záleźiace na pouźívateľovi, napr. [('state', '=', 'done')]. Výraz môže obsahovať odkaz na 'používateľ', čo je záznam prechádzania aktuálneho používateľa, ak nie vo várkovom móde."
+msgstr ""
+"Doména na filtrovanie záznamov. Všeobecné pravidlo, nie záleźiace na "
+"pouźívateľovi, napr. [('state', '=', 'done')]. Výraz môže obsahovať odkaz na "
+"'používateľ', čo je záznam prechádzania aktuálneho používateľa, ak nie vo "
+"várkovom móde."
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
@@ -619,8 +749,7 @@ msgid "Done"
 msgstr "Dokončiť"
 
 #. module: gamification
-#: selection:gamification.challenge,state:0
-#: selection:gamification.goal,state:0
+#: selection:gamification.challenge,state:0 selection:gamification.goal,state:0
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Draft"
 msgstr "Návrh"
@@ -673,24 +802,6 @@ msgid "Filter Domain"
 msgstr "Doména filtra"
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_follower_ids
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_follower_ids
-msgid "Followers"
-msgstr "Odberatelia"
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_channel_ids
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_partner_ids
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
-
-#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_first_id
 msgid "For 1st user"
 msgstr "Pre prvého používateľa"
@@ -707,7 +818,8 @@ msgstr "Pre tretieho používateľa"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_id
-msgid "For Every Succeding User"
+#, fuzzy
+msgid "For Every Succeeding User"
 msgstr "Pre každého ďalšieho používateľa"
 
 #. module: gamification
@@ -769,7 +881,7 @@ msgstr "Cieľ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_2101
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_3147
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_name
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Goal Definition"
@@ -910,18 +1022,6 @@ msgid "If a maxium is set"
 msgstr "Ak je nastavené maximum"
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_message_unread
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_message_needaction
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_challenge_id
 msgid "If this badge was rewarded through a challenge"
 msgstr "Ak bol teno odznak udelený cez výzvu"
@@ -941,14 +1041,18 @@ msgstr "spracováva sa"
 msgid ""
 "In batch mode, the domain is evaluated globally. If enabled, do not use "
 "keyword 'user' in above filter domain."
-msgstr "Vo vákovom režime, doména je hodnotená globálne. Ak povolené, nepoužívajte kľúčové slovo \"používateľ\" vo vyššie uvedenom filtri domény."
+msgstr ""
+"Vo vákovom režime, doména je hodnotená globálne. Ak povolené, nepoužívajte "
+"kľúčové slovo \"používateľ\" vo vyššie uvedenom filtri domény."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_distinctive_field
 msgid ""
 "In batch mode, this indicates which field distinct one user form the other, "
 "e.g. user_id, partner_id..."
-msgstr "Vo várkovom režime, toto indikuje ktoré pole rozlišuje jedného používateľa od druhého, napr. user_id, partner_id..."
+msgstr ""
+"Vo várkovom režime, toto indikuje ktoré pole rozlišuje jedného používateľa "
+"od druhého, napr. user_id, partner_id..."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_last_update
@@ -956,7 +1060,10 @@ msgid ""
 "In case of manual goal, reminders are sent if the goal as not been updated "
 "for a while (defined in challenge). Ignored in case of non-manual goal or "
 "goal not linked to a challenge."
-msgstr "V prípade manuálneho cieľa, pripomienky sú poslané ak cieľ nebol aktualizovaný nejaký čas (definovaný vo výzve). Ignorovaný v prípade nemanuálneho cieľa alebo cieľov, ktoré nesúvisia s výzvou."
+msgstr ""
+"V prípade manuálneho cieľa, pripomienky sú poslané ak cieľ nebol "
+"aktualizovaný nejaký čas (definovaný vo výzve). Ignorovaný v prípade "
+"nemanuálneho cieľa alebo cieľov, ktoré nesúvisia s výzvou."
 
 #. module: gamification
 #: selection:gamification.goal,state:0
@@ -969,12 +1076,7 @@ msgid "Individual Goals"
 msgstr "Individuálne ciele"
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_model_inherited_model_ids
-msgid "Inherited models"
-msgstr "Zdedené modely"
-
-#. module: gamification
-#: code:addons/gamification/models/goal.py:319
+#: code:addons/gamification/models/goal.py:338
 #, python-format
 msgid "Invalid return content from the evaluation of code for definition %s"
 msgstr "Nesprávny vrátený obsah z vyhodnotenia kódu pre definíciu %s"
@@ -988,18 +1090,6 @@ msgstr "Pozvať nových používateľov"
 #: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
 msgid "Invited"
 msgstr "Pozvaný"
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_is_follower
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_is_follower
-msgid "Is Follower"
-msgstr "Je odberateľ"
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_last_post
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_last_post
-msgid "Last Message Date"
-msgstr "Dátum poslednej správy"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge___last_update
@@ -1081,18 +1171,6 @@ msgstr "Zoznam používateľov zúčastňujúcich sa na výzve"
 #: model:gamification.goal.definition,name:gamification.definition_nbr_following
 msgid "Mail Group Following"
 msgstr "Poslať poštu skupine odberajúcej"
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_ids
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_ids
-msgid "Messages"
-msgstr "Správy"
-
-#. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_message_ids
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_ids
-msgid "Messages and communication history"
-msgstr "Správa a história komunikácie"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_model_id
@@ -1185,7 +1263,8 @@ msgstr "Nikto, pridelené počas výziev"
 #: code:addons/gamification/models/challenge.py:756
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
-msgstr "Nikto nedosiahol požadované podmienky pre udelenie špeciálneho odznaku."
+msgstr ""
+"Nikto nedosiahol požadované podmienky pre udelenie špeciálneho odznaku."
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1201,24 +1280,6 @@ msgstr "Neaktualizované manuálne ciele budú pripomenuté po"
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Notification Messages"
 msgstr "Notifikačné správy"
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_needaction_counter
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Počet akcií"
-
-#. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_message_needaction_counter
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Počet správ ktoré vyžadujú akciu"
-
-#. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_message_unread_counter
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Počet neprečítaných správ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_count_distinct
@@ -1270,7 +1331,9 @@ msgstr "Obdobie"
 msgid ""
 "Period of automatic goal assigment. If none is selected, should be launched "
 "manually."
-msgstr "Obdobie automatického pridelenia cieľa. Ak žiadny nie je zvolený, má byť spustený manuálne."
+msgstr ""
+"Obdobie automatického pridelenia cieľa. Ak žiadny nie je zvolený, má byť "
+"spustený manuálne."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_period
@@ -1297,7 +1360,10 @@ msgstr "Kód Pyton"
 msgid ""
 "Python code to be executed for each user. 'result' should contains the new "
 "current value. Evaluated user can be access through object.user_id."
-msgstr "Python kód ktorý bude vykonaný pre každého používateľa. 'Výsledok' by mal obsahovať novú aktuálnu hodnotu. Vyhodnotený používateľ može byť sprísupnený cez object.user_id."
+msgstr ""
+"Python kód ktorý bude vykonaný pre každého používateľa. 'Výsledok' by mal "
+"obsahovať novú aktuálnu hodnotu. Vyhodnotený používateľ može byť sprísupnený "
+"cez object.user_id."
 
 #. module: gamification
 #: selection:gamification.goal,state:0
@@ -1446,7 +1512,9 @@ msgstr "Vyhľadať ciele"
 msgid ""
 "Security rules to define who is allowed to manually grant badges. Not "
 "enforced for administrator."
-msgstr "Bezpečnostné previdlá ktoré definujú kto má povolenie manuálne udelovať odznaky. Nie vynútené pre správcu."
+msgstr ""
+"Bezpečnostné previdlá ktoré definujú kto má povolenie manuálne udelovať "
+"odznaky. Nie vynútené pre správcu."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1535,7 +1603,7 @@ msgstr "Predplatné"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_full_suffix
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_2095
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_3141
 msgid "Suffix"
 msgstr "Prípona"
 
@@ -1580,23 +1648,30 @@ msgstr "Dátum na použitie pre vyhodnotené časové obdobie"
 msgid ""
 "The day a new challenge will be automatically closed. If no periodicity is "
 "set, will use this date as the goal end date."
-msgstr "Deň kedy bude automaticky zavretá nová výzva. Ak nie je nastavená periodicita, použije sa tento dátum ako dátum ukončenia cieľa."
+msgstr ""
+"Deň kedy bude automaticky zavretá nová výzva. Ak nie je nastavená "
+"periodicita, použije sa tento dátum ako dátum ukončenia cieľa."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_start_date
 msgid ""
 "The day a new challenge will be automatically started. If no periodicity is "
 "set, will use this date as the goal start date."
-msgstr "Deň kedy bude automaticky začatá nová výzva. Ak nie je nastavená periodicita, použije sa tento dátum ako dátum začatia cieľa."
+msgstr ""
+"Deň kedy bude automaticky začatá nová výzva. Ak nie je nastavená "
+"periodicita, použije sa tento dátum ako dátum začatia cieľa."
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:131
+#: code:addons/gamification/models/goal.py:129
 #, python-format
 msgid ""
 "The domain for the definition %s seems incorrect, please check it.\n"
 "\n"
 "%s"
-msgstr "Dom éna pre definíciu %s sa zdá byť nesprávna, prosím skontrolujte ju.\n\n%s"
+msgstr ""
+"Dom éna pre definíciu %s sa zdá byť nesprávna, prosím skontrolujte ju.\n"
+"\n"
+"%s"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_field_id
@@ -1608,7 +1683,9 @@ msgstr "Pole obsahujúce hodnotu na vyhodnotenie"
 msgid ""
 "The field name on the user profile (res.users) containing the value for "
 "res_id for action."
-msgstr "Názov poľa na profile používateľa (resp. používateľov) obsahujúci hodnotu res_id pre akciu."
+msgstr ""
+"Názov poľa na profile používateľa (resp. používateľov) obsahujúci hodnotu "
+"res_id pre akciu."
 
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
@@ -1632,9 +1709,36 @@ msgstr "Čím menšie tým lepšie"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_rule_max_number
+msgid "The maximum number of time this badge can be sent per month per person."
+msgstr ""
+"Maximálny počet razov tento odznak môže byť do mesiaca poslaný na "
+"používateľa."
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:146
+#, fuzzy, python-format
 msgid ""
-"The maximum number of time this badge can be sent per month per person."
-msgstr "Maximálny počet razov tento odznak môže byť do mesiaca poslaný na používateľa."
+"The model configuration for the definition %s seems incorrect, please check "
+"it.\n"
+"\n"
+"%s not found"
+msgstr ""
+"Dom éna pre definíciu %s sa zdá byť nesprávna, prosím skontrolujte ju.\n"
+"\n"
+"%s"
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:143
+#, fuzzy, python-format
+msgid ""
+"The model configuration for the definition %s seems incorrect, please check "
+"it.\n"
+"\n"
+"%s not stored"
+msgstr ""
+"Dom éna pre definíciu %s sa zdá byť nesprávna, prosím skontrolujte ju.\n"
+"\n"
+"%s"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_model_id
@@ -1646,12 +1750,13 @@ msgstr "Model objektu pre pole na vyhodnotenie"
 msgid ""
 "The number of days after which the user assigned to a manual goal will be "
 "reminded. Never reminded if no value is specified."
-msgstr "Počet dní po ktorých bude používateľ pridelený manuálnemu cieľu bude pripomenutý. Nikdy pripomínany ak hodnota nie je nastavená."
+msgstr ""
+"Počet dní po ktorých bude používateľ pridelený manuálnemu cieľu bude "
+"pripomenutý. Nikdy pripomínany ak hodnota nie je nastavená."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_stat_my_this_month
-msgid ""
-"The number of time the current user has received this badge this month."
+msgid "The number of time the current user has received this badge this month."
 msgstr "Koľko krát aktuálny používateľ obdržal tento odznak v tomto mesiaci."
 
 #. module: gamification
@@ -1682,7 +1787,8 @@ msgstr "Koľko krát bol tento odznak obdržaný."
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_monetary
 msgid "The target and current value are defined in the company currency."
-msgstr "Cieľová a aktuálna hodnota sú definované v mene používanej spoločnosťou."
+msgstr ""
+"Cieľová a aktuálna hodnota sú definované v mene používanej spoločnosťou."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_suffix
@@ -1710,16 +1816,23 @@ msgstr "Používatelia ktorí uspeli v týchto cieľoch automaticky obdržia odz
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_user_expression
 msgid ""
 "The value to compare with the distinctive field. The expression can contain "
-"reference to 'user' which is a browse record of the current user, e.g. "
-"user.id, user.partner_id.id..."
-msgstr "Hodnota na porovnanie s rozlišovacím poľom. Výraz môže obsahovať odkaz na 'používateľ' čo je prechádzanie záznamov aktuálneho používateľa, napr. user.id, user.partner_id.id..."
+"reference to 'user' which is a browse record of the current user, e.g. user."
+"id, user.partner_id.id..."
+msgstr ""
+"Hodnota na porovnanie s rozlišovacím poľom. Výraz môže obsahovať odkaz na "
+"'používateľ' čo je prechádzanie záznamov aktuálneho používateľa, napr. user."
+"id, user.partner_id.id..."
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goals_from_challenge_act
 msgid ""
 "There is no goals associated to this challenge matching your search.\n"
-"                Make sure that your challenge is active and assigned to at least one user."
-msgstr "Žiadne cieľe nie sú spojené s touto výzvou zodpovedajúce vášmu vyhľadávaniu.\nUistite sa že vaša výzva je aktívna a pridelená aspoň jednému používateľovi."
+"                Make sure that your challenge is active and assigned to at "
+"least one user."
+msgstr ""
+"Žiadne cieľe nie sú spojené s touto výzvou zodpovedajúce vášmu "
+"vyhľadávaniu.\n"
+"Uistite sa že vaša výzva je aktívna a pridelená aspoň jednému používateľovi."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
@@ -1773,24 +1886,12 @@ msgid "Unit"
 msgstr "Jednotka"
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_unread
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_unread
-msgid "Unread Messages"
-msgstr "Neprečítané správy"
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_unread_counter
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Počítadlo neprečítaných správ"
-
-#. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Update"
 msgstr "Aktualizovať"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:476
+#: code:addons/gamification/models/goal.py:495
 #, python-format
 msgid "Update %s"
 msgstr "Aktualizácia %s"
@@ -1835,7 +1936,9 @@ msgstr "Koho by ste chceli odmeniť?"
 msgid ""
 "With this option enabled, a user can receive a badge only once. The top 3 "
 "badges are still rewarded only at the end of the challenge."
-msgstr "S touto možnosťou povolenou, používateľ môže dostať odznak iba raz. Prvé 3 odznaky sú stále odmenou len na konci výzvy."
+msgstr ""
+"S touto možnosťou povolenou, používateľ môže dostať odznak iba raz. Prvé 3 "
+"odznaky sú stále odmenou len na konci výzvy."
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_idea
@@ -1917,10 +2020,13 @@ msgstr "napr. dni"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid ""
-"e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=',"
-" 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)], "
+"e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', "
+"'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)], "
 "count=True, context=context)"
-msgstr "napr. výsledok = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)"
+msgstr ""
+"napr. výsledok = pool.get('mail.followers').search(cr, uid, [('res_model', "
+"'=', 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)], "
+"count=True, context=context)"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1966,3 +2072,54 @@ msgstr " "
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "this month"
 msgstr "tento mesiac"
+
+#~ msgid "Action Needed"
+#~ msgstr "Potrebná akcia"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Dátum poslednej správy zaslanej záznamu."
+
+#~ msgid "Followers"
+#~ msgstr "Odberatelia"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Odberatelia (Kanály)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Odberatelia (Partneri)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "Inherited models"
+#~ msgstr "Zdedené modely"
+
+#~ msgid "Is Follower"
+#~ msgstr "Je odberateľ"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Dátum poslednej správy"
+
+#~ msgid "Messages"
+#~ msgstr "Správy"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Správa a história komunikácie"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Počet akcií"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Počet správ ktoré vyžadujú akciu"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Počet neprečítaných správ"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Neprečítané správy"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Počítadlo neprečítaných správ"

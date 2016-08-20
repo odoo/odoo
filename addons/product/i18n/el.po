@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product
-# 
+#
 # Translators:
 # Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-16 22:33+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product
@@ -30,19 +30,19 @@ msgid "# of Product Variants"
 msgstr "# Παραλλαγές Προϊόντων"
 
 #. module: product
-#: code:addons/product/pricelist.py:288
+#: code:addons/product/pricelist.py:372
 #, python-format
 msgid "%s %% discount"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:290
+#: code:addons/product/pricelist.py:374
 #, python-format
 msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:710 code:addons/product/product.py:1134
+#: code:addons/product/product.py:716
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (αντίγραφο)"
@@ -60,7 +60,11 @@ msgid ""
 "Processor AMD 8-Core\n"
 "512MB RAM\n"
 "HDD SH-1"
-msgstr "17\" LCD Monitor\nProcessor AMD 8-Core\n512MB RAM\nHDD SH-1"
+msgstr ""
+"17\" LCD Monitor\n"
+"Processor AMD 8-Core\n"
+"512MB RAM\n"
+"HDD SH-1"
 
 #. module: product
 #: model:product.product,description:product.product_product_25
@@ -70,17 +74,11 @@ msgid ""
 "4GB RAM\n"
 "Standard-1294P Processor\n"
 "QWERTY keyboard"
-msgstr "17\" Monitor\n4GB RAM\nStandard-1294P Processor\nQWERTY keyboard"
-
-#. module: product
-#: model:product.product,description:product.product_product_26
-#: model:product.template,description:product.product_product_26_product_template
-msgid ""
+msgstr ""
 "17\" Monitor\n"
-"6GB RAM\n"
-"Hi-Speed 234Q Processor\n"
+"4GB RAM\n"
+"Standard-1294P Processor\n"
 "QWERTY keyboard"
-msgstr "17\" Monitor\n6GB RAM\nHi-Speed 234Q Processor\nQWERTY keyboard"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -97,12 +95,6 @@ msgid ""
 "                1TB hard drive\n"
 "                Intel Iris Pro graphics\n"
 "            "
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_52
-#: model:product.template,name:product.product_product_52_product_template
-msgid "30m RJ45 wire"
 msgstr ""
 
 #. module: product
@@ -123,7 +115,10 @@ msgid ""
 "7.9‑inch (diagonal) LED-backlit, 128Gb\n"
 "Dual-core A5 with quad-core graphics\n"
 "FaceTime HD Camera, 1.2 MP Photos"
-msgstr "7.9‑inch (diagonal) LED-backlit, 128Gb\nDual-core A5 with quad-core graphics\nFaceTime HD Camera, 1.2 MP Photos"
+msgstr ""
+"7.9‑inch (diagonal) LED-backlit, 128Gb\n"
+"Dual-core A5 with quad-core graphics\n"
+"FaceTime HD Camera, 1.2 MP Photos"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -132,16 +127,14 @@ msgid "75 percent less reflection."
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_51
-#: model:product.template,name:product.product_product_51_product_template
-msgid "8-port Switch"
-msgstr ""
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
-"<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Public Price  -  </span>\n"
-"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Public Price  "
+"-  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', "
+"'standard_price')]}\">Cost  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', "
+"'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
 
 #. module: product
@@ -173,12 +166,13 @@ msgstr "<strong>Ημερομηνία Εκτύπωσης</strong>¨:<br/>"
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid ""
 "<strong>Warning</strong>: adding or deleting attributes\n"
-"                            will delete and recreate existing variants and lead\n"
+"                            will delete and recreate existing variants and "
+"lead\n"
 "                            to the loss of their possible customizations."
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:977 sql_constraint:product.product:0
+#: code:addons/product/product.py:1011 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
@@ -188,7 +182,10 @@ msgstr ""
 msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
-msgstr "Μια κατηγορία του τύπου εμφάνισης είναι μια εικονική κατηγορία η οποία μπορεί να χρησιμοποιηθεί ώς μητρική σε άλλη κατηγορία για να δημιουργήσει μια ιεραρχική υποδομή."
+msgstr ""
+"Μια κατηγορία του τύπου εμφάνισης είναι μια εικονική κατηγορία η οποία "
+"μπορεί να χρησιμοποιηθεί ώς μητρική σε άλλη κατηγορία για να δημιουργήσει "
+"μια ιεραρχική υποδομή."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_type
@@ -202,10 +199,13 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_description_sale
 #: model:ir.model.fields,help:product.field_product_template_description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sale Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr "Μια περιγραφή του προϊόντος που θέλετε να γνωστοποιήσετε στους πελάτες σας. Αυτή η περιγραφή θα πρέπει να αντιγραφεί σε κάθε παραγγελία, εντολή παράδοσης και κάθε Τιμολόγιο / Επιστροφή"
+msgstr ""
+"Μια περιγραφή του προϊόντος που θέλετε να γνωστοποιήσετε στους πελάτες σας. "
+"Αυτή η περιγραφή θα πρέπει να αντιγραφεί σε κάθε παραγγελία, εντολή "
+"παράδοσης και κάθε Τιμολόγιο / Επιστροφή"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_purchase
@@ -228,7 +228,9 @@ msgstr ""
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
-msgstr "Μια ακριβής περιγραφή του Προϊόντος, χρησιμοποιείται μόνο για σκοπούς εσωτερικής πληροφόρησης."
+msgstr ""
+"Μια ακριβής περιγραφή του Προϊόντος, χρησιμοποιείται μόνο για σκοπούς "
+"εσωτερικής πληροφόρησης."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
@@ -249,16 +251,13 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
-"About the size of a credit card — and just 5.4 mm thin — iPod nano is the thinnest iPod ever made.\n"
-"                                    The 2.5-inch Multi-Touch display is nearly twice as big as the display on the previous iPod nano,\n"
-"                                    so you can see more of the music, photos, and videos you love."
+"About the size of a credit card — and just 5.4 mm thin — iPod nano is the "
+"thinnest iPod ever made.\n"
+"                                    The 2.5-inch Multi-Touch display is "
+"nearly twice as big as the display on the previous iPod nano,\n"
+"                                    so you can see more of the music, "
+"photos, and videos you love."
 msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_needaction
-#: model:ir.model.fields,field_description:product.field_product_template_message_needaction
-msgid "Action Needed"
-msgstr "Απαιτείται ενέργεια"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
@@ -274,7 +273,7 @@ msgid "All"
 msgstr "Όλα"
 
 #. module: product
-#: code:addons/product/pricelist.py:283
+#: code:addons/product/pricelist.py:367
 #, python-format
 msgid "All Products"
 msgstr "Όλα τα Προϊόντα"
@@ -285,17 +284,11 @@ msgid "All general settings about this product are managed on"
 msgstr ""
 
 #. module: product
-#: model:product.product,description:product.product_product_37
-#: model:product.template,description:product.product_product_37_product_template
-msgid "All in one hi-speed printer with fax and scanner."
-msgstr "Εκτυπωτικό πολυμηχάνημα υψηλής ταχύτητας με fax και scanner."
-
-#. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid ""
-"And at the Apple Online Store, you can configure your iMac with an even more"
-" powerful Intel Core i7 processor, up to 3.5GHz."
+"And at the Apple Online Store, you can configure your iMac with an even more "
+"powerful Intel Core i7 processor, up to 3.5GHz."
 msgstr ""
 
 #. module: product
@@ -323,6 +316,7 @@ msgid "Apple Wireless Keyboard"
 msgstr "Ασύρματο Πληκτρολόγιο Apple"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Applicable On"
 msgstr "Ισχύουν για"
@@ -391,8 +385,7 @@ msgstr ""
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
-msgid ""
-"Auxiliary port lets you connect other audio sources, like an MP3 player"
+msgid "Auxiliary port lets you connect other audio sources, like an MP3 player"
 msgstr ""
 
 #. module: product
@@ -414,9 +407,10 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_list_price
 #: model:ir.model.fields,help:product.field_product_template_list_price
 msgid ""
-"Base price to compute the customer price. Sometimes called the catalog "
-"price."
-msgstr "Βασική τιμή για τον υπολογισμό της τιμής του πελάτη. Μερικές φορές ονομάζεται η τιμή καταλόγου."
+"Base price to compute the customer price. Sometimes called the catalog price."
+msgstr ""
+"Βασική τιμή για τον υπολογισμό της τιμής του πελάτη. Μερικές φορές "
+"ονομάζεται η τιμή καταλόγου."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_base
@@ -424,9 +418,15 @@ msgid "Based on"
 msgstr "Βασισμένο στο"
 
 #. module: product
-#: model:product.product,name:product.product_product_57
-#: model:product.template,name:product.product_product_57_product_template
+#: model:product.product,name:product.consu_delivery_03
+#: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Basic Computer"
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.membership_2
+#: model:product.template,name:product.membership_2_product_template
+msgid "Basic Membership"
 msgstr ""
 
 #. module: product
@@ -460,18 +460,6 @@ msgstr "Μεγαλύτερη από την αναφορά Μονάδας Μέτ�
 #: model:product.attribute.value,name:product.product_attribute_value_4
 msgid "Black"
 msgstr "Μαύρο"
-
-#. module: product
-#: model:product.product,name:product.product_product_35
-#: model:product.template,name:product.product_product_35_product_template
-msgid "Blank CD"
-msgstr "Κενό CD"
-
-#. module: product
-#: model:product.product,name:product.product_product_36
-#: model:product.template,name:product.product_product_36_product_template
-msgid "Blank DVD-RW"
-msgstr "Κενό DVD-RW"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -510,8 +498,10 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
-"                                    The smooth anodized aluminum design makes iPod nano feel as good as it sounds.\n"
-"                                    And iPod nano wouldn’t be iPod nano without gorgeous, hard-to-choose-from color."
+"                                    The smooth anodized aluminum design "
+"makes iPod nano feel as good as it sounds.\n"
+"                                    And iPod nano wouldn’t be iPod nano "
+"without gorgeous, hard-to-choose-from color."
 msgstr ""
 
 #. module: product
@@ -519,12 +509,15 @@ msgstr ""
 msgid ""
 "By unchecking the active field you can disable a unit of measure without "
 "deleting it."
-msgstr "Αποεπιλέγοντας το πεδίο ενεργό μπορείτε να απενεργοποιήσετε μια μονάδα μέτρησης χωρίς να την διαγράψετε."
+msgstr ""
+"Αποεπιλέγοντας το πεδίο ενεργό μπορείτε να απενεργοποιήσετε μια μονάδα "
+"μέτρησης χωρίς να την διαγράψετε."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
-msgstr "Υπολογισμός Τιμής Προϊόντος ανά μονάδα βασισμένη σε έκδοση τιμοκαταλόγου"
+msgstr ""
+"Υπολογισμός Τιμής Προϊόντος ανά μονάδα βασισμένη σε έκδοση τιμοκαταλόγου"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
@@ -556,7 +549,7 @@ msgid "Category name"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:277
+#: code:addons/product/pricelist.py:361
 #, python-format
 msgid "Category: %s"
 msgstr ""
@@ -578,7 +571,8 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "Charging cradle recharges the battery and serves as a convenient\n"
-"                                    home base for your speaker, and it lets you play while it charges."
+"                                    home base for your speaker, and it lets "
+"you play while it charges."
 msgstr ""
 
 #. module: product
@@ -682,7 +676,7 @@ msgid "Computers"
 msgstr "Υπολογιστές"
 
 #. module: product
-#: code:addons/product/product.py:460
+#: code:addons/product/product.py:474
 #, python-format
 msgid "Consumable"
 msgstr ""
@@ -692,15 +686,20 @@ msgstr ""
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr "Μετατροπή ανάμεσα σε Μονάδες Μέτρησης μπορεί να πραγματοποιηθεί μόνο αν ανήκουν στην ίδια κατηγορία. Η μετατροπή θα γίνει βάσει των αναλογιών."
+msgstr ""
+"Μετατροπή ανάμεσα σε Μονάδες Μέτρησης μπορεί να πραγματοποιηθεί μόνο αν "
+"ανήκουν στην ίδια κατηγορία. Η μετατροπή θα γίνει βάσει των αναλογιών."
 
 #. module: product
-#: code:addons/product/product.py:119
+#: code:addons/product/product.py:122
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr "Η μετατροπή από Μονάδα Μέτρησης Προϊόντος %s σε προεπιλεγμένη Μονάδα Μέτρησης %s δεν είναι δυνατή μια που και οι δύο ανήκουν σε διαφορετικές Κατηγορίες!."
+msgstr ""
+"Η μετατροπή από Μονάδα Μέτρησης Προϊόντος %s σε προεπιλεγμένη Μονάδα "
+"Μέτρησης %s δεν είναι δυνατή μια που και οι δύο ανήκουν σε διαφορετικές "
+"Κατηγορίες!."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_cost
@@ -713,14 +712,20 @@ msgstr "Κόστος"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
 msgid ""
-"Cost of the product template used for standard stock valuation in accounting"
-" and used as a base price on purchase orders. Expressed in the default unit "
+"Cost of the product template used for standard stock valuation in accounting "
+"and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
 msgid "Cost of the product, in the default unit of measure of the product."
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.service_delivery
+#: model:product.template,name:product.service_delivery_product_template
+msgid "Cost-plus Contract"
 msgstr ""
 
 #. module: product
@@ -766,8 +771,8 @@ msgstr "Δημιουργήθηκε στις"
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid ""
 "Creating such a stunningly thin design took some equally stunning feats of "
-"technological innovation. We refined,re-imagined,or re-engineered everything"
-" about iMac from the inside out. The result is an advanced, elegant all-in-"
+"technological innovation. We refined,re-imagined,or re-engineered everything "
+"about iMac from the inside out. The result is an advanced, elegant all-in-"
 "one computer that’s as much a work of art as it is state of the art."
 msgstr ""
 
@@ -805,8 +810,8 @@ msgid "Customer ref"
 msgstr "Σχετ. Πελάτη"
 
 #. module: product
-#: model:product.product,name:product.product_product_46
-#: model:product.template,name:product.product_product_46_product_template
+#: model:product.product,name:product.product_delivery_02
+#: model:product.template,name:product.product_delivery_02_product_template
 msgid "Datacard"
 msgstr "Κάρτα Δεδομένων"
 
@@ -814,12 +819,6 @@ msgstr "Κάρτα Δεδομένων"
 #: model:ir.model.fields,field_description:product.field_product_price_history_datetime
 msgid "Date"
 msgstr "Ημερομηνία"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_last_post
-#: model:ir.model.fields,help:product.field_product_template_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Ημερομηνία του τελευταίου μηνύματος "
 
 #. module: product
 #: model:product.uom,name:product.product_uom_day
@@ -830,7 +829,9 @@ msgstr "Ημέρες"
 #: model:ir.model.fields,help:product.field_product_product_uom_id
 #: model:ir.model.fields,help:product.field_product_template_uom_id
 msgid "Default Unit of Measure used for all stock operation."
-msgstr "Προεπιλεγμένη Μονάδα Μέτρησης που χρησιμοποιείται από όλες τις λειτουργίες αποθήκευσης"
+msgstr ""
+"Προεπιλεγμένη Μονάδα Μέτρησης που χρησιμοποιείται από όλες τις λειτουργίες "
+"αποθήκευσης"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_uom_po_id
@@ -838,18 +839,14 @@ msgstr "Προεπιλεγμένη Μονάδα Μέτρησης που χρησ
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr "Προεπιλεγμένη Μονάδα Μέτρησης για Παραγγελίες Αγορών. Θα πρέπει να είναι στην ίδια κατηγορία με την προεπιλεγμένη μονάδα μέτρησης."
+msgstr ""
+"Προεπιλεγμένη Μονάδα Μέτρησης για Παραγγελίες Αγορών. Θα πρέπει να είναι "
+"στην ίδια κατηγορία με την προεπιλεγμένη μονάδα μέτρησης."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_delay
 msgid "Delivery Lead Time"
 msgstr "Απαιτούμενος Χρόνος για Παράδοση"
-
-#. module: product
-#: model:product.product,name:product.product_product_49
-#: model:product.template,name:product.product_product_49_product_template
-msgid "Dell Inspiron Laptop without OS"
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description
@@ -873,18 +870,6 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Design. The thinnest iPod ever."
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_55
-#: model:product.template,name:product.product_product_55_product_template
-msgid "Desktop Computer Table"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_56
-#: model:product.template,name:product.product_product_56_product_template
-msgid "Desktop Lamp"
 msgstr ""
 
 #. module: product
@@ -924,8 +909,8 @@ msgid "Dozen(s)"
 msgstr "Δωδεκάδες"
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_57
-#: model:product.template,description_sale:product.product_product_57_product_template
+#: model:product.product,description_sale:product.consu_delivery_03
+#: model:product.template,description_sale:product.consu_delivery_03_product_template
 msgid ""
 "Dvorak keyboard \n"
 "            left-handed mouse"
@@ -935,7 +920,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "Each rule include a set of applicability criteria (date range,\n"
-"                product category...) and a computation that easily helps to achieve\n"
+"                product category...) and a computation that easily helps to "
+"achieve\n"
 "                any kind of pricing."
 msgstr ""
 
@@ -957,19 +943,8 @@ msgid "End date for this vendor price"
 msgstr ""
 
 #. module: product
-#: selection:product.template,state:0
-msgid "End of Lifecycle"
-msgstr "Λήξη Κύκλου Ζωής"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
 msgid "Ending valid for the pricelist item validation"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_54
-#: model:product.template,name:product.product_product_54_product_template
-msgid "Ergonomic Mouse"
 msgstr ""
 
 #. module: product
@@ -978,46 +953,72 @@ msgid "Error ! You cannot create recursive categories."
 msgstr "Λάθος! Δεν μπορείτα να δημιουργήσετε αναδρομικές κατηγορίες"
 
 #. module: product
+#: constraint:product.attribute.line:0
+msgid "Error ! You cannot use this attribute with the following value."
+msgstr ""
+
+#. module: product
+#: constraint:product.product:0
+msgid ""
+"Error! It is not allowed to choose more than one value for a given attribute."
+msgstr ""
+
+#. module: product
 #: constraint:product.pricelist.item:0
 msgid "Error! The minimum margin should be lower than the maximum margin."
-msgstr "Λάθος! Το ελάχιστο περιθώριο πρέπει να είναι χαμηλότερο από το μέγιστο περιθώριο"
+msgstr ""
+"Λάθος! Το ελάχιστο περιθώριο πρέπει να είναι χαμηλότερο από το μέγιστο "
+"περιθώριο"
 
 #. module: product
 #: constraint:product.pricelist.item:0
 msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
-msgstr "Λάθος! Δεν μπορείτε να ορίσετε τον Κυρίως Τιμοκατάλογο σαν Άλλο Τιμοκατάλογο στα Είδη Τιμοκαταλόγων!"
+msgstr ""
+"Λάθος! Δεν μπορείτε να ορίσετε τον Κυρίως Τιμοκατάλογο σαν Άλλο Τιμοκατάλογο "
+"στα Είδη Τιμοκαταλόγων!"
 
 #. module: product
 #: constraint:res.currency:0
 msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
-msgstr "Λάθος! Δεν μπορείτε να καθορίσετε ένα παράγοντα στρογγυλοποίησης για το κυρίως νόμισμα της εταιρίας ο οποίος να είναι μικρότερος από την ακρίβεια δεκαδικών του 'Λογαριασμός'."
+msgstr ""
+"Λάθος! Δεν μπορείτε να καθορίσετε ένα παράγοντα στρογγυλοποίησης για το "
+"κυρίως νόμισμα της εταιρίας ο οποίος να είναι μικρότερος από την ακρίβεια "
+"δεκαδικών του 'Λογαριασμός'."
 
 #. module: product
 #: constraint:decimal.precision:0
 msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
-msgstr "Λάθος! Δεν μπορείτε να καθορίσετε την ακρίβεια δεκαδικών του 'Λογαριασμός' μεγαλύτερο από τον παράγοντα στρογγυλοποίησης του κυρίου νομίσματος της επιχείρησης"
+msgstr ""
+"Λάθος! Δεν μπορείτε να καθορίσετε την ακρίβεια δεκαδικών του 'Λογαριασμός' "
+"μεγαλύτερο από τον παράγοντα στρογγυλοποίησης του κυρίου νομίσματος της "
+"επιχείρησης"
 
 #. module: product
 #: constraint:product.template:0
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
-msgstr "Λάθος: Η προεπιλεγμένη Μονάδα Μέτρησης και η Μονάδα Μέτρησης της αγοράς θα πρέπει να είναι στην ίδια κατηγορία."
+msgstr ""
+"Λάθος: Η προεπιλεγμένη Μονάδα Μέτρησης και η Μονάδα Μέτρησης της αγοράς θα "
+"πρέπει να είναι στην ίδια κατηγορία."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Everything you love about iPad — the beautiful\n"
-"                                    screen, fast Colors are vivid and text is sharp on the iPad mini display.\n"
-"                                    But what really makes it stand out is its size. At 7.9 inches,\n"
-"                                    it’s perfectly sized to deliver an experience every bit as big as iPad."
+"                                    screen, fast Colors are vivid and text "
+"is sharp on the iPad mini display.\n"
+"                                    But what really makes it stand out is "
+"its size. At 7.9 inches,\n"
+"                                    it’s perfectly sized to deliver an "
+"experience every bit as big as iPad."
 msgstr ""
 
 #. module: product
@@ -1031,10 +1032,14 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid ""
 "Everything you love about iPad — the beautiful\n"
-"                                    screen, fast and fluid performance, FaceTime and\n"
-"                                    iSight cameras, thousands of amazing apps, 10-hour\n"
-"                                    battery life* — is everything you’ll love about\n"
-"                                    iPad mini, too. And you can hold it in one hand."
+"                                    screen, fast and fluid performance, "
+"FaceTime and\n"
+"                                    iSight cameras, thousands of amazing "
+"apps, 10-hour\n"
+"                                    battery life* — is everything you’ll "
+"love about\n"
+"                                    iPad mini, too. And you can hold it in "
+"one hand."
 msgstr ""
 
 #. module: product
@@ -1042,9 +1047,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Everything you love about iPad — the beautiful screen,\n"
-"                                        fast and fluid performance, FaceTime and iSight cameras, \n"
-"                                        thousands of amazing apps, 10-hour battery life* — is everything\n"
-"                                        you’ll love about iPad mini, too. And you can hold it in one hand."
+"                                        fast and fluid performance, FaceTime "
+"and iSight cameras, \n"
+"                                        thousands of amazing apps, 10-hour "
+"battery life* — is everything\n"
+"                                        you’ll love about iPad mini, too. "
+"And you can hold it in one hand."
 msgstr ""
 
 #. module: product
@@ -1054,14 +1062,14 @@ msgid "Example of product to invoice based on delivery."
 msgstr ""
 
 #. module: product
-#: model:product.product,description:product.product_product_0
-#: model:product.template,description:product.product_product_0_product_template
+#: model:product.product,description:product.service_order_01
+#: model:product.template,description:product.service_order_01_product_template
 msgid "Example of product to invoice on order."
 msgstr ""
 
 #. module: product
-#: model:product.product,description:product.product_product_1b
-#: model:product.template,description:product.product_product_1b_product_template
+#: model:product.product,description:product.service_cost_01
+#: model:product.template,description:product.service_cost_01_product_template
 msgid "Example of products to invoice based on cost."
 msgstr ""
 
@@ -1078,8 +1086,8 @@ msgid "Explicit rule name for this pricelist line."
 msgstr "Σαφής ονομασία κανόνα για αυτήν την γραμμή τιμοκαταλόγου"
 
 #. module: product
-#: model:product.product,name:product.product_product_1b
-#: model:product.template,name:product.product_product_1b_product_template
+#: model:product.product,name:product.service_cost_01
+#: model:product.template,name:product.service_cost_01_product_template
 msgid "External Audit"
 msgstr ""
 
@@ -1087,12 +1095,6 @@ msgstr ""
 #: model:product.public.category,name:product.External_Hard_Drive
 msgid "External Hard Drive"
 msgstr "Εξωτερικός Σκληρός Δίσκος"
-
-#. module: product
-#: model:product.product,name:product.product_product_28
-#: model:product.template,name:product.product_product_28_product_template
-msgid "External Hard disk"
-msgstr "Εξωτερικός Σκληρός δίσκος"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1111,27 +1113,10 @@ msgid "Fixed Price"
 msgstr "Σταθερή τιμή"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_follower_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_follower_ids
-msgid "Followers"
-msgstr "Ακόλουθοι"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_channel_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Ακόλουθοι (Κανάλια)"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_partner_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Ακόλουθοι (Συνεργάτες)"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_min_quantity
 msgid ""
-"For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
 
@@ -1160,12 +1145,6 @@ msgid "Friendly to the environment."
 msgstr ""
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_44
-#: model:product.template,description_sale:product.product_product_44_product_template
-msgid "Full featured image editing software."
-msgstr "Λογισμικό επεξεργασίας εικόνας με πλήρη χαρακτηριστικά."
-
-#. module: product
 #: model:product.product,name:product.product_product_1
 #: model:product.template,name:product.product_product_1_product_template
 msgid "GAP Analysis Service"
@@ -1190,20 +1169,27 @@ msgstr ""
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
-msgstr "Δίνει τις διάφορες επιλογές συσκευασίας του ίδιου προϊόντος. Δεν έχει κανένα αντίκτυπο στην σειρά επιλογής και χρησιμοποιείται κυρίως εάν χρησιμοποιείτε την εφαρμογή EDI."
+msgstr ""
+"Δίνει τις διάφορες επιλογές συσκευασίας του ίδιου προϊόντος. Δεν έχει κανένα "
+"αντίκτυπο στην σειρά επιλογής και χρησιμοποιείται κυρίως εάν χρησιμοποιείτε "
+"την εφαρμογή EDI."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_sequence
 msgid ""
-"Gives the order in which the pricelist items will be checked. The evaluation"
-" gives highest priority to lowest sequence and stops as soon as a matching "
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
-msgstr "Δίνει την σειρά με την οποία τα είδη του τιμοκαταλόγου θα ελέγχονται. Η αξιολόγηση δίνει υψηλή προτεραιότητα στην χαμηλότερη ακολουθία και σταματά όταν βρεθεί ένα είδος που ταιριάζει ."
+msgstr ""
+"Δίνει την σειρά με την οποία τα είδη του τιμοκαταλόγου θα ελέγχονται. Η "
+"αξιολόγηση δίνει υψηλή προτεραιότητα στην χαμηλότερη ακολουθία και σταματά "
+"όταν βρεθεί ένα είδος που ταιριάζει ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_sequence
 msgid "Gives the sequence order when displaying a list of product categories."
-msgstr "Δίνει την ακολουθία σειράς όταν εμφανίζει μία λίστα κατηγοριών προϊόντων."
+msgstr ""
+"Δίνει την ακολουθία σειράς όταν εμφανίζει μία λίστα κατηγοριών προϊόντων."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sequence
@@ -1217,10 +1203,10 @@ msgid "Global"
 msgstr "Παγκόσμια"
 
 #. module: product
-#: model:product.product,name:product.product_product_44
-#: model:product.template,name:product.product_product_44_product_template
-msgid "GrapWorks Software"
-msgstr "Λογισμικό GrapWorks"
+#: model:product.product,name:product.membership_0
+#: model:product.template,name:product.membership_0_product_template
+msgid "Gold Membership"
+msgstr ""
 
 #. module: product
 #: model:product.product,name:product.product_product_24
@@ -1229,35 +1215,10 @@ msgid "Graphics Card"
 msgstr "Κάρτα Γραφικών"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_weight
-#: model:ir.model.fields,field_description:product.field_product_template_weight
-msgid "Gross Weight"
-msgstr "Μικτό βάρος"
-
-#. module: product
 #: model:product.product,name:product.product_product_17
 #: model:product.template,name:product.product_product_17_product_template
 msgid "HDD SH-1"
 msgstr "HDD SH-1"
-
-#. module: product
-#: model:product.product,name:product.product_product_18
-#: model:product.template,name:product.product_product_18_product_template
-msgid "HDD SH-2 (mto)"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_19
-#: model:product.template,name:product.product_product_19_product_template
-msgid "HDD on Demand"
-msgstr "Σκληρός Δίσκος κατ' απαίτηση"
-
-#. module: product
-#: model:product.product,description:product.product_product_32
-#: model:product.template,description:product.product_product_32_product_template
-msgid ""
-"Hands free headset for laptop PC with in-line microphone and headphone plug."
-msgstr "Hands free headset για laptop PC με ενσωματωμένο μικρόφωνο και headphone plug."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1271,24 +1232,6 @@ msgstr ""
 #: model:product.public.category,name:product.Headset
 msgid "Headset"
 msgstr "Headset"
-
-#. module: product
-#: model:product.product,name:product.product_product_33
-#: model:product.template,name:product.product_product_33_product_template
-msgid "Headset USB"
-msgstr "Headset USB"
-
-#. module: product
-#: model:product.product,description:product.product_product_33
-#: model:product.template,description:product.product_product_33_product_template
-msgid "Headset for laptop PC with USB connector."
-msgstr "Headset για laptop PC με σύνδεση USB."
-
-#. module: product
-#: model:product.product,name:product.product_product_32
-#: model:product.template,name:product.product_product_32_product_template
-msgid "Headset standard"
-msgstr "Standard Headset"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -1332,16 +1275,24 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor_inv
 msgid ""
-"How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n"
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
-msgstr "Πόσες φορές αυτή η Μονάδα Μέτρησης είναι μεγαλύτερη από την Μονάδα Μέτρησης αναφοράς για αυτή την κατηγορία:\n1 * (αυτή η μονάδα) = σχέση * (μονάδα αναφοράς)"
+msgstr ""
+"Πόσες φορές αυτή η Μονάδα Μέτρησης είναι μεγαλύτερη από την Μονάδα Μέτρησης "
+"αναφοράς για αυτή την κατηγορία:\n"
+"1 * (αυτή η μονάδα) = σχέση * (μονάδα αναφοράς)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor
 msgid ""
-"How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n"
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
-msgstr "Πόσο μεγαλύτερο ή μικρότερο αυτή η μονάδα είναι συγκρινόμενη με την μονάδα αναφοράς της Μέτρησης για αυτή την κατηγορία:\n1 * (μονάδα αναφοράς) = σχέση * (αυτή η ομάδα)"
+msgstr ""
+"Πόσο μεγαλύτερο ή μικρότερο αυτή η μονάδα είναι συγκρινόμενη με την μονάδα "
+"αναφοράς της Μέτρησης για αυτή την κατηγορία:\n"
+"1 * (μονάδα αναφοράς) = σχέση * (αυτή η ομάδα)"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1372,18 +1323,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_unread
-#: model:ir.model.fields,help:product.field_product_template_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_needaction
-#: model:ir.model.fields,help:product.field_product_template_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "If it's made for iPad, it's made for iPad mini."
@@ -1393,14 +1332,18 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_pricelist_active
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
-msgstr "Εάν αποεπιλεγεί, θα σας επιτρέψει να κρύψετε ένα τιμοκατάλογο χωρίς να τον αφαιρέσετε."
+msgstr ""
+"Εάν αποεπιλεγεί, θα σας επιτρέψει να κρύψετε ένα τιμοκατάλογο χωρίς να τον "
+"αφαιρέσετε."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_active
 #: model:ir.model.fields,help:product.field_product_template_active
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr "Εάν αποεπιλεγεί, θα σας επιτρέψει να κρύψετε ένα προϊόν χωρίς να το διαγράψετε."
+msgstr ""
+"Εάν αποεπιλεγεί, θα σας επιτρέψει να κρύψετε ένα προϊόν χωρίς να το "
+"διαγράψετε."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_image
@@ -1410,29 +1353,32 @@ msgstr "Εικόνα"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image
 msgid ""
-"Image of the product variant (Big-sized image of product template if false)."
-" It is automatically resized as a 1024x1024px image, with aspect ratio "
+"Image of the product variant (Big-sized image of product template if false). "
+"It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr "Εικόνα της παραλλαγής προϊόντος (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η μεγάλου μεγέθους εικόνα του προτύπου προϊόντος). Θα αλλάξει αυτόματα το μέγεθός τους ως 1024x1024 εικονοστοιχεία, με διατήρηση της αναλογίας διαστάσεων."
+msgstr ""
+"Εικόνα της παραλλαγής προϊόντος (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η "
+"μεγάλου μεγέθους εικόνα του προτύπου προϊόντος). Θα αλλάξει αυτόματα το "
+"μέγεθός τους ως 1024x1024 εικονοστοιχεία, με διατήρηση της αναλογίας "
+"διαστάσεων."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr "Εικόνα της παραλλαγής προϊόντος (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η μεσαίου μεγέθους εικόνα του προτύπου προϊόντος)."
+msgstr ""
+"Εικόνα της παραλλαγής προϊόντος (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η "
+"μεσαίου μεγέθους εικόνα του προτύπου προϊόντος)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr "Εικόνα της παραλλαγής προϊόντος (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η μικρού μεγέθους εικόνα του προτύπου προϊόντος)."
-
-#. module: product
-#: selection:product.template,state:0
-msgid "In Development"
-msgstr "Σε Ανάπτυξη"
+msgstr ""
+"Εικόνα της παραλλαγής προϊόντος (εάν είναι Ψευδές, τότε θα χρησιμοποιηθεί η "
+"μικρού μεγέθους εικόνα του προτύπου προϊόντος)."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1446,18 +1392,15 @@ msgid "Information about a product vendor"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_38
-#: model:product.template,name:product.product_product_38_product_template
-msgid "Ink Cartridge"
-msgstr "Ink Cartridge"
-
-#. module: product
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid ""
-"Inside each earpiece is a stainless steel mesh cap that protects the precision acoustic\n"
-"                                    components from dust and debris. You can remove the caps for cleaning or replace\n"
-"                                    them with an extra set that’s included in the box."
+"Inside each earpiece is a stainless steel mesh cap that protects the "
+"precision acoustic\n"
+"                                    components from dust and debris. You can "
+"remove the caps for cleaning or replace\n"
+"                                    them with an extra set that’s included "
+"in the box."
 msgstr ""
 
 #. module: product
@@ -1482,18 +1425,13 @@ msgstr "Εσωτερικός Κωδικός"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_barcode
 msgid "International Article Number used for product identification."
-msgstr "Διεθνής Αριθμός Είδους που χρησιμοποιείται για την αναγνώριση προϊόντος"
+msgstr ""
+"Διεθνής Αριθμός Είδους που χρησιμοποιείται για την αναγνώριση προϊόντος"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
 msgstr "Απόθεμα"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_is_follower
-#: model:ir.model.fields,field_description:product.field_product_template_message_is_follower
-msgid "Is Follower"
-msgstr "Είναι Ακόλουθος"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
@@ -1531,21 +1469,9 @@ msgid "Laptop E5023"
 msgstr "Laptop E5023"
 
 #. module: product
-#: model:product.product,name:product.product_product_26
-#: model:product.template,name:product.product_product_26_product_template
-msgid "Laptop S3450"
-msgstr "Laptop S3450"
-
-#. module: product
 #: model:product.public.category,name:product.laptops
 msgid "Laptops"
 msgstr "Laptops"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_last_post
-#: model:ir.model.fields,field_description:product.field_product_template_message_last_post
-msgid "Last Message Date"
-msgstr "Τελευταία ημερομηνία μηνύματος"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute___last_update
@@ -1611,7 +1537,10 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
-msgstr "Χρόνος σε μέρες ανάμεσα στην επιβεβαίωση μιας αγοράς και την παραλαβή των προϊόντων στην αποθήκη σας. Χρησιμοποιείται από τον προγραμματιστή για αυτόματο υπολογισμό του προγραμματισμού των παραγγελιών αγορών."
+msgstr ""
+"Χρόνος σε μέρες ανάμεσα στην επιβεβαίωση μιας αγοράς και την παραλαβή των "
+"προϊόντων στην αποθήκη σας. Χρησιμοποιείται από τον προγραμματιστή για "
+"αυτόματο υπολογισμό του προγραμματισμού των παραγγελιών αγορών."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_left
@@ -1629,19 +1558,13 @@ msgid "Lines"
 msgstr "Γραμμές"
 
 #. module: product
-#: model:product.product,name:product.product_product_50
-#: model:product.template,name:product.product_product_50_product_template
-msgid "Linutop"
-msgstr ""
-
-#. module: product
 #: model:product.uom,name:product.product_uom_litre
 msgid "Liter(s)"
 msgstr "Λίτρο"
 
 #. module: product
-#: model:product.product,name:product.product_product_58
-#: model:product.template,name:product.product_product_58_product_template
+#: model:product.product,name:product.consu_delivery_02
+#: model:product.template,name:product.consu_delivery_02_product_template
 msgid "Little server"
 msgstr ""
 
@@ -1704,24 +1627,16 @@ msgid ""
 "Medium-sized image of the product. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
-msgstr "Μεσαίου-μεγέθους εικόνα του προϊόντος. Το μέγεθος αλλάζει αυτόματα σε εικόνα διαστάσεων 128x128px, με διατήρηση των αναλογιών, μόνο όταν η εικόνα υπερβαίνει αυτές τις διαστάσεις. Χρησιμοποιήστε αυτό το πεδίο για προβολές φορμών ή προβολές kanban."
+msgstr ""
+"Μεσαίου-μεγέθους εικόνα του προϊόντος. Το μέγεθος αλλάζει αυτόματα σε εικόνα "
+"διαστάσεων 128x128px, με διατήρηση των αναλογιών, μόνο όταν η εικόνα "
+"υπερβαίνει αυτές τις διαστάσεις. Χρησιμοποιήστε αυτό το πεδίο για προβολές "
+"φορμών ή προβολές kanban."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
 msgid "Memory"
 msgstr "Μνήμη"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_ids
-msgid "Messages"
-msgstr "Μηνύματα"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_ids
-#: model:ir.model.fields,help:product.field_product_template_message_ids
-msgid "Messages and communication history"
-msgstr "Μηνύματα και ιστορικό επικοινωνίας"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1756,12 +1671,6 @@ msgid "More features."
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_21
-#: model:product.template,name:product.product_product_21_product_template
-msgid "Motherboard A20Z7"
-msgstr "Motherboard A20Z7"
-
-#. module: product
 #: model:product.product,name:product.product_product_20
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Motherboard I9P57"
@@ -1778,12 +1687,6 @@ msgstr "Οπτικό Ποντίκι"
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Mouse, Wireless"
 msgstr "Ασύρματο Ποντίκι"
-
-#. module: product
-#: model:product.product,name:product.product_product_31
-#: model:product.template,name:product.product_product_31_product_template
-msgid "Multimedia Speakers"
-msgstr "Ηχεία"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1815,7 +1718,7 @@ msgid "New Price ="
 msgstr "Νέα Τιμή ="
 
 #. module: product
-#: selection:product.category,type:0 selection:product.template,state:0
+#: selection:product.category,type:0
 msgid "Normal"
 msgstr "Κανονικό"
 
@@ -1823,49 +1726,6 @@ msgstr "Κανονικό"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Notes"
 msgstr "Σημειώσεις"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_needaction_counter
-#: model:ir.model.fields,field_description:product.field_product_template_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Αριθμός ενεργειών"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_needaction_counter
-#: model:ir.model.fields,help:product.field_product_template_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_unread_counter
-#: model:ir.model.fields,help:product.field_product_template_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
-
-#. module: product
-#: selection:product.template,state:0
-msgid "Obsolete"
-msgstr "Απαρχαιωμένο"
-
-#. module: product
-#: model:product.product,description_sale:product.product_product_42
-#: model:product.template,description_sale:product.product_product_42_product_template
-msgid ""
-"Office Editing Software with word processing, spreadsheets, presentations, "
-"graphics, and databases..."
-msgstr "Λογισμικό Επεξεργασίας "
-
-#. module: product
-#: model:product.product,name:product.product_product_42
-#: model:product.template,name:product.product_product_42_product_template
-msgid "Office Suite"
-msgstr "Σουίτα Γραφείου"
-
-#. module: product
-#: model:product.product,description:product.product_product_19
-#: model:product.template,description:product.product_product_19_product_template
-msgid "On demand hard-disk having capacity based on requirement."
-msgstr "Σκληρός δίσκος με χωρητικότητα κατά παραγγελία"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -1918,18 +1778,6 @@ msgid "Pen Drive"
 msgstr "Pen Drive"
 
 #. module: product
-#: model:product.product,name:product.product_product_29
-#: model:product.template,name:product.product_product_29_product_template
-msgid "Pen drive, SP-2"
-msgstr "Pen drive, SP-2"
-
-#. module: product
-#: model:product.product,name:product.product_product_30
-#: model:product.template,name:product.product_product_30_product_template
-msgid "Pen drive, SP-4"
-msgstr "Pen drive, SP-4"
-
-#. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
 msgstr ""
@@ -1962,14 +1810,14 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid ""
-"Powered by fourth-generation Intel Core processors, this iMac is the fastest"
-" yet. Every model in the lineup comes standard with a quad-core Intel Core "
-"i5 processor, starting at 2.7GHz and topping out at 3.4GHz."
+"Powered by fourth-generation Intel Core processors, this iMac is the fastest "
+"yet. Every model in the lineup comes standard with a quad-core Intel Core i5 "
+"processor, starting at 2.7GHz and topping out at 3.4GHz."
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_0
-#: model:product.template,name:product.product_product_0_product_template
+#: model:product.product,name:product.service_order_01
+#: model:product.template,name:product.service_order_01_product_template
 msgid "Prepaid Consulting"
 msgstr "Προπληρωμένες Συμβουλευτικές Υπηρεσίες"
 
@@ -1978,6 +1826,7 @@ msgstr "Προπληρωμένες Συμβουλευτικές Υπηρεσίε
 #: model:ir.model.fields,field_description:product.field_product_product_price
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_price
 #: model:ir.model.fields,field_description:product.field_product_template_price
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2004,7 +1853,9 @@ msgstr "Εξαιρετικό"
 msgid ""
 "Price Extra: Extra price for the variant with this attribute value on sale "
 "price. eg. 200 price extra, 1000 + 200 = 1200."
-msgstr "Επιπλέον Τιμή: Επιπλέον τιμή για την παραλλαγή με αυτή την τιμή παραμέτρου στην τιμή πώλησης. πχ. 200 επιπλέον της τιμής, 1000 + 200 = 1200."
+msgstr ""
+"Επιπλέον Τιμή: Επιπλέον τιμή για την παραλλαγή με αυτή την τιμή παραμέτρου "
+"στην τιμή πώλησης. πχ. 200 επιπλέον της τιμής, 1000 + 200 = 1200."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -2055,6 +1906,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_ids
 #: model:ir.model.fields,field_description:product.field_product_product_item_ids
 #: model:ir.model.fields,field_description:product.field_product_template_item_ids
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
@@ -2104,18 +1956,6 @@ msgstr "Εκτύπωση"
 #: model:product.public.category,name:product.printer
 msgid "Printer"
 msgstr "Εκτυπωτής"
-
-#. module: product
-#: model:product.product,name:product.product_product_37
-#: model:product.template,name:product.product_product_37_product_template
-msgid "Printer, All-in-one"
-msgstr "Εκτυπωτής όλα-σε-ένα"
-
-#. module: product
-#: model:product.product,name:product.product_product_23
-#: model:product.template,name:product.product_product_23_product_template
-msgid "Processor AMD 8-Core"
-msgstr "Επεξεργαστής AMD 8-Core"
 
 #. module: product
 #: model:product.product,name:product.product_product_22
@@ -2263,7 +2103,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:817
+#: code:addons/product/product.py:824
 #, python-format
 msgid "Products: "
 msgstr "Προϊόντα: "
@@ -2327,18 +2167,6 @@ msgid "Quantity-5"
 msgstr "Ποσότητα-5"
 
 #. module: product
-#: model:product.product,name:product.product_product_14
-#: model:product.template,name:product.product_product_14_product_template
-msgid "RAM SR2 (kit)"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_15
-#: model:product.template,name:product.product_product_15_product_template
-msgid "RAM SR3"
-msgstr "RAM SR3"
-
-#. module: product
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "RAM SR5"
@@ -2370,9 +2198,12 @@ msgstr "Δεξιά Μητρική"
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Right from the start, apps made for iPad also work with iPad mini.\n"
-"                                    They’re immersive, full-screen apps that let you do almost anything\n"
-"                                    you can imagine. And with automatic updates,\n"
-"                                    you're always getting the best experience possible."
+"                                    They’re immersive, full-screen apps that "
+"let you do almost anything\n"
+"                                    you can imagine. And with automatic "
+"updates,\n"
+"                                    you're always getting the best "
+"experience possible."
 msgstr ""
 
 #. module: product
@@ -2386,8 +2217,10 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid ""
 "Right from the start, there’s a lot to love about\n"
-"                                    iPad. It’s simple yet powerful. Thin and light yet\n"
-"                                    full-featured. It can do just about everything and\n"
+"                                    iPad. It’s simple yet powerful. Thin and "
+"light yet\n"
+"                                    full-featured. It can do just about "
+"everything and\n"
 "                                    be just about anything."
 msgstr ""
 
@@ -2396,9 +2229,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Right from the start, there’s a lot to love about iPad.\n"
-"                                   It’s simple yet powerful. Thin and light yet full-\n"
-"                                   featured. It can do just about everything and be just\n"
-"                                   about anything.And because it’s so easy to use, it’s\n"
+"                                   It’s simple yet powerful. Thin and light "
+"yet full-\n"
+"                                   featured. It can do just about everything "
+"and be just\n"
+"                                   about anything.And because it’s so easy "
+"to use, it’s\n"
 "                                   easy to love."
 msgstr ""
 
@@ -2411,12 +2247,6 @@ msgstr "Μέθοδος Στρογγυλοποίησης"
 #: model:ir.model.fields,field_description:product.field_product_uom_rounding
 msgid "Rounding Precision"
 msgstr "Ακρίβεια στρογγυλοποίησης"
-
-#. module: product
-#: model:product.product,name:product.product_product_45
-#: model:product.template,name:product.product_product_45_product_template
-msgid "Router R430"
-msgstr "Router R430"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2463,11 +2293,16 @@ msgstr "Τιμοκατάλογοι Πωλήσεων"
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "Say you’re listening to a song you love and you want to stay in the mood.\n"
-"                                        Just tap Genius. It finds other songs on iPod nano that go great together\n"
-"                                        and makes a Genius playlist for you. For more song combinations\n"
-"                                        you wouldn’t have thought of yourself, create Genius Mixes in iTunes\n"
-"                                        and sync the ones you like to iPod nano. Then tap Genius Mixes and\n"
-"                                        rediscover songs you haven’t heard in a while — or find music you forgot you even had."
+"                                        Just tap Genius. It finds other "
+"songs on iPod nano that go great together\n"
+"                                        and makes a Genius playlist for you. "
+"For more song combinations\n"
+"                                        you wouldn’t have thought of "
+"yourself, create Genius Mixes in iTunes\n"
+"                                        and sync the ones you like to iPod "
+"nano. Then tap Genius Mixes and\n"
+"                                        rediscover songs you haven’t heard "
+"in a while — or find music you forgot you even had."
 msgstr ""
 
 #. module: product
@@ -2494,14 +2329,14 @@ msgid "Sequence"
 msgstr "Ακολουθία"
 
 #. module: product
-#: model:product.product,name:product.product_product_59
+#: model:product.product,name:product.consu_delivery_01
 #: model:product.public.category,name:product.server
-#: model:product.template,name:product.product_product_59_product_template
+#: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Server"
 msgstr "Διακομιστής"
 
 #. module: product
-#: code:addons/product/product.py:460
+#: code:addons/product/product.py:474
 #, python-format
 msgid "Service"
 msgstr ""
@@ -2519,7 +2354,12 @@ msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr "Θέτει την τιμή ώστε να είναι πολλαπλάσια αυτής της αξόας.\nΗ στρογγυλοποίηση εφαρμόζεται μετά την έκπτωση και πριν τις πρόσθετες χρεώσεις.\nΓια να κάνετε τις τιμές να τελειώνουν σε 9,99, θέστε την στρογγυλοποίηση στο 10, και πρόσθετες χρεώσεις στο -0,01."
+msgstr ""
+"Θέτει την τιμή ώστε να είναι πολλαπλάσια αυτής της αξόας.\n"
+"Η στρογγυλοποίηση εφαρμόζεται μετά την έκπτωση και πριν τις πρόσθετες "
+"χρεώσεις.\n"
+"Για να κάνετε τις τιμές να τελειώνουν σε 9,99, θέστε την στρογγυλοποίηση στο "
+"10, και πρόσθετες χρεώσεις στο -0,01."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
@@ -2530,8 +2370,16 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
 msgid ""
 "Share your product to all companies defined in your instance.\n"
-" * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
+" * Checked : Product are visible for every company, even if a company is "
+"defined on the partner.\n"
+" * Unchecked : Each company can see only its product (product where company "
+"is defined). Product not related to a company are visible for all companies."
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.membership_1
+#: model:product.template,name:product.membership_1_product_template
+msgid "Silver Membership"
 msgstr ""
 
 #. module: product
@@ -2550,9 +2398,12 @@ msgstr "Μικρού-Μεγέθους Εικόνα"
 #: model:ir.model.fields,help:product.field_product_template_image_small
 msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
-msgstr "Μικρού-μεγέθους φωτογραφία του προϊόντος. Αυτόματα μετασχηματίζεται σε 64x64px εικόνα, με aspect ratio preserved. Χρησιμοπιήστε αυτό το πεδίο οπουδήποτε μια μικρή εικόνα είναι αναγκαία."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
+msgstr ""
+"Μικρού-μεγέθους φωτογραφία του προϊόντος. Αυτόματα μετασχηματίζεται σε "
+"64x64px εικόνα, με aspect ratio preserved. Χρησιμοπιήστε αυτό το πεδίο "
+"οπουδήποτε μια μικρή εικόνα είναι αναγκαία."
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -2583,21 +2434,28 @@ msgstr "Ηχεία"
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
-msgstr "Καθορίστε μια κατηγορία προϊόντος εάν αυτός ο κανόνας αναπτύσεται σε προϊόντα που ανήκουν σε αυτή την κατηγορία ή τις θυγατρικές κατηγορίες της. Κρατήστε κενό αλλιώς."
+msgstr ""
+"Καθορίστε μια κατηγορία προϊόντος εάν αυτός ο κανόνας αναπτύσεται σε "
+"προϊόντα που ανήκουν σε αυτή την κατηγορία ή τις θυγατρικές κατηγορίες της. "
+"Κρατήστε κενό αλλιώς."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_id
 msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
-msgstr "Συγκεκριμενοποίησε ένα προϊόν εάν αυτός ο κανόνας εφαρμόζεται μόνο σε ένα προϊόν. Αλλιώς κράτησε το κενό."
+msgstr ""
+"Συγκεκριμενοποίησε ένα προϊόν εάν αυτός ο κανόνας εφαρμόζεται μόνο σε ένα "
+"προϊόν. Αλλιώς κράτησε το κενό."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_tmpl_id
 msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
-msgstr "Καθορίστε ένα πρότυπο εάν αυτός ο κανόνας εφαρμόζεται μόνο σε ένα πρότυπο προϊόντος. Αλλιώς κρατήστε το κενό."
+msgstr ""
+"Καθορίστε ένα πρότυπο εάν αυτός ο κανόνας εφαρμόζεται μόνο σε ένα πρότυπο "
+"προϊόντος. Αλλιώς κρατήστε το κενό."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sale_ok
@@ -2610,7 +2468,9 @@ msgstr "Καθορίστε εάν το προϊόν μπορεί να επιλε
 msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
-msgstr "Καθορίστε το σταθερό ποσό για πρόσθεση ή αφαίρεση (εάν είναι αρνητικό) στο ποσό που υπολογίστηκε με την έκπτωση."
+msgstr ""
+"Καθορίστε το σταθερό ποσό για πρόσθεση ή αφαίρεση (εάν είναι αρνητικό) στο "
+"ποσό που υπολογίστηκε με την έκπτωση."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_max_margin
@@ -2639,12 +2499,6 @@ msgid "Starting date for the pricelist item validation"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_state
-#: model:ir.model.fields,field_description:product.field_product_template_state
-msgid "Status"
-msgstr "Κατάσταση"
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Supplier Pricelist"
 msgstr "Τιμοκατάλογος Προμηθευτή"
@@ -2656,8 +2510,8 @@ msgid "Support Contract (on timesheet)"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_47
-#: model:product.template,name:product.product_product_47_product_template
+#: model:product.product,name:product.product_delivery_01
+#: model:product.template,name:product.product_delivery_01_product_template
 msgid "Switch, 24 ports"
 msgstr "Switch, 24 ports"
 
@@ -2676,9 +2530,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "Tap to play your favorite songs. Or entire albums.\n"
-"                                    Or everything by one artist. You can even browse by genres or composers.\n"
-"                                    Flip through your music: Album art looks great on the bigger screen.\n"
-"                                    Or to keep things fresh, give iPod nano a shake and it shuffles to a different song in your music library."
+"                                    Or everything by one artist. You can "
+"even browse by genres or composers.\n"
+"                                    Flip through your music: Album art looks "
+"great on the bigger screen.\n"
+"                                    Or to keep things fresh, give iPod nano "
+"a shake and it shuffles to a different song in your music library."
 msgstr ""
 
 #. module: product
@@ -2690,11 +2547,16 @@ msgstr "Περιγραφή Προτύπου"
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid ""
-"The Apple In-Ear Headphones deliver a truly immersive sound experience by drastically\n"
-"                                    reducing unwanted outside noises. The soft, silicone ear tips fit snugly and comfortably\n"
-"                                    in your ear, creating a seal that isolates your music from your surroundings.\n"
-"                                    Three different sizes of ear tips are included so you can find a perfect fit for each ear.\n"
-"                                    Also included are a convenient carrying case for the ear tips and a cable-control case\n"
+"The Apple In-Ear Headphones deliver a truly immersive sound experience by "
+"drastically\n"
+"                                    reducing unwanted outside noises. The "
+"soft, silicone ear tips fit snugly and comfortably\n"
+"                                    in your ear, creating a seal that "
+"isolates your music from your surroundings.\n"
+"                                    Three different sizes of ear tips are "
+"included so you can find a perfect fit for each ear.\n"
+"                                    Also included are a convenient carrying "
+"case for the ear tips and a cable-control case\n"
 "                                    for the headphones themselves."
 msgstr ""
 
@@ -2702,9 +2564,12 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
-"The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. Its ultra-compact size fits in the \n"
-"                                    palm of your hand, yet gives you full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
-"                                    full-featured. It can do just about everything and\n"
+"The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. Its "
+"ultra-compact size fits in the \n"
+"                                    palm of your hand, yet gives you full, "
+"natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
+"                                    full-featured. It can do just about "
+"everything and\n"
 "                                    experience music just about anywhere."
 msgstr ""
 
@@ -2713,9 +2578,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "The SoundLink® Mini speaker is small and light enough\n"
-"                                        to tuck into your bag. It weighs in at just 1.5 pounds.\n"
-"                                        Its low profile lets you place it almost anywhere and\n"
-"                                        provides a low center of gravity that makes it nearly\n"
+"                                        to tuck into your bag. It weighs in "
+"at just 1.5 pounds.\n"
+"                                        Its low profile lets you place it "
+"almost anywhere and\n"
+"                                        provides a low center of gravity "
+"that makes it nearly\n"
 "                                        impossible to tip over."
 msgstr ""
 
@@ -2724,14 +2592,19 @@ msgstr ""
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
-msgstr "Η τιμή που υπολογίστηκε είναι εκφρασμένη στην προεπιλεγμένη Μονάδα Μέτρησης του προϊόντος."
+msgstr ""
+"Η τιμή που υπολογίστηκε είναι εκφρασμένη στην προεπιλεγμένη Μονάδα Μέτρησης "
+"του προϊόντος."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_rounding
 msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
-msgstr "Η υπολογιζόμενη ποσότητα θα είναι ένα πολλαπλάσιο από αυτή την τιμή. Χρησιμοποίησε το 1.0 για Μονάδα Μέτρησης που δεν μπορεί να κατατμηθεί παραπάνω, όπως είναι το τεμάχιο."
+msgstr ""
+"Η υπολογιζόμενη ποσότητα θα είναι ένα πολλαπλάσιο από αυτή την τιμή. "
+"Χρησιμοποίησε το 1.0 για Μονάδα Μέτρησης που δεν μπορεί να κατατμηθεί "
+"παραπάνω, όπως είναι το τεμάχιο."
 
 #. module: product
 #: sql_constraint:product.uom:0
@@ -2768,8 +2641,10 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_9_product_template
 msgid ""
 "The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
-"                                    which makes it compatible with iPad. And you’re free to type wherever\n"
-"                                    you like — with the keyboard in front of your iPad or on your lap."
+"                                    which makes it compatible with iPad. And "
+"you’re free to type wherever\n"
+"                                    you like — with the keyboard in front of "
+"your iPad or on your lap."
 msgstr ""
 
 #. module: product
@@ -2781,11 +2656,12 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:329
+#: code:addons/product/product.py:332
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
-"You are trying to delete an attribute value with a reference on a product variant."
+"You are trying to delete an attribute value with a reference on a product "
+"variant."
 msgstr ""
 
 #. module: product
@@ -2814,8 +2690,10 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
-"The rechargeable lithium-ion battery delivers up to seven hours of playtime.\n"
-"                                    And at home, you can listen even longer—the charging cradle lets\n"
+"The rechargeable lithium-ion battery delivers up to seven hours of "
+"playtime.\n"
+"                                    And at home, you can listen even longer—"
+"the charging cradle lets\n"
 "                                    you listen while it charges."
 msgstr ""
 
@@ -2832,16 +2710,20 @@ msgstr "Το κομψό ασύρματο πληκτρολόγιο της Apple"
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "The speaker has a range of about 30 feet, so you can enjoy\n"
-"                                    the sound you want without wires. It pairs easily with your\n"
-"                                    smartphone, iPad® or other Bluetooth device.\n"
-"                                    And it remembers the most recent six devices you've used,\n"
+"                                    the sound you want without wires. It "
+"pairs easily with your\n"
+"                                    smartphone, iPad® or other Bluetooth "
+"device.\n"
+"                                    And it remembers the most recent six "
+"devices you've used,\n"
 "                                    so reconnecting is even simpler."
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
 msgid "The total number of products you can put by pallet or box."
-msgstr "Ο συνολικός αριθμός προϊόντων που μπορείς να τοποθετήσεις σε παλέτα ή κουτί"
+msgstr ""
+"Ο συνολικός αριθμός προϊόντων που μπορείς να τοποθετήσεις σε παλέτα ή κουτί"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -2879,10 +2761,14 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
-"There’s another way to get a good mix of music on iPod: Let Genius do the work.\n"
-"                                        Activate Genius in iTunes on your computer, and it automatically finds songs that sound\n"
-"                                        great together. Then it creates Genius Mixes, which you can easily sync to your iPod.\n"
-"                                        It’s the perfect way to rediscover songs you haven’t listened to in forever."
+"There’s another way to get a good mix of music on iPod: Let Genius do the "
+"work.\n"
+"                                        Activate Genius in iTunes on your "
+"computer, and it automatically finds songs that sound\n"
+"                                        great together. Then it creates "
+"Genius Mixes, which you can easily sync to your iPod.\n"
+"                                        It’s the perfect way to rediscover "
+"songs you haven’t listened to in forever."
 msgstr ""
 
 #. module: product
@@ -2898,21 +2784,26 @@ msgstr "Αυτό έρχεται από την φόρμα καταχώρησης 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_variant
 msgid ""
-"This field holds the image used as image for the product variant, limited to"
-" 1024x1024px."
-msgstr "Στο πεδίο περιέχεται η εικόνα της παραλλαγής του προϊόντος, με περιορισμό σε 1024x1024px."
+"This field holds the image used as image for the product variant, limited to "
+"1024x1024px."
+msgstr ""
+"Στο πεδίο περιέχεται η εικόνα της παραλλαγής του προϊόντος, με περιορισμό σε "
+"1024x1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image
 msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
-msgstr "Αυτό το πεδίο κρατά την εικόνα σαν φωτογραφία για το προϊόν, περιορισμένη σε  1024x1024px."
+msgstr ""
+"Αυτό το πεδίο κρατά την εικόνα σαν φωτογραφία για το προϊόν, περιορισμένη "
+"σε  1024x1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_qty
 msgid "This is a quantity which is converted into Default Unit of Measure."
-msgstr "Αυτή είναι μια ποσότητα η οποία μετατράπηκε σε Προκαθοριμένη Μονάδα Μέτρησης"
+msgstr ""
+"Αυτή είναι μια ποσότητα η οποία μετατράπηκε σε Προκαθοριμένη Μονάδα Μέτρησης"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_price_extra
@@ -2934,7 +2825,9 @@ msgstr ""
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr "Αυτός ο τιμοκατάλογος θα χρησιμοποιηθεί, αντί του προεπιλεγμένου , για πωλήσεις στον τρέχον συνεργάτη"
+msgstr ""
+"Αυτός ο τιμοκατάλογος θα χρησιμοποιηθεί, αντί του προεπιλεγμένου , για "
+"πωλήσεις στον τρέχον συνεργάτη"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
@@ -2951,12 +2844,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_39
-#: model:product.template,name:product.product_product_39_product_template
-msgid "Toner Cartridge"
-msgstr "Toner Cartridge"
-
-#. module: product
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Two is better than one."
@@ -2966,18 +2853,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_uom_uom_type
 msgid "Type"
 msgstr "Τύπος"
-
-#. module: product
-#: model:product.product,name:product.product_product_53
-#: model:product.template,name:product.product_product_53_product_template
-msgid "TypeMatrix Dvorak Keyboard"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_48
-#: model:product.template,name:product.product_product_48_product_template
-msgid "USB Adapter"
-msgstr "USB Adapter"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -3046,7 +2921,8 @@ msgstr "Κατηγορίες Μονάδων Μέτρησης"
 msgid ""
 "Units of measure belonging to the same category can be\n"
 "                converted between each others. For example, in the category\n"
-"                <i>'Time'</i>, you will have the following units of measure:\n"
+"                <i>'Time'</i>, you will have the following units of "
+"measure:\n"
 "                Hours, Days."
 msgstr ""
 
@@ -3061,24 +2937,17 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid ""
 "Unlike many small headphones, each earpiece of the Apple In-Ear Headphones\n"
-"                                    contains two separate high-performance drivers — a woofer to handle bass and\n"
-"                                    mid-range sounds and a tweeter for high-frequency audio. These dedicated\n"
-"                                    drivers help ensure accurate, detailed sound across the entire sonic spectrum.\n"
-"                                    The result: you’re immersed in the music and hear details you never knew existed.\n"
-"                                    Even when listening to an old favorite, you may feel like you’re hearing it for the first time."
+"                                    contains two separate high-performance "
+"drivers — a woofer to handle bass and\n"
+"                                    mid-range sounds and a tweeter for high-"
+"frequency audio. These dedicated\n"
+"                                    drivers help ensure accurate, detailed "
+"sound across the entire sonic spectrum.\n"
+"                                    The result: you’re immersed in the music "
+"and hear details you never knew existed.\n"
+"                                    Even when listening to an old favorite, "
+"you may feel like you’re hearing it for the first time."
 msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_unread
-#: model:ir.model.fields,field_description:product.field_product_template_message_unread
-msgid "Unread Messages"
-msgstr "Αδιάβαστα Μηνύματα"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_unread_counter
-#: model:ir.model.fields,field_description:product.field_product_template_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3130,9 +2999,7 @@ msgid "Variants"
 msgstr "Παραλλαγές"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_name
-#: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
 msgstr ""
@@ -3164,6 +3031,8 @@ msgid "Vendor of this product"
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_seller_ids
+#: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendors"
 msgstr ""
@@ -3176,6 +3045,7 @@ msgstr "Προβολή"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_volume
 #: model:ir.model.fields,field_description:product.field_product_template_volume
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:product.uom.categ,name:product.product_uom_categ_vol
 msgid "Volume"
 msgstr "Όγκος"
@@ -3200,13 +3070,8 @@ msgid "Warranty"
 msgstr "Εγγύηση"
 
 #. module: product
-#: model:product.product,name:product.product_product_34
-#: model:product.template,name:product.product_product_34_product_template
-msgid "Webcam"
-msgstr "Webcam"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.model.fields,field_description:product.field_product_product_weight
+#: model:ir.model.fields,field_description:product.field_product_template_weight
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
 msgstr "Βάρος"
@@ -3227,8 +3092,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
 msgid ""
-"When this field is filled in, the vendor data will only apply to the "
-"variant."
+"When this field is filled in, the vendor data will only apply to the variant."
 msgstr ""
 
 #. module: product
@@ -3256,24 +3120,14 @@ msgid "Wi-Fi"
 msgstr "Wi-Fi"
 
 #. module: product
-#: model:product.product,name:product.product_product_40
-#: model:product.template,name:product.product_product_40_product_template
-msgid "Windows 7 Professional"
-msgstr "Windows 7 Professional"
-
-#. module: product
-#: model:product.product,name:product.product_product_41
-#: model:product.template,name:product.product_product_41_product_template
-msgid "Windows Home Server 2011"
-msgstr "Windows Home Server 2011"
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "With advanced Wi‑Fi that’s up to twice as fast as\n"
-"                                   any previous-generation iPad and access to fast\n"
-"                                   cellular data networks around the world, iPad mini\n"
+"                                   any previous-generation iPad and access "
+"to fast\n"
+"                                   cellular data networks around the world, "
+"iPad mini\n"
 "                                   lets you download content, stream video,\n"
 "                                   and browse the web at amazing speeds."
 msgstr ""
@@ -3283,7 +3137,10 @@ msgstr ""
 msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
-msgstr "Δουλεύοντας με παραλλαγές προϊόντος σου επιτρέπει να ορίσεις μερικές παραλλαγές των ίδιων προϊόντων, μια διευκόλυνση της διαχείρισης του προϊόντος στο ηλεκτρονικό εμπόριο για παράδειγμα"
+msgstr ""
+"Δουλεύοντας με παραλλαγές προϊόντος σου επιτρέπει να ορίσεις μερικές "
+"παραλλαγές των ίδιων προϊόντων, μια διευκόλυνση της διαχείρισης του "
+"προϊόντος στο ηλεκτρονικό εμπόριο για παράδειγμα"
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
@@ -3311,7 +3168,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_template_action
 msgid ""
 "You must define a product for everything you sell, whether it's a physical "
-"product, a consumable or a service you offer to  customers."
+"product, a consumable or a service you offer to customers."
 msgstr ""
 
 #. module: product
@@ -3321,15 +3178,19 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "You probably have multiple playlists in iTunes on your computer.\n"
-"                                        One for your commute. One for the gym. Sync those playlists\n"
-"                                        to iPod, and you can play the perfect mix for whatever\n"
-"                                        mood strikes you. VoiceOver tells you the name of each playlist,\n"
-"                                        so it’s easy to switch between them and find the one you want without looking."
+"                                        One for your commute. One for the "
+"gym. Sync those playlists\n"
+"                                        to iPod, and you can play the "
+"perfect mix for whatever\n"
+"                                        mood strikes you. VoiceOver tells "
+"you the name of each playlist,\n"
+"                                        so it’s easy to switch between them "
+"and find the one you want without looking."
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_43
-#: model:product.template,name:product.product_product_43_product_template
+#: model:product.product,name:product.product_order_01
+#: model:product.template,name:product.product_order_01_product_template
 msgid "Zed+ Antivirus"
 msgstr "Zed+ Antivirus"
 
@@ -3432,8 +3293,10 @@ msgstr "iPod"
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "iTunes on your Mac or PC makes it easy to load up\n"
-"                                        your iPod. Just choose the playlists, audiobooks,\n"
-"                                        podcasts, and other audio files you want, then sync."
+"                                        your iPod. Just choose the "
+"playlists, audiobooks,\n"
+"                                        podcasts, and other audio files you "
+"want, then sync."
 msgstr ""
 
 #. module: product
@@ -3497,16 +3360,16 @@ msgid "qt"
 msgstr "ποσ"
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_58
-#: model:product.template,description_sale:product.product_product_58_product_template
+#: model:product.product,description_sale:product.consu_delivery_02
+#: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid ""
 "raid 1 \n"
 "            512ECC ram"
 msgstr ""
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_59
-#: model:product.template,description_sale:product.product_product_59_product_template
+#: model:product.product,description_sale:product.consu_delivery_01
+#: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid ""
 "raid 10 \n"
 "            2048ECC ram"
@@ -3537,3 +3400,170 @@ msgstr "σε"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "άγνωστο"
+
+#~ msgid ""
+#~ "17\" Monitor\n"
+#~ "6GB RAM\n"
+#~ "Hi-Speed 234Q Processor\n"
+#~ "QWERTY keyboard"
+#~ msgstr ""
+#~ "17\" Monitor\n"
+#~ "6GB RAM\n"
+#~ "Hi-Speed 234Q Processor\n"
+#~ "QWERTY keyboard"
+
+#~ msgid "Action Needed"
+#~ msgstr "Απαιτείται ενέργεια"
+
+#~ msgid "All in one hi-speed printer with fax and scanner."
+#~ msgstr "Εκτυπωτικό πολυμηχάνημα υψηλής ταχύτητας με fax και scanner."
+
+#~ msgid "Blank CD"
+#~ msgstr "Κενό CD"
+
+#~ msgid "Blank DVD-RW"
+#~ msgstr "Κενό DVD-RW"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Ημερομηνία του τελευταίου μηνύματος "
+
+#~ msgid "End of Lifecycle"
+#~ msgstr "Λήξη Κύκλου Ζωής"
+
+#~ msgid "External Hard disk"
+#~ msgstr "Εξωτερικός Σκληρός δίσκος"
+
+#~ msgid "Followers"
+#~ msgstr "Ακόλουθοι"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Ακόλουθοι (Κανάλια)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Ακόλουθοι (Συνεργάτες)"
+
+#~ msgid "Full featured image editing software."
+#~ msgstr "Λογισμικό επεξεργασίας εικόνας με πλήρη χαρακτηριστικά."
+
+#~ msgid "GrapWorks Software"
+#~ msgstr "Λογισμικό GrapWorks"
+
+#~ msgid "Gross Weight"
+#~ msgstr "Μικτό βάρος"
+
+#~ msgid "HDD on Demand"
+#~ msgstr "Σκληρός Δίσκος κατ' απαίτηση"
+
+#~ msgid ""
+#~ "Hands free headset for laptop PC with in-line microphone and headphone "
+#~ "plug."
+#~ msgstr ""
+#~ "Hands free headset για laptop PC με ενσωματωμένο μικρόφωνο και headphone "
+#~ "plug."
+
+#~ msgid "Headset USB"
+#~ msgstr "Headset USB"
+
+#~ msgid "Headset for laptop PC with USB connector."
+#~ msgstr "Headset για laptop PC με σύνδεση USB."
+
+#~ msgid "Headset standard"
+#~ msgstr "Standard Headset"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
+
+#~ msgid "In Development"
+#~ msgstr "Σε Ανάπτυξη"
+
+#~ msgid "Ink Cartridge"
+#~ msgstr "Ink Cartridge"
+
+#~ msgid "Is Follower"
+#~ msgstr "Είναι Ακόλουθος"
+
+#~ msgid "Laptop S3450"
+#~ msgstr "Laptop S3450"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Τελευταία ημερομηνία μηνύματος"
+
+#~ msgid "Messages"
+#~ msgstr "Μηνύματα"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Μηνύματα και ιστορικό επικοινωνίας"
+
+#~ msgid "Motherboard A20Z7"
+#~ msgstr "Motherboard A20Z7"
+
+#~ msgid "Multimedia Speakers"
+#~ msgstr "Ηχεία"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Αριθμός ενεργειών"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
+
+#~ msgid "Obsolete"
+#~ msgstr "Απαρχαιωμένο"
+
+#~ msgid ""
+#~ "Office Editing Software with word processing, spreadsheets, "
+#~ "presentations, graphics, and databases..."
+#~ msgstr "Λογισμικό Επεξεργασίας "
+
+#~ msgid "Office Suite"
+#~ msgstr "Σουίτα Γραφείου"
+
+#~ msgid "On demand hard-disk having capacity based on requirement."
+#~ msgstr "Σκληρός δίσκος με χωρητικότητα κατά παραγγελία"
+
+#~ msgid "Pen drive, SP-2"
+#~ msgstr "Pen drive, SP-2"
+
+#~ msgid "Pen drive, SP-4"
+#~ msgstr "Pen drive, SP-4"
+
+#~ msgid "Printer, All-in-one"
+#~ msgstr "Εκτυπωτής όλα-σε-ένα"
+
+#~ msgid "Processor AMD 8-Core"
+#~ msgstr "Επεξεργαστής AMD 8-Core"
+
+#~ msgid "RAM SR3"
+#~ msgstr "RAM SR3"
+
+#~ msgid "Router R430"
+#~ msgstr "Router R430"
+
+#~ msgid "Status"
+#~ msgstr "Κατάσταση"
+
+#~ msgid "Toner Cartridge"
+#~ msgstr "Toner Cartridge"
+
+#~ msgid "USB Adapter"
+#~ msgstr "USB Adapter"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Αδιάβαστα Μηνύματα"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
+
+#~ msgid "Webcam"
+#~ msgstr "Webcam"
+
+#~ msgid "Windows 7 Professional"
+#~ msgstr "Windows 7 Professional"
+
+#~ msgid "Windows Home Server 2011"
+#~ msgstr "Windows Home Server 2011"

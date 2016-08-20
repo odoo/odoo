@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_import
-# 
+#
 # Translators:
 # Bohdan Lisnenko, 2016
 # ТАрас <tratatuta@i.ua>, 2016
@@ -9,31 +9,35 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-18 13:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-05-06 19:21+0000\n"
 "Last-Translator: ТАрас <tratatuta@i.ua>\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
+"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
+"uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:466
+#: code:addons/base_import/static/src/js/import.js:474
 #, python-format
 msgid "(%d more)"
 msgstr "(%d більше)"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:281
+#: code:addons/base_import/static/src/js/import.js:287
 #, python-format
 msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
-msgstr "У файлі знайдено одинарну колонку; зазвичай це означає, що роздільник файлів налаштований невірно"
+msgstr ""
+"У файлі знайдено одинарну колонку; зазвичай це означає, що роздільник файлів "
+"налаштований невірно"
 
 #. module: base_import
 #. openerp-web
@@ -41,10 +45,15 @@ msgstr "У файлі знайдено одинарну колонку; зазв
 #, python-format
 msgid ""
 "According to your need, you should use \n"
-"                        one of these 3 ways to reference records in relations. \n"
+"                        one of these 3 ways to reference records in "
+"relations. \n"
 "                        Here is when you should use one or the other, \n"
 "                        according to your need:"
-msgstr "Відповідно до своїх потреб, Вам слід\nвикористовувати один з цих 3-х способів\nпосилання на записи у відношеннях.\nКоли використовувати той чи інший, відповідно до своїх потреб:"
+msgstr ""
+"Відповідно до своїх потреб, Вам слід\n"
+"використовувати один з цих 3-х способів\n"
+"посилання на записи у відношеннях.\n"
+"Коли використовувати той чи інший, відповідно до своїх потреб:"
 
 #. module: base_import
 #. openerp-web
@@ -52,8 +61,10 @@ msgstr "Відповідно до своїх потреб, Вам слід\nви
 #, python-format
 msgid ""
 "As an example, here is \n"
-"                        purchase.order_functional_error_line_cant_adpat.CSV \n"
-"                        file of some quotations you can import, based on demo \n"
+"                        purchase.order_functional_error_line_cant_adpat."
+"CSV \n"
+"                        file of some quotations you can import, based on "
+"demo \n"
 "                        data."
 msgstr ""
 
@@ -65,10 +76,18 @@ msgid ""
 "As an example, suppose you have a SQL database \n"
 "                        with two tables you want to import: companies and \n"
 "                        persons. Each person belong to one company, so you \n"
-"                        will have to recreate the link between a person and \n"
+"                        will have to recreate the link between a person "
+"and \n"
 "                        the company he work for. (If you want to test this \n"
 "                        example, here is a"
-msgstr "Як приклад, припустимо, що у вас база даних SQL\nз двома таблицями, які ви хочете імпортувати:\nкомпанії та особи. Кожна особа відноситься до\nоднієї компанії, тож вам потрібно буде заново\nстворити зв'язку між особою і компанією, на яку\nвона працює. (Якщо ви хочете випробувати цей\nприклад, ось"
+msgstr ""
+"Як приклад, припустимо, що у вас база даних SQL\n"
+"з двома таблицями, які ви хочете імпортувати:\n"
+"компанії та особи. Кожна особа відноситься до\n"
+"однієї компанії, тож вам потрібно буде заново\n"
+"створити зв'язку між особою і компанією, на яку\n"
+"вона працює. (Якщо ви хочете випробувати цей\n"
+"приклад, ось"
 
 #. module: base_import
 #. openerp-web
@@ -77,12 +96,16 @@ msgstr "Як приклад, припустимо, що у вас база да�
 msgid ""
 "As you can see in this file, Fabien and Laurence \n"
 "                        are working for the Bigees company (company_1) and \n"
-"                        Eric is working for the Organi company. The relation \n"
+"                        Eric is working for the Organi company. The "
+"relation \n"
 "                        between persons and companies is done using the \n"
 "                        External ID of the companies. We had to prefix the \n"
-"                        \"External ID\" by the name of the table to avoid a \n"
-"                        conflict of ID between persons and companies (person_1 \n"
-"                        and company_1 who shared the same ID 1 in the orignial \n"
+"                        \"External ID\" by the name of the table to avoid "
+"a \n"
+"                        conflict of ID between persons and companies "
+"(person_1 \n"
+"                        and company_1 who shared the same ID 1 in the "
+"orignial \n"
 "                        database)."
 msgstr ""
 
@@ -96,7 +119,12 @@ msgid ""
 "                        significant issue. To limit incorrect\n"
 "                        interpretation of data, they are strictly limited\n"
 "                        to dates following"
-msgstr "Оскільки CSV-файли використовуються \nвсередині і в багатьох зовнішніх процесах,\nінтероперабельність дуже важлива. Щоб \nобмежити невідповідну інтерпретацію даних, \nвони строго обмежені в датах нижче"
+msgstr ""
+"Оскільки CSV-файли використовуються \n"
+"всередині і в багатьох зовнішніх процесах,\n"
+"інтероперабельність дуже важлива. Щоб \n"
+"обмежити невідповідну інтерпретацію даних, \n"
+"вони строго обмежені в датах нижче"
 
 #. module: base_import
 #. openerp-web
@@ -177,7 +205,9 @@ msgstr ""
 msgid ""
 "Country/Database ID: the unique Odoo ID for a \n"
 "                        record, defined by the ID postgresql column"
-msgstr "ID країни/бази даних: унікальний Odoo ID для\nзапису; визначається колонкою ID-постгрес"
+msgstr ""
+"ID країни/бази даних: унікальний Odoo ID для\n"
+"запису; визначається колонкою ID-постгрес"
 
 #. module: base_import
 #. openerp-web
@@ -192,9 +222,13 @@ msgstr ""
 #, python-format
 msgid ""
 "Country/External ID: the ID of this record \n"
-"                        referenced in another application (or the .XML file \n"
+"                        referenced in another application (or the .XML "
+"file \n"
 "                        that imported it)"
-msgstr "Країна/ зовнішній ID: ID цього запису \nз посиланням з іншого додатка (чи файла .XML,\nз якого імпортовано)"
+msgstr ""
+"Країна/ зовнішній ID: ID цього запису \n"
+"з посиланням з іншого додатка (чи файла .XML,\n"
+"з якого імпортовано)"
 
 #. module: base_import
 #. openerp-web
@@ -254,7 +288,7 @@ msgid "Customers and their respective contacts"
 msgstr "Замовники та їх відповідні контакти"
 
 #. module: base_import
-#: code:addons/base_import/models.py:147 code:addons/base_import/models.py:153
+#: code:addons/base_import/models.py:149 code:addons/base_import/models.py:155
 #, python-format
 msgid "Database ID"
 msgstr "ID бази даних"
@@ -279,7 +313,7 @@ msgstr "Назва для відображення"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:315
+#: code:addons/base_import/static/src/js/import.js:321
 #, python-format
 msgid "Don't import"
 msgstr "Не імпортувати"
@@ -292,21 +326,21 @@ msgid "Encoding:"
 msgstr "Кодування:"
 
 #. module: base_import
-#: code:addons/base_import/models.py:204
+#: code:addons/base_import/models.py:228
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
 msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:443
+#: code:addons/base_import/static/src/js/import.js:451
 #, python-format
 msgid "Everything seems valid."
 msgstr "Все здається вірним."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/models.py:112 code:addons/base_import/models.py:146
+#: code:addons/base_import/models.py:114 code:addons/base_import/models.py:148
 #: code:addons/base_import/static/src/xml/import.xml:69
 #: code:addons/base_import/static/src/xml/import.xml:74
 #, python-format
@@ -410,14 +444,14 @@ msgstr "Запитання й відповіді"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:490
+#: code:addons/base_import/static/src/js/import.js:498
 #, python-format
 msgid "Get all possible values"
 msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:477
+#: code:addons/base_import/static/src/js/import.js:485
 #, python-format
 msgid "Here are the possible values:"
 msgstr ""
@@ -445,7 +479,9 @@ msgstr "Як мені змінити опції формату файла CSV п
 msgid ""
 "How can I import a many2many relationship field \n"
 "                        (e.g. a customer that has multiple tags)?"
-msgstr "Як мені імпортувати поле відношення багато-багатьом (напр. декілька рядків з замовлення на продаж)? 2"
+msgstr ""
+"Як мені імпортувати поле відношення багато-багатьом (напр. декілька рядків з "
+"замовлення на продаж)? 2"
 
 #. module: base_import
 #. openerp-web
@@ -454,7 +490,9 @@ msgstr "Як мені імпортувати поле відношення ба�
 msgid ""
 "How can I import a one2many relationship (e.g. several \n"
 "                        Order Lines of a Sales Order)?"
-msgstr "Як мені імпортувати відношення один-багатьом (напр. декілька рядків з замовлення на продаж)? 2"
+msgstr ""
+"Як мені імпортувати відношення один-багатьом (напр. декілька рядків з "
+"замовлення на продаж)? 2"
 
 #. module: base_import
 #. openerp-web
@@ -471,10 +509,15 @@ msgstr "Як експортувати/імпортувати різні табл
 #, python-format
 msgid ""
 "However if you do not wish to change your \n"
-"                        configuration of product categories, we recommend you \n"
+"                        configuration of product categories, we recommend "
+"you \n"
 "                        use make use of the external ID for this field \n"
 "                        'Category'."
-msgstr "Проте, якщо Ви не бажаєте змінювати свої \nналаштування категорій товарів, ми радимо \nскористатися зовнішнім ID для цього поля \n\"Категорії\"."
+msgstr ""
+"Проте, якщо Ви не бажаєте змінювати свої \n"
+"налаштування категорій товарів, ми радимо \n"
+"скористатися зовнішнім ID для цього поля \n"
+"\"Категорії\"."
 
 #. module: base_import
 #. openerp-web
@@ -507,11 +550,15 @@ msgid ""
 "                        with the child name \"Sellable\" (ie. \"Misc. \n"
 "                        Products/Sellable\" & \"Other Products/Sellable\"),\n"
 "                        your validation is halted but you may still import \n"
-"                        your data. However, we recommend you do not import the \n"
+"                        your data. However, we recommend you do not import "
+"the \n"
 "                        data because they will all be linked to the first \n"
-"                        'Sellable' category found in the Product Category list \n"
-"                        (\"Misc. Products/Sellable\"). We recommend you modify \n"
-"                        one of the duplicates' values or your product category \n"
+"                        'Sellable' category found in the Product Category "
+"list \n"
+"                        (\"Misc. Products/Sellable\"). We recommend you "
+"modify \n"
+"                        one of the duplicates' values or your product "
+"category \n"
 "                        hierarchy."
 msgstr ""
 
@@ -532,8 +579,8 @@ msgstr ""
 #, python-format
 msgid ""
 "If the model uses openchatter, history tracking                             "
-"will set up subscriptions and send notifications"
-"                             during the import, but lead to a slower import."
+"will set up subscriptions and send notifications                             "
+"during the import, but lead to a slower import."
 msgstr ""
 
 #. module: base_import
@@ -544,7 +591,8 @@ msgid ""
 "If you do not set all fields in your CSV file, \n"
 "                        Odoo will assign the default value for every non \n"
 "                        defined fields. But if you\n"
-"                        set fields with empty values in your CSV file, Odoo \n"
+"                        set fields with empty values in your CSV file, "
+"Odoo \n"
 "                        will set the EMPTY value in the field, instead of \n"
 "                        assigning the default value."
 msgstr ""
@@ -555,11 +603,13 @@ msgstr ""
 #, python-format
 msgid ""
 "If you edit and save CSV files in speadsheet \n"
-"                        applications, your computer's regional settings will \n"
+"                        applications, your computer's regional settings "
+"will \n"
 "                        be applied for the separator and delimiter. \n"
 "                        We suggest you use OpenOffice or LibreOffice Calc \n"
 "                        as they will allow you to modify all three options \n"
-"                        (in 'Save As' dialog box > Check the box 'Edit filter \n"
+"                        (in 'Save As' dialog box > Check the box 'Edit "
+"filter \n"
 "                        settings' > Save)."
 msgstr ""
 
@@ -569,11 +619,16 @@ msgstr ""
 #, python-format
 msgid ""
 "If you import a file that contains one of the \n"
-"                        column \"External ID\" or \"Database ID\", records that \n"
-"                        have already been imported will be modified instead of \n"
-"                        being created. This is very usefull as it allows you \n"
-"                        to import several times the same CSV file while having \n"
-"                        made some changes in between two imports. Odoo will \n"
+"                        column \"External ID\" or \"Database ID\", records "
+"that \n"
+"                        have already been imported will be modified instead "
+"of \n"
+"                        being created. This is very usefull as it allows "
+"you \n"
+"                        to import several times the same CSV file while "
+"having \n"
+"                        made some changes in between two imports. Odoo "
+"will \n"
 "                        take care of creating or modifying each record \n"
 "                        depending if it's new or not."
 msgstr ""
@@ -584,9 +639,11 @@ msgstr ""
 #, python-format
 msgid ""
 "If you need to import data from different tables, \n"
-"                        you will have to recreate relations between records \n"
+"                        you will have to recreate relations between "
+"records \n"
 "                        belonging to different tables. (e.g. if you import \n"
-"                        companies and persons, you will have to recreate the \n"
+"                        companies and persons, you will have to recreate "
+"the \n"
 "                        link between each person and the company they work \n"
 "                        for)."
 msgstr ""
@@ -597,11 +654,16 @@ msgstr ""
 #, python-format
 msgid ""
 "If you want to import sales order having several \n"
-"                        order lines; for each order line, you need to reserve \n"
-"                        a specific row in the CSV file. The first order line \n"
-"                        will be imported on the same row as the information \n"
-"                        relative to order. Any additional lines will need an \n"
-"                        addtional row that does not have any information in \n"
+"                        order lines; for each order line, you need to "
+"reserve \n"
+"                        a specific row in the CSV file. The first order "
+"line \n"
+"                        will be imported on the same row as the "
+"information \n"
+"                        relative to order. Any additional lines will need "
+"an \n"
+"                        addtional row that does not have any information "
+"in \n"
 "                        the fields relative to the order."
 msgstr ""
 
@@ -736,7 +798,7 @@ msgstr "Потрібно імпортувати дані з іншої прог�
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:363
+#: code:addons/base_import/static/src/js/import.js:369
 #, python-format
 msgid "Normal Fields"
 msgstr ""
@@ -748,8 +810,10 @@ msgstr ""
 msgid ""
 "Note that if your CSV file \n"
 "                        has a tabulation as separator, Odoo will not \n"
-"                        detect the separations. You will need to change the \n"
-"                        file format options in your spreadsheet application. \n"
+"                        detect the separations. You will need to change "
+"the \n"
+"                        file format options in your spreadsheet "
+"application. \n"
 "                        See the following question."
 msgstr ""
 
@@ -774,7 +838,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:364
+#: code:addons/base_import/static/src/js/import.js:370
 #, python-format
 msgid "Relation Fields"
 msgstr "Пов’язані поля"
@@ -793,7 +857,9 @@ msgstr "Перезавантажити дані, щоб перевірити з�
 msgid ""
 "Select the file to import. If you need a sample importable file, you\n"
 "            can use the export tool to generate one."
-msgstr "Виберіть файл для імпорту. Якщо Вам потрібен простий файл, \nможете скористатися інструментом експорту, щоб створити його."
+msgstr ""
+"Виберіть файл для імпорту. Якщо Вам потрібен простий файл, \n"
+"можете скористатися інструментом експорту, щоб створити його."
 
 #. module: base_import
 #. openerp-web
@@ -825,7 +891,8 @@ msgid ""
 "                        want to import such fields, Odoo will have to \n"
 "                        recreate links between the different records. \n"
 "                        To help you import such fields, Odoo provides 3 \n"
-"                        mechanisms. You must use one and only one mechanism \n"
+"                        mechanisms. You must use one and only one "
+"mechanism \n"
 "                        per field you want to import."
 msgstr ""
 
@@ -866,7 +933,9 @@ msgstr ""
 msgid ""
 "The following CSV file shows how to import \n"
 "                        customers and their respective contacts"
-msgstr "В наступному файлі CSV показано, як імпортувати клієнтів і їх відповідні контакти"
+msgstr ""
+"В наступному файлі CSV показано, як імпортувати клієнтів і їх відповідні "
+"контакти"
 
 #. module: base_import
 #. openerp-web
@@ -883,7 +952,8 @@ msgstr ""
 #, python-format
 msgid ""
 "The tags should be separated by a comma without any \n"
-"                        spacing. For example, if you want your customer to be \n"
+"                        spacing. For example, if you want your customer to "
+"be \n"
 "                        linked to both tags 'Manufacturer' and 'Retailer' \n"
 "                        then you will encode \"Manufacturer,\n"
 "                        Retailer\" in the same column of your CSV file."
@@ -896,8 +966,10 @@ msgstr ""
 msgid ""
 "The two files produced are ready to be imported in \n"
 "                        Odoo without any modifications. After having \n"
-"                        imported these two CSV files, you will have 4 contacts \n"
-"                        and 3 companies. (the firsts two contacts are linked \n"
+"                        imported these two CSV files, you will have 4 "
+"contacts \n"
+"                        and 3 companies. (the firsts two contacts are "
+"linked \n"
 "                        to the first company). You must first import the \n"
 "                        companies and then the persons."
 msgstr ""
@@ -915,8 +987,10 @@ msgstr ""
 #, python-format
 msgid ""
 "This feature \n"
-"                        allows you to use the Import/Export tool of Odoo to \n"
-"                        modify a batch of records in your favorite spreadsheet \n"
+"                        allows you to use the Import/Export tool of Odoo "
+"to \n"
+"                        modify a batch of records in your favorite "
+"spreadsheet \n"
 "                        application."
 msgstr ""
 
@@ -926,7 +1000,8 @@ msgstr ""
 #, python-format
 msgid ""
 "To create the CSV file for persons, linked to \n"
-"                        companies, we will use the following SQL command in \n"
+"                        companies, we will use the following SQL command "
+"in \n"
 "                        PSQL:"
 msgstr ""
 
@@ -936,12 +1011,16 @@ msgstr ""
 #, python-format
 msgid ""
 "To manage relations between tables, \n"
-"                        you can use the \"External ID\" facilities of Odoo. \n"
-"                        The \"External ID\" of a record is the unique identifier \n"
-"                        of this record in another application. This \"External \n"
+"                        you can use the \"External ID\" facilities of "
+"Odoo. \n"
+"                        The \"External ID\" of a record is the unique "
+"identifier \n"
+"                        of this record in another application. This "
+"\"External \n"
 "                        ID\" must be unique accoss all the records of all \n"
 "                        objects, so it's a good practice to prefix this \n"
-"                        \"External ID\" with the name of the application or \n"
+"                        \"External ID\" with the name of the application "
+"or \n"
 "                        table. (like 'company_1', 'person_1' instead of '1')"
 msgstr ""
 
@@ -953,13 +1032,14 @@ msgid "Track history during import"
 msgstr "Історія переміщень під час імпорту"
 
 #. module: base_import
-#: code:addons/base_import/models.py:173
+#: code:addons/base_import/models.py:195
 #, python-format
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models.py:174
+#: code:addons/base_import/models.py:196
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
@@ -972,9 +1052,11 @@ msgstr ""
 msgid ""
 "Use \n"
 "                        Country/Database ID: You should rarely use this \n"
-"                        notation. It's mostly used by developers as it's main \n"
+"                        notation. It's mostly used by developers as it's "
+"main \n"
 "                        advantage is to never have conflicts (you may have \n"
-"                        several records with the same name, but they always \n"
+"                        several records with the same name, but they "
+"always \n"
 "                        have a unique Database ID)"
 msgstr ""
 
@@ -984,7 +1066,8 @@ msgstr ""
 #, python-format
 msgid ""
 "Use \n"
-"                        Country/External ID: Use External ID when you import \n"
+"                        Country/External ID: Use External ID when you "
+"import \n"
 "                        data from a third party application."
 msgstr ""
 
@@ -1011,8 +1094,11 @@ msgstr "Підтвердити"
 #, python-format
 msgid ""
 "We will first export all companies and their \n"
-"                        \"External ID\". In PSQL, write the following command:"
-msgstr "Спершу, ми експортуємо всі компанії і їх\n\"Зовнішні ID\". Введіть у PSQL наступну команду: "
+"                        \"External ID\". In PSQL, write the following "
+"command:"
+msgstr ""
+"Спершу, ми експортуємо всі компанії і їх\n"
+"\"Зовнішні ID\". Введіть у PSQL наступну команду: "
 
 #. module: base_import
 #. openerp-web
@@ -1028,7 +1114,9 @@ msgstr "Що робити, якщо в мене багато чого підхо
 msgid ""
 "What can I do when the Import preview table isn't\n"
 "                        displayed correctly?"
-msgstr "Що робити, якщо попередній перегляд таблиці імпорту не відображається правильно?"
+msgstr ""
+"Що робити, якщо попередній перегляд таблиці імпорту не відображається "
+"правильно?"
 
 #. module: base_import
 #. openerp-web
@@ -1054,12 +1142,20 @@ msgstr "Яка різниця між ID бази даних та Зовнішн�
 #, python-format
 msgid ""
 "When you use External IDs, you can import CSV files \n"
-"                        with the \"External ID\" column to define the External \n"
-"                        ID of each record you import. Then, you will be able \n"
-"                        to make a reference to that record with columns like \n"
-"                        \"Field/External ID\". The following two CSV files give \n"
+"                        with the \"External ID\" column to define the "
+"External \n"
+"                        ID of each record you import. Then, you will be "
+"able \n"
+"                        to make a reference to that record with columns "
+"like \n"
+"                        \"Field/External ID\". The following two CSV files "
+"give \n"
 "                        you an example for Products and their Categories."
-msgstr "Коли використовуєте Зовнішні ID, Ви можете імпортувати файли CSV із зовнішнім ID кожного імпортованого запису. Так, Ви зможете робити посилання на цей запис, як у \"Поля/Зовнішній ID\". Два наступні файли CSV - приклади для Товарів та їх Категорій."
+msgstr ""
+"Коли використовуєте Зовнішні ID, Ви можете імпортувати файли CSV із "
+"зовнішнім ID кожного імпортованого запису. Так, Ви зможете робити посилання "
+"на цей запис, як у \"Поля/Зовнішній ID\". Два наступні файли CSV - приклади "
+"для Товарів та їх Категорій."
 
 #. module: base_import
 #. openerp-web
@@ -1083,14 +1179,14 @@ msgid "XXX/ID"
 msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models.py:376
+#: code:addons/base_import/models.py:406
 #, python-format
 msgid "You must configure at least one field to import"
 msgstr "Щоб імпортувати, потрібно налаштувати хоча б одне поле"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:460
+#: code:addons/base_import/static/src/js/import.js:468
 #, python-format
 msgid "at row %d"
 msgstr "в рядку %d"
@@ -1167,7 +1263,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:462
+#: code:addons/base_import/static/src/js/import.js:470
 #, python-format
 msgid "between rows %d and %d"
 msgstr ""
@@ -1209,8 +1305,10 @@ msgstr ""
 #, python-format
 msgid ""
 "copy \n"
-"                        (select 'company_'||id as \"External ID\",company_name \n"
-"                        as \"Name\",'True' as \"Is a Company\" from companies) TO \n"
+"                        (select 'company_'||id as \"External ID\","
+"company_name \n"
+"                        as \"Name\",'True' as \"Is a Company\" from "
+"companies) TO \n"
 "                        '/tmp/company.csv' with CSV HEADER;"
 msgstr ""
 
@@ -1221,8 +1319,10 @@ msgstr ""
 msgid ""
 "copy (select \n"
 "                        'person_'||id as \"External ID\",person_name as \n"
-"                        \"Name\",'False' as \"Is a Company\",'company_'||company_id\n"
-"                         as \"Related Company/External ID\" from persons) TO \n"
+"                        \"Name\",'False' as \"Is a Company\",'company_'||"
+"company_id\n"
+"                         as \"Related Company/External ID\" from persons) "
+"TO \n"
 "                        '/tmp/person.csv' with CSV"
 msgstr ""
 
@@ -1268,7 +1368,9 @@ msgstr ""
 msgid ""
 "the\n"
 "                        ISO 8601 format"
-msgstr "формат \nISO 8601"
+msgstr ""
+"формат \n"
+"ISO 8601"
 
 #. module: base_import
 #. openerp-web
@@ -1303,4 +1405,7 @@ msgid ""
 "                        import if you need to re-import modified data\n"
 "                        later, it's thus good practice to specify it\n"
 "                        whenever possible"
-msgstr "також буде використовуватися для оновлення першого імпорту, якщо Вам потрібно ре-імпортувати змінені дані пізніше; це хороший спосіб визначити його, коли буде можливість"
+msgstr ""
+"також буде використовуватися для оновлення першого імпорту, якщо Вам "
+"потрібно ре-імпортувати змінені дані пізніше; це хороший спосіб визначити "
+"його, коли буде можливість"
