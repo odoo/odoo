@@ -32,7 +32,7 @@ class Web_Editor(http.Controller):
             res_id=res_id,
             field=field,
             datarecord=json.loads(kwargs['datarecord']),
-            debug='debug' in kwargs)
+            debug=request.debug)
 
         for k in kwargs:
             if isinstance(kwargs[k], basestring) and kwargs[k].isdigit():

@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * project_issue
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-07-19 07:04+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project_issue
@@ -33,7 +33,7 @@ msgid "# of Issues"
 msgstr "Nº de incidències"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:212
+#: code:addons/project_issue/project_issue.py:215
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (còpia)"
@@ -59,13 +59,15 @@ msgid ""
 "A Issue's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the next stage"
-msgstr "Un estat de kanban de les incidències indica situacions especials que les afecten:\n* 'Normal' és la situació per defecte.\n* 'Bloquejada' indica que alguna cosa impedeix el progrés de la incidència.\n* 'Llesta per la següent etapa' indica que la incidència està llesta per ser portada a la següent etapa."
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction
-msgid "Action Needed"
-msgstr "Cal fer alguna acció"
+" * Ready for next stage indicates the issue is ready to be pulled to the "
+"next stage"
+msgstr ""
+"Un estat de kanban de les incidències indica situacions especials que les "
+"afecten:\n"
+"* 'Normal' és la situació per defecte.\n"
+"* 'Bloquejada' indica que alguna cosa impedeix el progrés de la incidència.\n"
+"* 'Llesta per la següent etapa' indica que la incidència està llesta per ser "
+"portada a la següent etapa."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -205,13 +207,13 @@ msgid "Creation Date"
 msgstr "Data de creació"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:367
+#: code:addons/project_issue/project_issue.py:384
 #, python-format
 msgid "Customer"
 msgstr "Client"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:369
+#: code:addons/project_issue/project_issue.py:386
 #, python-format
 msgid "Customer Email"
 msgstr "Correu del client"
@@ -235,11 +237,6 @@ msgstr "Data de tancament"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_opening_date
 msgid "Date of Opening"
 msgstr "Data d'obertura"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Data de l'últim missatge enviat al registre."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_days_since_creation
@@ -328,34 +325,18 @@ msgid "Feature description"
 msgstr "Descripció funcionalitat"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_follower_ids
-msgid "Followers"
-msgstr "Seguidors"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Followers (Canals)"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Seguidors (Socis)"
-
-#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Group By"
 msgstr "Agrupa per"
 
 #. module: project_issue
-#: selection:project.issue,priority:0
-#: selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
 msgid "High"
 msgstr "Alta"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:345
+#: code:addons/project_issue/project_issue.py:362
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -365,21 +346,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_id
 msgid "ID"
 msgstr "ID"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Si està marcat hi ha missatges nous pendents."
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Si està marcat, els nous missatges requereixen la vostra atenció"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_is_follower
-msgid "Is Follower"
-msgstr "És seguidor"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_name
@@ -438,8 +404,9 @@ msgstr ""
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
-msgid "Issue ready for next sStage"
-msgstr ""
+#, fuzzy
+msgid "Issue ready for next stage"
+msgstr "Preparat per propera etapa"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -449,6 +416,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
+#: model:ir.model.fields,field_description:project_issue.field_project_project_issue_needaction_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
 #: model:ir.ui.menu,name:project_issue.portal_services_issues
@@ -497,11 +465,6 @@ msgid "Last Message"
 msgstr "Últim missatge"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_last_post
-msgid "Last Message Date"
-msgstr "Data Últim Missatge"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue___last_update
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report___last_update
 msgid "Last Modified on"
@@ -519,20 +482,9 @@ msgid "Last Updated by"
 msgstr "Actualitzat per última vegada per"
 
 #. module: project_issue
-#: selection:project.issue,priority:0
-#: selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
 msgid "Low"
 msgstr "Baixa"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_ids
-msgid "Messages"
-msgstr "Missatges"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_ids
-msgid "Messages and communication history"
-msgstr "Historial de missatges i comunicació"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -546,7 +498,7 @@ msgid "New"
 msgstr "Nou"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:347
+#: code:addons/project_issue/project_issue.py:364
 #, python-format
 msgid "New Issue"
 msgstr ""
@@ -557,7 +509,7 @@ msgid "Next Action"
 msgstr "Acció següent"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:390
+#: code:addons/project_issue/project_issue.py:413
 #, python-format
 msgid "No Subject"
 msgstr "Sense assumpte"
@@ -567,11 +519,6 @@ msgstr "Sense assumpte"
 #: selection:project.issue.report,priority:0
 msgid "Normal"
 msgstr "Normal"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Nombre d'accions"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -584,26 +531,16 @@ msgid "Number of Days to open the project issue."
 msgstr "Nombre de dies per obrir les incidències de projecte."
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Nombre de missatges que requereixen una atenció"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Nombre de missatges no llegits"
-
-#. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
 msgid "Partner"
 msgstr "Empresa"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:480
+#: code:addons/project_issue/project_issue.py:530
 #, python-format
 msgid ""
-"Please remove existing issues in the project linked to the accounts you want"
-" to delete."
+"Please remove existing issues in the project linked to the accounts you want "
+"to delete."
 msgstr ""
 
 #. module: project_issue
@@ -631,7 +568,6 @@ msgid "Project"
 msgstr "Projecte"
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_graph
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_pivot
 msgid "Project Issue"
@@ -663,7 +599,9 @@ msgstr "Equip de vendes"
 msgid ""
 "Sales team to which Case belongs to.                             Define "
 "Responsible user and Email account for mail gateway."
-msgstr "Equip de vendes al qual pertany el cas. Defineix l'usuari responsable i el compte de correu electrònic per a la passarel·la de correu."
+msgstr ""
+"Equip de vendes al qual pertany el cas. Defineix l'usuari responsable i el "
+"compte de correu electrònic per a la passarel·la de correu."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -702,11 +640,18 @@ msgid "Task"
 msgstr "Tasca"
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_project_task_type
+#, fuzzy
+msgid "Task Stage"
+msgstr "Etapa"
+
+#. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
 msgid ""
 "The Odoo issues tacker allows you to efficiently manage things\n"
-"                    like internal requests, software development bugs, customer\n"
+"                    like internal requests, software development bugs, "
+"customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
 
@@ -724,7 +669,10 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr "Aquestes adreces de correu seran afegides al camp CC per a tots els correus entrants i sortints d'aquest registre abans de ser enviats. Separeu les diferents adreces de correu amb una coma."
+msgstr ""
+"Aquestes adreces de correu seran afegides al camp CC per a tots els correus "
+"entrants i sortints d'aquest registre abans de ser enviats. Separeu les "
+"diferents adreces de correu amb una coma."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
@@ -739,7 +687,12 @@ msgid ""
 "support or after-sales services. You can track the issues per age. You can "
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
-msgstr "Aquest informe sobre les incidències del projecte permet analitzar la qualitat del seu suport o els serveis postvenda. Podeu fer un seguiment de les incidències per antiguitat. Podeu analitzar el temps requerit a obrir o tancar una incidència, el nombre de correus intercanviats i el temps gastat en mitjana per incidència."
+msgstr ""
+"Aquest informe sobre les incidències del projecte permet analitzar la "
+"qualitat del seu suport o els serveis postvenda. Podeu fer un seguiment de "
+"les incidències per antiguitat. Podeu analitzar el temps requerit a obrir o "
+"tancar una incidència, el nombre de correus intercanviats i el temps gastat "
+"en mitjana per incidència."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -748,16 +701,10 @@ msgid "Unassigned"
 msgstr "Sense assignar"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Unread Messages"
 msgstr "Missatges pendents de llegir"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Comptador de missatges no llegits"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
@@ -785,16 +732,6 @@ msgid "Watchers Emails"
 msgstr "Observadors d'Emails (CC)"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_website_message_ids
-msgid "Website Messages"
-msgstr "Missatges de la pàgina web"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_website_message_ids
-msgid "Website communication history"
-msgstr "Historial de comunicacions de la pàgina web"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_open
 msgid "Working Hours to assign the Issue"
 msgstr "Hores laborals per assignar l'incidència"
@@ -819,12 +756,69 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:260
+#: code:addons/project_issue/project_issue.py:263
 #, python-format
 msgid "issues"
 msgstr "incidències"
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue
+#, fuzzy
+msgid "project issue"
+msgstr "Incidència projecte"
+
+#. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
 msgstr "projecte.incidència.informe"
+
+#~ msgid "Action Needed"
+#~ msgstr "Cal fer alguna acció"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data de l'últim missatge enviat al registre."
+
+#~ msgid "Followers"
+#~ msgstr "Seguidors"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Followers (Canals)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Seguidors (Socis)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Si està marcat hi ha missatges nous pendents."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Si està marcat, els nous missatges requereixen la vostra atenció"
+
+#~ msgid "Is Follower"
+#~ msgstr "És seguidor"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data Últim Missatge"
+
+#~ msgid "Messages"
+#~ msgstr "Missatges"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Historial de missatges i comunicació"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Nombre d'accions"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Nombre de missatges que requereixen una atenció"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Nombre de missatges no llegits"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Comptador de missatges no llegits"
+
+#~ msgid "Website Messages"
+#~ msgstr "Missatges de la pàgina web"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historial de comunicacions de la pàgina web"

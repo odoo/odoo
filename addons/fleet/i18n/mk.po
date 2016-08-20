@@ -1,31 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * fleet
-# 
+#
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:27+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-05-31 13:43+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
-"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
+"mk/)\n"
+"Language: mk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mk\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:373
+#: code:addons/fleet/fleet.py:367
 #, python-format
 msgid "%s %s has been added to the fleet!"
 msgstr "%s %s е додаден на флотата!"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:649
+#: code:addons/fleet/fleet.py:643
 #, python-format
 msgid "%s contract(s) need(s) to be renewed and/or closed!"
 msgstr "%s договор(и) треба да бидат обновени или затворени!"
@@ -69,11 +70,6 @@ msgstr "Полнење на акумулатор"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_acquisition_date
 msgid "Acquisition Date"
 msgstr "Датум на стекнување"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_needaction
-msgid "Action Needed"
-msgstr "Потребна е акција"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
@@ -233,7 +229,8 @@ msgstr "Изберете дали договорот е сеуште валид�
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type_category
 msgid "Choose wheter the service refer to contracts, vehicle services or both"
-msgstr "Избери дали сервисот е поврзан со договор, сервис на возилото или двата"
+msgstr ""
+"Избери дали сервисот е поврзан со договор, сервис на возилото или двата"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_act
@@ -448,14 +445,19 @@ msgstr "Месечни трошоци"
 msgid ""
 "Costs paid at regular intervals, depending on the cost frequency. If the "
 "cost frequency is set to unique, the cost will be logged at the start date"
-msgstr "Трошоци кои се плаќаат во редовни интервали, во зависност од зачестеноста на трошоците. Доколку зачестеноста на трошоците е подесена на уникатно, трошокот ќе биде најавен на почетниот датум"
+msgstr ""
+"Трошоци кои се плаќаат во редовни интервали, во зависност од зачестеноста на "
+"трошоците. Доколку зачестеноста на трошоците е подесена на уникатно, "
+"трошокот ќе биде најавен на почетниот датум"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 msgid ""
 "Create a new contract automatically with all the same informations except "
 "for the date that will start at the end of current contract"
-msgstr "Креирајте нов договор автоматски со истите информации освен за датумот кој ќе започне на крајот од тековниот договор"
+msgstr ""
+"Креирајте нов договор автоматски со истите информации освен за датумот кој "
+"ќе започне на крајот од тековниот договор"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_contract_state_create_uid
@@ -490,7 +492,7 @@ msgid "Created on"
 msgstr "Креирано на"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2863
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2976
 msgid "Current state of the vehicle"
 msgstr "Моментална состојба на возилото"
 
@@ -509,11 +511,6 @@ msgid "Date"
 msgstr "Датум"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Датум на испраќање на последната порака"
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_date
@@ -529,8 +526,8 @@ msgstr "Датум на почеток на договорот"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_expiration_date
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after"
-" begin date)"
+"Date when the coverage of the contract expirates (by default, one year after "
+"begin date)"
 msgstr "Датум кога истекува договорот (стандардно: 1 после почетниот датум)"
 
 #. module: fleet
@@ -585,7 +582,7 @@ msgid "Driver of the vehicle"
 msgstr "Возач на оваа возило"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:390
+#: code:addons/fleet/fleet.py:384
 #, python-format
 msgid "Driver: from '%s' to '%s'"
 msgstr "Возач : од '%s' до '%s'"
@@ -595,7 +592,9 @@ msgstr "Возач : од '%s' до '%s'"
 msgid ""
 "Each contract (e.g.: leasing) may include several services\n"
 "                (reparation, insurances, periodic maintenance)."
-msgstr "Секој договор (пр. Лизинг) може да вклучува неколку услуги\n(репарации, осигурувања, тековни одржувања)."
+msgstr ""
+"Секој договор (пр. Лизинг) може да вклучува неколку услуги\n"
+"(репарации, осигурувања, тековни одржувања)."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_act
@@ -658,21 +657,6 @@ msgstr ""
 #: model:ir.ui.menu,name:fleet.menu_root
 msgid "Fleet"
 msgstr "Возила"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_follower_ids
-msgid "Followers"
-msgstr "Пратители"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Пратители (Канали)"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Пратители (Партнери)"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_cost_type
@@ -812,7 +796,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_act
 msgid ""
 "Here you can add various odometer entries for all vehicles.\n"
-"                You can also show odometer value for a particular vehicle using\n"
+"                You can also show odometer value for a particular vehicle "
+"using\n"
 "                the search field."
 msgstr ""
 
@@ -839,23 +824,13 @@ msgstr "Хибридно"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2812
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2925
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_id
 msgid "ID"
 msgstr "ID"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_29
@@ -922,19 +897,9 @@ msgid "Invoice Reference"
 msgstr "Референца за фактура"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_is_follower
-msgid "Is Follower"
-msgstr "е следач"
-
-#. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Kilometers"
 msgstr "Километри"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_last_post
-msgid "Last Message Date"
-msgstr "Датум на последна порака"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_contract_state___last_update
@@ -1000,7 +965,7 @@ msgid "License Plate"
 msgstr "Регистарска таблица"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:397
+#: code:addons/fleet/fleet.py:391
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
 msgstr "Регистарска оснака: од '%s' до '%s'"
@@ -1062,7 +1027,10 @@ msgid ""
 "Manage all your contracts (leasing, insurances, etc.) with\n"
 "                their related services, costs. Odoo will automatically warn\n"
 "                you when some contracts have to be renewed."
-msgstr "Менаџирајте ги сите ваши договори (лизинг, осигурувања, итн.) со нивните \nповрзани услуги, цени. Odoo автоматски ќе ве предупреди\nкога некои договори треба да ви бидат обновени."
+msgstr ""
+"Менаџирајте ги сите ваши договори (лизинг, осигурувања, итн.) со нивните \n"
+"поврзани услуги, цени. Odoo автоматски ќе ве предупреди\n"
+"кога некои договори треба да ви бидат обновени."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
@@ -1090,17 +1058,10 @@ msgid ""
 "Medium-sized logo of the brand. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
-msgstr "Лого со средна големина на марката. Тоа автоматски се намалува како 128х128px слика, со зачуван сооднос. Искористете го ова поле во приказите на формуларот или во некои kanban прикази."
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_ids
-msgid "Messages"
-msgstr "Пораки"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_ids
-msgid "Messages and communication history"
-msgstr "Пораки и историја на комуникација"
+msgstr ""
+"Лого со средна големина на марката. Тоа автоматски се намалува како "
+"128х128px слика, со зачуван сооднос. Искористете го ова поле во приказите на "
+"формуларот или во некои kanban прикази."
 
 #. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
@@ -1108,7 +1069,7 @@ msgid "Miles"
 msgstr "Милји"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2845
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2958
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_search
 msgid "Model"
@@ -1137,12 +1098,12 @@ msgid "Model of a vehicle"
 msgstr "Модел на возилото"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2845
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2958
 msgid "Model of the vehicle"
 msgstr "Модел на возилото"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:386
+#: code:addons/fleet/fleet.py:380
 #, python-format
 msgid "Model: from '%s' to '%s'"
 msgstr "Модел: од '%s' до '%s'"
@@ -1186,8 +1147,8 @@ msgid "No"
 msgstr "Не"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:385 code:addons/fleet/fleet.py:389
-#: code:addons/fleet/fleet.py:393 code:addons/fleet/fleet.py:396
+#: code:addons/fleet/fleet.py:379 code:addons/fleet/fleet.py:383
+#: code:addons/fleet/fleet.py:387 code:addons/fleet/fleet.py:390
 #, python-format
 msgid "None"
 msgstr "Ништо"
@@ -1200,29 +1161,14 @@ msgid "Notes"
 msgstr "Белешки"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Број на акции"
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_doors
 msgid "Number of doors of the vehicle"
 msgstr "Број на врати на возилото"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Број на пораки за кои ѝм е потребна акција"
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_seats
 msgid "Number of seats of the vehicle"
 msgstr "Број на седишта на возилото"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Број на непрочитани пораки"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_odometer_id
@@ -1294,7 +1240,10 @@ msgid ""
 "Odoo helps you keeping track of all the services done\n"
 "                on your vehicle. Services can be of many type: occasional\n"
 "                repair, fixed maintenance, etc."
-msgstr "Odoo ви помага да водите сметка на сите ваши извршени услуги \nна вашето возило. Услугите можат да бидат од многу типови и тоа: повремени \nпоправки, еднократен сервис, итн."
+msgstr ""
+"Odoo ви помага да водите сметка на сите ваши извршени услуги \n"
+"на вашето возило. Услугите можат да бидат од многу типови и тоа: повремени \n"
+"поправки, еднократен сервис, итн."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_costs_act
@@ -1302,22 +1251,30 @@ msgid ""
 "Odoo helps you managing the costs for your different\n"
 "                vehicles. Costs are created automatically from services,\n"
 "                contracts (fixed or recurring) and fuel logs."
-msgstr "Odoo ви помага со менаџирањето на трошоците од сите ваши различни\n возила. Трошоците се креираат автоматски од услугите, \nдоговори (фиксни или обновливи) и наоди за гориво."
+msgstr ""
+"Odoo ви помага со менаџирањето на трошоците од сите ваши различни\n"
+" возила. Трошоците се креираат автоматски од услугите, \n"
+"договори (фиксни или обновливи) и наоди за гориво."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs
 #: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs_non_effective
 msgid ""
 "Odoo helps you managing the costs for your different vehicles\n"
-"          Costs are generally created from services and contract and appears here."
-msgstr "Odoo ви помага со менаџирањето на трошоците од вашите различни возила.\nТрошоци се генерално креирани од услуги и договори и ви се појавуваат тука."
+"          Costs are generally created from services and contract and appears "
+"here."
+msgstr ""
+"Odoo ви помага со менаџирањето на трошоците од вашите различни возила.\n"
+"Трошоци се генерално креирани од услуги и договори и ви се појавуваат тука."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
 msgid ""
 "Odoo will warn you when services or contract have to be\n"
 "                renewed."
-msgstr "Odoo ќе ве предупреди кога некои услуги или договор треба да ви \nбидат обновени."
+msgstr ""
+"Odoo ќе ве предупреди кога некои услуги или договор треба да ви \n"
+"бидат обновени."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_31
@@ -1333,11 +1290,6 @@ msgstr "Замена на пумпа за гориво"
 #: model:fleet.service.type,name:fleet.type_contract_omnium
 msgid "Omnium"
 msgstr "Омниум"
-
-#. module: fleet
-#: model:ir.actions.client,name:fleet.action_fleet_menu
-msgid "Open Fleet Menu"
-msgstr "Отвори го менито за возила"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_16
@@ -1446,7 +1398,7 @@ msgid "Refueling Details"
 msgstr "Податоци за точење на гориво"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:720
+#: code:addons/fleet/fleet.py:714
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 #, python-format
@@ -1580,9 +1532,11 @@ msgstr "Слика со мала димензија"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image_small
 msgid ""
 "Small-sized logo of the brand. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
-msgstr "Мала фотографија за брендот. Таа автоматски се намалува како 64x64px слика, со зачуван сооднос. Искористет го ова поле таму каде што се бара мала слика."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
+msgstr ""
+"Мала фотографија за брендот. Таа автоматски се намалува како 64x64px слика, "
+"со зачуван сооднос. Искористет го ова поле таму каде што се бара мала слика."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_6
@@ -1600,7 +1554,7 @@ msgid "Starter Replacement"
 msgstr "Замена на стартер"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2863
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2976
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_state_tree
 msgid "State"
 msgstr "Држава"
@@ -1611,7 +1565,7 @@ msgid "State name already exists"
 msgstr "Ова име веќе постои"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:394
+#: code:addons/fleet/fleet.py:388
 #, python-format
 msgid "State: from '%s' to '%s'"
 msgstr "Состојба: од '%s' до '%s'"
@@ -1677,7 +1631,9 @@ msgstr "Замена на термостат"
 msgid ""
 "This field holds the image used as logo for the brand, limited to "
 "1024x1024px."
-msgstr "Оваа поле може да содржи слика како лого за брендот. Лимитирано на 1024x1024px."
+msgstr ""
+"Оваа поле може да содржи слика како лого за брендот. Лимитирано на "
+"1024x1024px."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_44
@@ -1775,7 +1731,7 @@ msgstr "Број на шасија/мотор (VIN/SN number)"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2878
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2991
 msgid "Unit"
 msgstr "Единица"
 
@@ -1783,16 +1739,6 @@ msgstr "Единица"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit
 msgid "Unit of the odometer "
 msgstr "Единици на мерачот на километража "
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_unread
-msgid "Unread Messages"
-msgstr "Непрочитани Пораки"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Тезга на непрочитаните пораки"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_sequence
@@ -1963,7 +1909,8 @@ msgstr "Запишете ги овде сите други информации 
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_notes
-msgid "Write here all supplementary informations relative to this contract"
+#, fuzzy
+msgid "Write here all supplementary information relative to this contract"
 msgstr "Запишете ги овде сите дополнителни информации поврзани со овој договор"
 
 #. module: fleet
@@ -2002,7 +1949,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
 msgid ""
 "You will be able to manage your fleet by keeping track of the\n"
-"                contracts, services, fixed and recurring costs, odometers and\n"
+"                contracts, services, fixed and recurring costs, odometers "
+"and\n"
 "                fuel logs associated to each vehicle."
 msgstr ""
 
@@ -2071,3 +2019,54 @@ msgstr "прикажи ги записите за километража на о
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_form
 msgid "show the services logs for this vehicle"
 msgstr "Прикажи ја историјата на сервиси на оваа возило"
+
+#~ msgid "Action Needed"
+#~ msgstr "Потребна е акција"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Датум на испраќање на последната порака"
+
+#~ msgid "Followers"
+#~ msgstr "Пратители"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Пратители (Канали)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Пратители (Партнери)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
+
+#~ msgid "Is Follower"
+#~ msgstr "е следач"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Датум на последна порака"
+
+#~ msgid "Messages"
+#~ msgstr "Пораки"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Пораки и историја на комуникација"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Број на акции"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Број на пораки за кои ѝм е потребна акција"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Број на непрочитани пораки"
+
+#~ msgid "Open Fleet Menu"
+#~ msgstr "Отвори го менито за возила"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Непрочитани Пораки"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Тезга на непрочитаните пораки"

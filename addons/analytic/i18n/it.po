@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * analytic
-# 
+#
 # Translators:
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-04 22:40+0000\n"
 "Last-Translator: Francesco Garganese <francesco.garganese@aeromnia.aero>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
@@ -34,9 +34,10 @@ msgid "Account Currency"
 msgstr "Conto Valuta"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction
-msgid "Action Needed"
-msgstr "Azione Necessaria"
+#: selection:account.analytic.account,account_type:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+msgid "Active"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
@@ -84,11 +85,6 @@ msgid "Analytic Entry"
 msgstr "Registrazione analitica"
 
 #. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Riga contabilità analitica"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
 msgid "Analytic Lines"
 msgstr "Linee Analitiche"
@@ -105,8 +101,8 @@ msgstr "Tag Analitici"
 
 #. module: analytic
 #: selection:account.analytic.account,account_type:0
-msgid "Analytic View"
-msgstr "Vista Analitica"
+msgid "Archived"
+msgstr ""
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -161,7 +157,9 @@ msgstr "Costi e ricavi"
 msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
-msgstr "I costi saranno creati automaticamente quando si registrano\nfatture, spese o schede attività di un fornitore"
+msgstr ""
+"I costi saranno creati automaticamente quando si registrano\n"
+"fatture, spese o schede attività di un fornitore"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
@@ -200,11 +198,6 @@ msgid "Date"
 msgstr "Data"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Data dell'ultimo messaggio postato per questo record"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_debit
 msgid "Debit"
 msgstr "Debito"
@@ -221,21 +214,6 @@ msgstr "Descrizione"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
 msgid "Display Name"
 msgstr "Visualizza Nome"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_follower_ids
-msgid "Followers"
-msgstr "Followers"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Followers (Canali)"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Followers (Partner)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
@@ -257,33 +235,17 @@ msgid "ID"
 msgstr "ID"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Se selezionato, nuovi messaggi richiedono la tua attenzione"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Se selezionato, i nuovi messaggi richiedono la tua attenzione"
-
-#. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sale orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
-msgstr "In Odoo, gli ordini di vendita ed i progetti sono implementati\nusando i conti analitici. Puoi tenere traccia dei costi e dei ricavi\nper analizzare facilmente i tuoi margini."
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_is_follower
-msgid "Is Follower"
-msgstr "E' Follower"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_last_post
-msgid "Last Message Date"
-msgstr "Data Ultimo Messaggio"
+msgstr ""
+"In Odoo, gli ordini di vendita ed i progetti sono implementati\n"
+"usando i conti analitici. Puoi tenere traccia dei costi e dei ricavi\n"
+"per analizzare facilmente i tuoi margini."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
@@ -310,16 +272,6 @@ msgid "Last Updated on"
 msgstr "Ultima modifica il"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_ids
-msgid "Messages"
-msgstr "Messaggi"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_ids
-msgid "Messages and communication history"
-msgstr "Storico messaggi e comunicazioni"
-
-#. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account."
 msgstr "Ancora nessuna attività su questo conto."
@@ -328,21 +280,6 @@ msgstr "Ancora nessuna attività su questo conto."
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet."
 msgstr "Ancora nessuna attività."
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Numero di Azioni"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Numero di messaggi che richiedono un'azione"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Numero di messaggi non letti"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
@@ -370,10 +307,17 @@ msgstr "Riferimento"
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sale orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sale "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
-msgstr "I ricavi saranno creati automaticamente quando crei fatture di vendita.\nLe fatture di vendita possono essere create in base agli ordini di vendita\n(fatture e prezzo fisso), ai fogli attività (in base al lavoro fatto) o sulle\nspese (es. fatturare spese di viaggio a piè di lista)."
+msgstr ""
+"I ricavi saranno creati automaticamente quando crei fatture di vendita.\n"
+"Le fatture di vendita possono essere create in base agli ordini di vendita\n"
+"(fatture e prezzo fisso), ai fogli attività (in base al lavoro fatto) o "
+"sulle\n"
+"spese (es. fatturare spese di viaggio a piè di lista)."
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -384,6 +328,11 @@ msgstr "Ricerca registraioni analitiche"
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
 msgid "Select the Period for Analysis"
 msgstr "Seleziona il periodo per l'analisi"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
+msgid "State"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
@@ -412,26 +361,74 @@ msgid "Total"
 msgstr "Totale"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
-msgid "Type of Account"
-msgstr "Tipo di Conto"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_unread
-msgid "Unread Messages"
-msgstr "Messaggi Non Letti"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Contatore di messsaggi non letti"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_user_id
 msgid "User"
 msgstr "Utente"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+#, fuzzy
+msgid "account analytic line"
+msgstr "Piano dei conti analitico"
+
+#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr "es. Progetto XYZ"
+
+#~ msgid "Action Needed"
+#~ msgstr "Azione Necessaria"
+
+#~ msgid "Analytic Line"
+#~ msgstr "Riga contabilità analitica"
+
+#~ msgid "Analytic View"
+#~ msgstr "Vista Analitica"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data dell'ultimo messaggio postato per questo record"
+
+#~ msgid "Followers"
+#~ msgstr "Followers"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Followers (Canali)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Followers (Partner)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Se selezionato, nuovi messaggi richiedono la tua attenzione"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Se selezionato, i nuovi messaggi richiedono la tua attenzione"
+
+#~ msgid "Is Follower"
+#~ msgstr "E' Follower"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data Ultimo Messaggio"
+
+#~ msgid "Messages"
+#~ msgstr "Messaggi"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Storico messaggi e comunicazioni"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Numero di Azioni"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Numero di messaggi che richiedono un'azione"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Numero di messaggi non letti"
+
+#~ msgid "Type of Account"
+#~ msgstr "Tipo di Conto"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Messaggi Non Letti"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Contatore di messsaggi non letti"

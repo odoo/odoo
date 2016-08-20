@@ -1,36 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * procurement
-# 
+#
 # Translators:
 # Jesper Carstensen <jc@danodoo.dk>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-04-08 08:46+0000\n"
 "Last-Translator: Morten Schou <ms@msteknik.dk>\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"<b>Procurement Orders</b> represent the need for a certain quantity of "
-"products, at a given time, in a given location."
-msgstr "<b>Indkøbsordrer</b> repræsenterer et behov for et givent antal produkter på et givent tidspunkt på et givent sted.."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"<b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
-"                <br>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc..."
-msgstr ""
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
@@ -39,7 +25,10 @@ msgid ""
 "fulfill a procurement. Some exceptions will resolve themselves "
 "automatically, but others require manual intervention (those are identified "
 "by a specific error message in the chatter)."
-msgstr "<b>Indkøbs undtagelser</b> optræder når systemet ikke kan finde en måde at opfylde et behov. Nogle undtagelser løser sig selv  mens andre kræver manuel indgriben (disse kan identificeres ved en specifik fejlmeddelelse i tråden)."
+msgstr ""
+"<b>Indkøbs undtagelser</b> optræder når systemet ikke kan finde en måde at "
+"opfylde et behov. Nogle undtagelser løser sig selv  mens andre kræver manuel "
+"indgriben (disse kan identificeres ved en specifik fejlmeddelelse i tråden)."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -47,20 +36,21 @@ msgstr "<b>Indkøbs undtagelser</b> optræder når systemet ikke kan finde en m�
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "A <b>procurement order</b> is used to record a need for a specific\n"
-"                product at a specific location. Procurement orders are usually\n"
-"                created automatically from <i>sales orders, pull logistic rules or\n"
+"                product at a specific location. Procurement orders are "
+"usually\n"
+"                created automatically from <i>sales orders, pull logistic "
+"rules or\n"
 "                minimum stock rules.</i>"
-msgstr "En <b>indkøbsordre</b> anvendes til at registrere et behov for et givent\nprodukt på et givent sted. Indkøbsordrer oprettes normalt\nautomatisk på baggrund af  <i>salgsordrer, logistik regler eller\nminimum lager regler.</i>"
+msgstr ""
+"En <b>indkøbsordre</b> anvendes til at registrere et behov for et givent\n"
+"produkt på et givent sted. Indkøbsordrer oprettes normalt\n"
+"automatisk på baggrund af  <i>salgsordrer, logistik regler eller\n"
+"minimum lager regler.</i>"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
 msgid "Action"
 msgstr "Aktion"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction
-msgid "Action Needed"
-msgstr "Aktion påkrævet"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
@@ -88,7 +78,7 @@ msgid "Cancelled"
 msgstr "Annulleret"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:139
+#: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
 msgstr ""
@@ -101,17 +91,11 @@ msgstr "Tjek indkøb"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but"
-" can be manually set by the procurement manager to force an unusual "
-"behavior."
-msgstr "Valgt regel for beslutningen indkøb. Normalt valgt af systemet, men kan indstilles manuelt af manager indkøb til at tvinge en usædvanlig adfærd."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"Click to create a Procurement order in exception state, or remove the filter"
-" on the search bar to display all the procurements."
+"Chosen rule for the procurement resolution. Usually chosen by the system but "
+"can be manually set by the procurement manager to force an unusual behavior."
 msgstr ""
+"Valgt regel for beslutningen indkøb. Normalt valgt af systemet, men kan "
+"indstilles manuelt af manager indkøb til at tvinge en usædvanlig adfærd."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -158,13 +142,9 @@ msgid "Created on"
 msgstr "Oprettet den"
 
 #. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Dato for sidste besked på denne post."
-
-#. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-msgid "Delivery Method"
+#, fuzzy
+msgid "Delivery Type"
 msgstr "Leveringsmåde"
 
 #. module: procurement
@@ -216,21 +196,6 @@ msgid "Fixed Procurement Group"
 msgstr "Fast indkøbs gruppe"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_follower_ids
-msgid "Followers"
-msgstr "Followers"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Følgere (kanaler)"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Følgere (partnere)"
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Global"
 msgstr "Globalt"
@@ -255,16 +220,6 @@ msgid "ID"
 msgstr "Id"
 
 #. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Hvis afmærket, kræver nye beskeder din attention"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Hvis afmærket kræver nye beskeder din opmærksomhed "
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
 msgstr "Hvis ruten er global"
@@ -272,17 +227,9 @@ msgstr "Hvis ruten er global"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr "Hvis markeret, vil det give dig mulighed for at skjule den regel uden at fjerne det."
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_is_follower
-msgid "Is Follower"
-msgstr "Følger"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_last_post
-msgid "Last Message Date"
-msgstr "Sidste dato for besked"
+msgstr ""
+"Hvis markeret, vil det give dig mulighed for at skjule den regel uden at "
+"fjerne det."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
@@ -324,14 +271,12 @@ msgid "Logistics"
 msgstr "Logistik"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_ids
-msgid "Messages"
-msgstr "Beskeder"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_ids
-msgid "Messages and communication history"
-msgstr "Besked- og kommunikations historik"
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"Most common exceptions are products to purchase without\n"
+"                having a vendor defined on the product, and products to\n"
+"                manufacture without having a bill of materials."
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -339,7 +284,7 @@ msgid "Name"
 msgstr "Navn"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:206
+#: code:addons/procurement/procurement.py:200
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Ingen regel matcher denne indkøb"
@@ -358,21 +303,6 @@ msgstr "Haster ikke"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Notes"
 msgstr "Noter"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Antal aktioner"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Antal meddelser der kræver handling"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Antal ulæste beskeder"
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
@@ -576,16 +506,6 @@ msgid "Unit of Measure"
 msgstr "Enhed"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread
-msgid "Unread Messages"
-msgstr "Ulæste beskeder"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Ulæste besked tæller"
-
-#. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Urgent"
 msgstr "Haster"
@@ -596,22 +516,13 @@ msgid "Very Urgent"
 msgstr "Haster meget"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_website_message_ids
-msgid "Website Messages"
-msgstr "Website beskeder"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_website_message_ids
-msgid "Website communication history"
-msgstr "Website kommunikations historik"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: purchase\n"
+"                creates the necessary operations to fulfill the need: "
+"purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
 
@@ -624,3 +535,64 @@ msgstr ""
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr "Eksempelvis S005"
+
+#~ msgid ""
+#~ "<b>Procurement Orders</b> represent the need for a certain quantity of "
+#~ "products, at a given time, in a given location."
+#~ msgstr ""
+#~ "<b>Indkøbsordrer</b> repræsenterer et behov for et givent antal produkter "
+#~ "på et givent tidspunkt på et givent sted.."
+
+#~ msgid "Action Needed"
+#~ msgstr "Aktion påkrævet"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Dato for sidste besked på denne post."
+
+#~ msgid "Followers"
+#~ msgstr "Followers"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Følgere (kanaler)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Følgere (partnere)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Hvis afmærket, kræver nye beskeder din attention"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Hvis afmærket kræver nye beskeder din opmærksomhed "
+
+#~ msgid "Is Follower"
+#~ msgstr "Følger"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Sidste dato for besked"
+
+#~ msgid "Messages"
+#~ msgstr "Beskeder"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Besked- og kommunikations historik"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Antal aktioner"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Antal meddelser der kræver handling"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Antal ulæste beskeder"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Ulæste beskeder"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Ulæste besked tæller"
+
+#~ msgid "Website Messages"
+#~ msgstr "Website beskeder"
+
+#~ msgid "Website communication history"
+#~ msgstr "Website kommunikations historik"

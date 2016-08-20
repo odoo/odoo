@@ -1,22 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product_extended
-# 
+#
 # Translators:
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-02-10 19:30+0000\n"
 "Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: product_extended
 #: code:addons/product_extended/wizard/wizard_price.py:24
@@ -52,6 +54,7 @@ msgstr "Изменить также цены дочерних специфика
 
 #. module: product_extended
 #: model:ir.actions.act_window,name:product_extended.action_view_compute_price_wizard
+#: model:ir.model,name:product_extended.model_wizard_price
 msgid "Compute Price Wizard"
 msgstr "Рассчитать мастера цен"
 
@@ -61,16 +64,13 @@ msgid "Compute from BOM"
 msgstr "Расчитать из Спецификации"
 
 #. module: product_extended
-#: model:ir.model,name:product_extended.model_wizard_price
-msgid "Compute price wizard"
-msgstr "Рассчитать мастера цен"
-
-#. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
-msgstr "Вычислить цену продукта используя продукты и операции соответствующей спецификации материалов, только для производимых продуктов."
+msgstr ""
+"Вычислить цену продукта используя продукты и операции соответствующей "
+"спецификации материалов, только для производимых продуктов."
 
 #. module: product_extended
 #: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_uid
@@ -118,6 +118,11 @@ msgid "Last Updated on"
 msgstr "Последний раз обновлено"
 
 #. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_get_variant_count
+msgid "Number of variant for the product"
+msgstr ""
+
+#. module: product_extended
 #: model:ir.model,name:product_extended.model_product_template
 msgid "Product Template"
 msgstr "Шаблон продукта"
@@ -137,12 +142,19 @@ msgstr "Стандартная цена"
 msgid ""
 "The price is computed from the bill of material lines which are not variant "
 "specific"
-msgstr "Цена вычисляется из строк спецификации материалов, у которых не определены варианты"
+msgstr ""
+"Цена вычисляется из строк спецификации материалов, у которых не определены "
+"варианты"
 
 #. module: product_extended
 #: code:addons/product_extended/wizard/wizard_price.py:38
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"This wizard is build for product templates, while you are currently running "
+"This wizard is built for product templates, while you are currently running "
 "it from a product variant."
-msgstr "Этот мастер построит шаблоны продуктов, в то время как вы в настоящее время работаете от варианта продукта."
+msgstr ""
+"Этот мастер построит шаблоны продуктов, в то время как вы в настоящее время "
+"работаете от варианта продукта."
+
+#~ msgid "Compute price wizard"
+#~ msgstr "Рассчитать мастера цен"

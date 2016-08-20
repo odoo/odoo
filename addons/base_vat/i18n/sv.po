@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_vat
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-09-07 16:40+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_vat
@@ -27,13 +27,9 @@ msgstr "Bolag"
 msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
-msgstr "Om markerad, kommer företags momsregistreringsnummer helt valideras mot EU: s VIES tjänst snarare än via en enkel formatvalidering (kontrollsumma)."
-
-#. module: base_vat
-#: code:addons/base_vat/base_vat.py:111
-#, python-format
-msgid "Importing VAT Number [%s] is not valid !"
-msgstr "Vid import av Moms-registreringsnumret  [%s] är det ej giltigt !"
+msgstr ""
+"Om markerad, kommer företags momsregistreringsnummer helt valideras mot EU: "
+"s VIES tjänst snarare än via en enkel formatvalidering (kontrollsumma)."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -46,7 +42,9 @@ msgstr "Företag"
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
-msgstr "Moms-registreringsnumret [%s] for organisationen [%s] verkar inte stämma. \nNotera: det förväntade formatet är %s"
+msgstr ""
+"Moms-registreringsnumret [%s] for organisationen [%s] verkar inte stämma. \n"
+"Notera: det förväntade formatet är %s"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:127
@@ -54,7 +52,9 @@ msgstr "Moms-registreringsnumret [%s] for organisationen [%s] verkar inte stämm
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
-msgstr "Moms-registreingsnumret [%s] för organisationen [%s] klarade inte VIES VAT-kontroll eller följer inte formatet %s."
+msgstr ""
+"Moms-registreingsnumret [%s] för organisationen [%s] klarade inte VIES VAT-"
+"kontroll eller följer inte formatet %s."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
@@ -65,3 +65,6 @@ msgstr "VIES VAT-kontroll"
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "e.g. BE0477472701"
 msgstr "e.g. SE5577472701"
+
+#~ msgid "Importing VAT Number [%s] is not valid !"
+#~ msgstr "Vid import av Moms-registreringsnumret  [%s] är det ej giltigt !"

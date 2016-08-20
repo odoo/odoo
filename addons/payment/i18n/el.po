@@ -1,63 +1,92 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-# 
+#
 # Translators:
 # Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-03 14:18+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
 msgid ""
-"            Will be safe_eval with `self` being the current transaction. i.e.:\n"
+"            Will be safe_eval with `self` being the current transaction. i."
+"e.:\n"
 "                self.env['my.model'].payment_validated(self)"
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
-msgid "-It installs the module payment_adyen."
+#, fuzzy
+msgid "-This installs the module payment_adyen."
 msgstr "-Εγκαθιστά την εφαρμογή payment_adyen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
-msgid "-It installs the module payment_authorize."
-msgstr ""
+#, fuzzy
+msgid "-This installs the module payment_authorize."
+msgstr "-Εγκαθιστά την εφαρμογή payment_adyen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
-msgid "-It installs the module payment_buckaroo."
+#, fuzzy
+msgid "-This installs the module payment_buckaroo."
 msgstr "-Εγκαθιστά την εφαρμογή payment_buckaroo."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
-msgid "-It installs the module payment_ogone."
+#, fuzzy
+msgid "-This installs the module payment_ogone."
 msgstr "-Εγκαθιστά την εφαρμογή payment_ogone."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
-msgid "-It installs the module payment_paypal."
+#, fuzzy
+msgid "-This installs the module payment_paypal."
+msgstr "-Εγκαθιστά την εφαρμογή payment_paypal."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_sips
+#, fuzzy
+msgid "-This installs the module payment_sips."
 msgstr "-Εγκαθιστά την εφαρμογή payment_paypal."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
-msgid "-It installs the module payment_transfer."
-msgstr ""
+#, fuzzy
+msgid "-This installs the module payment_transfer."
+msgstr "-Εγκαθιστά την εφαρμογή payment_adyen."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
 msgid "3D Secure HTML"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-danger\">Test</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-success\">Production</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 
 #. module: payment
@@ -115,6 +144,11 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid "At payment with acquirer confirmation"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
+msgid "Authorize.Net"
 msgstr ""
 
 #. module: payment
@@ -262,12 +296,15 @@ msgstr "Προμήθεια"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr "Ποσό προμήθειας. Ορίζεται από το σύστημα επειδή εξαρτάται από τον αποδέκτη"
+msgstr ""
+"Ποσό προμήθειας. Ορίζεται από το σύστημα επειδή εξαρτάται από τον αποδέκτη"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
 msgid "Field used to store error and/or validation messages for information"
-msgstr "Το πεδίο χρησιμοποιείται για να αποθηκεύει τα μηνύματα λάθους ή / και επικύρωσης για πληροφόρηση"
+msgstr ""
+"Το πεδίο χρησιμοποιείται για να αποθηκεύει τα μηνύματα λάθους ή / και "
+"επικύρωσης για πληροφόρηση"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
@@ -350,7 +387,8 @@ msgstr "Τελευταία Ενημέρωση στις"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr "Μετατροπή της πληρωμής σε διαθέσιμη προς εξαγορά (Τιμολόγια Πελάτη, κ.λπ)"
+msgstr ""
+"Μετατροπή της πληρωμής σε διαθέσιμη προς εξαγορά (Τιμολόγια Πελάτη, κ.λπ)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
@@ -379,7 +417,9 @@ msgstr "Μήνυμα που εμφανίζεται μετά την επεξερ�
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pre_msg
 msgid "Message displayed to explain and help the payment process."
-msgstr "Μήνυμα που εμφανίζεται για να επεξηγήσει και να βοηθήσει στην διαδικασία πληρωμής."
+msgstr ""
+"Μήνυμα που εμφανίζεται για να επεξηγήσει και να βοηθήσει στην διαδικασία "
+"πληρωμής."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
@@ -486,7 +526,6 @@ msgstr "Συναλλαγή Πληρωμής"
 #: model:ir.actions.act_window,name:payment.action_payment_tx_ids
 #: model:ir.actions.act_window,name:payment.payment_transaction_action_child
 #: model:ir.model.fields,field_description:payment.field_payment_method_payment_ids
-#: model:ir.ui.menu,name:payment.finance_pay_tx_menu
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
@@ -494,7 +533,6 @@ msgid "Payment Transactions"
 msgstr "Συναλλαγές Πληρωμής"
 
 #. module: payment
-#: model:ir.ui.menu,name:payment.finance_payment_menu
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.payment_method_form_view
@@ -559,7 +597,6 @@ msgstr ""
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_method_action
-#: model:ir.ui.menu,name:payment.finance_pay_method_menu
 #: model:ir.ui.menu,name:payment.payment_method_menu
 msgid "Saved Payment Data"
 msgstr ""
@@ -575,6 +612,11 @@ msgid "Server To Server"
 msgstr "Διακομιστής προς διακομιστή"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_sips
+msgid "Sips"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
 msgid "Small-sized image"
 msgstr "Μικρού-Μεγέθους Εικόνα"
@@ -582,9 +624,9 @@ msgstr "Μικρού-Μεγέθους Εικόνα"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px"
-" image, with aspect ratio preserved. Use this field anywhere a small image "
-"is required."
+"Small-sized image of this provider. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 
 #. module: payment
@@ -622,7 +664,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is be rendered with qWeb with the following evaluation context:"
+"                                            It is be rendered with qWeb with "
+"the following evaluation context:"
 msgstr ""
 
 #. module: payment
@@ -693,14 +736,17 @@ msgstr "νόμισμα: αναζήτηση αρχείων νομίσματος �
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr "συνεργάτης: αναζήτηση αρχείου συνεργάτη αγορών, όχι απαραίτητα ρυθμισμένο"
+msgstr ""
+"συνεργάτης: αναζήτηση αρχείου συνεργάτη αγορών, όχι απαραίτητα ρυθμισμένο"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr "partner_values: συγκεκριμένες αξίες σχετικά με τον αγοραστή, για παράδειγμα που προέρχονται από φόρμα αποστολής"
+msgstr ""
+"partner_values: συγκεκριμένες αξίες σχετικά με τον αγοραστή, για παράδειγμα "
+"που προέρχονται από φόρμα αποστολής"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_method
@@ -723,11 +769,9 @@ msgid "tx_values: transaction values"
 msgstr "tx_values: αξίες συναλλαγών"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
-msgid "unknown"
-msgstr "άγνωστο"
-
-#. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr "χρήστης: αναζήτηση αρχείων τρέχοντος χρήστη"
+
+#~ msgid "unknown"
+#~ msgstr "άγνωστο"

@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_byproduct
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-22 15:18+0000\n"
 "Last-Translator: Juliano Henriquez <juliano@consultoriahenca.com>\n"
-"Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
+"Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/"
+"odoo-9/language/es_DO/)\n"
+"Language: es_DO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_DO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_byproduct
@@ -63,7 +64,15 @@ msgid ""
 "that the quantity will be computed as    '(quantity of byproduct set on the "
 "BoM / quantity of manufactured product set on the BoM * quantity of "
 "manufactured product in the production order.)'"
-msgstr "Definir cómo se establecerá la cantidad de subproductos en las órdenes de producción que utilizan esta LdM. \"Fijo\" representa una situación en la que la cantidad de producto creado por siempre es igual a la cantidad fijada en la LDM, independientemente de cuántos son creados a la orden de producción. Por oposición, \"variable\" significa que la cantidad se calcula como '(cantidad de derivado establecido en LDM / cantidad de producto manufacturado fijado en la cantidad de la LdM * producto manufacturado en el orden de producción.)'"
+msgstr ""
+"Definir cómo se establecerá la cantidad de subproductos en las órdenes de "
+"producción que utilizan esta LdM. \"Fijo\" representa una situación en la "
+"que la cantidad de producto creado por siempre es igual a la cantidad fijada "
+"en la LDM, independientemente de cuántos son creados a la orden de "
+"producción. Por oposición, \"variable\" significa que la cantidad se calcula "
+"como '(cantidad de derivado establecido en LDM / cantidad de producto "
+"manufacturado fijado en la cantidad de la LdM * producto manufacturado en el "
+"orden de producción.)'"
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
@@ -96,11 +105,6 @@ msgid "Last Updated on"
 msgstr "Última actualización en"
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Orden de Fabricación"
-
-#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
 msgid "Product"
 msgstr "Producto"
@@ -116,6 +120,12 @@ msgid "Product Unit of Measure"
 msgstr "Unidad de medida del producto"
 
 #. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_production
+#, fuzzy
+msgid "Production"
+msgstr "Producto"
+
+#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_subproduct_type
 msgid "Quantity Type"
 msgstr "Tipo de Cantidad"
@@ -126,7 +136,9 @@ msgstr "Tipo de Cantidad"
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr "La Unidad de medida del producto que eligió tiene una categoría diferente a la del formulario del producto."
+msgstr ""
+"La Unidad de medida del producto que eligió tiene una categoría diferente a "
+"la del formulario del producto."
 
 #. module: mrp_byproduct
 #: selection:mrp.subproduct,subproduct_type:0
@@ -138,3 +150,6 @@ msgstr "Variable"
 #, python-format
 msgid "Warning"
 msgstr "Advertencia"
+
+#~ msgid "Manufacturing Order"
+#~ msgstr "Orden de Fabricación"

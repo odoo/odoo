@@ -569,12 +569,11 @@ class IrModelConstraint(models.Model):
 
         ids_set = set(self.ids)
         for data in self.sorted(key='id', reverse=True):
-            if data.model.model not in self.env:
-                continue
-            model = self.env[data.model.model]
             name = tools.ustr(data.name)
-            if not model:
-                continue
+            if data.model.model in self.env:
+                table = self.env[data.model.model]._table    
+            else:
+                table = data.model.model.replace('.', '_')
             typ = data.type
 
             # double-check we are really going to delete all the owners of this schema element
@@ -588,18 +587,18 @@ class IrModelConstraint(models.Model):
                 # test if FK exists on this table (it could be on a related m2m table, in which case we ignore it)
                 self._cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
                                     WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""",
-                                 ('f', name, model._table))
+                                 ('f', name, table))
                 if self._cr.fetchone():
-                    self._cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model._table, name),)
+                    self._cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (table, name),)
                     _logger.info('Dropped FK CONSTRAINT %s@%s', name, data.model.model)
 
             if typ == 'u':
                 # test if constraint exists
                 self._cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
                                     WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""",
-                                 ('u', name, model._table))
+                                 ('u', name, table))
                 if self._cr.fetchone():
-                    self._cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model._table, name),)
+                    self._cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (table, name),)
                     _logger.info('Dropped CONSTRAINT %s@%s', name, data.model.model)
 
         self.unlink()

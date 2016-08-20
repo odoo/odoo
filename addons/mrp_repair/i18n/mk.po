@@ -1,42 +1,49 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_repair
-# 
+#
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-07-08 16:00+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
-"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
+"mk/)\n"
+"Language: mk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mk\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
-msgid ""
-" * The 'Draft' status is set automatically as draft when repair order in draft status.                         \n"
-"* The 'Confirmed' status is set automatically as confirm when repair order in confirm status.                         \n"
-"* The 'Done' status is set automatically when repair order is completed.                        \n"
-"* The 'Cancelled' status is set automatically when user cancel repair order."
-msgstr " * Статусот 'Нацрт' е автоматски подесен како нацрт кога налогот за поправка е во статус нацрт.                         \n* Статусот 'Потврдено' е автоматски подесен како потврдено кога налогот за поправка е во статус потврди.                         \n* Статусот 'Завршено' е подесен автоматски кога налогот за поправка е завршен.                        \n* Статусот 'Откажано' е автоматски подесен кога корисникот го откажува налогот за поправка."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.             \n"
-"* The 'Confirmed' status is used when a user confirms the repair order.             \n"
-"* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.             \n"
-"* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.             \n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"repair order.             \n"
+"* The 'Confirmed' status is used when a user confirms the repair "
+"order.             \n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start "
+"repairing only after repair order is confirmed.             \n"
+"* The 'To be Invoiced' status is used to generate the invoice before or "
+"after repairing done.             \n"
 "* The 'Done' status is set when repairing is completed.            \n"
 "* The 'Cancelled' status is used when user cancel repair order."
-msgstr " * Статусот 'Нацрт' се користи кога корисникот внесува нов и непотврден налог за поправка.             \n* Статусот 'Потврдено' се користи кога корисникот го потврдува налогот за поправка.             \n* 'Спремно за поправка' се користи за да се започне со поправката. Корисникот може да започне откако налогот за поправка е потврден.             \n* Статусот 'За фактурирање' се користи за да се генерира фактура пред или после поправката.             \n* 'Завршено' се поставува откако поправката е целосно завршена.            \n* 'Откажано' се користи кога корисникот ќе го откаже налогот за поправка."
+msgstr ""
+" * Статусот 'Нацрт' се користи кога корисникот внесува нов и непотврден "
+"налог за поправка.             \n"
+"* Статусот 'Потврдено' се користи кога корисникот го потврдува налогот за "
+"поправка.             \n"
+"* 'Спремно за поправка' се користи за да се започне со поправката. "
+"Корисникот може да започне откако налогот за поправка е "
+"потврден.             \n"
+"* Статусот 'За фактурирање' се користи за да се генерира фактура пред или "
+"после поправката.             \n"
+"* 'Завршено' се поставува откако поправката е целосно завршена.            \n"
+"* 'Откажано' се користи кога корисникот ќе го откаже налогот за поправка."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -85,6 +92,12 @@ msgstr "<strong>Производ за поправка:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#, fuzzy
+msgid "<strong>Shipping address :</strong>"
+msgstr "Адреса на испорака :"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total Without Taxes</strong>"
 msgstr "<strong>Вкупно без данок</strong>"
 
@@ -92,11 +105,6 @@ msgstr "<strong>Вкупно без данок</strong>"
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total</strong>"
 msgstr "<strong>Вкупно</strong>"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_needaction
-msgid "Action Needed"
-msgstr "Потребна е акција"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:24
@@ -185,7 +193,10 @@ msgstr "Потврдено"
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr "Не е пронајдена ставка од ценовник што се совпаѓа со овој производ и количина.\nТреба да ги промените или производот, количината или ценовникот."
+msgstr ""
+"Не е пронајдена ставка од ценовник што се совпаѓа со овој производ и "
+"количина.\n"
+"Треба да ги промените или производот, количината или ценовникот."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -221,11 +232,6 @@ msgstr "Креирано на"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_id
 msgid "Current Location"
 msgstr "Моменталан ситуација"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Датум на испраќање на последната порака"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -290,21 +296,6 @@ msgid "Fees"
 msgstr "Надоместоци"
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_follower_ids
-msgid "Followers"
-msgstr "Пратители"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Пратители (Канали)"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Пратители (Партнери)"
-
-#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Group By"
 msgstr "Групирај по"
@@ -339,20 +330,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
-
-#. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the different\n"
+"                add or replace and record the time you spent on the "
+"different\n"
 "                operations."
 msgstr ""
 
@@ -421,16 +403,6 @@ msgid "Invoicing Address"
 msgstr "Адреса на фактурирање"
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_is_follower
-msgid "Is Follower"
-msgstr "е следач"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_last_post
-msgid "Last Message Date"
-msgstr "Датум на последна порака"
-
-#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair___last_update
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel___last_update
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee___last_update
@@ -466,16 +438,6 @@ msgstr "Лот"
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
 msgid "Make Invoice"
 msgstr "Направи фактура"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_ids
-msgid "Messages"
-msgstr "Пораки"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_ids
-msgid "Messages and communication history"
-msgstr "Пораки и историја на комуникација"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_move_id
@@ -527,21 +489,6 @@ msgstr "Не е пронајден валиден ценовник !"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Notes"
 msgstr "Белешки"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Број на акции"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Број на пораки за кои ѝм е потребна акција"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Број на непрочитани пораки"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_operations
@@ -647,11 +594,6 @@ msgid "Ready to Repair"
 msgstr "Спремно за поправка"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-msgid "Reair Orders"
-msgstr "Налози за поправка"
-
-#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Recreate Invoice"
 msgstr "Креирај повторно фактура"
@@ -691,6 +633,7 @@ msgstr "Референца на налог за поправка"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Repair Orders"
 msgstr "Налози за поправка"
 
@@ -740,7 +683,8 @@ msgstr "Налози за поправка"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-msgid "Search Reair Orders"
+#, fuzzy
+msgid "Search Repair Orders"
 msgstr "Пребарај ги налозите за поправка"
 
 #. module: mrp_repair
@@ -749,7 +693,10 @@ msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
-msgstr "Со избирање на 'Пред поправка' или 'По поправка' ќе можете да генерирате фактура пред или по завршувањето на поправката. 'Не фактурирај' значи дека не сакате да изадете фактура за овој налог за поправка."
+msgstr ""
+"Со избирање на 'Пред поправка' или 'По поправка' ќе можете да генерирате "
+"фактура пред или по завршувањето на поправката. 'Не фактурирај' значи дека "
+"не сакате да изадете фактура за овој налог за поправка."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:272
@@ -761,11 +708,6 @@ msgstr "Потребен е сериски број за оперативна л
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Set to Draft"
 msgstr "Поставено на Предлог"
-
-#. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "Shipping address :"
-msgstr "Адреса на испорака :"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
@@ -809,7 +751,9 @@ msgstr "Даноци"
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr "Единицата мерка на производот која ја одбравте има различна категорија од онаа во формуларот за производот."
+msgstr ""
+"Единицата мерка на производот која ја одбравте има различна категорија од "
+"онаа во формуларот за производот."
 
 #. module: mrp_repair
 #: sql_constraint:mrp.repair:0
@@ -820,8 +764,16 @@ msgstr "Името на налогот за поправка мора да е у
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "The repair order uses the warranty date on the Serial Number in\n"
-"                order to know if whether the repair should be invoiced to the\n"
+"                order to know if whether the repair should be invoiced to "
+"the\n"
 "                customer or not."
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
+msgid ""
+"The status of a repair line is set automatically to the one of the linked "
+"repair order."
 msgstr ""
 
 #. module: mrp_repair
@@ -829,7 +781,9 @@ msgstr ""
 msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
-msgstr "Оваа операција ќе го откаже процесот на поправка, но нема да ја откаже фактурата за истата. Дали сакате да продолжите?"
+msgstr ""
+"Оваа операција ќе го откаже процесот на поправка, но нема да ја откаже "
+"фактурата за истата. Дали сакате да продолжите?"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_to_invoice
@@ -875,16 +829,6 @@ msgid "Unit of Measure"
 msgstr "Единица мерка"
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_unread
-msgid "Unread Messages"
-msgstr "Непрочитани Пораки"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Тезга на непрочитаните пораки"
-
-#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_untaxed
 msgid "Untaxed Amount"
 msgstr "Даночна основа"
@@ -911,16 +855,6 @@ msgid "Warranty Expiration"
 msgstr "Истек на гаранција"
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_website_message_ids
-msgid "Website Messages"
-msgstr "Пораки на веб сајт"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_website_message_ids
-msgid "Website communication history"
-msgstr "Историја на веб комуникација"
-
-#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
 msgid "Yes"
 msgstr "Да"
@@ -929,7 +863,8 @@ msgstr "Да"
 #: code:addons/mrp_repair/mrp_repair.py:308
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form!"
-msgstr "Мора да изберете адреса за фактура на партнер во формуларот за поправка!"
+msgstr ""
+"Мора да изберете адреса за фактура на партнер во формуларот за поправка!"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:513
@@ -937,9 +872,87 @@ msgstr "Мора да изберете адреса за фактура на п�
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
 "Please set one before choosing a product."
-msgstr "Мора да изберете ценовник во формуларот за поправка !\nВе молиме подесете еден пред да изберете производ."
+msgstr ""
+"Мора да изберете ценовник во формуларот за поправка !\n"
+"Ве молиме подесете еден пред да изберете производ."
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
 msgid "unknown"
 msgstr "непознато"
+
+#~ msgid ""
+#~ " * The 'Draft' status is set automatically as draft when repair order in "
+#~ "draft status.                         \n"
+#~ "* The 'Confirmed' status is set automatically as confirm when repair "
+#~ "order in confirm status.                         \n"
+#~ "* The 'Done' status is set automatically when repair order is "
+#~ "completed.                        \n"
+#~ "* The 'Cancelled' status is set automatically when user cancel repair "
+#~ "order."
+#~ msgstr ""
+#~ " * Статусот 'Нацрт' е автоматски подесен како нацрт кога налогот за "
+#~ "поправка е во статус нацрт.                         \n"
+#~ "* Статусот 'Потврдено' е автоматски подесен како потврдено кога налогот "
+#~ "за поправка е во статус потврди.                         \n"
+#~ "* Статусот 'Завршено' е подесен автоматски кога налогот за поправка е "
+#~ "завршен.                        \n"
+#~ "* Статусот 'Откажано' е автоматски подесен кога корисникот го откажува "
+#~ "налогот за поправка."
+
+#~ msgid "Action Needed"
+#~ msgstr "Потребна е акција"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Датум на испраќање на последната порака"
+
+#~ msgid "Followers"
+#~ msgstr "Пратители"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Пратители (Канали)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Пратители (Партнери)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
+
+#~ msgid "Is Follower"
+#~ msgstr "е следач"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Датум на последна порака"
+
+#~ msgid "Messages"
+#~ msgstr "Пораки"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Пораки и историја на комуникација"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Број на акции"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Број на пораки за кои ѝм е потребна акција"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Број на непрочитани пораки"
+
+#~ msgid "Reair Orders"
+#~ msgstr "Налози за поправка"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Непрочитани Пораки"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Тезга на непрочитаните пораки"
+
+#~ msgid "Website Messages"
+#~ msgstr "Пораки на веб сајт"
+
+#~ msgid "Website communication history"
+#~ msgstr "Историја на веб комуникација"

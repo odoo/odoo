@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_crm
-# 
+#
 # Translators:
 # Bole <bole@dajmi5.com>, 2015
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
@@ -11,20 +11,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-05-10 12:04+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_claim_count
-msgid "# Claims"
-msgstr "# Prigovori/pritužbe"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
@@ -56,17 +52,20 @@ msgstr "<span class=\"o_stat_text\"> Ponuda(e) </span>"
 msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
-msgstr "Član s kojim želite povezati svoje članstvo. Ono će uzeti u obzir stanje članstva pridruženog člana ."
+msgstr ""
+"Član s kojim želite povezati svoje članstvo. Ono će uzeti u obzir stanje "
+"članstva pridruženog člana ."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
+#, fuzzy
+msgid "Activation"
+msgstr "Ponuda"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
 msgid "Associate Member"
 msgstr "Izvanredni član"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_campaign_id
-msgid "Campaign"
-msgstr "Kampanja"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
@@ -109,19 +108,26 @@ msgid "Free Member"
 msgstr "Slobodan član"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_latitude
-msgid "Geo Latitude"
-msgstr "Geo Latitude"
+#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
+msgid ""
+"Gives the probability to assign a lead to this partner. (0 means no "
+"assignation.)"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_localization
-msgid "Geo Localization Date"
-msgstr "Datum Geo lokalizacije"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
+msgid "Implementation References"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_longitude
-msgid "Geo Longitude"
-msgstr "Geo dužina"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
+msgid "Implemented by"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_account_invoice
+msgid "Invoice"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
@@ -135,10 +141,24 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
-msgstr "Ukazuje na stanje članstva.\n-Nije član: Partner koji nije podnio zahtjev za članstvo.\n-Otkazano: Član koji je otkazao svoje članstvo.\n-Stari član: Član kojem je istekao datum članstva.\n-Čekajući član: Član koji je podnio zahtjev za članstvo, a račun će tek biti kreiran.\n- Član kojem je izdan račun: Član kojem je račun kreiran.\n- Član koji plaća: Član koji je platio članarinu."
+msgstr ""
+"Ukazuje na stanje članstva.\n"
+"-Nije član: Partner koji nije podnio zahtjev za članstvo.\n"
+"-Otkazano: Član koji je otkazao svoje članstvo.\n"
+"-Stari član: Član kojem je istekao datum članstva.\n"
+"-Čekajući član: Član koji je podnio zahtjev za članstvo, a račun će tek biti "
+"kreiran.\n"
+"- Član kojem je izdan račun: Član kojem je račun kreiran.\n"
+"- Član koji plaća: Član koji je platio članarinu."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
+msgid "Latest Partner Review"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
@@ -146,14 +166,19 @@ msgid "Lead/Opportunity"
 msgstr "Potencijal/prilika"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
+msgid "Level"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
+msgid "Level Weight"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
 msgstr "Zabilježi u prozor chat-a iz koje prilike nalog dolazi"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_medium_id
-msgid "Medium"
-msgstr "Srednji"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
@@ -181,6 +206,11 @@ msgid "New Quotation"
 msgstr "Nova ponuda"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
+msgid "Next Partner Review"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
 msgid "Number of Quotations"
 msgstr "Broj ponuda"
@@ -194,6 +224,12 @@ msgstr "Prilika"
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
 msgid "Orders"
 msgstr "Nalozi"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
+#, fuzzy
+msgid "Partnership Date"
+msgstr "Otkaži datum članstva"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
@@ -222,11 +258,6 @@ msgid "Select if you want to give free membership."
 msgstr "Odaberite ako želite dati besplatno članstvo."
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_source_id
-msgid "Source"
-msgstr "Izvor"
-
-#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
 msgid "Sum of Orders"
 msgstr "Suma naloga"
@@ -247,37 +278,22 @@ msgid "The price negotiated by the partner"
 msgstr "Cijena po dogovoru partnera"
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr "Ime koje vam pomaže pratiti napore različitih kampanja, npr: Jesenska_akcija, Božićni_specijal"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "Ovo je način isporuke. Npr. razglednica, e-mail, oglas"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_source_id
-msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr "To je izvor linka npr. pretraživač, druga domena ili ime sa popisa e-pošte"
-
-#. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
 msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
-msgstr "Ova skladišna lokacija će se koristiti, umjesto uobičajene, kao odredišna lokacija za robu koju šaljete ovom partneru"
+msgstr ""
+"Ova skladišna lokacija će se koristiti, umjesto uobičajene, kao odredišna "
+"lokacija za robu koju šaljete ovom partneru"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
-msgstr "Ova lokacija zalihe se koristi umjesto uobičajene kao ulazna lokacija za robu koju nabavljate od ovog partnera"
+msgstr ""
+"Ova lokacija zalihe se koristi umjesto uobičajene kao ulazna lokacija za "
+"robu koju nabavljate od ovog partnera"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -288,3 +304,40 @@ msgstr "Korisnici"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
 msgstr "Lokacija dobavljača"
+
+#~ msgid "# Claims"
+#~ msgstr "# Prigovori/pritužbe"
+
+#~ msgid "Campaign"
+#~ msgstr "Kampanja"
+
+#~ msgid "Geo Latitude"
+#~ msgstr "Geo Latitude"
+
+#~ msgid "Geo Localization Date"
+#~ msgstr "Datum Geo lokalizacije"
+
+#~ msgid "Geo Longitude"
+#~ msgstr "Geo dužina"
+
+#~ msgid "Medium"
+#~ msgstr "Srednji"
+
+#~ msgid "Source"
+#~ msgstr "Izvor"
+
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "Ime koje vam pomaže pratiti napore različitih kampanja, npr: "
+#~ "Jesenska_akcija, Božićni_specijal"
+
+#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+#~ msgstr "Ovo je način isporuke. Npr. razglednica, e-mail, oglas"
+
+#~ msgid ""
+#~ "This is the source of the link Ex: Search Engine, another domain, or name "
+#~ "of email list"
+#~ msgstr ""
+#~ "To je izvor linka npr. pretraživač, druga domena ili ime sa popisa e-pošte"

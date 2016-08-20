@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_setup
-# 
+#
 # Translators:
 # Luis Miguel Sarabia <lmsarabia@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-20 21:15+0000\n"
 "Last-Translator: Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>\n"
-"Language-Team: Spanish (Peru) (http://www.transifex.com/odoo/odoo-9/language/es_PE/)\n"
+"Language-Team: Spanish (Peru) (http://www.transifex.com/odoo/odoo-9/language/"
+"es_PE/)\n"
+"Language: es_PE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_PE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_setup
@@ -29,14 +30,25 @@ msgid "Allow documents sharing"
 msgstr "Permitir compartir documentos"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_currency
+msgid "Allow multi currencies"
+msgstr ""
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
-msgstr "Permite a los usuarios sincronizar su calendario con el Calendario de Google"
+msgstr ""
+"Permite a los usuarios sincronizar su calendario con el Calendario de Google"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_base_import
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
 msgstr "Permitir a los usuarios importar datos desde archivos CSV/XLS/XLSX/ODS"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_currency
+msgid "Allows to work in a multi currency environment"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -197,7 +209,7 @@ msgid "Manage Inter Company"
 msgstr "Administrar Inter Compañías"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_light_multi_company
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
 msgid "Manage multiple companies"
 msgstr "Administrar multiples compañias"
 
@@ -213,9 +225,14 @@ msgstr "Multicompañias"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Multi Currencies"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
-"Once installed, you can configure your API credentials for \"Google "
-"calendar\""
+"Once installed, you can configure your API credentials for \"Google calendar"
+"\""
 msgstr ""
 
 #. module: base_setup
@@ -247,9 +264,17 @@ msgstr "Comparta partners a todas las compañias"
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_company_share_partner
 msgid ""
 "Share your partners to all companies defined in your instance.\n"
-" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
-msgstr "Comparta sus empresas entre todas las compañías definidas en su instancia.\n * Marcado: Las empresas son visibles para todas las compañías, incluso si se define una compañía en la empresa.\n * Desmarcado: Cada compañía podrá ver solo sus empresas (empresas en las que la compañía está definida). Las empresas sin compañía establecida serán visibles para todas las compañías."
+" * Checked : Partners are visible for every companies, even if a company is "
+"defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company "
+"is defined). Partners not related to a company are visible for all companies."
+msgstr ""
+"Comparta sus empresas entre todas las compañías definidas en su instancia.\n"
+" * Marcado: Las empresas son visibles para todas las compañías, incluso si "
+"se define una compañía en la empresa.\n"
+" * Desmarcado: Cada compañía podrá ver solo sus empresas (empresas en las "
+"que la compañía está definida). Las empresas sin compañía establecida serán "
+"visibles para todas las compañías."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -280,8 +305,12 @@ msgstr "Esto instala el módulo google_docs."
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_inter_company_rules
 msgid ""
 "This installs the module inter_company_rules.\n"
-" Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
-msgstr "Esto instala el módulo inter_company_rules.\n Configure reglas de compañía para crear automáticamente PV/OC cuando una de sus compañías venda/compre a otra de sus compañías."
+" Configure company rules to automatically create SO/PO when one of your "
+"company sells/buys to another of your company."
+msgstr ""
+"Esto instala el módulo inter_company_rules.\n"
+" Configure reglas de compañía para crear automáticamente PV/OC cuando una de "
+"sus compañías venda/compre a otra de sus compañías."
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
@@ -297,18 +326,23 @@ msgstr "Use proveedores de autenticación externa, inicie sesión con Google..."
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "When you send a document to a customer\n"
-"                                    (quotation, invoice), your customer will be\n"
-"                                    able to signup to get all his documents,\n"
-"                                    read your company news, check his projects,\n"
+"                                    (quotation, invoice), your customer will "
+"be\n"
+"                                    able to signup to get all his "
+"documents,\n"
+"                                    read your company news, check his "
+"projects,\n"
 "                                    etc."
 msgstr ""
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_light_multi_company
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_company
 msgid ""
-"Work in multi-company environments, with appropriate security access between"
-" companies."
-msgstr "Trabaje en entornos multi-compañía, con la seguridad de acceso apropiada entre compañías."
+"Work in multi-company environments, with appropriate security access between "
+"companies."
+msgstr ""
+"Trabaje en entornos multi-compañía, con la seguridad de acceso apropiada "
+"entre compañías."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form

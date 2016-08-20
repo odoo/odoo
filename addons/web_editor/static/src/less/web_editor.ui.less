@@ -12,10 +12,13 @@
 
     form.navbar-form {
         height: 100%;
+        z-index: 1060;
         margin: 0;
         padding: 0;
         .o-position-absolute(@right: -@o-we-sidebar-width);
         .o-transition(right, 0.4s, @o-we-md-ease);
+        border-left: 1px solid @o-we-color-divider;
+        background-color: inherit;
 
         .btn-group {
             height: 100%;
@@ -703,6 +706,7 @@ html[lang] > body.editor_enable{
 
     .popover-content {
         height: @odoo-navbar-height;
+        white-space: nowrap;
 
         .btn {
             height: @odoo-navbar-height;
@@ -716,6 +720,11 @@ html[lang] > body.editor_enable{
             &:hover {
                 border-top: 2px solid @o-we-color-text-normal;
                 color: @o-we-color-text-normal;
+            }
+
+            .o_image_alt {
+                .o-text-overflow(inline-block);
+                max-width: 100px;
             }
         }
         .btn.active {
@@ -746,6 +755,10 @@ html[lang] > body.editor_enable{
                 }
             }
         }
+        .note-para .dropdown-menu {
+            min-width: 228px;
+        }
+
         #colors_preview {
             padding: 4px;
             border-radius: 2px;

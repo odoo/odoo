@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_order_dates
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2015-09-08 08:03+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
@@ -26,16 +27,28 @@ msgstr "تاريخ الإلتزام"
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
 msgid ""
 "Date by which the customer has requested the items to be delivered.\n"
-"When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
-"Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
-msgstr "التاريخ الذي طلب العميل تسليم المنتجات فيه.\nعند تأكيد هذا الأمر، سيتم احتساب التاريخ المتوقع للتسليم انطلاقاً من تاريخ التأكيد وفترة الأمان في التسليم.\nاترك هذا الحقل فارغاً إذا كنت ترغب في معالجة أمر التسليم في أقرب وقت ممكن. في تلك الحالة، سيتم احتساب التاريخ باستخدام الطريقة الافتراضية: بناء على الزمن الاستباقي للمنتج وفترة الأمان للتسليم في الشركة."
+"When this Order gets confirmed, the Delivery Order's expected date will be "
+"computed based on this date and the Company's Security Delay.\n"
+"Leave this field empty if you want the Delivery Order to be processed as "
+"soon as possible. In that case the expected date will be computed using the "
+"default method: based on the Product Lead Times and the Company's Security "
+"Delay."
+msgstr ""
+"التاريخ الذي طلب العميل تسليم المنتجات فيه.\n"
+"عند تأكيد هذا الأمر، سيتم احتساب التاريخ المتوقع للتسليم انطلاقاً من تاريخ "
+"التأكيد وفترة الأمان في التسليم.\n"
+"اترك هذا الحقل فارغاً إذا كنت ترغب في معالجة أمر التسليم في أقرب وقت ممكن. في "
+"تلك الحالة، سيتم احتساب التاريخ باستخدام الطريقة الافتراضية: بناء على الزمن "
+"الاستباقي للمنتج وفترة الأمان للتسليم في الشركة."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
 msgid ""
-"Date by which the products are sure to be delivered. This is a date that you"
-" can promise to the customer, based on the Product Lead Times."
-msgstr "التاريخ الذي تضمن تسليم المنتجات فيه. هذا التاريخ هو الذي ستخبر العميل به، اعتماداً على إعدادات الزمن الاستباقي في المنتج."
+"Date by which the products are sure to be delivered. This is a date that you "
+"can promise to the customer, based on the Product Lead Times."
+msgstr ""
+"التاريخ الذي تضمن تسليم المنتجات فيه. هذا التاريخ هو الذي ستخبر العميل به، "
+"اعتماداً على إعدادات الزمن الاستباقي في المنتج."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
@@ -74,4 +87,6 @@ msgstr "بند أمر البيع"
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
-msgstr "التاريخ المطلوب بواسطة العميل أقرب من تاريخ الإلتزام. ربما لن تستطيع تلبية طلب العميل في الوقت المناسب."
+msgstr ""
+"التاريخ المطلوب بواسطة العميل أقرب من تاريخ الإلتزام. ربما لن تستطيع تلبية "
+"طلب العميل في الوقت المناسب."

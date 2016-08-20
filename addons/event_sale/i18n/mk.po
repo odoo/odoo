@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event_sale
-# 
+#
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-28 10:42+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
-"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
+"mk/)\n"
+"Language: mk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mk\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: event_sale
@@ -28,6 +29,12 @@ msgstr "со билет %s"
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "Примени"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+#, fuzzy
+msgid "Asset Type"
+msgstr "Тип на настан"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -54,14 +61,17 @@ msgstr "Пред потврдување"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "Изберете настан и тој автоматски ќе креира регистрација за овој настан."
+msgstr ""
+"Изберете настан и тој автоматски ќе креира регистрација за овој настан."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
-msgstr "Изберете билет за настан и автоматски ќе се креира регистрација за вој билет за настан."
+msgstr ""
+"Изберете билет за настан и автоматски ќе се креира регистрација за вој билет "
+"за настан."
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_2_product
@@ -84,12 +94,20 @@ msgid "Created on"
 msgstr "Креирано на"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
-msgstr "Одреди го бројот на достапни влезни билети. Ако имате премногу регистрирани купувања нема да можете да ги продавате билетите повеќе. Подеси на 0 за да го игнорирате ова правило и подеси на неограничено."
+msgstr ""
+"Одреди го бројот на достапни влезни билети. Ако имате премногу регистрирани "
+"купувања нема да можете да ги продавате билетите повеќе. Подеси на 0 за да "
+"го игнорирате ова правило и подеси на неограничено."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_ok
@@ -97,7 +115,9 @@ msgstr "Одреди го бројот на достапни влезни бил
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr "Определува дали производот треба автоматски да креира регистрација на настан при потврдувањето на ставка од налогот за продажба."
+msgstr ""
+"Определува дали производот треба автоматски да креира регистрација на настан "
+"при потврдувањето на ставка од налогот за продажба."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
@@ -325,9 +345,12 @@ msgstr "Седишта користени"
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
 #: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
 msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
-msgstr "Изберете типови на настан така што кога го користиме овој производ во ставките на налогот за продажба, ќе се филтрираат единствено настаните од овој тип."
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
+msgstr ""
+"Изберете типови на настан така што кога го користиме овој производ во "
+"ставките на налогот за продажба, ќе се филтрираат единствено настаните од "
+"овој тип."
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -365,7 +388,9 @@ msgstr "Техничка обука"
 msgid ""
 "The registration has been created for event %(event_name)s%(ticket)s from "
 "sale order %(order)s"
-msgstr "Регистрацијата беше креирана за настанот %(event_name)s%(ticket)s од налогот за продажба %(order)s"
+msgstr ""
+"Регистрацијата беше креирана за настанот %(event_name)s%(ticket)s од налогот "
+"за продажба %(order)s"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_event_report_template_badge

@@ -1,32 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * google_drive
-# 
+#
 # Translators:
 # Simone Bernini <simone@aperturelabs.it>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-02-26 17:03+0000\n"
 "Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "<b>To create a new filter:</b><br/>\n"
-"                                - Go to the Odoo document you want to filter. For instance, go to Opportunities and search on Sales Department.<br/>\n"
-"                                - In this \"Search\" view, select the option \"Save Current Filter\", enter the name (Ex: Sales Department)<br/>\n"
-"                                - If you select \"Share with all users\", link of google document in \"More\" options will appear for all users in opportunities of Sales Department.<br/>\n"
-"                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
-"                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
+"                                - Go to the Odoo document you want to "
+"filter. For instance, go to Opportunities and search on Sales Department.<br/"
+">\n"
+"                                - In this \"Search\" view, select the option "
+"\"Save Current Filter\", enter the name (Ex: Sales Department)<br/>\n"
+"                                - If you select \"Share with all users\", "
+"link of google document in \"More\" options will appear for all users in "
+"opportunities of Sales Department.<br/>\n"
+"                                - If you don't select \"Share with all users"
+"\", link of google document in \"More\" options will not appear for other "
+"users in opportunities of Sales Department.<br/>\n"
+"                                - If filter is not specified, link of google "
+"document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
 
 #. module: google_drive
@@ -38,7 +46,8 @@ msgstr "Attivo"
 #: code:addons/google_drive/google_drive.py:34
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
-msgstr "Non è stato possibile trovare almeno una chiave nel tuo pattern Google Drive"
+msgstr ""
+"Non è stato possibile trovare almeno una chiave nel tuo pattern Google Drive"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_authorization_code
@@ -48,9 +57,10 @@ msgstr "Authorization Code"
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config_name_template
 msgid ""
-"Choose how the new google drive will be named, on google side. Eg. "
-"gdoc_%(field_name)s"
-msgstr "Scegli come sarà chiamato il nuovo google drive, es. gdoc_%(field_name)s"
+"Choose how the new google drive will be named, on google side. Eg. gdoc_"
+"%(field_name)s"
+msgstr ""
+"Scegli come sarà chiamato il nuovo google drive, es. gdoc_%(field_name)s"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
@@ -76,7 +86,8 @@ msgstr "Creato il"
 #: code:addons/google_drive/google_drive.py:141
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
-msgstr "La creazione di un google drive puo' essere fatta uno documento alla volta."
+msgstr ""
+"La creazione di un google drive puo' essere fatta uno documento alla volta."
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
@@ -126,7 +137,8 @@ msgstr "Pattern Nome Google Drive"
 #: code:addons/google_drive/google_drive.py:75
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
-msgstr "Google Drive non è ancora configurato. Contatta l'amministratore di sistema."
+msgstr ""
+"Google Drive non è ancora configurato. Contatta l'amministratore di sistema."
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
@@ -173,7 +185,9 @@ msgstr "Modello"
 #: constraint:google.drive.config:0
 msgid ""
 "Model of selected filter is not matching with model of current template."
-msgstr "Il modello del filtro selezionato non corrisponde al modello del template corrente."
+msgstr ""
+"Il modello del filtro selezionato non corrisponde al modello del template "
+"corrente."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:173
@@ -192,7 +206,9 @@ msgstr "ID Risorsa"
 msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
-msgstr "Qualcosa è andato storto nella generazione del token. Richiedi un nuovo authorization code."
+msgstr ""
+"Qualcosa è andato storto nella generazione del token. Richiedi un nuovo "
+"authorization code."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name
@@ -214,7 +230,8 @@ msgstr "Template"
 #: code:addons/google_drive/google_drive.py:90
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
-msgstr "Non è stato possibile trovare il Template Google. Forse è stato cancellato."
+msgstr ""
+"Non è stato possibile trovare il Template Google. Forse è stato cancellato."
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_base_config_settings_google_drive_uri
@@ -224,11 +241,21 @@ msgstr "L'URL per generare l'autorization code di Google"
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
-"The name of the attached document can use fixed or variable data. To distinguish between documents in\n"
-"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
-"                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
+"The name of the attached document can use fixed or variable data. To "
+"distinguish between documents in\n"
+"                                Google Drive, use fixed words and fields. "
+"For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
+"                                in the Google Drive name field, the document "
+"in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
-msgstr "Il nome del documento allegato puo' fare uso di campi fissi o variabili. Per distinguere tra vari documenti in \n                                Google Drive, usa campi e parole fissis. Per esempi, nell'esempio sovrastante, se si usasse Agrolait_%(name)s_Sales\n                                nel campo nome di Google Drive, il documento Google Drive e allegato a Odoo sarà chiamato\n                                'Agrolait_SO0001_Sales'."
+msgstr ""
+"Il nome del documento allegato puo' fare uso di campi fissi o variabili. Per "
+"distinguere tra vari documenti in \n"
+"                                Google Drive, usa campi e parole fissis. Per "
+"esempi, nell'esempio sovrastante, se si usasse Agrolait_%(name)s_Sales\n"
+"                                nel campo nome di Google Drive, il documento "
+"Google Drive e allegato a Odoo sarà chiamato\n"
+"                                'Agrolait_SO0001_Sales'."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:117
@@ -236,7 +263,9 @@ msgstr "Il nome del documento allegato puo' fare uso di campi fissi o variabili.
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr "Il permesso di lettura per \"chiunque abbia il link\" non è stato applicato al documento"
+msgstr ""
+"Il permesso di lettura per \"chiunque abbia il link\" non è stato applicato "
+"al documento"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_uri
@@ -249,7 +278,9 @@ msgstr "URI"
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
-msgstr "Non hai configurato alcun \"Authorization Code\" generato da google. Generalo e inseriscilo."
+msgstr ""
+"Non hai configurato alcun \"Authorization Code\" generato da google. "
+"Generalo e inseriscilo."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
@@ -264,5 +295,8 @@ msgstr "base.config.settings"
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
-"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
-msgstr "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
+"https://docs.google.com/document/"
+"d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
+msgstr ""
+"https://docs.google.com/document/"
+"d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"

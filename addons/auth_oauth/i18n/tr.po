@@ -1,37 +1,49 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_oauth
-# 
+#
 # Translators:
 # AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-04 06:52+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+#, fuzzy
 msgid ""
 "<br/>\n"
-"                                    - Ceate a new project<br/>\n"
+"                                    - Create a new project<br/>\n"
 "                                    - Go to Api Access<br/>\n"
 "                                    - Create an oauth client_id<br/>\n"
-"                                    - Edit settings and set both Authorized Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
+"                                    - Edit settings and set both Authorized "
+"Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
 "                                    <br/>\n"
 "                                    Now copy paste the client_id here:"
-msgstr "<br/>\n                                    - Yeni bir proje oluştur<br/>\n                                    - Api Erişimine git<br/>\n                                    - Bir oauth client_id oluştur<br/>\n                                    - Ayarları düzenleyin ve makine adınızı hem Authorized Redirect URIs hem de Authorized JavaScript Origins olarak ayarlayın.<br/>\n                                    <br/>\n                                    Şimdi client_id'i buraya kopyalayıp yapıştırın:"
+msgstr ""
+"<br/>\n"
+"                                    - Yeni bir proje oluştur<br/>\n"
+"                                    - Api Erişimine git<br/>\n"
+"                                    - Bir oauth client_id oluştur<br/>\n"
+"                                    - Ayarları düzenleyin ve makine adınızı "
+"hem Authorized Redirect URIs hem de Authorized JavaScript Origins olarak "
+"ayarlayın.<br/>\n"
+"                                    <br/>\n"
+"                                    Şimdi client_id'i buraya kopyalayıp "
+"yapıştırın:"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:99
+#: code:addons/auth_oauth/controllers/main.py:98
 #, python-format
 msgid "Access Denied"
 msgstr "Erişim Engellendi"
@@ -105,7 +117,7 @@ msgstr "Oluşturuldu"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
-msgid "Currency id"
+msgid "Currency"
 msgstr ""
 
 #. module: auth_oauth
@@ -117,6 +129,11 @@ msgstr "Müşteri Ödeme Koşulu"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
 msgid "Data URL"
 msgstr "Data URL"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
+msgid "Degree of trust you have in this debtor"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
@@ -243,7 +260,7 @@ msgid "Scope"
 msgstr "Kapsam"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:97
+#: code:addons/auth_oauth/controllers/main.py:96
 #, python-format
 msgid "Sign up is not allowed on this database."
 msgstr "Bu veritabanına kayıt olmaya izin verilmez."
@@ -252,7 +269,9 @@ msgstr "Bu veritabanına kayıt olmaya izin verilmez."
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_position_id
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr "Mali durum, iş ortağı için kullanılacak vergileri ve hesapları belirlemek için kullanılır."
+msgstr ""
+"Mali durum, iş ortağı için kullanılacak vergileri ve hesapları belirlemek "
+"için kullanılır."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_has_unreconciled_entries
@@ -266,14 +285,18 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr "Bu hesap, geçerli iş ortağının ödemeler hesabında varsayılan yerine kullanılacaktır"
+msgstr ""
+"Bu hesap, geçerli iş ortağının ödemeler hesabında varsayılan yerine "
+"kullanılacaktır"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_receivable_id
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr "Bu hesap, geçerli İş Ortağı için alacak hesabı olarak varsayılanın yerine kullanılacaktır."
+msgstr ""
+"Bu hesap, geçerli İş Ortağı için alacak hesabı olarak varsayılanın yerine "
+"kullanılacaktır."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_supplier_payment_term_id
@@ -287,12 +310,15 @@ msgstr ""
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr "Bu ödeme koşulu satış siparişlerinde ve müşteri faturalarında varsayılan yerine kullanılacaktır"
+msgstr ""
+"Bu ödeme koşulu satış siparişlerinde ve müşteri faturalarında varsayılan "
+"yerine kullanılacaktır"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
-"To setup the signin process with Google, first you have to perform the following steps:<br/>\n"
+"To setup the signin process with Google, first you have to perform the "
+"following steps:<br/>\n"
 "                                    <br/>\n"
 "                                    - Go to the"
 msgstr ""
@@ -343,13 +369,25 @@ msgid "Vendor Payment Term"
 msgstr "Satıcı Vadesi"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:101
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:100
 #, python-format
 msgid ""
 "You do not have access to this database or your invitation has expired. "
 "Please ask for an invitation and be sure to follow the link in your "
 "invitation email."
-msgstr "Bu veritabanına giriş izniniz yok ya da davetinizin süresi dolmuş. Lütfen bir davetiye isteyin ve eposta davetiyenizdeki bağlantıyı izleyin."
+msgstr ""
+"Bu veritabanına giriş izniniz yok ya da davetinizin süresi dolmuş. Lütfen "
+"bir davetiye isteyin ve eposta davetiyenizdeki bağlantıyı izleyin."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form

@@ -1,22 +1,36 @@
+# #-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * analytic
-# 
+#
 # Translators:
 # krnkris, 2015
 # krnkris, 2016
+# #-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * analytic
+#
+# Translators:
+# krnkris <krnkris@freemail.hu>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2016-06-06 19:55+0000\n"
-"Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
@@ -35,9 +49,10 @@ msgid "Account Currency"
 msgstr "Főkönyvi számla pénzneme"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction
-msgid "Action Needed"
-msgstr "Művelet szükséges"
+#: selection:account.analytic.account,account_type:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+msgid "Active"
+msgstr "Aktív"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
@@ -52,8 +67,13 @@ msgstr "Összeg"
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+#, fuzzy
 msgid "Analytic Account"
-msgstr "Gyűjtő/elemző könyvelés"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Gyűjtő/elemző könyvelés\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Analitikus/elemző könyvelés"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
@@ -85,11 +105,6 @@ msgid "Analytic Entry"
 msgstr "Analitikus gyűjtőkód bevitel"
 
 #. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Gyűjtőkód tétel"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
 msgid "Analytic Lines"
 msgstr "Gyűjtőkód sorok"
@@ -106,8 +121,8 @@ msgstr "Gyűjtő/Elemző címkék"
 
 #. module: analytic
 #: selection:account.analytic.account,account_type:0
-msgid "Analytic View"
-msgstr "Elemző nézet"
+msgid "Archived"
+msgstr "Archivált"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -137,8 +152,13 @@ msgstr "Kattintson gyűjtő/elemző számla hozzáadásához."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
+#, fuzzy
 msgid "Color Index"
-msgstr "Szín meghatározó"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Szín meghatározó\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Szín jegyzék"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_company_id
@@ -162,7 +182,9 @@ msgstr "Költségek & Árbevételek"
 msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
-msgstr "Költségek automatikusan létrehozva a beszállítók számláiból, kiadásokból vagy munkaidő-kimutatásokból."
+msgstr ""
+"Költségek automatikusan létrehozva a beszállítók számláiból, kiadásokból "
+"vagy munkaidő-kimutatásokból."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
@@ -187,23 +209,28 @@ msgstr "Követel"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_currency_id
+#, fuzzy
 msgid "Currency"
-msgstr "Valuta"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Valuta\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Pénznem"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_partner_id
+#, fuzzy
 msgid "Customer"
-msgstr "Vevő"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Vevő\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Vásárló"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_date
 msgid "Date"
 msgstr "Dátum"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "A feljegyzésen történt utolsó levelezés dátuma."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_debit
@@ -220,23 +247,13 @@ msgstr "Leírás"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
+#, fuzzy
 msgid "Display Name"
-msgstr "Név megjelenítése"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_follower_ids
-msgid "Followers"
-msgstr "Követők"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Követők (Csatornák)"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Követők (Partnerek)"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Név megjelenítése\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Megjelenített név"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
@@ -254,53 +271,53 @@ msgstr "Csoportosítás..."
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
+#, fuzzy
 msgid "ID"
-msgstr "ID"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"ID\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Azonosító ID"
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sale orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
-msgstr "Odoo rendszerben, vásárlói megrendelések és projekt témák beleépítettek az\n                gyűjtő/elemző számlák használatába. Nyomon követheti a költségeit és bevételeit a fedezet könnyű\n                elemzéséhez."
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_is_follower
-msgid "Is Follower"
-msgstr "Ő egy követő"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_last_post
-msgid "Last Message Date"
-msgstr "Utolsó üzenet dátuma"
+msgstr ""
+"Odoo rendszerben, vásárlói megrendelések és projekt témák beleépítettek az\n"
+"                gyűjtő/elemző számlák használatába. Nyomon követheti a "
+"költségeit és bevételeit a fedezet könnyű\n"
+"                elemzéséhez."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
+#, fuzzy
 msgid "Last Modified on"
-msgstr "Utolsó frissítés dátuma"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Utolsó frissítés dátuma\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Utoljára frissítve ekkor"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
+#, fuzzy
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Utoljára frissítve, által\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Utoljára frissítette"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
@@ -311,16 +328,6 @@ msgid "Last Updated on"
 msgstr "Utoljára frissítve "
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_ids
-msgid "Messages"
-msgstr "Üzenetek"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_ids
-msgid "Messages and communication history"
-msgstr "Üzenetek és kommunikáció történet"
-
-#. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account."
 msgstr "Ezen a számlán nincs aktivitás."
@@ -329,21 +336,6 @@ msgstr "Ezen a számlán nincs aktivitás."
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet."
 msgstr "Nincs még aktivitás."
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Műveletek száma"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Olvasatlan üzenetek száma"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
@@ -371,10 +363,18 @@ msgstr "Hivatkozás"
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sale orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sale "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
-msgstr "Bevételek  automatikusan létrehozva a vásárlói számla \n                elkészítésekor. Ügyfelek számlái elkészíthetőek a a vásárlói megrendelések alapján \n                (fix árú számlák), a munkaidő-kimutatásokról (elvégzett munka alapján) vagy \n                kiadásokra (pl. utazási költség elszám.)."
+msgstr ""
+"Bevételek  automatikusan létrehozva a vásárlói számla \n"
+"                elkészítésekor. Ügyfelek számlái elkészíthetőek a a vásárlói "
+"megrendelések alapján \n"
+"                (fix árú számlák), a munkaidő-kimutatásokról (elvégzett "
+"munka alapján) vagy \n"
+"                kiadásokra (pl. utazási költség elszám.)."
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -385,6 +385,11 @@ msgstr "Analitikai gyűjtőkód tételek keresése"
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
 msgid "Select the Period for Analysis"
 msgstr "Elemzési időszak kiválasztása"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
+msgid "State"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
@@ -413,26 +418,89 @@ msgid "Total"
 msgstr "Összesen"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
-msgid "Type of Account"
-msgstr "Bankszámla típusa"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_unread
-msgid "Unread Messages"
-msgstr "Olvasatlan üzenetek"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Olvasatlan üzenetek számlálója"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_user_id
 msgid "User"
 msgstr "Felhasználó"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+#, fuzzy
+msgid "account analytic line"
+msgstr "Analitikai gyűjtőkód lista"
+
+#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr "Pl. Projekt téma XYZ"
+
+#~ msgid "Action Needed"
+#~ msgstr "Művelet szükséges"
+
+#, fuzzy
+#~ msgid "Analytic Line"
+#~ msgstr ""
+#~ "#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+#~ "Gyűjtőkód tétel\n"
+#~ "#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+#~ "Analitikus/elemző tétel"
+
+#~ msgid "Analytic View"
+#~ msgstr "Elemző nézet"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
+
+#~ msgid "Followers"
+#~ msgstr "Követők"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Követők (Csatornák)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Követők (Partnerek)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#~ msgid "Is Follower"
+#~ msgstr "Ő egy követő"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Utolsó üzenet dátuma"
+
+#~ msgid "Messages"
+#~ msgstr "Üzenetek"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Üzenetek és kommunikáció történet"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Műveletek száma"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Olvasatlan üzenetek száma"
+
+#~ msgid "Type of Account"
+#~ msgstr "Bankszámla típusa"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Olvasatlan üzenetek"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Olvasatlan üzenetek számlálója"
+
+#~ msgid "Click to add a new tag."
+#~ msgstr "Kattintson egy új címke hozzáadásához."
+
+#~ msgid ""
+#~ "If the active field is set to False, it will allow you to hide the "
+#~ "account without removing it."
+#~ msgstr ""
+#~ "Ha az aktív mező hamisra állított, akkor eltüntetheti a főkönyvi számlát "
+#~ "annak törlése nélkül."

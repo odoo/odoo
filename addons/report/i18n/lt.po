@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * report
-# 
+#
 # Translators:
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2015
 # Rolandas <info@paninfo.lt>, 2015
@@ -9,15 +9,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-12-22 11:10+0000\n"
 "Last-Translator: Audrius Palenskis <audrius.palenskis@gmail.com>\n"
-"Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/lt/)\n"
+"Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/"
+"lt/)\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
+"%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -25,7 +27,6 @@ msgid "&amp;bull;"
 msgstr "&amp;bull;"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.layout
 #: model:ir.ui.view,arch_db:report.minimal_layout
 msgid "&lt;!DOCTYPE html&gt;"
 msgstr "&lt;!DOCTYPE html&gt;"
@@ -146,7 +147,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9  23  33 x 62 mm"
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:288
 #, python-format
 msgid "Bad Report Reference"
 msgstr "Blogas raporto numeris"
@@ -199,6 +200,7 @@ msgid "Default paper format ?"
 msgstr "Standartinis puslapio formatas?"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_paperformat_display_name
@@ -232,8 +234,10 @@ msgstr "El. paštas:"
 
 #. module: report
 #: constraint:report.paperformat:0
-msgid "Error ! You cannot select a format AND speficic page width/height."
-msgstr "Klaida! Jūs negalite pasirinkti formato IR specifinio puslapio ilgio/pločio."
+#, fuzzy
+msgid "Error ! You cannot select a format AND specific page width/height."
+msgstr ""
+"Klaida! Jūs negalite pasirinkti formato IR specifinio puslapio ilgio/pločio."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -261,6 +265,7 @@ msgid "Header spacing"
 msgstr "Antraštės tarpas"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_id
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_id
 #: model:ir.model.fields,field_description:report.field_report_id
 #: model:ir.model.fields,field_description:report.field_report_paperformat_id
@@ -273,6 +278,7 @@ msgid "Landscape"
 msgstr "Gulsčias"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode___last_update
 #: model:ir.model.fields,field_description:report.field_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_abstract_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_paperformat___last_update
@@ -443,7 +449,7 @@ msgid "This is a sample of an internal report."
 msgstr "Čia vidinės ataskaitos pavyzdys."
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:288
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr "Ši ataskaita nėra įkelta į duomenų bazę: %s."
@@ -459,9 +465,13 @@ msgstr "Viršutinė paraštė (mm)"
 #, python-format
 msgid ""
 "Unable to find Wkhtmltopdf on this \n"
-"system. The report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
+"system. The report will be shown in html.<br><br><a href=\"http://"
+"wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
-msgstr "Šioje sistemoje neįmanoma rasti Wkhtmltopdf.\nAtaskaita bus rodoma html formatu.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
+msgstr ""
+"Šioje sistemoje neįmanoma rasti Wkhtmltopdf.\n"
+"Ataskaita bus rodoma html formatu.<br><br><a href=\"http://wkhtmltopdf.org/"
+"\" target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -469,7 +479,7 @@ msgid "Website:"
 msgstr "Interneto svetainė:"
 
 #. module: report
-#: code:addons/report/models/report.py:413
+#: code:addons/report/models/report.py:459
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf klaida (klaidos kodas: %s). Pranešimas: %s"
@@ -481,7 +491,9 @@ msgstr "Wkhtmltopdf klaida (klaidos kodas: %s). Pranešimas: %s"
 msgid ""
 "You need to start OpenERP with at least two \n"
 "workers to print a pdf version of the reports."
-msgstr "Jei norite atsispausti ataskaitos pdf versiją, turite OpenERP sąraše turėti mažiausia 2 darbuotojus."
+msgstr ""
+"Jei norite atsispausti ataskaitos pdf versiją, turite OpenERP sąraše turėti "
+"mažiausia 2 darbuotojus."
 
 #. module: report
 #. openerp-web
@@ -489,15 +501,27 @@ msgstr "Jei norite atsispausti ataskaitos pdf versiją, turite OpenERP sąraše 
 #, python-format
 msgid ""
 "You should upgrade your version of\n"
-"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
-"support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
+"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers "
+"and footers as well as\n"
+"support for table-breaking between pages.<br><br><a href=\"http://"
+"wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
-msgstr "Turėtumėte atnaujinti Wkhtmltopdf versiją \nbent iki 0.12.0 tam, kad būtų tvarkingai vaizduojamos antraštės ir paraštės, taip pat palaikomas lentelių dalinimas keliuose puslapiuose.<br><br><a href=\"http://wkhtmltopdf.org/\" \ntarget=\"_blank\">wkhtmltopdf.org</a>"
+msgstr ""
+"Turėtumėte atnaujinti Wkhtmltopdf versiją \n"
+"bent iki 0.12.0 tam, kad būtų tvarkingai vaizduojamos antraštės ir paraštės, "
+"taip pat palaikomas lentelių dalinimas keliuose puslapiuose.<br><br><a href="
+"\"http://wkhtmltopdf.org/\" \n"
+"target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
+
+#. module: report
+#: model:ir.model,name:report.model_ir_qweb_field_barcode
+msgid "ir.qweb.field.barcode"
+msgstr ""
 
 #. module: report
 #: model:ir.model,name:report.model_report_abstract_report

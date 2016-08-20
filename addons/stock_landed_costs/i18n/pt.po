@@ -1,25 +1,40 @@
+# #-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_landed_costs
-# 
+#
 # Translators:
+# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2015
+# #-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_landed_costs
+#
+# Translators:
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2015-10-21 12:21+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
+"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
+"pt/)\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
+"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:126
-#: code:addons/stock_landed_costs/stock_landed_costs.py:130
+#: code:addons/stock_landed_costs/stock_landed_costs.py:127
+#: code:addons/stock_landed_costs/stock_landed_costs.py:131
+#: code:addons/stock_landed_costs/stock_landed_costs.py:147
+#: code:addons/stock_landed_costs/stock_landed_costs.py:151
 #, python-format
 msgid " already out"
 msgstr "já saiu"
@@ -35,11 +50,6 @@ msgid "Account Journal"
 msgstr "Diário de Conta"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_needaction
-msgid "Action Needed"
-msgstr "Ação Necessária"
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_additional_landed_cost
 msgid "Additional Landed Cost"
 msgstr "Custos de Entrega Adicionais"
@@ -48,7 +58,7 @@ msgstr "Custos de Entrega Adicionais"
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "By Current Cost"
-msgstr ""
+msgstr "Por Custo Corrente"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -81,12 +91,12 @@ msgstr "Cancelado"
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Click to create a new landed cost."
-msgstr ""
+msgstr "Clique para criar um novo custo de entrega."
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Click to define a new kind of landed cost."
-msgstr ""
+msgstr "Clique para definir um novo tipo de custo de entrega."
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -129,11 +139,6 @@ msgid "Date"
 msgstr "Data"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Data da Ultmia Mensagem Inserida no Registo"
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_name
 msgid "Description"
@@ -173,24 +178,19 @@ msgid "Equal"
 msgstr "Igual"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_product_template_split_method
+msgid ""
+"Equal : Cost will be equally divided.\n"
+"By Quantity : Cost will be divided according to product's quantity.\n"
+"By Current cost : Cost will be divided according to product's current cost.\n"
+"By Weight : Cost will be divided depending on its weight.\n"
+"By Volume : Cost will be divided depending on its volume."
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
 msgid "Final Cost"
 msgstr "Custo Final"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_follower_ids
-msgid "Followers"
-msgstr "Seguidores"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Seguidores (Canais)"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Seguidores (Parceiros)"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_former_cost
@@ -215,24 +215,9 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
-
-#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Information"
 msgstr "Informação"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_is_follower
-msgid "Is Follower"
-msgstr "É um seguidor"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_description
@@ -253,7 +238,7 @@ msgstr "Custos de Entrega"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost Name"
-msgstr ""
+msgstr "Nome do Custo de Entrega"
 
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
@@ -272,14 +257,14 @@ msgid "Landed Costs"
 msgstr "Custos de Entrega"
 
 #. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Landed cost are computed based on the purchase unit of measure."
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
 msgstr "Custo de Entrega Validado"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_last_post
-msgid "Last Message Date"
-msgstr "Data da Última Mensagem"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost___last_update
@@ -303,16 +288,6 @@ msgid "Last Updated on"
 msgstr "Última Actualização em"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_ids
-msgid "Messages"
-msgstr "Mensagens"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_ids
-msgid "Messages and communication history"
-msgstr "Histórico de mensagens e comunicação"
-
-#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Month"
 msgstr "Mês"
@@ -324,25 +299,10 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Número de Ações"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Número de mensagens que requerem uma ação"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Número de mensagens por ler"
-
-#. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:181
+#: code:addons/stock_landed_costs/stock_landed_costs.py:203
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr ""
+msgstr "Apenas custos de entrega em rascunho podem ser validados"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
@@ -428,10 +388,14 @@ msgstr "Linhas de ajuste da valorização"
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
-"landed costs. Landed costs are only possible for products configured in real"
-" time valuation with real price costing method. Please make sure it is the "
+"landed costs. Landed costs are only possible for products configured in real "
+"time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
-msgstr "A recolha  seleccionada não contém qualquer movimento que seria impactado por despesas de importação. Despesas de importação só são possíveis para os produtos configurados em avaliação em tempo real com preço real método de custeio. Por favor verifique se é o caso, ou se selecionou a recolha correta"
+msgstr ""
+"A recolha  seleccionada não contém qualquer movimento que seria impactado "
+"por despesas de importação. Despesas de importação só são possíveis para os "
+"produtos configurados em avaliação em tempo real com preço real método de "
+"custeio. Por favor verifique se é o caso, ou se selecionou a recolha correta"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_amount_total
@@ -439,27 +403,19 @@ msgid "Total"
 msgstr "Total"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_unread
-msgid "Unread Messages"
-msgstr "Mensagens por ler"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Contador de Mensagens por Ler"
-
-#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Validate"
 msgstr "Validar"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:212
+#: code:addons/stock_landed_costs/stock_landed_costs.py:261
 #, python-format
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
+"Custos de entrega validados não podem ser cancelados, mas pode criar custos "
+"de entrega negativos para os reverter."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines
@@ -479,27 +435,19 @@ msgid "Warning!"
 msgstr "Aviso!"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_website_message_ids
-msgid "Website Messages"
-msgstr "Mensagens do Website"
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_website_message_ids
-msgid "Website communication history"
-msgstr "Histórico de Comunicação do Website"
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_weight
 msgid "Weight"
 msgstr "Peso"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:183
+#: code:addons/stock_landed_costs/stock_landed_costs.py:205
 #, python-format
 msgid ""
 "You cannot validate a landed cost which has no valid valuation adjustments "
 "lines. Did you click on Compute?"
 msgstr ""
+"Não pode validar um custo distribuido que não tenha linhas de avaliação "
+"válidas. Clicou em calcular?"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
@@ -510,3 +458,57 @@ msgstr "descrever as características do produto ..."
 #: model:ir.model,name:stock_landed_costs.model_purchase_config_settings
 msgid "purchase.config.settings"
 msgstr "purchase.config.settings"
+
+#~ msgid "Action Needed"
+#~ msgstr "Ação Necessária"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data da Ultmia Mensagem Inserida no Registo"
+
+#~ msgid "Followers"
+#~ msgstr "Seguidores"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Seguidores (Canais)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Seguidores (Parceiros)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
+
+#~ msgid "Is Follower"
+#~ msgstr "É um seguidor"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data da Última Mensagem"
+
+#~ msgid "Messages"
+#~ msgstr "Mensagens"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Histórico de mensagens e comunicação"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Número de Ações"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Número de mensagens que requerem uma ação"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Número de mensagens por ler"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Mensagens por ler"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Contador de Mensagens por Ler"
+
+#~ msgid "Website Messages"
+#~ msgstr "Mensagens do Website"
+
+#~ msgid "Website communication history"
+#~ msgstr "Histórico de Comunicação do Website"

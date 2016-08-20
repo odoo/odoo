@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event_sale
-# 
+#
 # Translators:
 # David Hernandez <davidhernandez.ctam@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-27 18:28+0000\n"
 "Last-Translator: David Hernandez <davidhernandez.ctam@gmail.com>\n"
-"Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
+"Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/"
+"language/es_MX/)\n"
+"Language: es_MX\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_MX\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: event_sale
@@ -28,6 +29,12 @@ msgstr "con pase %s"
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "Aplicar"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+#, fuzzy
+msgid "Asset Type"
+msgstr "Tipo de evento"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -54,7 +61,8 @@ msgstr "Antes de confirmarlo"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "Elija un evento y se creará automáticamente un registro para este evento."
+msgstr ""
+"Elija un evento y se creará automáticamente un registro para este evento."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ticket_id
@@ -84,12 +92,20 @@ msgid "Created on"
 msgstr "Creado en"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
-msgstr "Definir el número de entradas que hay disponibles. Si usted tiene demasiados registros usted no será capaz de vender los boletos más. Ajuste 0 a ignorar este conjunto de reglas como ilimitada."
+msgstr ""
+"Definir el número de entradas que hay disponibles. Si usted tiene demasiados "
+"registros usted no será capaz de vender los boletos más. Ajuste 0 a ignorar "
+"este conjunto de reglas como ilimitada."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_ok
@@ -97,7 +113,9 @@ msgstr "Definir el número de entradas que hay disponibles. Si usted tiene demas
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr "Determinar si un producto necesita para crear automáticamente un registro de eventos en la confirmación de una línea de pedido de cliente."
+msgstr ""
+"Determinar si un producto necesita para crear automáticamente un registro de "
+"eventos en la confirmación de una línea de pedido de cliente."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
@@ -325,8 +343,8 @@ msgstr "Asientos usados"
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
 #: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
 msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
 msgstr ""
 
 #. module: event_sale
@@ -365,7 +383,9 @@ msgstr ""
 msgid ""
 "The registration has been created for event %(event_name)s%(ticket)s from "
 "sale order %(order)s"
-msgstr "El registro ha sido creado por evento %(event_name)s%(ticket)s de orden de venta %(order)s"
+msgstr ""
+"El registro ha sido creado por evento %(event_name)s%(ticket)s de orden de "
+"venta %(order)s"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
