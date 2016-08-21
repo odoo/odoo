@@ -18,7 +18,7 @@
                             <div class="oe_kanban_vignette">
                                 <div class="oe_attachment">
                                     <div class="row">
-                                        <div class="col-xs-7 o_kanban_primary_left" t-if="record.type.raw_value == 'binary'">
+                                        <div class="col-xs-4 o_kanban_primary_left" t-if="record.type.raw_value == 'binary'">
                                             <a t-attf-href="/web/content/#{record.id.value}?download=1">
                                                 <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
                                                 <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
@@ -27,13 +27,12 @@
                                                 </div>
                                             </a>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-8" style="margin: 7px;">
-                                            <field name="name"/>
-                                        </div>
-                                        <div class="col-xs-4 oe_kanban_bottom_right" style="margin: 7px;">
-                                            <field name="priority" widget="priority"/>
+                                        <div class="col-xs-8">
+                                            <strong><field name="name"/></strong><br/>
+                                            <field name="datas_fname"/><br/>
+                                            <div class="mt8">
+                                                <field name="priority" widget="priority"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
