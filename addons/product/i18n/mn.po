@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-14 10:10+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
+"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
+"mn/)\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product
@@ -29,19 +30,19 @@ msgid "# of Product Variants"
 msgstr "Барааны Хувилбарын #"
 
 #. module: product
-#: code:addons/product/pricelist.py:288
+#: code:addons/product/pricelist.py:372
 #, python-format
 msgid "%s %% discount"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:290
+#: code:addons/product/pricelist.py:374
 #, python-format
 msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:710 code:addons/product/product.py:1134
+#: code:addons/product/product.py:716
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
@@ -59,7 +60,11 @@ msgid ""
 "Processor AMD 8-Core\n"
 "512MB RAM\n"
 "HDD SH-1"
-msgstr "17\" LCD Monitor\nProcessor AMD 8-Core\n512MB RAM\nHDD SH-1"
+msgstr ""
+"17\" LCD Monitor\n"
+"Processor AMD 8-Core\n"
+"512MB RAM\n"
+"HDD SH-1"
 
 #. module: product
 #: model:product.product,description:product.product_product_25
@@ -69,17 +74,11 @@ msgid ""
 "4GB RAM\n"
 "Standard-1294P Processor\n"
 "QWERTY keyboard"
-msgstr "17\" Monitor\n4GB RAM\nStandard-1294P Processor\nQWERTY keyboard"
-
-#. module: product
-#: model:product.product,description:product.product_product_26
-#: model:product.template,description:product.product_product_26_product_template
-msgid ""
+msgstr ""
 "17\" Monitor\n"
-"6GB RAM\n"
-"Hi-Speed 234Q Processor\n"
+"4GB RAM\n"
+"Standard-1294P Processor\n"
 "QWERTY keyboard"
-msgstr "17\" Monitor\n6GB RAM\nHi-Speed 234Q Processor\nQWERTY keyboard"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -96,12 +95,6 @@ msgid ""
 "                1TB hard drive\n"
 "                Intel Iris Pro graphics\n"
 "            "
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_52
-#: model:product.template,name:product.product_product_52_product_template
-msgid "30m RJ45 wire"
 msgstr ""
 
 #. module: product
@@ -131,16 +124,14 @@ msgid "75 percent less reflection."
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_51
-#: model:product.template,name:product.product_product_51_product_template
-msgid "8-port Switch"
-msgstr ""
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
-"<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Public Price  -  </span>\n"
-"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Public Price  "
+"-  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', "
+"'standard_price')]}\">Cost  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', "
+"'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
 
 #. module: product
@@ -172,12 +163,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid ""
 "<strong>Warning</strong>: adding or deleting attributes\n"
-"                            will delete and recreate existing variants and lead\n"
+"                            will delete and recreate existing variants and "
+"lead\n"
 "                            to the loss of their possible customizations."
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:977 sql_constraint:product.product:0
+#: code:addons/product/product.py:1011 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
@@ -187,7 +179,9 @@ msgstr ""
 msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
-msgstr "Харагдац төрлийн ангилал нь хуурмаг ангилал бөгөөд өөр ангилалаар эцэгээр ашиглагдаж мөчирлөсөн бүтцийг бий болгоход хэрэглэгддэг."
+msgstr ""
+"Харагдац төрлийн ангилал нь хуурмаг ангилал бөгөөд өөр ангилалаар эцэгээр "
+"ашиглагдаж мөчирлөсөн бүтцийг бий болгоход хэрэглэгддэг."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_type
@@ -201,10 +195,13 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_description_sale
 #: model:ir.model.fields,help:product.field_product_template_description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sale Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr "Захиалагчтай харилцах гэж байгаа барааны тодорхойлолт. Энэ тодорхойлолт нь борлуулалтын захиалга, хүргэх захиалга, захиалагчийн нэхэмжлэл, буцаалт бүрд хуулагдана."
+msgstr ""
+"Захиалагчтай харилцах гэж байгаа барааны тодорхойлолт. Энэ тодорхойлолт нь "
+"борлуулалтын захиалга, хүргэх захиалга, захиалагчийн нэхэмжлэл, буцаалт бүрд "
+"хуулагдана."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_purchase
@@ -248,16 +245,13 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
-"About the size of a credit card — and just 5.4 mm thin — iPod nano is the thinnest iPod ever made.\n"
-"                                    The 2.5-inch Multi-Touch display is nearly twice as big as the display on the previous iPod nano,\n"
-"                                    so you can see more of the music, photos, and videos you love."
+"About the size of a credit card — and just 5.4 mm thin — iPod nano is the "
+"thinnest iPod ever made.\n"
+"                                    The 2.5-inch Multi-Touch display is "
+"nearly twice as big as the display on the previous iPod nano,\n"
+"                                    so you can see more of the music, "
+"photos, and videos you love."
 msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_needaction
-#: model:ir.model.fields,field_description:product.field_product_template_message_needaction
-msgid "Action Needed"
-msgstr "Үйлдэл Шаардлагатай"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
@@ -273,7 +267,7 @@ msgid "All"
 msgstr "Бүх"
 
 #. module: product
-#: code:addons/product/pricelist.py:283
+#: code:addons/product/pricelist.py:367
 #, python-format
 msgid "All Products"
 msgstr ""
@@ -284,17 +278,11 @@ msgid "All general settings about this product are managed on"
 msgstr ""
 
 #. module: product
-#: model:product.product,description:product.product_product_37
-#: model:product.template,description:product.product_product_37_product_template
-msgid "All in one hi-speed printer with fax and scanner."
-msgstr "Факс болон сканнертай бүгдийг багтаасан принтер"
-
-#. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid ""
-"And at the Apple Online Store, you can configure your iMac with an even more"
-" powerful Intel Core i7 processor, up to 3.5GHz."
+"And at the Apple Online Store, you can configure your iMac with an even more "
+"powerful Intel Core i7 processor, up to 3.5GHz."
 msgstr ""
 
 #. module: product
@@ -322,6 +310,7 @@ msgid "Apple Wireless Keyboard"
 msgstr ""
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Applicable On"
 msgstr "Дараахад Хэрэглэх боломжтой"
@@ -390,8 +379,7 @@ msgstr ""
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
-msgid ""
-"Auxiliary port lets you connect other audio sources, like an MP3 player"
+msgid "Auxiliary port lets you connect other audio sources, like an MP3 player"
 msgstr ""
 
 #. module: product
@@ -413,8 +401,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_list_price
 #: model:ir.model.fields,help:product.field_product_template_list_price
 msgid ""
-"Base price to compute the customer price. Sometimes called the catalog "
-"price."
+"Base price to compute the customer price. Sometimes called the catalog price."
 msgstr "Захиалагчийн үнийг тооцоолох суурь үнэ. Заримдаа каталогийн үнэ гэдэг."
 
 #. module: product
@@ -423,9 +410,15 @@ msgid "Based on"
 msgstr "Суурь"
 
 #. module: product
-#: model:product.product,name:product.product_product_57
-#: model:product.template,name:product.product_product_57_product_template
+#: model:product.product,name:product.consu_delivery_03
+#: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Basic Computer"
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.membership_2
+#: model:product.template,name:product.membership_2_product_template
+msgid "Basic Membership"
 msgstr ""
 
 #. module: product
@@ -459,18 +452,6 @@ msgstr "Сурвалж хэмжих нэгжээс их"
 #: model:product.attribute.value,name:product.product_attribute_value_4
 msgid "Black"
 msgstr "Хар"
-
-#. module: product
-#: model:product.product,name:product.product_product_35
-#: model:product.template,name:product.product_product_35_product_template
-msgid "Blank CD"
-msgstr "Хоосон CD"
-
-#. module: product
-#: model:product.product,name:product.product_product_36
-#: model:product.template,name:product.product_product_36_product_template
-msgid "Blank DVD-RW"
-msgstr "Хоосон DVD-RW"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -509,8 +490,10 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
-"                                    The smooth anodized aluminum design makes iPod nano feel as good as it sounds.\n"
-"                                    And iPod nano wouldn’t be iPod nano without gorgeous, hard-to-choose-from color."
+"                                    The smooth anodized aluminum design "
+"makes iPod nano feel as good as it sounds.\n"
+"                                    And iPod nano wouldn’t be iPod nano "
+"without gorgeous, hard-to-choose-from color."
 msgstr ""
 
 #. module: product
@@ -555,7 +538,7 @@ msgid "Category name"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:277
+#: code:addons/product/pricelist.py:361
 #, python-format
 msgid "Category: %s"
 msgstr ""
@@ -577,7 +560,8 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "Charging cradle recharges the battery and serves as a convenient\n"
-"                                    home base for your speaker, and it lets you play while it charges."
+"                                    home base for your speaker, and it lets "
+"you play while it charges."
 msgstr ""
 
 #. module: product
@@ -681,7 +665,7 @@ msgid "Computers"
 msgstr "Компьютер"
 
 #. module: product
-#: code:addons/product/product.py:460
+#: code:addons/product/product.py:474
 #, python-format
 msgid "Consumable"
 msgstr ""
@@ -691,15 +675,19 @@ msgstr ""
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr "Хэмжих нэгжийг хооронд нь хөрвүүлэх явдал нь зөвхөн нэг ангилалд хамаарч байвал л хийгдэнэ. Хөрвүүлэлт нь харьцаан дээр суурилж явагдана."
+msgstr ""
+"Хэмжих нэгжийг хооронд нь хөрвүүлэх явдал нь зөвхөн нэг ангилалд хамаарч "
+"байвал л хийгдэнэ. Хөрвүүлэлт нь харьцаан дээр суурилж явагдана."
 
 #. module: product
-#: code:addons/product/product.py:119
+#: code:addons/product/product.py:122
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr "Барааны %s хэмжих нэгжээс анхны %s хэмжих нэгж рүү хөрвүүлэх боломжгүй. Учир нь эдгээр нь өөр хэмжих нэгжийн ангилалд байна."
+msgstr ""
+"Барааны %s хэмжих нэгжээс анхны %s хэмжих нэгж рүү хөрвүүлэх боломжгүй. Учир "
+"нь эдгээр нь өөр хэмжих нэгжийн ангилалд байна."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_cost
@@ -712,14 +700,20 @@ msgstr "Өртөг"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
 msgid ""
-"Cost of the product template used for standard stock valuation in accounting"
-" and used as a base price on purchase orders. Expressed in the default unit "
+"Cost of the product template used for standard stock valuation in accounting "
+"and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
 msgid "Cost of the product, in the default unit of measure of the product."
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.service_delivery
+#: model:product.template,name:product.service_delivery_product_template
+msgid "Cost-plus Contract"
 msgstr ""
 
 #. module: product
@@ -765,8 +759,8 @@ msgstr "Үүсгэсэн"
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid ""
 "Creating such a stunningly thin design took some equally stunning feats of "
-"technological innovation. We refined,re-imagined,or re-engineered everything"
-" about iMac from the inside out. The result is an advanced, elegant all-in-"
+"technological innovation. We refined,re-imagined,or re-engineered everything "
+"about iMac from the inside out. The result is an advanced, elegant all-in-"
 "one computer that’s as much a work of art as it is state of the art."
 msgstr ""
 
@@ -804,8 +798,8 @@ msgid "Customer ref"
 msgstr "Захиалагчийн сурвалж"
 
 #. module: product
-#: model:product.product,name:product.product_product_46
-#: model:product.template,name:product.product_product_46_product_template
+#: model:product.product,name:product.product_delivery_02
+#: model:product.template,name:product.product_delivery_02_product_template
 msgid "Datacard"
 msgstr "Өгөгдлийн карт"
 
@@ -813,12 +807,6 @@ msgstr "Өгөгдлийн карт"
 #: model:ir.model.fields,field_description:product.field_product_price_history_datetime
 msgid "Date"
 msgstr "Огноо"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_last_post
-#: model:ir.model.fields,help:product.field_product_template_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_day
@@ -837,18 +825,14 @@ msgstr "Агуулахын бүх үйлдэлд ашиглах үндсэн х�
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr "Худалдан авалтын захиалга дээр хэрэглэгдэх хэмжих нэгж. Энэ барааны үндсэн хэмжих нэгжтэй ижил ангилалынх байх ёстой."
+msgstr ""
+"Худалдан авалтын захиалга дээр хэрэглэгдэх хэмжих нэгж. Энэ барааны үндсэн "
+"хэмжих нэгжтэй ижил ангилалынх байх ёстой."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_delay
 msgid "Delivery Lead Time"
 msgstr "Хүргэлтийн урьтал хугацаа"
-
-#. module: product
-#: model:product.product,name:product.product_product_49
-#: model:product.template,name:product.product_product_49_product_template
-msgid "Dell Inspiron Laptop without OS"
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description
@@ -872,18 +856,6 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Design. The thinnest iPod ever."
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_55
-#: model:product.template,name:product.product_product_55_product_template
-msgid "Desktop Computer Table"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_56
-#: model:product.template,name:product.product_product_56_product_template
-msgid "Desktop Lamp"
 msgstr ""
 
 #. module: product
@@ -923,8 +895,8 @@ msgid "Dozen(s)"
 msgstr "Олон тооны"
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_57
-#: model:product.template,description_sale:product.product_product_57_product_template
+#: model:product.product,description_sale:product.consu_delivery_03
+#: model:product.template,description_sale:product.consu_delivery_03_product_template
 msgid ""
 "Dvorak keyboard \n"
 "            left-handed mouse"
@@ -934,7 +906,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "Each rule include a set of applicability criteria (date range,\n"
-"                product category...) and a computation that easily helps to achieve\n"
+"                product category...) and a computation that easily helps to "
+"achieve\n"
 "                any kind of pricing."
 msgstr ""
 
@@ -956,19 +929,8 @@ msgid "End date for this vendor price"
 msgstr ""
 
 #. module: product
-#: selection:product.template,state:0
-msgid "End of Lifecycle"
-msgstr "Дуусах хугацаа"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
 msgid "Ending valid for the pricelist item validation"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_54
-#: model:product.template,name:product.product_product_54_product_template
-msgid "Ergonomic Mouse"
 msgstr ""
 
 #. module: product
@@ -977,46 +939,69 @@ msgid "Error ! You cannot create recursive categories."
 msgstr "Алдаа ! Тойрог ангилал үүсгэх боломжгүй."
 
 #. module: product
+#: constraint:product.attribute.line:0
+msgid "Error ! You cannot use this attribute with the following value."
+msgstr ""
+
+#. module: product
+#: constraint:product.product:0
+msgid ""
+"Error! It is not allowed to choose more than one value for a given attribute."
+msgstr ""
+
+#. module: product
 #: constraint:product.pricelist.item:0
 msgid "Error! The minimum margin should be lower than the maximum margin."
-msgstr "Алдаа! Хамгийн бага тохируулга нь хамгийн их тохируулгаас бага байх ёстой."
+msgstr ""
+"Алдаа! Хамгийн бага тохируулга нь хамгийн их тохируулгаас бага байх ёстой."
 
 #. module: product
 #: constraint:product.pricelist.item:0
 msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
-msgstr "Алдаа! Үнийн жагсаалтын зүйлд Үндсэн үнийн жагсаалтыг Өөр үнийн жагсаалтаар оноох боломжгүй!"
+msgstr ""
+"Алдаа! Үнийн жагсаалтын зүйлд Үндсэн үнийн жагсаалтыг Өөр үнийн жагсаалтаар "
+"оноох боломжгүй!"
 
 #. module: product
 #: constraint:res.currency:0
 msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
-msgstr "Алдаа! Та компаний үндсэн валютын нарийвчлалын оронг \"Данс\"-ны нарийвчлалын оронгоос багаар тааруулж чадахгүй."
+msgstr ""
+"Алдаа! Та компаний үндсэн валютын нарийвчлалын оронг \"Данс\"-ны "
+"нарийвчлалын оронгоос багаар тааруулж чадахгүй."
 
 #. module: product
 #: constraint:decimal.precision:0
 msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
-msgstr "Алдаа! Та \"Данс\"-ны нарийвчлалын оронг компаний үндсэн валютын нарийвчлалын оронгоос ихээр тааруулж чадахгүй"
+msgstr ""
+"Алдаа! Та \"Данс\"-ны нарийвчлалын оронг компаний үндсэн валютын "
+"нарийвчлалын оронгоос ихээр тааруулж чадахгүй"
 
 #. module: product
 #: constraint:product.template:0
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
-msgstr "Алдаа: Хэмжих нэгжийн анхны утга болон борлуулалтын хэмжих нэгжийн анхны утга нь нэг ангилалд байх ёстой."
+msgstr ""
+"Алдаа: Хэмжих нэгжийн анхны утга болон борлуулалтын хэмжих нэгжийн анхны "
+"утга нь нэг ангилалд байх ёстой."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Everything you love about iPad — the beautiful\n"
-"                                    screen, fast Colors are vivid and text is sharp on the iPad mini display.\n"
-"                                    But what really makes it stand out is its size. At 7.9 inches,\n"
-"                                    it’s perfectly sized to deliver an experience every bit as big as iPad."
+"                                    screen, fast Colors are vivid and text "
+"is sharp on the iPad mini display.\n"
+"                                    But what really makes it stand out is "
+"its size. At 7.9 inches,\n"
+"                                    it’s perfectly sized to deliver an "
+"experience every bit as big as iPad."
 msgstr ""
 
 #. module: product
@@ -1030,10 +1015,14 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid ""
 "Everything you love about iPad — the beautiful\n"
-"                                    screen, fast and fluid performance, FaceTime and\n"
-"                                    iSight cameras, thousands of amazing apps, 10-hour\n"
-"                                    battery life* — is everything you’ll love about\n"
-"                                    iPad mini, too. And you can hold it in one hand."
+"                                    screen, fast and fluid performance, "
+"FaceTime and\n"
+"                                    iSight cameras, thousands of amazing "
+"apps, 10-hour\n"
+"                                    battery life* — is everything you’ll "
+"love about\n"
+"                                    iPad mini, too. And you can hold it in "
+"one hand."
 msgstr ""
 
 #. module: product
@@ -1041,9 +1030,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Everything you love about iPad — the beautiful screen,\n"
-"                                        fast and fluid performance, FaceTime and iSight cameras, \n"
-"                                        thousands of amazing apps, 10-hour battery life* — is everything\n"
-"                                        you’ll love about iPad mini, too. And you can hold it in one hand."
+"                                        fast and fluid performance, FaceTime "
+"and iSight cameras, \n"
+"                                        thousands of amazing apps, 10-hour "
+"battery life* — is everything\n"
+"                                        you’ll love about iPad mini, too. "
+"And you can hold it in one hand."
 msgstr ""
 
 #. module: product
@@ -1053,14 +1045,14 @@ msgid "Example of product to invoice based on delivery."
 msgstr ""
 
 #. module: product
-#: model:product.product,description:product.product_product_0
-#: model:product.template,description:product.product_product_0_product_template
+#: model:product.product,description:product.service_order_01
+#: model:product.template,description:product.service_order_01_product_template
 msgid "Example of product to invoice on order."
 msgstr ""
 
 #. module: product
-#: model:product.product,description:product.product_product_1b
-#: model:product.template,description:product.product_product_1b_product_template
+#: model:product.product,description:product.service_cost_01
+#: model:product.template,description:product.service_cost_01_product_template
 msgid "Example of products to invoice based on cost."
 msgstr ""
 
@@ -1077,8 +1069,8 @@ msgid "Explicit rule name for this pricelist line."
 msgstr "Уг үнийн дүрмийн нэрлэлт, тайлбарлалт."
 
 #. module: product
-#: model:product.product,name:product.product_product_1b
-#: model:product.template,name:product.product_product_1b_product_template
+#: model:product.product,name:product.service_cost_01
+#: model:product.template,name:product.service_cost_01_product_template
 msgid "External Audit"
 msgstr ""
 
@@ -1086,12 +1078,6 @@ msgstr ""
 #: model:product.public.category,name:product.External_Hard_Drive
 msgid "External Hard Drive"
 msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_28
-#: model:product.template,name:product.product_product_28_product_template
-msgid "External Hard disk"
-msgstr "Гадаад хатуу диск"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1110,27 +1096,10 @@ msgid "Fixed Price"
 msgstr "Тогтмол үнэ"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_follower_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_follower_ids
-msgid "Followers"
-msgstr "Дагагчид"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_channel_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Дагагчид (Сувагууд)"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_partner_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Дагагчид (Харилцагчид)"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_min_quantity
 msgid ""
-"For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
 
@@ -1159,12 +1128,6 @@ msgid "Friendly to the environment."
 msgstr ""
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_44
-#: model:product.template,description_sale:product.product_product_44_product_template
-msgid "Full featured image editing software."
-msgstr "Зураг засварлах бүрэн хэмжээний програм хангамж"
-
-#. module: product
 #: model:product.product,name:product.product_product_1
 #: model:product.template,name:product.product_product_1_product_template
 msgid "GAP Analysis Service"
@@ -1189,15 +1152,21 @@ msgstr ""
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
-msgstr "Ижил барааг савлаж боохдоо ялгаатай арга хэрэглэх боломжтой. Энэ нь түүвэрлэх дараалалд нөлөө байхгүй. Ерөнхийдөө EDI модулийг ашиглах үед хэрэглэгдэнэ."
+msgstr ""
+"Ижил барааг савлаж боохдоо ялгаатай арга хэрэглэх боломжтой. Энэ нь "
+"түүвэрлэх дараалалд нөлөө байхгүй. Ерөнхийдөө EDI модулийг ашиглах үед "
+"хэрэглэгдэнэ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_sequence
 msgid ""
-"Gives the order in which the pricelist items will be checked. The evaluation"
-" gives highest priority to lowest sequence and stops as soon as a matching "
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
-msgstr "Үнийн хүснэгтийн зүйлүүдийн шалгагдах эрэмбийг өгнө. Хамгийн бага дарааллын дугаар нь хамгийн өндөр урьтамжтай бөгөөд нийцэх зүйл олдмогц тооцоолол зогсоно."
+msgstr ""
+"Үнийн хүснэгтийн зүйлүүдийн шалгагдах эрэмбийг өгнө. Хамгийн бага дарааллын "
+"дугаар нь хамгийн өндөр урьтамжтай бөгөөд нийцэх зүйл олдмогц тооцоолол "
+"зогсоно."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_sequence
@@ -1216,10 +1185,10 @@ msgid "Global"
 msgstr "Глобал"
 
 #. module: product
-#: model:product.product,name:product.product_product_44
-#: model:product.template,name:product.product_product_44_product_template
-msgid "GrapWorks Software"
-msgstr "GrapWorks програм хангамж"
+#: model:product.product,name:product.membership_0
+#: model:product.template,name:product.membership_0_product_template
+msgid "Gold Membership"
+msgstr ""
 
 #. module: product
 #: model:product.product,name:product.product_product_24
@@ -1228,35 +1197,10 @@ msgid "Graphics Card"
 msgstr "График Карт"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_weight
-#: model:ir.model.fields,field_description:product.field_product_template_weight
-msgid "Gross Weight"
-msgstr "Бохир жин"
-
-#. module: product
 #: model:product.product,name:product.product_product_17
 #: model:product.template,name:product.product_product_17_product_template
 msgid "HDD SH-1"
 msgstr "HDD SH-1"
-
-#. module: product
-#: model:product.product,name:product.product_product_18
-#: model:product.template,name:product.product_product_18_product_template
-msgid "HDD SH-2 (mto)"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_19
-#: model:product.template,name:product.product_product_19_product_template
-msgid "HDD on Demand"
-msgstr "Зөөврийн хард диск"
-
-#. module: product
-#: model:product.product,description:product.product_product_32
-#: model:product.template,description:product.product_product_32_product_template
-msgid ""
-"Hands free headset for laptop PC with in-line microphone and headphone plug."
-msgstr "Микрофон болон чихэвчний оролт бүхий зөөврийн компьютерт зориулсан чихэвч"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1270,24 +1214,6 @@ msgstr ""
 #: model:product.public.category,name:product.Headset
 msgid "Headset"
 msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_33
-#: model:product.template,name:product.product_product_33_product_template
-msgid "Headset USB"
-msgstr "USB чихэвч"
-
-#. module: product
-#: model:product.product,description:product.product_product_33
-#: model:product.template,description:product.product_product_33_product_template
-msgid "Headset for laptop PC with USB connector."
-msgstr "USB холболттой нөөтбүүкийн чихэвч"
-
-#. module: product
-#: model:product.product,name:product.product_product_32
-#: model:product.template,name:product.product_product_32_product_template
-msgid "Headset standard"
-msgstr "Чихэвчийн стандарт"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -1331,16 +1257,23 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor_inv
 msgid ""
-"How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n"
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
-msgstr "Ангилалын сурвалж хэмжих нэгжээс хэмжих нэгж нь хэд дахин их болох:\n1 * (энэ нэгж) = харьцаа * (сурвалж нэгж)"
+msgstr ""
+"Ангилалын сурвалж хэмжих нэгжээс хэмжих нэгж нь хэд дахин их болох:\n"
+"1 * (энэ нэгж) = харьцаа * (сурвалж нэгж)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor
 msgid ""
-"How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n"
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
-msgstr "Энэ хэмжих нэгж нь хэр зэрэг их эсвэл бага гэдэг нь энэ ангилалын сурвалж хэмжих нэгжтэй жишсэнээр илэрхийлэгдэнэ: \n1 * (сурвалж нэгж) = харьцаа * (энэ нэгж)"
+msgstr ""
+"Энэ хэмжих нэгж нь хэр зэрэг их эсвэл бага гэдэг нь энэ ангилалын сурвалж "
+"хэмжих нэгжтэй жишсэнээр илэрхийлэгдэнэ: \n"
+"1 * (сурвалж нэгж) = харьцаа * (энэ нэгж)"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1371,18 +1304,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_unread
-#: model:ir.model.fields,help:product.field_product_template_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг шаардана."
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_needaction
-#: model:ir.model.fields,help:product.field_product_template_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "If it's made for iPad, it's made for iPad mini."
@@ -1399,7 +1320,9 @@ msgstr "Хэрэв сонгоогүй бол үнийн хүснэгтийг у�
 #: model:ir.model.fields,help:product.field_product_template_active
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr "Идэвхтэй талбарын тэмдэглэгээг арилгаснаар барааг арилгахгүйгээр нуух боломжтой."
+msgstr ""
+"Идэвхтэй талбарын тэмдэглэгээг арилгаснаар барааг арилгахгүйгээр нуух "
+"боломжтой."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_image
@@ -1409,29 +1332,31 @@ msgstr "Зураг"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image
 msgid ""
-"Image of the product variant (Big-sized image of product template if false)."
-" It is automatically resized as a 1024x1024px image, with aspect ratio "
+"Image of the product variant (Big-sized image of product template if false). "
+"It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr "Барааны хувилбарын зураг (Хэрэв худал бол барааны үлгэрийн том хэмжээтэй зураг). Энэ автоматаар хэмжээ 1024x1024px хэмжээтэй болох бөгөөд харьцаа нь хадгалагдана."
+msgstr ""
+"Барааны хувилбарын зураг (Хэрэв худал бол барааны үлгэрийн том хэмжээтэй "
+"зураг). Энэ автоматаар хэмжээ 1024x1024px хэмжээтэй болох бөгөөд харьцаа нь "
+"хадгалагдана."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr "Барааны хувилбарын зураг (Хэрэв худал бол барааны үлгэрийн дунд хэмжээтэй зураг)."
+msgstr ""
+"Барааны хувилбарын зураг (Хэрэв худал бол барааны үлгэрийн дунд хэмжээтэй "
+"зураг)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr "Барааны хувилбарын зураг (Хэрэв худал бол барааны үлгэрийн жижиг хэмжээтэй зураг)."
-
-#. module: product
-#: selection:product.template,state:0
-msgid "In Development"
-msgstr "Хөгжүүлэлтийн шатанд"
+msgstr ""
+"Барааны хувилбарын зураг (Хэрэв худал бол барааны үлгэрийн жижиг хэмжээтэй "
+"зураг)."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1445,18 +1370,15 @@ msgid "Information about a product vendor"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_38
-#: model:product.template,name:product.product_product_38_product_template
-msgid "Ink Cartridge"
-msgstr "Принтерийн бэхэн хор"
-
-#. module: product
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid ""
-"Inside each earpiece is a stainless steel mesh cap that protects the precision acoustic\n"
-"                                    components from dust and debris. You can remove the caps for cleaning or replace\n"
-"                                    them with an extra set that’s included in the box."
+"Inside each earpiece is a stainless steel mesh cap that protects the "
+"precision acoustic\n"
+"                                    components from dust and debris. You can "
+"remove the caps for cleaning or replace\n"
+"                                    them with an extra set that’s included "
+"in the box."
 msgstr ""
 
 #. module: product
@@ -1487,12 +1409,6 @@ msgstr "Барааны Олон улсын хувийн дугаар"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
 msgstr "Хадгалах"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_is_follower
-#: model:ir.model.fields,field_description:product.field_product_template_message_is_follower
-msgid "Is Follower"
-msgstr "Дагагч эсэх"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
@@ -1530,21 +1446,9 @@ msgid "Laptop E5023"
 msgstr "Laptop E5023"
 
 #. module: product
-#: model:product.product,name:product.product_product_26
-#: model:product.template,name:product.product_product_26_product_template
-msgid "Laptop S3450"
-msgstr "Гар компьютер S3450"
-
-#. module: product
 #: model:product.public.category,name:product.laptops
 msgid "Laptops"
 msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_last_post
-#: model:ir.model.fields,field_description:product.field_product_template_message_last_post
-msgid "Last Message Date"
-msgstr "Сүүлийн зурвасын огноо"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute___last_update
@@ -1610,7 +1514,10 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
-msgstr "Худалдан авах захиалгыг баталснаас барааг агуулахад хүлээн авах хүртэлх урьтал хугацааг өдрөөр илэрхийлсэн. Худалдан авах захиалгыг төлөвлөхөд товлогч автомат тооцоололд хэрэглэнэ."
+msgstr ""
+"Худалдан авах захиалгыг баталснаас барааг агуулахад хүлээн авах хүртэлх "
+"урьтал хугацааг өдрөөр илэрхийлсэн. Худалдан авах захиалгыг төлөвлөхөд "
+"товлогч автомат тооцоололд хэрэглэнэ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_left
@@ -1628,19 +1535,13 @@ msgid "Lines"
 msgstr "Мөрүүд"
 
 #. module: product
-#: model:product.product,name:product.product_product_50
-#: model:product.template,name:product.product_product_50_product_template
-msgid "Linutop"
-msgstr ""
-
-#. module: product
 #: model:product.uom,name:product.product_uom_litre
 msgid "Liter(s)"
 msgstr "Литер"
 
 #. module: product
-#: model:product.product,name:product.product_product_58
-#: model:product.template,name:product.product_product_58_product_template
+#: model:product.product,name:product.consu_delivery_02
+#: model:product.template,name:product.consu_delivery_02_product_template
 msgid "Little server"
 msgstr ""
 
@@ -1703,24 +1604,15 @@ msgid ""
 "Medium-sized image of the product. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
-msgstr "Барааны дунд хэмжээт зураг. Энэ нь автоматаар 128x128px хэмжээтэй болох бөгөөд харьцаа нь хадгалагдана. Энэ зурагийг зарим маягт харагдац болон канбан харагдацад хэрэглэж болно."
+msgstr ""
+"Барааны дунд хэмжээт зураг. Энэ нь автоматаар 128x128px хэмжээтэй болох "
+"бөгөөд харьцаа нь хадгалагдана. Энэ зурагийг зарим маягт харагдац болон "
+"канбан харагдацад хэрэглэж болно."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
 msgid "Memory"
 msgstr "Санах ой"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_ids
-msgid "Messages"
-msgstr "Зурвасууд"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_ids
-#: model:ir.model.fields,help:product.field_product_template_message_ids
-msgid "Messages and communication history"
-msgstr "Зурвас болон харилцсан түүх"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1755,12 +1647,6 @@ msgid "More features."
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_21
-#: model:product.template,name:product.product_product_21_product_template
-msgid "Motherboard A20Z7"
-msgstr "Motherboard A20Z7"
-
-#. module: product
 #: model:product.product,name:product.product_product_20
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Motherboard I9P57"
@@ -1777,12 +1663,6 @@ msgstr "Хулгана, Оптик"
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Mouse, Wireless"
 msgstr "Хулгана, утасгүй"
-
-#. module: product
-#: model:product.product,name:product.product_product_31
-#: model:product.template,name:product.product_product_31_product_template
-msgid "Multimedia Speakers"
-msgstr "Мултимедиа өсгөгчүүд"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1814,7 +1694,7 @@ msgid "New Price ="
 msgstr "Шинэ үнэ ="
 
 #. module: product
-#: selection:product.category,type:0 selection:product.template,state:0
+#: selection:product.category,type:0
 msgid "Normal"
 msgstr "Хэвийн"
 
@@ -1822,49 +1702,6 @@ msgstr "Хэвийн"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Notes"
 msgstr "Тэмдэглэл"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_needaction_counter
-#: model:ir.model.fields,field_description:product.field_product_template_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Үйлдлийн тоо"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_needaction_counter
-#: model:ir.model.fields,help:product.field_product_template_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Үйлдэл шаардлагатай зурвасын тоо"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_unread_counter
-#: model:ir.model.fields,help:product.field_product_template_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Уншаагүй зурвасын тоо"
-
-#. module: product
-#: selection:product.template,state:0
-msgid "Obsolete"
-msgstr "Хуучирсан"
-
-#. module: product
-#: model:product.product,description_sale:product.product_product_42
-#: model:product.template,description_sale:product.product_product_42_product_template
-msgid ""
-"Office Editing Software with word processing, spreadsheets, presentations, "
-"graphics, and databases..."
-msgstr "Баримт, хүснэгт, илтгэл, хүснэгт, өгөгдлийн бааз зэрэгийн засварлагч оффисын програм хангамжууд..."
-
-#. module: product
-#: model:product.product,name:product.product_product_42
-#: model:product.template,name:product.product_product_42_product_template
-msgid "Office Suite"
-msgstr "Оффисын Багц"
-
-#. module: product
-#: model:product.product,description:product.product_product_19
-#: model:product.template,description:product.product_product_19_product_template
-msgid "On demand hard-disk having capacity based on requirement."
-msgstr "Шаардлага дээр суурилсан багтаамжтай хэрэгцээний хатуу-дискүүд"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -1917,18 +1754,6 @@ msgid "Pen Drive"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_29
-#: model:product.template,name:product.product_product_29_product_template
-msgid "Pen drive, SP-2"
-msgstr "Pen drive, SP-2"
-
-#. module: product
-#: model:product.product,name:product.product_product_30
-#: model:product.template,name:product.product_product_30_product_template
-msgid "Pen drive, SP-4"
-msgstr "Pen drive, SP-4"
-
-#. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
 msgstr ""
@@ -1961,14 +1786,14 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid ""
-"Powered by fourth-generation Intel Core processors, this iMac is the fastest"
-" yet. Every model in the lineup comes standard with a quad-core Intel Core "
-"i5 processor, starting at 2.7GHz and topping out at 3.4GHz."
+"Powered by fourth-generation Intel Core processors, this iMac is the fastest "
+"yet. Every model in the lineup comes standard with a quad-core Intel Core i5 "
+"processor, starting at 2.7GHz and topping out at 3.4GHz."
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_0
-#: model:product.template,name:product.product_product_0_product_template
+#: model:product.product,name:product.service_order_01
+#: model:product.template,name:product.service_order_01_product_template
 msgid "Prepaid Consulting"
 msgstr ""
 
@@ -1977,6 +1802,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_price
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_price
 #: model:ir.model.fields,field_description:product.field_product_template_price
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2003,7 +1829,9 @@ msgstr "Нэмэлт үнэ"
 msgid ""
 "Price Extra: Extra price for the variant with this attribute value on sale "
 "price. eg. 200 price extra, 1000 + 200 = 1200."
-msgstr "Нэмэлт Үнэ: Энэ шинж чанараарх хувилбарын борлуулалтын нэмэлт үнэ. ж. 200 нэмэлт үнэ, 1000 + 200 = 1200."
+msgstr ""
+"Нэмэлт Үнэ: Энэ шинж чанараарх хувилбарын борлуулалтын нэмэлт үнэ. ж. 200 "
+"нэмэлт үнэ, 1000 + 200 = 1200."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -2054,6 +1882,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_ids
 #: model:ir.model.fields,field_description:product.field_product_product_item_ids
 #: model:ir.model.fields,field_description:product.field_product_template_item_ids
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
@@ -2103,18 +1932,6 @@ msgstr "Хэвлэх"
 #: model:product.public.category,name:product.printer
 msgid "Printer"
 msgstr "Хэвлэгч"
-
-#. module: product
-#: model:product.product,name:product.product_product_37
-#: model:product.template,name:product.product_product_37_product_template
-msgid "Printer, All-in-one"
-msgstr "Олон үйлдэлт принтер"
-
-#. module: product
-#: model:product.product,name:product.product_product_23
-#: model:product.template,name:product.product_product_23_product_template
-msgid "Processor AMD 8-Core"
-msgstr "AMD 8-Core процессор"
 
 #. module: product
 #: model:product.product,name:product.product_product_22
@@ -2262,7 +2079,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:817
+#: code:addons/product/product.py:824
 #, python-format
 msgid "Products: "
 msgstr "Бараанууд "
@@ -2326,18 +2143,6 @@ msgid "Quantity-5"
 msgstr "Тоо хэмжээ-5"
 
 #. module: product
-#: model:product.product,name:product.product_product_14
-#: model:product.template,name:product.product_product_14_product_template
-msgid "RAM SR2 (kit)"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_15
-#: model:product.template,name:product.product_product_15_product_template
-msgid "RAM SR3"
-msgstr "RAM SR3"
-
-#. module: product
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "RAM SR5"
@@ -2369,9 +2174,12 @@ msgstr "Баруун Эцэг"
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Right from the start, apps made for iPad also work with iPad mini.\n"
-"                                    They’re immersive, full-screen apps that let you do almost anything\n"
-"                                    you can imagine. And with automatic updates,\n"
-"                                    you're always getting the best experience possible."
+"                                    They’re immersive, full-screen apps that "
+"let you do almost anything\n"
+"                                    you can imagine. And with automatic "
+"updates,\n"
+"                                    you're always getting the best "
+"experience possible."
 msgstr ""
 
 #. module: product
@@ -2385,8 +2193,10 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid ""
 "Right from the start, there’s a lot to love about\n"
-"                                    iPad. It’s simple yet powerful. Thin and light yet\n"
-"                                    full-featured. It can do just about everything and\n"
+"                                    iPad. It’s simple yet powerful. Thin and "
+"light yet\n"
+"                                    full-featured. It can do just about "
+"everything and\n"
 "                                    be just about anything."
 msgstr ""
 
@@ -2395,9 +2205,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "Right from the start, there’s a lot to love about iPad.\n"
-"                                   It’s simple yet powerful. Thin and light yet full-\n"
-"                                   featured. It can do just about everything and be just\n"
-"                                   about anything.And because it’s so easy to use, it’s\n"
+"                                   It’s simple yet powerful. Thin and light "
+"yet full-\n"
+"                                   featured. It can do just about everything "
+"and be just\n"
+"                                   about anything.And because it’s so easy "
+"to use, it’s\n"
 "                                   easy to love."
 msgstr ""
 
@@ -2410,12 +2223,6 @@ msgstr "Тоймлох арга"
 #: model:ir.model.fields,field_description:product.field_product_uom_rounding
 msgid "Rounding Precision"
 msgstr "Тоймлох нарийвчлал"
-
-#. module: product
-#: model:product.product,name:product.product_product_45
-#: model:product.template,name:product.product_product_45_product_template
-msgid "Router R430"
-msgstr "Router R430"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2462,11 +2269,16 @@ msgstr "Борлуулалтын үнийн хүснэгт"
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "Say you’re listening to a song you love and you want to stay in the mood.\n"
-"                                        Just tap Genius. It finds other songs on iPod nano that go great together\n"
-"                                        and makes a Genius playlist for you. For more song combinations\n"
-"                                        you wouldn’t have thought of yourself, create Genius Mixes in iTunes\n"
-"                                        and sync the ones you like to iPod nano. Then tap Genius Mixes and\n"
-"                                        rediscover songs you haven’t heard in a while — or find music you forgot you even had."
+"                                        Just tap Genius. It finds other "
+"songs on iPod nano that go great together\n"
+"                                        and makes a Genius playlist for you. "
+"For more song combinations\n"
+"                                        you wouldn’t have thought of "
+"yourself, create Genius Mixes in iTunes\n"
+"                                        and sync the ones you like to iPod "
+"nano. Then tap Genius Mixes and\n"
+"                                        rediscover songs you haven’t heard "
+"in a while — or find music you forgot you even had."
 msgstr ""
 
 #. module: product
@@ -2493,14 +2305,14 @@ msgid "Sequence"
 msgstr "Дараалал"
 
 #. module: product
-#: model:product.product,name:product.product_product_59
+#: model:product.product,name:product.consu_delivery_01
 #: model:product.public.category,name:product.server
-#: model:product.template,name:product.product_product_59_product_template
+#: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Server"
 msgstr "Сервер"
 
 #. module: product
-#: code:addons/product/product.py:460
+#: code:addons/product/product.py:474
 #, python-format
 msgid "Service"
 msgstr ""
@@ -2518,7 +2330,10 @@ msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr "Энэ утгаар үржүүлж үнийг тогтооно.\nҮнийн хөнгөлөлт болон нэмэлтийн дараа тоймлолт хийгдэнэ.\n9.99 үнийг гаргаж авахын тулд тоймлолт нь 10, нэмэлт нь -0.01 байна."
+msgstr ""
+"Энэ утгаар үржүүлж үнийг тогтооно.\n"
+"Үнийн хөнгөлөлт болон нэмэлтийн дараа тоймлолт хийгдэнэ.\n"
+"9.99 үнийг гаргаж авахын тулд тоймлолт нь 10, нэмэлт нь -0.01 байна."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
@@ -2529,8 +2344,16 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
 msgid ""
 "Share your product to all companies defined in your instance.\n"
-" * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
+" * Checked : Product are visible for every company, even if a company is "
+"defined on the partner.\n"
+" * Unchecked : Each company can see only its product (product where company "
+"is defined). Product not related to a company are visible for all companies."
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.membership_1
+#: model:product.template,name:product.membership_1_product_template
+msgid "Silver Membership"
 msgstr ""
 
 #. module: product
@@ -2549,9 +2372,12 @@ msgstr "Жижиг-хэмжээт зураг"
 #: model:ir.model.fields,help:product.field_product_template_image_small
 msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
-msgstr "Барааны жижиг хэмжээт зураг. Энэ нь автоматаар 64x64px хэмжээтэй болно, харьцаа нь гэхдээ хадгалагдана. Энэ талбарыг жижиг зураг хэрэгцээтэй газарт хаана ч хамаагүй хэрэглэж болно."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
+msgstr ""
+"Барааны жижиг хэмжээт зураг. Энэ нь автоматаар 64x64px хэмжээтэй болно, "
+"харьцаа нь гэхдээ хадгалагдана. Энэ талбарыг жижиг зураг хэрэгцээтэй газарт "
+"хаана ч хамаагүй хэрэглэж болно."
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -2582,21 +2408,27 @@ msgstr ""
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
-msgstr "Хэрэв энэ дүрэм зөвхөн энэ ангилал болон бүх дэд ангилалд үйлчлэхээр бол ангилалыг сонгоно. Үгүй бол хоосон үлдээнэ."
+msgstr ""
+"Хэрэв энэ дүрэм зөвхөн энэ ангилал болон бүх дэд ангилалд үйлчлэхээр бол "
+"ангилалыг сонгоно. Үгүй бол хоосон үлдээнэ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_id
 msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
-msgstr "Хэрэв энэ дүрэм зөвхөн нэг бараанд үйлчилдэг бол барааг зааж өг. Үгүй бол хоосон үлдээ."
+msgstr ""
+"Хэрэв энэ дүрэм зөвхөн нэг бараанд үйлчилдэг бол барааг зааж өг. Үгүй бол "
+"хоосон үлдээ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_tmpl_id
 msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
-msgstr "Хэрэв энэ дүрэм барааны нэг л үлгэрт үйлчлэх бол үлгэрийг зааж өгнө. Үгүй бол хоосон үлдээнэ."
+msgstr ""
+"Хэрэв энэ дүрэм барааны нэг л үлгэрт үйлчлэх бол үлгэрийг зааж өгнө. Үгүй "
+"бол хоосон үлдээнэ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sale_ok
@@ -2609,7 +2441,9 @@ msgstr "Хэрэв бараа борлуулалтын захиалгын мөр
 msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
-msgstr "Хөнгөлөлт тооцсон дүн дээр нэмэх эсвэл хасах (хэрэв сөрөг бол) тогтол дүнг зааж өгнө."
+msgstr ""
+"Хөнгөлөлт тооцсон дүн дээр нэмэх эсвэл хасах (хэрэв сөрөг бол) тогтол дүнг "
+"зааж өгнө."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_max_margin
@@ -2638,12 +2472,6 @@ msgid "Starting date for the pricelist item validation"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_state
-#: model:ir.model.fields,field_description:product.field_product_template_state
-msgid "Status"
-msgstr "Төлөв"
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Supplier Pricelist"
 msgstr "Нийлүүлэлтийн үнийн хүснэгт"
@@ -2655,8 +2483,8 @@ msgid "Support Contract (on timesheet)"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_47
-#: model:product.template,name:product.product_product_47_product_template
+#: model:product.product,name:product.product_delivery_01
+#: model:product.template,name:product.product_delivery_01_product_template
 msgid "Switch, 24 ports"
 msgstr "24 порт бүхий свич"
 
@@ -2675,9 +2503,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "Tap to play your favorite songs. Or entire albums.\n"
-"                                    Or everything by one artist. You can even browse by genres or composers.\n"
-"                                    Flip through your music: Album art looks great on the bigger screen.\n"
-"                                    Or to keep things fresh, give iPod nano a shake and it shuffles to a different song in your music library."
+"                                    Or everything by one artist. You can "
+"even browse by genres or composers.\n"
+"                                    Flip through your music: Album art looks "
+"great on the bigger screen.\n"
+"                                    Or to keep things fresh, give iPod nano "
+"a shake and it shuffles to a different song in your music library."
 msgstr ""
 
 #. module: product
@@ -2689,11 +2520,16 @@ msgstr "Тэмплэйт Нэр"
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid ""
-"The Apple In-Ear Headphones deliver a truly immersive sound experience by drastically\n"
-"                                    reducing unwanted outside noises. The soft, silicone ear tips fit snugly and comfortably\n"
-"                                    in your ear, creating a seal that isolates your music from your surroundings.\n"
-"                                    Three different sizes of ear tips are included so you can find a perfect fit for each ear.\n"
-"                                    Also included are a convenient carrying case for the ear tips and a cable-control case\n"
+"The Apple In-Ear Headphones deliver a truly immersive sound experience by "
+"drastically\n"
+"                                    reducing unwanted outside noises. The "
+"soft, silicone ear tips fit snugly and comfortably\n"
+"                                    in your ear, creating a seal that "
+"isolates your music from your surroundings.\n"
+"                                    Three different sizes of ear tips are "
+"included so you can find a perfect fit for each ear.\n"
+"                                    Also included are a convenient carrying "
+"case for the ear tips and a cable-control case\n"
 "                                    for the headphones themselves."
 msgstr ""
 
@@ -2701,9 +2537,12 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
-"The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. Its ultra-compact size fits in the \n"
-"                                    palm of your hand, yet gives you full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
-"                                    full-featured. It can do just about everything and\n"
+"The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. Its "
+"ultra-compact size fits in the \n"
+"                                    palm of your hand, yet gives you full, "
+"natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
+"                                    full-featured. It can do just about "
+"everything and\n"
 "                                    experience music just about anywhere."
 msgstr ""
 
@@ -2712,9 +2551,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "The SoundLink® Mini speaker is small and light enough\n"
-"                                        to tuck into your bag. It weighs in at just 1.5 pounds.\n"
-"                                        Its low profile lets you place it almost anywhere and\n"
-"                                        provides a low center of gravity that makes it nearly\n"
+"                                        to tuck into your bag. It weighs in "
+"at just 1.5 pounds.\n"
+"                                        Its low profile lets you place it "
+"almost anywhere and\n"
+"                                        provides a low center of gravity "
+"that makes it nearly\n"
 "                                        impossible to tip over."
 msgstr ""
 
@@ -2730,7 +2572,9 @@ msgstr "Барааны үндсэн хэмжих нэгжээр тооцоолс
 msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
-msgstr "Тооцоолсон тоо хэмжээ нь эдгээрийн үржвэр байна. 1.0 гэсэн тоог цааш үл хуваагдах нэгжид хэрэглэнэ. Жишээлбэл ширхэг."
+msgstr ""
+"Тооцоолсон тоо хэмжээ нь эдгээрийн үржвэр байна. 1.0 гэсэн тоог цааш үл "
+"хуваагдах нэгжид хэрэглэнэ. Жишээлбэл ширхэг."
 
 #. module: product
 #: sql_constraint:product.uom:0
@@ -2767,8 +2611,10 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_9_product_template
 msgid ""
 "The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
-"                                    which makes it compatible with iPad. And you’re free to type wherever\n"
-"                                    you like — with the keyboard in front of your iPad or on your lap."
+"                                    which makes it compatible with iPad. And "
+"you’re free to type wherever\n"
+"                                    you like — with the keyboard in front of "
+"your iPad or on your lap."
 msgstr ""
 
 #. module: product
@@ -2780,11 +2626,12 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:329
+#: code:addons/product/product.py:332
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
-"You are trying to delete an attribute value with a reference on a product variant."
+"You are trying to delete an attribute value with a reference on a product "
+"variant."
 msgstr ""
 
 #. module: product
@@ -2813,8 +2660,10 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
-"The rechargeable lithium-ion battery delivers up to seven hours of playtime.\n"
-"                                    And at home, you can listen even longer—the charging cradle lets\n"
+"The rechargeable lithium-ion battery delivers up to seven hours of "
+"playtime.\n"
+"                                    And at home, you can listen even longer—"
+"the charging cradle lets\n"
 "                                    you listen while it charges."
 msgstr ""
 
@@ -2831,9 +2680,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "The speaker has a range of about 30 feet, so you can enjoy\n"
-"                                    the sound you want without wires. It pairs easily with your\n"
-"                                    smartphone, iPad® or other Bluetooth device.\n"
-"                                    And it remembers the most recent six devices you've used,\n"
+"                                    the sound you want without wires. It "
+"pairs easily with your\n"
+"                                    smartphone, iPad® or other Bluetooth "
+"device.\n"
+"                                    And it remembers the most recent six "
+"devices you've used,\n"
 "                                    so reconnecting is even simpler."
 msgstr ""
 
@@ -2878,10 +2730,14 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
-"There’s another way to get a good mix of music on iPod: Let Genius do the work.\n"
-"                                        Activate Genius in iTunes on your computer, and it automatically finds songs that sound\n"
-"                                        great together. Then it creates Genius Mixes, which you can easily sync to your iPod.\n"
-"                                        It’s the perfect way to rediscover songs you haven’t listened to in forever."
+"There’s another way to get a good mix of music on iPod: Let Genius do the "
+"work.\n"
+"                                        Activate Genius in iTunes on your "
+"computer, and it automatically finds songs that sound\n"
+"                                        great together. Then it creates "
+"Genius Mixes, which you can easily sync to your iPod.\n"
+"                                        It’s the perfect way to rediscover "
+"songs you haven’t listened to in forever."
 msgstr ""
 
 #. module: product
@@ -2897,9 +2753,11 @@ msgstr "Энэ нь барааны формоос авагддаг."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_variant
 msgid ""
-"This field holds the image used as image for the product variant, limited to"
-" 1024x1024px."
-msgstr "Энэ талбар нь барааны хувилбарын зурагийг хадгалахад зориулагдсан, 1024x1024px-р хязгаарлагдана."
+"This field holds the image used as image for the product variant, limited to "
+"1024x1024px."
+msgstr ""
+"Энэ талбар нь барааны хувилбарын зурагийг хадгалахад зориулагдсан, "
+"1024x1024px-р хязгаарлагдана."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image
@@ -2933,7 +2791,8 @@ msgstr ""
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr "Тухайн харилцагчтай борлуулалтын захиалга үүсгэхэд хэрэглэгдэх үнийн хүснэгт."
+msgstr ""
+"Тухайн харилцагчтай борлуулалтын захиалга үүсгэхэд хэрэглэгдэх үнийн хүснэгт."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
@@ -2950,12 +2809,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_39
-#: model:product.template,name:product.product_product_39_product_template
-msgid "Toner Cartridge"
-msgstr "Принтерийн хор"
-
-#. module: product
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Two is better than one."
@@ -2965,18 +2818,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_uom_uom_type
 msgid "Type"
 msgstr "Төрөл"
-
-#. module: product
-#: model:product.product,name:product.product_product_53
-#: model:product.template,name:product.product_product_53_product_template
-msgid "TypeMatrix Dvorak Keyboard"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_48
-#: model:product.template,name:product.product_product_48_product_template
-msgid "USB Adapter"
-msgstr "USB адаптер"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -3045,7 +2886,8 @@ msgstr "Хэмжих нэгжийн ангилал"
 msgid ""
 "Units of measure belonging to the same category can be\n"
 "                converted between each others. For example, in the category\n"
-"                <i>'Time'</i>, you will have the following units of measure:\n"
+"                <i>'Time'</i>, you will have the following units of "
+"measure:\n"
 "                Hours, Days."
 msgstr ""
 
@@ -3060,24 +2902,17 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid ""
 "Unlike many small headphones, each earpiece of the Apple In-Ear Headphones\n"
-"                                    contains two separate high-performance drivers — a woofer to handle bass and\n"
-"                                    mid-range sounds and a tweeter for high-frequency audio. These dedicated\n"
-"                                    drivers help ensure accurate, detailed sound across the entire sonic spectrum.\n"
-"                                    The result: you’re immersed in the music and hear details you never knew existed.\n"
-"                                    Even when listening to an old favorite, you may feel like you’re hearing it for the first time."
+"                                    contains two separate high-performance "
+"drivers — a woofer to handle bass and\n"
+"                                    mid-range sounds and a tweeter for high-"
+"frequency audio. These dedicated\n"
+"                                    drivers help ensure accurate, detailed "
+"sound across the entire sonic spectrum.\n"
+"                                    The result: you’re immersed in the music "
+"and hear details you never knew existed.\n"
+"                                    Even when listening to an old favorite, "
+"you may feel like you’re hearing it for the first time."
 msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_unread
-#: model:ir.model.fields,field_description:product.field_product_template_message_unread
-msgid "Unread Messages"
-msgstr "Уншаагүй Зурвасууд"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_unread_counter
-#: model:ir.model.fields,field_description:product.field_product_template_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Уншаагүй зурвасын тоолуур"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3129,9 +2964,7 @@ msgid "Variants"
 msgstr "Хувилбарууд"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_name
-#: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
 msgstr "Нийлүүлэгч"
@@ -3163,6 +2996,8 @@ msgid "Vendor of this product"
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_seller_ids
+#: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendors"
 msgstr "Нийлүүлэгч"
@@ -3175,6 +3010,7 @@ msgstr "Дэлгэц"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_volume
 #: model:ir.model.fields,field_description:product.field_product_template_volume
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:product.uom.categ,name:product.product_uom_categ_vol
 msgid "Volume"
 msgstr "Эзлэхүүн"
@@ -3199,13 +3035,8 @@ msgid "Warranty"
 msgstr "Баталгаа"
 
 #. module: product
-#: model:product.product,name:product.product_product_34
-#: model:product.template,name:product.product_product_34_product_template
-msgid "Webcam"
-msgstr "Веб камер"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.model.fields,field_description:product.field_product_product_weight
+#: model:ir.model.fields,field_description:product.field_product_template_weight
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
 msgstr "Жин"
@@ -3226,8 +3057,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
 msgid ""
-"When this field is filled in, the vendor data will only apply to the "
-"variant."
+"When this field is filled in, the vendor data will only apply to the variant."
 msgstr ""
 
 #. module: product
@@ -3255,24 +3085,14 @@ msgid "Wi-Fi"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_40
-#: model:product.template,name:product.product_product_40_product_template
-msgid "Windows 7 Professional"
-msgstr "Windows 7 Professional"
-
-#. module: product
-#: model:product.product,name:product.product_product_41
-#: model:product.template,name:product.product_product_41_product_template
-msgid "Windows Home Server 2011"
-msgstr "Windows Home Server 2011"
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid ""
 "With advanced Wi‑Fi that’s up to twice as fast as\n"
-"                                   any previous-generation iPad and access to fast\n"
-"                                   cellular data networks around the world, iPad mini\n"
+"                                   any previous-generation iPad and access "
+"to fast\n"
+"                                   cellular data networks around the world, "
+"iPad mini\n"
 "                                   lets you download content, stream video,\n"
 "                                   and browse the web at amazing speeds."
 msgstr ""
@@ -3310,7 +3130,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_template_action
 msgid ""
 "You must define a product for everything you sell, whether it's a physical "
-"product, a consumable or a service you offer to  customers."
+"product, a consumable or a service you offer to customers."
 msgstr ""
 
 #. module: product
@@ -3320,15 +3140,19 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "You probably have multiple playlists in iTunes on your computer.\n"
-"                                        One for your commute. One for the gym. Sync those playlists\n"
-"                                        to iPod, and you can play the perfect mix for whatever\n"
-"                                        mood strikes you. VoiceOver tells you the name of each playlist,\n"
-"                                        so it’s easy to switch between them and find the one you want without looking."
+"                                        One for your commute. One for the "
+"gym. Sync those playlists\n"
+"                                        to iPod, and you can play the "
+"perfect mix for whatever\n"
+"                                        mood strikes you. VoiceOver tells "
+"you the name of each playlist,\n"
+"                                        so it’s easy to switch between them "
+"and find the one you want without looking."
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_43
-#: model:product.template,name:product.product_product_43_product_template
+#: model:product.product,name:product.product_order_01
+#: model:product.template,name:product.product_order_01_product_template
 msgid "Zed+ Antivirus"
 msgstr "Zed+ Antivirus"
 
@@ -3431,8 +3255,10 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid ""
 "iTunes on your Mac or PC makes it easy to load up\n"
-"                                        your iPod. Just choose the playlists, audiobooks,\n"
-"                                        podcasts, and other audio files you want, then sync."
+"                                        your iPod. Just choose the "
+"playlists, audiobooks,\n"
+"                                        podcasts, and other audio files you "
+"want, then sync."
 msgstr ""
 
 #. module: product
@@ -3496,16 +3322,16 @@ msgid "qt"
 msgstr ""
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_58
-#: model:product.template,description_sale:product.product_product_58_product_template
+#: model:product.product,description_sale:product.consu_delivery_02
+#: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid ""
 "raid 1 \n"
 "            512ECC ram"
 msgstr ""
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_59
-#: model:product.template,description_sale:product.product_product_59_product_template
+#: model:product.product,description_sale:product.consu_delivery_01
+#: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid ""
 "raid 10 \n"
 "            2048ECC ram"
@@ -3536,3 +3362,173 @@ msgstr "дараах руу"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "тодорхой бус"
+
+#~ msgid ""
+#~ "17\" Monitor\n"
+#~ "6GB RAM\n"
+#~ "Hi-Speed 234Q Processor\n"
+#~ "QWERTY keyboard"
+#~ msgstr ""
+#~ "17\" Monitor\n"
+#~ "6GB RAM\n"
+#~ "Hi-Speed 234Q Processor\n"
+#~ "QWERTY keyboard"
+
+#~ msgid "Action Needed"
+#~ msgstr "Үйлдэл Шаардлагатай"
+
+#~ msgid "All in one hi-speed printer with fax and scanner."
+#~ msgstr "Факс болон сканнертай бүгдийг багтаасан принтер"
+
+#~ msgid "Blank CD"
+#~ msgstr "Хоосон CD"
+
+#~ msgid "Blank DVD-RW"
+#~ msgstr "Хоосон DVD-RW"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
+
+#~ msgid "End of Lifecycle"
+#~ msgstr "Дуусах хугацаа"
+
+#~ msgid "External Hard disk"
+#~ msgstr "Гадаад хатуу диск"
+
+#~ msgid "Followers"
+#~ msgstr "Дагагчид"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Дагагчид (Сувагууд)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Дагагчид (Харилцагчид)"
+
+#~ msgid "Full featured image editing software."
+#~ msgstr "Зураг засварлах бүрэн хэмжээний програм хангамж"
+
+#~ msgid "GrapWorks Software"
+#~ msgstr "GrapWorks програм хангамж"
+
+#~ msgid "Gross Weight"
+#~ msgstr "Бохир жин"
+
+#~ msgid "HDD on Demand"
+#~ msgstr "Зөөврийн хард диск"
+
+#~ msgid ""
+#~ "Hands free headset for laptop PC with in-line microphone and headphone "
+#~ "plug."
+#~ msgstr ""
+#~ "Микрофон болон чихэвчний оролт бүхий зөөврийн компьютерт зориулсан чихэвч"
+
+#~ msgid "Headset USB"
+#~ msgstr "USB чихэвч"
+
+#~ msgid "Headset for laptop PC with USB connector."
+#~ msgstr "USB холболттой нөөтбүүкийн чихэвч"
+
+#~ msgid "Headset standard"
+#~ msgstr "Чихэвчийн стандарт"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr ""
+#~ "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг "
+#~ "шаардана."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
+
+#~ msgid "In Development"
+#~ msgstr "Хөгжүүлэлтийн шатанд"
+
+#~ msgid "Ink Cartridge"
+#~ msgstr "Принтерийн бэхэн хор"
+
+#~ msgid "Is Follower"
+#~ msgstr "Дагагч эсэх"
+
+#~ msgid "Laptop S3450"
+#~ msgstr "Гар компьютер S3450"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Сүүлийн зурвасын огноо"
+
+#~ msgid "Messages"
+#~ msgstr "Зурвасууд"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Зурвас болон харилцсан түүх"
+
+#~ msgid "Motherboard A20Z7"
+#~ msgstr "Motherboard A20Z7"
+
+#~ msgid "Multimedia Speakers"
+#~ msgstr "Мултимедиа өсгөгчүүд"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Үйлдлийн тоо"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Үйлдэл шаардлагатай зурвасын тоо"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Уншаагүй зурвасын тоо"
+
+#~ msgid "Obsolete"
+#~ msgstr "Хуучирсан"
+
+#~ msgid ""
+#~ "Office Editing Software with word processing, spreadsheets, "
+#~ "presentations, graphics, and databases..."
+#~ msgstr ""
+#~ "Баримт, хүснэгт, илтгэл, хүснэгт, өгөгдлийн бааз зэрэгийн засварлагч "
+#~ "оффисын програм хангамжууд..."
+
+#~ msgid "Office Suite"
+#~ msgstr "Оффисын Багц"
+
+#~ msgid "On demand hard-disk having capacity based on requirement."
+#~ msgstr "Шаардлага дээр суурилсан багтаамжтай хэрэгцээний хатуу-дискүүд"
+
+#~ msgid "Pen drive, SP-2"
+#~ msgstr "Pen drive, SP-2"
+
+#~ msgid "Pen drive, SP-4"
+#~ msgstr "Pen drive, SP-4"
+
+#~ msgid "Printer, All-in-one"
+#~ msgstr "Олон үйлдэлт принтер"
+
+#~ msgid "Processor AMD 8-Core"
+#~ msgstr "AMD 8-Core процессор"
+
+#~ msgid "RAM SR3"
+#~ msgstr "RAM SR3"
+
+#~ msgid "Router R430"
+#~ msgstr "Router R430"
+
+#~ msgid "Status"
+#~ msgstr "Төлөв"
+
+#~ msgid "Toner Cartridge"
+#~ msgstr "Принтерийн хор"
+
+#~ msgid "USB Adapter"
+#~ msgstr "USB адаптер"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Уншаагүй Зурвасууд"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Уншаагүй зурвасын тоолуур"
+
+#~ msgid "Webcam"
+#~ msgstr "Веб камер"
+
+#~ msgid "Windows 7 Professional"
+#~ msgstr "Windows 7 Professional"
+
+#~ msgid "Windows Home Server 2011"
+#~ msgstr "Windows Home Server 2011"

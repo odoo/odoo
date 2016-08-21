@@ -13,7 +13,6 @@ class TestIrAttachment(TransactionCase):
     def setUp(self):
         super(TestIrAttachment, self).setUp()
         self.Attachment = self.env['ir.attachment']
-        self.ira = self.Attachment._model
         self.filestore = self.Attachment._filestore()
 
         # Blob1

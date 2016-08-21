@@ -97,10 +97,10 @@ class ResourceCalendar(models.Model):
         for leave in leave_intervals:
             if len(leave) > 2:
                 current_group = False
-                att_obj = self.pool.get("resource.calendar.attendance")
+                Att = self.env["resource.calendar.attendance"]
                 if leave[2]:
                     if len(current_interval) > 2:
-                        current_group = current_interval[2] and att_obj.browse(current_interval[2]).group_id.id or False
+                        current_group = current_interval[2] and Att.browse(current_interval[2]).group_id.id or False
                     if leave[2] != current_group:
                         continue
             if leave[1] <= current_interval[0]:

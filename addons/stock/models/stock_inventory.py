@@ -43,7 +43,7 @@ class Inventory(models.Model):
         'stock.location', 'Inventoried Location',
         readonly=True, required=True,
         states={'draft': [('readonly', False)]},
-        default=lambda self: getattr(self.env.ref('stock.warehouse0', raise_if_not_found=False) or self.env['stock.warehouse]'], 'lot_stock_id').id)
+        default=lambda self: getattr(self.env.ref('stock.warehouse0', raise_if_not_found=False) or self.env['stock.warehouse'], 'lot_stock_id').id)
     product_id = fields.Many2one(
         'product.product', 'Inventoried Product',
         readonly=True,
@@ -175,9 +175,9 @@ class Inventory(models.Model):
 
     @api.multi
     def action_start(self):
-        for inventory in self.filtered(lambda x: not x.line_ids):
+        for inventory in self:
             vals = {'state': 'confirm', 'date': fields.Datetime.now()}
-            if inventory.filter != 'partial':
+            if (inventory.filter != 'partial') and not inventory.line_ids:
                 vals.update({'line_ids': [(0, 0, line_values) for line_values in inventory._get_inventory_lines_values()]})
             inventory.write(vals)
         return True
@@ -284,7 +284,7 @@ class InventoryLine(models.Model):
         default=lambda self: self.env.ref('product.product_uom_unit', raise_if_not_found=True))
     product_qty = fields.Float(
         'Checked Quantity',
-        digits_compute=dp.get_precision('Product Unit of Measure'), default=0)
+        digits=dp.get_precision('Product Unit of Measure'), default=0)
     location_id = fields.Many2one(
         'stock.location', 'Location',
         index=True, required=True)
@@ -308,7 +308,7 @@ class InventoryLine(models.Model):
         'Status',  related='inventory_id.state', readonly=True)
     theoretical_qty = fields.Float(
         'Theoretical Quantity', compute='_compute_theoretical_qty',
-        digits_compute=dp.get_precision('Product Unit of Measure'), readonly=True, store=True)
+        digits=dp.get_precision('Product Unit of Measure'), readonly=True, store=True)
 
     @api.one
     @api.depends('location_id', 'product_id', 'package_id', 'product_uom_id', 'company_id', 'prod_lot_id', 'partner_id')

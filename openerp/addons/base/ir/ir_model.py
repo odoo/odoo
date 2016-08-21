@@ -5,7 +5,6 @@ from collections import defaultdict
 
 from odoo import api, fields, models, SUPERUSER_ID, tools,  _
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.modules import init_models
 from odoo.modules.registry import RegistryManager
 from odoo.tools.safe_eval import safe_eval
 
@@ -150,8 +149,7 @@ class IrModel(models.Model):
             # setup models; this automatically adds model in registry
             self.pool.setup_models(self._cr, partial=(not self.pool.ready))
             # update database schema
-            model = self.pool[vals['model']]
-            init_models([model], self._cr, dict(self._context, update_custom_fields=True))
+            self.pool.init_models(self._cr, [vals['model']], dict(self._context, update_custom_fields=True))
             RegistryManager.signal_registry_change(self._cr.dbname)
         return res
 
@@ -444,8 +442,7 @@ class IrModelFields(models.Model):
                 # setup models; this re-initializes model in registry
                 self.pool.setup_models(self._cr, partial=(not self.pool.ready))
                 # update database schema
-                model = self.pool[vals['model']]
-                init_models([model], self._cr, dict(self._context, update_custom_fields=True))
+                self.pool.init_models(self._cr, [vals['model']], dict(self._context, update_custom_fields=True))
                 RegistryManager.signal_registry_change(self._cr.dbname)
 
         return res
@@ -527,8 +524,7 @@ class IrModelFields(models.Model):
 
         if patched_models:
             # update the database schema of the models to patch
-            models = [self.pool[name] for name in patched_models]
-            init_models(models, self._cr, dict(self._context, update_custom_fields=True))
+            self.pool.init_models(self._cr, patched_models, dict(self._context, update_custom_fields=True))
 
         if column_rename or patched_models:
             RegistryManager.signal_registry_change(self._cr.dbname)
@@ -569,12 +565,11 @@ class IrModelConstraint(models.Model):
 
         ids_set = set(self.ids)
         for data in self.sorted(key='id', reverse=True):
-            if data.model.model not in self.env:
-                continue
-            model = self.env[data.model.model]
             name = tools.ustr(data.name)
-            if not model:
-                continue
+            if data.model.model in self.env:
+                table = self.env[data.model.model]._table    
+            else:
+                table = data.model.model.replace('.', '_')
             typ = data.type
 
             # double-check we are really going to delete all the owners of this schema element
@@ -588,18 +583,18 @@ class IrModelConstraint(models.Model):
                 # test if FK exists on this table (it could be on a related m2m table, in which case we ignore it)
                 self._cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
                                     WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""",
-                                 ('f', name, model._table))
+                                 ('f', name, table))
                 if self._cr.fetchone():
-                    self._cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model._table, name),)
+                    self._cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (table, name),)
                     _logger.info('Dropped FK CONSTRAINT %s@%s', name, data.model.model)
 
             if typ == 'u':
                 # test if constraint exists
                 self._cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
                                     WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""",
-                                 ('u', name, model._table))
+                                 ('u', name, table))
                 if self._cr.fetchone():
-                    self._cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model._table, name),)
+                    self._cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (table, name),)
                     _logger.info('Dropped CONSTRAINT %s@%s', name, data.model.model)
 
         self.unlink()

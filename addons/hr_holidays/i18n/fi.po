@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_holidays
-# 
+#
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-06-17 16:55+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_holidays
@@ -46,7 +46,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:234
-#: code:addons/hr_holidays/hr_holidays.py:356
+#: code:addons/hr_holidays/hr_holidays.py:361
 #, python-format
 msgid "%s on %s"
 msgstr ""
@@ -64,8 +64,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid ""
-"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
-"color:"
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-color:"
 msgstr ""
 
 #. module: hr_holidays
@@ -110,14 +109,14 @@ msgid "Absent Today"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_needaction
-msgid "Action Needed"
-msgstr "Vaatii toimia"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_active
 msgid "Active"
 msgstr "Aktiivinen"
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Active Leaves and Allocations"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -176,7 +175,7 @@ msgid "Allocation Requests to Approve"
 msgstr "Varauspyynnöt hyväksyttäviksi"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:559
+#: code:addons/hr_holidays/hr_holidays.py:575
 #, python-format
 msgid "Allocation for %s"
 msgstr "Varaus henkilölle  %s"
@@ -185,6 +184,12 @@ msgstr "Varaus henkilölle  %s"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_allocation_to_approve_count
 msgid "Allocation to Approve"
 msgstr ""
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#, fuzzy
+msgid "Allocations"
+msgstr "Varaus"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_limit
@@ -266,7 +271,9 @@ msgstr "Työntekijätunnisteittain"
 msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee Tag: "
 "Allocation/Request for group of employees in category"
-msgstr "Työntekijöittäin: Yksittäisen henkilön varaus/pyyntö. Työntekijä tunnisteittain: varaus/pyyntö työntekijäryhmään."
+msgstr ""
+"Työntekijöittäin: Yksittäisen henkilön varaus/pyyntö. Työntekijä "
+"tunnisteittain: varaus/pyyntö työntekijäryhmään."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_can_reset
@@ -298,7 +305,8 @@ msgstr "Työntekijän ryhmä"
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_type
 msgid ""
 "Choose 'Leave Request' if someone wants to take an off-day. \n"
-"Choose 'Allocation Request' if you want to increase the number of leaves available for someone"
+"Choose 'Allocation Request' if you want to increase the number of leaves "
+"available for someone"
 msgstr ""
 
 #. module: hr_holidays
@@ -365,6 +373,12 @@ msgid "Created on"
 msgstr "Luotu"
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#, fuzzy
+msgid "Current"
+msgstr "Edeltävä"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_current_leave_state
 msgid "Current Leave Status"
 msgstr "Poissaolotilanne nyt"
@@ -375,21 +389,12 @@ msgid "Current Leave Type"
 msgstr "Tämänhetkisen poissaolon tyyppi"
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Current Year Leaves"
-msgstr "Kuluvan vuoden poissaolot"
-
-#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Dashboard"
 msgstr "Työpöytä"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Viimeisen viestin päivämäärä"
-
-#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_department
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_department_id
 msgid "Department"
 msgstr "Osasto"
@@ -462,29 +467,14 @@ msgstr "Loppupäivä"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid ""
-"Filters only on allocations and requests that belong to an holiday type that"
-" is 'active' (active field is True)"
+"Filters only on allocations and requests that belong to an holiday type that "
+"is 'active' (active field is True)"
 msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_manager_id
 msgid "First Approval"
 msgstr "Ensimmäinen hyväksyntä"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_follower_ids
-msgid "Followers"
-msgstr "Seuraajat"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Seuraajat (kanavat)"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Seuraajat (kumppanit)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_date_from
@@ -514,11 +504,6 @@ msgid "HR Comments"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_department
-msgid "HR Department"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
 msgid "HR Leaves Summary Report By Department"
 msgstr "Henkilöstöhallinnon yhteenvetoraportti poissaoloista osastoittain"
@@ -539,16 +524,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_active
 msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
@@ -564,19 +539,9 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_is_follower
-msgid "Is Follower"
-msgstr "on seuraaja"
-
-#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Ivory"
 msgstr "Norsunluu"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_last_post
-msgid "Last Message Date"
-msgstr "Viimeinen viestipvm"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays___last_update
@@ -682,6 +647,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_approve
 #: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 #: model:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Leaves"
 msgstr "Poissaolot"
 
@@ -771,17 +737,20 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_confirmed
-msgid "Leaves/Allocations: first approval"
-msgstr ""
+#, fuzzy
+msgid "Leaves/Allocations Confirmed"
+msgstr "Varaustapa"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_first_validated
-msgid "Leaves/Allocations: second approval"
-msgstr ""
+#, fuzzy
+msgid "Leaves/Allocations First Approval"
+msgstr "Varauspyynnöt hyväksyttäviksi"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2015"
+#, fuzzy
+msgid "Legal Leaves 2016"
 msgstr "Lainmukaiset poissaolot 2015"
 
 #. module: hr_holidays
@@ -846,8 +815,7 @@ msgstr "Maksimimäärä sallittuja poissaoloja - on jo käytetty"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_virtual_remaining_leaves
-msgid ""
-"Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
+msgid "Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
 msgstr ""
 
 #. module: hr_holidays
@@ -859,16 +827,6 @@ msgstr "Tapaaminen"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_categ_id
 msgid "Meeting Type"
 msgstr "Tapaamistyyppi"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_ids
-msgid "Messages"
-msgstr "Viestit"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_ids
-msgid "Messages and communication history"
-msgstr "Viesti- ja kommunikointihistoria"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
@@ -887,13 +845,7 @@ msgid "My Department Leaves"
 msgstr "Osastoni poissaolot"
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "My Leave Requests"
-msgstr "Omat poissaolopyyntöni"
-
-#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Leaves"
 msgstr "Omat poissaolot"
 
@@ -913,11 +865,6 @@ msgid "New"
 msgstr "Uusi"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Toimenpiteiden määrä"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_number_of_days
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_employee
@@ -929,16 +876,6 @@ msgstr "Päivien lukumäärä"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_leaves_count
 msgid "Number of Leaves"
 msgstr ""
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Toimenpiteitä vaativien viestien määrä"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Lukemattomien viestien määrä"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_categ_id
@@ -955,11 +892,6 @@ msgid ""
 "                type (recuperation, legal holidays, sickness) and the exact\n"
 "                number of open days related to your leave."
 msgstr ""
-
-#. module: hr_holidays
-#: model:ir.actions.client,name:hr_holidays.action_client_hr_holidays_menu
-msgid "Open HR Menu"
-msgstr "Avaa HR Valikko"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_parent_id
@@ -1118,11 +1050,16 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:554
+#: code:addons/hr_holidays/hr_holidays.py:570
 #, python-format
 msgid ""
-"The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
-"You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \\ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field."
+"The feature behind the field 'Remaining Legal Leaves' can only be used when "
+"there is only one leave type with the option 'Allow to Override Limit' "
+"unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot "
+"decide on which leave type the update has to be done. \n"
+"You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
+"Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
+"the employees if the configuration does not allow to use this field."
 msgstr ""
 
 #. module: hr_holidays
@@ -1147,16 +1084,25 @@ msgstr "Alkupäivän pitää olla ennen loppupäivää."
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_state
 msgid ""
-"The status is set to 'To Submit', when a holiday request is created.            \n"
-"The status is 'To Approve', when holiday request is confirmed by user.            \n"
-"The status is 'Refused', when holiday request is refused by manager.            \n"
+"The status is set to 'To Submit', when a holiday request is "
+"created.            \n"
+"The status is 'To Approve', when holiday request is confirmed by "
+"user.            \n"
+"The status is 'Refused', when holiday request is refused by "
+"manager.            \n"
 "The status is 'Approved', when holiday request is approved by manager."
-msgstr "Lomapyyntö on asetettu tilaan:                                   \n'Kesken', kun se on luotu, mutta ei tallennettu,     \n'Hyväksyttävänä', kun käyttäjä on sen tallentanut,       \n'Hylätty', jos esimies ei ole sitä hyväksynyt.              \n'Hyväksytty', jos esimies on sen vahvistanut."
+msgstr ""
+"Lomapyyntö on asetettu tilaan:                                   \n"
+"'Kesken', kun se on luotu, mutta ei tallennettu,     \n"
+"'Hyväksyttävänä', kun käyttäjä on sen tallentanut,       \n"
+"'Hylätty', jos esimies ei ole sitä hyväksynyt.              \n"
+"'Hyväksytty', jos esimies on sen vahvistanut."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_manager_id
 msgid "This area is automatically filled by the user who validate the leave"
-msgstr "Alue on täytetty automaattisesti poissaolon vahvistaneen käyttäjän toimesta."
+msgstr ""
+"Alue on täytetty automaattisesti poissaolon vahvistaneen käyttäjän toimesta."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_manager_id2
@@ -1170,7 +1116,9 @@ msgstr ""
 msgid ""
 "This color will be used in the leaves summary located in Reporting\\Leaves "
 "by Department."
-msgstr "Tätä väriä käytetään poissalojen yhteenvedossa raportoitaessa poissaoloja osastoittain."
+msgstr ""
+"Tätä väriä käytetään poissalojen yhteenvedossa raportoitaessa poissaoloja "
+"osastoittain."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_leaves_taken
@@ -1241,15 +1189,9 @@ msgid "Unpaid"
 msgstr "Palkaton"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Unread Messages"
 msgstr "Lukemattomia viestejä"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Lukemattomien viestien laskuri"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_remaining_leaves_user_user_id
@@ -1288,23 +1230,6 @@ msgid "Waiting Second Validation"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:554
-#: code:addons/hr_holidays/hr_holidays.py:561
-#, python-format
-msgid "Warning!"
-msgstr "Varoitus!"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_website_message_ids
-msgid "Website Messages"
-msgstr "Verkkosivun ilmoitukset"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_website_message_ids
-msgid "Website communication history"
-msgstr "Verkkosivun viestihistoria"
-
-#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Wheat"
 msgstr "Vehnä"
@@ -1314,12 +1239,9 @@ msgstr "Vehnä"
 msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
 "validation to be approved."
-msgstr "Kun tämä valittu, niin tämän tyyppiset varaus- ja poissaolopyynnöt vaativat vahvistuksen lisäksi toisen vahvistuksen tullakseen hyväksytyksi."
-
-#. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Year"
-msgstr "Vuosi"
+msgstr ""
+"Kun tämä valittu, niin tämän tyyppiset varaus- ja poissaolopyynnöt vaativat "
+"vahvistuksen lisäksi toisen vahvistuksen tullakseen hyväksytyksi."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
@@ -1340,14 +1262,14 @@ msgid "You cannot delete a leave which is in %s state."
 msgstr "Et voi poistaa poissaoloa, joka on tilassa %s."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:561
+#: code:addons/hr_holidays/hr_holidays.py:577
 #, python-format
 msgid "You cannot reduce validated allocation requests"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:352
-#: code:addons/hr_holidays/hr_holidays.py:364
+#: code:addons/hr_holidays/hr_holidays.py:357
+#: code:addons/hr_holidays/hr_holidays.py:369
 #, python-format
 msgid ""
 "You cannot set a leave request as '%s'. Contact a human resource manager."
@@ -1384,3 +1306,69 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "to"
 msgstr " - "
+
+#~ msgid "Action Needed"
+#~ msgstr "Vaatii toimia"
+
+#~ msgid "Current Year Leaves"
+#~ msgstr "Kuluvan vuoden poissaolot"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Viimeisen viestin päivämäärä"
+
+#~ msgid "Followers"
+#~ msgstr "Seuraajat"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Seuraajat (kanavat)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Seuraajat (kumppanit)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
+
+#~ msgid "Is Follower"
+#~ msgstr "on seuraaja"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Viimeinen viestipvm"
+
+#~ msgid "Messages"
+#~ msgstr "Viestit"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Viesti- ja kommunikointihistoria"
+
+#~ msgid "My Leave Requests"
+#~ msgstr "Omat poissaolopyyntöni"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Toimenpiteiden määrä"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Toimenpiteitä vaativien viestien määrä"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Lukemattomien viestien määrä"
+
+#~ msgid "Open HR Menu"
+#~ msgstr "Avaa HR Valikko"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Lukemattomien viestien laskuri"
+
+#~ msgid "Warning!"
+#~ msgstr "Varoitus!"
+
+#~ msgid "Website Messages"
+#~ msgstr "Verkkosivun ilmoitukset"
+
+#~ msgid "Website communication history"
+#~ msgstr "Verkkosivun viestihistoria"
+
+#~ msgid "Year"
+#~ msgstr "Vuosi"

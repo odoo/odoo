@@ -338,7 +338,7 @@ class MarketingCampaignActivity(models.Model):
         method = '_process_wi_%s' % (self.action_type,)
         action = getattr(self, method, None)
         if not action:
-            raise NotImplementedError('Method %r is not implemented on %r object.' % (method, self._model))
+            raise NotImplementedError('Method %r is not implemented on %r object.' % (method, self._name))
         return action(workitem)
 
 

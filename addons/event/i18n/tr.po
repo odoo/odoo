@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event
-# 
+#
 # Translators:
 # Cem Uygur <cemuygur.beb@gmail.com>, 2016
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2016
@@ -9,15 +9,55 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:27+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-25 20:44+0000\n"
 "Last-Translator: Cem Uygur <cemuygur.beb@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: event
+#: model:mail.template,body_html:event.event_registration_mail_template_badge
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your inquiry.</p>\n"
+"<p>Here is your badge for the event ${object.event_id.name}.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: event
+#: model:mail.template,body_html:event.event_subscription
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your inquiry.</p>\n"
+"<p>We confirm your subscription to the event <b>${object.event_id.name}</b>. "
+"You will receive emails with practical information.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: event
+#: model:mail.template,body_html:event.event_reminder
+msgid ""
+"\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>Thank you for your registration to the event ${object.event_id.name}.</"
+"p>\n"
+"<p>The event will take place at ${object.event_id.address_id.city}\n"
+"% if object.event_id.address_id.street\n"
+", ${object.event_id.address_id.street}\n"
+"% endif\n"
+"from ${object.event_id.date_begin_located} to ${object.event_id."
+"date_end_located}.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_cancel_state
@@ -53,8 +93,8 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_2
 msgid ""
-"<em>(Chamber Works reserves the right to cancel, re-name or re-"
-"locate<br/>the event or change the dates on which it is held.)</em>"
+"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the "
+"event or change the dates on which it is held.)</em>"
 msgstr ""
 
 #. module: event
@@ -96,60 +136,10 @@ msgid "<i>to</i>"
 msgstr ""
 
 #. module: event
-#: model:mail.template,body_html:event.event_reminder
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>This is a reminder for ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located} to ${object.event_id.date_end_located}.\n"
-"For any further information please contact our event department.</p>\n"
-"<p>Thank you for your participation!</p>\n"
-"<p>Best regards</p>"
-msgstr ""
-
-#. module: event
-#: model:mail.template,body_html:event.event_registration_mail_template_badge
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.\n"
-"Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
-"<p>Thank you for your participation!</p>\n"
-"<p>Best regards</p>"
-msgstr ""
-
-#. module: event
-#: model:mail.template,body_html:event.event_subscription
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.\n"
-"You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
-"<p>Thank you for your participation!</p>\n"
-"<p>Best regards</p>"
-msgstr ""
-
-#. module: event
-#: model:mail.template,body_html:event.event_thanks
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"<p>We would like to thank you for your presence at our event ${object.event_id.name}.\n"
-"<br/><br/>\n"
-"    % if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n"
-"        <strong>The ${object.event_id.organizer_id.name} Team</strong>\n"
-"    % elif object.event_id.organizer_id:\n"
-"        <strong>${object.event_id.organizer_id.name}</strong>\n"
-"    % endif\n"
-"</p>"
-msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "<small>John Doe, CEO</small>"
-msgstr "<small>John Doe, CEO</small>"
-
-#. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid ""
-"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" "
+"class=\"oe_read_only\">\n"
 "                                                to \n"
 "                                            </span>"
 msgstr ""
@@ -159,10 +149,10 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
-"developers who need to grasp knowledge of the <strong>business applications "
-"development </strong>process. This course is for new developers or for IT "
-"professionals eager to learn more about technical aspects.</span>"
+"<span style=\"text-align: -webkit-center; \">This course is dedicated "
+"to developers who need to grasp knowledge of the <strong>business "
+"applications development </strong>process. This course is for new developers "
+"or for IT professionals eager to learn more about technical aspects.</span>"
 msgstr ""
 
 #. module: event
@@ -175,8 +165,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<strong>Having attended this course, participants should be able "
-"to:</strong>"
+"<strong>Having attended this course, participants should be able to:</strong>"
 msgstr ""
 
 #. module: event
@@ -210,12 +199,6 @@ msgstr "<strong>Gereklilikler:</strong>"
 #: model:event.event,description:event.event_2
 msgid "<strong>Where to find us:</strong>"
 msgstr ""
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_needaction
-#: model:ir.model.fields,field_description:event.field_event_registration_message_needaction
-msgid "Action Needed"
-msgstr "Eylem Gerekiyor"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_active
@@ -336,14 +319,15 @@ msgid "Badge Front"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
+#, fuzzy
+msgid "Badge Inner Left"
+msgstr "Yaka Kartı İç Sol"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
 msgid "Badge Inner Right"
 msgstr "Yaka Kartı İç Sağ"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
-msgid "Badge Innner Left"
-msgstr "Yaka Kartı İç Sol"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -430,7 +414,7 @@ msgid "Click to add a new event."
 msgstr "Yeni bir etkinlik eklemek için tıklayın."
 
 #. module: event
-#: code:addons/event/models/event.py:204
+#: code:addons/event/models/event.py:206
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
 msgstr "Kapanış Tarihi, Başlangıç Tarihinden önce olamaz."
@@ -444,7 +428,7 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: event
-#: code:addons/event/models/event.py:397
+#: code:addons/event/models/event.py:402
 #, python-format
 msgid "Compose Email"
 msgstr "Eposta Yaz"
@@ -522,7 +506,7 @@ msgstr "Kontak"
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
-msgid "Controlers and Views"
+msgid "Controllers and Views"
 msgstr ""
 
 #. module: event
@@ -540,8 +524,8 @@ msgstr ""
 #. module: event
 #: model:web.tip,description:event.event_tip_1
 msgid ""
-"Create and manage registrations for this event, send emails to attendees and"
-" print identification badges."
+"Create and manage registrations for this event, send emails to attendees and "
+"print identification badges."
 msgstr ""
 
 #. module: event
@@ -572,22 +556,16 @@ msgid "Creation Date"
 msgstr "Oluşturma Tarihi"
 
 #. module: event
-#: code:addons/event/models/event.py:378
+#: code:addons/event/models/event.py:379
 #, python-format
 msgid "Customer"
 msgstr "Müşteri"
 
 #. module: event
-#: code:addons/event/models/event.py:376
+#: code:addons/event/models/event.py:381
 #, python-format
 msgid "Customer Email"
 msgstr "Müşteri Epostası"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_last_post
-#: model:ir.model.fields,help:event.field_event_registration_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Kayıta işlenmiş son mesajın tarihi."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -896,24 +874,6 @@ msgid "Finish Event"
 msgstr "Etkinlik Bitir"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_follower_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_follower_ids
-msgid "Followers"
-msgstr "İzleyiciler"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_channel_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "İzleyiciler (Kanallar)"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_partner_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "İzleyiciler (İş ortakları)"
-
-#. module: event
 #: model:event.event,description:event.event_2
 msgid "For any additional information, please contact us at"
 msgstr ""
@@ -982,15 +942,6 @@ msgid "How to Debug"
 msgstr ""
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"I did not expect such a great learning experience. I feel like I can develop"
-" anything now."
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_id
 #: model:ir.model.fields,field_description:event.field_event_confirm_id
 #: model:ir.model.fields,field_description:event.field_event_event_id
@@ -1003,25 +954,16 @@ msgid "ID"
 msgstr "ID"
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_unread
-#: model:ir.model.fields,help:event.field_event_registration_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_needaction
-#: model:ir.model.fields,help:event.field_event_registration_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event_state
 msgid ""
 "If event is created, the status is 'Draft'. If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the"
-" status is set to 'Done'. If event is cancelled the status is set to "
+"particular dates the status is set to 'Confirmed'. If the event is over, the "
+"status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
-msgstr "Etkinlik oluşturulduysa durumu 'Taslak'tır. Etkinlik belirli tarihler için onaylandıysa durumu 'Onaylandı'dı olur. Etkinlik sonlandıysa durumu 'Bitti' olur. Etkinlik iptal edildiyse durumu 'İptal Edildi' olur."
+msgstr ""
+"Etkinlik oluşturulduysa durumu 'Taslak'tır. Etkinlik belirli tarihler için "
+"onaylandıysa durumu 'Onaylandı'dı olur. Etkinlik sonlandıysa durumu 'Bitti' "
+"olur. Etkinlik iptal edildiyse durumu 'İptal Edildi' olur."
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1089,12 +1031,6 @@ msgid "Introduction, CRM, Sales Management"
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_is_follower
-#: model:ir.model.fields,field_description:event.field_event_registration_message_is_follower
-msgid "Is Follower"
-msgstr "Takipçi mi"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_max
 msgid "It will select this default maximum value when you choose this event"
 msgstr "Bu etkinliği seçtiğinizde bu varsayılan ençok değeri seçecektir"
@@ -1108,12 +1044,6 @@ msgstr "Bu etkinliği seçtiğinizde bu varsayılan enaz değeri seçilecektir"
 #: model:ir.model.fields,field_description:event.field_event_event_color
 msgid "Kanban Color Index"
 msgstr ""
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_last_post
-#: model:ir.model.fields,field_description:event.field_event_registration_message_last_post
-msgid "Last Message Date"
-msgstr "Son Mesaj Tarihi"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings___last_update
@@ -1228,18 +1158,6 @@ msgid "Maximum Attendees Number"
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_ids
-msgid "Messages"
-msgstr "Mesajlar"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_ids
-#: model:ir.model.fields,help:event.field_event_registration_message_ids
-msgid "Messages and communication history"
-msgstr "Mesajlar ve iletişim geçmişi"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
 msgid "Minimum Attendees"
 msgstr ""
@@ -1282,13 +1200,13 @@ msgid "No mini website per event"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:198
+#: code:addons/event/models/event.py:200
 #, python-format
 msgid "No more available seats."
 msgstr "Artık mevcut koltuk yok."
 
 #. module: event
-#: code:addons/event/models/event.py:298
+#: code:addons/event/models/event.py:300
 #, python-format
 msgid "No more seats available for this event."
 msgstr ""
@@ -1297,12 +1215,6 @@ msgstr ""
 #: selection:event.config.settings,auto_confirmation:0
 msgid "No validation step on subscription"
 msgstr ""
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_needaction_counter
-#: model:ir.model.fields,field_description:event.field_event_registration_message_needaction_counter
-msgid "Number of Actions"
-msgstr "İşlem Sayısı"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_nbevent
@@ -1325,18 +1237,6 @@ msgid "Number of Registrations"
 msgstr "Kayıt Sayısı"
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_needaction_counter
-#: model:ir.model.fields,help:event.field_event_registration_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Eylem gerektiren mesaj sayısı"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_unread_counter
-#: model:ir.model.fields,help:event.field_event_registration_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Okunmamış mesaj sayısı"
-
-#. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
@@ -1354,7 +1254,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid ""
 "Odoo helps you schedule and efficiently organize your events:\n"
-"    track subscriptions and participations, automate the confirmation emails,\n"
+"    track subscriptions and participations, automate the confirmation "
+"emails,\n"
 "    sell tickets, etc."
 msgstr ""
 
@@ -1362,11 +1263,6 @@ msgstr ""
 #: model:event.event,name:event.event_0
 msgid "Open Days in Los Angeles"
 msgstr "Los Angeles'ta Açık Günler"
-
-#. module: event
-#: model:ir.actions.client,name:event.action_client_event_menu
-msgid "Open Event Menu"
-msgstr "Etkinlik Menüsünü Aç"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
@@ -1431,13 +1327,6 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Python Objects"
-msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Read Great Contents"
 msgstr ""
 
 #. module: event
@@ -1659,27 +1548,17 @@ msgid "Technical Training"
 msgstr "Teknik Eğitimi"
 
 #. module: event
-#: model:mail.template,subject:event.event_thanks
-msgid "Thanks for attending ${object.event_id.name}"
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event_reply_to
 msgid ""
-"The email address of the organizer is likely to be put here, with the effect"
-" to be in the 'Reply-To' of the mails sent automatically at event or "
+"The email address of the organizer is likely to be put here, with the effect "
+"to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
-msgstr "Etkinlikte ya da kayıt onaylamalarında otomatik olarak gönderilen epostaların 'Yanıtlanan' kısmına organizatörün eposta adresi konulabilecektir. Eğer kullanıyorsanız posta ağgeçidi eposta adresini de koyabilirsiniz."
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"This course help me build my first application within a month. Definetly "
-"worth its price."
 msgstr ""
+"Etkinlikte ya da kayıt onaylamalarında otomatik olarak gönderilen "
+"epostaların 'Yanıtlanan' kısmına organizatörün eposta adresi "
+"konulabilecektir. Eğer kullanıyorsanız posta ağgeçidi eposta adresini de "
+"koyabilirsiniz."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
@@ -1762,18 +1641,10 @@ msgid "Unlimited"
 msgstr "Sınırsız"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_unread
-#: model:ir.model.fields,field_description:event.field_event_registration_message_unread
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
 msgstr "Okunmamış Mesajlar"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_unread_counter
-#: model:ir.model.fields,field_description:event.field_event_registration_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Okunmamış Mesaj Sayacı"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
@@ -1813,29 +1684,14 @@ msgstr ""
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
-msgstr "Uyarı: Bu Etkinlik Enaz Kayıt Sınırına erişmemiştir. Bunu onaylamak istediğinizden emin misiniz?"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_website_message_ids
-msgid "Website Messages"
 msgstr ""
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_website_message_ids
-msgid "Website communication history"
-msgstr ""
+"Uyarı: Bu Etkinlik Enaz Kayıt Sınırına erişmemiştir. Bunu onaylamak "
+"istediğinizden emin misiniz?"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Week(s)"
 msgstr "Hafta(lar)"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "What do people say about this course?"
-msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1857,15 +1713,17 @@ msgid "Workflows"
 msgstr "İş Akışları"
 
 #. module: event
-#: code:addons/event/models/event.py:230
+#: code:addons/event/models/event.py:232
 #, python-format
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
-msgstr "'Katıldı' olarak zaten bu etkinlik için bir kayıt belirlediniz. Bu etkinliği iptal etmek istiyorsanız lütfen taslağı sıfırlayın."
+msgstr ""
+"'Katıldı' olarak zaten bu etkinlik için bir kayıt belirlediniz. Bu etkinliği "
+"iptal etmek istiyorsanız lütfen taslağı sıfırlayın."
 
 #. module: event
-#: code:addons/event/models/event.py:355
+#: code:addons/event/models/event.py:357
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
 msgstr "Bu işlemi yapmak için etkinlik başlangıç ​​gününü beklemeniz gerekir."
@@ -1945,3 +1803,54 @@ msgstr ""
 #: model:event.event,description:event.event_3
 msgid "training material."
 msgstr ""
+
+#~ msgid "<small>John Doe, CEO</small>"
+#~ msgstr "<small>John Doe, CEO</small>"
+
+#~ msgid "Action Needed"
+#~ msgstr "Eylem Gerekiyor"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Kayıta işlenmiş son mesajın tarihi."
+
+#~ msgid "Followers"
+#~ msgstr "İzleyiciler"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "İzleyiciler (Kanallar)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "İzleyiciler (İş ortakları)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
+
+#~ msgid "Is Follower"
+#~ msgstr "Takipçi mi"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Son Mesaj Tarihi"
+
+#~ msgid "Messages"
+#~ msgstr "Mesajlar"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Mesajlar ve iletişim geçmişi"
+
+#~ msgid "Number of Actions"
+#~ msgstr "İşlem Sayısı"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Eylem gerektiren mesaj sayısı"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Okunmamış mesaj sayısı"
+
+#~ msgid "Open Event Menu"
+#~ msgstr "Etkinlik Menüsünü Aç"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Okunmamış Mesaj Sayacı"

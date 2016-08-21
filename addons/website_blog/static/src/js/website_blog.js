@@ -1,8 +1,6 @@
 odoo.define('website_blog.website_blog', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
-
 function page_transist(event) {
     event.preventDefault();
     var newLocation = $('.js_next')[0].href;
@@ -37,9 +35,9 @@ function shareArticle(event){
             url = 'https://www.facebook.com/sharer/sharer.php?u='+window.location.href;
         } else if ($(this).hasClass('o_linkedin_complete')){
             url = 'https://www.linkedin.com/shareArticle?mini=true&url='+window.location.href+'&title='+blog_title_complete;
-        } else{
+        } else {
             url = 'https://plus.google.com/share?url='+window.location.href;
-        };
+        }
     }
     else {
         var blog_post = $(this).parents("[name='blog_post']");
@@ -71,7 +69,6 @@ $(document).ready(function() {
         function() { $('div.o_blog_post_complete a').not('#'+this.id).addClass('unhover'); },
         function() { $('div.o_blog_post_complete a').not('#'+this.id).removeClass('unhover'); }
     );
-
- });
+});
 
 });

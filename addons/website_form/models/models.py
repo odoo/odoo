@@ -110,6 +110,6 @@ class website_form_model_fields(models.Model):
         return True
 
     website_form_blacklisted = fields.Boolean(
-        'Blacklisted in web forms', default=True, select=True, # required=True,
+        'Blacklisted in web forms', default=True, index=True, # required=True,
         help='Blacklist this field for web forms'
     )

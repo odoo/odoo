@@ -10,7 +10,6 @@ Also, adds methods to convert values back to Odoo models.
 
 import ast
 import cStringIO
-import datetime
 import itertools
 import json
 import logging
@@ -82,7 +81,7 @@ class Field(models.AbstractModel):
             attrs['placeholder'] = placeholder
 
         if options['translate'] and field.type in ('char', 'text'):
-            name = "%s,%s" % (record._model._name, field_name)
+            name = "%s,%s" % (record._name, field_name)
             domain = [('name', '=', name), ('res_id', '=', record.id), ('type', '=', 'model'), ('lang', '=', options.get('lang'))]
             translation = record.env['ir.translation'].search(domain, limit=1)
             attrs['data-oe-translation-state'] = translation and translation.state or 'to_translate'
@@ -158,10 +157,7 @@ class Contact(models.AbstractModel):
     # helper to call the rendering of contact field
     @api.model
     def get_record_to_html(self, ids, options=None):
-        node = self.record_to_html('record', {
-            'record': self.env['res.partner'].browse(ids[0])},
-            options=options)
-        return node and node.__html__()
+        return self.value_to_html(self.env['res.partner'].browse(ids[0]), options=options)
 
 
 class Date(models.AbstractModel):

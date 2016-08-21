@@ -1,21 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * membership
-# 
+#
 # Translators:
 # MMSRS <h_manuela_rodsilva@gmail.com>, 2015
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-10-20 14:23+0000\n"
 "Last-Translator: MMSRS <h_manuela_rodsilva@gmail.com>\n"
-"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
+"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
+"pt/)\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
+"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: membership
@@ -38,7 +43,7 @@ msgstr "#A Aguardar"
 msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
-msgstr ""
+msgstr "Um membro com o qual você se quer associar. "
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
@@ -78,12 +83,6 @@ msgid "Associated Partner"
 msgstr "Parceiro Associado"
 
 #. module: membership
-#: model:product.product,name:membership.membership_2
-#: model:product.template,name:membership.membership_2_product_template
-msgid "Basic Membership"
-msgstr ""
-
-#. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Buy Membership"
 msgstr ""
@@ -96,7 +95,7 @@ msgstr "Cancelar"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_cancel
 msgid "Cancel Membership Date"
-msgstr ""
+msgstr "Data de fim da filiação"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_cancel
@@ -179,7 +178,7 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_cancel
 msgid "Date on which membership has been cancelled"
-msgstr ""
+msgstr "Data a partir da qual a filiação foi cancelada"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_template_membership_date_to
@@ -263,12 +262,6 @@ msgid "From Month"
 msgstr ""
 
 #. module: membership
-#: model:product.product,name:membership.membership_0
-#: model:product.template,name:membership.membership_0_product_template
-msgid "Gold Membership"
-msgstr ""
-
-#. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Group By"
@@ -327,7 +320,8 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
@@ -336,12 +330,18 @@ msgstr ""
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
 msgid ""
 "It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any membership.\n"
-"                        -Cancelled Member: A member who has cancelled his membership.\n"
-"                        -Old Member: A member whose membership date has expired.\n"
-"                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been created.\n"
-"                        -Paid Member: A member who has paid the membership amount."
+"                        -Non Member: A member who has not applied for any "
+"membership.\n"
+"                        -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                        -Old Member: A member whose membership date has "
+"expired.\n"
+"                        -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                        -Paid Member: A member who has paid the membership "
+"amount."
 msgstr ""
 
 #. module: membership
@@ -405,7 +405,7 @@ msgstr "Adesão"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_amount
 msgid "Membership Amount"
-msgstr ""
+msgstr "Montante de Filiação"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
@@ -502,7 +502,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:membership.action_membership_members
 msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
-"                 Current Membership Status, Discussions and History of Membership, etc."
+"                 Current Membership Status, Discussions and History of "
+"Membership, etc."
 msgstr ""
 
 #. module: membership
@@ -572,13 +573,7 @@ msgstr "Vendedor"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_free_member
 msgid "Select if you want to give free membership."
-msgstr ""
-
-#. module: membership
-#: model:product.product,name:membership.membership_1
-#: model:product.template,name:membership.membership_1_product_template
-msgid "Silver Membership"
-msgstr ""
+msgstr "Selecione se quiser dar filiação gratuita"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_start_date

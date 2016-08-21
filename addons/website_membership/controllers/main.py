@@ -48,9 +48,7 @@ class WebsiteMembership(http.Controller):
         if membership_id and membership_id != 'free':
             membership_id = int(membership_id)
             base_line_domain.append(('membership_id', '=', membership_id))
-            membership = Product.browse(membership_id)
-        else:
-            membership = None
+
         if post_name:
             base_line_domain += ['|', ('partner.name', 'ilike', post_name), ('partner.website_description', 'ilike', post_name)]
 
@@ -102,7 +100,6 @@ class WebsiteMembership(http.Controller):
             if offset <= count_members:
                 membership_lines = MembershipLine.sudo().search(line_domain, offset, limit)
         page_partner_ids = set(m.partner.id for m in membership_lines)
-        page_partner = membership_lines.mapped('partner')
 
         # get google maps localization of partners
         google_map_partner_ids = []
@@ -116,7 +113,6 @@ class WebsiteMembership(http.Controller):
             search_domain += [('country_id', '=', country_id)]
         free_partners = Partner.sudo().search(search_domain)
         free_partner_ids = []
-
 
         memberships_data = []
         for membership_record in memberships:
@@ -159,6 +155,7 @@ class WebsiteMembership(http.Controller):
             'pager': pager,
             'post': post,
             'search': "?%s" % werkzeug.url_encode(post),
+            'search_count': count_members
         }
         return request.render("website_membership.index", values)
 

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Sales Management',
+    'name': 'Sales',
     'version': '1.0',
     'category': 'Sales',
     'sequence': 15,

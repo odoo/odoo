@@ -1,38 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_repair
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2015-10-21 12:21+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
+"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
+"pt/)\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
-msgid ""
-" * The 'Draft' status is set automatically as draft when repair order in draft status.                         \n"
-"* The 'Confirmed' status is set automatically as confirm when repair order in confirm status.                         \n"
-"* The 'Done' status is set automatically when repair order is completed.                        \n"
-"* The 'Cancelled' status is set automatically when user cancel repair order."
-msgstr ""
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.             \n"
-"* The 'Confirmed' status is used when a user confirms the repair order.             \n"
-"* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.             \n"
-"* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.             \n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"repair order.             \n"
+"* The 'Confirmed' status is used when a user confirms the repair "
+"order.             \n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start "
+"repairing only after repair order is confirmed.             \n"
+"* The 'To be Invoiced' status is used to generate the invoice before or "
+"after repairing done.             \n"
 "* The 'Done' status is set when repairing is completed.            \n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
@@ -84,6 +80,12 @@ msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#, fuzzy
+msgid "<strong>Shipping address :</strong>"
+msgstr "Endereço para envio :"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total Without Taxes</strong>"
 msgstr "<strong>Total Sem Impostos</strong>"
 
@@ -91,11 +93,6 @@ msgstr "<strong>Total Sem Impostos</strong>"
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total</strong>"
 msgstr "<strong>Total</strong>"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_needaction
-msgid "Action Needed"
-msgstr "Ação Necessária"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:24
@@ -222,11 +219,6 @@ msgid "Current Location"
 msgstr "Localização Atual"
 
 #. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Data da Ultmia Mensagem Inserida no Registo"
-
-#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
 msgid "Delivery Address"
 msgstr "Endereço de entrega"
@@ -289,21 +281,6 @@ msgid "Fees"
 msgstr "Comissões"
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_follower_ids
-msgid "Followers"
-msgstr "Seguidores"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Seguidores (Canais)"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Seguidores (Parceiros)"
-
-#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Group By"
 msgstr "Agrupar por"
@@ -338,20 +315,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
-
-#. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the different\n"
+"                add or replace and record the time you spent on the "
+"different\n"
 "                operations."
 msgstr ""
 
@@ -420,16 +388,6 @@ msgid "Invoicing Address"
 msgstr "Endereço de Faturação"
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_is_follower
-msgid "Is Follower"
-msgstr "É um seguidor"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_last_post
-msgid "Last Message Date"
-msgstr "Data da Última Mensagem"
-
-#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair___last_update
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel___last_update
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee___last_update
@@ -465,16 +423,6 @@ msgstr "Lote"
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
 msgid "Make Invoice"
 msgstr "Criar Fatura"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_ids
-msgid "Messages"
-msgstr "Mensagens"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_ids
-msgid "Messages and communication history"
-msgstr "Histórico de mensagens e comunicação"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_move_id
@@ -526,21 +474,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Notes"
 msgstr "Notas"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Número de Ações"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Número de mensagens que requerem uma ação"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Número de mensagens por ler"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_operations
@@ -646,11 +579,6 @@ msgid "Ready to Repair"
 msgstr "Pronto para Reparar"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-msgid "Reair Orders"
-msgstr ""
-
-#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Recreate Invoice"
 msgstr "Recriar Fatura"
@@ -690,6 +618,7 @@ msgstr "Referência da ordem de reparação"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Repair Orders"
 msgstr "Ordens de Reparação"
 
@@ -739,7 +668,8 @@ msgstr "Ordens de reparação"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-msgid "Search Reair Orders"
+#, fuzzy
+msgid "Search Repair Orders"
 msgstr "Pesquisar Ordens de Reparação"
 
 #. module: mrp_repair
@@ -760,11 +690,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Set to Draft"
 msgstr "Definir para Rascunho"
-
-#. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "Shipping address :"
-msgstr "Endereço para envio :"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
@@ -808,7 +733,9 @@ msgstr "Impostos"
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr "A unidade de medida do produto escolhida por si pertence a uma categoria diferente da do formulário."
+msgstr ""
+"A unidade de medida do produto escolhida por si pertence a uma categoria "
+"diferente da do formulário."
 
 #. module: mrp_repair
 #: sql_constraint:mrp.repair:0
@@ -819,8 +746,16 @@ msgstr ""
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "The repair order uses the warranty date on the Serial Number in\n"
-"                order to know if whether the repair should be invoiced to the\n"
+"                order to know if whether the repair should be invoiced to "
+"the\n"
 "                customer or not."
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
+msgid ""
+"The status of a repair line is set automatically to the one of the linked "
+"repair order."
 msgstr ""
 
 #. module: mrp_repair
@@ -828,7 +763,9 @@ msgstr ""
 msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
-msgstr "Esta operação irá cancelar o processo de reparação, mas não cancela a factura. Você quer continuar?"
+msgstr ""
+"Esta operação irá cancelar o processo de reparação, mas não cancela a "
+"factura. Você quer continuar?"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_to_invoice
@@ -874,16 +811,6 @@ msgid "Unit of Measure"
 msgstr "Unidade de Medida"
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_unread
-msgid "Unread Messages"
-msgstr "Mensagens por ler"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Contador de Mensagens por Ler"
-
-#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_untaxed
 msgid "Untaxed Amount"
 msgstr "Montante sem imposto"
@@ -910,16 +837,6 @@ msgid "Warranty Expiration"
 msgstr ""
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_website_message_ids
-msgid "Website Messages"
-msgstr "Mensagens do Website"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_website_message_ids
-msgid "Website communication history"
-msgstr "Histórico de Comunicação do Website"
-
-#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
 msgid "Yes"
 msgstr "Sim"
@@ -942,3 +859,57 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
 msgid "unknown"
 msgstr "Desconhecido"
+
+#~ msgid "Action Needed"
+#~ msgstr "Ação Necessária"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data da Ultmia Mensagem Inserida no Registo"
+
+#~ msgid "Followers"
+#~ msgstr "Seguidores"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Seguidores (Canais)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Seguidores (Parceiros)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
+
+#~ msgid "Is Follower"
+#~ msgstr "É um seguidor"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data da Última Mensagem"
+
+#~ msgid "Messages"
+#~ msgstr "Mensagens"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Histórico de mensagens e comunicação"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Número de Ações"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Número de mensagens que requerem uma ação"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Número de mensagens por ler"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Mensagens por ler"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Contador de Mensagens por Ler"
+
+#~ msgid "Website Messages"
+#~ msgstr "Mensagens do Website"
+
+#~ msgid "Website communication history"
+#~ msgstr "Histórico de Comunicação do Website"

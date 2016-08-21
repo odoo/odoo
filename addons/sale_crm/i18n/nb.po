@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_crm
-# 
+#
 # Translators:
 # Mari Løken <mari@tinderbox.no>, 2016
 # Mari Løken <mari@tinderbox.no>, 2015
@@ -9,20 +9,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-27 12:59+0000\n"
 "Last-Translator: Mari Løken <mari@tinderbox.no>\n"
-"Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/language/nb/)\n"
+"Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/"
+"language/nb/)\n"
+"Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_claim_count
-msgid "# Claims"
-msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
@@ -57,14 +53,15 @@ msgid ""
 msgstr ""
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
+#, fuzzy
+msgid "Activation"
+msgstr "Tilbud"
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
 msgid "Associate Member"
 msgstr "Tilknyttet medlem"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_campaign_id
-msgid "Campaign"
-msgstr "Kampanje"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
@@ -107,18 +104,25 @@ msgid "Free Member"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_latitude
-msgid "Geo Latitude"
+#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
+msgid ""
+"Gives the probability to assign a lead to this partner. (0 means no "
+"assignation.)"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_localization
-msgid "Geo Localization Date"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
+msgid "Implementation References"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_longitude
-msgid "Geo Longitude"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
+msgid "Implemented by"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_account_invoice
+msgid "Invoice"
 msgstr ""
 
 #. module: sale_crm
@@ -133,9 +137,15 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
+msgid "Latest Partner Review"
 msgstr ""
 
 #. module: sale_crm
@@ -144,14 +154,19 @@ msgid "Lead/Opportunity"
 msgstr "Lead/Salgsmulighet"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
+msgid "Level"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_medium_id
-msgid "Medium"
-msgstr "Medium"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
+msgid "Level Weight"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+msgid "Log in the chatter from which opportunity the order originates"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
@@ -179,6 +194,11 @@ msgid "New Quotation"
 msgstr "Nytt tilbud"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
+msgid "Next Partner Review"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
 msgid "Number of Quotations"
 msgstr "Antall tilbud"
@@ -192,6 +212,11 @@ msgstr "Salgsmulighet"
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
 msgid "Orders"
 msgstr "Ordre"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
+msgid "Partnership Date"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
@@ -220,11 +245,6 @@ msgid "Select if you want to give free membership."
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_source_id
-msgid "Source"
-msgstr "Kilde"
-
-#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
 msgid "Sum of Orders"
 msgstr "Sum av ordre"
@@ -245,37 +265,22 @@ msgid "The price negotiated by the partner"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr "Dette navnet hjelper deg å ha kontroll på de ulike kampanjene dine, som Julekampanje, Høstkampanje et c"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "Leveringsmetode, som Postkort, e-post, Bannerannonse et c"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_source_id
-msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr "Dette er kilden til lenken. Eksempel Søkemotor, et annet domene eller navnet på en e-post liste."
-
-#. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
 msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
-msgstr "Denne lagerlokasjonen vil bli brukt, i stedet for en standard en, som målplassering for varer du sender til denne partneren"
+msgstr ""
+"Denne lagerlokasjonen vil bli brukt, i stedet for en standard en, som "
+"målplassering for varer du sender til denne partneren"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
-msgstr "Denne lagerlokasjonen vil bli benyttet, i stedet for standard lokasjon, som lokasjon for varer du mottar fra gjeldende klient"
+msgstr ""
+"Denne lagerlokasjonen vil bli benyttet, i stedet for standard lokasjon, som "
+"lokasjon for varer du mottar fra gjeldende klient"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -286,3 +291,29 @@ msgstr "Brukere"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
 msgstr ""
+
+#~ msgid "Campaign"
+#~ msgstr "Kampanje"
+
+#~ msgid "Medium"
+#~ msgstr "Medium"
+
+#~ msgid "Source"
+#~ msgstr "Kilde"
+
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "Dette navnet hjelper deg å ha kontroll på de ulike kampanjene dine, som "
+#~ "Julekampanje, Høstkampanje et c"
+
+#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+#~ msgstr "Leveringsmetode, som Postkort, e-post, Bannerannonse et c"
+
+#~ msgid ""
+#~ "This is the source of the link Ex: Search Engine, another domain, or name "
+#~ "of email list"
+#~ msgstr ""
+#~ "Dette er kilden til lenken. Eksempel Søkemotor, et annet domene eller "
+#~ "navnet på en e-post liste."

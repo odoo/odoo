@@ -1,23 +1,38 @@
+# #-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_budget
-# 
+#
 # Translators:
 # Kovács Tibor <kovika@gmail.com>, 2015
 # krnkris, 2015
 # krnkris, 2016
+# #-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_budget
+#
+# Translators:
+# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
+# Kovács Tibor <kovika@gmail.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-06-06 19:55+0000\n"
-"Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_budget
@@ -69,10 +84,17 @@ msgstr "<strong>Összesen:</strong>"
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
 msgid ""
 "A budget is a forecast of your company's income and/or expenses\n"
-"                expected for a period in the future. A budget is defined on some\n"
-"                financial accounts and/or analytic accounts (that may represent\n"
+"                expected for a period in the future. A budget is defined on "
+"some\n"
+"                financial accounts and/or analytic accounts (that may "
+"represent\n"
 "                projects, departments, categories of products, etc.)"
-msgstr "A költségvetés a vállalat bevételeinek és/vagy költségeinek várható\nállapotáról ad előrejelzést adott időszakra értelmezve.\nEgy költségvetés meghatározható főkönyvi számlákon és/vagy\nelemző számlákon (ami képviselhet projektet, vállalat egy\nosztályát, termék kategóriát, stb.)"
+msgstr ""
+"A költségvetés a vállalat bevételeinek és/vagy költségeinek várható\n"
+"állapotáról ad előrejelzést adott időszakra értelmezve.\n"
+"Egy költségvetés meghatározható főkönyvi számlákon és/vagy\n"
+"elemző számlákon (ami képviselhet projektet, vállalat egy\n"
+"osztályát, termék kategóriát, stb.)"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_report
@@ -102,15 +124,15 @@ msgid "Achievement"
 msgstr "Eredmény"
 
 #. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_message_needaction
-msgid "Action Needed"
-msgstr "Művelet szükséges"
-
-#. module: account_budget
 #: model:ir.model,name:account_budget.model_account_analytic_account
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_analytic_account_id
+#, fuzzy
 msgid "Analytic Account"
-msgstr "Gyűjtő/elemző könyvelés"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Gyűjtő/elemző könyvelés\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Analitikus/elemző könyvelés"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.report_analyticaccountbudget
@@ -153,8 +175,13 @@ msgstr "Költségvetési tervsor"
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_form
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_tree
+#, fuzzy
 msgid "Budget Lines"
-msgstr "Költségvetési tervsorok"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Költségvetési tervsorok\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Költségvetési sorok"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_name
@@ -193,10 +220,19 @@ msgstr "Költségvetési pénzügyi tervek"
 msgid ""
 "By keeping track of where your money goes, you may be less\n"
 "                likely to overspend, and more likely to meet your financial\n"
-"                goals. Forecast a budget by detailing the expected revenue per\n"
-"                analytic account and monitor its evolution based on the actuals\n"
+"                goals. Forecast a budget by detailing the expected revenue "
+"per\n"
+"                analytic account and monitor its evolution based on the "
+"actuals\n"
 "                realised during that period."
-msgstr "Annak nyomon követése, hogy mire használja a pénzét, és nehogy túl\n                költekezzen, és még inkább fenntartsa anyagi helyzetét és \n                céljait. Üzleti terv előrejelzés egy részletes várható bevétel \n                elemző számlánként és fejlődés monitorozása az aktuális az időszak alatt\n                megvalósult bevétel alapján."
+msgstr ""
+"Annak nyomon követése, hogy mire használja a pénzét, és nehogy túl\n"
+"                költekezzen, és még inkább fenntartsa anyagi helyzetét és \n"
+"                céljait. Üzleti terv előrejelzés egy részletes várható "
+"bevétel \n"
+"                elemző számlánként és fejlődés monitorozása az aktuális az "
+"időszak alatt\n"
+"                megvalósult bevétel alapján."
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.account_budget_analytic_view
@@ -213,8 +249,13 @@ msgstr "Költségvetés törlése"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
+#, fuzzy
 msgid "Cancelled"
-msgstr "Törölt"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Törölt\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Visszavont"
 
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
@@ -230,8 +271,13 @@ msgstr "Vállalat"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#, fuzzy
 msgid "Confirm"
-msgstr "Jóváhagyás"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Jóváhagyás\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Megerősít"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -261,11 +307,6 @@ msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: account_budget
-#: model:ir.model.fields,help:account_budget.field_crossovered_budget_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.report_analyticaccountbudget
 #: model:ir.ui.view,arch_db:account_budget.report_budget
 #: model:ir.ui.view,arch_db:account_budget.report_crossoveredbudget
@@ -283,14 +324,24 @@ msgstr "Leírás"
 #: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_analyticaccountbudget_display_name
 #: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_budget_display_name
 #: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_crossoveredbudget_display_name
+#, fuzzy
 msgid "Display Name"
-msgstr "Név megjelenítése"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Név megjelenítése\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Megjelenített név"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#, fuzzy
 msgid "Done"
-msgstr "Kész"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Kész\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Elvégezve"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -306,8 +357,13 @@ msgstr "Előzetes, tervezett költségvetés"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_date_to
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_date_to
+#, fuzzy
 msgid "End Date"
-msgstr "Dátum-ig:"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Dátum-ig:\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Befejezés dátuma"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_analytic_date_to
@@ -316,21 +372,6 @@ msgstr "Dátum-ig:"
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_report_date_to
 msgid "End of period"
 msgstr "Időszak vége"
-
-#. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_message_follower_ids
-msgid "Followers"
-msgstr "Követők"
-
-#. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Követők (Csatornák)"
-
-#. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Követők (Partnerek)"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_analytic_id
@@ -343,28 +384,13 @@ msgstr "Követők (Partnerek)"
 #: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_analyticaccountbudget_id
 #: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_budget_id
 #: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_crossoveredbudget_id
+#, fuzzy
 msgid "ID"
-msgstr "ID"
-
-#. module: account_budget
-#: model:ir.model.fields,help:account_budget.field_crossovered_budget_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#. module: account_budget
-#: model:ir.model.fields,help:account_budget.field_crossovered_budget_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_message_is_follower
-msgid "Is Follower"
-msgstr "Ő egy követő"
-
-#. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_message_last_post
-msgid "Last Message Date"
-msgstr "Utolsó üzenet dátuma"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"ID\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Azonosító ID"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_analytic___last_update
@@ -377,8 +403,13 @@ msgstr "Utolsó üzenet dátuma"
 #: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_analyticaccountbudget___last_update
 #: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_budget___last_update
 #: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_crossoveredbudget___last_update
+#, fuzzy
 msgid "Last Modified on"
-msgstr "Utolsó frissítés dátuma"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Utolsó frissítés dátuma\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Utoljára frissítve ekkor"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_analytic_write_uid
@@ -388,8 +419,13 @@ msgstr "Utolsó frissítés dátuma"
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_report_write_uid
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_write_uid
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_write_uid
+#, fuzzy
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr ""
+"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
+"Utoljára frissítve, által\n"
+"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Utoljára frissítette"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_analytic_write_date
@@ -403,34 +439,9 @@ msgid "Last Updated on"
 msgstr "Utoljára frissítve "
 
 #. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_message_ids
-msgid "Messages"
-msgstr "Üzenetek"
-
-#. module: account_budget
-#: model:ir.model.fields,help:account_budget.field_crossovered_budget_message_ids
-msgid "Messages and communication history"
-msgstr "Üzenetek és kommunikáció történet"
-
-#. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_name
 msgid "Name"
 msgstr "Név"
-
-#. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Műveletek száma"
-
-#. module: account_budget
-#: model:ir.model.fields,help:account_budget.field_crossovered_budget_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#. module: account_budget
-#: model:ir.model.fields,help:account_budget.field_crossovered_budget_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Olvasatlan üzenetek száma"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_paid_date
@@ -579,29 +590,9 @@ msgid "To Approve Budgets"
 msgstr "Költségvetés jóváhagyása"
 
 #. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_message_unread
-msgid "Unread Messages"
-msgstr "Olvasatlan üzenetek"
-
-#. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Olvasatlan üzenetek számlálója"
-
-#. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Validated"
 msgstr "Jóváhagyott"
-
-#. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_website_message_ids
-msgid "Website Messages"
-msgstr "Weboldal üzenetek"
-
-#. module: account_budget
-#: model:ir.model.fields,help:account_budget.field_crossovered_budget_website_message_ids
-msgid "Website communication history"
-msgstr "Weboldal  kommunikáció történet"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.report_budget
@@ -629,3 +620,57 @@ msgstr "report.account_budget.report_crossoveredbudget"
 #: model:ir.ui.view,arch_db:account_budget.report_crossoveredbudget
 msgid "to"
 msgstr "ig"
+
+#~ msgid "Action Needed"
+#~ msgstr "Művelet szükséges"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
+
+#~ msgid "Followers"
+#~ msgstr "Követők"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Követők (Csatornák)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Követők (Partnerek)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#~ msgid "Is Follower"
+#~ msgstr "Ő egy követő"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Utolsó üzenet dátuma"
+
+#~ msgid "Messages"
+#~ msgstr "Üzenetek"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Üzenetek és kommunikáció történet"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Műveletek száma"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Olvasatlan üzenetek száma"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Olvasatlan üzenetek"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Olvasatlan üzenetek számlálója"
+
+#~ msgid "Website Messages"
+#~ msgstr "Weboldal üzenetek"
+
+#~ msgid "Website communication history"
+#~ msgstr "Weboldal  kommunikáció történet"

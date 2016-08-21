@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_expense
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015-2016
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2016
@@ -9,25 +9,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-02-21 14:55+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Date:</strong>"
+#, fuzzy
+msgid "<strong>Currency:</strong>"
 msgstr "<strong>Dátum:</strong>"
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Description:</strong>"
-msgstr "<strong>Popis:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -36,18 +32,26 @@ msgstr "<strong>Zamestnanec:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
+msgid "<strong>Manager:</strong>"
+msgstr "<strong>Dátum:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
+msgid "<strong>Status:</strong>"
+msgstr "<strong>Dátum:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Total</strong>"
 msgstr "<strong>Celkom</strong>"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Validated By:</strong>"
-msgstr "<strong>Overil:</strong>"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction
-msgid "Action Needed"
-msgstr "Potrebná akcia"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_id
+#, fuzzy
+msgid "Account"
+msgstr "Analytický účet"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
@@ -167,11 +171,7 @@ msgid "Date"
 msgstr "Dátum"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Dátum poslednej správy zaslanej záznamu."
-
-#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_department_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Department"
@@ -288,18 +288,20 @@ msgid "Expenses by Month"
 msgstr "Výdavky podľa mesiaca"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:206
+#: code:addons/hr_expense/models/hr_expense.py:209
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "Výdavky musia patriť rovnakému zamestnancovi."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:209
+#: code:addons/hr_expense/models/hr_expense.py:212
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
 "entries."
-msgstr "Výdavky musia mať špecifikovanú účtovnú knihu výdajov pre generovanie účtovných vstupov."
+msgstr ""
+"Výdavky musia mať špecifikovanú účtovnú knihu výdajov pre generovanie "
+"účtovných vstupov."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -319,21 +321,6 @@ msgid "Expenses to Invoice"
 msgstr "Výdavky na faktúrovanie"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_follower_ids
-msgid "Followers"
-msgstr "Odberatelia"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
-
-#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Former Employees"
 msgstr "Bývalí zamestnanci"
@@ -343,22 +330,20 @@ msgstr "Bývalí zamestnanci"
 msgid ""
 "From here the accountant will be able to approve as well as refuse the "
 "expenses which are verified by the HR Manager."
-msgstr "Odtiaľto bude môcť účtovník schváliť ako aj zamietnuť výdavky, ktoré sú overované HR manažérom."
+msgstr ""
+"Odtiaľto bude môcť účtovník schváliť ako aj zamietnuť výdavky, ktoré sú "
+"overované HR manažérom."
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
-msgid "Generate Single Accounting Entry"
+#, fuzzy
+msgid "Generate Accounting Entries"
 msgstr "Vytvoriť jediný účtovný vstup"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Group By"
 msgstr "Zoskupiť podľa"
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
-msgid "HR Department"
-msgstr "HR oddelenie"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
@@ -389,21 +374,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_is_follower
-msgid "Is Follower"
-msgstr "Je odberateľ"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_move_id
 msgid "Journal Entry"
 msgstr "Vstup účtovnej knihy"
@@ -412,11 +382,6 @@ msgstr "Vstup účtovnej knihy"
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Item"
 msgstr "Položka účtovnej knihy"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_last_post
-msgid "Last Message Date"
-msgstr "Dátum poslednej správy"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
@@ -436,16 +401,6 @@ msgstr "Naposledy upravoval"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_date
 msgid "Last Updated on"
 msgstr "Naposledy upravované"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_ids
-msgid "Messages"
-msgstr "Správy"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_ids
-msgid "Messages and communication history"
-msgstr "Správa a história komunikácie"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all
@@ -480,24 +435,27 @@ msgid "New Mail"
 msgstr "Nová pošta"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:260
+#: code:addons/hr_expense/models/hr_expense.py:276
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
 "configure one."
-msgstr "Účet výdavkov nenájdený pre produkt %s (alebo jeho kategóriu), prosím nakonfigurujte ho."
+msgstr ""
+"Účet výdavkov nenájdený pre produkt %s (alebo jeho kategóriu), prosím "
+"nakonfigurujte ho."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:231
+#: code:addons/hr_expense/models/hr_expense.py:244
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr "Adresa domov nenájdná pre zamestnanca %s, prosím nakonfigurujte ju."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:227
+#: code:addons/hr_expense/models/hr_expense.py:240
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
-msgstr "Kreditný účet nenájdený pre účtovnú knihu %s, prosím nakonfigurujte ho."
+msgstr ""
+"Kreditný účet nenájdený pre účtovnú knihu %s, prosím nakonfigurujte ho."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -505,24 +463,9 @@ msgid "Notes..."
 msgstr "Poznámky..."
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Počet akcií"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_attachment_number
 msgid "Number of Attachments"
 msgstr "Počet príloh"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Počet správ ktoré vyžadujú akciu"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Počet neprečítaných správ"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense
@@ -530,12 +473,8 @@ msgstr "Počet neprečítaných správ"
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr "Akonáhle vytvoríte vaše výdavky, predložte ho vášmu manažérovi na potvrdenie."
-
-#. module: hr_expense
-#: model:ir.actions.client,name:hr_expense.action_client_expense_menu
-msgid "Open Expense Menu"
-msgstr "Otvoriť menu výdavkov"
+msgstr ""
+"Akonáhle vytvoríte vaše výdavky, predložte ho vášmu manažérovi na potvrdenie."
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -548,12 +487,14 @@ msgid "Payment By"
 msgstr "Zaplatil"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:264
+#: code:addons/hr_expense/models/hr_expense.py:280
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
 "`property_account_expense_categ_id`."
-msgstr "Prosím nakonfigurujte prevolený účet výdavkov pre Produktové výdavky: `property_account_expense_categ_id`."
+msgstr ""
+"Prosím nakonfigurujte prevolený účet výdavkov pre Produktové výdavky: "
+"`property_account_expense_categ_id`."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -624,12 +565,14 @@ msgid "Select the lines you want to submit to be reimbursed."
 msgstr "Vyberte riadky, ktoré chcete odoslať aby boli uhradené."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:73
+#: code:addons/hr_expense/models/hr_expense.py:77
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product"
-" Unit of Measure"
-msgstr "Zvolená merná jednotka nepatrí do rovnakej kategórie ako merná jednotka produktu"
+"Selected Unit of Measure does not belong to the same category as the product "
+"Unit of Measure"
+msgstr ""
+"Zvolená merná jednotka nepatrí do rovnakej kategórie ako merná jednotka "
+"produktu"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -733,16 +676,6 @@ msgid "Unit of Measure"
 msgstr "Merná jednotka"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread
-msgid "Unread Messages"
-msgstr "Neprečítané správy"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Počítadlo neprečítaných správ"
-
-#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "UoM"
 msgstr "Merná jdnotka"
@@ -752,7 +685,9 @@ msgstr "Merná jdnotka"
 msgid ""
 "Use the messaging tool to log a note and attach a document to the expense. "
 "(e.g. scan of the bill)"
-msgstr "Pomocou nástroja pre zasielanie správ zaindexujte poznámku a priložte dokument k výdavku (napr. sken potvrdenky)"
+msgstr ""
+"Pomocou nástroja pre zasielanie správ zaindexujte poznámku a priložte "
+"dokument k výdavku (napr. sken potvrdenky)"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -760,50 +695,51 @@ msgid "Waiting Payment"
 msgstr "Čakajúca platba"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_website_message_ids
-msgid "Website Messages"
-msgstr "Správy webovej stránky"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_website_message_ids
-msgid "Website communication history"
-msgstr "História komunikácie webovej stránky"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_state
 msgid ""
 "When the expense request is created the status is 'To Submit'.\n"
-" It is submitted by the employee and request is sent to manager, the status is 'Submitted'.        \n"
+" It is submitted by the employee and request is sent to manager, the status "
+"is 'Submitted'.        \n"
 "If the manager approve it, the status is 'Approved'.\n"
-" If the accountant genrate the accounting entries for the expense request, the status is 'Waiting Payment'."
-msgstr "Keď sa vytvorí požidavka výdavkov, status je 'Na odovzdanie'.\nJe odovzdaná zamestnancom a požiadavka je odoslaná manažérovi, status je 'Odovzdané'.\nAk ju manažér potvrdí, status je 'Potvrdené'.\nAk účtovník vytvorí účtovné vstupy pre požiadavku výdavkov, status je 'Čakajúca platba'."
+" If the accountant genrate the accounting entries for the expense request, "
+"the status is 'Waiting Payment'."
+msgstr ""
+"Keď sa vytvorí požidavka výdavkov, status je 'Na odovzdanie'.\n"
+"Je odovzdaná zamestnancom a požiadavka je odoslaná manažérovi, status je "
+"'Odovzdané'.\n"
+"Ak ju manažér potvrdí, status je 'Potvrdené'.\n"
+"Ak účtovník vytvorí účtovné vstupy pre požiadavku výdavkov, status je "
+"'Čakajúca platba'."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:107
+#: code:addons/hr_expense/models/hr_expense.py:111
 #, python-format
 msgid "You can only delete draft or refused expenses!"
 msgstr "Môžte zmazať iba koncept alebo zamietnuté výdavky."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:203
+#: code:addons/hr_expense/models/hr_expense.py:206
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr "Môžte vytvoriť účtovný vstup iba pre potvrdené výdavky."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:113
+#: code:addons/hr_expense/models/hr_expense.py:117
 #, python-format
 msgid "You can only submit draft expenses!"
 msgstr "Môžete odoslať iba koncept výdavkov!"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:124
+#: code:addons/hr_expense/models/hr_expense.py:128
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
 "class=o_timeline_tracking_value_list><li>Reason<span> : </span><span "
 "class=o_timeline_tracking_value>%s</span></li></ul>"
-msgstr "Vaše výdavky %s boli zamietnuté.<br/><ul class=o_timeline_tracking_value_list><li>Dôvod<span> : </span><span class=o_timeline_tracking_value>%s</span></li></ul>"
+msgstr ""
+"Vaše výdavky %s boli zamietnuté.<br/><ul "
+"class=o_timeline_tracking_value_list><li>Dôvod<span> : </span><span "
+"class=o_timeline_tracking_value>%s</span></li></ul>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -814,3 +750,74 @@ msgstr "napr. Pracovný obed s X"
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "or"
 msgstr "alebo"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
+msgid "report.hr_expense.report_expense"
+msgstr ""
+
+#~ msgid "<strong>Description:</strong>"
+#~ msgstr "<strong>Popis:</strong>"
+
+#~ msgid "<strong>Validated By:</strong>"
+#~ msgstr "<strong>Overil:</strong>"
+
+#~ msgid "Action Needed"
+#~ msgstr "Potrebná akcia"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Dátum poslednej správy zaslanej záznamu."
+
+#~ msgid "Followers"
+#~ msgstr "Odberatelia"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Odberatelia (Kanály)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Odberatelia (Partneri)"
+
+#~ msgid "HR Department"
+#~ msgstr "HR oddelenie"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "Is Follower"
+#~ msgstr "Je odberateľ"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Dátum poslednej správy"
+
+#~ msgid "Messages"
+#~ msgstr "Správy"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Správa a história komunikácie"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Počet akcií"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Počet správ ktoré vyžadujú akciu"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Počet neprečítaných správ"
+
+#~ msgid "Open Expense Menu"
+#~ msgstr "Otvoriť menu výdavkov"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Neprečítané správy"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Počítadlo neprečítaných správ"
+
+#~ msgid "Website Messages"
+#~ msgstr "Správy webovej stránky"
+
+#~ msgid "Website communication history"
+#~ msgstr "História komunikácie webovej stránky"

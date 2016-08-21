@@ -111,7 +111,7 @@ class MailTemplate(models.Model):
 
     name = fields.Char('Name')
     model_id = fields.Many2one('ir.model', 'Applies to', help="The type of document this template can be used with")
-    model = fields.Char('Related Document Model', related='model_id.model', select=True, store=True, readonly=True)
+    model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     lang = fields.Char('Language',
                        help="Optional translation language (ISO code) to select when sending out an email. "
                             "If not set, the english version will be used. "
@@ -497,7 +497,7 @@ class MailTemplate(models.Model):
                     report_service = report.report_name
 
                     if report.report_type in ['qweb-html', 'qweb-pdf']:
-                        result, format = self.pool['report'].get_pdf(self._cr, self._uid, [res_id], report_service, context=Template._context), 'pdf'
+                        result, format = Template.env['report'].get_pdf([res_id], report_service), 'pdf'
                     else:
                         result, format = odoo_report.render_report(self._cr, self._uid, [res_id], report_service, {'model': template.model}, Template._context)
 

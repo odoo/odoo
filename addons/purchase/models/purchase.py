@@ -156,7 +156,7 @@ class PurchaseOrder(models.Model):
         help="This will determine picking type of incoming shipment")
     default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',\
         help="Technical field used to display the Drop Ship Address", readonly=True)
-    group_id = fields.Many2one('procurement.group', string="Procurement Group")
+    group_id = fields.Many2one('procurement.group', string="Procurement Group", copy=False)
     is_shipped = fields.Boolean(compute="_compute_is_shipped")
 
     @api.model
@@ -324,6 +324,8 @@ class PurchaseOrder(models.Model):
     @api.multi
     def button_confirm(self):
         for order in self:
+            if order.state not in ['draft', 'sent']:
+                continue
             order._add_supplier_to_product()
             # Deal with double validation process
             if order.company_id.po_double_validation == 'one_step':
@@ -353,6 +355,10 @@ class PurchaseOrder(models.Model):
                 moves.filtered(lambda r: r.state != 'cancel').action_cancel()
 
         self.write({'state': 'cancel'})
+
+    @api.multi
+    def button_unlock(self):
+        self.write({'state': 'purchase'})
 
     @api.multi
     def button_done(self):

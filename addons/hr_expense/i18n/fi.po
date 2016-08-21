@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_expense
-# 
+#
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
@@ -9,25 +9,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-17 16:45+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Date:</strong>"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Description:</strong>"
-msgstr ""
+#, fuzzy
+msgid "<strong>Currency:</strong>"
+msgstr "<strong>Työntekijä:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -36,18 +32,26 @@ msgstr "<strong>Työntekijä:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Total</strong>"
+#, fuzzy
+msgid "<strong>Manager:</strong>"
 msgstr "<strong>Yhteensä</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Validated By:</strong>"
-msgstr ""
+#, fuzzy
+msgid "<strong>Status:</strong>"
+msgstr "<strong>Yhteensä</strong>"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction
-msgid "Action Needed"
-msgstr "Vaatii toimia"
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
+msgid "<strong>Total</strong>"
+msgstr "<strong>Yhteensä</strong>"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_id
+#, fuzzy
+msgid "Account"
+msgstr "Kustannuspaikka"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
@@ -167,11 +171,7 @@ msgid "Date"
 msgstr "Päivämäärä"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Viimeisen viestin päivämäärä"
-
-#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_department_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Department"
@@ -288,13 +288,13 @@ msgid "Expenses by Month"
 msgstr "Kulut kuukausittain"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:206
+#: code:addons/hr_expense/models/hr_expense.py:209
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:209
+#: code:addons/hr_expense/models/hr_expense.py:212
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -319,21 +319,6 @@ msgid "Expenses to Invoice"
 msgstr "Laskutettavat kulut"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_follower_ids
-msgid "Followers"
-msgstr "Seuraajat"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Seuraajat (kanavat)"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Seuraajat (kumppanit)"
-
-#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Former Employees"
 msgstr ""
@@ -347,18 +332,13 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
-msgid "Generate Single Accounting Entry"
+msgid "Generate Accounting Entries"
 msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Group By"
 msgstr "Ryhmittele"
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
-msgid "HR Department"
-msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
@@ -389,21 +369,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_is_follower
-msgid "Is Follower"
-msgstr "On seuraaja"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_move_id
 msgid "Journal Entry"
 msgstr "Päiväkirjavienti"
@@ -412,11 +377,6 @@ msgstr "Päiväkirjavienti"
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Item"
 msgstr "Päiväkirjatapahtuma"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_last_post
-msgid "Last Message Date"
-msgstr "Viimeinen viestipvm"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
@@ -436,16 +396,6 @@ msgstr "Viimeksi päivittänyt"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_date
 msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_ids
-msgid "Messages"
-msgstr "Viestit"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_ids
-msgid "Messages and communication history"
-msgstr "Viesti- ja kommunikointihistoria"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all
@@ -480,7 +430,7 @@ msgid "New Mail"
 msgstr "Uusi viesti"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:260
+#: code:addons/hr_expense/models/hr_expense.py:276
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
@@ -488,13 +438,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:231
+#: code:addons/hr_expense/models/hr_expense.py:244
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:227
+#: code:addons/hr_expense/models/hr_expense.py:240
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr ""
@@ -505,24 +455,9 @@ msgid "Notes..."
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Toimenpiteiden määrä"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_attachment_number
 msgid "Number of Attachments"
 msgstr "Liitteiden lukumäärä"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Toimenpiteitä vaativien viestien määrä"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Lukemattomien viestien määrä"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense
@@ -530,11 +465,6 @@ msgstr "Lukemattomien viestien määrä"
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.actions.client,name:hr_expense.action_client_expense_menu
-msgid "Open Expense Menu"
 msgstr ""
 
 #. module: hr_expense
@@ -548,7 +478,7 @@ msgid "Payment By"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:264
+#: code:addons/hr_expense/models/hr_expense.py:280
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -624,11 +554,11 @@ msgid "Select the lines you want to submit to be reimbursed."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:73
+#: code:addons/hr_expense/models/hr_expense.py:77
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product"
-" Unit of Measure"
+"Selected Unit of Measure does not belong to the same category as the product "
+"Unit of Measure"
 msgstr ""
 
 #. module: hr_expense
@@ -733,16 +663,6 @@ msgid "Unit of Measure"
 msgstr "Yksikkö"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread
-msgid "Unread Messages"
-msgstr "Lukemattomia viestejä"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Lukemattomien viestien laskuri"
-
-#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "UoM"
 msgstr "Yksikkö"
@@ -760,44 +680,36 @@ msgid "Waiting Payment"
 msgstr "Odottaa maksamista"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_website_message_ids
-msgid "Website Messages"
-msgstr "Verkkosivun ilmoitukset"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_website_message_ids
-msgid "Website communication history"
-msgstr "Verkkosivun viestihistoria"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_state
 msgid ""
 "When the expense request is created the status is 'To Submit'.\n"
-" It is submitted by the employee and request is sent to manager, the status is 'Submitted'.        \n"
+" It is submitted by the employee and request is sent to manager, the status "
+"is 'Submitted'.        \n"
 "If the manager approve it, the status is 'Approved'.\n"
-" If the accountant genrate the accounting entries for the expense request, the status is 'Waiting Payment'."
+" If the accountant genrate the accounting entries for the expense request, "
+"the status is 'Waiting Payment'."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:107
+#: code:addons/hr_expense/models/hr_expense.py:111
 #, python-format
 msgid "You can only delete draft or refused expenses!"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:203
+#: code:addons/hr_expense/models/hr_expense.py:206
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:113
+#: code:addons/hr_expense/models/hr_expense.py:117
 #, python-format
 msgid "You can only submit draft expenses!"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:124
+#: code:addons/hr_expense/models/hr_expense.py:128
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
@@ -814,3 +726,62 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "or"
 msgstr "o"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
+msgid "report.hr_expense.report_expense"
+msgstr ""
+
+#~ msgid "Action Needed"
+#~ msgstr "Vaatii toimia"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Viimeisen viestin päivämäärä"
+
+#~ msgid "Followers"
+#~ msgstr "Seuraajat"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Seuraajat (kanavat)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Seuraajat (kumppanit)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
+
+#~ msgid "Is Follower"
+#~ msgstr "On seuraaja"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Viimeinen viestipvm"
+
+#~ msgid "Messages"
+#~ msgstr "Viestit"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Viesti- ja kommunikointihistoria"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Toimenpiteiden määrä"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Toimenpiteitä vaativien viestien määrä"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Lukemattomien viestien määrä"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Lukemattomia viestejä"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Lukemattomien viestien laskuri"
+
+#~ msgid "Website Messages"
+#~ msgstr "Verkkosivun ilmoitukset"
+
+#~ msgid "Website communication history"
+#~ msgstr "Verkkosivun viestihistoria"

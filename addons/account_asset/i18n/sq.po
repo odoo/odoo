@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_asset
-# 
+#
 # Translators:
 # Anri Haxhi <anrihaxhi@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 09:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-05-12 09:34+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Albanian (http://www.transifex.com/odoo/odoo-9/language/sq/)\n"
+"Language: sq\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sq\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:350
+#: code:addons/account_asset/account_asset.py:347
 #, python-format
 msgid " (copy)"
 msgstr "(kopje)"
@@ -50,18 +50,13 @@ msgid "Account Entry"
 msgstr "Hyrja e Llogarisë"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_needaction
-msgid "Action Needed"
-msgstr "Veprimet e nevojshme"
-
-#. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_active
 msgid "Active"
 msgstr "Aktiv"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #, python-format
 msgid "Amount"
 msgstr "Vlera"
@@ -92,8 +87,6 @@ msgid "Asset"
 msgstr "Asetet"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
 msgid "Asset Account"
 msgstr "Llogaria e Asetit"
@@ -152,7 +145,7 @@ msgid "Asset category"
 msgstr "Kategoritë e Asetit"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:238
+#: code:addons/account_asset/account_asset.py:235
 #, python-format
 msgid "Asset created"
 msgstr "Aset i Krijuar"
@@ -163,10 +156,11 @@ msgid "Asset depreciation line"
 msgstr "Linja e amortizimit të Asetit"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:271
+#: code:addons/account_asset/account_asset.py:268
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
-msgstr "Aset i shitur ose i predispozuar. Hyrja e llogarisë në pritje për verifikim."
+msgstr ""
+"Aset i shitur ose i predispozuar. Hyrja e llogarisë në pritje për verifikim."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_asset
@@ -239,7 +233,9 @@ msgstr "Kategori e Asetit"
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
-msgstr "Kliko këtë nëqoftëse do që të konfirmosh automatikisht asetet e kësaj kategorie të krijuara nga Invoice-et."
+msgstr ""
+"Kliko këtë nëqoftëse do që të konfirmosh automatikisht asetet e kësaj "
+"kategorie të krijuara nga Invoice-et."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -248,23 +244,39 @@ msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr "Zgjidh metodën e përdorimit për të llogaritur sasinë e linjave të zhvlerësimit.\n* Lineare: Kalkulohet në bazë të: Vlerës Groso / Numri i Zhvlerësimeve\n* Ulje Progresive: Kalkulohet në bazë të: Vlera e Mbetur *\nFaktori i Uljes Progresive"
+msgstr ""
+"Zgjidh metodën e përdorimit për të llogaritur sasinë e linjave të "
+"zhvlerësimit.\n"
+"* Lineare: Kalkulohet në bazë të: Vlerës Groso / Numri i Zhvlerësimeve\n"
+"* Ulje Progresive: Kalkulohet në bazë të: Vlera e Mbetur *\n"
+"Faktori i Uljes Progresive"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_time
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_time
 msgid ""
-"Choose the method to use to compute the dates and number of depreciation lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
-msgstr "Zgjidh metodën e përdorimit për të llogaritur datat dhe numrin e linjave të zhvlerësimit.\n* Numri i Zhvlerësimeve: Rregullo numrin e linjave të zhvlerësimit dhe kohën midis 2 zhvlerësimeve.\n* Data Përfundimtare: Zgjidh kohën midis 2 zhvlerësimeve dhe datën pas të cilës zhvlerësimet nuk vazhdojnë."
+"Choose the method to use to compute the dates and number of depreciation "
+"lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the "
+"time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
+msgstr ""
+"Zgjidh metodën e përdorimit për të llogaritur datat dhe numrin e linjave të "
+"zhvlerësimit.\n"
+"* Numri i Zhvlerësimeve: Rregullo numrin e linjave të zhvlerësimit dhe kohën "
+"midis 2 zhvlerësimeve.\n"
+"* Data Përfundimtare: Zgjidh kohën midis 2 zhvlerësimeve dhe datën pas të "
+"cilës zhvlerësimet nuk vazhdojnë."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
 msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
-msgstr "Zgjidh periudhën për të cilën do që të postohet automatikisht linja e zhvlerësimit të aseteve të rrjedhsme"
+msgstr ""
+"Zgjidh periudhën për të cilën do që të postohet automatikisht linja e "
+"zhvlerësimit të aseteve të rrjedhsme"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
@@ -341,7 +353,7 @@ msgid "Cumulative Depreciation"
 msgstr "Zhvlerësim i Akumuluar"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -384,11 +396,6 @@ msgid "Date of depreciation"
 msgstr "Data e zhvlerësimit"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Data e mesazhit të fundit të postuar në regjistër"
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Account"
 msgstr "Llogaria e të Ardhurave të Shtyra"
@@ -423,9 +430,13 @@ msgstr "Zhvlerësim"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Account"
 msgstr "Llogari Zhvlerësimi"
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Depreciation Asset Account"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -442,11 +453,6 @@ msgstr "Data e Zhvlerësimit"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
 msgid "Depreciation Entry"
 msgstr "Hyrja e Zhvlerësimit"
-
-#. module: account_asset
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
-msgid "Depreciation Asset Account"
-msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -486,7 +492,7 @@ msgid "Depreciation board modified"
 msgstr "Modofikim i Këshillit të Zhvlerësimit"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:489
+#: code:addons/account_asset/account_asset.py:487
 #, python-format
 msgid "Depreciation line posted."
 msgstr "Linja e Zhvlerësimit e postuar."
@@ -502,19 +508,19 @@ msgid "Display Name"
 msgstr "Emri i paraqitur"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:274
+#: code:addons/account_asset/account_asset.py:271
 #, python-format
 msgid "Disposal Move"
 msgstr "Lëvizja Shkarkuese"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:277
+#: code:addons/account_asset/account_asset.py:274
 #, python-format
 msgid "Disposal Moves"
 msgstr "Lëvizje Shkarkuese"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:468
+#: code:addons/account_asset/account_asset.py:466
 #, python-format
 msgid "Document closed."
 msgstr "Dokument i mbyllur."
@@ -549,31 +555,26 @@ msgid "Every"
 msgstr "Cdo"
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
+#, fuzzy
+msgid "Expense Account"
+msgstr "Llogaria e Asetit"
+
+#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Extended Filters..."
 msgstr "Filtra të zgjeruar..."
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_follower_ids
-msgid "Followers"
-msgstr "Ndjekesit"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Ndjekesit (Kanalet)"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Ndjekesit (Partnerët)"
-
-#. module: account_asset
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
 "From this report, you can have an overview on all depreciations. The\n"
-"            search bar can also be used to personalize your assets depreciation reporting."
-msgstr "Nga ky raport, mund te kesh nje pasqyrë të të gjithë zhvlerësimeve.\nDritarja e kërkimit mund gjithashtu të përdoret për të personalizuar raportimin e aseteve të zhvlerësuara."
+"            search bar can also be used to personalize your assets "
+"depreciation reporting."
+msgstr ""
+"Nga ky raport, mund te kesh nje pasqyrë të të gjithë zhvlerësimeve.\n"
+"Dritarja e kërkimit mund gjithashtu të përdoret për të personalizuar "
+"raportimin e aseteve të zhvlerësuara."
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
@@ -622,16 +623,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Nëqoftëse është e çekuar mesazhet e reja kërkojnë vëmëndjen tuaj."
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Nëqoftëse është e çekuar,\n mesazhet e reja kërkojnë vëmëndjen tuaj."
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Income Account"
 msgstr "Llogaria e të Ardhurave"
@@ -642,14 +633,19 @@ msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January / Start date of fiscal "
 "year"
-msgstr "Indikon që hyrja e parë e zhvlerësimit për këtë aset duhet të bëhet nga data e blerjes ne vënd te ditës së parë të Janarit / Ditës fillestare së vitit fiskal."
+msgstr ""
+"Indikon që hyrja e parë e zhvlerësimit për këtë aset duhet të bëhet nga data "
+"e blerjes ne vënd te ditës së parë të Janarit / Ditës fillestare së vitit "
+"fiskal."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_prorata
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first of January"
-msgstr "Indikon që hyrja e parë e zhvlerësimit për këtë aset duhet të bëhet nga data e blerjes ne vënd të diës së parë të Janarit"
+msgstr ""
+"Indikon që hyrja e parë e zhvlerësimit për këtë aset duhet të bëhet nga data "
+"e blerjes ne vënd të diës së parë të Janarit"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
@@ -662,11 +658,6 @@ msgstr "Invoice"
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Linja Invoice-it"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_is_follower
-msgid "Is Follower"
-msgstr "Eshte Ndjekës"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_salvage_value
@@ -684,16 +675,11 @@ msgid "Journal"
 msgstr "Ditar"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:376
+#: code:addons/account_asset/account_asset.py:374
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
 msgstr "Hyrjet e Ditarit"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_last_post
-msgid "Last Message Date"
-msgstr "Data e Mesazhit të Fundit"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset___last_update
@@ -728,11 +714,6 @@ msgstr "Modifikuar per here te fundit me"
 #: selection:account.asset.category,method:0
 msgid "Linear"
 msgstr "Linear"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_ids
-msgid "Messages"
-msgstr "Mesazhet"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -772,11 +753,6 @@ msgid "Note"
 msgstr "Shënim"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Numri i Veprimeve"
-
-#. module: account_asset
 #: selection:account.asset.asset,method_time:0
 #: selection:account.asset.category,method_time:0
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_number
@@ -796,17 +772,7 @@ msgid "Number of Months in a Period"
 msgstr "Numri i Muajve në një Periudhë"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Numri i mesazheve që kërkojnë një veprim"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Numri i mesazheve të palexuara"
-
-#. module: account_asset
-#: code:addons/account_asset/account_asset.py:488
+#: code:addons/account_asset/account_asset.py:486
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -867,12 +833,14 @@ msgid "Prorata Temporis"
 msgstr "Proporcioni Temporis"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:316
+#: code:addons/account_asset/account_asset.py:313
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
-msgstr "Proporcioni temporis mund të aplikohet vetëm për metodën e kohës \"numri i zhvlerësimeve\"."
+msgstr ""
+"Proporcioni temporis mund të aplikohet vetëm për metodën e kohës \"numri i "
+"zhvlerësimeve\"."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -985,9 +953,15 @@ msgstr "Numri i zhvlerësimeve që duhen për zhvlerësuar asetin tuaj"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid ""
-"This wizard will post installment/depreciation lines for the selected month.<br/>\n"
-"                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
-msgstr "Ky magjistar do postoj linjat e instalimeve/zhvlerësimeve për muajin e zgjedhur.<br/>\nKjo do të gjenerojë gjithashtu hyrje në ditar për të gjithë linjat e  instalimeve  të ndërlidhura në këtë periudhë të njohjes së asetit/ardhurave."
+"This wizard will post installment/depreciation lines for the selected month."
+"<br/>\n"
+"                        This will generate journal entries for all related "
+"installment lines on this period of asset/revenue recognition as well."
+msgstr ""
+"Ky magjistar do postoj linjat e instalimeve/zhvlerësimeve për muajin e "
+"zgjedhur.<br/>\n"
+"Kjo do të gjenerojë gjithashtu hyrje në ditar për të gjithë linjat e  "
+"instalimeve  të ndërlidhura në këtë periudhë të njohjes së asetit/ardhurave."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -1020,16 +994,6 @@ msgid "Unposted Amount"
 msgstr "Sasia E Pa Postuar"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_unread
-msgid "Unread Messages"
-msgstr "Mesazhe të Palexuara"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Numëruesi i Mesazheve të Palexuara"
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_purchase_tree
 msgid "Vendor"
@@ -1040,9 +1004,17 @@ msgstr "Shitës"
 #: model:ir.model.fields,help:account_asset.field_account_asset_depreciation_line_parent_state
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
-msgstr "Kur një aset krijohet, statusi është 'Draft'.\nNëqoftëse aseti konfirmohet, statusi bëhet 'I Rrjedhshëm' dhe linjat e zhvlerësimit mund të postohen në llogaritje.\nJu mund ta mbyllni manualisht një aset kur zhvlerësimi mbaron. Nëqoftëse linja e fundit e zhvlerësimit është postuar, aseti shkon automatikisht në atë status."
+"If the asset is confirmed, the status goes in 'Running' and the depreciation "
+"lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last "
+"line of depreciation is posted, the asset automatically goes in that status."
+msgstr ""
+"Kur një aset krijohet, statusi është 'Draft'.\n"
+"Nëqoftëse aseti konfirmohet, statusi bëhet 'I Rrjedhshëm' dhe linjat e "
+"zhvlerësimit mund të postohen në llogaritje.\n"
+"Ju mund ta mbyllni manualisht një aset kur zhvlerësimi mbaron. Nëqoftëse "
+"linja e fundit e zhvlerësimit është postuar, aseti shkon automatikisht në "
+"atë status."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name
@@ -1050,33 +1022,25 @@ msgid "Year"
 msgstr "Viti"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset_invoice.py:53
-#, python-format
-msgid ""
-"You already have assets with the reference %s.\n"
-"Please delete these assets before creating new ones for this invoice."
-msgstr ""
-
-#. module: account_asset
-#: code:addons/account_asset/account_asset.py:100
+#: code:addons/account_asset/account_asset.py:96
 #, python-format
 msgid "You cannot delete a document is in %s state."
 msgstr "Ju nuk mund ta fshini një dokument është në gjëndje %s."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:102
+#: code:addons/account_asset/account_asset.py:98
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr "Ju nuk mund ta fshini një dokument që përmban hyrje të postuara."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:497
+#: code:addons/account_asset/account_asset.py:495
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr "Ju nuk mund të fshini linja zhvlerësimi të postuara."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:499
+#: code:addons/account_asset/account_asset.py:497
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr "Ju nuk mund të fshini linja instalimi të postuara."
@@ -1101,3 +1065,50 @@ msgstr "p.sh, Laptop iBook"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
 msgstr "muaj"
+
+#~ msgid "Action Needed"
+#~ msgstr "Veprimet e nevojshme"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data e mesazhit të fundit të postuar në regjistër"
+
+#~ msgid "Followers"
+#~ msgstr "Ndjekesit"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Ndjekesit (Kanalet)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Ndjekesit (Partnerët)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Nëqoftëse është e çekuar mesazhet e reja kërkojnë vëmëndjen tuaj."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr ""
+#~ "Nëqoftëse është e çekuar,\n"
+#~ " mesazhet e reja kërkojnë vëmëndjen tuaj."
+
+#~ msgid "Is Follower"
+#~ msgstr "Eshte Ndjekës"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data e Mesazhit të Fundit"
+
+#~ msgid "Messages"
+#~ msgstr "Mesazhet"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Numri i Veprimeve"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Numri i mesazheve që kërkojnë një veprim"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Numri i mesazheve të palexuara"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Mesazhe të Palexuara"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Numëruesi i Mesazheve të Palexuara"

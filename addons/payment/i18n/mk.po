@@ -1,63 +1,97 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-# 
+#
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-05-27 15:04+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
-"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
+"mk/)\n"
+"Language: mk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mk\n"
+"#-#-#-#-#  mk.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
+"#-#-#-#-#  mk.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
 msgid ""
-"            Will be safe_eval with `self` being the current transaction. i.e.:\n"
+"            Will be safe_eval with `self` being the current transaction. i."
+"e.:\n"
 "                self.env['my.model'].payment_validated(self)"
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
-msgid "-It installs the module payment_adyen."
+#, fuzzy
+msgid "-This installs the module payment_adyen."
 msgstr "-го инсталира модулот payment_adyen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
-msgid "-It installs the module payment_authorize."
-msgstr ""
+#, fuzzy
+msgid "-This installs the module payment_authorize."
+msgstr "-го инсталира модулот payment_adyen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
-msgid "-It installs the module payment_buckaroo."
+#, fuzzy
+msgid "-This installs the module payment_buckaroo."
 msgstr "-го инсталира модулот payment_buckaroo."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
-msgid "-It installs the module payment_ogone."
+#, fuzzy
+msgid "-This installs the module payment_ogone."
 msgstr "-го инсталира модулот payment_ogone."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
-msgid "-It installs the module payment_paypal."
+#, fuzzy
+msgid "-This installs the module payment_paypal."
+msgstr "-го инсталира модулот payment_paypal."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_sips
+#, fuzzy
+msgid "-This installs the module payment_sips."
 msgstr "-го инсталира модулот payment_paypal."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
-msgid "-It installs the module payment_transfer."
-msgstr ""
+#, fuzzy
+msgid "-This installs the module payment_transfer."
+msgstr "-го инсталира модулот payment_adyen."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
 msgid "3D Secure HTML"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-danger\">Test</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-success\">Production</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 
 #. module: payment
@@ -118,6 +152,11 @@ msgid "At payment with acquirer confirmation"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
+msgid "Authorize.Net"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_buckaroo
 msgid "Buckaroo"
 msgstr ""
@@ -125,7 +164,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
 msgid "Cancel Message"
-msgstr ""
+msgstr "Откажи порака"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -262,12 +301,15 @@ msgstr "Надоместоци"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr "Сума на надоместок; се подесува од системот бидејќи зависи од примателот"
+msgstr ""
+"Сума на надоместок; се подесува од системот бидејќи зависи од примателот"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
 msgid "Field used to store error and/or validation messages for information"
-msgstr "Поле кое се користи за запишување на грешки и/или валидациони пораки за информација"
+msgstr ""
+"Поле кое се користи за запишување на грешки и/или валидациони пораки за "
+"информација"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
@@ -350,7 +392,8 @@ msgstr "Последно ажурирање на"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr "Направи го овој примател на средства достапен (Фактури за клиенти, итн.)"
+msgstr ""
+"Направи го овој примател на средства достапен (Фактури за клиенти, итн.)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
@@ -486,7 +529,6 @@ msgstr "Трансакција на плаќање"
 #: model:ir.actions.act_window,name:payment.action_payment_tx_ids
 #: model:ir.actions.act_window,name:payment.payment_transaction_action_child
 #: model:ir.model.fields,field_description:payment.field_payment_method_payment_ids
-#: model:ir.ui.menu,name:payment.finance_pay_tx_menu
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
@@ -494,7 +536,6 @@ msgid "Payment Transactions"
 msgstr "Трансакции на плаќање"
 
 #. module: payment
-#: model:ir.ui.menu,name:payment.finance_payment_menu
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.payment_method_form_view
@@ -559,7 +600,6 @@ msgstr ""
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_method_action
-#: model:ir.ui.menu,name:payment.finance_pay_method_menu
 #: model:ir.ui.menu,name:payment.payment_method_menu
 msgid "Saved Payment Data"
 msgstr ""
@@ -575,6 +615,11 @@ msgid "Server To Server"
 msgstr "Сервер на сервер"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_sips
+msgid "Sips"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
 msgid "Small-sized image"
 msgstr "Слика со мала димензија"
@@ -582,9 +627,9 @@ msgstr "Слика со мала димензија"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px"
-" image, with aspect ratio preserved. Use this field anywhere a small image "
-"is required."
+"Small-sized image of this provider. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 
 #. module: payment
@@ -622,7 +667,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is be rendered with qWeb with the following evaluation context:"
+"                                            It is be rendered with qWeb with "
+"the following evaluation context:"
 msgstr ""
 
 #. module: payment
@@ -700,7 +746,9 @@ msgstr "партнер: пребарување записи за партнер 
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr "partner_values: специфични вредности за купувачот, на пример од формулар за испорака"
+msgstr ""
+"partner_values: специфични вредности за купувачот, на пример од формулар за "
+"испорака"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_method
@@ -723,11 +771,9 @@ msgid "tx_values: transaction values"
 msgstr "tx_values: вредности на трансакција"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
-msgid "unknown"
-msgstr "непознато"
-
-#. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr "корисник: пребарување записи за моментални корисници"
+
+#~ msgid "unknown"
+#~ msgstr "непознато"

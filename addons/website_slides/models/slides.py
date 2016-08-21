@@ -203,7 +203,7 @@ class EmbeddedSlide(models.Model):
     _description = 'Embedded Slides View Counter'
     _rec_name = 'slide_id'
 
-    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, select=1)
+    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, index=True)
     url = fields.Char('Third Party Website URL', required=True)
     count_views = fields.Integer('# Views', default=1)
 
@@ -292,7 +292,7 @@ class Slide(models.Model):
         default='document',
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
     index_content = fields.Text('Transcript')
-    datas = fields.Binary('Content')
+    datas = fields.Binary('Content', attachment=True)
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
     mime_type = fields.Char('Mime-type')

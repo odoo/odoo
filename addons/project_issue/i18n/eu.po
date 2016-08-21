@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * project_issue
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-02-12 10:26+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Basque (http://www.transifex.com/odoo/odoo-9/language/eu/)\n"
+"Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: eu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project_issue
@@ -33,7 +33,7 @@ msgid "# of Issues"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:212
+#: code:addons/project_issue/project_issue.py:215
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopia)"
@@ -59,13 +59,9 @@ msgid ""
 "A Issue's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the next stage"
+" * Ready for next stage indicates the issue is ready to be pulled to the "
+"next stage"
 msgstr ""
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction
-msgid "Action Needed"
-msgstr "Beharrezko ekintza"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -205,13 +201,13 @@ msgid "Creation Date"
 msgstr "Sortze data"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:367
+#: code:addons/project_issue/project_issue.py:384
 #, python-format
 msgid "Customer"
 msgstr "Kidea"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:369
+#: code:addons/project_issue/project_issue.py:386
 #, python-format
 msgid "Customer Email"
 msgstr ""
@@ -235,11 +231,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_opening_date
 msgid "Date of Opening"
 msgstr ""
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Date of the last message posted on the record."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_days_since_creation
@@ -328,34 +319,18 @@ msgid "Feature description"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_follower_ids
-msgid "Followers"
-msgstr "Followers"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Jarraitzaileak(kanalak)"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
-
-#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Group By"
 msgstr "Group By"
 
 #. module: project_issue
-#: selection:project.issue,priority:0
-#: selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
 msgid "High"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:345
+#: code:addons/project_issue/project_issue.py:362
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -365,21 +340,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_id
 msgid "ID"
 msgstr "ID"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_unread
-msgid "If checked new messages require your attention."
-msgstr "If checked new messages require your attention."
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_is_follower
-msgid "Is Follower"
-msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_name
@@ -438,7 +398,7 @@ msgstr ""
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
-msgid "Issue ready for next sStage"
+msgid "Issue ready for next stage"
 msgstr ""
 
 #. module: project_issue
@@ -449,6 +409,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
+#: model:ir.model.fields,field_description:project_issue.field_project_project_issue_needaction_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
 #: model:ir.ui.menu,name:project_issue.portal_services_issues
@@ -497,11 +458,6 @@ msgid "Last Message"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_last_post
-msgid "Last Message Date"
-msgstr "Last Message Date"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue___last_update
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report___last_update
 msgid "Last Modified on"
@@ -519,20 +475,9 @@ msgid "Last Updated by"
 msgstr "Last Updated by"
 
 #. module: project_issue
-#: selection:project.issue,priority:0
-#: selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
 msgid "Low"
 msgstr ""
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_ids
-msgid "Messages"
-msgstr "Mezuak"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_ids
-msgid "Messages and communication history"
-msgstr "Messages and communication history"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -546,7 +491,7 @@ msgid "New"
 msgstr "Berria"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:347
+#: code:addons/project_issue/project_issue.py:364
 #, python-format
 msgid "New Issue"
 msgstr ""
@@ -557,7 +502,7 @@ msgid "Next Action"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:390
+#: code:addons/project_issue/project_issue.py:413
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -567,11 +512,6 @@ msgstr ""
 #: selection:project.issue.report,priority:0
 msgid "Normal"
 msgstr "Arrunta"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Akzioen zenbakia"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -584,26 +524,16 @@ msgid "Number of Days to open the project issue."
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_unread_counter
-msgid "Number of unread messages"
-msgstr ""
-
-#. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
 msgid "Partner"
 msgstr "Kidea"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:480
+#: code:addons/project_issue/project_issue.py:530
 #, python-format
 msgid ""
-"Please remove existing issues in the project linked to the accounts you want"
-" to delete."
+"Please remove existing issues in the project linked to the accounts you want "
+"to delete."
 msgstr ""
 
 #. module: project_issue
@@ -631,7 +561,6 @@ msgid "Project"
 msgstr "Proiektua"
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_graph
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_pivot
 msgid "Project Issue"
@@ -702,11 +631,17 @@ msgid "Task"
 msgstr "Ataza"
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_project_task_type
+msgid "Task Stage"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
 msgid ""
 "The Odoo issues tacker allows you to efficiently manage things\n"
-"                    like internal requests, software development bugs, customer\n"
+"                    like internal requests, software development bugs, "
+"customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
 
@@ -748,16 +683,10 @@ msgid "Unassigned"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Unread Messages"
 msgstr "Irakurri gabeko mezuak"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
@@ -785,16 +714,6 @@ msgid "Watchers Emails"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_open
 msgid "Working Hours to assign the Issue"
 msgstr ""
@@ -819,12 +738,45 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:260
+#: code:addons/project_issue/project_issue.py:263
 #, python-format
 msgid "issues"
 msgstr ""
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue
+#, fuzzy
+msgid "project issue"
+msgstr "Proiektua"
+
+#. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
 msgstr ""
+
+#~ msgid "Action Needed"
+#~ msgstr "Beharrezko ekintza"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Date of the last message posted on the record."
+
+#~ msgid "Followers"
+#~ msgstr "Followers"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Jarraitzaileak(kanalak)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "If checked new messages require your attention."
+
+#~ msgid "Last Message Date"
+#~ msgstr "Last Message Date"
+
+#~ msgid "Messages"
+#~ msgstr "Mezuak"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Messages and communication history"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Akzioen zenbakia"

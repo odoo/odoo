@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * fleet
-# 
+#
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
@@ -9,24 +9,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:27+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-07-15 13:52+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:373
+#: code:addons/fleet/fleet.py:367
 #, python-format
 msgid "%s %s has been added to the fleet!"
 msgstr ""
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:649
+#: code:addons/fleet/fleet.py:643
 #, python-format
 msgid "%s contract(s) need(s) to be renewed and/or closed!"
 msgstr ""
@@ -70,11 +70,6 @@ msgstr "Ilmastoinnin lataus"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_acquisition_date
 msgid "Acquisition Date"
 msgstr "Hankintapäivä"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_needaction
-msgid "Action Needed"
-msgstr "Vaatii toimia"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
@@ -491,7 +486,7 @@ msgid "Created on"
 msgstr "Luotu"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2863
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2976
 msgid "Current state of the vehicle"
 msgstr "Ajoneuvon nykyinen tila"
 
@@ -510,11 +505,6 @@ msgid "Date"
 msgstr "Päivämäärä"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Viimeisen viestin päivämäärä"
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_date
@@ -530,9 +520,10 @@ msgstr "Päivämäärä jolloin sopimuksen voimassaolo alkaa"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_expiration_date
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after"
-" begin date)"
-msgstr "Päivä jolloin sopimuksen voimassaolo päättyy (oletuksena vuosi alkupäivästä)"
+"Date when the coverage of the contract expirates (by default, one year after "
+"begin date)"
+msgstr ""
+"Päivä jolloin sopimuksen voimassaolo päättyy (oletuksena vuosi alkupäivästä)"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_acquisition_date
@@ -586,7 +577,7 @@ msgid "Driver of the vehicle"
 msgstr "Ajoneuvon kuljettaja"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:390
+#: code:addons/fleet/fleet.py:384
 #, python-format
 msgid "Driver: from '%s' to '%s'"
 msgstr "Kuljettaja: kohteesta '%s' kohteeseen '%s'"
@@ -659,21 +650,6 @@ msgstr ""
 #: model:ir.ui.menu,name:fleet.menu_root
 msgid "Fleet"
 msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_follower_ids
-msgid "Followers"
-msgstr "Seuraajat"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Seuraajat (kanavat)"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Seuraajat (kumppanit)"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_cost_type
@@ -813,7 +789,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_act
 msgid ""
 "Here you can add various odometer entries for all vehicles.\n"
-"                You can also show odometer value for a particular vehicle using\n"
+"                You can also show odometer value for a particular vehicle "
+"using\n"
 "                the search field."
 msgstr ""
 
@@ -840,23 +817,13 @@ msgstr "Hybridi"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2812
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2925
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_id
 msgid "ID"
 msgstr "ID"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_29
@@ -923,19 +890,9 @@ msgid "Invoice Reference"
 msgstr "Laskuviite"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_is_follower
-msgid "Is Follower"
-msgstr "on seuraaja"
-
-#. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Kilometers"
 msgstr "Kilometrit"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_last_post
-msgid "Last Message Date"
-msgstr "Viimeinen viestipvm"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_contract_state___last_update
@@ -1001,7 +958,7 @@ msgid "License Plate"
 msgstr "Rekisterikilpi"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:397
+#: code:addons/fleet/fleet.py:391
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
 msgstr ""
@@ -1094,22 +1051,12 @@ msgid ""
 msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_ids
-msgid "Messages"
-msgstr "Viestit"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_ids
-msgid "Messages and communication history"
-msgstr "Viesti- ja kommunikointihistoria"
-
-#. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Miles"
 msgstr "Mailia"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2845
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2958
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_search
 msgid "Model"
@@ -1138,12 +1085,12 @@ msgid "Model of a vehicle"
 msgstr "Ajoneuvon malli"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2845
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2958
 msgid "Model of the vehicle"
 msgstr "Ajoneuvon malli"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:386
+#: code:addons/fleet/fleet.py:380
 #, python-format
 msgid "Model: from '%s' to '%s'"
 msgstr "Malli: kohteesta '%s' kohteeseen '%s'"
@@ -1187,8 +1134,8 @@ msgid "No"
 msgstr "Ei"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:385 code:addons/fleet/fleet.py:389
-#: code:addons/fleet/fleet.py:393 code:addons/fleet/fleet.py:396
+#: code:addons/fleet/fleet.py:379 code:addons/fleet/fleet.py:383
+#: code:addons/fleet/fleet.py:387 code:addons/fleet/fleet.py:390
 #, python-format
 msgid "None"
 msgstr "Ei mitään"
@@ -1201,29 +1148,14 @@ msgid "Notes"
 msgstr "Muistiinpanot"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Toimenpiteiden määrä"
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_doors
 msgid "Number of doors of the vehicle"
 msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Toimenpiteitä vaativien viestien määrä"
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_seats
 msgid "Number of seats of the vehicle"
 msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Lukemattomien viestien määrä"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_odometer_id
@@ -1310,7 +1242,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs_non_effective
 msgid ""
 "Odoo helps you managing the costs for your different vehicles\n"
-"          Costs are generally created from services and contract and appears here."
+"          Costs are generally created from services and contract and appears "
+"here."
 msgstr ""
 
 #. module: fleet
@@ -1333,11 +1266,6 @@ msgstr "Öljypumpun vaihto"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_omnium
 msgid "Omnium"
-msgstr ""
-
-#. module: fleet
-#: model:ir.actions.client,name:fleet.action_fleet_menu
-msgid "Open Fleet Menu"
 msgstr ""
 
 #. module: fleet
@@ -1447,7 +1375,7 @@ msgid "Refueling Details"
 msgstr "Tankkauksen tiedot"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:720
+#: code:addons/fleet/fleet.py:714
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 #, python-format
@@ -1581,8 +1509,8 @@ msgstr ""
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image_small
 msgid ""
 "Small-sized logo of the brand. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 
 #. module: fleet
@@ -1601,7 +1529,7 @@ msgid "Starter Replacement"
 msgstr "Käynnistimen vaihto"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2863
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2976
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_state_tree
 msgid "State"
 msgstr "Valtio"
@@ -1612,7 +1540,7 @@ msgid "State name already exists"
 msgstr "Tilan nimi on jo olemassa"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:394
+#: code:addons/fleet/fleet.py:388
 #, python-format
 msgid "State: from '%s' to '%s'"
 msgstr "Tila: kohteesta '%s' kohteeseen '%s'"
@@ -1776,7 +1704,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2878
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2991
 msgid "Unit"
 msgstr "Yksikkö"
 
@@ -1784,16 +1712,6 @@ msgstr "Yksikkö"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit
 msgid "Unit of the odometer "
 msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_unread
-msgid "Unread Messages"
-msgstr "Lukemattomia viestejä"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Lukemattomien viestien laskuri"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_sequence
@@ -1964,7 +1882,7 @@ msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_notes
-msgid "Write here all supplementary informations relative to this contract"
+msgid "Write here all supplementary information relative to this contract"
 msgstr ""
 
 #. module: fleet
@@ -2003,7 +1921,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
 msgid ""
 "You will be able to manage your fleet by keeping track of the\n"
-"                contracts, services, fixed and recurring costs, odometers and\n"
+"                contracts, services, fixed and recurring costs, odometers "
+"and\n"
 "                fuel logs associated to each vehicle."
 msgstr ""
 
@@ -2072,3 +1991,51 @@ msgstr ""
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_form
 msgid "show the services logs for this vehicle"
 msgstr ""
+
+#~ msgid "Action Needed"
+#~ msgstr "Vaatii toimia"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Viimeisen viestin päivämäärä"
+
+#~ msgid "Followers"
+#~ msgstr "Seuraajat"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Seuraajat (kanavat)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Seuraajat (kumppanit)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
+
+#~ msgid "Is Follower"
+#~ msgstr "on seuraaja"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Viimeinen viestipvm"
+
+#~ msgid "Messages"
+#~ msgstr "Viestit"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Viesti- ja kommunikointihistoria"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Toimenpiteiden määrä"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Toimenpiteitä vaativien viestien määrä"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Lukemattomien viestien määrä"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Lukemattomia viestejä"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Lukemattomien viestien laskuri"

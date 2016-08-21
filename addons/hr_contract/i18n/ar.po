@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_contract
-# 
+#
 # Translators:
 # Sadig Adam <sadig41@gmail.com>, 2015
 # salah Elabbar <salah@elshaden.com>, 2016
@@ -9,20 +9,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-07 14:46+0000\n"
 "Last-Translator: salah Elabbar <salah@elshaden.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_needaction
-msgid "Action Needed"
-msgstr "الاجراء المطلوب"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_base_action_rule
@@ -50,11 +46,6 @@ msgid "Company Vehicle"
 msgstr "سيارة الشركة"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract
-msgid "Contract"
-msgstr "اتفاقية"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Reference"
@@ -62,7 +53,7 @@ msgstr "مرجع العقد"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5307
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -130,11 +121,6 @@ msgid "Current Employee"
 msgstr "الموظفون الحاليون"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "تاريخ آخر رسالة في هذا السجل."
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_department_id
 msgid "Department"
 msgstr "القسم"
@@ -158,6 +144,12 @@ msgid "Employee"
 msgstr "الموظف"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_contract
+#, fuzzy
+msgid "Employee Contract"
+msgstr "العقود المفتوحة"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
 msgid "End Date"
 msgstr "تاريخ الإنتهاء"
@@ -172,21 +164,6 @@ msgstr "خطأ! تاريخ بدء العقد يجب أن يكون قبل تار�
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
 msgstr "منتهي"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_follower_ids
-msgid "Followers"
-msgstr "المتابعون"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "المتابعون (القنوات)"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "المتابعون (الشرماء)"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
@@ -220,21 +197,6 @@ msgid "ID"
 msgstr "المعرف"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_unread
-msgid "If checked new messages require your attention."
-msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "عند التفعيل، توجد رسالة جديدة"
-
-#. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Important Messages"
-msgstr "رسائل مهمة"
-
-#. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
 msgid "In kilometers"
 msgstr "في الكيلومترات"
@@ -243,11 +205,6 @@ msgstr "في الكيلومترات"
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Information"
 msgstr "المعلومات"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_is_follower
-msgid "Is Follower"
-msgstr "متابع"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_manager
@@ -263,11 +220,6 @@ msgstr "العمل"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_job_id
 msgid "Job Title"
 msgstr "المسمى الوظيفي"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_last_post
-msgid "Last Message Date"
-msgstr "تاريخ آخر رسالة"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract___last_update
@@ -303,16 +255,6 @@ msgid "Medical Examination Date"
 msgstr "تاريخ الفحص الطبي"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_ids
-msgid "Messages"
-msgstr "الرسائل"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_ids
-msgid "Messages and communication history"
-msgstr "الرسائل و سجل التواصل"
-
-#. module: hr_contract
 #: selection:hr.contract,state:0
 msgid "New"
 msgstr "جديد"
@@ -324,24 +266,9 @@ msgid "Notes"
 msgstr "الملاحظات"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_needaction_counter
-msgid "Number of Actions"
-msgstr "عدد الاجراءات"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_children
 msgid "Number of Children"
 msgstr "عدد الاطفال"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "عدد الرسائل الواجب اجراءها"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_unread_counter
-msgid "Number of unread messages"
-msgstr "عدد الرسائل غير المقروءة"
 
 #. module: hr_contract
 #: model:ir.filters,name:hr_contract.contract_open
@@ -417,14 +344,9 @@ msgid "Trial Start Date"
 msgstr "تاريخ بدء المحاولة"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_unread
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Unread Messages"
 msgstr "رسائل غير مقروءة"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "عداد الرسائل الغير مقروءة"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
@@ -452,16 +374,6 @@ msgid "Wage"
 msgstr "الاجور"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_website_message_ids
-msgid "Website Messages"
-msgstr "رسائل الموقع"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_website_message_ids
-msgid "Website communication history"
-msgstr "سجل تواصل الموقع"
-
-#. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Work Permit"
 msgstr "تصريح عمل"
@@ -475,3 +387,60 @@ msgstr "رقم تصريح العمل"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_working_hours
 msgid "Working Schedule"
 msgstr "جدول العمل"
+
+#~ msgid "Action Needed"
+#~ msgstr "الاجراء المطلوب"
+
+#~ msgid "Contract"
+#~ msgstr "اتفاقية"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "تاريخ آخر رسالة في هذا السجل."
+
+#~ msgid "Followers"
+#~ msgstr "المتابعون"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "المتابعون (القنوات)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "المتابعون (الشرماء)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "عند التفعيل، توجد رسالة جديدة"
+
+#~ msgid "Important Messages"
+#~ msgstr "رسائل مهمة"
+
+#~ msgid "Is Follower"
+#~ msgstr "متابع"
+
+#~ msgid "Last Message Date"
+#~ msgstr "تاريخ آخر رسالة"
+
+#~ msgid "Messages"
+#~ msgstr "الرسائل"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "الرسائل و سجل التواصل"
+
+#~ msgid "Number of Actions"
+#~ msgstr "عدد الاجراءات"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "عدد الرسائل الواجب اجراءها"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "عدد الرسائل غير المقروءة"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "عداد الرسائل الغير مقروءة"
+
+#~ msgid "Website Messages"
+#~ msgstr "رسائل الموقع"
+
+#~ msgid "Website communication history"
+#~ msgstr "سجل تواصل الموقع"

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from pychart import *
+from pychart import color
 
 colorline = [color.T(r=((r+3) % 11)/10.0,
                      g=((g+6) % 11)/10.0,

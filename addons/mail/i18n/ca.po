@@ -1,21 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mail
-# 
+#
 # Translators:
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-22 13:00+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-07-23 09:04+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
+"#-#-#-#-#  ca.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  ca.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mail
@@ -23,7 +27,8 @@ msgstr ""
 msgid ""
 "\n"
 "<div itemscope itemtype=\"http://schema.org/EmailMessage\">\n"
-"    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\">\n"
+"    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/"
+"ViewAction\">\n"
 "        % if ctx.get('button_access'):\n"
 "        <link itemprop=\"target\" href=\"${ctx['button_access']['url']}\"/>\n"
 "        <link itemprop=\"url\" href=\"${ctx['button_access']['url']}\"/>\n"
@@ -31,134 +36,232 @@ msgid ""
 "        <meta itemprop=\"name\" content=\"View ${ctx['model_name']}\"/>\n"
 "    </div>\n"
 "</div>\n"
-"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx."
+"get('is_accessible'):\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
+"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
+"collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"center\" width=\"270\" style=\"padding:5px 10px 5px 5px;font-size: 30px\">\n"
-"                % if ctx.get('button_access'):\n"
-"                <a href=\"${ctx['button_access']['url']}\" style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\">${ctx['button_access']['title']}</a>\n"
-"                % endif\n"
-"\n"
-"                % if ctx.get('button_follow'):\n"
-"                <a href=\"${ctx['button_follow']['url']}\" style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\">${ctx['button_follow']['title']}</a>\n"
-"                \n"
-"                % elif ctx.get('button_unfollow'):\n"
-"                <a href=\"${ctx['button_unfollow']['url']}\" style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\">${ctx['button_unfollow']['title']}</a>\n"
-"                % endif\n"
-"\n"
-"                % if not ctx.get('button_access') and not ctx.get('button_follow') and not ctx.get('button_unfollow') and ctx.get('model_name'):\n"
-"                <p style=\"padding: 5px 10px; font-size: 12px;\">\n"
-"                About <strong>${ctx['model_name']}\n"
-"                % if ctx.get('record_name'):\n"
-"                : ${ctx['record_name']}\n"
-"                % endif\n"
-"                </strong>\n"
-"                </p>\n"
-"                % endif\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px "
+"5px; font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
 "            </td>\n"
-"            <td valign=\"center\" align=\"right\" width=\"270\" style=\"padding:5px 15px 5px 10px; font-size: 12px;\">\n"
+"            <td valign=\"center\" align=\"right\" width=\"340\" style="
+"\"padding:0px 10px 5px 5px; font-size: 12px;\">\n"
 "                <p>\n"
 "                % if ctx.get('actions'):\n"
 "                % for action in ctx['actions']:\n"
-"                <a href=\"${action['url']}\" style=\"text-decoration:none; color: #a24689;\"><strong>${action['title']}</strong></a>\n"
-"                %if cmp(len(ctx['actions']), 1) == 1 and cmp(len(ctx['actions']), loop.index) == 1:\n"
-"                    |\n"
-"                % endif\n"
+"                <a href=\"${action['url']}\" style=\"padding: 5px 10px; font-"
+"size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-"
+"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
+"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
+"space: nowrap; background-image: none; background-color: #a24689; border: "
+"1px solid #a24689; border-radius:3px\">${action['title']}</a>\n"
 "                % endfor\n"
-"                % else:\n"
-"                <strong>Sent by</strong>\n"
-"                % if ctx.get('website_url'):\n"
-"                <a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: #a24689;\">\n"
 "                % endif\n"
-"                <strong>${ctx.get('company_name')}</strong>\n"
-"                % if ctx.get('website_url'):\n"
-"                </a>\n"
+"\n"
+"                % if ctx.get('button_follow'):\n"
+"                % if ctx.get('actions'):\n"
+"                   |\n"
 "                % endif\n"
-"                <strong>using</strong>\n"
-"                <a href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #a24689;\"><strong>Odoo</strong></a>\n"
+"                <a href=\"${ctx['button_follow']['url']}\" style=\"text-"
+"decoration:none; color: #a24689;\"><strong>${ctx['button_follow']['title']}</"
+"strong></a>\n"
+"                % elif ctx.get('button_unfollow'):\n"
+"                % if ctx.get('actions'):\n"
+"                   |\n"
+"                % endif\n"
+"                <a href=\"${ctx['button_unfollow']['url']}\" style=\"text-"
+"decoration:none; color: #a24689;\"><strong>${ctx['button_unfollow']['title']}"
+"</strong></a>\n"
+"                % endif\n"
+"\n"
+"                % if ctx.get('button_access') or ctx.get('button_follow') or "
+"ctx.get('button_unfollow'):\n"
+"                % if ctx.get('actions'):\n"
+"                   |\n"
+"                % endif\n"
+"                <a href=\"${ctx['button_access']['url']}\" style=\"text-"
+"decoration:none; color: #a24689;\"><strong>${ctx['button_access']['title']}</"
+"strong></a>\n"
 "                % endif\n"
 "                </p>\n"
 "            </td>\n"
 "        </tr>\n"
 "    </tbody></table>\n"
 "</div>\n"
-"<div style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
+"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; "
+"padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"top\" style=\"width:600px; padding:5px 10px 5px 5px;\">\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;"
+"\">\n"
 "                <div>\n"
-"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                    <hr width=\"100%\" style=\"background-color:"
+"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
+"min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
 "                </div>\n"
 "            </td>\n"
 "        </tr></tbody>\n"
 "    </table>\n"
 "</div>\n"
-"<div style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: 0 auto; width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
-"        <tbody><tr>\n"
-"            <td style=\"padding:5px 10px 5px 5px;font-size: 14px;\">\n"
-"                ${object.body | safe}\n"
-"                % if ctx.get('tracking'):\n"
-"                    <ul>\n"
-"                    % for tracking in ctx['tracking']\n"
-"                        <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>\n"
-"                    % endfor\n"
-"                    </ul>\n"
-"                % endif\n"
-"            </td>\n"
-"        </tr></tbody>\n"
-"    </table>\n"
-"</div>\n"
-"% if ctx.get('signature'):\n"
-"<div style=\"padding:0px; width:600px;margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: 0 auto; width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
-"        <tbody><tr>\n"
-"            <td style=\"padding:5px 10px 5px 5px;font-size: 14px; text-align: left;\">\n"
-"                ${ctx['signature'] | safe}\n"
-"            </td>\n"
-"        </tr></tbody>\n"
-"    </table>\n"
-"</div>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
+"background: #FFFFFF repeat top /100%; color:#777777\">\n"
+"% else:\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
+"background: #FFFFFF repeat top /100%;>\n"
 "% endif\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-"
+"align:justify; margin:0 auto; border-collapse:collapse; background:inherit; "
+"color:inherit\">\n"
+"\n"
+"        <tbody>\n"
+"            % if not ctx['is_discussion'] or not len(ctx['actions']) == 0:\n"
+"            <tr>\n"
+"                <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                    ${object.body | safe}\n"
+"                    % if ctx.get('tracking'):\n"
+"                        <ul>\n"
+"                        % for tracking in ctx['tracking']\n"
+"                            <li>${tracking[0]} : ${tracking[1]} -&gt; "
+"${tracking[2]}</li>\n"
+"                        % endfor\n"
+"                        </ul>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"            % else:\n"
+"            <tr>\n"
+"                <td style=\"font-size: 14px;\">\n"
+"                    ${object.body | safe}\n"
+"                    % if ctx.get('tracking'):\n"
+"                        <ul>\n"
+"                        % for tracking in ctx['tracking']\n"
+"                            <li>${tracking[0]} : ${tracking[1]} -&gt; "
+"${tracking[2]}</li>\n"
+"                        % endfor\n"
+"                        </ul>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"            % endif\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0:\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
+"background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"% else:\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
+"background: #FFFFFF repeat top /100%;>\n"
+"% endif\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-"
+"align:justify; margin:0 auto; border-collapse:collapse; background:inherit; "
+"color:inherit\">\n"
+"        <tbody>\n"
+"            % if ctx.get('signature'):\n"
+"                % if not ctx['is_discussion'] or not len(ctx['actions']) == "
+"0:\n"
+"                    <tr>\n"
+"                        <td style=\"padding:0px 10px 5px 5px;font-size: "
+"14px; text-align: left;\">\n"
+"                            ${ctx['signature'] | safe}\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                % else:\n"
+"                    <tr>\n"
+"                        <td style=\"font-size: 14px; text-align: left;\">\n"
+"                            ${ctx['signature'] | safe}\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                % endif\n"
+"            % endif\n"
+"\n"
+"            % if not ctx['is_discussion'] or not len(ctx['actions']) == 0:\n"
+"            <tr>\n"
+"                <td style=\"padding:0px 10px 5px 5px;font-size: 11px; text-"
+"align: left;\">\n"
+"                    <strong>Sent by</strong>\n"
+"                    % if ctx.get('website_url'):\n"
+"                    <a href=\"${ctx['website_url']}\" style=\"text-"
+"decoration:none; color: #a24689;\">\n"
+"                    % endif\n"
+"                    <strong>${ctx.get('company_name')}</strong>\n"
+"                    % if ctx.get('website_url'):\n"
+"                    </a>\n"
+"                    % endif\n"
+"                    <strong>using</strong>\n"
+"                    <a href=\"https://www.odoo.com\" style=\"text-decoration:"
+"none; color: #a24689;\"><strong>Odoo</strong></a>\n"
+"                </td>\n"
+"            </tr>\n"
+"            % else:\n"
+"            <tr>\n"
+"                <td style=\"font-size: 14px; text-align: left;\">\n"
+"                    <strong>Sent by</strong>\n"
+"                    % if ctx.get('website_url'):\n"
+"                    <a href=\"${ctx['website_url']}\" style=\"text-"
+"decoration:none;\">\n"
+"                    % endif\n"
+"                    <strong>${ctx.get('company_name')}</strong>\n"
+"                    % if ctx.get('website_url'):\n"
+"                    </a>\n"
+"                    % endif\n"
+"                    <strong>using</strong>\n"
+"                    <a href=\"https://www.odoo.com\" style=\"text-decoration:"
+"none;\"><strong>Odoo</strong></a>\n"
+"                </td>\n"
+"            </tr>\n"
+"            % endif\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>"
 msgstr ""
 
 #. module: mail
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
 msgid ""
 "${object.subject or (object.record_name and 'Re: %s' % object.record_name) "
-"or (object.parent_id and object.parent_id.subject and 'Re: %s' % "
-"object.parent_id.subject) or (object.parent_id and "
-"object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
-msgstr "${object.subject o (object.record_name i 'Re: %s' % object.record_name) o (object.parent_id i object.parent_id.subject i 'Re: %s' % object.parent_id.subject) o (object.parent_id and object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
+"or (object.parent_id and object.parent_id.subject and 'Re: %s' % object."
+"parent_id.subject) or (object.parent_id and object.parent_id.record_name and "
+"'Re: %s' % object.parent_id.record_name)}"
+msgstr ""
+"${object.subject o (object.record_name i 'Re: %s' % object.record_name) o "
+"(object.parent_id i object.parent_id.subject i 'Re: %s' % object.parent_id."
+"subject) o (object.parent_id and object.parent_id.record_name and 'Re: %s' % "
+"object.parent_id.record_name)}"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:83
+#: code:addons/mail/static/src/js/chat_manager.js:61
 #, python-format
 msgid "%d Messages"
 msgstr "%d Missatges"
 
 #. module: mail
-#: code:addons/mail/models/mail_template.py:230
+#: code:addons/mail/models/mail_template.py:231
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (còpia)"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:238
+#: code:addons/mail/models/mail_thread.py:241
 #, python-format
 msgid "%s created"
 msgstr "%s creat"
 
 #. module: mail
-#: code:addons/mail/models/res_users.py:81
+#: code:addons/mail/models/res_users.py:79
 #, python-format
 msgid "%s has joined the %s network."
 msgstr "%s ha entrar a la xarxa %s."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:96
+#: code:addons/mail/static/src/xml/thread.xml:94
 #, python-format
 msgid "(from"
 msgstr "(de"
@@ -179,73 +282,92 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:147
+#: code:addons/mail/static/src/xml/thread.xml:178
 #, python-format
 msgid "-------- Show older messages --------"
 msgstr "-------- Mostrar missatges antics --------"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:537
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">created <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+msgstr ""
+"<div class=\"o_mail_notification\">creat <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:460
 #: code:addons/mail/models/mail_channel.py:513
 #, python-format
 msgid ""
-"<div class=\"o_mail_notification\">created <a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
-msgstr "<div class=\"o_mail_notification\">creat <a href=\"#\" class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">joined <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+msgstr ""
+"<div class=\"o_mail_notification\">carregat <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:489
+#: code:addons/mail/models/mail_channel.py:162
 #, python-format
 msgid ""
-"<div class=\"o_mail_notification\">joined <a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
-msgstr "<div class=\"o_mail_notification\">carregat <a href=\"#\" class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
-
-#. module: mail
-#: code:addons/mail/models/mail_channel.py:151
-#, python-format
-msgid ""
-"<div class=\"o_mail_notification\">left <a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
-msgstr "<div class=\"o_mail_notification\">esquerra <a href=\"#\" class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">left <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+msgstr ""
+"<div class=\"o_mail_notification\">esquerra <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:22
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
-msgstr "<div><p>Hola,</p><p>%s t'ha convidat a fer-te seguidor %s del document: %s.</p></div>"
+msgstr ""
+"<div><p>Hola,</p><p>%s t'ha convidat a fer-te seguidor %s del document: %s.</"
+"p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:25
 #, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr "<div><p>Hola,</p><p>%s t'ha convidat a seguir un nou document.</p></div>"
+msgid "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
+msgstr ""
+"<div><p>Hola,</p><p>%s t'ha convidat a seguir un nou document.</p></div>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
 "                                <strong>Email mass mailing</strong> on\n"
-"                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">the selected records</span>\n"
-"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">the current search filter</span>.\n"
+"                                <span attrs=\"{'invisible': "
+"[('use_active_domain', '=', True)]}\">the selected records</span>\n"
+"                                <span attrs=\"{'invisible': "
+"[('use_active_domain', '=', False)]}\">the current search filter</span>.\n"
 "                            </span>\n"
-"                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
+"                            <span attrs=\"{'invisible':['|', ('model', '=', "
+"False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document "
+"and</span>"
 msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
-"                                    <span class=\"o_stat_text\">Context Action</span>"
-msgstr "<span class=\"o_stat_text\">Afegeix</span>\n<span class=\"o_stat_text\">Acció del Context</span>"
+"                                    <span class=\"o_stat_text\">Context "
+"Action</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Afegeix</span>\n"
+"<span class=\"o_stat_text\">Acció del Context</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
-"                                    <span class=\"o_stat_text\">Context Action</span>"
-msgstr "<span class=\"o_stat_text\">Treu</span>\n<span class=\"o_stat_text\">Acció del Context</span>"
+"                                    <span class=\"o_stat_text\">Context "
+"Action</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Treu</span>\n"
+"<span class=\"o_stat_text\">Acció del Context</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_general_configuration_mail_alias_domain
@@ -256,26 +378,33 @@ msgstr "<span>Correus electrònics fallits</span>"
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<strong>All records matching your current search filter will be mailed,\n"
-"                                    not only the ids selected in the list view.</strong><br/>\n"
-"                                If you want to work only with selected ids, please uncheck the\n"
+"                                    not only the ids selected in the list "
+"view.</strong><br/>\n"
+"                                If you want to work only with selected ids, "
+"please uncheck the\n"
 "                                list header checkbox."
 msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
-"<strong>Moreover, if you want to send a lot of emails, we recommend you to use the mass mailing module</strong>. <br/>\n"
-"                                Confirming this wizard will probably take a few minutes blocking your browser."
+"<strong>Moreover, if you want to send a lot of emails, we recommend you to "
+"use the mass mailing module</strong>. <br/>\n"
+"                                Confirming this wizard will probably take a "
+"few minutes blocking your browser."
 msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_defaults
+#: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_defaults
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_defaults
 #: model:ir.model.fields,help:mail.field_res_users_alias_defaults
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr "Diccionari Python a avaluar per proporcionar valors per defecte quan es creïn nous registres per aquest pseudònim."
+msgstr ""
+"Diccionari Python a avaluar per proporcionar valors per defecte quan es "
+"creïn nous registres per aquest pseudònim."
 
 #. module: mail
 #: model:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -290,10 +419,63 @@ msgid "Access Groups"
 msgstr "Grups d'accés"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_needaction
+#: model:ir.model.fields,field_description:mail.field_account_asset_asset_message_needaction
+#: model:ir.model.fields,field_description:mail.field_account_bank_statement_message_needaction
+#: model:ir.model.fields,field_description:mail.field_account_invoice_message_needaction
+#: model:ir.model.fields,field_description:mail.field_account_voucher_message_needaction
+#: model:ir.model.fields,field_description:mail.field_blog_blog_message_needaction
+#: model:ir.model.fields,field_description:mail.field_blog_post_message_needaction
+#: model:ir.model.fields,field_description:mail.field_calendar_event_message_needaction
+#: model:ir.model.fields,field_description:mail.field_crm_lead_message_needaction
+#: model:ir.model.fields,field_description:mail.field_crm_team_message_needaction
+#: model:ir.model.fields,field_description:mail.field_crossovered_budget_message_needaction
+#: model:ir.model.fields,field_description:mail.field_event_event_message_needaction
+#: model:ir.model.fields,field_description:mail.field_event_registration_message_needaction
+#: model:ir.model.fields,field_description:mail.field_event_track_message_needaction
+#: model:ir.model.fields,field_description:mail.field_fleet_vehicle_message_needaction
+#: model:ir.model.fields,field_description:mail.field_forum_forum_message_needaction
+#: model:ir.model.fields,field_description:mail.field_forum_post_message_needaction
+#: model:ir.model.fields,field_description:mail.field_forum_tag_message_needaction
+#: model:ir.model.fields,field_description:mail.field_gamification_badge_message_needaction
+#: model:ir.model.fields,field_description:mail.field_gamification_challenge_message_needaction
+#: model:ir.model.fields,field_description:mail.field_hr_applicant_message_needaction
+#: model:ir.model.fields,field_description:mail.field_hr_contract_message_needaction
+#: model:ir.model.fields,field_description:mail.field_hr_department_message_needaction
+#: model:ir.model.fields,field_description:mail.field_hr_employee_message_needaction
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_category_message_needaction
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_message_needaction
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_request_message_needaction
+#: model:ir.model.fields,field_description:mail.field_hr_expense_message_needaction
+#: model:ir.model.fields,field_description:mail.field_hr_holidays_message_needaction
+#: model:ir.model.fields,field_description:mail.field_hr_job_message_needaction
+#: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_needaction
+#: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_needaction
+#: model:ir.model.fields,field_description:mail.field_mrp_bom_message_needaction
+#: model:ir.model.fields,field_description:mail.field_mrp_production_message_needaction
+#: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_needaction
+#: model:ir.model.fields,field_description:mail.field_mrp_repair_message_needaction
+#: model:ir.model.fields,field_description:mail.field_note_note_message_needaction
+#: model:ir.model.fields,field_description:mail.field_procurement_order_message_needaction
+#: model:ir.model.fields,field_description:mail.field_product_product_message_needaction
+#: model:ir.model.fields,field_description:mail.field_product_template_message_needaction
+#: model:ir.model.fields,field_description:mail.field_project_issue_message_needaction
+#: model:ir.model.fields,field_description:mail.field_project_project_message_needaction
+#: model:ir.model.fields,field_description:mail.field_project_task_message_needaction
+#: model:ir.model.fields,field_description:mail.field_purchase_order_message_needaction
+#: model:ir.model.fields,field_description:mail.field_purchase_requisition_message_needaction
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_needaction
 #: model:ir.model.fields,field_description:mail.field_res_users_message_needaction
+#: model:ir.model.fields,field_description:mail.field_sale_order_message_needaction
+#: model:ir.model.fields,field_description:mail.field_slide_channel_message_needaction
+#: model:ir.model.fields,field_description:mail.field_slide_slide_message_needaction
+#: model:ir.model.fields,field_description:mail.field_stock_landed_cost_message_needaction
+#: model:ir.model.fields,field_description:mail.field_stock_picking_message_needaction
+#: model:ir.model.fields,field_description:mail.field_stock_picking_wave_message_needaction
+#: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_needaction
+#: model:ir.model.fields,field_description:mail.field_survey_survey_message_needaction
 msgid "Action Needed"
 msgstr "Cal fer alguna acció"
 
@@ -309,6 +491,7 @@ msgstr "Actiu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_active_domain
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_active_domain
 msgid "Active domain"
 msgstr "Domini actiu"
 
@@ -328,14 +511,14 @@ msgstr "Afegeix"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:144
+#: code:addons/mail/static/src/xml/followers.xml:64
 #, python-format
 msgid "Add Channels"
 msgstr "Afegeix Canals"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:141
+#: code:addons/mail/static/src/xml/followers.xml:61
 #: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 #, python-format
 msgid "Add Followers"
@@ -349,8 +532,8 @@ msgstr "Afegeix Signatura"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:26
-#: code:addons/mail/static/src/xml/client_action.xml:44
+#: code:addons/mail/static/src/xml/client_action.xml:37
+#: code:addons/mail/static/src/xml/client_action.xml:54
 #, python-format
 msgid "Add a channel"
 msgstr "Afegeix un canal"
@@ -382,6 +565,7 @@ msgid "Advanced Settings"
 msgstr "Configuració avançada"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_id
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_id
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -396,6 +580,7 @@ msgstr "El pseudònim accepta correus electrònics de"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_contact
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_contact
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_contact
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_contact
 msgid "Alias Contact Security"
@@ -408,6 +593,7 @@ msgstr "Àlies de domini"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_name
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_name
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_name
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_name
 msgid "Alias Name"
@@ -415,6 +601,7 @@ msgstr "Pseudònim"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_domain
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_domain
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_domain
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_domain
 msgid "Alias domain"
@@ -422,6 +609,7 @@ msgstr "Pseudònim del domini"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_model_id
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_model_id
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_model_id
 msgid "Aliased Model"
@@ -435,7 +623,7 @@ msgstr "Pseudònims"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/systray.xml:12
+#: code:addons/mail/static/src/xml/systray.xml:20
 #, python-format
 msgid "All"
 msgstr "Tot"
@@ -447,7 +635,7 @@ msgstr "Tots els missatges"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:190
+#: code:addons/mail/static/src/js/chat_manager.js:186
 #, python-format
 msgid "Anonymous"
 msgstr "Anònim"
@@ -456,6 +644,7 @@ msgstr "Anònim"
 #: model:ir.model.fields,help:mail.field_mail_compose_message_no_auto_thread
 #: model:ir.model.fields,help:mail.field_mail_mail_no_auto_thread
 #: model:ir.model.fields,help:mail.field_mail_message_no_auto_thread
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_no_auto_thread
 msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
@@ -469,7 +658,7 @@ msgstr "S'aplica a"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:120
+#: code:addons/mail/static/src/js/followers.js:117
 #, python-format
 msgid "Apply"
 msgstr "Aplica"
@@ -495,7 +684,7 @@ msgstr "Adjunts"
 #: model:ir.model.fields,help:mail.field_mail_message_attachment_ids
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
-"messagethrough this field."
+"message through this field."
 msgstr ""
 
 #. module: mail
@@ -507,6 +696,7 @@ msgstr "Empresa autenticada"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_author_id
 #: model:ir.model.fields,field_description:mail.field_mail_mail_author_id
 #: model:ir.model.fields,field_description:mail.field_mail_message_author_id
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_author_id
 #: model:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Author"
 msgstr "Autor"
@@ -514,21 +704,25 @@ msgstr "Autor"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Author Signature (mass mail only)"
-msgstr ""
+msgstr "Firma de l'autor (només per enviaments massius)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_author_id
 #: model:ir.model.fields,help:mail.field_mail_mail_author_id
 #: model:ir.model.fields,help:mail.field_mail_message_author_id
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_author_id
 msgid ""
-"Author of the message. If not set, email_from may hold an email address that"
-" did not match any partner."
-msgstr "Autor del missatge. Si no es defineix,  email_from  pot tenir una adreça de correu que no coincideixi amb la de ninguna empresa."
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
+msgstr ""
+"Autor del missatge. Si no es defineix,  email_from  pot tenir una adreça de "
+"correu que no coincideixi amb la de ninguna empresa."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_author_avatar
 #: model:ir.model.fields,field_description:mail.field_mail_mail_author_avatar
 #: model:ir.model.fields,field_description:mail.field_mail_message_author_avatar
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_author_avatar
 msgid "Author's avatar"
 msgstr ""
 
@@ -555,25 +749,13 @@ msgid "Auto subscription"
 msgstr "Auto subscripció"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_compose_message_body
-#: model:ir.model.fields,help:mail.field_mail_mail_body
-#: model:ir.model.fields,help:mail.field_mail_message_body
-msgid "Automatically sanitized HTML contents"
-msgstr "Contingut HTML automàticament sanejat"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_users_chatter_needaction_auto
-msgid "Automatically set needaction as Read"
-msgstr ""
-
-#. module: mail
 #: model:ir.ui.view,arch_db:mail.res_partner_opt_out_search
 msgid "Available for mass mailing"
 msgstr "Disponible per enviament massiu de correu"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:162
+#: code:addons/mail/static/src/xml/followers.xml:86
 #, python-format
 msgid "Be careful with channels following internal notifications"
 msgstr ""
@@ -588,8 +770,14 @@ msgid "Body"
 msgstr "Contingut"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_partner_message_bounce
+#: model:ir.model.fields,field_description:mail.field_res_users_message_bounce
+msgid "Bounce"
+msgstr ""
+
+#. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:128
+#: code:addons/mail/static/src/js/followers.js:125
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -627,6 +815,7 @@ msgstr "Destinataris amb còpia de carbó del missatge"
 #: model:ir.model.fields,help:mail.field_mail_template_email_cc
 msgid "Carbon copy recipients (placeholders may be used here)"
 msgstr ""
+"Destinataris per còpia carbó (es pot utilitzar aquí expressions de camp)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_email_cc
@@ -664,14 +853,16 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:23
-#: code:addons/mail/static/src/xml/client_action.xml:89
+#: code:addons/mail/static/src/xml/client_action.xml:33
+#: code:addons/mail/static/src/xml/client_action.xml:131
+#: code:addons/mail/static/src/xml/systray.xml:22
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner_channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_users_channel_ids
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_channel_ids
 #: model:ir.ui.menu,name:mail.mail_channel_menu_settings
 #: model:ir.ui.view,arch_db:mail.mail_channel_partner_view_tree
 #, python-format
@@ -686,7 +877,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/systray.xml:13
+#: code:addons/mail/static/src/xml/systray.xml:21
 #: model:ir.actions.client,name:mail.mail_channel_action_client_chat
 #, python-format
 msgid "Chat"
@@ -706,27 +897,28 @@ msgstr "Codi curt de conversa"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_child_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail_child_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message_child_ids
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_child_ids
 msgid "Child Messages"
 msgstr "Missatges fills"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Choose a template to display its values."
-msgstr ""
+msgstr "Esculli una plantilla per visualitzar els seus valors"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "Choose an example"
-msgstr ""
+msgstr "Esculli un exemple"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:308
+#: code:addons/mail/models/mail_thread.py:347
 #, python-format
 msgid "Click here to add new %(document)s or send an email to: %(email_link)s"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:324
+#: code:addons/mail/models/mail_thread.py:363
 #, python-format
 msgid "Click here to add new %s"
 msgstr "Feu clic aquí per afegir un nou %s"
@@ -749,12 +941,12 @@ msgstr "Tancada"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated carbon copy recipients addresses"
-msgstr ""
+msgstr "Direccions CC separades per comes"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated ids of recipient partners"
-msgstr ""
+msgstr "IDs de destinataris separades per comes"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_partner_to
@@ -762,12 +954,12 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_template_partner_to
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr ""
+msgstr "Ids de destinataris separats per comes (\"pot utilitzar marcadors\")"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated recipient addresses"
-msgstr ""
+msgstr "Direccions de destinataris separats per comes"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_email_to
@@ -775,11 +967,14 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_template_email_to
 msgid "Comma-separated recipient addresses (placeholders may be used here)"
 msgstr ""
+"Destinataris separats per comes (es poden utilitzar aquí expressions de "
+"camps)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
 #: selection:mail.compose.message,message_type:0
 #: selection:mail.message,message_type:0
+#: selection:survey.mail.compose.message,message_type:0
 msgid "Comment"
 msgstr "Comentari"
 
@@ -790,14 +985,8 @@ msgid "Compose Email"
 msgstr "Compondre correu electrònic"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:135
-#, python-format
-msgid "Compose a new message"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_composition_mode
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_composition_mode
 msgid "Composition mode"
 msgstr "Mode de composició"
 
@@ -824,6 +1013,7 @@ msgstr "Contingut"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_body
 #: model:ir.model.fields,field_description:mail.field_mail_mail_body
 #: model:ir.model.fields,field_description:mail.field_mail_message_body
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_body
 msgid "Contents"
 msgstr "Continguts"
 
@@ -834,7 +1024,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
-msgid "Conversation is minimied"
+msgid "Conversation is minimized"
 msgstr ""
 
 #. module: mail
@@ -845,15 +1035,28 @@ msgid "Conversations"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_res_partner_message_bounce
+#: model:ir.model.fields,help:mail.field_res_users_message_bounce
+msgid "Counter of the number of bounced emails for this contact"
+msgstr ""
+
+#. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:250
+#: code:addons/mail/static/src/js/client_action.js:308
 #, python-format
 msgid "Create %s"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
+#, fuzzy
+msgid "Create Date"
+msgstr "Creat per"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_alias_create_uid
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_create_uid
@@ -870,7 +1073,7 @@ msgstr "Creat per"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_alias_create_date
-#: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_mail_create_date
@@ -892,11 +1095,13 @@ msgstr "Mes de creació"
 #: model:ir.model.fields,help:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,help:mail.field_mail_mail_starred
 #: model:ir.model.fields,help:mail.field_mail_message_starred
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_starred
 msgid "Current user has a starred notification linked to this message"
-msgstr "L'usuari actual té una notificació destacada associada a aquest missatge."
+msgstr ""
+"L'usuari actual té una notificació destacada associada a aquest missatge."
 
 #. module: mail
-#: code:addons/mail/models/res_partner.py:16
+#: code:addons/mail/models/res_partner.py:17
 #, python-format
 msgid "Customers"
 msgstr "Clients"
@@ -905,14 +1110,68 @@ msgstr "Clients"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_date
 #: model:ir.model.fields,field_description:mail.field_mail_mail_date
 #: model:ir.model.fields,field_description:mail.field_mail_message_date
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_date
 msgid "Date"
 msgstr "Data"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_account_analytic_account_message_last_post
+#: model:ir.model.fields,help:mail.field_account_asset_asset_message_last_post
+#: model:ir.model.fields,help:mail.field_account_bank_statement_message_last_post
+#: model:ir.model.fields,help:mail.field_account_invoice_message_last_post
+#: model:ir.model.fields,help:mail.field_account_voucher_message_last_post
+#: model:ir.model.fields,help:mail.field_blog_blog_message_last_post
+#: model:ir.model.fields,help:mail.field_blog_post_message_last_post
+#: model:ir.model.fields,help:mail.field_calendar_event_message_last_post
+#: model:ir.model.fields,help:mail.field_crm_lead_message_last_post
+#: model:ir.model.fields,help:mail.field_crm_team_message_last_post
+#: model:ir.model.fields,help:mail.field_crossovered_budget_message_last_post
+#: model:ir.model.fields,help:mail.field_event_event_message_last_post
+#: model:ir.model.fields,help:mail.field_event_registration_message_last_post
+#: model:ir.model.fields,help:mail.field_event_track_message_last_post
+#: model:ir.model.fields,help:mail.field_fleet_vehicle_message_last_post
+#: model:ir.model.fields,help:mail.field_forum_forum_message_last_post
+#: model:ir.model.fields,help:mail.field_forum_post_message_last_post
+#: model:ir.model.fields,help:mail.field_forum_tag_message_last_post
+#: model:ir.model.fields,help:mail.field_gamification_badge_message_last_post
+#: model:ir.model.fields,help:mail.field_gamification_challenge_message_last_post
+#: model:ir.model.fields,help:mail.field_hr_applicant_message_last_post
+#: model:ir.model.fields,help:mail.field_hr_contract_message_last_post
+#: model:ir.model.fields,help:mail.field_hr_department_message_last_post
+#: model:ir.model.fields,help:mail.field_hr_employee_message_last_post
+#: model:ir.model.fields,help:mail.field_hr_equipment_category_message_last_post
+#: model:ir.model.fields,help:mail.field_hr_equipment_message_last_post
+#: model:ir.model.fields,help:mail.field_hr_equipment_request_message_last_post
+#: model:ir.model.fields,help:mail.field_hr_expense_message_last_post
+#: model:ir.model.fields,help:mail.field_hr_holidays_message_last_post
+#: model:ir.model.fields,help:mail.field_hr_job_message_last_post
+#: model:ir.model.fields,help:mail.field_hr_timesheet_sheet_sheet_message_last_post
 #: model:ir.model.fields,help:mail.field_mail_channel_message_last_post
+#: model:ir.model.fields,help:mail.field_mail_mass_mailing_contact_message_last_post
 #: model:ir.model.fields,help:mail.field_mail_thread_message_last_post
+#: model:ir.model.fields,help:mail.field_mrp_bom_message_last_post
+#: model:ir.model.fields,help:mail.field_mrp_production_message_last_post
+#: model:ir.model.fields,help:mail.field_mrp_production_workcenter_line_message_last_post
+#: model:ir.model.fields,help:mail.field_mrp_repair_message_last_post
+#: model:ir.model.fields,help:mail.field_note_note_message_last_post
+#: model:ir.model.fields,help:mail.field_procurement_order_message_last_post
+#: model:ir.model.fields,help:mail.field_product_product_message_last_post
+#: model:ir.model.fields,help:mail.field_product_template_message_last_post
+#: model:ir.model.fields,help:mail.field_project_issue_message_last_post
+#: model:ir.model.fields,help:mail.field_project_project_message_last_post
+#: model:ir.model.fields,help:mail.field_project_task_message_last_post
+#: model:ir.model.fields,help:mail.field_purchase_order_message_last_post
+#: model:ir.model.fields,help:mail.field_purchase_requisition_message_last_post
 #: model:ir.model.fields,help:mail.field_res_partner_message_last_post
 #: model:ir.model.fields,help:mail.field_res_users_message_last_post
+#: model:ir.model.fields,help:mail.field_sale_order_message_last_post
+#: model:ir.model.fields,help:mail.field_slide_channel_message_last_post
+#: model:ir.model.fields,help:mail.field_slide_slide_message_last_post
+#: model:ir.model.fields,help:mail.field_stock_landed_cost_message_last_post
+#: model:ir.model.fields,help:mail.field_stock_picking_message_last_post
+#: model:ir.model.fields,help:mail.field_stock_picking_wave_message_last_post
+#: model:ir.model.fields,help:mail.field_stock_production_lot_message_last_post
+#: model:ir.model.fields,help:mail.field_survey_survey_message_last_post
 msgid "Date of the last message posted on the record."
 msgstr "Data de l'últim missatge enviat al registre."
 
@@ -929,6 +1188,7 @@ msgstr "Valor per defecte"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_defaults
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_defaults
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_defaults
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_defaults
 msgid "Default Values"
@@ -938,7 +1198,7 @@ msgstr "Valors per defecte"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_use_default_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_use_default_to
 msgid "Default recipients"
-msgstr ""
+msgstr "Destinataris per defecte"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_use_default_to
@@ -948,10 +1208,34 @@ msgid ""
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
 msgstr ""
+"Destinataris per defecte del registre:\n"
+"- Empresa (utilitzant el id de l'empresa o del camp partner_id) O\n"
+"- Correu electrònic (utilitzant els camps email_from o email)"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
+#, fuzzy
+msgid "Delete Emails"
+msgstr "Cancel·lar correu electrònic"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
+#, fuzzy
+msgid "Delete Message Copy"
+msgstr "Missatge pare"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
+#, fuzzy
+msgid "Delete sent emails (mass mailing only)"
+msgstr "Firma de l'autor (només per enviaments massius)"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:111
+#: code:addons/mail/static/src/xml/thread.xml:167
 #, python-format
 msgid "Delete this attachment"
 msgstr "Eliminar aquest adjunt"
@@ -974,7 +1258,9 @@ msgstr "Descripció"
 msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
-msgstr "Descripció que s'afegira al missatge enviat per aquest subtipus. Si no s'omple, es posara el nom al seu lloc."
+msgstr ""
+"Descripció que s'afegira al missatge enviat per aquest subtipus. Si no "
+"s'omple, es posara el nom al seu lloc."
 
 #. module: mail
 #. openerp-web
@@ -1001,6 +1287,7 @@ msgstr "Debats"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_display_name
 #: model:ir.model.fields,field_description:mail.field_mail_alias_display_name
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_display_name
 #: model:ir.model.fields,field_description:mail.field_mail_channel_display_name
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_display_name
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_display_name
@@ -1023,6 +1310,16 @@ msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
 msgstr ""
+"Mostrar una opció al document relacionat per obrir un assistent de "
+"composició amb aquesta plantilla"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete_message
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete_message
+msgid ""
+"Do not keep a copy of the email in the document communication history (mass "
+"mailing only)"
+msgstr ""
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
@@ -1032,18 +1329,18 @@ msgstr "Seguidors del Document"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Dynamic Placeholder Generator"
-msgstr ""
+msgstr "Generador dinàmic d'expressions amb marcadors de posició"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:117
+#: code:addons/mail/static/src/js/followers.js:114
 #, python-format
 msgid "Edit Subscription of "
 msgstr "Edita la subscripció de"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:129
+#: code:addons/mail/static/src/xml/followers.xml:49
 #, python-format
 msgid "Edit subscription"
 msgstr "Editar subscripció"
@@ -1053,6 +1350,7 @@ msgstr "Editar subscripció"
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
 #: selection:mail.compose.message,message_type:0
 #: selection:mail.message,message_type:0
+#: selection:survey.mail.compose.message,message_type:0
 msgid "Email"
 msgstr "Correu electrònic"
 
@@ -1112,12 +1410,15 @@ msgstr "Fil de missatges"
 msgid ""
 "Email address internally associated with this user. Incoming emails will "
 "appear in the user's notifications."
-msgstr "Correu electrònic intern associat a l'usuari. Els correus entrants apareixeran com notificacions d'usuari."
+msgstr ""
+"Correu electrònic intern associat a l'usuari. Els correus entrants "
+"apareixeran com notificacions d'usuari."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_email_from
 #: model:ir.model.fields,help:mail.field_mail_mail_email_from
 #: model:ir.model.fields,help:mail.field_mail_message_email_from
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_email_from
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
@@ -1147,13 +1448,15 @@ msgid "Emails"
 msgstr "Correus electrònics"
 
 #. module: mail
-#: code:addons/mail/models/update.py:91
+#: code:addons/mail/models/update.py:96
 #, python-format
 msgid "Error during communication with the publisher warranty server."
-msgstr "Error durant la comunicació amb el servidor de garantia del editor de OpenERP."
+msgstr ""
+"Error durant la comunicació amb el servidor de garantia del editor de "
+"OpenERP."
 
 #. module: mail
-#: code:addons/mail/models/mail_mail.py:240
+#: code:addons/mail/models/mail_mail.py:247
 #, python-format
 msgid ""
 "Error without exception. Probably due do sending an email without computed "
@@ -1172,8 +1475,7 @@ msgstr "Error, una empresa no pots seguir dues vegades el mateix objecte."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
-msgid ""
-"Error: A follower must be either a partner or a channel (but not both)."
+msgid "Error: A follower must be either a partner or a channel (but not both)."
 msgstr ""
 
 #. module: mail
@@ -1197,7 +1499,7 @@ msgid "Failed"
 msgstr "Fallit"
 
 #. module: mail
-#: code:addons/mail/models/mail_template.py:352
+#: code:addons/mail/models/mail_template.py:368
 #, python-format
 msgid "Failed to render template %r using values %r"
 msgstr ""
@@ -1219,6 +1521,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message_starred_partner_ids
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_starred_partner_ids
 msgid "Favorited By"
 msgstr ""
 
@@ -1244,7 +1547,10 @@ msgid ""
 "Field used to link the related model to the subtype model when using "
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
-msgstr "Camp utilitzat per enllaçar el model relacionat al model del subtipus quan s'utilitza la subscripció automatica en el document relacionat. El camp s'utilitza per calcular getattr(related_document.relation_field)"
+msgstr ""
+"Camp utilitzat per enllaçar el model relacionat al model del subtipus quan "
+"s'utilitza la subscripció automatica en el document relacionat. El camp "
+"s'utilitza per calcular getattr(related_document.relation_field)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_copyvalue
@@ -1253,6 +1559,8 @@ msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
 msgstr ""
+"Expressió de camps final, a ser copia-pegada al camp de la plantilla "
+"desitjada."
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -1261,36 +1569,195 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:605
-#: code:addons/mail/static/src/xml/chatter.xml:99
+#: code:addons/mail/models/mail_thread.py:683
+#: code:addons/mail/static/src/xml/followers.xml:20
 #, python-format
 msgid "Follow"
 msgstr "Segueix"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_followers
+#: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_account_asset_asset_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_account_bank_statement_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_account_invoice_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_account_voucher_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_blog_blog_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_blog_post_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_calendar_event_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_crm_lead_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_crm_team_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_crossovered_budget_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_event_event_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_event_registration_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_event_track_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_fleet_vehicle_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_forum_forum_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_forum_post_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_forum_tag_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_gamification_badge_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_gamification_challenge_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_hr_applicant_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_hr_contract_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_hr_department_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_hr_employee_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_category_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_request_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_hr_expense_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_hr_holidays_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_hr_job_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_bom_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_production_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_repair_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_note_note_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_procurement_order_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_product_product_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_product_template_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_project_issue_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_project_project_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_project_task_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_purchase_order_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_purchase_requisition_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_res_users_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_sale_order_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_slide_channel_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_slide_slide_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_stock_landed_cost_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_stock_picking_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_stock_picking_wave_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_survey_survey_message_follower_ids
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model:ir.ui.view,arch_db:mail.view_followers_tree
 msgid "Followers"
 msgstr "Seguidors"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_account_asset_asset_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_account_bank_statement_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_account_invoice_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_account_voucher_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_blog_blog_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_blog_post_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_calendar_event_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_crm_lead_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_crm_team_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_crossovered_budget_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_event_event_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_event_registration_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_event_track_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_fleet_vehicle_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_forum_forum_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_forum_post_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_forum_tag_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_gamification_badge_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_gamification_challenge_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_hr_applicant_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_hr_contract_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_hr_department_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_hr_employee_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_category_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_request_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_hr_expense_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_hr_holidays_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_hr_job_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_bom_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_production_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_repair_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_note_note_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_procurement_order_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_product_product_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_product_template_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_project_issue_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_project_project_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_project_task_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_purchase_order_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_purchase_requisition_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_users_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_sale_order_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_slide_channel_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_slide_slide_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_stock_landed_cost_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_stock_picking_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_stock_picking_wave_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_survey_survey_message_channel_ids
 msgid "Followers (Channels)"
 msgstr "Followers (Canals)"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_account_asset_asset_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_account_bank_statement_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_account_invoice_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_account_voucher_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_blog_blog_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_blog_post_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_calendar_event_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_crm_lead_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_crm_team_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_crossovered_budget_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_event_event_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_event_registration_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_event_track_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_fleet_vehicle_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_forum_forum_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_forum_post_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_forum_tag_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_gamification_badge_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_gamification_challenge_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_hr_applicant_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_hr_contract_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_hr_department_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_hr_employee_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_category_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_request_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_hr_expense_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_hr_holidays_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_hr_job_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_bom_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_production_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_repair_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_note_note_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_procurement_order_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_product_product_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_product_template_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_project_issue_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_project_project_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_project_task_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_purchase_order_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_purchase_requisition_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_users_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_sale_order_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_slide_channel_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_slide_slide_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_stock_landed_cost_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_stock_picking_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_stock_picking_wave_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_survey_survey_message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Seguidors (Socis)"
 
@@ -1306,7 +1773,7 @@ msgstr "Només seguidors"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:103
+#: code:addons/mail/static/src/xml/followers.xml:24
 #, python-format
 msgid "Following"
 msgstr "Seguint"
@@ -1318,6 +1785,7 @@ msgstr "Seguint"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_email_from
 #: model:ir.model.fields,field_description:mail.field_mail_message_email_from
 #: model:ir.model.fields,field_description:mail.field_mail_template_email_from
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_email_from
 msgid "From"
 msgstr "De"
 
@@ -1327,7 +1795,7 @@ msgid "Gateway"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/res_users.py:48
+#: code:addons/mail/models/res_users.py:50
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Anar al panell de configuració "
@@ -1372,6 +1840,7 @@ msgstr "Oculta el subtipus en les opcions del seguidor"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_id
 #: model:ir.model.fields,field_description:mail.field_mail_alias_id
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_id
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_id
@@ -1390,12 +1859,15 @@ msgstr "ID"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_parent_thread_id
+#: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_parent_thread_id
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_parent_thread_id
 #: model:ir.model.fields,help:mail.field_res_users_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
-msgstr "Id del registre pare que te el pseudònim.(exemple: el projecte que conté el pseudònim per la creació de tasques)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
+msgstr ""
+"Id del registre pare que te el pseudònim.(exemple: el projecte que conté el "
+"pseudònim per la creació de tasques)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers_res_id
@@ -1405,24 +1877,130 @@ msgstr "Id del recurs seguit"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:108
+#: code:addons/mail/static/src/xml/client_action.xml:110
 #, python-format
 msgid "Idle"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_account_analytic_account_message_unread
+#: model:ir.model.fields,help:mail.field_account_asset_asset_message_unread
+#: model:ir.model.fields,help:mail.field_account_bank_statement_message_unread
+#: model:ir.model.fields,help:mail.field_account_invoice_message_unread
+#: model:ir.model.fields,help:mail.field_account_voucher_message_unread
+#: model:ir.model.fields,help:mail.field_blog_blog_message_unread
+#: model:ir.model.fields,help:mail.field_blog_post_message_unread
+#: model:ir.model.fields,help:mail.field_calendar_event_message_unread
+#: model:ir.model.fields,help:mail.field_crm_lead_message_unread
+#: model:ir.model.fields,help:mail.field_crm_team_message_unread
+#: model:ir.model.fields,help:mail.field_crossovered_budget_message_unread
+#: model:ir.model.fields,help:mail.field_event_event_message_unread
+#: model:ir.model.fields,help:mail.field_event_registration_message_unread
+#: model:ir.model.fields,help:mail.field_event_track_message_unread
+#: model:ir.model.fields,help:mail.field_fleet_vehicle_message_unread
+#: model:ir.model.fields,help:mail.field_forum_forum_message_unread
+#: model:ir.model.fields,help:mail.field_forum_post_message_unread
+#: model:ir.model.fields,help:mail.field_forum_tag_message_unread
+#: model:ir.model.fields,help:mail.field_gamification_badge_message_unread
+#: model:ir.model.fields,help:mail.field_gamification_challenge_message_unread
+#: model:ir.model.fields,help:mail.field_hr_applicant_message_unread
+#: model:ir.model.fields,help:mail.field_hr_contract_message_unread
+#: model:ir.model.fields,help:mail.field_hr_department_message_unread
+#: model:ir.model.fields,help:mail.field_hr_employee_message_unread
+#: model:ir.model.fields,help:mail.field_hr_equipment_category_message_unread
+#: model:ir.model.fields,help:mail.field_hr_equipment_message_unread
+#: model:ir.model.fields,help:mail.field_hr_equipment_request_message_unread
+#: model:ir.model.fields,help:mail.field_hr_expense_message_unread
+#: model:ir.model.fields,help:mail.field_hr_holidays_message_unread
+#: model:ir.model.fields,help:mail.field_hr_job_message_unread
+#: model:ir.model.fields,help:mail.field_hr_timesheet_sheet_sheet_message_unread
 #: model:ir.model.fields,help:mail.field_mail_channel_message_unread
+#: model:ir.model.fields,help:mail.field_mail_mass_mailing_contact_message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread_message_unread
+#: model:ir.model.fields,help:mail.field_mrp_bom_message_unread
+#: model:ir.model.fields,help:mail.field_mrp_production_message_unread
+#: model:ir.model.fields,help:mail.field_mrp_production_workcenter_line_message_unread
+#: model:ir.model.fields,help:mail.field_mrp_repair_message_unread
+#: model:ir.model.fields,help:mail.field_note_note_message_unread
+#: model:ir.model.fields,help:mail.field_procurement_order_message_unread
+#: model:ir.model.fields,help:mail.field_product_product_message_unread
+#: model:ir.model.fields,help:mail.field_product_template_message_unread
+#: model:ir.model.fields,help:mail.field_project_issue_message_unread
+#: model:ir.model.fields,help:mail.field_project_project_message_unread
+#: model:ir.model.fields,help:mail.field_project_task_message_unread
+#: model:ir.model.fields,help:mail.field_purchase_order_message_unread
+#: model:ir.model.fields,help:mail.field_purchase_requisition_message_unread
 #: model:ir.model.fields,help:mail.field_res_partner_message_unread
 #: model:ir.model.fields,help:mail.field_res_users_message_unread
+#: model:ir.model.fields,help:mail.field_sale_order_message_unread
+#: model:ir.model.fields,help:mail.field_slide_channel_message_unread
+#: model:ir.model.fields,help:mail.field_slide_slide_message_unread
+#: model:ir.model.fields,help:mail.field_stock_landed_cost_message_unread
+#: model:ir.model.fields,help:mail.field_stock_picking_message_unread
+#: model:ir.model.fields,help:mail.field_stock_picking_wave_message_unread
+#: model:ir.model.fields,help:mail.field_stock_production_lot_message_unread
+#: model:ir.model.fields,help:mail.field_survey_survey_message_unread
 msgid "If checked new messages require your attention."
 msgstr "Si està marcat hi ha missatges nous pendents."
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_account_analytic_account_message_needaction
+#: model:ir.model.fields,help:mail.field_account_asset_asset_message_needaction
+#: model:ir.model.fields,help:mail.field_account_bank_statement_message_needaction
+#: model:ir.model.fields,help:mail.field_account_invoice_message_needaction
+#: model:ir.model.fields,help:mail.field_account_voucher_message_needaction
+#: model:ir.model.fields,help:mail.field_blog_blog_message_needaction
+#: model:ir.model.fields,help:mail.field_blog_post_message_needaction
+#: model:ir.model.fields,help:mail.field_calendar_event_message_needaction
+#: model:ir.model.fields,help:mail.field_crm_lead_message_needaction
+#: model:ir.model.fields,help:mail.field_crm_team_message_needaction
+#: model:ir.model.fields,help:mail.field_crossovered_budget_message_needaction
+#: model:ir.model.fields,help:mail.field_event_event_message_needaction
+#: model:ir.model.fields,help:mail.field_event_registration_message_needaction
+#: model:ir.model.fields,help:mail.field_event_track_message_needaction
+#: model:ir.model.fields,help:mail.field_fleet_vehicle_message_needaction
+#: model:ir.model.fields,help:mail.field_forum_forum_message_needaction
+#: model:ir.model.fields,help:mail.field_forum_post_message_needaction
+#: model:ir.model.fields,help:mail.field_forum_tag_message_needaction
+#: model:ir.model.fields,help:mail.field_gamification_badge_message_needaction
+#: model:ir.model.fields,help:mail.field_gamification_challenge_message_needaction
+#: model:ir.model.fields,help:mail.field_hr_applicant_message_needaction
+#: model:ir.model.fields,help:mail.field_hr_contract_message_needaction
+#: model:ir.model.fields,help:mail.field_hr_department_message_needaction
+#: model:ir.model.fields,help:mail.field_hr_employee_message_needaction
+#: model:ir.model.fields,help:mail.field_hr_equipment_category_message_needaction
+#: model:ir.model.fields,help:mail.field_hr_equipment_message_needaction
+#: model:ir.model.fields,help:mail.field_hr_equipment_request_message_needaction
+#: model:ir.model.fields,help:mail.field_hr_expense_message_needaction
+#: model:ir.model.fields,help:mail.field_hr_holidays_message_needaction
+#: model:ir.model.fields,help:mail.field_hr_job_message_needaction
+#: model:ir.model.fields,help:mail.field_hr_timesheet_sheet_sheet_message_needaction
 #: model:ir.model.fields,help:mail.field_mail_channel_message_needaction
+#: model:ir.model.fields,help:mail.field_mail_mass_mailing_contact_message_needaction
 #: model:ir.model.fields,help:mail.field_mail_thread_message_needaction
+#: model:ir.model.fields,help:mail.field_mrp_bom_message_needaction
+#: model:ir.model.fields,help:mail.field_mrp_production_message_needaction
+#: model:ir.model.fields,help:mail.field_mrp_production_workcenter_line_message_needaction
+#: model:ir.model.fields,help:mail.field_mrp_repair_message_needaction
+#: model:ir.model.fields,help:mail.field_note_note_message_needaction
+#: model:ir.model.fields,help:mail.field_procurement_order_message_needaction
+#: model:ir.model.fields,help:mail.field_product_product_message_needaction
+#: model:ir.model.fields,help:mail.field_product_template_message_needaction
+#: model:ir.model.fields,help:mail.field_project_issue_message_needaction
+#: model:ir.model.fields,help:mail.field_project_project_message_needaction
+#: model:ir.model.fields,help:mail.field_project_task_message_needaction
+#: model:ir.model.fields,help:mail.field_purchase_order_message_needaction
+#: model:ir.model.fields,help:mail.field_purchase_requisition_message_needaction
 #: model:ir.model.fields,help:mail.field_res_partner_message_needaction
 #: model:ir.model.fields,help:mail.field_res_users_message_needaction
+#: model:ir.model.fields,help:mail.field_sale_order_message_needaction
+#: model:ir.model.fields,help:mail.field_slide_channel_message_needaction
+#: model:ir.model.fields,help:mail.field_slide_slide_message_needaction
+#: model:ir.model.fields,help:mail.field_stock_landed_cost_message_needaction
+#: model:ir.model.fields,help:mail.field_stock_picking_message_needaction
+#: model:ir.model.fields,help:mail.field_stock_picking_wave_message_needaction
+#: model:ir.model.fields,help:mail.field_stock_production_lot_message_needaction
+#: model:ir.model.fields,help:mail.field_survey_survey_message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Si està marcat, els nous missatges requereixen la vostra atenció"
 
@@ -1431,15 +2009,19 @@ msgstr "Si està marcat, els nous missatges requereixen la vostra atenció"
 msgid ""
 "If checked, the partners will receive an email warning they have been added "
 "in the document's followers."
-msgstr "Si està marcat, les empreses rebran un correu electrònic avisant que han estat afegits com a seguidors del document."
+msgstr ""
+"Si està marcat, les empreses rebran un correu electrònic avisant que han "
+"estat afegits com a seguidors del document."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_user_signature
 #: model:ir.model.fields,help:mail.field_mail_template_user_signature
 msgid ""
-"If checked, the user's signature will be appended to the text version of the"
-" message"
+"If checked, the user's signature will be appended to the text version of the "
+"message"
 msgstr ""
+"Si està marcada, la firma de l'usuari serà afegida a la versió de text del "
+"missatge"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner_opt_out
@@ -1449,13 +2031,34 @@ msgid ""
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the partners when performing mass mailing."
 msgstr ""
+"Si 'No accepta missatges' està marcada, aquest contacte ha refusat rebre "
+"correus electrònics d'enviaments massius i campanyes de màrqueting. El "
+"filtre 'Disponible per enviaments massius' permet als usuaris filtrar a les "
+"empreses quan es realitzin enviaments massius."
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_mail_scheduled_date
+msgid ""
+"If set, the queue manager will send the email after the date. If not set, "
+"the email will be send as soon as possible."
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_email_template_preview_scheduled_date
+#: model:ir.model.fields,help:mail.field_mail_template_scheduled_date
+msgid ""
+"If set, the queue manager will send the email after the date. If not set, "
+"the email will be send as soon as possible. Jinja2 placeholders may be used."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_base_config_settings_alias_domain
 msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
-msgstr "Si heu configurat un domini de correu \"agafa-ho tot\" re-dirigit a un servidor Odoo, entreu el nom del domini aquí."
+msgstr ""
+"Si heu configurat un domini de correu \"agafa-ho tot\" re-dirigit a un "
+"servidor Odoo, entreu el nom del domini aquí."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:141
@@ -1465,7 +2068,7 @@ msgstr "Pseudònim inactiu"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1033
+#: code:addons/mail/static/src/js/chat_manager.js:958
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -1476,6 +2079,7 @@ msgstr "Bústia d'entrada"
 #: model:ir.model.fields,help:mail.field_mail_compose_message_parent_id
 #: model:ir.model.fields,help:mail.field_mail_mail_parent_id
 #: model:ir.model.fields,help:mail.field_mail_message_parent_id
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_parent_id
 msgid "Initial thread message."
 msgstr "Missatge inicial del fil"
 
@@ -1490,19 +2094,21 @@ msgstr ""
 msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
-msgstr "Expressió invalida, ha de ser un diccionari python, per exemple \"{'field': 'value'}\""
+msgstr ""
+"Expressió invalida, ha de ser un diccionari python, per exemple \"{'field': "
+"'value'}\""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:1607
+#: code:addons/mail/models/mail_thread.py:1718
 #, python-format
 msgid ""
-"Invalid record set: should be called as model (without records) or on "
-"single-record recordset"
+"Invalid record set: should be called as model (without records) or on single-"
+"record recordset"
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:514
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "Invitation"
 msgstr ""
@@ -1516,21 +2122,21 @@ msgstr "Invitació per seguir %s: %s"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:40
-#: code:addons/mail/static/src/xml/client_action.xml:75
+#: code:addons/mail/static/src/xml/client_action.xml:132
 #, python-format
 msgid "Invite"
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:144
+#: code:addons/mail/static/src/js/followers.js:143
 #, python-format
 msgid "Invite Follower"
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:30
+#: code:addons/mail/static/src/js/client_action.js:31
 #: code:addons/mail/static/src/xml/client_action.xml:132
 #, python-format
 msgid "Invite people"
@@ -1538,7 +2144,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:626
+#: code:addons/mail/static/src/js/client_action.js:638
 #, python-format
 msgid "Invite people to #%s"
 msgstr ""
@@ -1554,10 +2160,63 @@ msgid "Invited people only"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_account_asset_asset_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_account_bank_statement_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_account_invoice_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_account_voucher_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_blog_blog_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_blog_post_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_calendar_event_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_crm_lead_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_crm_team_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_crossovered_budget_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_event_event_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_event_registration_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_event_track_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_fleet_vehicle_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_forum_forum_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_forum_post_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_forum_tag_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_gamification_badge_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_gamification_challenge_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_hr_applicant_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_hr_contract_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_hr_department_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_hr_employee_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_category_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_request_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_hr_expense_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_hr_holidays_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_hr_job_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_mrp_bom_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_mrp_production_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_mrp_repair_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_note_note_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_procurement_order_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_product_product_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_product_template_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_project_issue_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_project_project_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_project_task_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_purchase_order_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_purchase_requisition_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_res_users_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_sale_order_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_slide_channel_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_slide_slide_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_stock_landed_cost_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_stock_picking_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_stock_picking_wave_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_survey_survey_message_is_follower
 msgid "Is Follower"
 msgstr "És seguidor"
 
@@ -1565,6 +2224,11 @@ msgstr "És seguidor"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_notification
 msgid "Is Notification"
 msgstr "Es una notificació"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
+msgid "Is Subscribed"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
@@ -1578,8 +2242,8 @@ msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
-msgid "Join Group"
-msgstr "Unir-se al grup"
+msgid "Join"
+msgstr ""
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
@@ -1593,16 +2257,70 @@ msgid "Language"
 msgstr "Idioma"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_last_post
+#: model:ir.model.fields,field_description:mail.field_account_asset_asset_message_last_post
+#: model:ir.model.fields,field_description:mail.field_account_bank_statement_message_last_post
+#: model:ir.model.fields,field_description:mail.field_account_invoice_message_last_post
+#: model:ir.model.fields,field_description:mail.field_account_voucher_message_last_post
+#: model:ir.model.fields,field_description:mail.field_blog_blog_message_last_post
+#: model:ir.model.fields,field_description:mail.field_blog_post_message_last_post
+#: model:ir.model.fields,field_description:mail.field_calendar_event_message_last_post
+#: model:ir.model.fields,field_description:mail.field_crm_lead_message_last_post
+#: model:ir.model.fields,field_description:mail.field_crm_team_message_last_post
+#: model:ir.model.fields,field_description:mail.field_crossovered_budget_message_last_post
+#: model:ir.model.fields,field_description:mail.field_event_event_message_last_post
+#: model:ir.model.fields,field_description:mail.field_event_registration_message_last_post
+#: model:ir.model.fields,field_description:mail.field_event_track_message_last_post
+#: model:ir.model.fields,field_description:mail.field_fleet_vehicle_message_last_post
+#: model:ir.model.fields,field_description:mail.field_forum_forum_message_last_post
+#: model:ir.model.fields,field_description:mail.field_forum_post_message_last_post
+#: model:ir.model.fields,field_description:mail.field_forum_tag_message_last_post
+#: model:ir.model.fields,field_description:mail.field_gamification_badge_message_last_post
+#: model:ir.model.fields,field_description:mail.field_gamification_challenge_message_last_post
+#: model:ir.model.fields,field_description:mail.field_hr_applicant_message_last_post
+#: model:ir.model.fields,field_description:mail.field_hr_contract_message_last_post
+#: model:ir.model.fields,field_description:mail.field_hr_department_message_last_post
+#: model:ir.model.fields,field_description:mail.field_hr_employee_message_last_post
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_category_message_last_post
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_message_last_post
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_request_message_last_post
+#: model:ir.model.fields,field_description:mail.field_hr_expense_message_last_post
+#: model:ir.model.fields,field_description:mail.field_hr_holidays_message_last_post
+#: model:ir.model.fields,field_description:mail.field_hr_job_message_last_post
+#: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_last_post
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_last_post
+#: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_last_post
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_last_post
+#: model:ir.model.fields,field_description:mail.field_mrp_bom_message_last_post
+#: model:ir.model.fields,field_description:mail.field_mrp_production_message_last_post
+#: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_last_post
+#: model:ir.model.fields,field_description:mail.field_mrp_repair_message_last_post
+#: model:ir.model.fields,field_description:mail.field_note_note_message_last_post
+#: model:ir.model.fields,field_description:mail.field_procurement_order_message_last_post
+#: model:ir.model.fields,field_description:mail.field_product_product_message_last_post
+#: model:ir.model.fields,field_description:mail.field_product_template_message_last_post
+#: model:ir.model.fields,field_description:mail.field_project_issue_message_last_post
+#: model:ir.model.fields,field_description:mail.field_project_project_message_last_post
+#: model:ir.model.fields,field_description:mail.field_project_task_message_last_post
+#: model:ir.model.fields,field_description:mail.field_purchase_order_message_last_post
+#: model:ir.model.fields,field_description:mail.field_purchase_requisition_message_last_post
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_last_post
 #: model:ir.model.fields,field_description:mail.field_res_users_message_last_post
+#: model:ir.model.fields,field_description:mail.field_sale_order_message_last_post
+#: model:ir.model.fields,field_description:mail.field_slide_channel_message_last_post
+#: model:ir.model.fields,field_description:mail.field_slide_slide_message_last_post
+#: model:ir.model.fields,field_description:mail.field_stock_landed_cost_message_last_post
+#: model:ir.model.fields,field_description:mail.field_stock_picking_message_last_post
+#: model:ir.model.fields,field_description:mail.field_stock_picking_wave_message_last_post
+#: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_last_post
+#: model:ir.model.fields,field_description:mail.field_survey_survey_message_last_post
 msgid "Last Message Date"
 msgstr "Data Últim Missatge"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview___last_update
 #: model:ir.model.fields,field_description:mail.field_mail_alias___last_update
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin___last_update
 #: model:ir.model.fields,field_description:mail.field_mail_channel___last_update
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner___last_update
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message___last_update
@@ -1632,6 +2350,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_write_uid
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_alias_write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_channel_write_uid
@@ -1648,6 +2367,7 @@ msgstr "Actualitzat per última vegada per"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_write_date
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_write_date
 #: model:ir.model.fields,field_description:mail.field_mail_alias_write_date
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_write_date
 #: model:ir.model.fields,field_description:mail.field_mail_channel_write_date
@@ -1663,8 +2383,13 @@ msgid "Last Updated on"
 msgstr "Actualitzat per última vegada el dia"
 
 #. module: mail
+#: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
+msgid "Leave"
+msgstr ""
+
+#. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:97
+#: code:addons/mail/static/src/xml/client_action.xml:99
 #, python-format
 msgid "Leave this channel"
 msgstr ""
@@ -1679,7 +2404,8 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite_partner_ids
 msgid ""
 "List of partners that will be added as follower of the current document."
-msgstr "Llista d'empreses que seran afegides com seguidors del document actual."
+msgstr ""
+"Llista d'empreses que seran afegides com seguidors del document actual."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_channel_id
@@ -1698,26 +2424,27 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:443
+#: code:addons/mail/static/src/js/chatter.js:36
 #, python-format
 msgid "Log"
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:75
+#: code:addons/mail/static/src/xml/chatter.xml:70
 #, python-format
 msgid "Log a note. Followers will not be notified."
 msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_is_log
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_is_log
 msgid "Log an Internal Note"
 msgstr "Registrar una nota interna"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:75
+#: code:addons/mail/static/src/xml/chatter.xml:70
 #, python-format
 msgid "Log an internal note"
 msgstr "Registrar una nota interna"
@@ -1727,7 +2454,8 @@ msgstr "Registrar una nota interna"
 #: code:addons/mail/static/src/xml/chatter.xml:12
 #, python-format
 msgid ""
-"Log an internal note which will not be sent to followers, but which can be read\n"
+"Log an internal note which will not be sent to followers, but which can be "
+"read\n"
 "                    by users accessing this document."
 msgstr ""
 
@@ -1737,7 +2465,7 @@ msgid "Mail Channel Form"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_mail.py:306
+#: code:addons/mail/models/mail_mail.py:313
 #, python-format
 msgid "Mail Delivery Failed"
 msgstr "Error de lliurament de correu"
@@ -1750,7 +2478,9 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_notification
 msgid "Mail has been created to notify people of an existing mail.message"
-msgstr "S'ha creat un correu electrònic per notificar a la gent de un missatge existent"
+msgstr ""
+"S'ha creat un correu electrònic per notificar a la gent de un missatge "
+"existent"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_emails_partner_info_form
@@ -1759,21 +2489,21 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:125
+#: code:addons/mail/static/src/xml/client_action.xml:133
 #, python-format
 msgid "Mark all as read"
 msgstr "Marca-ho tot com a llegit"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:125
+#: code:addons/mail/static/src/xml/client_action.xml:133
 #, python-format
 msgid "Mark all read"
 msgstr "Marcar-ho tot llegit"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:105
+#: code:addons/mail/static/src/xml/thread.xml:106
 #, python-format
 msgid "Mark as Read"
 msgstr "Marcar com a Llegit"
@@ -1781,7 +2511,7 @@ msgstr "Marcar com a Llegit"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:68
-#: code:addons/mail/static/src/xml/thread.xml:102
+#: code:addons/mail/static/src/xml/thread.xml:100
 #, python-format
 msgid "Mark as Todo"
 msgstr "Marcar com a pendents per reatiltzar"
@@ -1797,7 +2527,10 @@ msgid ""
 "Medium-sized photo of the group. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
-msgstr "Foto de mida mitja del grup. Automàticament es redimensionara a 128x128px mantenint la ràtio d'aspecte. Utilitza aquest camp en les vistes de formulari i kanban."
+msgstr ""
+"Foto de mida mitja del grup. Automàticament es redimensionara a 128x128px "
+"mantenint la ràtio d'aspecte. Utilitza aquest camp en les vistes de "
+"formulari i kanban."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -1809,7 +2542,10 @@ msgstr "Socis"
 msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
-msgstr "Els membres d'aquests grups s'afegira automàticament com a seguidors. Tingui en compte que podran gestionar la seva subscripció manualment si és necessari."
+msgstr ""
+"Els membres d'aquests grups s'afegira automàticament com a seguidors. Tingui "
+"en compte que podran gestionar la seva subscripció manualment si és "
+"necessari."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
@@ -1828,6 +2564,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_record_name
 #: model:ir.model.fields,field_description:mail.field_mail_mail_record_name
 #: model:ir.model.fields,field_description:mail.field_mail_message_record_name
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_record_name
 msgid "Message Record Name"
 msgstr "Nom de registre del missatge"
 
@@ -1857,11 +2594,16 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_name
 msgid ""
 "Message subtype gives a more precise type on the message, especially for "
-"system notifications. For example, it can be a notification related to a new"
-" record (New), or to a stage change in a process (Stage change). Message "
+"system notifications. For example, it can be a notification related to a new "
+"record (New), or to a stage change in a process (Stage change). Message "
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
-msgstr "El subtipus de missatge dona un tipus més precís en el missatge, especialment per als sistemes de notificació. Per exemple pot ser una notificació relativa a un nou registre (Nou), o a un canvi d'etapa en un procés (Canvi d'etapa). Els subtipus de missatge permeten afinar les notificacions que els usuaris volen rebre al seu mur."
+msgstr ""
+"El subtipus de missatge dona un tipus més precís en el missatge, "
+"especialment per als sistemes de notificació. Per exemple pot ser una "
+"notificació relativa a un nou registre (Nou), o a un canvi d'etapa en un "
+"procés (Canvi d'etapa). Els subtipus de missatge permeten afinar les "
+"notificacions que els usuaris volen rebre al seu mur."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
@@ -1873,21 +2615,28 @@ msgstr "Subtipus del missatge"
 msgid ""
 "Message subtypes followed, meaning subtypes that will be pushed onto the "
 "user's Wall."
-msgstr "Subtipus de missatge seguit. Seran els subtipus que seran portats al mur de l'usuari."
+msgstr ""
+"Subtipus de missatge seguit. Seran els subtipus que seran portats al mur de "
+"l'usuari."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_message_type
 #: model:ir.model.fields,help:mail.field_mail_mail_message_type
 #: model:ir.model.fields,help:mail.field_mail_message_message_type
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_message_type
 msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
-msgstr "Tipus de missatge: e-mail per a missatges de correu, notificació per a missatges de sistema, comentaris per altres tipus de missatges com resposta d'usuaris."
+msgstr ""
+"Tipus de missatge: e-mail per a missatges de correu, notificació per a "
+"missatges de sistema, comentaris per altres tipus de missatges com resposta "
+"d'usuaris."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_message_id
 #: model:ir.model.fields,help:mail.field_mail_mail_message_id
 #: model:ir.model.fields,help:mail.field_mail_message_message_id
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_message_id
 msgid "Message unique identifier"
 msgstr "Identificador únic del missatge"
 
@@ -1895,15 +2644,69 @@ msgstr "Identificador únic del missatge"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_mail_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_message_message_id
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_message_id
 msgid "Message-Id"
 msgstr "Id del missatge"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
+#: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_ids
+#: model:ir.model.fields,field_description:mail.field_account_asset_asset_message_ids
+#: model:ir.model.fields,field_description:mail.field_account_bank_statement_message_ids
+#: model:ir.model.fields,field_description:mail.field_account_invoice_message_ids
+#: model:ir.model.fields,field_description:mail.field_account_voucher_message_ids
+#: model:ir.model.fields,field_description:mail.field_blog_blog_message_ids
+#: model:ir.model.fields,field_description:mail.field_blog_post_message_ids
+#: model:ir.model.fields,field_description:mail.field_calendar_event_message_ids
+#: model:ir.model.fields,field_description:mail.field_crm_lead_message_ids
+#: model:ir.model.fields,field_description:mail.field_crm_team_message_ids
+#: model:ir.model.fields,field_description:mail.field_crossovered_budget_message_ids
+#: model:ir.model.fields,field_description:mail.field_event_event_message_ids
+#: model:ir.model.fields,field_description:mail.field_event_registration_message_ids
+#: model:ir.model.fields,field_description:mail.field_event_track_message_ids
+#: model:ir.model.fields,field_description:mail.field_fleet_vehicle_message_ids
+#: model:ir.model.fields,field_description:mail.field_forum_forum_message_ids
+#: model:ir.model.fields,field_description:mail.field_forum_post_message_ids
+#: model:ir.model.fields,field_description:mail.field_forum_tag_message_ids
+#: model:ir.model.fields,field_description:mail.field_gamification_badge_message_ids
+#: model:ir.model.fields,field_description:mail.field_gamification_challenge_message_ids
+#: model:ir.model.fields,field_description:mail.field_hr_applicant_message_ids
+#: model:ir.model.fields,field_description:mail.field_hr_contract_message_ids
+#: model:ir.model.fields,field_description:mail.field_hr_department_message_ids
+#: model:ir.model.fields,field_description:mail.field_hr_employee_message_ids
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_category_message_ids
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_message_ids
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_request_message_ids
+#: model:ir.model.fields,field_description:mail.field_hr_expense_message_ids
+#: model:ir.model.fields,field_description:mail.field_hr_holidays_message_ids
+#: model:ir.model.fields,field_description:mail.field_hr_job_message_ids
+#: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_ids
+#: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_bom_message_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_production_message_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_ids
+#: model:ir.model.fields,field_description:mail.field_mrp_repair_message_ids
+#: model:ir.model.fields,field_description:mail.field_note_note_message_ids
+#: model:ir.model.fields,field_description:mail.field_procurement_order_message_ids
+#: model:ir.model.fields,field_description:mail.field_product_product_message_ids
+#: model:ir.model.fields,field_description:mail.field_product_template_message_ids
+#: model:ir.model.fields,field_description:mail.field_project_issue_message_ids
+#: model:ir.model.fields,field_description:mail.field_project_project_message_ids
+#: model:ir.model.fields,field_description:mail.field_project_task_message_ids
+#: model:ir.model.fields,field_description:mail.field_purchase_order_message_ids
+#: model:ir.model.fields,field_description:mail.field_purchase_requisition_message_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_ids
 #: model:ir.model.fields,field_description:mail.field_res_users_message_ids
+#: model:ir.model.fields,field_description:mail.field_sale_order_message_ids
+#: model:ir.model.fields,field_description:mail.field_slide_channel_message_ids
+#: model:ir.model.fields,field_description:mail.field_slide_slide_message_ids
+#: model:ir.model.fields,field_description:mail.field_stock_landed_cost_message_ids
+#: model:ir.model.fields,field_description:mail.field_stock_picking_message_ids
+#: model:ir.model.fields,field_description:mail.field_stock_picking_wave_message_ids
+#: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_ids
+#: model:ir.model.fields,field_description:mail.field_survey_survey_message_ids
 #: model:ir.ui.menu,name:mail.menu_mail_message
 #: model:ir.ui.view,arch_db:mail.view_message_tree
 msgid "Messages"
@@ -1943,7 +2746,9 @@ msgstr "Model del recurs seguit"
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_res_model
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
-msgstr "Model al que aplica el subtipus. Si no esta establert, aquest subtipus s'aplica a tots els models."
+msgstr ""
+"Model al que aplica el subtipus. Si no esta establert, aquest subtipus "
+"s'aplica a tots els models."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -1962,6 +2767,7 @@ msgstr "Nom"
 #: model:ir.model.fields,help:mail.field_mail_compose_message_record_name
 #: model:ir.model.fields,help:mail.field_mail_mail_record_name
 #: model:ir.model.fields,help:mail.field_mail_message_record_name
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_record_name
 msgid "Name get of the related document."
 msgstr "Nom del document relacionat."
 
@@ -1972,14 +2778,20 @@ msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
 "The extension can be omitted and will then come from the report type."
 msgstr ""
+"Nom a utilitzar per a l'arxiu de l'informe generat (es poden utilitzar aquí "
+"expressions de camps)\n"
+"L'extensió pot ser omesa i s'emplenarà automàticament des del tipus "
+"d'informe."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_mail_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_message_needaction
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_needaction
 #: model:ir.model.fields,help:mail.field_mail_compose_message_needaction
 #: model:ir.model.fields,help:mail.field_mail_mail_needaction
 #: model:ir.model.fields,help:mail.field_mail_message_needaction
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_needaction
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Need Action"
 msgstr ""
@@ -2021,18 +2833,17 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:54
-#: code:addons/mail/static/src/js/window_manager.js:124
+#: code:addons/mail/static/src/js/chat_manager.js:53
+#: code:addons/mail/static/src/js/window_manager.js:140
 #: code:addons/mail/static/src/xml/chatter.xml:67
-#: code:addons/mail/static/src/xml/client_action.xml:127
-#: code:addons/mail/static/src/xml/systray.xml:16
+#: code:addons/mail/static/src/xml/systray.xml:24
 #, python-format
 msgid "New message"
 msgstr "Nou missatge"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:140
+#: code:addons/mail/static/src/xml/thread.xml:131
 #, python-format
 msgid "New messages"
 msgstr "Nous missatges"
@@ -2046,14 +2857,14 @@ msgstr "Els nous missatges apareixeran aquí."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:81
+#: code:addons/mail/static/src/js/client_action.js:79
 #, python-format
 msgid "New people"
 msgstr "Nova gent"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:216
+#: code:addons/mail/static/src/js/followers.js:218
 #, python-format
 msgid "No follower"
 msgstr "Cap seguidor"
@@ -2083,6 +2894,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_no_auto_thread
 #: model:ir.model.fields,field_description:mail.field_mail_mail_no_auto_thread
 #: model:ir.model.fields,field_description:mail.field_mail_message_no_auto_thread
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_no_auto_thread
 msgid "No threading for answers"
 msgstr "No hi ha fil per les respostes"
 
@@ -2093,7 +2905,7 @@ msgstr "Nota"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:48
+#: code:addons/mail/static/src/xml/thread.xml:72
 #, python-format
 msgid "Note by"
 msgstr "Nota de"
@@ -2105,35 +2917,196 @@ msgstr "Notificació "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_notify
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_notify
 msgid "Notify followers"
 msgstr "Notificar als seguidors"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_notify
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_notify
 msgid "Notify followers of the document (mass post only)"
 msgstr "Notificar als seguidors del document (només per enviaments massius)"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_account_asset_asset_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_account_bank_statement_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_account_invoice_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_account_voucher_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_blog_blog_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_blog_post_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_calendar_event_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_crm_lead_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_crm_team_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_crossovered_budget_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_event_event_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_event_registration_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_event_track_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_fleet_vehicle_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_forum_forum_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_forum_post_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_forum_tag_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_gamification_badge_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_gamification_challenge_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_hr_applicant_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_hr_contract_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_hr_department_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_hr_employee_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_category_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_request_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_hr_expense_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_hr_holidays_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_hr_job_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_mrp_bom_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_mrp_production_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_mrp_repair_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_note_note_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_procurement_order_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_product_product_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_product_template_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_project_issue_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_project_project_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_project_task_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_purchase_order_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_purchase_requisition_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_res_users_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_sale_order_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_slide_channel_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_slide_slide_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_stock_landed_cost_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_stock_picking_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_stock_picking_wave_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_survey_survey_message_needaction_counter
 msgid "Number of Actions"
 msgstr "Nombre d'accions"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_account_analytic_account_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_account_asset_asset_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_account_bank_statement_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_account_invoice_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_account_voucher_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_blog_blog_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_blog_post_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_calendar_event_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_crm_lead_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_crm_team_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_crossovered_budget_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_event_event_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_event_registration_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_event_track_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_fleet_vehicle_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_forum_forum_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_forum_post_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_forum_tag_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_gamification_badge_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_gamification_challenge_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_hr_applicant_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_hr_contract_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_hr_department_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_hr_employee_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_hr_equipment_category_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_hr_equipment_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_hr_equipment_request_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_hr_expense_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_hr_holidays_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_hr_job_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_hr_timesheet_sheet_sheet_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mail_channel_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_mail_mass_mailing_contact_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mail_thread_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_mrp_bom_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_mrp_production_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_mrp_production_workcenter_line_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_mrp_repair_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_note_note_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_procurement_order_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_product_product_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_product_template_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_project_issue_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_project_project_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_project_task_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_purchase_order_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_purchase_requisition_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_partner_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_sale_order_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_slide_channel_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_slide_slide_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_stock_landed_cost_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_stock_picking_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_stock_picking_wave_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_stock_production_lot_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_survey_survey_message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr "Nombre de missatges que requereixen una atenció"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_account_analytic_account_message_unread_counter
+#: model:ir.model.fields,help:mail.field_account_asset_asset_message_unread_counter
+#: model:ir.model.fields,help:mail.field_account_bank_statement_message_unread_counter
+#: model:ir.model.fields,help:mail.field_account_invoice_message_unread_counter
+#: model:ir.model.fields,help:mail.field_account_voucher_message_unread_counter
+#: model:ir.model.fields,help:mail.field_blog_blog_message_unread_counter
+#: model:ir.model.fields,help:mail.field_blog_post_message_unread_counter
+#: model:ir.model.fields,help:mail.field_calendar_event_message_unread_counter
+#: model:ir.model.fields,help:mail.field_crm_lead_message_unread_counter
+#: model:ir.model.fields,help:mail.field_crm_team_message_unread_counter
+#: model:ir.model.fields,help:mail.field_crossovered_budget_message_unread_counter
+#: model:ir.model.fields,help:mail.field_event_event_message_unread_counter
+#: model:ir.model.fields,help:mail.field_event_registration_message_unread_counter
+#: model:ir.model.fields,help:mail.field_event_track_message_unread_counter
+#: model:ir.model.fields,help:mail.field_fleet_vehicle_message_unread_counter
+#: model:ir.model.fields,help:mail.field_forum_forum_message_unread_counter
+#: model:ir.model.fields,help:mail.field_forum_post_message_unread_counter
+#: model:ir.model.fields,help:mail.field_forum_tag_message_unread_counter
+#: model:ir.model.fields,help:mail.field_gamification_badge_message_unread_counter
+#: model:ir.model.fields,help:mail.field_gamification_challenge_message_unread_counter
+#: model:ir.model.fields,help:mail.field_hr_applicant_message_unread_counter
+#: model:ir.model.fields,help:mail.field_hr_contract_message_unread_counter
+#: model:ir.model.fields,help:mail.field_hr_department_message_unread_counter
+#: model:ir.model.fields,help:mail.field_hr_employee_message_unread_counter
+#: model:ir.model.fields,help:mail.field_hr_equipment_category_message_unread_counter
+#: model:ir.model.fields,help:mail.field_hr_equipment_message_unread_counter
+#: model:ir.model.fields,help:mail.field_hr_equipment_request_message_unread_counter
+#: model:ir.model.fields,help:mail.field_hr_expense_message_unread_counter
+#: model:ir.model.fields,help:mail.field_hr_holidays_message_unread_counter
+#: model:ir.model.fields,help:mail.field_hr_job_message_unread_counter
+#: model:ir.model.fields,help:mail.field_hr_timesheet_sheet_sheet_message_unread_counter
 #: model:ir.model.fields,help:mail.field_mail_channel_message_unread_counter
+#: model:ir.model.fields,help:mail.field_mail_mass_mailing_contact_message_unread_counter
 #: model:ir.model.fields,help:mail.field_mail_thread_message_unread_counter
+#: model:ir.model.fields,help:mail.field_mrp_bom_message_unread_counter
+#: model:ir.model.fields,help:mail.field_mrp_production_message_unread_counter
+#: model:ir.model.fields,help:mail.field_mrp_production_workcenter_line_message_unread_counter
+#: model:ir.model.fields,help:mail.field_mrp_repair_message_unread_counter
+#: model:ir.model.fields,help:mail.field_note_note_message_unread_counter
+#: model:ir.model.fields,help:mail.field_procurement_order_message_unread_counter
+#: model:ir.model.fields,help:mail.field_product_product_message_unread_counter
+#: model:ir.model.fields,help:mail.field_product_template_message_unread_counter
+#: model:ir.model.fields,help:mail.field_project_issue_message_unread_counter
+#: model:ir.model.fields,help:mail.field_project_project_message_unread_counter
+#: model:ir.model.fields,help:mail.field_project_task_message_unread_counter
+#: model:ir.model.fields,help:mail.field_purchase_order_message_unread_counter
+#: model:ir.model.fields,help:mail.field_purchase_requisition_message_unread_counter
 #: model:ir.model.fields,help:mail.field_res_partner_message_unread_counter
 #: model:ir.model.fields,help:mail.field_res_users_message_unread_counter
+#: model:ir.model.fields,help:mail.field_sale_order_message_unread_counter
+#: model:ir.model.fields,help:mail.field_slide_channel_message_unread_counter
+#: model:ir.model.fields,help:mail.field_slide_slide_message_unread_counter
+#: model:ir.model.fields,help:mail.field_stock_landed_cost_message_unread_counter
+#: model:ir.model.fields,help:mail.field_stock_picking_message_unread_counter
+#: model:ir.model.fields,help:mail.field_stock_picking_wave_message_unread_counter
+#: model:ir.model.fields,help:mail.field_stock_production_lot_message_unread_counter
+#: model:ir.model.fields,help:mail.field_survey_survey_message_unread_counter
 msgid "Number of unread messages"
 msgstr "Nombre de missatges no llegits"
 
@@ -2141,7 +3114,7 @@ msgstr "Nombre de missatges no llegits"
 #: model:ir.actions.act_window,help:mail.action_contacts
 msgid ""
 "Odoo helps you easily track all activities related to\n"
-"            a customer; discussions, history of business opportunities,\n"
+"            a customer: discussions, history of business opportunities,\n"
 "            documents, etc."
 msgstr ""
 
@@ -2154,7 +3127,7 @@ msgstr "Odoo necessita el vostre permís per"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:109
+#: code:addons/mail/static/src/xml/client_action.xml:111
 #, python-format
 msgid "Offline"
 msgstr "Fora de línia"
@@ -2191,14 +3164,14 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:218
+#: code:addons/mail/static/src/js/followers.js:220
 #, python-format
 msgid "One follower"
 msgstr "Un seguidor"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:107
+#: code:addons/mail/static/src/xml/client_action.xml:109
 #, python-format
 msgid "Online"
 msgstr ""
@@ -2220,7 +3193,7 @@ msgstr "Obrir el document pare"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:128
+#: code:addons/mail/static/src/xml/client_action.xml:136
 #, python-format
 msgid "Open channel settings"
 msgstr ""
@@ -2240,13 +3213,17 @@ msgstr "No accepta rebre emails"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_force_thread_id
+#: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_force_thread_id
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_force_thread_id
 #: model:ir.model.fields,help:mail.field_res_users_alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "Id opcional d'un fil(registre) al que tots els missatges entrants s'adjuntaran, inclús si no van ser respostes del mateix. Si s'estableix, se desactivarà completament la creació de nous registres."
+msgstr ""
+"Id opcional d'un fil(registre) al que tots els missatges entrants "
+"s'adjuntaran, inclús si no van ser respostes del mateix. Si s'estableix, se "
+"desactivarà completament la creació de nous registres."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_mail_server_id
@@ -2255,12 +3232,14 @@ msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
 msgstr ""
+"Servidor de sortida preferit (opcional). Si no està establert, s'utilitzarà "
+"del de prioritat major."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_report_template
 #: model:ir.model.fields,field_description:mail.field_mail_template_report_template
 msgid "Optional report to print and attach"
-msgstr ""
+msgstr "Informe opcional a generar i adjuntar"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_lang
@@ -2271,12 +3250,16 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. "
 "${object.partner_id.lang}."
 msgstr ""
+"Llenguatge de traducció opcional (codi ISO) per seleccionar quan s'està "
+"enviant un correu electrònic. Si no està activada, s'utilitzarà la versió "
+"anglesa. Això normalment haurà de ser una expressió amb marcadors que "
+"proveeix el llenguatge apropiat. Per exemple: ${object.partner_id.lang}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_null_value
 #: model:ir.model.fields,help:mail.field_mail_template_null_value
 msgid "Optional value to use if the target field is empty"
-msgstr ""
+msgstr "Valor opcional a utilitzar si el camp objectiu està buit"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
@@ -2298,16 +3281,18 @@ msgstr "Correu sortint"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_mail_server_id
 #: model:ir.model.fields,field_description:mail.field_mail_mail_mail_server_id
 #: model:ir.model.fields,field_description:mail.field_mail_message_mail_server_id
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_mail_server_id
 msgid "Outgoing mail server"
 msgstr "Servidor de correus sortint"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Override author's email"
-msgstr ""
+msgstr "Sobreescriure el correu electrònic de l'autor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_user_id
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_user_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_user_id
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_user_id
 msgid "Owner"
@@ -2322,11 +3307,13 @@ msgstr "Parent"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_parent_id
 #: model:ir.model.fields,field_description:mail.field_mail_mail_parent_id
 #: model:ir.model.fields,field_description:mail.field_mail_message_parent_id
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_parent_id
 msgid "Parent Message"
 msgstr "Missatge pare"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_parent_model_id
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_parent_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_parent_model_id
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_parent_model_id
 msgid "Parent Model"
@@ -2334,6 +3321,7 @@ msgstr "Model pare"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_parent_thread_id
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_parent_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_parent_thread_id
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_parent_thread_id
 msgid "Parent Record Thread ID"
@@ -2341,20 +3329,21 @@ msgstr "Id del registre pare"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_parent_model_id
+#: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_parent_model_id
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_parent_model_id
 #: model:ir.model.fields,help:mail.field_res_users_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_parent_id
 msgid ""
-"Parent subtype, used for automatic subscription. This field is not correctly"
-" named. For example on a project, the parent_id of project subtypes refers "
-"to task-related subtypes."
+"Parent subtype, used for automatic subscription. This field is not correctly "
+"named. For example on a project, the parent_id of project subtypes refers to "
+"task-related subtypes."
 msgstr ""
 
 #. module: mail
@@ -2363,7 +3352,7 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: mail
-#: code:addons/mail/models/res_partner.py:35
+#: code:addons/mail/models/res_partner.py:37
 #, python-format
 msgid "Partner Profile"
 msgstr "Perfil de l'empresa"
@@ -2372,11 +3361,14 @@ msgstr "Perfil de l'empresa"
 #: model:ir.ui.view,arch_db:mail.res_partner_opt_out_search
 msgid "Partners that did not ask not to be included in mass mailing campaigns"
 msgstr ""
+"Empreses que van demanar no ser incloses en campanyes d'enviament massius de "
+"correus"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail_needaction_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message_needaction_partner_ids
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_needaction_partner_ids
 msgid "Partners with Need Action"
 msgstr ""
 
@@ -2385,7 +3377,9 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_mail_auto_delete
 #: model:ir.model.fields,help:mail.field_mail_template_auto_delete
 msgid "Permanently delete this email after sending it, to save space"
-msgstr "Elimina permanent-ment aquest correu electronic deprés de enviar-lo, per estalviar espai."
+msgstr ""
+"Elimina permanent-ment aquest correu electronic deprés de enviar-lo, per "
+"estalviar espai."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image
@@ -2396,11 +3390,11 @@ msgstr "Foto"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_copyvalue
 #: model:ir.model.fields,field_description:mail.field_mail_template_copyvalue
 msgid "Placeholder Expression"
-msgstr ""
+msgstr "Expressió de marcador"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:618
+#: code:addons/mail/static/src/js/chatter.js:191
 #, python-format
 msgid "Please complete partner's informations"
 msgstr "Si us plau, completi la informació de l'empresa"
@@ -2410,29 +3404,33 @@ msgstr "Si us plau, completi la informació de l'empresa"
 #: code:addons/mail/static/src/js/many2many_tags_email.js:68
 #, python-format
 msgid "Please complete partner's informations and Email"
-msgstr "Si us plau, completi la informació de l'empresa i el seu correu electrònic"
+msgstr ""
+"Si us plau, completi la informació de l'empresa i el seu correu electrònic"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Please set the Base Model before setting the action details."
 msgstr ""
+"Estableixi si us plau, el model base abans d'establir els detalls de l'acció"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:252
+#: code:addons/mail/static/src/js/composer.js:578
 #, python-format
 msgid "Please, wait while the file is uploading."
 msgstr "Per favor, esperi mentre l'arxiu s'està pujant."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_contact
+#: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_contact
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_contact
 #: model:ir.model.fields,help:mail.field_res_users_alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 
 #. module: mail
@@ -2442,18 +3440,24 @@ msgid ""
 "Policy to receive emails for new messages pushed to your personal Inbox:\n"
 "- Never: no emails are sent\n"
 "- All Messages: for every notification you receive in your Inbox"
-msgstr "Política per rebre correus electrònics pels nous missatges inserits en la safata d'entrada personal.\n-Mai: No s'enviarà cap correu\n-Tots els missatges: S'enviarà un correu per cada notificació que rebi a la safata d'entrada"
+msgstr ""
+"Política per rebre correus electrònics pels nous missatges inserits en la "
+"safata d'entrada personal.\n"
+"-Mai: No s'enviarà cap correu\n"
+"-Tots els missatges: S'enviarà un correu per cada notificació que rebi a la "
+"safata d'entrada"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Preferred reply address"
-msgstr ""
+msgstr "Direcció de resposta favorita"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_reply_to
 #: model:ir.model.fields,help:mail.field_mail_template_reply_to
 msgid "Preferred response address (placeholders may be used here)"
 msgstr ""
+"Direcció de resposta preferida (es poden utilitzar aquí expressions de camp)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -2463,7 +3467,7 @@ msgstr "Previsualitza"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "Preview of"
-msgstr ""
+msgstr "Vista prèvia de"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_public
@@ -2473,13 +3477,20 @@ msgstr "Privacitat"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:44
+#: code:addons/mail/static/src/xml/client_action.xml:51
 #, python-format
 msgid "Private Channels"
 msgstr "Canals privats"
 
 #. module: mail
-#: code:addons/mail/wizard/mail_compose_message.py:176
+#. openerp-web
+#: code:addons/mail/static/src/js/client_action.js:138
+#, fuzzy, python-format
+msgid "Public Channels"
+msgstr "Canals privats"
+
+#. module: mail
+#: code:addons/mail/wizard/mail_compose_message.py:180
 #, python-format
 msgid "Re:"
 msgstr "Re:"
@@ -2506,6 +3517,7 @@ msgstr "Destinataris"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_force_thread_id
+#: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_force_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_force_thread_id
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_force_thread_id
 msgid "Record Thread ID"
@@ -2522,6 +3534,7 @@ msgstr "Referències"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_res_id
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_res_id
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_res_id
 msgid "Related Document ID"
 msgstr "Id. del document relacionat"
 
@@ -2533,6 +3546,7 @@ msgstr "Id. del document relacionat"
 #: model:ir.model.fields,field_description:mail.field_mail_message_model
 #: model:ir.model.fields,field_description:mail.field_mail_template_model
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_res_model
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_model
 msgid "Related Document Model"
 msgstr "Model de document relacionat"
 
@@ -2555,17 +3569,19 @@ msgstr "Camp relació"
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove the contextual action to use this template on related documents"
 msgstr ""
+"La seva plantilla no té definida cap remitent. Si us plau, actualitzi la "
+"seva plantilla."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:131
+#: code:addons/mail/static/src/xml/followers.xml:51
 #, python-format
 msgid "Remove this follower"
 msgstr "Eliminar aquest seguidor"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:105
+#: code:addons/mail/static/src/xml/thread.xml:103
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "Reply"
@@ -2575,10 +3591,13 @@ msgstr "Respondre"
 #: model:ir.model.fields,help:mail.field_mail_compose_message_reply_to
 #: model:ir.model.fields,help:mail.field_mail_mail_reply_to
 #: model:ir.model.fields,help:mail.field_mail_message_reply_to
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_reply_to
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
-msgstr "Adreça de resposta dels correus. Establint aquest camp, se saltara la creació automàtica de fils."
+msgstr ""
+"Adreça de resposta dels correus. Establint aquest camp, se saltara la "
+"creació automàtica de fils."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_reply_to
@@ -2586,6 +3605,7 @@ msgstr "Adreça de resposta dels correus. Establint aquest camp, se saltara la c
 #: model:ir.model.fields,field_description:mail.field_mail_mail_reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_message_reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_reply_to
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_reply_to
 msgid "Reply-To"
 msgstr "Respondre a"
 
@@ -2612,13 +3632,6 @@ msgid "Rich-text/HTML message"
 msgstr "Missatge de text enriquit/HTML"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview_body_html
-#: model:ir.model.fields,help:mail.field_ir_act_server_body_html
-#: model:ir.model.fields,help:mail.field_mail_template_body_html
-msgid "Rich-text/HTML version of the message (placeholders may be used here)"
-msgstr ""
-
-#. module: mail
 #: model:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "SMTP Server"
 msgstr "Servidor SMTP "
@@ -2626,23 +3639,35 @@ msgstr "Servidor SMTP "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_res_id
 msgid "Sample Document"
-msgstr ""
+msgstr "Document d'exemple"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save as a new template"
-msgstr ""
+msgstr "Guardar com a nova plantilla"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save as new template"
-msgstr ""
+msgstr "Guardar com a nova plantilla"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_window.js:23
+#: code:addons/mail/static/src/js/chat_window.js:35
 #, python-format
 msgid "Say something"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_email_template_preview_scheduled_date
+#: model:ir.model.fields,field_description:mail.field_mail_template_scheduled_date
+msgid "Scheduled Date"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_mail_scheduled_date
+#: model:ir.ui.view,arch_db:mail.email_template_form
+msgid "Scheduled Send Date"
 msgstr ""
 
 #. module: mail
@@ -2660,8 +3685,12 @@ msgstr "Grups de cerca"
 #: model:ir.model.fields,help:mail.field_mail_template_model_object_field
 msgid ""
 "Select target field from the related document model.\n"
-"If it is a relationship field you will be able to select a target field at the destination of the relationship."
+"If it is a relationship field you will be able to select a target field at "
+"the destination of the relationship."
 msgstr ""
+"Seleccioni el camp objectiu del model de documentat relacionat. Si és un "
+"camp d'associació, podrà seleccionar un camp objectiu al destí de "
+"l'associació."
 
 #. module: mail
 #: selection:mail.channel,public:0
@@ -2670,7 +3699,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/composer.xml:9
+#: code:addons/mail/static/src/js/composer.js:333
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Send"
@@ -2682,7 +3711,7 @@ msgid "Send Email"
 msgstr "Enviar Correu electrònic"
 
 #. module: mail
-#: code:addons/mail/models/mail_template.py:237
+#: code:addons/mail/models/mail_template.py:252
 #, python-format
 msgid "Send Mail (%s)"
 msgstr "Envia mail (%s)"
@@ -2701,13 +3730,6 @@ msgid "Send a message"
 msgstr "Enviar un missatge"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:135
-#, python-format
-msgid "Send mail"
-msgstr "Enviar correu"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_email_send
 msgid "Send messages by email"
 msgstr "Enviar missatges per correu electrònic"
@@ -2720,10 +3742,13 @@ msgid ""
 "Sender address (placeholders may be used here). If not set, the default "
 "value will be the author's email alias if configured, or email address."
 msgstr ""
+"Direcció del remitent (es poden utilitzar expressions de camp aquí). Si no "
+"s'estableix, el valor per defecte serà l'àlies de l'autor si està "
+"configurat, o la direcció de correu."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:94
+#: code:addons/mail/static/src/xml/client_action.xml:95
 #, python-format
 msgid "Sends messages by email"
 msgstr ""
@@ -2740,7 +3765,7 @@ msgstr "Seqüència"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:128
+#: code:addons/mail/static/src/xml/client_action.xml:136
 #, python-format
 msgid "Settings"
 msgstr "Configuració"
@@ -2765,13 +3790,13 @@ msgstr "Abreviació"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_value
 #: model:ir.model.fields,field_description:mail.field_mail_template_ref_ir_value
 msgid "Sidebar Button"
-msgstr ""
+msgstr "Botó a la barra lateral"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_act_window
 #: model:ir.model.fields,field_description:mail.field_mail_template_ref_ir_act_window
 msgid "Sidebar action"
-msgstr ""
+msgstr "Acció barra lateral"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_ref_ir_act_window
@@ -2780,21 +3805,24 @@ msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
+"Acció de la barra lateral per fer disponible aquesta plantilla als registres "
+"del model de document relacionat."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_ref_ir_value
 #: model:ir.model.fields,help:mail.field_mail_template_ref_ir_value
 msgid "Sidebar button to open the sidebar action"
-msgstr ""
+msgstr "Botó de barra lateral que llança l'acció"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_author_avatar
 #: model:ir.model.fields,help:mail.field_mail_mail_author_avatar
 #: model:ir.model.fields,help:mail.field_mail_message_author_avatar
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_author_avatar
 msgid ""
 "Small-sized image of this contact. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 
 #. module: mail
@@ -2806,9 +3834,12 @@ msgstr "Foto petita"
 #: model:ir.model.fields,help:mail.field_mail_channel_image_small
 msgid ""
 "Small-sized photo of the group. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
-msgstr "Imatge petita del grup. Automàticament es redimensionarà a 64x64px, mantenint el rati d'aspecte. Utilitzi aquest camp quan una imatge petita sigui necessària."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
+msgstr ""
+"Imatge petita del grup. Automàticament es redimensionarà a 64x64px, "
+"mantenint el rati d'aspecte. Utilitzi aquest camp quan una imatge petita "
+"sigui necessària."
 
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
@@ -2817,11 +3848,12 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:432
-#: code:addons/mail/static/src/xml/client_action.xml:18
+#: code:addons/mail/static/src/js/chat_manager.js:964
+#: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
 #: model:ir.model.fields,field_description:mail.field_mail_message_starred
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_starred
 #, python-format
 msgid "Starred"
 msgstr "Destacat"
@@ -2854,6 +3886,7 @@ msgstr "Sub-model"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_subject
 #: model:ir.model.fields,field_description:mail.field_mail_message_subject
 #: model:ir.model.fields,field_description:mail.field_mail_template_subject
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_subject
 #, python-format
 msgid "Subject"
 msgstr "Assumpte"
@@ -2864,7 +3897,7 @@ msgstr "Assumpte"
 #: model:ir.model.fields,help:mail.field_mail_template_subject
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Subject (placeholders may be used here)"
-msgstr ""
+msgstr "Assumpte (es poden utilitzar aquí expressions de camps)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -2873,7 +3906,7 @@ msgstr "Assumpte..."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:68
+#: code:addons/mail/static/src/xml/thread.xml:115
 #, python-format
 msgid "Subject:"
 msgstr ""
@@ -2887,7 +3920,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_subtype_id
 #: model:ir.model.fields,field_description:mail.field_mail_followers_subtype_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail_subtype_id
-#: model:ir.model.fields,field_description:mail.field_mail_message_subtype_id_2108
+#: model:ir.model.fields,field_description:mail.field_mail_message_subtype_id_2200
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_subtype_id
 #: model:ir.ui.view,arch_db:mail.view_message_subtype_tree
 msgid "Subtype"
 msgstr "Subtip"
@@ -2901,6 +3935,7 @@ msgstr "Subtipus"
 #. module: mail
 #: selection:mail.compose.message,message_type:0
 #: selection:mail.message,message_type:0
+#: selection:survey.mail.compose.message,message_type:0
 msgid "System notification"
 msgstr "Notificació del sistema"
 
@@ -2923,40 +3958,44 @@ msgstr "Plantilles"
 msgid ""
 "The email address associated with this group. New emails received will "
 "automatically create new topics."
-msgstr "Adreça de correu associada al grup. Els correus rebuts crearan un nou tema."
+msgstr ""
+"Adreça de correu associada al grup. Els correus rebuts crearan un nou tema."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
-msgid "The excaped html code replacing the shortcut"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_email_template_preview_model_id
-#: model:ir.model.fields,help:mail.field_mail_template_model_id
-msgid "The kind of document with with this template can be used"
+msgid "The escaped html code replacing the shortcut"
 msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
+#: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_model_id
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_model_id
 #: model:ir.model.fields,help:mail.field_res_users_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
-msgstr "El model (Tipus de document d'Odoo) al que correspon aquest pseudònim. Qualsevol correu electrònic entrant que no sigui resposta a un registre existent, causarà la creació d'un nou registre d'aquest model (per exemple, una tasca de projecte)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
+msgstr ""
+"El model (Tipus de document d'Odoo) al que correspon aquest pseudònim. "
+"Qualsevol correu electrònic entrant que no sigui resposta a un registre "
+"existent, causarà la creació d'un nou registre d'aquest model (per exemple, "
+"una tasca de projecte)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_name
+#: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_name
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_name
 #: model:ir.model.fields,help:mail.field_res_users_alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "El nom d'aquest pseudònim de correu electrònic. Per exemple, \"feines\", si el que vol és obtenir els correus per <fenies@example.odoo.com>"
+msgstr ""
+"El nom d'aquest pseudònim de correu electrònic. Per exemple, \"feines\", si "
+"el que vol és obtenir els correus per <fenies@example.odoo.com>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_user_id
+#: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_user_id
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_user_id
 #: model:ir.model.fields,help:mail.field_res_users_alias_user_id
 msgid ""
@@ -2964,17 +4003,26 @@ msgid ""
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
-msgstr "El propietari dels registres creats al rebre correus electrònics amb aquest pseudònim. Si aquest camp no esta definit, el sistema intentarà de trobar el propietari correcte basat amb l'adreça de l'emissor (De), o utilitzarà la compta d'administrador si no es troba un usuari per aquesta adreça."
+msgstr ""
+"El propietari dels registres creats al rebre correus electrònics amb aquest "
+"pseudònim. Si aquest camp no esta definit, el sistema intentarà de trobar el "
+"propietari correcte basat amb l'adreça de l'emissor (De), o utilitzarà la "
+"compta d'administrador si no es troba un usuari per aquesta adreça."
 
 #. module: mail
-#: code:addons/mail/models/mail_message.py:642
-#: code:addons/mail/models/mail_message.py:731
+#: code:addons/mail/models/mail_message.py:728
+#: code:addons/mail/models/mail_message.py:823
 #, python-format
 msgid ""
-"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
+"The requested operation cannot be completed due to security restrictions. "
+"Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr "L'operació no ha pogut ser completada per restriccions de seguretat. Si us plau contacti amb l'administrador del seu sistema.\n\n(Tipus de document: %s, Operació: %s)"
+msgstr ""
+"L'operació no ha pogut ser completada per restriccions de seguretat. Si us "
+"plau contacti amb l'administrador del seu sistema.\n"
+"\n"
+"(Tipus de document: %s, Operació: %s)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
@@ -2982,18 +4030,30 @@ msgid "The shortcut which must be replace in the Chat Messages"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_email_template_preview_model_id
+#: model:ir.model.fields,help:mail.field_mail_template_model_id
+#, fuzzy
+msgid "The type of document this template can be used with"
+msgstr "La classe de document amb el qual aquesta plantilla pot ser utilitzada"
+
+#. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid ""
-"The values displayed hereunder are informative. When sending the email, the values\n"
+"The values displayed hereunder are informative. When sending the email, the "
+"values\n"
 "                                will be taken from the email template."
 msgstr ""
+"Els valors que es mostren a continuació són informatius. Quan enviï el "
+"correu electrònic, els valors seran agafats de la plantilla."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_image
 msgid ""
 "This field holds the image used as photo for the group, limited to "
 "1024x1024px."
-msgstr "Aquest camp contindrà una imatge utilitzada com a foto de grup, limitada a 1024x1024px."
+msgstr ""
+"Aquest camp contindrà una imatge utilitzada com a foto de grup, limitada a "
+"1024x1024px."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_public
@@ -3017,7 +4077,7 @@ msgstr "A"
 #: model:ir.model.fields,field_description:mail.field_ir_act_server_email_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_email_to
 msgid "To (Emails)"
-msgstr ""
+msgstr "Per a (correus electrònics)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_partner_to
@@ -3029,7 +4089,7 @@ msgstr "Per (empreses)"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chat_window.xml:24
+#: code:addons/mail/static/src/xml/extended_chat_window.xml:7
 #, python-format
 msgid "To:"
 msgstr "Per:"
@@ -3043,14 +4103,14 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/thread.js:117
+#: code:addons/mail/static/src/js/thread.js:230
 #, python-format
 msgid "Today"
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:122
+#: code:addons/mail/static/src/xml/client_action.xml:131
 #, python-format
 msgid "Toggle Channels"
 msgstr ""
@@ -3064,9 +4124,10 @@ msgstr "Temes discutits en aquest grup... "
 #: model:ir.model.fields,help:mail.field_mail_compose_message_tracking_value_ids
 #: model:ir.model.fields,help:mail.field_mail_mail_tracking_value_ids
 #: model:ir.model.fields,help:mail.field_mail_message_tracking_value_ids
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_tracking_value_ids
 msgid ""
 "Tracked values are stored in a separate model. This field allow to "
-"reconstructthe tracking and to generate statistics on the model."
+"reconstruct the tracking and to generate statistics on the model."
 msgstr ""
 
 #. module: mail
@@ -3090,6 +4151,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_tracking_value_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail_tracking_value_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message_tracking_value_ids
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_tracking_value_ids
 msgid "Tracking values"
 msgstr ""
 
@@ -3097,6 +4159,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_message_type
 #: model:ir.model.fields,field_description:mail.field_mail_mail_message_type
 #: model:ir.model.fields,field_description:mail.field_mail_message_message_type
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_message_type
 msgid "Type"
 msgstr "Tipus"
 
@@ -3106,24 +4169,25 @@ msgid "UUID"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_message.py:42
+#: code:addons/mail/models/mail_message.py:43
 #, python-format
 msgid ""
 "Unable to send email, please configure the sender's email address or alias."
-msgstr "Incapaç d'enviar el correu electrònic, si us plau configuri el correu electrònic o el pseudònim del remitent."
+msgstr ""
+"Incapaç d'enviar el correu electrònic, si us plau configuri el correu "
+"electrònic o el pseudònim del remitent."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:98
+#: code:addons/mail/static/src/xml/client_action.xml:117
 #, python-format
 msgid "Undo"
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:638
-#: code:addons/mail/static/src/xml/chatter.xml:96
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
+#: code:addons/mail/models/mail_thread.py:684
+#: code:addons/mail/static/src/xml/followers.xml:22
 #, python-format
 msgid "Unfollow"
 msgstr "Deixa de seguir"
@@ -3132,22 +4196,129 @@ msgstr "Deixa de seguir"
 #: sql_constraint:mail.alias:0
 msgid ""
 "Unfortunately this email alias is already used, please choose a unique one"
-msgstr "Desafortunadament, aquest pseudònim de correu ja està en ús. Per favor, elegeixi un altre."
+msgstr ""
+"Desafortunadament, aquest pseudònim de correu ja està en ús. Per favor, "
+"elegeixi un altre."
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_unread
+#: model:ir.model.fields,field_description:mail.field_account_asset_asset_message_unread
+#: model:ir.model.fields,field_description:mail.field_account_bank_statement_message_unread
+#: model:ir.model.fields,field_description:mail.field_account_invoice_message_unread
+#: model:ir.model.fields,field_description:mail.field_account_voucher_message_unread
+#: model:ir.model.fields,field_description:mail.field_blog_blog_message_unread
+#: model:ir.model.fields,field_description:mail.field_blog_post_message_unread
+#: model:ir.model.fields,field_description:mail.field_calendar_event_message_unread
+#: model:ir.model.fields,field_description:mail.field_crm_lead_message_unread
+#: model:ir.model.fields,field_description:mail.field_crm_team_message_unread
+#: model:ir.model.fields,field_description:mail.field_crossovered_budget_message_unread
+#: model:ir.model.fields,field_description:mail.field_event_event_message_unread
+#: model:ir.model.fields,field_description:mail.field_event_registration_message_unread
+#: model:ir.model.fields,field_description:mail.field_event_track_message_unread
+#: model:ir.model.fields,field_description:mail.field_fleet_vehicle_message_unread
+#: model:ir.model.fields,field_description:mail.field_forum_forum_message_unread
+#: model:ir.model.fields,field_description:mail.field_forum_post_message_unread
+#: model:ir.model.fields,field_description:mail.field_forum_tag_message_unread
+#: model:ir.model.fields,field_description:mail.field_gamification_badge_message_unread
+#: model:ir.model.fields,field_description:mail.field_gamification_challenge_message_unread
+#: model:ir.model.fields,field_description:mail.field_hr_applicant_message_unread
+#: model:ir.model.fields,field_description:mail.field_hr_contract_message_unread
+#: model:ir.model.fields,field_description:mail.field_hr_department_message_unread
+#: model:ir.model.fields,field_description:mail.field_hr_employee_message_unread
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_category_message_unread
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_message_unread
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_request_message_unread
+#: model:ir.model.fields,field_description:mail.field_hr_expense_message_unread
+#: model:ir.model.fields,field_description:mail.field_hr_holidays_message_unread
+#: model:ir.model.fields,field_description:mail.field_hr_job_message_unread
+#: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_unread
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_unread
+#: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_unread
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_unread
+#: model:ir.model.fields,field_description:mail.field_mrp_bom_message_unread
+#: model:ir.model.fields,field_description:mail.field_mrp_production_message_unread
+#: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_unread
+#: model:ir.model.fields,field_description:mail.field_mrp_repair_message_unread
+#: model:ir.model.fields,field_description:mail.field_note_note_message_unread
+#: model:ir.model.fields,field_description:mail.field_procurement_order_message_unread
+#: model:ir.model.fields,field_description:mail.field_product_product_message_unread
+#: model:ir.model.fields,field_description:mail.field_product_template_message_unread
+#: model:ir.model.fields,field_description:mail.field_project_issue_message_unread
+#: model:ir.model.fields,field_description:mail.field_project_project_message_unread
+#: model:ir.model.fields,field_description:mail.field_project_task_message_unread
+#: model:ir.model.fields,field_description:mail.field_purchase_order_message_unread
+#: model:ir.model.fields,field_description:mail.field_purchase_requisition_message_unread
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_unread
 #: model:ir.model.fields,field_description:mail.field_res_users_message_unread
-#: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
+#: model:ir.model.fields,field_description:mail.field_sale_order_message_unread
+#: model:ir.model.fields,field_description:mail.field_slide_channel_message_unread
+#: model:ir.model.fields,field_description:mail.field_slide_slide_message_unread
+#: model:ir.model.fields,field_description:mail.field_stock_landed_cost_message_unread
+#: model:ir.model.fields,field_description:mail.field_stock_picking_message_unread
+#: model:ir.model.fields,field_description:mail.field_stock_picking_wave_message_unread
+#: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_unread
+#: model:ir.model.fields,field_description:mail.field_survey_survey_message_unread
 msgid "Unread Messages"
 msgstr "Missatges pendents de llegir"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_account_asset_asset_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_account_bank_statement_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_account_invoice_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_account_voucher_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_blog_blog_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_blog_post_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_calendar_event_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_crm_lead_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_crm_team_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_crossovered_budget_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_event_event_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_event_registration_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_event_track_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_fleet_vehicle_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_forum_forum_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_forum_post_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_forum_tag_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_gamification_badge_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_gamification_challenge_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_hr_applicant_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_hr_contract_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_hr_department_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_hr_employee_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_category_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_hr_equipment_request_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_hr_expense_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_hr_holidays_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_hr_job_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_mrp_bom_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_mrp_production_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_mrp_repair_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_note_note_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_procurement_order_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_product_product_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_product_template_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_project_issue_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_project_project_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_project_task_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_purchase_order_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_purchase_requisition_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_res_users_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_sale_order_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_slide_channel_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_slide_slide_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_stock_landed_cost_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_stock_picking_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_stock_picking_wave_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_survey_survey_message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Comptador de missatges no llegits"
 
@@ -3158,62 +4329,64 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:126
+#: code:addons/mail/static/src/xml/client_action.xml:134
 #, python-format
 msgid "Unstar all"
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:126
+#: code:addons/mail/static/src/xml/client_action.xml:134
 #, python-format
 msgid "Unstar all messages"
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:127
+#: code:addons/mail/static/src/xml/client_action.xml:135
 #, python-format
 msgid "Unsubscribe"
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:127
+#: code:addons/mail/static/src/xml/client_action.xml:135
 #, python-format
 msgid "Unsubscribe from channel"
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:425
+#: code:addons/mail/static/src/js/client_action.js:467
 #, python-format
 msgid "Unsubscribed"
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:178
+#: code:addons/mail/static/src/xml/thread.xml:169
 #, python-format
 msgid "Uploading"
 msgstr "Carregant"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:583
+#: code:addons/mail/static/src/js/composer.js:578
 #, python-format
 msgid "Uploading error"
 msgstr "Error de pujada"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_use_active_domain
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_use_active_domain
 msgid "Use active domain"
 msgstr "Utilitzar el domini actiu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_template_id
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_template_id
 msgid "Use template"
-msgstr ""
+msgstr "Utilitzar plantilla"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_sequence
@@ -3233,19 +4406,20 @@ msgid "Users"
 msgstr "Usuaris"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:593
-#: code:addons/mail/models/mail_thread.py:595
+#: code:addons/mail/models/mail_thread.py:671
+#: code:addons/mail/models/mail_thread.py:673
 #, python-format
 msgid "View"
 msgstr "Vista"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:365
+#: code:addons/mail/static/src/js/followers.js:328
 #, python-format
 msgid ""
 "Warning! \n"
-" If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove this follower ?"
+" If you remove a follower, he won't be notified of any email or discussion "
+"on this document. Do you really want to remove this follower ?"
 msgstr ""
 
 #. module: mail
@@ -3255,6 +4429,8 @@ msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
 msgstr ""
+"Quan es selecciona un camp de relació com primer camp, aquest camp permet "
+"establir el camp objectiu del model de document desti (sub-model)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_object
@@ -3263,9 +4439,12 @@ msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
 msgstr ""
+"Quan un camp d'asociació es selecciona com a primer camp, aquest camp mostra "
+"el model de document al que apunta la relació."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_is_log
+#: model:ir.model.fields,help:mail.field_survey_mail_compose_message_is_log
 msgid "Whether the message is an internal note (comment mode only)"
 msgstr "Si missatge és una nota interna (només mode comentari)"
 
@@ -3276,21 +4455,21 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/composer.xml:7
+#: code:addons/mail/static/src/xml/composer.xml:18
 #, python-format
 msgid "Write something..."
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/thread.js:122
+#: code:addons/mail/static/src/js/thread.js:232
 #, python-format
 msgid "Yesterday"
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:80
+#: code:addons/mail/static/src/js/client_action.js:78
 #, python-format
 msgid "You added <b>%s</b> to the conversation."
 msgstr ""
@@ -3299,37 +4478,39 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:29
 #, python-format
-msgid ""
-"You can mark any message as 'starred', and it shows up in this channel."
+msgid "You can mark any message as 'starred', and it shows up in this channel."
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/res_users.py:47
+#: code:addons/mail/models/res_users.py:49
 #, python-format
 msgid ""
 "You cannot create a new user from here.\n"
 " To create new user please go to configuration panel."
-msgstr "No pot crear un nou usuari des d'aquí. Per a crear un nou usuari, vagi al panell de configuració."
+msgstr ""
+"No pot crear un nou usuari des d'aquí. Per a crear un nou usuari, vagi al "
+"panell de configuració."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:125
+#: code:addons/mail/models/mail_channel.py:130
 #, python-format
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
-msgstr "No pot esborrar aquests grups, ja que el grup \"Tota la companyia\" és requerit per altres mòduls."
+msgstr ""
+"No pot esborrar aquests grups, ja que el grup \"Tota la companyia\" és "
+"requerit per altres mòduls."
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:315
+#: code:addons/mail/models/mail_thread.py:354
 #, python-format
 msgid ""
-"You could also add a new %(document)s by sending an email to: "
-"%(email_link)s."
+"You could also add a new %(document)s by sending an email to: %(email_link)s."
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:478
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "You have been invited to: "
 msgstr ""
@@ -3341,10 +4522,12 @@ msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
 msgstr ""
+"Pot adjuntar arxius a aquesta plantilla, per ser afegits a tots els e-mails "
+"creats des d'ella."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:401
+#: code:addons/mail/static/src/js/client_action.js:466
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr ""
@@ -3378,7 +4561,7 @@ msgid "by"
 msgstr "per"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:312
+#: code:addons/mail/models/mail_thread.py:320
 #, python-format
 msgid "document"
 msgstr "document"
@@ -3392,7 +4575,7 @@ msgstr "activa notificacions d'escriptori"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:220
+#: code:addons/mail/static/src/js/followers.js:222
 #, python-format
 msgid "followers"
 msgstr "seguidors"
@@ -3413,13 +4596,18 @@ msgid "ir.autovacuum"
 msgstr "ir.autovacuum"
 
 #. module: mail
+#: model:ir.model,name:mail.model_mail_alias_mixin
+msgid "mail.alias.mixin"
+msgstr ""
+
+#. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "members"
 msgstr "membres"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/client_action.xml:97
+#: code:addons/mail/static/src/xml/client_action.xml:116
 #, python-format
 msgid "mention(s) marked as read."
 msgstr ""
@@ -3431,14 +4619,14 @@ msgstr "lamevaempresa.odoo.com"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/thread.js:142
+#: code:addons/mail/static/src/js/thread.js:20
 #, python-format
 msgid "now"
 msgstr "ara"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:93
+#: code:addons/mail/static/src/xml/thread.xml:91
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "on"
@@ -3453,6 +4641,20 @@ msgstr ""
 #: model:mail.channel,name:mail.channel_3
 msgid "rd"
 msgstr "rd"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/thread.js:16
+#, fuzzy, python-format
+msgid "read less"
+msgstr "Missatges pendents de llegir"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/thread.js:15
+#, python-format
+msgid "read more"
+msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
@@ -3470,3 +4672,18 @@ msgstr "vendes"
 #, python-format
 msgid "this document"
 msgstr "aquest document"
+
+#~ msgid "Automatically sanitized HTML contents"
+#~ msgstr "Contingut HTML automàticament sanejat"
+
+#~ msgid "Join Group"
+#~ msgstr "Unir-se al grup"
+
+#~ msgid ""
+#~ "Rich-text/HTML version of the message (placeholders may be used here)"
+#~ msgstr ""
+#~ "Versió de text enriquit/HTML del missatge (es poden utilitzar aquí "
+#~ "expressions de camp)"
+
+#~ msgid "Send mail"
+#~ msgstr "Enviar correu"

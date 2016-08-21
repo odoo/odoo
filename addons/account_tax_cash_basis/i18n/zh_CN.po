@@ -1,25 +1,38 @@
+# #-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_tax_cash_basis
-# 
+#
 # Translators:
 # Connie Xiao <connie.xiao@elico-corp.com>, 2015
 # fausthuang, 2015
 # fausthuang, 2015
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
 # wxb <bd5dml@gmail.com>, 2015
+# #-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_tax_cash_basis
+#
+# Translators:
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:39+0000\n"
-"PO-Revision-Date: 2016-06-16 05:39+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_tax_cash_basis
@@ -47,7 +60,8 @@ msgstr "部分调节"
 msgid ""
 "Select this if the tax should use cash basis, which will         create an "
 "entry for this tax on a given account during reconciliation"
-msgstr "如果现金收付制税金，选择这个。它会在调节时，基于所给的科目创建一个分录。"
+msgstr ""
+"如果现金收付制税金，选择这个。它会在调节时，基于所给的科目创建一个分录。"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_tax
@@ -76,7 +90,9 @@ msgid ""
 "Technical field used to keep track of the tax cash basis reconciliation. "
 "This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
-msgstr "技术字段用于追踪税金现金收付制调节。当取消源单据时需要它：它会登录逆转会计分录来取消那部分。"
+msgstr ""
+"技术字段用于追踪税金现金收付制调节。当取消源单据时需要它：它会登录逆转会计分"
+"录来取消那部分。"
 
 #. module: account_tax_cash_basis
 #: code:addons/account_tax_cash_basis/tax_cash_basis.py:82
@@ -84,7 +100,9 @@ msgstr "技术字段用于追踪税金现金收付制调节。当取消源单据
 msgid ""
 "There is no tax cash basis journal defined for this company: \"%s\" \n"
 "Configure it in Accounting/Configuration/Settings"
-msgstr "这个公司没有定义税收收付实现制: \"%s\" \n在Accounting/Configuration/Settings下设置"
+msgstr ""
+"这个公司没有定义税收收付实现制: \"%s\" \n"
+"在Accounting/Configuration/Settings下设置"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_use_cash_basis
@@ -93,5 +111,10 @@ msgstr "使用现金收付制"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_config_settings
+#, fuzzy
 msgid "account.config.settings"
-msgstr "account.config.settings"
+msgstr ""
+"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
+"account.config.settings\n"
+"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"会计.配置.设定"

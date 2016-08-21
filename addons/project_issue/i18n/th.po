@@ -1,21 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * project_issue
-# 
+#
 # Translators:
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-04-03 15:14+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
+"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: project_issue
@@ -34,7 +38,7 @@ msgid "# of Issues"
 msgstr "# ของปัญหา"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:212
+#: code:addons/project_issue/project_issue.py:215
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (สำเนา)"
@@ -60,13 +64,9 @@ msgid ""
 "A Issue's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the next stage"
+" * Ready for next stage indicates the issue is ready to be pulled to the "
+"next stage"
 msgstr ""
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction
-msgid "Action Needed"
-msgstr "ต้องดำเนินการ"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -85,8 +85,13 @@ msgstr "บัญชีวิเคราะห์"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#, fuzzy
 msgid "Archived"
-msgstr "เก็บแล้ว"
+msgstr ""
+"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
+"ถูกเก็บ\n"
+"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
+"เก็บแล้ว"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_open
@@ -206,13 +211,13 @@ msgid "Creation Date"
 msgstr "วันที่สร้าง"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:367
+#: code:addons/project_issue/project_issue.py:384
 #, python-format
 msgid "Customer"
 msgstr "ลูกค้า"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:369
+#: code:addons/project_issue/project_issue.py:386
 #, python-format
 msgid "Customer Email"
 msgstr "อีเมลลูกค้า"
@@ -236,11 +241,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_opening_date
 msgid "Date of Opening"
 msgstr ""
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "วันที่ข้อความล่าสุดโพสต์ในระเบียน"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_days_since_creation
@@ -329,34 +329,18 @@ msgid "Feature description"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_follower_ids
-msgid "Followers"
-msgstr "ผู้ติดตาม"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "ผู้ติดตาม (ช่องทาง)"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "ผู้ติดตาม (คู่ค้า)"
-
-#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Group By"
 msgstr "จัดกลุ่มโดย"
 
 #. module: project_issue
-#: selection:project.issue,priority:0
-#: selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
 msgid "High"
 msgstr "ค่าสูงสุด"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:345
+#: code:addons/project_issue/project_issue.py:362
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -366,21 +350,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_id
 msgid "ID"
 msgstr "รหัส"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_unread
-msgid "If checked new messages require your attention."
-msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_is_follower
-msgid "Is Follower"
-msgstr "เป็นผู้ติดตาม"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_name
@@ -439,7 +408,7 @@ msgstr ""
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
-msgid "Issue ready for next sStage"
+msgid "Issue ready for next stage"
 msgstr ""
 
 #. module: project_issue
@@ -450,6 +419,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
+#: model:ir.model.fields,field_description:project_issue.field_project_project_issue_needaction_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
 #: model:ir.ui.menu,name:project_issue.portal_services_issues
@@ -498,11 +468,6 @@ msgid "Last Message"
 msgstr "ข้อความล่าสุด"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_last_post
-msgid "Last Message Date"
-msgstr "วันที่ข้อความล่าสุด"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue___last_update
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report___last_update
 msgid "Last Modified on"
@@ -520,20 +485,9 @@ msgid "Last Updated by"
 msgstr "อัพเดทครั้งสุดท้ายโดย"
 
 #. module: project_issue
-#: selection:project.issue,priority:0
-#: selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
 msgid "Low"
 msgstr "ต่ำ"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_ids
-msgid "Messages"
-msgstr "ข้อความ"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_ids
-msgid "Messages and communication history"
-msgstr "ข้อความและประวัติการติดต่อ"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -547,7 +501,7 @@ msgid "New"
 msgstr "ใหม่"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:347
+#: code:addons/project_issue/project_issue.py:364
 #, python-format
 msgid "New Issue"
 msgstr ""
@@ -558,7 +512,7 @@ msgid "Next Action"
 msgstr "การกระทำต่อไป"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:390
+#: code:addons/project_issue/project_issue.py:413
 #, python-format
 msgid "No Subject"
 msgstr "ไม่มีหัวข้อ"
@@ -568,11 +522,6 @@ msgstr "ไม่มีหัวข้อ"
 #: selection:project.issue.report,priority:0
 msgid "Normal"
 msgstr "ปกติ"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction_counter
-msgid "Number of Actions"
-msgstr "จำนวนกิจกรรม"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -585,26 +534,16 @@ msgid "Number of Days to open the project issue."
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_unread_counter
-msgid "Number of unread messages"
-msgstr ""
-
-#. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
 msgid "Partner"
 msgstr "คู่ค้า"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:480
+#: code:addons/project_issue/project_issue.py:530
 #, python-format
 msgid ""
-"Please remove existing issues in the project linked to the accounts you want"
-" to delete."
+"Please remove existing issues in the project linked to the accounts you want "
+"to delete."
 msgstr ""
 
 #. module: project_issue
@@ -632,7 +571,6 @@ msgid "Project"
 msgstr "โปรเจค"
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_graph
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_pivot
 msgid "Project Issue"
@@ -703,11 +641,18 @@ msgid "Task"
 msgstr "งาน"
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_project_task_type
+#, fuzzy
+msgid "Task Stage"
+msgstr "สถานะ"
+
+#. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
 msgid ""
 "The Odoo issues tacker allows you to efficiently manage things\n"
-"                    like internal requests, software development bugs, customer\n"
+"                    like internal requests, software development bugs, "
+"customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
 
@@ -749,16 +694,10 @@ msgid "Unassigned"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Unread Messages"
 msgstr "ข้อความที่ยังไม่ได้อ่าน"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
@@ -786,16 +725,6 @@ msgid "Watchers Emails"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_website_message_ids
-msgid "Website Messages"
-msgstr "ข้อความเว็บไซต์"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_website_message_ids
-msgid "Website communication history"
-msgstr "ประวัติการสื่อสารเว็บไซต์"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_open
 msgid "Working Hours to assign the Issue"
 msgstr ""
@@ -820,12 +749,63 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:260
+#: code:addons/project_issue/project_issue.py:263
 #, python-format
 msgid "issues"
 msgstr ""
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue
+#, fuzzy
+msgid "project issue"
+msgstr "ปัญหาของโปรเจค"
+
+#. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
 msgstr "project.issue.report"
+
+#~ msgid "Action Needed"
+#~ msgstr "ต้องดำเนินการ"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "วันที่ข้อความล่าสุดโพสต์ในระเบียน"
+
+#~ msgid "Followers"
+#~ msgstr "ผู้ติดตาม"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "ผู้ติดตาม (ช่องทาง)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "ผู้ติดตาม (คู่ค้า)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#~ msgid "Is Follower"
+#~ msgstr "เป็นผู้ติดตาม"
+
+#~ msgid "Last Message Date"
+#~ msgstr "วันที่ข้อความล่าสุด"
+
+#~ msgid "Messages"
+#~ msgstr "ข้อความ"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "ข้อความและประวัติการติดต่อ"
+
+#~ msgid "Number of Actions"
+#~ msgstr "จำนวนกิจกรรม"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "จำนวนข้อความที่ยังไม่ได้อ่าน"
+
+#~ msgid "Website Messages"
+#~ msgstr "ข้อความเว็บไซต์"
+
+#~ msgid "Website communication history"
+#~ msgstr "ประวัติการสื่อสารเว็บไซต์"

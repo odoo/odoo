@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * purchase_requisition
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-19 10:04+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: purchase_requisition
@@ -79,14 +79,15 @@ msgid ""
 "A Call for Tenders is a procedure for generating competing offers from\n"
 "            different bidders. In the call for tenders, you can record the\n"
 "            products you need to buy and generate the creation of RfQs to\n"
-"            vendors. Once the tenders have been registered, you can review and\n"
+"            vendors. Once the tenders have been registered, you can review "
+"and\n"
 "            compare them and you can validate some and cancel others."
-msgstr "Výzva na predkladanie ponúk je postup pre vytváranie konkurenčných ponúk\nrôznych záujemcov. V rámci výzvy na podávanie ponúk, môžete zaznamenať\nprodukty ktoré potrebujete kúpiť a generovať vytvorenie RFQ na\npredajcov. Akonáhle ponuky boli registrované, môžete skontrolovať a\nporovnať ich, a môžete zvalidovať niektoré a zrušiť ďalšie."
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction
-msgid "Action Needed"
-msgstr "Potrebná akcia"
+msgstr ""
+"Výzva na predkladanie ponúk je postup pre vytváranie konkurenčných ponúk\n"
+"rôznych záujemcov. V rámci výzvy na podávanie ponúk, môžete zaznamenať\n"
+"produkty ktoré potrebujete kúpiť a generovať vytvorenie RFQ na\n"
+"predajcov. Akonáhle ponuky boli registrované, môžete skontrolovať a\n"
+"porovnať ich, a môžete zvalidovať niektoré a zrušiť ďalšie."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
@@ -186,13 +187,6 @@ msgid "Change Quantity"
 msgstr "Zmeniť množstvo"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_product_template_purchase_requisition
-msgid ""
-"Check this box to generate Call for Tenders instead of generating requests "
-"for quotation from procurement."
-msgstr "Zaškrtnite, ak chcete generovať výzvu na cenovú ponuku namiesto generovania žiadosti o cenovú ponuku."
-
-#. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_partner
 msgid "Choose Vendor"
@@ -272,11 +266,6 @@ msgid "Created on"
 msgstr "Vytvorené"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Dátum poslednej správy zaslanej záznamu."
-
-#. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:22
 #, python-format
 msgid "Define product(s) you want to include in the call for tenders."
@@ -311,21 +300,6 @@ msgid "End Month"
 msgstr "Mesiac ukončenia"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_follower_ids
-msgid "Followers"
-msgstr "Odberatelia"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
-
-#. module: purchase_requisition
 #. openerp-web
 #: code:addons/purchase_requisition/static/src/xml/purchase_requisition.xml:5
 #, python-format
@@ -344,26 +318,6 @@ msgstr "Zoskupiť podľa"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_id
 msgid "ID"
 msgstr "ID"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_is_follower
-msgid "Is Follower"
-msgstr "Je odberateľ"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_last_post
-msgid "Last Message Date"
-msgstr "Dátum poslednej správy"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty___last_update
@@ -395,16 +349,6 @@ msgid "Latest Requisition"
 msgstr "Najnovšia rekvizícia"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_ids
-msgid "Messages"
-msgstr "Správy"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_ids
-msgid "Messages and communication history"
-msgstr "Správa a história komunikácie"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_multiple_rfq_per_supplier
 msgid "Multiple RFQ per vendor"
 msgstr "Viaceré RFQ za predajcu"
@@ -423,21 +367,6 @@ msgstr "Nové"
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "New Call for Tenders"
 msgstr "Nová výzva na cenové ponuky"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Počet akcií"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Počet správ ktoré vyžadujú akciu"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Počet neprečítaných správ"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -549,7 +478,7 @@ msgid "Purchase Requisition Partner"
 msgstr "Partner nákupnej rekvizície"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:431
+#: code:addons/purchase_requisition/purchase_requisition.py:435
 #, python-format
 msgid "Purchase Requisition created"
 msgstr "Nákupná rekvizícia vytvorená"
@@ -658,9 +587,15 @@ msgstr "Vybrať iba jednu RFQ (exkluzívne)"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_exclusive
 msgid ""
-"Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
-"Select multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
-msgstr "Vybrať iba jednu RFQ (exkluzívne): Pri potvrdení nákupnej objednávky to zruší zostávajúcu nákupnú objednávku.\nZvoliť viaceré RFQ: To umožňuje mať viaceré nákupné objednávky. Pri potvrdení nákupnej objednávky to nezruší zostávajúce objednávky."
+"Select only one RFQ (exclusive):  On the confirmation of a purchase order, "
+"it cancels the remaining purchase order.\n"
+"Select multiple RFQ:  It allows to have multiple purchase orders.On "
+"confirmation of a purchase order it does not cancel the remaining orders"
+msgstr ""
+"Vybrať iba jednu RFQ (exkluzívne): Pri potvrdení nákupnej objednávky to "
+"zruší zostávajúcu nákupnú objednávku.\n"
+"Zvoliť viaceré RFQ: To umožňuje mať viaceré nákupné objednávky. Pri "
+"potvrdení nákupnej objednávky to nezruší zostávajúce objednávky."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -688,7 +623,9 @@ msgstr "Stav"
 msgid ""
 "Technical field for not loosing the initial information about the quantity "
 "proposed in the tender"
-msgstr "Technické pole používané pre nestrácanie počiatočnej informácie o množstve navhrnutom v ponuke"
+msgstr ""
+"Technické pole používané pre nestrácanie počiatočnej informácie o množstve "
+"navhrnutom v ponuke"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_date_end
@@ -727,16 +664,6 @@ msgid "Unassigned  Requisition"
 msgstr "Nepridelená rekvizícia"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread
-msgid "Unread Messages"
-msgstr "Neprečítané správy"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Počítadlo neprečítaných správ"
-
-#. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
 msgid "Vendor"
 msgstr "Predajca"
@@ -750,16 +677,6 @@ msgstr "Predajcovia"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_warehouse_id
 msgid "Warehouse"
 msgstr "Sklad"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_website_message_ids
-msgid "Website Messages"
-msgstr "Správy webovej stránky"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_website_message_ids
-msgid "Website communication history"
-msgstr "História komunikácie webovej stránky"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:72
@@ -779,7 +696,9 @@ msgstr "Už ste vygenerovali nákupú objednávku(y)."
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
-msgstr "Už máte jednu %s nákupnú objednávku pre tohto partnera, musíte zrušiť túto nákupnú objednávku pre vytvorenie novej cenovej ponuky."
+msgstr ""
+"Už máte jednu %s nákupnú objednávku pre tohto partnera, musíte zrušiť túto "
+"nákupnú objednávku pre vytvorenie novej cenovej ponuky."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:258
@@ -791,3 +710,64 @@ msgstr "Nemáte zvolený žiadny riadok pre kupovanie."
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
 msgstr "napr. PO0025"
+
+#~ msgid "Action Needed"
+#~ msgstr "Potrebná akcia"
+
+#~ msgid ""
+#~ "Check this box to generate Call for Tenders instead of generating "
+#~ "requests for quotation from procurement."
+#~ msgstr ""
+#~ "Zaškrtnite, ak chcete generovať výzvu na cenovú ponuku namiesto "
+#~ "generovania žiadosti o cenovú ponuku."
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Dátum poslednej správy zaslanej záznamu."
+
+#~ msgid "Followers"
+#~ msgstr "Odberatelia"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Odberatelia (Kanály)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Odberatelia (Partneri)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "Is Follower"
+#~ msgstr "Je odberateľ"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Dátum poslednej správy"
+
+#~ msgid "Messages"
+#~ msgstr "Správy"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Správa a história komunikácie"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Počet akcií"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Počet správ ktoré vyžadujú akciu"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Počet neprečítaných správ"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Neprečítané správy"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Počítadlo neprečítaných správ"
+
+#~ msgid "Website Messages"
+#~ msgstr "Správy webovej stránky"
+
+#~ msgid "Website communication history"
+#~ msgstr "História komunikácie webovej stránky"

@@ -431,7 +431,7 @@
                                             <p>Example of python code</p>
                                             <code>
                                                 partner_name = obj.name + '_code'
-                                                self.pool["res.partner"].create(cr, uid, {"name": partner_name}, context=context)  
+                                                env["res.partner"].create({"name": partner_name})
                                             </code>
                                         </div>
                                     </div>

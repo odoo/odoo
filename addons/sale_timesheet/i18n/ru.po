@@ -1,27 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_timesheet
-# 
+#
 # Translators:
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-02-10 19:08+0000\n"
 "Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Позиция аналитики"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_res_company
@@ -39,6 +36,17 @@ msgid "Product Template"
 msgstr "Шаблон продукта"
 
 #. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+msgid "Project"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
+#, fuzzy
+msgid "Project associated to this sale"
+msgstr "Активность расписания, связанная с этой продажей"
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
 msgid "Sales Order"
 msgstr "Заказ продаж"
@@ -49,14 +57,23 @@ msgid "Sales Order Line"
 msgstr "Позиция заказа на продажу"
 
 #. module: sale_timesheet
-#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
-msgid "Timesheet"
-msgstr "Табель"
+#: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"If you use the timesheet linked to projects, don't forget to setup the right "
+"unit of measure in your employees."
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
 msgid "Timesheet Cost"
 msgstr "Расписание Стоимость"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
+#, fuzzy
+msgid "Timesheet UoM"
+msgstr "Табель"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
@@ -70,14 +87,24 @@ msgstr "Активность расписания, связанная с это�
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
+#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Timesheets"
 msgstr "Табели учёта"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_timesheet.py:101
+#: code:addons/sale_timesheet/models/sale_timesheet.py:128
 #, python-format
 msgid ""
 "You can use only one product on timesheet within the same sale order. You "
 "should split your order to include only one contract based on time and "
 "material."
-msgstr "Вы можете использовать только один продукт в расписании в пределах того же заказа продажи. Вы должны разделить ваш заказ, чтобы включить только один контракт основанный на времени и материале."
+msgstr ""
+"Вы можете использовать только один продукт в расписании в пределах того же "
+"заказа продажи. Вы должны разделить ваш заказ, чтобы включить только один "
+"контракт основанный на времени и материале."
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_analytic_line
+#, fuzzy
+msgid "account analytic line"
+msgstr "Позиция аналитики"

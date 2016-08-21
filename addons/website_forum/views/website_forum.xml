@@ -555,10 +555,14 @@
 <!-- Edition: ask your question -->
 <template id="new_question">
     <t t-call="website_forum.header">
-        <h1 class="mt0">Ask Your Question</h1>
-        <p>
-            To improve your chance getting an answer:
-        </p>
+      <h1 class="mt0">Ask Your Question</h1>
+      <t t-if='request.env.user.forum_waiting_posts_count'>
+        <div class="alert alert-warning" role="alert">
+            You already have one pending post.<br/>
+            Please wait for a moderator to validate your previous post before continuing.
+        </div>
+      </t>
+      <t t-if='not request.env.user.forum_waiting_posts_count'>
         <ul>
             <li>Set a clear, explicit and concise question title
                 (check
@@ -589,6 +593,7 @@
                 t-att-data-karma="forum.karma_ask"
                 data-hashtags="#question" data-social-target-type="question">Post Your Question</button>
         </form>
+      </t>
     </t>
 </template>
 
@@ -695,6 +700,9 @@
         - no need to answer the same question twice. Also, please <b>don't forget to vote</b>
         - it really helps to select the best questions and answers!
     </p>
+    <t t-if="request.params.get('nocontent')">
+        <p class='alert alert-danger' role='alert'>You cannot post an empty answer</p>
+    </t>
     <form t-attf-action="/forum/#{ slug(forum) }/#{slug(question)}/reply" method="post" class="js_website_submit_form" role="form">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>

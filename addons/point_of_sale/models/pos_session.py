@@ -159,6 +159,8 @@ class PosSession(models.Model):
             journals.sudo().write({'journal_user': True})
             pos_config.sudo().write({'journal_ids': [(6, 0, journals.ids)]})
 
+        pos_name = self.env['ir.sequence'].with_context(ctx).next_by_code('pos.session')
+
         statements = []
         ABS = self.env['account.bank.statement']
         uid = SUPERUSER_ID if self.env.user.has_group('point_of_sale.group_pos_user') else self.env.user.id
@@ -170,12 +172,13 @@ class PosSession(models.Model):
             st_values = {
                 'journal_id': journal.id,
                 'user_id': self.env.user.id,
+                'name': pos_name
             }
 
             statements.append(ABS.with_context(ctx).sudo(uid).create(st_values).id)
 
         values.update({
-            'name': self.env['ir.sequence'].with_context(ctx).next_by_code('pos.session'),
+            'name': pos_name,
             'statement_ids': [(6, 0, statements)],
             'config_id': config_id
         })

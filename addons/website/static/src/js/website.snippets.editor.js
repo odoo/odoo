@@ -1,14 +1,90 @@
 odoo.define('website.snippets.editor', function (require) {
 'use strict';
 
-var animation = require('web_editor.snippets.animation');
+var ajax = require("web.ajax");
+var core = require("web.core");
+var Dialog = require("web.Dialog");
+var Model = require("web.Model");
+var editor = require("web_editor.editor");
 var options = require('web_editor.snippets.options');
 var snippet_editor = require('web_editor.snippet.editor');
+var website = require('website.website');
+
+var _t = core._t;
 
 snippet_editor.Class.include({
     _get_snippet_url: function () {
         return '/website/snippets';
     }
+});
+
+options.registry.menu_data = options.Class.extend({
+    start: function () {
+        this._super.apply(this, arguments);
+        this.link = this.$target.attr("href");
+    },
+
+    on_focus: function () {
+        this._super.apply(this, arguments);
+
+        (new Dialog(null, {
+            title: _t("Confirmation"),
+            $content: $(core.qweb.render("website.leaving_current_page_edition")),
+            buttons: [
+                {text: _t("Go to Link"), classes: "btn-primary", click: save_editor_then_go_to.bind(null, this.link)},
+                {text: _t("Edit the menu"), classes: "btn-primary", click: function () {
+                    var self = this;
+                    website.topBar.content_menu.edit_menu(function () {
+                        return editor.editor_bar.save_without_reload();
+                    }).then(function (dialog) {
+                        self.close();
+                    });
+                }},
+                {text: _t("Stay on this page"), close: true}
+            ]
+        })).open();
+
+        function save_editor_then_go_to(url) {
+            editor.editor_bar.save_without_reload().then(function () {
+                window.location.href = url;
+            });
+        }
+    },
+});
+
+options.registry.company_data = options.Class.extend({
+    start: function () {
+        this._super.apply(this, arguments);
+
+        var proto = options.registry.company_data.prototype;
+
+        if (proto.__link_deferred === undefined) {
+            proto.__link_deferred = $.Deferred();
+            return ajax.jsonRpc("/web/session/get_session_info", "call").then(function (session) {
+                return (new Model("res.users")).get_func("read")(session.uid, ["company_id"]).then(function (res) {
+                    proto.__link_deferred.resolve(
+                        "/web#action=base.action_res_company_form&view_type=form&id=" + (res && res[0] && res[0].company_id[0] || 1)
+                    );
+                });
+            });
+        }
+    },
+
+    on_focus: function () {
+        this._super.apply(this, arguments);
+
+        var proto = options.registry.company_data.prototype;
+
+        Dialog.confirm(null, _t("Do you want to edit the company data ?"), {
+            confirm_callback: function () {
+                editor.editor_bar.save_without_reload().then(function () {
+                    proto.__link_deferred.then(function (link) {
+                        window.location.href = link;
+                    });
+                });
+            },
+        });
+    },
 });
 
 options.registry.slider = options.Class.extend({

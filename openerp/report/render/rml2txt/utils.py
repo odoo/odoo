@@ -3,8 +3,10 @@
 
 import copy
 import re
+
 import reportlab
 import reportlab.lib.units
+
 from openerp.tools.safe_eval import safe_eval
 
 _regex = re.compile('\[\[(.+?)\]\]')

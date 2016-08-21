@@ -1,27 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_contract
-# 
+#
 # Translators:
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-07-18 22:31+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_needaction
-msgid "Action Needed"
-msgstr "必要なアクション"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_base_action_rule
@@ -49,11 +44,6 @@ msgid "Company Vehicle"
 msgstr "社用車"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract
-msgid "Contract"
-msgstr "契約"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Reference"
@@ -61,7 +51,7 @@ msgstr "契約の参照"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5307
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -129,11 +119,6 @@ msgid "Current Employee"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "記録上の最後のメッセージが投稿された日"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_department_id
 msgid "Department"
 msgstr "部門"
@@ -157,6 +142,12 @@ msgid "Employee"
 msgstr "従業員"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_contract
+#, fuzzy
+msgid "Employee Contract"
+msgstr "契約"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
 msgid "End Date"
 msgstr "終了日"
@@ -171,21 +162,6 @@ msgstr ""
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
 msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_follower_ids
-msgid "Followers"
-msgstr "フォロワー"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "フォロワー(チャンネル)"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "フォロワー(取引先)"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
@@ -219,16 +195,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_unread
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
 msgid "In kilometers"
 msgstr "キロメートル"
@@ -237,11 +203,6 @@ msgstr "キロメートル"
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Information"
 msgstr "情報"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_is_follower
-msgid "Is Follower"
-msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_manager
@@ -257,11 +218,6 @@ msgstr "職務"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_job_id
 msgid "Job Title"
 msgstr "役職"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_last_post
-msgid "Last Message Date"
-msgstr "最終メッセージ日"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract___last_update
@@ -297,16 +253,6 @@ msgid "Medical Examination Date"
 msgstr "健康診断の日付"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_ids
-msgid "Messages"
-msgstr "メッセージ"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_ids
-msgid "Messages and communication history"
-msgstr "メッセージと通信履歴"
-
-#. module: hr_contract
 #: selection:hr.contract,state:0
 msgid "New"
 msgstr "新規"
@@ -318,24 +264,9 @@ msgid "Notes"
 msgstr "注記"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_needaction_counter
-msgid "Number of Actions"
-msgstr "アクションの数"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_children
 msgid "Number of Children"
 msgstr "子供の人数"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_unread_counter
-msgid "Number of unread messages"
-msgstr "未読メッセージ数"
 
 #. module: hr_contract
 #: model:ir.filters,name:hr_contract.contract_open
@@ -411,15 +342,9 @@ msgid "Trial Start Date"
 msgstr "仮採用の開始日"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_unread
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Unread Messages"
 msgstr "未読メッセージ"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "未読メッセージカウンター"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
@@ -447,16 +372,6 @@ msgid "Wage"
 msgstr "賃金"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_website_message_ids
-msgid "Website Messages"
-msgstr "ウェブサイトメッセージ"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_website_message_ids
-msgid "Website communication history"
-msgstr "ウェブサイトコミュニケーション履歴"
-
-#. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Work Permit"
 msgstr "労働許可"
@@ -470,3 +385,42 @@ msgstr "労働許可番号"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_working_hours
 msgid "Working Schedule"
 msgstr "作業予定"
+
+#~ msgid "Action Needed"
+#~ msgstr "必要なアクション"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "記録上の最後のメッセージが投稿された日"
+
+#~ msgid "Followers"
+#~ msgstr "フォロワー"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "フォロワー(チャンネル)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "フォロワー(取引先)"
+
+#~ msgid "Last Message Date"
+#~ msgstr "最終メッセージ日"
+
+#~ msgid "Messages"
+#~ msgstr "メッセージ"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "メッセージと通信履歴"
+
+#~ msgid "Number of Actions"
+#~ msgstr "アクションの数"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "未読メッセージ数"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "未読メッセージカウンター"
+
+#~ msgid "Website Messages"
+#~ msgstr "ウェブサイトメッセージ"
+
+#~ msgid "Website communication history"
+#~ msgstr "ウェブサイトコミュニケーション履歴"

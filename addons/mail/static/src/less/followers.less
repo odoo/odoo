@@ -16,6 +16,7 @@
         .dropdown-toggle {
             opacity: 0.3;
             border: none;
+            display: none;
 
             &:hover, &:focus, &[aria-expanded="true"] {
                 opacity: 1;
@@ -23,6 +24,10 @@
 
             > .fa {
                 font-size: inherit;
+            }
+
+            &.o_followers_following {
+                display: block;
             }
         }
 

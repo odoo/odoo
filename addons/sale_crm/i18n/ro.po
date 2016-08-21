@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_crm
-# 
+#
 # Translators:
 # Cosmin o <oprisancosmin@yahoo.com>, 2015
 # Simonel Criste <simi@erpsystems.ro>, 2015
@@ -9,20 +9,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-12-04 16:29+0000\n"
 "Last-Translator: Cosmin o <oprisancosmin@yahoo.com>\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_claim_count
-msgid "# Claims"
-msgstr "# Reclamaţii"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
@@ -54,17 +50,20 @@ msgstr "<span class=\"o_stat_text\"> Ofertă(e) </span>"
 msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
-msgstr "Un membru cu care doriti sa va asociati calitatea de membru. Va lua in considerare starea apartenentei membrului asociat."
+msgstr ""
+"Un membru cu care doriti sa va asociati calitatea de membru. Va lua in "
+"considerare starea apartenentei membrului asociat."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
+#, fuzzy
+msgid "Activation"
+msgstr "Cotatie"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
 msgid "Associate Member"
 msgstr "Membru asociat"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_campaign_id
-msgid "Campaign"
-msgstr "Campanie"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
@@ -107,19 +106,26 @@ msgid "Free Member"
 msgstr "Membru necotizant"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_latitude
-msgid "Geo Latitude"
-msgstr "Latitudine Geo"
+#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
+msgid ""
+"Gives the probability to assign a lead to this partner. (0 means no "
+"assignation.)"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_localization
-msgid "Geo Localization Date"
-msgstr "Data Geo Localizare"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
+msgid "Implementation References"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_longitude
-msgid "Geo Longitude"
-msgstr "Geo Longitudine"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
+msgid "Implemented by"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_account_invoice
+msgid "Invoice"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
@@ -133,9 +139,15 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
+msgid "Latest Partner Review"
 msgstr ""
 
 #. module: sale_crm
@@ -144,14 +156,19 @@ msgid "Lead/Opportunity"
 msgstr "Pista/Oportunitate"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
+msgid "Level"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_medium_id
-msgid "Medium"
-msgstr "Mediu"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
+msgid "Level Weight"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+msgid "Log in the chatter from which opportunity the order originates"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
@@ -179,6 +196,11 @@ msgid "New Quotation"
 msgstr "Ofertă Nouă"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
+msgid "Next Partner Review"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
 msgid "Number of Quotations"
 msgstr "Numărul de Oferte"
@@ -192,6 +214,12 @@ msgstr "Oportunitate"
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
 msgid "Orders"
 msgstr "Comenzi"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
+#, fuzzy
+msgid "Partnership Date"
+msgstr "Anuleaza Data Apartenentei"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
@@ -220,11 +248,6 @@ msgid "Select if you want to give free membership."
 msgstr "Selectati daca doriti sa oferiti apartenenta ca membru gratuit."
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_source_id
-msgid "Source"
-msgstr "Sursa"
-
-#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
 msgid "Sum of Orders"
 msgstr "Suma Comenzilor"
@@ -245,37 +268,22 @@ msgid "The price negotiated by the partner"
 msgstr "Pretul negociat de catre partener"
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_source_id
-msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr ""
-
-#. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
 msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
-msgstr "Locatia stocului va fi folosita, in locul celei predefinita, drept locatia destinatie pentru bunurile pe care le trimiteti acestui partener"
+msgstr ""
+"Locatia stocului va fi folosita, in locul celei predefinita, drept locatia "
+"destinatie pentru bunurile pe care le trimiteti acestui partener"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
-msgstr "Aceasta locatie a stocului va fi folosita in locul celei default drept locatia sursa pentru bunurile pe care le primiti de la partenerul curent"
+msgstr ""
+"Aceasta locatie a stocului va fi folosita in locul celei default drept "
+"locatia sursa pentru bunurile pe care le primiti de la partenerul curent"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -286,3 +294,24 @@ msgstr "Utilizatori"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
 msgstr ""
+
+#~ msgid "# Claims"
+#~ msgstr "# Reclamaţii"
+
+#~ msgid "Campaign"
+#~ msgstr "Campanie"
+
+#~ msgid "Geo Latitude"
+#~ msgstr "Latitudine Geo"
+
+#~ msgid "Geo Localization Date"
+#~ msgstr "Data Geo Localizare"
+
+#~ msgid "Geo Longitude"
+#~ msgstr "Geo Longitudine"
+
+#~ msgid "Medium"
+#~ msgstr "Mediu"
+
+#~ msgid "Source"
+#~ msgstr "Sursa"

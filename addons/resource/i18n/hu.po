@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * resource
-# 
+#
 # Translators:
 # krnkris, 2015
 # krnkris, 2016
@@ -9,18 +9,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
+"hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:689
+#: code:addons/resource/resource.py:686
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -80,7 +81,9 @@ msgstr "Az erőforrás ütemezésének a meghatározása."
 msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
-msgstr "Határozzon meg munkaórákat és idő táblát melyet hozzárendelhet a  projekt téma munka csoport tagjaihoz."
+msgstr ""
+"Határozzon meg munkaórákat és idő táblát melyet hozzárendelhet a  projekt "
+"téma munka csoport tagjaihoz."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
@@ -109,7 +112,9 @@ msgstr "Dátum-ig:"
 #. module: resource
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
-msgstr "Hiba! Az erőforrás-szabadság kezdő időpontjának előbb kell lennie, mint a záró időpontjának."
+msgstr ""
+"Hiba! Az erőforrás-szabadság kezdő időpontjának előbb kell lennie, mint a "
+"záró időpontjának."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -145,14 +150,19 @@ msgstr "ID"
 msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
-msgstr "Amennyiben üresen hagyja ezt a mezőt, akkor ez egy munkaszüneti nap lesz az egész vállalat számára. Ha az erőforrás be van állítva, a munkaszüneti nap/erőforrás-szabadság csak erre az erőforrásra vonatkozik."
+msgstr ""
+"Amennyiben üresen hagyja ezt a mezőt, akkor ez egy munkaszüneti nap lesz az "
+"egész vállalat számára. Ha az erőforrás be van állítva, a munkaszüneti nap/"
+"erőforrás-szabadság csak erre az erőforrásra vonatkozik."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr "Ha az aktív mező hamisra van állítva, akkor elrejtheti az erőforrást, anélkül, hogy törölné azt."
+msgstr ""
+"Ha az aktív mező hamisra van állítva, akkor elrejtheti az erőforrást, "
+"anélkül, hogy törölné azt."
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -228,7 +238,9 @@ msgstr "Ok"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Az erőforráshoz kapcsolódó felhasználó neve, aki kezeli a hozzáférést az erőforráshoz."
+msgstr ""
+"Az erőforráshoz kapcsolódó felhasználó neve, aki kezeli a hozzáférést az "
+"erőforráshoz."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_resource_id
@@ -284,7 +296,11 @@ msgid ""
 "Resources allow you to create and manage resources that should be involved "
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
-msgstr "Az erőforrások modul lehetővé teszi Önnek, hogy létrehozza és kezelje azokat az erőforrásokat, amelyeket be szeretne vonni egy speciális projekt fázisaiba. Beállíthatja az erőforrások hatékonysági fokát és munkaterheltségét azok heti munkaórái alapján."
+msgstr ""
+"Az erőforrások modul lehetővé teszi Önnek, hogy létrehozza és kezelje azokat "
+"az erőforrásokat, amelyeket be szeretne vonni egy speciális projekt "
+"fázisaiba. Beállíthatja az erőforrások hatékonysági fokát és "
+"munkaterheltségét azok heti munkaórái alapján."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -336,9 +352,13 @@ msgstr "Vasárnap"
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
-msgstr "Ez a mező ábrázolja a kutatás hatékonyságát a teljes feladaton. pl. egyedül végrehajtott kutatási 5 napos fázis 5 tárgyban kiosztva neki, ez a 100% terhelés erre a fázisra alap értelmezve, de ha a hatékonyságot 200% tesszük akkor ez a terhelés \"csak\" 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
+msgstr ""
+"Ez a mező ábrázolja a kutatás hatékonyságát a teljes feladaton. pl. egyedül "
+"végrehajtott kutatási 5 napos fázis 5 tárgyban kiosztva neki, ez a 100% "
+"terhelés erre a fázisra alap értelmezve, de ha a hatékonyságot 200% tesszük "
+"akkor ez a terhelés \"csak\" 50%."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0

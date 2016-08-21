@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from reportlab.lib import colors
 import re
+
+from reportlab.lib import colors
 
 allcols = colors.getAllNamedColors()
 

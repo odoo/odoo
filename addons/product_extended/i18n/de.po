@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product_extended
-# 
+#
 # Translators:
 # Ermin Trevisan <trevi@twanda.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-16 19:17+0000\n"
 "Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_extended
@@ -52,6 +52,7 @@ msgstr "Preise in  Sub-Stücklisten ändern"
 
 #. module: product_extended
 #: model:ir.actions.act_window,name:product_extended.action_view_compute_price_wizard
+#: model:ir.model,name:product_extended.model_wizard_price
 msgid "Compute Price Wizard"
 msgstr "Preisberechnungsassistent"
 
@@ -61,16 +62,13 @@ msgid "Compute from BOM"
 msgstr "Berechnung aus Stückliste"
 
 #. module: product_extended
-#: model:ir.model,name:product_extended.model_wizard_price
-msgid "Compute price wizard"
-msgstr "Preisberechnungsassistent"
-
-#. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
-msgstr "Berechnung des Produktpreises mittels Produkten und Vorgängen der entsprechenden Stücklisten, nur für Fertigungsprodukte."
+msgstr ""
+"Berechnung des Produktpreises mittels Produkten und Vorgängen der "
+"entsprechenden Stücklisten, nur für Fertigungsprodukte."
 
 #. module: product_extended
 #: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_uid
@@ -118,6 +116,11 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_get_variant_count
+msgid "Number of variant for the product"
+msgstr ""
+
+#. module: product_extended
 #: model:ir.model,name:product_extended.model_product_template
 msgid "Product Template"
 msgstr "Produktvorlage"
@@ -137,12 +140,19 @@ msgstr "Standardpreis"
 msgid ""
 "The price is computed from the bill of material lines which are not variant "
 "specific"
-msgstr "Der Preis ist aus einer Abrechnung der Materialien errechnet, die nicht variantenspezifisch ist."
+msgstr ""
+"Der Preis ist aus einer Abrechnung der Materialien errechnet, die nicht "
+"variantenspezifisch ist."
 
 #. module: product_extended
 #: code:addons/product_extended/wizard/wizard_price.py:38
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"This wizard is build for product templates, while you are currently running "
+"This wizard is built for product templates, while you are currently running "
 "it from a product variant."
-msgstr "Der Wizard ist für Produktvorlagen vorgesehen. Sie nutzen ihn derzeit aus einer Produktvariante heraus."
+msgstr ""
+"Der Wizard ist für Produktvorlagen vorgesehen. Sie nutzen ihn derzeit aus "
+"einer Produktvariante heraus."
+
+#~ msgid "Compute price wizard"
+#~ msgstr "Preisberechnungsassistent"

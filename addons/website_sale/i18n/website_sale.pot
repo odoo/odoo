@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~10c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-09 09:18+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-08-18 14:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -15,18 +15,14 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "(extra fees apply)"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ", go in the 'Sales' tab"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ", go the 'Sales' tab"
+msgid ", go to the 'Sales' tab"
 msgstr ""
 
 #. module: website_sale
@@ -118,11 +114,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat on"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<span class=\"fa fa-envelope-o\"/> Email Our Website Expert"
 msgstr ""
 
 #. module: website_sale
@@ -462,11 +453,6 @@ msgid "Apply"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_available_in_pos
-msgid "Available in the Point of Sale"
-msgstr ""
-
-#. module: website_sale
 #: model:product.pricelist,name:website_sale.list_benelux
 msgid "Benelux Pricelist"
 msgstr ""
@@ -508,21 +494,6 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:59
 #, python-format
 msgid "Change the price"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_to_weight
-msgid "Check if the product should be weighted using the hardware scale integration"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_available_in_pos
-msgid "Check if you want this product to appear in the Point of Sale"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_purchase_requisition
-msgid "Check this box to generate Call for Tenders instead of generating requests for quotation from procurement."
 msgstr ""
 
 #. module: website_sale
@@ -794,6 +765,11 @@ msgid "Determine the display order in the Website E-commerce"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line_discounted_price
+msgid "Discounted price"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_style_display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_pricelist_display_name
@@ -854,6 +830,15 @@ msgid "Enter your existing products into this CSV file, respecting its structure
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product_split_method
+msgid "Equal : Cost will be equally divided.\n"
+"By Quantity : Cost will be divided according to product's quantity.\n"
+"By Current cost : Cost will be divided according to product's current cost.\n"
+"By Weight : Cost will be divided depending on its weight.\n"
+"By Volume : Cost will be divided depending on its volume."
+msgstr ""
+
+#. module: website_sale
 #: constraint:product.public.category:0
 msgid "Error ! You cannot create recursive categories."
 msgstr ""
@@ -880,12 +865,12 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "Export the 3 products you have already created by checking them and choosing 'Export' from the 'More' menu"
+msgid "Export the 3 products you have already created by checking them and choosing 'Export' from the 'Action' menu"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info_option
-msgid "Extra Info"
+msgid "Extra Info<span class=\"chevron\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -954,7 +939,7 @@ msgid "HTML Classes"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_attribute_value_color
+#: model:ir.model.fields,field_description:website_sale.field_product_attribute_value_html_color
 msgid "HTML Color Index"
 msgstr ""
 
@@ -974,7 +959,7 @@ msgid "Here are <strong>some pros and cons</strong> to help you decide:"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_attribute_value_color
+#: model:ir.model.fields,help:website_sale.field_product_attribute_value_html_color
 msgid "Here you can set a specific HTML color index (e.g. #ff0000) to display the color on the website if the attibute type is 'Color'."
 msgstr ""
 
@@ -986,7 +971,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_id
 #: model:ir.model.fields,field_description:website_sale.field_product_style_id
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11237
+#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11000
 msgid "ID"
 msgstr ""
 
@@ -1032,13 +1017,13 @@ msgid "Increase your chances to make a sale by displaying suggested products."
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:559
+#: code:addons/website_sale/controllers/main.py:567
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:73
+#: code:addons/website_sale/models/sale_order.py:86
 #, python-format
 msgid "It is forbidden to modify a sale order which is not in draft status"
 msgstr ""
@@ -1106,7 +1091,7 @@ msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale.js:14
+#: code:addons/website_sale/static/src/js/website_sale.js:15
 #, python-format
 msgid "My Cart"
 msgstr ""
@@ -1124,7 +1109,7 @@ msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:957
+#: code:addons/website_sale/controllers/main.py:976
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:18
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -1213,7 +1198,8 @@ msgid "Partner"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:769
+#: code:addons/website_sale/controllers/main.py:779
+#: code:addons/website_sale/controllers/main.py:859
 #, python-format
 msgid "Pay Now"
 msgstr ""
@@ -1221,11 +1207,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Pay Now <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.extra_info_option
-msgid "Payment"
 msgstr ""
 
 #. module: website_sale
@@ -1254,6 +1235,7 @@ msgid "Payment Transaction"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.extra_info_option
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Payment<span class=\"chevron\"/>"
 msgstr ""
@@ -1261,11 +1243,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
 msgid "Phone"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_pos_categ_id
-msgid "Point of Sale Category"
 msgstr ""
 
 #. module: website_sale
@@ -1296,11 +1273,6 @@ msgid "Pricelist Name"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_purchase_requisition
-msgid "Procurement"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model,name:website_sale.model_product_product
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.payment
@@ -1324,7 +1296,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
-msgid "Product Product Categories"
+msgid "Product Public Categories"
 msgstr ""
 
 #. module: website_sale
@@ -1362,11 +1334,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Products list view"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_project_id
-msgid "Project"
 msgstr ""
 
 #. module: website_sale
@@ -1441,7 +1408,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_rating_rating
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_ids
-#: model:ir.model.fields,field_description:website_sale.field_product_template_rating_ids
 msgid "Rating"
 msgstr ""
 
@@ -1476,6 +1442,7 @@ msgid "Sales Order"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_sale_order_line
 #: model:ir.model.fields,field_description:website_sale.field_product_product_sale_line_warn
 msgid "Sales Order Line"
 msgstr ""
@@ -1675,7 +1642,7 @@ msgid "Some customers prefer to pay this way"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:581
+#: code:addons/website_sale/controllers/main.py:589
 #, python-format
 msgid "Some required fields are empty."
 msgstr ""
@@ -1747,6 +1714,16 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Taxes"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_temando
+msgid "Temando integration"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Thank you for your order."
 msgstr ""
 
@@ -1758,7 +1735,6 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_website_url
-#: model:ir.model.fields,help:website_sale.field_product_template_website_url
 msgid "The full URL to access the document through the website."
 msgstr ""
 
@@ -1793,16 +1769,6 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_product_public_categ_ids
 #: model:ir.model.fields,help:website_sale.field_product_template_public_categ_ids
 msgid "Those categories are used to group similar products for e-commerce."
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_pos_categ_id
-msgid "Those categories are used to group similar products for point of sale."
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_to_weight
-msgid "To Weigh With Scale"
 msgstr ""
 
 #. module: website_sale
@@ -1879,7 +1845,6 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_published
-#: model:ir.model.fields,field_description:website_sale.field_product_template_website_published
 msgid "Visible in Website"
 msgstr ""
 
@@ -1906,12 +1871,6 @@ msgid "Website Categories"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_website_message_ids
-#: model:ir.model.fields,field_description:website_sale.field_product_template_website_message_ids
-msgid "Website Comments"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_country_group_website_pricelist_ids
 msgid "Website Price Lists"
 msgstr ""
@@ -1930,7 +1889,7 @@ msgid "Website Pricelist"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:344
+#: code:addons/website_sale/models/sale_order.py:427
 #, python-format
 msgid "Website Pricelist for %s"
 msgstr ""
@@ -1960,28 +1919,21 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_url
-#: model:ir.model.fields,field_description:website_sale.field_product_template_website_url
 msgid "Website URL"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_description
-#: model:ir.model.fields,field_description:website_sale.field_product_public_category_website_meta_description
-#: model:ir.model.fields,field_description:website_sale.field_product_template_website_meta_description
 msgid "Website meta description"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_keywords
-#: model:ir.model.fields,field_description:website_sale.field_product_public_category_website_meta_keywords
-#: model:ir.model.fields,field_description:website_sale.field_product_template_website_meta_keywords
 msgid "Website meta keywords"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_title
-#: model:ir.model.fields,field_description:website_sale.field_product_public_category_website_meta_title
-#: model:ir.model.fields,field_description:website_sale.field_product_template_website_meta_title
 msgid "Website meta title"
 msgstr ""
 

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~10c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-08-18 14:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,20 +27,19 @@ msgid "# of Product Variants"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:288
+#: code:addons/product/pricelist.py:372
 #, python-format
 msgid "%s %% discount"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:290
+#: code:addons/product/pricelist.py:374
 #, python-format
 msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:710
-#: code:addons/product/product.py:1134
+#: code:addons/product/product.py:716
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -69,15 +68,6 @@ msgid "17\" Monitor\n"
 msgstr ""
 
 #. module: product
-#: model:product.product,description:product.product_product_26
-#: model:product.template,description:product.product_product_26_product_template
-msgid "17\" Monitor\n"
-"6GB RAM\n"
-"Hi-Speed 234Q Processor\n"
-"QWERTY keyboard"
-msgstr ""
-
-#. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
 msgid "2.4 GHz"
 msgstr ""
@@ -91,12 +81,6 @@ msgid "2.7GHz quad-core Intel Core i5\n"
 "                1TB hard drive\n"
 "                Intel Iris Pro graphics\n"
 "            "
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_52
-#: model:product.template,name:product.product_product_52_product_template
-msgid "30m RJ45 wire"
 msgstr ""
 
 #. module: product
@@ -125,14 +109,9 @@ msgid "75 percent less reflection."
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_51
-#: model:product.template,name:product.product_product_51_product_template
-msgid "8-port Switch"
-msgstr ""
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Public Price  -  </span>\n"
+msgid "<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Public Price  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
 
@@ -169,7 +148,7 @@ msgid "<strong>Warning</strong>: adding or deleting attributes\n"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:977
+#: code:addons/product/product.py:1011
 #: sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
@@ -233,12 +212,6 @@ msgid "About the size of a credit card — and just 5.4 mm thin — iPod nano is
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_needaction
-#: model:ir.model.fields,field_description:product.field_product_template_message_needaction
-msgid "Action Needed"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
 #: model:ir.model.fields,field_description:product.field_product_product_active
 #: model:ir.model.fields,field_description:product.field_product_template_active
@@ -252,7 +225,7 @@ msgid "All"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:283
+#: code:addons/product/pricelist.py:367
 #, python-format
 msgid "All Products"
 msgstr ""
@@ -260,12 +233,6 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
-
-#. module: product
-#: model:product.product,description:product.product_product_37
-#: model:product.template,description:product.product_product_37_product_template
-msgid "All in one hi-speed printer with fax and scanner."
 msgstr ""
 
 #. module: product
@@ -299,6 +266,7 @@ msgid "Apple Wireless Keyboard"
 msgstr ""
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Applicable On"
 msgstr ""
@@ -396,9 +364,15 @@ msgid "Based on"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_57
-#: model:product.template,name:product.product_product_57_product_template
+#: model:product.product,name:product.consu_delivery_03
+#: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Basic Computer"
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.membership_2
+#: model:product.template,name:product.membership_2_product_template
+msgid "Basic Membership"
 msgstr ""
 
 #. module: product
@@ -431,18 +405,6 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
 msgid "Black"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_35
-#: model:product.template,name:product.product_product_35_product_template
-msgid "Blank CD"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_36
-#: model:product.template,name:product.product_product_36_product_template
-msgid "Blank DVD-RW"
 msgstr ""
 
 #. module: product
@@ -525,7 +487,7 @@ msgid "Category name"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:277
+#: code:addons/product/pricelist.py:361
 #, python-format
 msgid "Category: %s"
 msgstr ""
@@ -649,7 +611,7 @@ msgid "Computers"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:460
+#: code:addons/product/product.py:474
 #, python-format
 msgid "Consumable"
 msgstr ""
@@ -660,7 +622,7 @@ msgid "Conversion between Units of Measure can only occur if they belong to the 
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:119
+#: code:addons/product/product.py:122
 #, python-format
 msgid "Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!."
 msgstr ""
@@ -681,6 +643,12 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
 msgid "Cost of the product, in the default unit of measure of the product."
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.service_delivery
+#: model:product.template,name:product.service_delivery_product_template
+msgid "Cost-plus Contract"
 msgstr ""
 
 #. module: product
@@ -761,20 +729,14 @@ msgid "Customer ref"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_46
-#: model:product.template,name:product.product_product_46_product_template
+#: model:product.product,name:product.product_delivery_02
+#: model:product.template,name:product.product_delivery_02_product_template
 msgid "Datacard"
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_datetime
 msgid "Date"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_last_post
-#: model:ir.model.fields,help:product.field_product_template_message_last_post
-msgid "Date of the last message posted on the record."
 msgstr ""
 
 #. module: product
@@ -800,12 +762,6 @@ msgid "Delivery Lead Time"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_49
-#: model:product.template,name:product.product_product_49_product_template
-msgid "Dell Inspiron Laptop without OS"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description
 #: model:ir.model.fields,field_description:product.field_product_template_description
 msgid "Description"
@@ -827,18 +783,6 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Design. The thinnest iPod ever."
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_55
-#: model:product.template,name:product.product_product_55_product_template
-msgid "Desktop Computer Table"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_56
-#: model:product.template,name:product.product_product_56_product_template
-msgid "Desktop Lamp"
 msgstr ""
 
 #. module: product
@@ -878,8 +822,8 @@ msgid "Dozen(s)"
 msgstr ""
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_57
-#: model:product.template,description_sale:product.product_product_57_product_template
+#: model:product.product,description_sale:product.consu_delivery_03
+#: model:product.template,description_sale:product.consu_delivery_03_product_template
 msgid "Dvorak keyboard \n"
 "            left-handed mouse"
 msgstr ""
@@ -909,24 +853,23 @@ msgid "End date for this vendor price"
 msgstr ""
 
 #. module: product
-#: selection:product.template,state:0
-msgid "End of Lifecycle"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
 msgid "Ending valid for the pricelist item validation"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_54
-#: model:product.template,name:product.product_product_54_product_template
-msgid "Ergonomic Mouse"
+#: constraint:product.category:0
+msgid "Error ! You cannot create recursive categories."
 msgstr ""
 
 #. module: product
-#: constraint:product.category:0
-msgid "Error ! You cannot create recursive categories."
+#: constraint:product.attribute.line:0
+msgid "Error ! You cannot use this attribute with the following value."
+msgstr ""
+
+#. module: product
+#: constraint:product.product:0
+msgid "Error! It is not allowed to choose more than one value for a given attribute."
 msgstr ""
 
 #. module: product
@@ -995,14 +938,14 @@ msgid "Example of product to invoice based on delivery."
 msgstr ""
 
 #. module: product
-#: model:product.product,description:product.product_product_0
-#: model:product.template,description:product.product_product_0_product_template
+#: model:product.product,description:product.service_order_01
+#: model:product.template,description:product.service_order_01_product_template
 msgid "Example of product to invoice on order."
 msgstr ""
 
 #. module: product
-#: model:product.product,description:product.product_product_1b
-#: model:product.template,description:product.product_product_1b_product_template
+#: model:product.product,description:product.service_cost_01
+#: model:product.template,description:product.service_cost_01_product_template
 msgid "Example of products to invoice based on cost."
 msgstr ""
 
@@ -1019,20 +962,14 @@ msgid "Explicit rule name for this pricelist line."
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_1b
-#: model:product.template,name:product.product_product_1b_product_template
+#: model:product.product,name:product.service_cost_01
+#: model:product.template,name:product.service_cost_01_product_template
 msgid "External Audit"
 msgstr ""
 
 #. module: product
 #: model:product.public.category,name:product.External_Hard_Drive
 msgid "External Hard Drive"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_28
-#: model:product.template,name:product.product_product_28_product_template
-msgid "External Hard disk"
 msgstr ""
 
 #. module: product
@@ -1049,24 +986,6 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_fixed_price
 msgid "Fixed Price"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_follower_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_follower_ids
-msgid "Followers"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_channel_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_partner_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_partner_ids
-msgid "Followers (Partners)"
 msgstr ""
 
 #. module: product
@@ -1096,12 +1015,6 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Friendly to the environment."
-msgstr ""
-
-#. module: product
-#: model:product.product,description_sale:product.product_product_44
-#: model:product.template,description_sale:product.product_product_44_product_template
-msgid "Full featured image editing software."
 msgstr ""
 
 #. module: product
@@ -1151,9 +1064,9 @@ msgid "Global"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_44
-#: model:product.template,name:product.product_product_44_product_template
-msgid "GrapWorks Software"
+#: model:product.product,name:product.membership_0
+#: model:product.template,name:product.membership_0_product_template
+msgid "Gold Membership"
 msgstr ""
 
 #. module: product
@@ -1163,33 +1076,9 @@ msgid "Graphics Card"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_weight
-#: model:ir.model.fields,field_description:product.field_product_template_weight
-msgid "Gross Weight"
-msgstr ""
-
-#. module: product
 #: model:product.product,name:product.product_product_17
 #: model:product.template,name:product.product_product_17_product_template
 msgid "HDD SH-1"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_18
-#: model:product.template,name:product.product_product_18_product_template
-msgid "HDD SH-2 (mto)"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_19
-#: model:product.template,name:product.product_product_19_product_template
-msgid "HDD on Demand"
-msgstr ""
-
-#. module: product
-#: model:product.product,description:product.product_product_32
-#: model:product.template,description:product.product_product_32_product_template
-msgid "Hands free headset for laptop PC with in-line microphone and headphone plug."
 msgstr ""
 
 #. module: product
@@ -1203,24 +1092,6 @@ msgstr ""
 #. module: product
 #: model:product.public.category,name:product.Headset
 msgid "Headset"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_33
-#: model:product.template,name:product.product_product_33_product_template
-msgid "Headset USB"
-msgstr ""
-
-#. module: product
-#: model:product.product,description:product.product_product_33
-#: model:product.template,description:product.product_product_33_product_template
-msgid "Headset for laptop PC with USB connector."
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_32
-#: model:product.template,name:product.product_product_32_product_template
-msgid "Headset standard"
 msgstr ""
 
 #. module: product
@@ -1298,18 +1169,6 @@ msgid "ID"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_unread
-#: model:ir.model.fields,help:product.field_product_template_message_unread
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_needaction
-#: model:ir.model.fields,help:product.field_product_template_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "If it's made for iPad, it's made for iPad mini."
@@ -1347,11 +1206,6 @@ msgid "Image of the product variant (Small-sized image of product template if fa
 msgstr ""
 
 #. module: product
-#: selection:product.template,state:0
-msgid "In Development"
-msgstr ""
-
-#. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Individually calibrated for true-to-life color."
@@ -1360,12 +1214,6 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Information about a product vendor"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_38
-#: model:product.template,name:product.product_product_38_product_template
-msgid "Ink Cartridge"
 msgstr ""
 
 #. module: product
@@ -1406,12 +1254,6 @@ msgid "Inventory"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_is_follower
-#: model:ir.model.fields,field_description:product.field_product_template_message_is_follower
-msgid "Is Follower"
-msgstr ""
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
 #: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
 msgid "Is a product variant"
@@ -1447,20 +1289,8 @@ msgid "Laptop E5023"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_26
-#: model:product.template,name:product.product_product_26_product_template
-msgid "Laptop S3450"
-msgstr ""
-
-#. module: product
 #: model:product.public.category,name:product.laptops
 msgid "Laptops"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_last_post
-#: model:ir.model.fields,field_description:product.field_product_template_message_last_post
-msgid "Last Message Date"
 msgstr ""
 
 #. module: product
@@ -1542,19 +1372,13 @@ msgid "Lines"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_50
-#: model:product.template,name:product.product_product_50_product_template
-msgid "Linutop"
-msgstr ""
-
-#. module: product
 #: model:product.uom,name:product.product_uom_litre
 msgid "Liter(s)"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_58
-#: model:product.template,name:product.product_product_58_product_template
+#: model:product.product,name:product.consu_delivery_02
+#: model:product.template,name:product.consu_delivery_02_product_template
 msgid "Little server"
 msgstr ""
 
@@ -1622,18 +1446,6 @@ msgid "Memory"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_ids
-#: model:ir.model.fields,field_description:product.field_product_template_message_ids
-msgid "Messages"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_ids
-#: model:ir.model.fields,help:product.field_product_template_message_ids
-msgid "Messages and communication history"
-msgstr ""
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min. Margin"
 msgstr ""
@@ -1666,12 +1478,6 @@ msgid "More features."
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_21
-#: model:product.template,name:product.product_product_21_product_template
-msgid "Motherboard A20Z7"
-msgstr ""
-
-#. module: product
 #: model:product.product,name:product.product_product_20
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Motherboard I9P57"
@@ -1687,12 +1493,6 @@ msgstr ""
 #: model:product.product,name:product.product_product_12
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Mouse, Wireless"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_31
-#: model:product.template,name:product.product_product_31_product_template
-msgid "Multimedia Speakers"
 msgstr ""
 
 #. module: product
@@ -1726,54 +1526,12 @@ msgstr ""
 
 #. module: product
 #: selection:product.category,type:0
-#: selection:product.template,state:0
 msgid "Normal"
 msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Notes"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_needaction_counter
-#: model:ir.model.fields,field_description:product.field_product_template_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_needaction_counter
-#: model:ir.model.fields,help:product.field_product_template_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product_message_unread_counter
-#: model:ir.model.fields,help:product.field_product_template_message_unread_counter
-msgid "Number of unread messages"
-msgstr ""
-
-#. module: product
-#: selection:product.template,state:0
-msgid "Obsolete"
-msgstr ""
-
-#. module: product
-#: model:product.product,description_sale:product.product_product_42
-#: model:product.template,description_sale:product.product_product_42_product_template
-msgid "Office Editing Software with word processing, spreadsheets, presentations, graphics, and databases..."
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_42
-#: model:product.template,name:product.product_product_42_product_template
-msgid "Office Suite"
-msgstr ""
-
-#. module: product
-#: model:product.product,description:product.product_product_19
-#: model:product.template,description:product.product_product_19_product_template
-msgid "On demand hard-disk having capacity based on requirement."
 msgstr ""
 
 #. module: product
@@ -1827,18 +1585,6 @@ msgid "Pen Drive"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_29
-#: model:product.template,name:product.product_product_29_product_template
-msgid "Pen drive, SP-2"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_30
-#: model:product.template,name:product.product_product_30_product_template
-msgid "Pen drive, SP-4"
-msgstr ""
-
-#. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
 msgstr ""
@@ -1874,8 +1620,8 @@ msgid "Powered by fourth-generation Intel Core processors, this iMac is the fast
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_0
-#: model:product.template,name:product.product_product_0_product_template
+#: model:product.product,name:product.service_order_01
+#: model:product.template,name:product.service_order_01_product_template
 msgid "Prepaid Consulting"
 msgstr ""
 
@@ -1884,6 +1630,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_price
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_price
 #: model:ir.model.fields,field_description:product.field_product_template_price
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -1959,6 +1706,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_ids
 #: model:ir.model.fields,field_description:product.field_product_product_item_ids
 #: model:ir.model.fields,field_description:product.field_product_template_item_ids
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
@@ -2007,18 +1755,6 @@ msgstr ""
 #. module: product
 #: model:product.public.category,name:product.printer
 msgid "Printer"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_37
-#: model:product.template,name:product.product_product_37_product_template
-msgid "Printer, All-in-one"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_23
-#: model:product.template,name:product.product_product_23_product_template
-msgid "Processor AMD 8-Core"
 msgstr ""
 
 #. module: product
@@ -2167,7 +1903,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:817
+#: code:addons/product/product.py:824
 #, python-format
 msgid "Products: "
 msgstr ""
@@ -2228,18 +1964,6 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty5
 msgid "Quantity-5"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_14
-#: model:product.template,name:product.product_product_14_product_template
-msgid "RAM SR2 (kit)"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_15
-#: model:product.template,name:product.product_product_15_product_template
-msgid "RAM SR3"
 msgstr ""
 
 #. module: product
@@ -2311,12 +2035,6 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_rounding
 msgid "Rounding Precision"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_45
-#: model:product.template,name:product.product_product_45_product_template
-msgid "Router R430"
 msgstr ""
 
 #. module: product
@@ -2394,14 +2112,14 @@ msgid "Sequence"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_59
+#: model:product.product,name:product.consu_delivery_01
 #: model:product.public.category,name:product.server
-#: model:product.template,name:product.product_product_59_product_template
+#: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Server"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:460
+#: code:addons/product/product.py:474
 #, python-format
 msgid "Service"
 msgstr ""
@@ -2430,6 +2148,12 @@ msgstr ""
 msgid "Share your product to all companies defined in your instance.\n"
 " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
+msgstr ""
+
+#. module: product
+#: model:product.product,name:product.membership_1
+#: model:product.template,name:product.membership_1_product_template
+msgid "Silver Membership"
 msgstr ""
 
 #. module: product
@@ -2524,12 +2248,6 @@ msgid "Starting date for the pricelist item validation"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_state
-#: model:ir.model.fields,field_description:product.field_product_template_state
-msgid "Status"
-msgstr ""
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Supplier Pricelist"
 msgstr ""
@@ -2541,8 +2259,8 @@ msgid "Support Contract (on timesheet)"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_47
-#: model:product.template,name:product.product_product_47_product_template
+#: model:product.product,name:product.product_delivery_01
+#: model:product.template,name:product.product_delivery_01_product_template
 msgid "Switch, 24 ports"
 msgstr ""
 
@@ -2654,7 +2372,7 @@ msgid "The minimal quantity to purchase from this vendor, expressed in the vendo
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:329
+#: code:addons/product/product.py:332
 #, python-format
 msgid "The operation cannot be completed:\n"
 "You are trying to delete an attribute value with a reference on a product variant."
@@ -2806,12 +2524,6 @@ msgid "This vendor's product name will be used when printing a request for quota
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_39
-#: model:product.template,name:product.product_product_39_product_template
-msgid "Toner Cartridge"
-msgstr ""
-
-#. module: product
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Two is better than one."
@@ -2820,18 +2532,6 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_uom_type
 msgid "Type"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_53
-#: model:product.template,name:product.product_product_53_product_template
-msgid "TypeMatrix Dvorak Keyboard"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_48
-#: model:product.template,name:product.product_product_48_product_template
-msgid "USB Adapter"
 msgstr ""
 
 #. module: product
@@ -2920,18 +2620,6 @@ msgid "Unlike many small headphones, each earpiece of the Apple In-Ear Headphone
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_unread
-#: model:ir.model.fields,field_description:product.field_product_template_message_unread
-msgid "Unread Messages"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_message_unread_counter
-#: model:ir.model.fields,field_description:product.field_product_template_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
 msgstr ""
@@ -2981,9 +2669,7 @@ msgid "Variants"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_name
-#: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
 msgstr ""
@@ -3015,6 +2701,8 @@ msgid "Vendor of this product"
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_seller_ids
+#: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendors"
 msgstr ""
@@ -3027,6 +2715,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_volume
 #: model:ir.model.fields,field_description:product.field_product_template_volume
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:product.uom.categ,name:product.product_uom_categ_vol
 msgid "Volume"
 msgstr ""
@@ -3050,13 +2739,8 @@ msgid "Warranty"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_34
-#: model:product.template,name:product.product_product_34_product_template
-msgid "Webcam"
-msgstr ""
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.model.fields,field_description:product.field_product_product_weight
+#: model:ir.model.fields,field_description:product.field_product_template_weight
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
 msgstr ""
@@ -3104,18 +2788,6 @@ msgid "Wi-Fi"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_40
-#: model:product.template,name:product.product_product_40_product_template
-msgid "Windows 7 Professional"
-msgstr ""
-
-#. module: product
-#: model:product.product,name:product.product_product_41
-#: model:product.template,name:product.product_product_41_product_template
-msgid "Windows Home Server 2011"
-msgstr ""
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "With advanced Wi‑Fi that’s up to twice as fast as\n"
@@ -3152,7 +2824,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
-msgid "You must define a product for everything you sell, whether it's a physical product, a consumable or a service you offer to  customers."
+msgid "You must define a product for everything you sell, whether it's a physical product, a consumable or a service you offer to customers."
 msgstr ""
 
 #. module: product
@@ -3168,8 +2840,8 @@ msgid "You probably have multiple playlists in iTunes on your computer.\n"
 msgstr ""
 
 #. module: product
-#: model:product.product,name:product.product_product_43
-#: model:product.template,name:product.product_product_43_product_template
+#: model:product.product,name:product.product_order_01
+#: model:product.template,name:product.product_order_01_product_template
 msgid "Zed+ Antivirus"
 msgstr ""
 
@@ -3336,15 +3008,15 @@ msgid "qt"
 msgstr ""
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_58
-#: model:product.template,description_sale:product.product_product_58_product_template
+#: model:product.product,description_sale:product.consu_delivery_02
+#: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "raid 1 \n"
 "            512ECC ram"
 msgstr ""
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_59
-#: model:product.template,description_sale:product.product_product_59_product_template
+#: model:product.product,description_sale:product.consu_delivery_01
+#: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid "raid 10 \n"
 "            2048ECC ram"
 msgstr ""

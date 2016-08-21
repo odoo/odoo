@@ -220,6 +220,8 @@ class Partner(models.Model, FormatAddress):
         help="Small-sized image of this contact. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
+    # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
+    self = fields.Many2one(comodel_name=_name, compute='_compute_get_ids')
 
     _sql_constraints = [
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
@@ -242,6 +244,10 @@ class Partner(models.Model, FormatAddress):
         for partner in self:
             partner.contact_address = partner._display_address()
 
+    @api.one
+    def _compute_get_ids(self):
+        self.self = self.id
+
     @api.depends('is_company', 'parent_id.commercial_partner_id')
     def _compute_commercial_partner(self):
         for partner in self:
@@ -263,7 +269,7 @@ class Partner(models.Model, FormatAddress):
 
         colorize, img_path, image = False, False, False
 
-        if partner_type in ['contact', 'other'] and parent_id:
+        if partner_type in ['other'] and parent_id:
             parent_image = self.browse(parent_id).image
             image = parent_image and parent_image.decode('base64') or None
 
@@ -538,11 +544,11 @@ class Partner(models.Model, FormatAddress):
         for partner in self:
             name = partner.name or ''
 
-            if partner.commercial_company_name:
+            if partner.company_name or partner.parent_id:
                 if not name and partner.type in ['invoice', 'delivery', 'other']:
                     name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
                 if not partner.is_company:
-                    name = "%s, %s" % (partner.commercial_company_name, name)
+                    name = "%s, %s" % (partner.commercial_company_name or partner.parent_id.name, name)
             if self._context.get('show_address_only'):
                 name = partner._display_address(without_company=True)
             if self._context.get('show_address'):

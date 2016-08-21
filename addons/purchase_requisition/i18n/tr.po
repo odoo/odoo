@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * purchase_requisition
-# 
+#
 # Translators:
 # AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-05-01 18:12+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: purchase_requisition
@@ -79,14 +79,10 @@ msgid ""
 "A Call for Tenders is a procedure for generating competing offers from\n"
 "            different bidders. In the call for tenders, you can record the\n"
 "            products you need to buy and generate the creation of RfQs to\n"
-"            vendors. Once the tenders have been registered, you can review and\n"
+"            vendors. Once the tenders have been registered, you can review "
+"and\n"
 "            compare them and you can validate some and cancel others."
 msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction
-msgid "Action Needed"
-msgstr "Eylem Gerekiyor"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
@@ -186,13 +182,6 @@ msgid "Change Quantity"
 msgstr "Miktarı Değiştir"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_product_template_purchase_requisition
-msgid ""
-"Check this box to generate Call for Tenders instead of generating requests "
-"for quotation from procurement."
-msgstr "Bu kutuyu tedarikten teklif isteği oluşturmak yerine Teklif Çağrısı oluşturmak için işaretleyin."
-
-#. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_partner
 msgid "Choose Vendor"
@@ -272,11 +261,6 @@ msgid "Created on"
 msgstr "Oluşturuldu"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Kayıta işlenmiş son mesajın tarihi."
-
-#. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:22
 #, python-format
 msgid "Define product(s) you want to include in the call for tenders."
@@ -311,21 +295,6 @@ msgid "End Month"
 msgstr "Bitiş Ayı"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_follower_ids
-msgid "Followers"
-msgstr "İzleyiciler"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "İzleyiciler (Kanallar)"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "İzleyiciler (İş ortakları)"
-
-#. module: purchase_requisition
 #. openerp-web
 #: code:addons/purchase_requisition/static/src/xml/purchase_requisition.xml:5
 #, python-format
@@ -344,26 +313,6 @@ msgstr "Grupla"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_id
 msgid "ID"
 msgstr "ID"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_is_follower
-msgid "Is Follower"
-msgstr "Takipçi mi"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_last_post
-msgid "Last Message Date"
-msgstr "Son Mesaj Tarihi"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty___last_update
@@ -395,16 +344,6 @@ msgid "Latest Requisition"
 msgstr "En Son İstek"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_ids
-msgid "Messages"
-msgstr "Mesajlar"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_ids
-msgid "Messages and communication history"
-msgstr "Mesajlar ve iletişim geçmişi"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_multiple_rfq_per_supplier
 msgid "Multiple RFQ per vendor"
 msgstr ""
@@ -423,21 +362,6 @@ msgstr "Yeni"
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "New Call for Tenders"
 msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction_counter
-msgid "Number of Actions"
-msgstr "İşlem Sayısı"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Eylem gerektiren mesaj sayısı"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Okunmamış mesaj sayısı"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -549,7 +473,7 @@ msgid "Purchase Requisition Partner"
 msgstr "Satınalma İsteği Partner"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:431
+#: code:addons/purchase_requisition/purchase_requisition.py:435
 #, python-format
 msgid "Purchase Requisition created"
 msgstr "Satınalam Talebi oluşturuldu"
@@ -658,9 +582,15 @@ msgstr "Sadece bir RFQ (özel)"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_exclusive
 msgid ""
-"Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
-"Select multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
-msgstr "Yalnızca bir Teklif İsteği seç (özel): Satınalma siparişinin onaylanması kalan satınalma siparişini iptal eder.\nBirden çok Teklif İsteği seç: Birden çok satınalma siparişi alınmasını sağlar. Satınalma siparişinin onaylanması kalan siparişleri iptal etmez."
+"Select only one RFQ (exclusive):  On the confirmation of a purchase order, "
+"it cancels the remaining purchase order.\n"
+"Select multiple RFQ:  It allows to have multiple purchase orders.On "
+"confirmation of a purchase order it does not cancel the remaining orders"
+msgstr ""
+"Yalnızca bir Teklif İsteği seç (özel): Satınalma siparişinin onaylanması "
+"kalan satınalma siparişini iptal eder.\n"
+"Birden çok Teklif İsteği seç: Birden çok satınalma siparişi alınmasını "
+"sağlar. Satınalma siparişinin onaylanması kalan siparişleri iptal etmez."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -727,16 +657,6 @@ msgid "Unassigned  Requisition"
 msgstr "Atanmamış İstek"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread
-msgid "Unread Messages"
-msgstr "Okunmamış Mesajlar"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Okunmamış Mesaj Sayacı"
-
-#. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
 msgid "Vendor"
 msgstr "Tedarikçi"
@@ -750,16 +670,6 @@ msgstr "Satıcılar"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_warehouse_id
 msgid "Warehouse"
 msgstr "Depo"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_website_message_ids
-msgid "Website Messages"
-msgstr "Websitesi Mesajları"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_website_message_ids
-msgid "Website communication history"
-msgstr "Web Sitesi iletişim geçmişi"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:72
@@ -779,7 +689,9 @@ msgstr "Satınalma siparişini zaten oluşturmuşsunuz."
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
-msgstr "Bu iş ortağı için zaten bir %s siparişiniz var, yeni bir teklif oluşturmak için bu siparişi iptal edin."
+msgstr ""
+"Bu iş ortağı için zaten bir %s siparişiniz var, yeni bir teklif oluşturmak "
+"için bu siparişi iptal edin."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:258
@@ -791,3 +703,64 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
 msgstr "örn. PO0025"
+
+#~ msgid "Action Needed"
+#~ msgstr "Eylem Gerekiyor"
+
+#~ msgid ""
+#~ "Check this box to generate Call for Tenders instead of generating "
+#~ "requests for quotation from procurement."
+#~ msgstr ""
+#~ "Bu kutuyu tedarikten teklif isteği oluşturmak yerine Teklif Çağrısı "
+#~ "oluşturmak için işaretleyin."
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Kayıta işlenmiş son mesajın tarihi."
+
+#~ msgid "Followers"
+#~ msgstr "İzleyiciler"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "İzleyiciler (Kanallar)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "İzleyiciler (İş ortakları)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
+
+#~ msgid "Is Follower"
+#~ msgstr "Takipçi mi"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Son Mesaj Tarihi"
+
+#~ msgid "Messages"
+#~ msgstr "Mesajlar"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Mesajlar ve iletişim geçmişi"
+
+#~ msgid "Number of Actions"
+#~ msgstr "İşlem Sayısı"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Eylem gerektiren mesaj sayısı"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Okunmamış mesaj sayısı"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Okunmamış Mesajlar"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Okunmamış Mesaj Sayacı"
+
+#~ msgid "Website Messages"
+#~ msgstr "Websitesi Mesajları"
+
+#~ msgid "Website communication history"
+#~ msgstr "Web Sitesi iletişim geçmişi"

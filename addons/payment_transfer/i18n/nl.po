@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment_transfer
-# 
+#
 # Translators:
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
@@ -10,14 +10,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-07-15 13:31+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_transfer
@@ -42,7 +42,9 @@ msgstr "<span><i>Annuleer,</i> Uw betaling is geannuleerd.</span>"
 msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
-msgstr "<span><i>Klaar,</i> Uw online betaling is succesvol verwerkt. Bedankt voor uw order.</span>"
+msgstr ""
+"<span><i>Klaar,</i> Uw online betaling is succesvol verwerkt. Bedankt voor "
+"uw order.</span>"
 
 #. module: payment_transfer
 #: model:payment.acquirer,error_msg:payment_transfer.payment_acquirer_transfer
@@ -50,17 +52,23 @@ msgid ""
 "<span><i>Error,</i> Please be aware that an error occurred during the "
 "transaction. The order has been confirmed but won't be paid. Don't hesitate "
 "to contact us if you have any questions on the status of your order.</span>"
-msgstr "<span><i>Fout,</i> Er is een fout opgetreden tijdens de transactie. De order is bevestigd maar niet betaald. Aarzel niet ommet ons contact op te nemen indien u vragen heeft over de status van uw order.</span>"
+msgstr ""
+"<span><i>Fout,</i> Er is een fout opgetreden tijdens de transactie. De order "
+"is bevestigd maar niet betaald. Aarzel niet ommet ons contact op te nemen "
+"indien u vragen heeft over de status van uw order.</span>"
 
 #. module: payment_transfer
 #: model:payment.acquirer,pending_msg:payment_transfer.payment_acquirer_transfer
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr "<span><i>Wachtende,</i> Uw online betaling is succesvol verwerkt. Uw order is nog niet gevalideerd.</span>"
+msgstr ""
+"<span><i>Wachtende,</i> Uw online betaling is succesvol verwerkt. Uw order "
+"is nog niet gevalideerd.</span>"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:30
+#: model:payment.acquirer,post_msg:payment_transfer.payment_acquirer_transfer
 #, python-format
 msgid "Bank Account"
 msgstr "Bankrekening"
@@ -70,6 +78,11 @@ msgstr "Bankrekening"
 #, python-format
 msgid "Bank Accounts"
 msgstr "Bankrekeningen"
+
+#. module: payment_transfer
+#: model:payment.acquirer,post_msg:payment_transfer.payment_acquirer_transfer
+msgid "Communication"
+msgstr ""
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
@@ -82,12 +95,25 @@ msgid "Payment Transaction"
 msgstr "Betalingstransactie"
 
 #. module: payment_transfer
-#: model:payment.acquirer,pre_msg:payment_transfer.payment_acquirer_transfer
-msgid "Transfer information will be provided after choosing the payment mode."
-msgstr "De betaalinformatie ontvangt u nadat u heeft gekozen voor de betaalwijze."
+#: model:payment.acquirer,post_msg:payment_transfer.payment_acquirer_transfer
+msgid "Please use the following transfer details"
+msgstr ""
 
 #. module: payment_transfer
+#: model:payment.acquirer,post_msg:payment_transfer.payment_acquirer_transfer
+msgid "Please use the order name as communication reference."
+msgstr ""
+
+#. module: payment_transfer
+#: model:payment.acquirer,pre_msg:payment_transfer.payment_acquirer_transfer
+msgid "Transfer information will be provided after choosing the payment mode."
+msgstr ""
+"De betaalinformatie ontvangt u nadat u heeft gekozen voor de betaalwijze."
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_acquirer.py:19
 #: model:payment.acquirer,name:payment_transfer.payment_acquirer_transfer
+#, python-format
 msgid "Wire Transfer"
 msgstr "Overschrijving"
 

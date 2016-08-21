@@ -25,18 +25,13 @@ from xml.etree import ElementTree
 from cStringIO import StringIO
 
 
-try:
-    import xlwt
-except ImportError:
-    xlwt = None
-
 import odoo
 import odoo.modules.registry
 from odoo.api import Environment
 from odoo.modules import get_resource_path
 from odoo.tools import topological_sort
 from odoo.tools.translate import _
-from odoo.tools.misc import str2bool
+from odoo.tools.misc import str2bool, xlwt
 from odoo import http
 from odoo.http import request, serialize_exception as _serialize_exception
 from odoo.exceptions import AccessError

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * pos_restaurant
-# 
+#
 # Translators:
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2015
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2015
@@ -10,29 +10,35 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:39+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-06-24 07:44+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_background_image
 msgid ""
 "A background image used to display a floor layout in the point of sale "
 "interface"
-msgstr "Tło obrazu użyte do pokazania podstawy budowy w punkcie interfejsu sprzedaży"
+msgstr ""
+"Tło obrazu użyte do pokazania podstawy budowy w punkcie interfejsu sprzedaży"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid ""
-"A restaurant floor represents the place where customers are served, this is where you can\n"
+"A restaurant floor represents the place where customers are served, this is "
+"where you can\n"
 "                define and position the tables."
-msgstr "Sala restauracyjna jest odpowiednikiem miejsca, gdzie obsługiwani są klienci, \ntutaj możesz utworzyć i ustawić stoły. "
+msgstr ""
+"Sala restauracyjna jest odpowiednikiem miejsca, gdzie obsługiwani są "
+"klienci, \n"
+"tutaj możesz utworzyć i ustawić stoły. "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_active
@@ -78,7 +84,7 @@ msgstr "Wygląd"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:535
+#: code:addons/pos_restaurant/static/src/js/floors.js:543
 #, python-format
 msgid "Are you sure ?"
 msgstr "Jesteś pewien?"
@@ -139,7 +145,7 @@ msgstr "Anulowano "
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:260
-#: code:addons/pos_restaurant/static/src/js/floors.js:396
+#: code:addons/pos_restaurant/static/src/js/floors.js:404
 #, python-format
 msgid "Changes could not be saved"
 msgstr "Nie można zapisać zmian "
@@ -147,7 +153,7 @@ msgstr "Nie można zapisać zmian "
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:261
-#: code:addons/pos_restaurant/static/src/js/floors.js:397
+#: code:addons/pos_restaurant/static/src/js/floors.js:405
 #, python-format
 msgid "Check your internet connection and access rights"
 msgstr "Sprawdź połączenie internetowe i uprawnienia dostępu "
@@ -206,8 +212,10 @@ msgstr "Wyświetlana nazwa "
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
 msgid ""
 "Each Order Printer has an IP Address that defines the PosBox/Hardware\n"
-"                Proxy where the printer can be found, and a list of product categories.\n"
-"                An Order Printer will only print updates for prodcuts belonging to one of\n"
+"                Proxy where the printer can be found, and a list of product "
+"categories.\n"
+"                An Order Printer will only print updates for products "
+"belonging to one of\n"
 "                its categories."
 msgstr ""
 
@@ -234,7 +242,7 @@ msgstr "Plan sali"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:22
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:28
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_customer_count
 #, python-format
 msgid "Guests"
@@ -242,10 +250,18 @@ msgstr "Goście"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:883
+#: code:addons/pos_restaurant/static/src/js/floors.js:918
 #, python-format
 msgid "Guests ?"
 msgstr "Goście?"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:10
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:21
+#, fuzzy, python-format
+msgid "Guests:"
+msgstr "Goście"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_height
@@ -267,8 +283,8 @@ msgstr "ID"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_active
 msgid ""
-"If false, the table is deactivated and will not be available in the point of"
-" sale"
+"If false, the table is deactivated and will not be available in the point of "
+"sale"
 msgstr ""
 
 #. module: pos_restaurant
@@ -316,7 +332,7 @@ msgstr "Notatka"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:468
+#: code:addons/pos_restaurant/static/src/js/floors.js:476
 #, python-format
 msgid "Number of Seats ?"
 msgstr "Liczba miejsc?"
@@ -346,8 +362,11 @@ msgstr "Drukarki zamówień "
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
 msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
-"                order updates in the kitchen/bar when the waiter updates the order."
-msgstr "Drukarki zamówień służą restauracjom i barom do drukowania\nzamówień w kuchni/barze gdy kelner aktualizuje zamówienia."
+"                order updates in the kitchen/bar when the waiter updates the "
+"order."
+msgstr ""
+"Drukarki zamówień służą restauracjom i barom do drukowania\n"
+"zamówień w kuchni/barze gdy kelner aktualizuje zamówienia."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_iface_orderline_notes
@@ -401,7 +420,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:536
+#: code:addons/pos_restaurant/static/src/js/floors.js:544
 #, python-format
 msgid "Removing a table cannot be undone"
 msgstr "Nie można cofnąć usunięcia stolika "
@@ -492,7 +511,7 @@ msgstr "Nazwa stolika "
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:456
+#: code:addons/pos_restaurant/static/src/js/floors.js:464
 #, python-format
 msgid "Table Name ?"
 msgstr "Nazwa stolika?"
@@ -554,8 +573,7 @@ msgstr "Stolik, do którego podano to zamówienie "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_color
-msgid ""
-"The table's color, expressed as a valid 'background' CSS property value"
+msgid "The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
 
 #. module: pos_restaurant
@@ -566,8 +584,8 @@ msgstr "Wysokość stołu podana w pikselach "
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_position_h
 msgid ""
-"The table's horizontal position from the left side to the table's center, in"
-" pixels"
+"The table's horizontal position from the left side to the table's center, in "
+"pixels"
 msgstr ""
 
 #. module: pos_restaurant
@@ -583,10 +601,17 @@ msgstr "Szerokość stołu podana w pikselach "
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:90
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:102
 #, python-format
 msgid "This floor has no tables yet, use the"
 msgstr "Na tej sali jeszcze nie ma stolików, użyj "
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:37
+#, python-format
+msgid "Transfer"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_sequence
@@ -627,14 +652,14 @@ msgstr "po"
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:6
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:14
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:17
 #, python-format
 msgid "at table"
 msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:91
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:103
 #, python-format
 msgid "button in the editing toolbar to create new tables."
 msgstr ""

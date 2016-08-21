@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_holidays
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-04-26 05:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_holidays
@@ -44,7 +44,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:234
-#: code:addons/hr_holidays/hr_holidays.py:356
+#: code:addons/hr_holidays/hr_holidays.py:361
 #, python-format
 msgid "%s on %s"
 msgstr ""
@@ -62,8 +62,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid ""
-"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
-"color:"
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-color:"
 msgstr ""
 
 #. module: hr_holidays
@@ -108,14 +107,14 @@ msgid "Absent Today"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_needaction
-msgid "Action Needed"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_active
 msgid "Active"
 msgstr "활성"
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Active Leaves and Allocations"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -174,7 +173,7 @@ msgid "Allocation Requests to Approve"
 msgstr "할당 요청 승인"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:559
+#: code:addons/hr_holidays/hr_holidays.py:575
 #, python-format
 msgid "Allocation for %s"
 msgstr "%s에 할당"
@@ -183,6 +182,12 @@ msgstr "%s에 할당"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_allocation_to_approve_count
 msgid "Allocation to Approve"
 msgstr ""
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#, fuzzy
+msgid "Allocations"
+msgstr "할당"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_limit
@@ -264,7 +269,8 @@ msgstr "직원 태그별"
 msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee Tag: "
 "Allocation/Request for group of employees in category"
-msgstr "직원별 : 개별 직원에 할당/요청. 직원 태그별 : 임직원 분류 그룹에 할당/요청"
+msgstr ""
+"직원별 : 개별 직원에 할당/요청. 직원 태그별 : 임직원 분류 그룹에 할당/요청"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_can_reset
@@ -296,8 +302,11 @@ msgstr "임직원 분류"
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_type
 msgid ""
 "Choose 'Leave Request' if someone wants to take an off-day. \n"
-"Choose 'Allocation Request' if you want to increase the number of leaves available for someone"
-msgstr "누구든 쉬고 싶다면 '휴가 요청'을 선택하십시오.\n누구든 가능한 휴가일수를 늘릴려면 '할당 요청'을 선택하십시오."
+"Choose 'Allocation Request' if you want to increase the number of leaves "
+"available for someone"
+msgstr ""
+"누구든 쉬고 싶다면 '휴가 요청'을 선택하십시오.\n"
+"누구든 가능한 휴가일수를 늘릴려면 '할당 요청'을 선택하십시오."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -363,6 +372,12 @@ msgid "Created on"
 msgstr "작성일"
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#, fuzzy
+msgid "Current"
+msgstr "상위 요소"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_current_leave_state
 msgid "Current Leave Status"
 msgstr "현재 휴가 상태"
@@ -373,21 +388,12 @@ msgid "Current Leave Type"
 msgstr "현재 휴가 유형"
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Current Year Leaves"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Dashboard"
 msgstr "알림"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "레코드에 게시된 최근 메시지의 날짜."
-
-#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_department
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_department_id
 msgid "Department"
 msgstr "부서"
@@ -460,29 +466,14 @@ msgstr "마감일"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid ""
-"Filters only on allocations and requests that belong to an holiday type that"
-" is 'active' (active field is True)"
+"Filters only on allocations and requests that belong to an holiday type that "
+"is 'active' (active field is True)"
 msgstr "'활성'인 휴가 유형에 속하는 요청 및 할당 필터(활성 필터가 참임)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_manager_id
 msgid "First Approval"
 msgstr "첫 번째 승인"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_follower_ids
-msgid "Followers"
-msgstr "팔로워"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_date_from
@@ -512,11 +503,6 @@ msgid "HR Comments"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_department
-msgid "HR Department"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
 msgid "HR Leaves Summary Report By Department"
 msgstr "부서별 직원 휴가 요약 보고서"
@@ -537,21 +523,12 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_unread
-msgid "If checked new messages require your attention."
-msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_active
 msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
 "type without removing it."
-msgstr "사용중인 필드를 아니오로 설정하면 제거하지 않고 휴가 유형을 숨길 수 있습니다."
+msgstr ""
+"사용중인 필드를 아니오로 설정하면 제거하지 않고 휴가 유형을 숨길 수 있습니다."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_limit
@@ -559,22 +536,15 @@ msgid ""
 "If you select this check box, the system allows the employees to take more "
 "leaves than the available ones for this type and will not take them into "
 "account for the \"Remaining Legal Leaves\" defined on the employee form."
-msgstr "이 상자를 선택하면 시스템은 이 유형에 사용할 수 있는 것보다 더 많은 휴가일수를 임직원에게 허용합니다. 그리고 임직원 양식에 정의된 '잔여 법정휴가' 계정에 이를 적용하지 않습니다."
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_is_follower
-msgid "Is Follower"
 msgstr ""
+"이 상자를 선택하면 시스템은 이 유형에 사용할 수 있는 것보다 더 많은 휴가일수"
+"를 임직원에게 허용합니다. 그리고 임직원 양식에 정의된 '잔여 법정휴가' 계정에 "
+"이를 적용하지 않습니다."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Ivory"
 msgstr "상아색"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_last_post
-msgid "Last Message Date"
-msgstr "최근 메시지 날짜"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays___last_update
@@ -680,6 +650,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_approve
 #: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 #: model:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Leaves"
 msgstr "휴가"
 
@@ -769,17 +740,20 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_confirmed
-msgid "Leaves/Allocations: first approval"
-msgstr ""
+#, fuzzy
+msgid "Leaves/Allocations Confirmed"
+msgstr "할당 방법"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_first_validated
-msgid "Leaves/Allocations: second approval"
-msgstr ""
+#, fuzzy
+msgid "Leaves/Allocations First Approval"
+msgstr "할당 요청 승인"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2015"
+#, fuzzy
+msgid "Legal Leaves 2016"
 msgstr "2015년 법정 휴가"
 
 #. module: hr_holidays
@@ -844,8 +818,7 @@ msgstr "최대 허용 휴가일수  - 이미 사용한 휴가일수"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_virtual_remaining_leaves
-msgid ""
-"Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
+msgid "Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
 msgstr "최대 허용 휴가일수 - 이미 사용한 휴가일수 - 승인 대기중인 휴가일수"
 
 #. module: hr_holidays
@@ -857,16 +830,6 @@ msgstr "회의"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_categ_id
 msgid "Meeting Type"
 msgstr "회의 유형"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_ids
-msgid "Messages"
-msgstr "메시지"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_ids
-msgid "Messages and communication history"
-msgstr "메시지 및 대화 기록"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
@@ -885,13 +848,7 @@ msgid "My Department Leaves"
 msgstr "부서별 휴가"
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "My Leave Requests"
-msgstr "나의 휴가 요청"
-
-#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Leaves"
 msgstr ""
 
@@ -911,11 +868,6 @@ msgid "New"
 msgstr "신규"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_number_of_days
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_employee
@@ -926,16 +878,6 @@ msgstr "일 수"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_leaves_count
 msgid "Number of Leaves"
-msgstr ""
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_unread_counter
-msgid "Number of unread messages"
 msgstr ""
 
 #. module: hr_holidays
@@ -953,11 +895,6 @@ msgid ""
 "                type (recuperation, legal holidays, sickness) and the exact\n"
 "                number of open days related to your leave."
 msgstr ""
-
-#. module: hr_holidays
-#: model:ir.actions.client,name:hr_holidays.action_client_hr_holidays_menu
-msgid "Open HR Menu"
-msgstr "인사 메뉴 열기"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_parent_id
@@ -1113,15 +1050,28 @@ msgstr "합계"
 msgid ""
 "The employee or employee category of this request is missing. Please make "
 "sure that your user login is linked to an employee."
-msgstr "이 요청의 직원 또는 직원 유형이 없습니다. 사용자가 임직원에 연결되어 있는지 확인하십시오."
+msgstr ""
+"이 요청의 직원 또는 직원 유형이 없습니다. 사용자가 임직원에 연결되어 있는지 "
+"확인하십시오."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:554
+#: code:addons/hr_holidays/hr_holidays.py:570
 #, python-format
 msgid ""
-"The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
-"You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \\ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field."
-msgstr "'잔여 법정휴가' 필드 뒤에 기능은 '제한 재정의 허용' 옵션을 선택하지 않은 휴가 유형인 경우에만 사용할 수 있습니다(%s 발견). 그렇지 않으면 휴가 유형 갱신을 우리가 결정할 수 없기 때문에 갱신이 모호해집니다. \n환경 설정에서 이 필드를 사용하지 않도록 한 경우 귀하는 임직원의 휴가를 관리하기 위해 기본 메뉴인 '인사\\휴가'에 있는 '휴가 요청'과 '할당 요청'을 사용하는 것이 좋습니다."
+"The feature behind the field 'Remaining Legal Leaves' can only be used when "
+"there is only one leave type with the option 'Allow to Override Limit' "
+"unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot "
+"decide on which leave type the update has to be done. \n"
+"You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
+"Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
+"the employees if the configuration does not allow to use this field."
+msgstr ""
+"'잔여 법정휴가' 필드 뒤에 기능은 '제한 재정의 허용' 옵션을 선택하지 않은 휴"
+"가 유형인 경우에만 사용할 수 있습니다(%s 발견). 그렇지 않으면 휴가 유형 갱신"
+"을 우리가 결정할 수 없기 때문에 갱신이 모호해집니다. \n"
+"환경 설정에서 이 필드를 사용하지 않도록 한 경우 귀하는 임직원의 휴가를 관리하"
+"기 위해 기본 메뉴인 '인사\\휴가'에 있는 '휴가 요청'과 '할당 요청'을 사용하는 "
+"것이 좋습니다."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -1133,7 +1083,9 @@ msgstr "일수는 0보다 커야 합니다."
 msgid ""
 "The number of remaining leaves is not sufficient for this leave type.\n"
 "Please verify also the leaves waiting for validation."
-msgstr "잔여 휴가일수가 이 휴가 유형에 충분하지 않습니다.\n또한 휴가를 확인하고 승인을 기다리십시오."
+msgstr ""
+"잔여 휴가일수가 이 휴가 유형에 충분하지 않습니다.\n"
+"또한 휴가를 확인하고 승인을 기다리십시오."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:304
@@ -1145,11 +1097,19 @@ msgstr "시작일은 종료일보다 앞서야 합니다."
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_state
 msgid ""
-"The status is set to 'To Submit', when a holiday request is created.            \n"
-"The status is 'To Approve', when holiday request is confirmed by user.            \n"
-"The status is 'Refused', when holiday request is refused by manager.            \n"
+"The status is set to 'To Submit', when a holiday request is "
+"created.            \n"
+"The status is 'To Approve', when holiday request is confirmed by "
+"user.            \n"
+"The status is 'Refused', when holiday request is refused by "
+"manager.            \n"
 "The status is 'Approved', when holiday request is approved by manager."
-msgstr "'제출' 상태는 휴가 요청을 만들면 적용됩니다.            \n'승인 요청' 상태는 휴가 요청이 사용자에 의해 확정될 때 적용됩니다.            \n'반려' 상태는 휴가 요청을 담당자가 거부하면 적용됩니다.            \n'승인됨' 상태는 휴가 요청이 담당자에 의해 승인되면 적용됩니다."
+msgstr ""
+"'제출' 상태는 휴가 요청을 만들면 적용됩니다.            \n"
+"'승인 요청' 상태는 휴가 요청이 사용자에 의해 확정될 때 적용됩니"
+"다.            \n"
+"'반려' 상태는 휴가 요청을 담당자가 거부하면 적용됩니다.            \n"
+"'승인됨' 상태는 휴가 요청이 담당자에 의해 승인되면 적용됩니다."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_manager_id
@@ -1161,7 +1121,9 @@ msgstr "이 영역은 휴가를 승인하는 사용자에게 의해 자동으로
 msgid ""
 "This area is automaticly filled by the user who validate the leave with "
 "second level (If Leave type need second validation)"
-msgstr "이 영역은 두 번째 로 휴가 검증을 시행하는 사용자에 의해 자동적으로 채워집니다.(휴가 유형이 복수 승인인 경우)"
+msgstr ""
+"이 영역은 두 번째 로 휴가 검증을 시행하는 사용자에 의해 자동적으로 채워집니"
+"다.(휴가 유형이 복수 승인인 경우)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_color_name
@@ -1226,7 +1188,9 @@ msgid ""
 "Total number of legal leaves allocated to this employee, change this value "
 "to create allocation/leave request. Total based on all the leave types "
 "without overriding limit."
-msgstr "이 임직원에게 할당된 총 법정 휴가일수. 할당/휴가 요청을 만들면 이 값이 변경됩니다. 합계는 한계 설정없이 모든 휴가 유형을 기반으로 합니다."
+msgstr ""
+"이 임직원에게 할당된 총 법정 휴가일수. 할당/휴가 요청을 만들면 이 값이 변경됩"
+"니다. 합계는 한계 설정없이 모든 휴가 유형을 기반으로 합니다."
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1239,15 +1203,9 @@ msgid "Unpaid"
 msgstr "무급 휴가"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Unread Messages"
 msgstr "읽지 않은 메시지"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_remaining_leaves_user_user_id
@@ -1286,23 +1244,6 @@ msgid "Waiting Second Validation"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:554
-#: code:addons/hr_holidays/hr_holidays.py:561
-#, python-format
-msgid "Warning!"
-msgstr "경고!"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_website_message_ids
-msgid "Website Messages"
-msgstr "웹사이트 메시지"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_website_message_ids
-msgid "Website communication history"
-msgstr "웹사이트 대화 이력"
-
-#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Wheat"
 msgstr "밀색"
@@ -1313,11 +1254,6 @@ msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
 "validation to be approved."
 msgstr "선택하면 이 유형의 할당/휴가 요청은 두 번에 걸친 승인이 필요합니다."
-
-#. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Year"
-msgstr "년"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
@@ -1338,18 +1274,19 @@ msgid "You cannot delete a leave which is in %s state."
 msgstr "%s 상태에 있는 휴가는 삭제할 수 없습니다."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:561
+#: code:addons/hr_holidays/hr_holidays.py:577
 #, python-format
 msgid "You cannot reduce validated allocation requests"
 msgstr "승인된 할당 요청은 줄일 수 없습니다."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:352
-#: code:addons/hr_holidays/hr_holidays.py:364
+#: code:addons/hr_holidays/hr_holidays.py:357
+#: code:addons/hr_holidays/hr_holidays.py:369
 #, python-format
 msgid ""
 "You cannot set a leave request as '%s'. Contact a human resource manager."
-msgstr "'%s' 상태로 휴가 요청을 설정할 수 없습니다. 인사 담당자에게 문의해 주십시오."
+msgstr ""
+"'%s' 상태로 휴가 요청을 설정할 수 없습니다. 인사 담당자에게 문의해 주십시오."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:26
@@ -1382,3 +1319,39 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "to"
 msgstr "까지"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "레코드에 게시된 최근 메시지의 날짜."
+
+#~ msgid "Followers"
+#~ msgstr "팔로워"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
+
+#~ msgid "Last Message Date"
+#~ msgstr "최근 메시지 날짜"
+
+#~ msgid "Messages"
+#~ msgstr "메시지"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "메시지 및 대화 기록"
+
+#~ msgid "My Leave Requests"
+#~ msgstr "나의 휴가 요청"
+
+#~ msgid "Open HR Menu"
+#~ msgstr "인사 메뉴 열기"
+
+#~ msgid "Warning!"
+#~ msgstr "경고!"
+
+#~ msgid "Website Messages"
+#~ msgstr "웹사이트 메시지"
+
+#~ msgid "Website communication history"
+#~ msgstr "웹사이트 대화 이력"
+
+#~ msgid "Year"
+#~ msgstr "년"

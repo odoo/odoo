@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from openerp.tools import float_compare
 
 
 class AccountAssetCategory(models.Model):
@@ -455,11 +456,12 @@ class AccountAssetDepreciationLine(models.Model):
             amount = current_currency.compute(line.amount, company_currency)
             sign = (category_id.journal_id.type == 'purchase' or category_id.journal_id.type == 'sale' and 1) or -1
             asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, line.asset_id.method_number)
+            prec = self.env['decimal.precision'].precision_get('Account')
             move_line_1 = {
                 'name': asset_name,
                 'account_id': category_id.account_depreciation_id.id,
-                'debit': 0.0,
-                'credit': amount,
+                'debit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
+                'credit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': category_id.journal_id.id,
                 'partner_id': line.asset_id.partner_id.id,
                 'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
@@ -469,8 +471,8 @@ class AccountAssetDepreciationLine(models.Model):
             move_line_2 = {
                 'name': asset_name,
                 'account_id': category_id.account_depreciation_expense_id.id,
-                'credit': 0.0,
-                'debit': amount,
+                'credit': 0.0 if float_compare(amount, 0.0, precision_digits=prec) > 0 else -amount,
+                'debit': amount if float_compare(amount, 0.0, precision_digits=prec) > 0 else 0.0,
                 'journal_id': category_id.journal_id.id,
                 'partner_id': line.asset_id.partner_id.id,
                 'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'purchase' else False,

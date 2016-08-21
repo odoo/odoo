@@ -1,41 +1,50 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_repair
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2015-11-15 18:50+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
-msgid ""
-" * The 'Draft' status is set automatically as draft when repair order in draft status.                         \n"
-"* The 'Confirmed' status is set automatically as confirm when repair order in confirm status.                         \n"
-"* The 'Done' status is set automatically when repair order is completed.                        \n"
-"* The 'Cancelled' status is set automatically when user cancel repair order."
-msgstr " * Starea 'Ciorna' este setata automat ca ciorna atunci cand ordinul de reparatii se afla in starea ciorna.                         \n* Starea 'Confirmat' este setata automat pe confirmata atunci cand ordinul de reparatii se afla in starea confirmata.                         \n* Starea 'Efectuat' este setat automat atunci cand ordinul de reparatii este finalizat.                         \n* Starea 'Anulat' este setata automat atunci cand utilizatorul anuleaza ordinul de reparatii."
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.             \n"
-"* The 'Confirmed' status is used when a user confirms the repair order.             \n"
-"* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.             \n"
-"* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.             \n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"repair order.             \n"
+"* The 'Confirmed' status is used when a user confirms the repair "
+"order.             \n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start "
+"repairing only after repair order is confirmed.             \n"
+"* The 'To be Invoiced' status is used to generate the invoice before or "
+"after repairing done.             \n"
 "* The 'Done' status is set when repairing is completed.            \n"
 "* The 'Cancelled' status is used when user cancel repair order."
-msgstr " * Starea 'Ciorna' este utilizata atunci cand un utilizator inregistreaza un ordin de reparatii nou si neconfirmat.             \n* Starea 'Confirmat' este utilizata atunci cnad un utilizator confirma ordinul de reparatii.             \n* Starea 'Gata de Reparat' este utilizata pentru a incepe reparatia, utilizatorul poate incepe reparatia numai dupa ce ordinul de repratii este confirmat.             \n* Starea 'Va fi Facturat' este utilizata pentru a genera factura inainte de sau dupa efectuarea reparatiei.             \n* Starea 'Efectuat' este setata atunci cand reparatia este finalizata.             \n* Starea 'Anulat' este utilizata atunci cand utilizatorul anuleaza ordinul de reparatii."
+msgstr ""
+" * Starea 'Ciorna' este utilizata atunci cand un utilizator inregistreaza un "
+"ordin de reparatii nou si neconfirmat.             \n"
+"* Starea 'Confirmat' este utilizata atunci cnad un utilizator confirma "
+"ordinul de reparatii.             \n"
+"* Starea 'Gata de Reparat' este utilizata pentru a incepe reparatia, "
+"utilizatorul poate incepe reparatia numai dupa ce ordinul de repratii este "
+"confirmat.             \n"
+"* Starea 'Va fi Facturat' este utilizata pentru a genera factura inainte de "
+"sau dupa efectuarea reparatiei.             \n"
+"* Starea 'Efectuat' este setata atunci cand reparatia este "
+"finalizata.             \n"
+"* Starea 'Anulat' este utilizata atunci cand utilizatorul anuleaza ordinul "
+"de reparatii."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -84,6 +93,12 @@ msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#, fuzzy
+msgid "<strong>Shipping address :</strong>"
+msgstr "Adresa de expediere:"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total Without Taxes</strong>"
 msgstr ""
 
@@ -91,11 +106,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total</strong>"
 msgstr "<strong>Total</strong>"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_needaction
-msgid "Action Needed"
-msgstr ""
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:24
@@ -222,11 +232,6 @@ msgid "Current Location"
 msgstr "Locatia actuala"
 
 #. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Data ultimului mesaj postat pe înregistrare."
-
-#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
 msgid "Delivery Address"
 msgstr "Adresa de livrare"
@@ -289,21 +294,6 @@ msgid "Fees"
 msgstr "Taxe"
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_follower_ids
-msgid "Followers"
-msgstr "Urmări"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
-
-#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Group By"
 msgstr "Grupează după"
@@ -338,20 +328,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the different\n"
+"                add or replace and record the time you spent on the "
+"different\n"
 "                operations."
 msgstr ""
 
@@ -420,16 +401,6 @@ msgid "Invoicing Address"
 msgstr "Adresa de facturare"
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_is_follower
-msgid "Is Follower"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_last_post
-msgid "Last Message Date"
-msgstr "Data ultimului mesaj"
-
-#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair___last_update
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel___last_update
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee___last_update
@@ -465,16 +436,6 @@ msgstr "Lot"
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
 msgid "Make Invoice"
 msgstr "Creeaza Factura"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_ids
-msgid "Messages"
-msgstr "Mesaje"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_ids
-msgid "Messages and communication history"
-msgstr "Istoric mesaje și conversații"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_move_id
@@ -526,21 +487,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Notes"
 msgstr "Note"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_unread_counter
-msgid "Number of unread messages"
-msgstr ""
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_operations
@@ -646,11 +592,6 @@ msgid "Ready to Repair"
 msgstr "Pregatit de reparatie"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-msgid "Reair Orders"
-msgstr "Ordine de Reparatii"
-
-#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Recreate Invoice"
 msgstr "Recreeaza factura"
@@ -690,6 +631,7 @@ msgstr "Referinta Comanda Reparatii"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Repair Orders"
 msgstr "Comenzi Reparatii"
 
@@ -739,7 +681,8 @@ msgstr "Comanda reparatii"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-msgid "Search Reair Orders"
+#, fuzzy
+msgid "Search Repair Orders"
 msgstr "Cauta Comenzile de Reparatii"
 
 #. module: mrp_repair
@@ -748,7 +691,10 @@ msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
-msgstr "Selectand 'Inainte de Reparatie' sau 'Dupa Reparatie' va va permite sa generati factura inainte de sau dupa reparatie. 'Fara Factura' inseamna ca nu doriti sa generati nici o factura pentru acest ordin de reparatii."
+msgstr ""
+"Selectand 'Inainte de Reparatie' sau 'Dupa Reparatie' va va permite sa "
+"generati factura inainte de sau dupa reparatie. 'Fara Factura' inseamna ca "
+"nu doriti sa generati nici o factura pentru acest ordin de reparatii."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:272
@@ -760,11 +706,6 @@ msgstr "Numarul de serie este necesar pentru linia operatiei cu produsul '%s'"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Set to Draft"
 msgstr "Setati ca ciorna"
-
-#. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "Shipping address :"
-msgstr "Adresa de expediere:"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
@@ -808,7 +749,9 @@ msgstr "Taxe"
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr "Unitatea de Masura a Produsului pe care ati ales-o are o categorie diferita decat cea din formularul produsului."
+msgstr ""
+"Unitatea de Masura a Produsului pe care ati ales-o are o categorie diferita "
+"decat cea din formularul produsului."
 
 #. module: mrp_repair
 #: sql_constraint:mrp.repair:0
@@ -819,8 +762,16 @@ msgstr ""
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "The repair order uses the warranty date on the Serial Number in\n"
-"                order to know if whether the repair should be invoiced to the\n"
+"                order to know if whether the repair should be invoiced to "
+"the\n"
 "                customer or not."
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
+msgid ""
+"The status of a repair line is set automatically to the one of the linked "
+"repair order."
 msgstr ""
 
 #. module: mrp_repair
@@ -828,7 +779,9 @@ msgstr ""
 msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
-msgstr "Aceasta operatiune va anula Procesul de reparatie, dar nu va anula Factura acestuia. Doriti sa continuati?"
+msgstr ""
+"Aceasta operatiune va anula Procesul de reparatie, dar nu va anula Factura "
+"acestuia. Doriti sa continuati?"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_to_invoice
@@ -874,16 +827,6 @@ msgid "Unit of Measure"
 msgstr "Unitatea de masura"
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_unread
-msgid "Unread Messages"
-msgstr "Mesaje necitite"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_untaxed
 msgid "Untaxed Amount"
 msgstr "Sumă neimpozitată"
@@ -910,16 +853,6 @@ msgid "Warranty Expiration"
 msgstr "Expirarea Garantiei"
 
 #. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_website_message_ids
-msgid "Website Messages"
-msgstr "Mesaje Website"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_website_message_ids
-msgid "Website communication history"
-msgstr "Istoric comunicare website"
-
-#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
 msgid "Yes"
 msgstr "Da"
@@ -942,3 +875,53 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
 msgid "unknown"
 msgstr "necunoscut(a)"
+
+#~ msgid ""
+#~ " * The 'Draft' status is set automatically as draft when repair order in "
+#~ "draft status.                         \n"
+#~ "* The 'Confirmed' status is set automatically as confirm when repair "
+#~ "order in confirm status.                         \n"
+#~ "* The 'Done' status is set automatically when repair order is "
+#~ "completed.                        \n"
+#~ "* The 'Cancelled' status is set automatically when user cancel repair "
+#~ "order."
+#~ msgstr ""
+#~ " * Starea 'Ciorna' este setata automat ca ciorna atunci cand ordinul de "
+#~ "reparatii se afla in starea ciorna.                         \n"
+#~ "* Starea 'Confirmat' este setata automat pe confirmata atunci cand "
+#~ "ordinul de reparatii se afla in starea "
+#~ "confirmata.                         \n"
+#~ "* Starea 'Efectuat' este setat automat atunci cand ordinul de reparatii "
+#~ "este finalizat.                         \n"
+#~ "* Starea 'Anulat' este setata automat atunci cand utilizatorul anuleaza "
+#~ "ordinul de reparatii."
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data ultimului mesaj postat pe înregistrare."
+
+#~ msgid "Followers"
+#~ msgstr "Urmări"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data ultimului mesaj"
+
+#~ msgid "Messages"
+#~ msgstr "Mesaje"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Istoric mesaje și conversații"
+
+#~ msgid "Reair Orders"
+#~ msgstr "Ordine de Reparatii"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Mesaje necitite"
+
+#~ msgid "Website Messages"
+#~ msgstr "Mesaje Website"
+
+#~ msgid "Website communication history"
+#~ msgstr "Istoric comunicare website"

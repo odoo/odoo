@@ -115,7 +115,7 @@ class Users(models.Model):
 
     @api.multi
     def message_partner_info_from_emails(self, emails, link_mail=False):
-        return self.pool.get('mail.thread').message_partner_info_from_emails(emails, link_mail=link_mail)
+        return self.env['mail.thread'].message_partner_info_from_emails(emails, link_mail=link_mail)
 
     @api.multi
     def message_get_suggested_recipients(self):

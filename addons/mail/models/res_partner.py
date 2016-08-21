@@ -96,7 +96,7 @@ class Partner(models.Model):
 
         # custom values
         custom_values = dict()
-        if message.model and message.res_id and self.pool.get(message.model) and hasattr(self.pool[message.model], 'message_get_email_values'):
+        if message.res_id and message.model in self.env and hasattr(self.env[message.model], 'message_get_email_values'):
             custom_values = self.env[message.model].browse(message.res_id).message_get_email_values(message)
 
         mail_values = {

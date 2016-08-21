@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~10c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-08-18 14:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -53,6 +53,11 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
 msgid "# of Product Variants"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "<span>kg</span>"
 msgstr ""
 
 #. module: delivery
@@ -106,6 +111,11 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_amount
 msgid "Amount of the order to benefit from a free shipping, expressed in the company currency"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Archived"
 msgstr ""
 
 #. module: delivery
@@ -191,33 +201,29 @@ msgid "Can be Sold"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
+msgid "Can be changed during the 'put in pack' to adjust the weight of the shipping."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
 msgid "Can be expensed"
 msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form_shipping
 msgid "Cancel"
 msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_id
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr ""
-
-#. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
-msgid "Carrier Information"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
-msgid "Carrier Tracking Ref"
 msgstr ""
 
 #. module: delivery
@@ -364,6 +370,16 @@ msgid "Delivery"
 msgstr ""
 
 #. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Delivery Carrier Search"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Delivery Information"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order_carrier_id
 msgid "Delivery Method"
@@ -417,6 +433,11 @@ msgid "Determine the display order"
 msgstr ""
 
 #. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "Discard"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_display_name
 msgid "Display Name"
@@ -427,6 +448,11 @@ msgstr ""
 msgid "Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
+msgid "Environment"
 msgstr ""
 
 #. module: delivery
@@ -545,8 +571,24 @@ msgid "Gives the sequence order when calculating delivery carrier."
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_weight
-msgid "Gross Weight"
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Group By"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
+#: model:ir.model.fields,field_description:delivery.field_product_template_hs_code
+msgid "HS Code"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_height
+msgid "Height"
+msgstr ""
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Height must be positive"
 msgstr ""
 
 #. module: delivery
@@ -695,6 +737,16 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_length
+msgid "Length"
+msgstr ""
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Length must be positive"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
 msgid "Location"
 msgstr ""
@@ -705,8 +757,25 @@ msgid "Logistical Units"
 msgstr ""
 
 #. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Manage Package Type"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_track_service
+msgid "Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
+"Create a task and track hours: Create a task on the sale order validation and track the work hours."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
 msgid "Manufacturing Lead Time"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
+msgid "Margin"
 msgstr ""
 
 #. module: delivery
@@ -720,8 +789,28 @@ msgid "Margin Date To"
 msgstr ""
 
 #. module: delivery
+#: sql_constraint:delivery.carrier:0
+msgid "Margin cannot be lower than -100%"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
+msgid "Max Weight"
+msgstr ""
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Max Weight must be positive"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
 msgid "Maximum Value"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
+msgid "Maximum weight shippable in this packaging"
 msgstr ""
 
 #. module: delivery
@@ -750,11 +839,6 @@ msgid "Messages"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_ids
-msgid "Messages and communication history"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_orderpoint_ids
 msgid "Minimum Stock Rules"
 msgstr ""
@@ -767,13 +851,18 @@ msgid "Name"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:62
+#: selection:product.packaging,package_carrier_type:0
+msgid "No carrier integration"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:63
 #, python-format
 msgid "No carrier matching."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:70
+#: code:addons/delivery/models/sale_order.py:72
 #, python-format
 msgid "No carrier set for this order."
 msgstr ""
@@ -815,8 +904,21 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_method
+msgid "On ordered quantities: Invoice this product based on ordered quantities.\n"
+"On received quantities: Invoice this product based on received quantity."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_operator
 msgid "Operator"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_invoice_policy
+msgid "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
+"Delivered Quantity: Invoiced based on the quantity the vendor delivered.\n"
+"Reinvoice Costs: Invoice with some additional charges (product transfer, labour charges,...)"
 msgstr ""
 
 #. module: delivery
@@ -825,8 +927,35 @@ msgid "Outgoing"
 msgstr ""
 
 #. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "Package"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
+msgid "Package Code"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:35
+#: code:addons/delivery/models/stock_picking.py:128
+#, python-format
+msgid "Package Details"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
 msgid "Packages"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_product_packaging
+msgid "Packaging"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_pack_operation
+msgid "Packing Operation"
 msgstr ""
 
 #. module: delivery
@@ -849,6 +978,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Price Computation"
 msgstr ""
 
@@ -963,6 +1093,7 @@ msgstr ""
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line_product_qty
 msgid "Quantity"
 msgstr ""
 
@@ -995,6 +1126,11 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
 msgid "Reordering Rules"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_return_picking
+msgid "Return Picking"
 msgstr ""
 
 #. module: delivery
@@ -1037,6 +1173,11 @@ msgid "Sales Order Line"
 msgstr ""
 
 #. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "Save"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_categ_id
 msgid "Select category for the current product"
 msgstr ""
@@ -1047,7 +1188,7 @@ msgid "Select event types so when we use this product in sales order lines, it w
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/delivery_carrier.py:250
+#: code:addons/delivery/models/delivery_carrier.py:284
 #, python-format
 msgid "Selected product in the delivery method doesn't fulfill any of the delivery carrier(s) criteria."
 msgstr ""
@@ -1069,20 +1210,24 @@ msgid "Set price"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:88
-#, python-format
-msgid "Shipment sent to carrier %s for expedition with tracking number %s"
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
+msgid "Set to True if your credentials are certified for production."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:106
+#: code:addons/delivery/models/stock_picking.py:147
 #, python-format
-msgid "Your delivery method has no redirect on courier provider's website to track this order."
+msgid "Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost: %.2f %s"
 msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
 msgid "Shipping Cost"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
+msgid "Shipping Weight"
 msgstr ""
 
 #. module: delivery
@@ -1119,13 +1264,14 @@ msgid "Standard Price: The cost price is manually updated at the end of a specif
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
-msgid "States"
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
+#: model:ir.model.fields,help:delivery.field_product_template_hs_code
+msgid "Standardized code for international shipping and goods declaration"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state
-msgid "Status"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
+msgid "States"
 msgstr ""
 
 #. module: delivery
@@ -1190,7 +1336,7 @@ msgid "The average delay in days between the confirmation of the customer order 
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:53
+#: code:addons/delivery/models/sale_order.py:54
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
@@ -1248,6 +1394,11 @@ msgid "This is the sum of the extra price of all attributes"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
+msgid "This percentage will be added to the shipping price."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
 msgid "This stock location will be used, instead of the default one, as the source location for stock moves generated by manufacturing orders."
 msgstr ""
@@ -1291,6 +1442,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_tracking
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
+msgid "Tracking Reference"
 msgstr ""
 
 #. module: delivery
@@ -1381,13 +1537,13 @@ msgid "Variant Image"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
-msgid "Vendor"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
+msgid "Vendor Taxes"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
-msgid "Vendor Taxes"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
+msgid "Vendors"
 msgstr ""
 
 #. module: delivery
@@ -1409,8 +1565,19 @@ msgid "Warranty"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_weight
@@ -1422,6 +1589,11 @@ msgstr ""
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
 msgid "Weight * Volume"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
+msgid "Weight for Shipping"
 msgstr ""
 
 #. module: delivery
@@ -1457,6 +1629,29 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id
 msgid "When validating an invoice, an email will be sent to the customer based on this template. The customer will receive an email for each product linked to an email template."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_width
+msgid "Width"
+msgstr ""
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Width must be positive"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:187
+#, python-format
+msgid "You are shipping different packaging types in the same shipment.\n"
+"Packaging Types: %s"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:163
+#, python-format
+msgid "Your delivery method has no redirect on courier provider's website to track this order."
 msgstr ""
 
 #. module: delivery

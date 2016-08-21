@@ -193,6 +193,9 @@ class account_payment(models.Model):
 
     payment_type = fields.Selection(selection_add=[('transfer', 'Internal Transfer')])
     payment_reference = fields.Char(copy=False, readonly=True, help="Reference of the document used to issue this payment. Eg. check number, file name, etc.")
+    move_name = fields.Char(string='Journal Entry Name', readonly=True,
+        default=False, copy=False,
+        help="Technical field holding the number given to the journal entry, automatically set when the statement line is reconciled then stored to set the same number again if the line is cancelled, set to draft and re-processed again.")
 
     # Money flows from the journal_id's default_debit_account_id or default_credit_account_id to the destination_account_id
     destination_account_id = fields.Many2one('account.account', compute='_compute_destination_account_id', readonly=True)
@@ -315,6 +318,8 @@ class account_payment(models.Model):
     def unlink(self):
         if any(bool(rec.move_line_ids) for rec in self):
             raise UserError(_("You can not delete a payment that is already posted"))
+        if any(rec.move_name for rec in self):
+            raise UserError(_('It is not allowed to delete a payment that already created a journal entry since it would create a gap in the numbering. You should create the journal entry again and cancel it thanks to a regular revert.'))
         return super(account_payment, self).unlink()
 
     @api.multi
@@ -360,7 +365,7 @@ class account_payment(models.Model):
                 transfer_debit_aml = rec._create_transfer_entry(amount)
                 (transfer_credit_aml + transfer_debit_aml).reconcile()
 
-            rec.state = 'posted'
+            rec.write({'state': 'posted', 'move_name': move.name})
 
     def _create_payment_entry(self, amount):
         """ Create a journal entry corresponding to a payment, if the payment references invoice(s) they are reconciled.
@@ -450,7 +455,7 @@ class account_payment(models.Model):
             raise UserError(_('Configuration Error !'), _('The journal %s does not have a sequence, please specify one.') % journal.name)
         if not journal.sequence_id.active:
             raise UserError(_('Configuration Error !'), _('The sequence of journal %s is deactivated.') % journal.name)
-        name = journal.with_context(ir_sequence_date=self.payment_date).sequence_id.next_by_id()
+        name = self.move_name or journal.with_context(ir_sequence_date=self.payment_date).sequence_id.next_by_id()
         return {
             'name': name,
             'date': self.payment_date,

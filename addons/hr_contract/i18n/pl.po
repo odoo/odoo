@@ -1,27 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_contract
-# 
+#
 # Translators:
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-24 07:44+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_needaction
-msgid "Action Needed"
-msgstr "Wymagana akcja"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_base_action_rule
@@ -49,11 +45,6 @@ msgid "Company Vehicle"
 msgstr "Samochód służbowy"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract
-msgid "Contract"
-msgstr "Umowa"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Reference"
@@ -61,7 +52,7 @@ msgstr "Odnośnik umowy"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5307
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -129,11 +120,6 @@ msgid "Current Employee"
 msgstr "Bieżący pracownik"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Data ostatniej wiadomości w rekordzie."
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_department_id
 msgid "Department"
 msgstr "Dział"
@@ -157,6 +143,12 @@ msgid "Employee"
 msgstr "Pracownik"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_contract
+#, fuzzy
+msgid "Employee Contract"
+msgstr "Umowa"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
 msgid "End Date"
 msgstr "Data końcowa"
@@ -164,28 +156,14 @@ msgstr "Data końcowa"
 #. module: hr_contract
 #: constraint:hr.contract:0
 msgid "Error! Contract start-date must be less than contract end-date."
-msgstr "Błąd! Data rozpoczęcia umowy musi być wcześniejsza niż data zakończenia."
+msgstr ""
+"Błąd! Data rozpoczęcia umowy musi być wcześniejsza niż data zakończenia."
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
 msgstr "wygasło"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_follower_ids
-msgid "Followers"
-msgstr "Obserwatorzy"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Obserwatorzy (kanały)"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Obserwatorzy (partnerzy)"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
@@ -219,16 +197,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
-
-#. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
 msgid "In kilometers"
 msgstr "w kilometrach"
@@ -237,11 +205,6 @@ msgstr "w kilometrach"
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Information"
 msgstr "Informacja"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_is_follower
-msgid "Is Follower"
-msgstr "Jest obserwatorem"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_manager
@@ -257,11 +220,6 @@ msgstr "Stanowisko"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_job_id
 msgid "Job Title"
 msgstr "Stanowisko"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_last_post
-msgid "Last Message Date"
-msgstr "Data ostatniej wiadomości"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract___last_update
@@ -297,16 +255,6 @@ msgid "Medical Examination Date"
 msgstr "Data badania lekarskiego"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_ids
-msgid "Messages"
-msgstr "Wiadomosći"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_ids
-msgid "Messages and communication history"
-msgstr "Wiadomości i historia komunikacji"
-
-#. module: hr_contract
 #: selection:hr.contract,state:0
 msgid "New"
 msgstr "Nowe"
@@ -318,24 +266,9 @@ msgid "Notes"
 msgstr "Uwagi"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Liczba akcji"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_children
 msgid "Number of Children"
 msgstr "Liczba dzieci"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Liczba wiadomości wymagających akcji"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Liczba nieprzeczytanych wiadomości"
 
 #. module: hr_contract
 #: model:ir.filters,name:hr_contract.contract_open
@@ -411,15 +344,9 @@ msgid "Trial Start Date"
 msgstr "Data początkowa okresu próbnego"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_unread
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Unread Messages"
 msgstr "Nieprzeczytane wiadomości"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Licznik nieprzeczytanych wiadomości"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
@@ -447,16 +374,6 @@ msgid "Wage"
 msgstr "Płaca"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_website_message_ids
-msgid "Website Messages"
-msgstr "Wiadomości"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_website_message_ids
-msgid "Website communication history"
-msgstr "Historia rozmowy"
-
-#. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Work Permit"
 msgstr "Pozwolenie na pracę"
@@ -470,3 +387,54 @@ msgstr "Nr pozwolenia na pracę"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_working_hours
 msgid "Working Schedule"
 msgstr "Godziny pracy"
+
+#~ msgid "Action Needed"
+#~ msgstr "Wymagana akcja"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data ostatniej wiadomości w rekordzie."
+
+#~ msgid "Followers"
+#~ msgstr "Obserwatorzy"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Obserwatorzy (kanały)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Obserwatorzy (partnerzy)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
+
+#~ msgid "Is Follower"
+#~ msgstr "Jest obserwatorem"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data ostatniej wiadomości"
+
+#~ msgid "Messages"
+#~ msgstr "Wiadomosći"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Wiadomości i historia komunikacji"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Liczba akcji"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Liczba wiadomości wymagających akcji"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Liczba nieprzeczytanych wiadomości"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Licznik nieprzeczytanych wiadomości"
+
+#~ msgid "Website Messages"
+#~ msgstr "Wiadomości"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historia rozmowy"

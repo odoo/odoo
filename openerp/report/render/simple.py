@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import render
-
-from cStringIO import StringIO
+import copy
 import xml.dom.minidom
+from cStringIO import StringIO
 
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table
+import reportlab.lib
+from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.units import mm
 from reportlab.lib.pagesizes import A4
-import reportlab.lib
 
-import copy
+from . import render
+
 
 class simple(render.render):
     def _render(self):

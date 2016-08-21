@@ -136,9 +136,10 @@ class Registry(Mapping):
         return self._fields_by_model[model_name]
 
     def do_parent_store(self, cr):
-        for model in self._init_parent:
-            if model in self:
-                self[model]._parent_store_compute(cr)
+        env = openerp.api.Environment(cr, SUPERUSER_ID, {})
+        for model_name in self._init_parent:
+            if model_name in env:
+                env[model_name]._parent_store_compute()
         self._init = False
 
     def obj_list(self):
@@ -150,7 +151,8 @@ class Registry(Mapping):
         self.models[model_name] = model
 
     def load(self, cr, module):
-        """ Load a given module in the registry.
+        """ Load a given module in the registry, and return the names of the
+        modified models.
 
         At the Python level, the modules are already loaded, but not yet on a
         per-registry level. This method populates a registry with the given
@@ -176,7 +178,7 @@ class Registry(Mapping):
             model = cls._build_model(self, cr)
             mark_loaded(model)
 
-        return map(self, loaded_models)
+        return list(loaded_models)
 
     def setup_models(self, cr, partial=False):
         """ Complete the setup of models.
@@ -185,27 +187,61 @@ class Registry(Mapping):
             :param partial: ``True`` if all models have not been loaded yet.
         """
         lazy_property.reset_all(self)
+        env = openerp.api.Environment(cr, SUPERUSER_ID, {})
 
         # load custom models
-        ir_model = self['ir.model']
+        ir_model = env['ir.model']
         cr.execute('SELECT * FROM ir_model WHERE state=%s', ('manual',))
         for model_data in cr.dictfetchall():
-            ir_model._instanciate(cr, SUPERUSER_ID, model_data, {})
+            ir_model._instanciate(model_data)
 
         # prepare the setup on all models
-        for model in self.models.itervalues():
-            model._prepare_setup(cr, SUPERUSER_ID)
+        models = [env[model_name] for model_name in self.models]
+        for model in models:
+            model._prepare_setup()
 
         # do the actual setup from a clean state
         self._m2m = {}
-        for model in self.models.itervalues():
-            model._setup_base(cr, SUPERUSER_ID, partial)
+        for model in models:
+            model._setup_base(partial)
 
-        for model in self.models.itervalues():
-            model._setup_fields(cr, SUPERUSER_ID, partial)
+        for model in models:
+            model._setup_fields(partial)
 
-        for model in self.models.itervalues():
-            model._setup_complete(cr, SUPERUSER_ID)
+        for model in models:
+            model._setup_complete()
+
+    def init_models(self, cr, model_names, context):
+        """ Initialize a list of models (given by their name). Call methods
+            ``_auto_init``, ``init``, and ``_auto_end`` on each model to create
+            or update the database tables supporting the models.
+
+            The ``context`` may contain the following items:
+             - ``module``: the name of the module being installed/updated, if any;
+             - ``update_custom_fields``: whether custom fields should be updated.
+        """
+        if 'module' in context:
+            _logger.info('module %s: creating or updating database tables', context['module'])
+
+        context = dict(context, todo=[])
+        env = openerp.api.Environment(cr, SUPERUSER_ID, context)
+        models = [env[model_name] for model_name in model_names]
+
+        for model in models:
+            model._auto_init()
+            model.init()
+            cr.commit()
+
+        for model in models:
+            model._auto_end()
+            cr.commit()
+
+        for _, func, args in sorted(context['todo']):
+            func(*args)
+
+        if models:
+            models[0].recompute()
+        cr.commit()
 
     def clear_caches(self):
         """ Clear the caches

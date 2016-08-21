@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * im_livechat
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-26 12:06+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-05-28 04:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_nbr_channel
@@ -36,8 +37,10 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_action
 msgid ""
-"* Select 'Display the button' to simply display the chat button on the pages.\n"
-"* Select 'Auto popup' for to display the button, and automatically open the conversation window.\n"
+"* Select 'Display the button' to simply display the chat button on the "
+"pages.\n"
+"* Select 'Auto popup' for to display the button, and automatically open the "
+"conversation window.\n"
 "* Select 'Hide the button' to hide the chat button on the pages."
 msgstr ""
 
@@ -151,7 +154,7 @@ msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:28
+#: code:addons/im_livechat/static/src/js/im_livechat.js:29
 #, python-format
 msgid "Chat with one of our collaborators"
 msgstr "Chat cu unul dintre colaboratorii nostri"
@@ -291,8 +294,8 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
-"For website built with Odoo CMS, please install the website_livechat module."
-" Then go to Settings &gt; Website Settings and select the Website Live Chat "
+"For website built with Odoo CMS, please install the website_livechat module. "
+"Then go to Settings &gt; Website Settings and select the Website Live Chat "
 "Channel you want to add on your website."
 msgstr ""
 
@@ -337,7 +340,7 @@ msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:29
+#: code:addons/im_livechat/static/src/js/im_livechat.js:30
 #, python-format
 msgid "How may I help you?"
 msgstr "Cum vă pot ajuta?"
@@ -421,7 +424,7 @@ msgstr "Suport în timp real"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:8
+#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:9
 #, python-format
 msgid "Livechat"
 msgstr ""
@@ -436,7 +439,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_report_operator_action
 msgid ""
 "Livechat Support Channel Statistics allows you to easily check and analyse "
-"your company livechat session performance. Extract informations about the "
+"your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
 
@@ -486,16 +489,14 @@ msgid ""
 "Medium-sized photo of the group. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
-msgstr "Fotografie de dimensiune medie a grupului. Este redimensionată automat ca o imagine de 128x128px, cu formatul imaginii păstrat. Utilizați acest câmp în vizualizările formularului sau în unele vizualizări kanban."
+msgstr ""
+"Fotografie de dimensiune medie a grupului. Este redimensionată automat ca o "
+"imagine de 128x128px, cu formatul imaginii păstrat. Utilizați acest câmp în "
+"vizualizările formularului sau în unele vizualizări kanban."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Missed sessions"
-msgstr ""
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
-msgid "My sessions"
 msgstr ""
 
 #. module: im_livechat
@@ -505,7 +506,7 @@ msgstr "Nume"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:76
+#: code:addons/im_livechat/static/src/js/im_livechat.js:117
 #, python-format
 msgid ""
 "None of our collaborators seems to be available, please try again later."
@@ -535,11 +536,7 @@ msgid "OK"
 msgstr "OK"
 
 #. module: im_livechat
-#: model:ir.actions.client,name:im_livechat.ir_action_client_open_livechat_menu
-msgid "Open Livechat Channel Menu"
-msgstr ""
-
-#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_partner_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_partner_id
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
@@ -566,11 +563,6 @@ msgid ""
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_partner_id
-msgid "Opertor"
-msgstr ""
-
-#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Options"
 msgstr "Optiuni"
@@ -587,13 +579,12 @@ msgstr "Ieșire"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_rating_rating
-#: model:ir.model.fields,field_description:im_livechat.field_mail_channel_rating_ids
 msgid "Rating"
 msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:308
+#: code:addons/im_livechat/static/src/js/im_livechat.js:309
 #, python-format
 msgid "Rating: :rating_%d"
 msgstr ""
@@ -660,9 +651,12 @@ msgstr "Sesiuni"
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image_small
 msgid ""
 "Small-sized photo of the group. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
-msgstr "Fotografie de dimensiuni mici a grupului. Este redimensionata automat ca o imagine de 64x64px, cu formatul imaginii pastrat. Utilizati acest camp oriunde este necesara o imagine mica."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
+msgstr ""
+"Fotografie de dimensiuni mici a grupului. Este redimensionata automat ca o "
+"imagine de 64x64px, cu formatul imaginii pastrat. Utilizati acest camp "
+"oriunde este necesara o imagine mica."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_start_date
@@ -715,7 +709,9 @@ msgstr ""
 msgid ""
 "This field holds the image used as photo for the group, limited to "
 "1024x1024px."
-msgstr "Acest câmp conține imaginea utilizată ca fotografie a grupului, limitata la 1024x1024 pixeli."
+msgstr ""
+"Acest câmp conține imaginea utilizată ca fotografie a grupului, limitata la "
+"1024x1024 pixeli."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_default_message
@@ -764,7 +760,7 @@ msgstr "Utilizator"
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/controllers/main.py:30
-#: code:addons/im_livechat/static/src/js/im_livechat.js:27
+#: code:addons/im_livechat/static/src/js/im_livechat.js:28
 #, python-format
 msgid "Visitor"
 msgstr "Vizitator"
@@ -798,7 +794,8 @@ msgstr "Mesaj de întâmpinare"
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 msgid ""
 "You can create channels for each website on which you want\n"
-"                to integrate the website live chat widget, allowing you website\n"
+"                to integrate the website live chat widget, allowing your "
+"website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
 
@@ -815,7 +812,8 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
-msgstr "sau copiați acest URL și trimite-l prin e-mail către clienți sau furnizori:"
+msgstr ""
+"sau copiați acest URL și trimite-l prin e-mail către clienți sau furnizori:"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form

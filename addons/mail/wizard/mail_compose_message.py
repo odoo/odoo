@@ -65,7 +65,7 @@ class MailComposer(models.TransientModel):
         result['model'] = result.get('model', self._context.get('active_model'))
         result['res_id'] = result.get('res_id', self._context.get('active_id'))
         result['parent_id'] = result.get('parent_id', self._context.get('message_id'))
-        if 'no_auto_thread' not in result and (not result['model'] or not result['model'] in self.pool or not hasattr(self.env[result['model']], 'message_post')):
+        if 'no_auto_thread' not in result and (result['model'] not in self.env or not hasattr(self.env[result['model']], 'message_post')):
             result['no_auto_thread'] = True
 
         # default values according to composition mode - NOTE: reply is deprecated, fall back on comment
@@ -120,7 +120,7 @@ class MailComposer(models.TransientModel):
     auto_delete = fields.Boolean('Delete Emails', help='Delete sent emails (mass mailing only)')
     auto_delete_message = fields.Boolean('Delete Message Copy', help='Do not keep a copy of the email in the document communication history (mass mailing only)')
     template_id = fields.Many2one(
-        'mail.template', 'Use template', select=True,
+        'mail.template', 'Use template', index=True,
         domain="[('model', '=', model)]")
     # mail_message updated fields
     message_type = fields.Selection(default="comment")

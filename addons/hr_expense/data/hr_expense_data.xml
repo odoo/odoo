@@ -66,10 +66,10 @@
         </record>
 
         <record id="mail_template_data_expense_unknown_email_address" model="mail.template">
-            <field name="name">hr expense unknown email address on email alias</field>
+            <field name="name">HrExpense: unknown employee bounce</field>
             <field name="subject">Your expense has not been created</field>
             <field name="email_from">help@odoo.com</field>
-            <field name="email_to">${context.email_to|safe}</field>
+            <field name="email_to">${ctx['email_to']|safe}</field>
             <field name="lang">${user.lang}</field>
             <field name="model_id" ref="base.model_ir_module_module"/>
             <field name="auto_delete" eval="True"/>

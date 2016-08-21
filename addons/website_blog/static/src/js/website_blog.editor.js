@@ -13,7 +13,7 @@ contentMenu.TopBar.include({
     new_blog_post: function () {
         var model = new Model('blog.blog');
         model.call('name_search', [], { context: base.get_context() }).then(function (blog_ids) {
-            if (blog_ids.length == 1) {
+            if (blog_ids.length === 1) {
                 document.location = '/blog/' + blog_ids[0][0] + '/post/new';
             } else if (blog_ids.length > 1) {
                 website.prompt({
@@ -47,23 +47,22 @@ odoo.define('website_blog.editor', function (require) {
     rte.Class.include({
         // Destroy popOver and stop listening mouseup event on edit mode
         start: function () {
-            var self = this;
             $(".js_tweet, .js_comment").off('mouseup').trigger('mousedown');
             return this._super.apply(this, arguments);
         },
         saveElement: function ($el, context) {
-            if ($el.is('.website_blog #title')) {
+            if ($el.is('.o_blog_cover_container')) {
                 return ajax.jsonRpc("/blog/post_change_background", 'call', {
-                    'post_id' : +$el.find('#blog_post_name').data('oe-id'),
+                    'post_id' : parseInt($el.closest("[name=\"blog_post\"], .website_blog").find("[data-oe-model=\"blog.post\"]").first().data("oe-id"), 10),
                     'cover_properties' : {
-                        "background-image": $el.find('#js_blogcover').css("background-image").replace(/"/g, ''),
-                        "background-color": $el.find('#js_blogcover').attr("class"),
-                        "opacity": $el.find('#js_blogcover').css("opacity"),
-                        "resize_class": $el.attr('class'),
+                        "background-image": $el.children(".o_blog_cover_image").css("background-image").replace(/"/g, ''),
+                        "background-color": $el.data("filter_color"),
+                        "opacity": $el.data("filter_value"),
+                        "resize_class": $el.data("cover_class"),
                     }
                 });
             }
-            return this._super($el, context);
+            return this._super.apply(this, arguments);
         },
     });
 
@@ -84,59 +83,66 @@ odoo.define('website_blog.editor', function (require) {
         }
     });
 
-    options.registry.website_blog = options.Class.extend({
-        start : function() {
-            this.$cover = this.$target.find('#js_blogcover');
-            this.src = this.$target.css("background-image").replace(/url\(|\)|"|'/g,'').replace(/.*none$/,'');
-            this.$image = $('<image src="'+this.src+'">');
-            this._super();
+    options.registry.blog_cover = options.Class.extend({
+        init: function () {
+            this._super.apply(this, arguments);
+
+            this.$image = this.$target.children(".o_blog_cover_image");
+            this.$filter = this.$target.children(".o_blog_cover_filter");
         },
-        clear : function(type, value, $li) {
+        clear: function (type, value, $li) {
             if (type !== 'click') return;
-            this.src = null;
-            this.$cover.css({"background-image": '', 'min-height': ''});
-            this.$image.removeAttr("src");
-            this.$target.removeClass('cover cover_full cover_narrow cover_midscreen cover_mid_narrow');
+
+            this.select_class(type, "", $());
+            this.$image.css("background-image", "");
+            this.$target.addClass("o_dirty");
         },
-        change : function(type, value, $li) {
+        change: function (type, value, $li) {
             if (type !== 'click') return;
-            var self = this;
-            var editor  = new widget.MediaDialog(null, {only_images: true}, this.$image, this.$image[0]).open();
-            editor.on('saved', self, function (event, img) {
-                var url = self.$image.attr('src');
-                self.$cover.css({"background-image": url ? 'url(' + url + ')' : ""});
-                self.$target.addClass('o_dirty cover cover_full');
-                self.set_active();
+
+            var $image = $("<img/>", {src: this.$image.css("background-image")});
+
+            var editor = new widget.MediaDialog(null, {only_images: true}, $image, $image[0]).open();
+            editor.on("saved", this, function (event, img) {
+                var src = $image.attr("src");
+                this.$image.css("background-image", src ? ("url(" + src + ")") : "");
+                if (!this.$target.hasClass("cover")) {
+                    var $li = this.$el.find("[data-select_class]").first();
+                    this.select_class(type, $li.data("select_class"), $li);
+                }
+                this.set_active();
+                this.$target.addClass("o_dirty");
             });
         },
-        cover_class : function(type, value, $li) {
-            this.$target.attr("class", (type === 'over' || type === 'click') ? value : this.class);
+        filter_value: function (type, value, $li) {
+            this.$filter.css("opacity", value);
             this.$target.addClass('o_dirty');
         },
-        opacity : function(type, value, $li) {
-            this.$cover.css("opacity", (type === 'over' || type === 'click') ? value : this.value);
-            this.$target.addClass('o_dirty');
-        },
-        bgcolor : function(type, value, $li) {
-            this.$cover.attr("class", (type === 'over' || type === 'click') ? value : this.background);
-            this.$target.addClass('o_dirty');
-        },
-        set_active: function(){
-            this._super();
-            this.background = this.$cover.attr("class");
-            this.class = this.$target.attr('class');
-            this.value = this.$cover.css('opacity');
-            this.$el.parent().find('.snippet-option-website_blog:not(li[data-change])').toggleClass("hidden", !this.$target.hasClass("cover"));
-            this.$el.find('li[data-bgcolor], li[data-opacity], li[data-cover_class]').removeClass("active");
-            this.$el.find('[data-bgcolor="' + this.background + '"], [data-opacity="' + parseFloat(this.value).toFixed(1) + '"]').addClass("active");
-
-            if ((this.class || '').indexOf('cover_narrow') != -1) {
-                this.$el.find('[data-cover_class*=cover_narrow]').addClass("active");
-            } else if ((this.class || '').indexOf('cover_midscreen') != -1) {
-                this.$el.find('[data-cover_class*=cover_midscreen]').addClass("active");
-            } else {
-                this.$el.find('[data-cover_class*=cover_full]').addClass("active");
+        filter_color: function (type, value, $li) {
+            var $lis = this.$el.find("[data-filter_color]").addBack("[data-filter_color]");
+            var classes = $lis.map(function () {return $(this).data("filter_color");}).get().join(" ");
+            this.$filter.removeClass(classes);
+            if (value) {
+                this.$filter.addClass(value);
             }
+            this.$target.addClass("o_dirty");
+        },
+        set_active: function () {
+            this._super.apply(this, arguments);
+            var self = this;
+
+            this.$el.filter(":not([data-change])").toggleClass("hidden", !this.$target.hasClass("cover"));
+
+            var $actives = this.$el.find('li[data-filter_value], li[data-filter_color]').removeClass("active")
+                .filter(function () {
+                    var data = $(this).data();
+                    return (parseFloat(data.filter_value).toFixed(1) === parseFloat(self.$filter.css('opacity')).toFixed(1)
+                        || self.$filter.hasClass(data.filter_color));
+                }).addClass("active");
+
+            this.$target.data("cover_class", this.$el.find(".active[data-select_class]").data("select_class") || "");
+            this.$target.data("filter_value", $actives.filter("[data-filter_value]").data("filter_value") || 0.0);
+            this.$target.data("filter_color", $actives.filter("[data-filter_color]").data("filter_color") || "");
         },
     });
 });

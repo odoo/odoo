@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * report
-# 
+#
 # Translators:
 # Bohdan Lisnenko, 2015-2016
 # Bohdan Lisnenko, 2016
@@ -9,15 +9,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-05-06 12:24+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
+"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
+"uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -25,7 +27,6 @@ msgid "&amp;bull;"
 msgstr "&amp;bull;"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.layout
 #: model:ir.ui.view,arch_db:report.minimal_layout
 msgid "&lt;!DOCTYPE html&gt;"
 msgstr "&lt;!DOCTYPE html&gt;"
@@ -146,7 +147,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 мм"
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:288
 #, python-format
 msgid "Bad Report Reference"
 msgstr "Невірне посилання на звіт"
@@ -199,6 +200,7 @@ msgid "Default paper format ?"
 msgstr "Типовий формат сторінки?"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_paperformat_display_name
@@ -232,7 +234,8 @@ msgstr "Ел. пошта:"
 
 #. module: report
 #: constraint:report.paperformat:0
-msgid "Error ! You cannot select a format AND speficic page width/height."
+#, fuzzy
+msgid "Error ! You cannot select a format AND specific page width/height."
 msgstr "Помилка! Ви не можете обрати формат та певну ширину/висоту"
 
 #. module: report
@@ -261,6 +264,7 @@ msgid "Header spacing"
 msgstr "Відступ заголовку"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_id
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_id
 #: model:ir.model.fields,field_description:report.field_report_id
 #: model:ir.model.fields,field_description:report.field_report_paperformat_id
@@ -273,6 +277,7 @@ msgid "Landscape"
 msgstr "Альбомна орієнтація"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode___last_update
 #: model:ir.model.fields,field_description:report.field_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_abstract_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_paperformat___last_update
@@ -443,7 +448,7 @@ msgid "This is a sample of an internal report."
 msgstr "Це приклад внутрішнього звіту."
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:288
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr "Цей звіт не завантажено в базу даних: %s."
@@ -459,9 +464,14 @@ msgstr "Верхнє поле (мм)"
 #, python-format
 msgid ""
 "Unable to find Wkhtmltopdf on this \n"
-"system. The report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
+"system. The report will be shown in html.<br><br><a href=\"http://"
+"wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
-msgstr "Неможливо знайти Wkhtmltopdf в цій \nсистемі. Звіт буде показано в html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\nwkhtmltopdf.org</a>"
+msgstr ""
+"Неможливо знайти Wkhtmltopdf в цій \n"
+"системі. Звіт буде показано в html.<br><br><a href=\"http://wkhtmltopdf.org/"
+"\" target=\"_blank\">\n"
+"wkhtmltopdf.org</a>"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -469,7 +479,7 @@ msgid "Website:"
 msgstr "Веб-сайт:"
 
 #. module: report
-#: code:addons/report/models/report.py:413
+#: code:addons/report/models/report.py:459
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Помилка Wkhtmltopdf (код помилки: %s). Повідомлення: %s"
@@ -481,7 +491,9 @@ msgstr "Помилка Wkhtmltopdf (код помилки: %s). Повідомл
 msgid ""
 "You need to start OpenERP with at least two \n"
 "workers to print a pdf version of the reports."
-msgstr "Ви повинні запустити OpenERP як мінімум з двума \nробочими процесами, щоб друкувати pdf версії звітів."
+msgstr ""
+"Ви повинні запустити OpenERP як мінімум з двума \n"
+"робочими процесами, щоб друкувати pdf версії звітів."
 
 #. module: report
 #. openerp-web
@@ -489,15 +501,28 @@ msgstr "Ви повинні запустити OpenERP як мінімум з д
 #, python-format
 msgid ""
 "You should upgrade your version of\n"
-"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
-"support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
+"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers "
+"and footers as well as\n"
+"support for table-breaking between pages.<br><br><a href=\"http://"
+"wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
-msgstr "Вам необхідно оновити версію\nWkhtmltopdf як мінімум до 0.12.0 щоб отримати коректне відображення колонтитулів та \nпідримку розбивання таблиць на сторінки.<br><br><a href=\"http://wkhtmltopdf.org/\" \ntarget=\"_blank\">wkhtmltopdf.org</a>"
+msgstr ""
+"Вам необхідно оновити версію\n"
+"Wkhtmltopdf як мінімум до 0.12.0 щоб отримати коректне відображення "
+"колонтитулів та \n"
+"підримку розбивання таблиць на сторінки.<br><br><a href=\"http://wkhtmltopdf."
+"org/\" \n"
+"target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
+
+#. module: report
+#: model:ir.model,name:report.model_ir_qweb_field_barcode
+msgid "ir.qweb.field.barcode"
+msgstr ""
 
 #. module: report
 #: model:ir.model,name:report.model_report_abstract_report

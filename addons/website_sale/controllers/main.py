@@ -198,8 +198,7 @@ class WebsiteSale(http.Controller):
 
         domain = self._get_search_domain(search, category, attrib_values)
 
-        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list)
-
+        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list, order=post.get('order'))
         pricelist_context = dict(request.env.context)
         if not pricelist_context.get('pricelist'):
             pricelist = request.website.get_current_pricelist()
@@ -248,6 +247,7 @@ class WebsiteSale(http.Controller):
             'pager': pager,
             'pricelist': pricelist,
             'products': products,
+            'search_count': product_count,  # common for all searchbox
             'bins': TableCompute().process(products, ppg),
             'rows': PPR,
             'categories': categs,

@@ -1,22 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * report
-# 
+#
 # Translators:
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-24 19:20+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: report
@@ -25,7 +29,6 @@ msgid "&amp;bull;"
 msgstr "&amp;bull;"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.layout
 #: model:ir.ui.view,arch_db:report.minimal_layout
 msgid "&lt;!DOCTYPE html&gt;"
 msgstr "&lt;!DOCTYPE html&gt;"
@@ -146,7 +149,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9  23  33 x 62 mm"
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:288
 #, python-format
 msgid "Bad Report Reference"
 msgstr "Foute rapport referentie"
@@ -199,11 +202,17 @@ msgid "Default paper format ?"
 msgstr "Standaard papier formaat?"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_paperformat_display_name
+#, fuzzy
 msgid "Display Name"
-msgstr "Naam weergeven"
+msgstr ""
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Weergave naam\n"
+"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Naam weergeven"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_line
@@ -232,8 +241,11 @@ msgstr "E-mail:"
 
 #. module: report
 #: constraint:report.paperformat:0
-msgid "Error ! You cannot select a format AND speficic page width/height."
-msgstr "Fout! Het is niet mogelijk een papier formaat te selecteren EN een specifieke papier breedte/hoogte."
+#, fuzzy
+msgid "Error ! You cannot select a format AND specific page width/height."
+msgstr ""
+"Fout! Het is niet mogelijk een papier formaat te selecteren EN een "
+"specifieke papier breedte/hoogte."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -261,6 +273,7 @@ msgid "Header spacing"
 msgstr "Kop afstand"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_id
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_id
 #: model:ir.model.fields,field_description:report.field_report_id
 #: model:ir.model.fields,field_description:report.field_report_paperformat_id
@@ -273,6 +286,7 @@ msgid "Landscape"
 msgstr "Liggend"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode___last_update
 #: model:ir.model.fields,field_description:report.field_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_abstract_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_paperformat___last_update
@@ -443,7 +457,7 @@ msgid "This is a sample of an internal report."
 msgstr "Dit is een voorbeeld van een intern rapport."
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:288
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr "Dit rapport is niet geladen in de database: %s"
@@ -459,9 +473,14 @@ msgstr "Bovenmarge (mm)"
 #, python-format
 msgid ""
 "Unable to find Wkhtmltopdf on this \n"
-"system. The report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
+"system. The report will be shown in html.<br><br><a href=\"http://"
+"wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
-msgstr "Kan geen Wkhtmltopdf op dit systeem vinden \nHet rapport wordt getoond in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\nwkhtmltopdf.org</a>"
+msgstr ""
+"Kan geen Wkhtmltopdf op dit systeem vinden \n"
+"Het rapport wordt getoond in html.<br><br><a href=\"http://wkhtmltopdf.org/"
+"\" target=\"_blank\">\n"
+"wkhtmltopdf.org</a>"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -469,7 +488,7 @@ msgid "Website:"
 msgstr "Website:"
 
 #. module: report
-#: code:addons/report/models/report.py:413
+#: code:addons/report/models/report.py:459
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Fout in Wkhtmltopdf (fout code: %s). Bericht: %s"
@@ -481,7 +500,9 @@ msgstr "Fout in Wkhtmltopdf (fout code: %s). Bericht: %s"
 msgid ""
 "You need to start OpenERP with at least two \n"
 "workers to print a pdf version of the reports."
-msgstr "U moet Odoo starten met ten minste twee \nwerkers om een PDF versie af te drukken van het rapport."
+msgstr ""
+"U moet Odoo starten met ten minste twee \n"
+"werkers om een PDF versie af te drukken van het rapport."
 
 #. module: report
 #. openerp-web
@@ -489,15 +510,28 @@ msgstr "U moet Odoo starten met ten minste twee \nwerkers om een PDF versie af t
 #, python-format
 msgid ""
 "You should upgrade your version of\n"
-"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
-"support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
+"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers "
+"and footers as well as\n"
+"support for table-breaking between pages.<br><br><a href=\"http://"
+"wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
-msgstr "U moet uw versie van\nWkhtmltopdf updaten naar ten minste versie 0.12.0 om een correcte weergave van hoofdingen en voeteindes te krijgen\nen om tabel-breking tussen pagina's te ondersteunen.<br><br><a href=\"http://wkhtmltopdf.org/\"\ntarget=\"_blank\">wkhtmltopdf.org</a>"
+msgstr ""
+"U moet uw versie van\n"
+"Wkhtmltopdf updaten naar ten minste versie 0.12.0 om een correcte weergave "
+"van hoofdingen en voeteindes te krijgen\n"
+"en om tabel-breking tussen pagina's te ondersteunen.<br><br><a href=\"http://"
+"wkhtmltopdf.org/\"\n"
+"target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
+
+#. module: report
+#: model:ir.model,name:report.model_ir_qweb_field_barcode
+msgid "ir.qweb.field.barcode"
+msgstr ""
 
 #. module: report
 #: model:ir.model,name:report.model_report_abstract_report

@@ -158,22 +158,11 @@ data.Class = Widget.extend({
     compute_snippet_templates: function (html) {
         var self = this;
         var $html = $(html);
-        var $ul = $html.siblings("ul");
         var $scroll = $html.siblings("#o_scroll");
 
         if (!$scroll.length) {
             throw new Error("Wrong snippets xml definition");
         }
-
-        $ul.children().tooltip({
-            delay: { "show": 500, "hide": 100 },
-            container: 'body',
-            title: function () {
-                return (navigator.appVersion.indexOf('Mac') > -1 ? 'CMD' : 'CTRL')+'+SHIFT+'+($(this).index()+1);
-            },
-            trigger: 'hover',
-            placement: 'top'
-        }).on('click', function () {$(this).tooltip('hide');});
 
         // t-snippet
         $html.find('[data-oe-type="snippet"]').each(function () {
@@ -295,29 +284,6 @@ data.Class = Widget.extend({
         $html.find('.o_not_editable').attr("contentEditable", false);
 
         this.$el.html($html);
-
-        // animate for list of snippet blocks
-        this.$el.on('click', '.scroll-link', function (event) {
-            event.preventDefault();
-            var targetOffset =  $($(this).attr("href")).position().top - $ul.outerHeight() + $scroll[0].scrollTop;
-            $scroll.animate({'scrollTop': targetOffset}, 750);
-        });
-        $scroll.on('scroll', function () {
-            var middle = $scroll.height()/4;
-            var $li = $ul.find("a").parent().removeClass('active');
-            var last;
-            for (var k=0; k<$li.length; k++) {
-                var li = $($li[k]);
-                if (!li.data('target')) {
-                    li.data('target', $($("a", li).attr("href")));
-                }
-                if (li.data('target').position().top > middle) {
-                    break;
-                }
-                last = $li[k];
-            }
-            $(last).addClass("active");
-        });
 
         self.make_snippet_draggable(self.$snippets);
         this.associate_snippet_names(this.$snippets);
@@ -827,9 +793,13 @@ data.Editor = Class.extend({
         this.load_style_options();
 
         // Initialize move/clone/remove buttons
-        this.$overlay.on('click', '.oe_snippet_clone', _.bind(this.on_clone, this));
-        this.$overlay.on('click', '.oe_snippet_remove', _.bind(this.on_remove, this));
-        this._drag_and_drop();
+        if (!this.$target.parent().is(':o_editable')) {
+            this.$overlay.find('.oe_snippet_move, .oe_snippet_clone, .oe_snippet_remove').remove();
+        } else {
+            this.$overlay.on('click', '.oe_snippet_clone', _.bind(this.on_clone, this));
+            this.$overlay.on('click', '.oe_snippet_remove', _.bind(this.on_remove, this));
+            this._drag_and_drop();
+        }
     },
 
     getName: function () {
@@ -992,9 +962,6 @@ data.Editor = Class.extend({
             this.$overlay.find(".oe_snippet_move, .oe_snippet_clone").addClass('hidden');
         }
 
-        if ($ul.children().length) {
-            $styles.removeClass("hidden");
-        }
         this.$overlay.find('[data-toggle="dropdown"]').dropdown();
     },
 
@@ -1112,7 +1079,9 @@ data.Editor = Class.extend({
         var do_action = (focus ? _do_action_focus : _do_action_blur);
 
         // Attach own and parent options on the current overlay
-        var $headers = this.$overlay.find(".oe_options ul:first .dropdown-header:data(editor)");
+        var $style_button = this.$overlay.find(".oe_options");
+        var $ul = $style_button.find("ul:first");
+        var $headers = $ul.find(".dropdown-header:data(editor)");
         _.each($headers, function (el) {
             var $el = $(el);
             var styles = _.values($el.data("editor").styles);
@@ -1125,6 +1094,7 @@ data.Editor = Class.extend({
         });
 
         // Activate the overlay
+        $style_button.toggleClass("hidden", $ul.children(":not(.dropdown-header):not(.divider):not(.hidden)").length === 0);
         this.$overlay.toggleClass("oe_active", !!focus);
 
         function _do_action_focus(style, $dest) {
