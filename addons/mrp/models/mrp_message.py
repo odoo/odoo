@@ -20,7 +20,7 @@ class MrpProductionMessage(models.Model):
     message = fields.Html(required=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template')
     product_id = fields.Many2one('product.product', string="Product")
-    bom_id = fields.Many2one('mrp.bom', 'Bill of Material', domain="[('product_id', '=', product_id)]")
+    bom_id = fields.Many2one('mrp.bom', 'Bill of Material', domain="['|', ('product_id', '=', product_id), ('product_tmpl_id.product_variant_ids','=', product_id)]")
     workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center')
     valid_until = fields.Date('Validity Date', default=_default_valid_until, required=True)
     routing_id = fields.Many2one('mrp.routing', string='Routing')
