@@ -10,4 +10,9 @@ class TestUi(odoo.tests.HttpCase):
         self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('question')", "odoo.__DEBUG__.services['web_tour.tour'].tours.question", login="admin")
 
     def test_02_demo_question(self):
+        with self.cursor() as test_cr:
+            env = self.env(cr=test_cr)
+            forum = env.ref('website_forum.forum_help')
+            demo = env.ref('base.user_demo')
+            demo.karma = forum.karma_post + 1
         self.phantom_js("/", "odoo.__DEBUG__.services['web.Tour'].run('forum_question', 'test')", "odoo.__DEBUG__.services['web.Tour'].tours.forum_question", login="demo")
