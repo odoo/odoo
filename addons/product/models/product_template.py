@@ -304,7 +304,7 @@ class ProductTemplate(models.Model):
 
         # re-apply product.template order + name_get
         return super(ProductTemplate, self).name_search(
-            '', args=[('id', 'in', templates.ids)],
+            '', args=[('id', 'in', list(set(templates.ids)))],
             operator='ilike', limit=limit)
 
     @api.multi
