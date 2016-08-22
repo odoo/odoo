@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import logging
 import argparse
 import os
 import re
@@ -8,10 +9,10 @@ import multiprocessing
 import jinja2
 
 from . import Command
-from scaffold import snake, pascal, directory
+from scaffold import snake, pascal, directory, template
 
-from openerp.modules.module import (get_module_root, MANIFEST, load_information_from_description_file as load_manifest)
-
+import openerp
+from openerp import tools
 
 class Tune(Command):
     """ Generates an Odoo configuration skeleton. """
@@ -39,6 +40,7 @@ class Tune(Command):
 
         if not cmdargs:
             sys.exit(parser.print_help())
+            
         args = parser.parse_args(args=cmdargs)
 
         opts = {
@@ -50,12 +52,17 @@ class Tune(Command):
             'workers': (max(multiprocessing.cpu_count(), 2) * 2) - 1,
         }
         
-        template('nginx.conf.template').render_to(
+        tune_template('.').render_to(
+            '.',
             directory(args.dest, create=True),
             opts)
-        template('odoo.conf.template').render_to(
-            directory(args.dest, create=True),
-            opts)
+            
+        for thetool in ('nginx', 'logrotate'):
+            try:
+                tools.find_in_path(thetool)
+            except IOError:
+                print 'Warning : Unable to find %r in path' % (thetool,)
+            
 
 builtins = lambda *args: os.path.join(
     os.path.abspath(os.path.dirname(__file__)),
@@ -65,37 +72,21 @@ builtins = lambda *args: os.path.join(
 env = jinja2.Environment()
 env.filters['snake'] = snake
 env.filters['pascal'] = pascal
-class template(object):
+
+class tune_template(template):
     def __init__(self, identifier):
+        # TODO: archives (zipfile, tarfile)
         self.id = identifier
-        self.path = builtins(identifier)
-        if os.path.isfile(self.path):
+        # is identifier a builtin?
+        self.path = builtins()
+        if os.path.isdir(self.path):
             return
-        die("{} is not a valid template".format(identifier))
-
-    def __str__(self):
-        return self.id
-
-    def render_to(self, directory, params=None):
-        """ Render this template to ``dest`` with the provided
-         rendering parameters
-        """
-        with open(self.path, 'rb') as content:
-            local = self.id
-            # strip .template extension
-            root, ext = os.path.splitext(local)
-            if ext == '.template':
-                local = root
-            dest = os.path.join(directory, local)
-            destdir = os.path.dirname(dest)
-            if not os.path.exists(destdir):
-                os.makedirs(destdir)
-
-            with open(dest, 'wb') as f:
-                env.from_string(content.read().decode('utf-8'))\
-                    .stream(params or {})\
-                    .dump(f, encoding='utf-8')
-
+        # is identifier a directory?
+        self.path = identifier
+        if os.path.isdir(self.path):
+            return
+        die("{} is not a valid module template".format(identifier))
+        
 def die(message, code=1):
     print >>sys.stderr, message
     sys.exit(code)

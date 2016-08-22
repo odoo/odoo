@@ -1,0 +1,14 @@
+/var/log/odoo/{{hostname|snake}}.log {
+    rotate 10
+    daily
+    
+    # Do not rotate the log if it is empty
+    notifempty
+    
+    # if the log file is missing, go on to the next one without issuing an error
+    # message.
+    missingok
+    
+    compress
+    delaycompress
+}
