@@ -422,11 +422,7 @@ class ProductProduct(models.Model):
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
                 # Performing a quick memory merge of ids in Python will give much better performance
-                products = self.search(args + [('default_code', operator, name)], limit=limit)
-                if not limit or len(products) < limit:
-                    # we may underrun the limit because of dupes in the results, that's fine
-                    limit2 = (limit - len(products)) if limit else False
-                    products += self.search(args + [('name', operator, name), ('id', 'not in', self.ids)], limit=limit2)
+                products = self.search(args + ['|', ('default_code', operator, name), ('name', operator, name)], limit=limit)
             elif not products and operator in expression.NEGATIVE_TERM_OPERATORS:
                 products = self.search(args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit)
             if not products and operator in positive_operators:
