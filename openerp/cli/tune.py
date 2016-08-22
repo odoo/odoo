@@ -85,12 +85,9 @@ class tune_template(template):
         self.path = identifier
         if os.path.isdir(self.path):
             return
-        die("{} is not a valid module template".format(identifier))
+        die("{} is not a valid template".format(identifier))
         
 def die(message, code=1):
     print >>sys.stderr, message
     sys.exit(code)
 
-def warn(message):
-    # ASK: shall we use logger ?
-    print "WARNING: " + message
