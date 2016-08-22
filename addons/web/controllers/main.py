@@ -947,6 +947,11 @@ class Binary(http.Controller):
         addons_path = http.addons_manifest['web']['addons_path']
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
 
+    def force_contenttype(self, headers, contenttype='image/png'):
+        dictheaders = dict(headers)
+        dictheaders['Content-Type'] = contenttype
+        return dictheaders.items()
+
     @http.route(['/web/content',
         '/web/content/<string:xmlid>',
         '/web/content/<string:xmlid>/<string:filename>',
@@ -1005,8 +1010,15 @@ class Binary(http.Controller):
             if height > 500:
                 height = 500
             content = openerp.tools.image_resize_image(base64_source=content, size=(width or None, height or None), encoding='base64', filetype='PNG')
+            # resize force png as filetype
+            headers = self.force_contenttype(headers, contenttype='image/png')
 
-        image_base64 = content and base64.b64decode(content) or self.placeholder()
+        if content:
+            image_base64 = base64.b64decode(content)
+        else:
+            image_base64 = self.placeholder(image='placeholder.png')  # could return (contenttype, content) in master
+            headers = self.force_contenttype(headers, contenttype='image/png')
+
         headers.append(('Content-Length', len(image_base64)))
         response = request.make_response(image_base64, headers)
         response.status_code = status
