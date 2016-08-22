@@ -29,9 +29,9 @@
             <field name="reply_to">${object.event_id.reply_to|safe}</field>
             <field name="subject">Your registration at ${object.event_id.name}</field>
             <field name="body_html"><![CDATA[
+<div style="background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
 % set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')
 % set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')
-<div style="background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
     <table style="width:600px;margin:5px auto;">
         <tbody>
             <tr>
@@ -157,9 +157,9 @@
             <field name="reply_to">${object.event_id.reply_to|safe}</field>
             <field name="subject">Reminder for ${object.event_id.name}</field>
             <field name="body_html"><![CDATA[
+<div style="background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
 % set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')
 % set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')
-<div style="background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
     <table style="width:600px;margin:5px auto;">
         <tbody>
             <tr>

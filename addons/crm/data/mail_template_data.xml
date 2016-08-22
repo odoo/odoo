@@ -12,9 +12,9 @@
             <field name="auto_delete" eval="True"/>
             <field name="scheduled_date">${(datetime.datetime.now() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M')}</field>
             <field name="body_html" ><![CDATA[
-            % set last_created_team = user.env['crm.team'].search([], order="create_date desc")[0]
 
             <div style="margin: 10px auto;">
+            % set last_created_team = user.env['crm.team'].search([], order="create_date desc")[0]
             <table cellspacing="0" cellpadding="0" style="width:100%;">
                 <tbody>
                     <tr>

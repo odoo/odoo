@@ -33,8 +33,8 @@
             <field name="partner_to" >${object.rating_get_partner_id().id}</field>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
-% set access_token = object.rating_get_access_token()
 <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+    % set access_token = object.rating_get_access_token()
     <table style="width:600px;margin:5px auto;">
         <tbody>
             <tr><td>
