@@ -57,11 +57,11 @@ class Tune(Command):
             directory(args.dest, create=True),
             opts)
             
-        for thetool in ('nginx', 'logrotate'):
+        for thetool in ('nginx', 'logrotate', 'trululu'):
             try:
                 tools.find_in_path(thetool)
             except IOError:
-                print 'Warning : Unable to find %r in path' % (thetool,)
+                logging.warning('Warning : Unable to find %r in path' % (thetool,))
             
 
 builtins = lambda *args: os.path.join(
