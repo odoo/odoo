@@ -148,9 +148,8 @@ class Channel(models.Model):
         super(Channel, self)._compute_website_url()
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for channel in self:
-            channel_slug = slug(channel)
-            if channel_slug:
-                channel.website_url = '%s/slides/%s' % (base_url, channel_slug)
+            if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
+                channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
     @api.onchange('visibility')
     def change_visibility(self):
@@ -354,13 +353,12 @@ class Slide(models.Model):
         super(Slide, self)._compute_website_url()
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for slide in self:
-            slide_slug = slug(slide)
-            if slide_slug:
-                #link_tracker is not in dependencies, so use it to shorten url only if installed.
+            if slide.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
+                # link_tracker is not in dependencies, so use it to shorten url only if installed.
                 if self.env.registry.get('link.tracker'):
-                    url = self.env['link.tracker'].sudo().create({'url': '%s/slides/slide/%s' % (base_url, slide_slug)}).short_url
+                    url = self.env['link.tracker'].sudo().create({'url': '%s/slides/slide/%s' % (base_url, slug(slide))}).short_url
                 else:
-                    url = '%s/slides/slide/%s' % (base_url, slide_slug)
+                    url = '%s/slides/slide/%s' % (base_url, slug(slide))
                 slide.website_url = url
 
     @api.model
