@@ -238,18 +238,10 @@ class PosOrder(models.Model):
                     if not grouped_data[key]:
                         grouped_data[key].append(values)
                     else:
-                        for line in grouped_data[key]:
-                            if line.get('tax_code_id') == values.get('tax_code_id'):
-                                current_value = line
-                                current_value['quantity'] = current_value.get(
-                                    'quantity', 0.0) + values.get('quantity', 0.0)
-                                current_value['credit'] = current_value.get(
-                                    'credit', 0.0) + values.get('credit', 0.0)
-                                current_value['debit'] = current_value.get(
-                                    'debit', 0.0) + values.get('debit', 0.0)
-                                break
-                        else:
-                            grouped_data[key].append(values)
+                        current_value = grouped_data[key][0]
+                        current_value['quantity'] = current_value.get('quantity', 0.0) + values.get('quantity', 0.0)
+                        current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
+                        current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
                 else:
                     grouped_data[key].append(values)
 
