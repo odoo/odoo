@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-05-27 09:03+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
@@ -93,7 +93,7 @@ msgstr "Pregunte algo ..."
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Attendees"
-msgstr ""
+msgstr "Asistentes"
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
@@ -127,6 +127,22 @@ msgstr "Tiempo promedio para dar la primera respuesta al visitante"
 #, python-format
 msgid "Bad"
 msgstr "Malo"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
+#: model:ir.ui.menu,name:im_livechat.canned_responses
+msgid "Canned Responses"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid ""
+"Canned responses allow you to insert prewritten responses in\n"
+"                your messages by typing <i>:shortcut</i>. The shortcut is\n"
+"                replaced directly in your message, so that you can still "
+"edit\n"
+"                it before sending."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
@@ -173,6 +189,11 @@ msgid "Chat with one of our collaborators"
 msgstr "Converse con uno de nuestros colaboradores"
 
 #. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid "Click to create a new canned response."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 msgid "Click to define a new website live chat channel."
 msgstr "Haga click para definir un nuevo canal de chat en vivo para el sitio."
@@ -194,6 +215,7 @@ msgstr "Conversación"
 msgid ""
 "Copy and paste this code into your website, within the &lt;head&gt; tag:"
 msgstr ""
+"Copie y pegue este código en su sitio web, en la etiqueta HTML &lt;head&gt;:"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_country_ids
@@ -418,6 +440,11 @@ msgid "Last Modified on"
 msgstr "Última modificación en"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_mail_channel_partner
+msgid "Last Seen Many2many"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_uid
 msgid "Last Updated by"
@@ -441,6 +468,11 @@ msgid "Leave Channel"
 msgstr "Abandonar canal"
 
 #. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
+msgid "Live Chat"
+msgstr "Charla en vivo"
+
+#. module: im_livechat
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
 msgid "Live Support"
 msgstr "Soporte en vivo"
@@ -460,21 +492,11 @@ msgstr "Canal de chat en vivo"
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_report_operator_action
-#, fuzzy
 msgid ""
 "Livechat Support Channel Statistics allows you to easily check and analyse "
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
-"Las Estadísticas de Canales de Soporte de Chat en Vivo le permiten revisar y "
-"analizar fácilmente el despempeño de las sesiones de chat en vivo. Extraer "
-"información sobre las sesiones perdidas, la audiencia, la duración de una "
-"sesión, etc."
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "Livechat Support Page"
-msgstr "Página de la charla en vivo de soporte"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -593,6 +615,13 @@ msgstr ""
 "Operadores\n"
 "                                            <br/>\n"
 "                                            <i class=\"fa fa-comments\"/>"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Operators that do not show any activity In Odoo for more than 30 minutes "
+"will be considered as disconnected."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -797,7 +826,7 @@ msgstr "Usuario"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/controllers/main.py:30
+#: code:addons/im_livechat/controllers/main.py:34
 #: code:addons/im_livechat/static/src/js/im_livechat.js:28
 #, python-format
 msgid "Visitor"
@@ -809,19 +838,9 @@ msgid "Web Page"
 msgstr "Página web"
 
 #. module: im_livechat
-#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
-msgid "Website Live Chat"
-msgstr "Chat en vivo sitio web"
-
-#. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
 msgid "Website Live Chat Channels"
 msgstr "Canales de Chat en Vivo del Sitio"
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "Website Live Chat Powered by <strong>Odoo</strong>."
-msgstr " Chat en vivo por sitio web con tecnología <strong>Odoo</strong>."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_default_message
@@ -838,6 +857,13 @@ msgid ""
 msgstr ""
 
 #. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.mail_channel_action
+msgid ""
+"Your chatter history is empty. Create a channel and start chatting to fill "
+"up your history."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Hello, how may I help you?"
 msgstr "Por ejemplo, Hola, ¿cómo podemos ayudarle?"
@@ -846,6 +872,11 @@ msgstr "Por ejemplo, Hola, ¿cómo podemos ayudarle?"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
 msgstr "Por ej. TuSitioWeb.com"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr "ir.autovacuum"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -859,6 +890,19 @@ msgstr ""
 msgid "seconds"
 msgstr "segundos"
 
+#~ msgid ""
+#~ "Livechat Support Channel Statistics allows you to easily check and "
+#~ "analyse your company livechat session performance. Extract informations "
+#~ "about the missed sessions, the audiance, the duration of a session, etc."
+#~ msgstr ""
+#~ "Las Estadísticas de Canales de Soporte de Chat en Vivo le permiten "
+#~ "revisar y analizar fácilmente el despempeño de las sesiones de chat en "
+#~ "vivo. Extraer información sobre las sesiones perdidas, la audiencia, la "
+#~ "duración de una sesión, etc."
+
+#~ msgid "Livechat Support Page"
+#~ msgstr "Página de la charla en vivo de soporte"
+
 #~ msgid "My sessions"
 #~ msgstr "Mis sesiones"
 
@@ -867,3 +911,12 @@ msgstr "segundos"
 
 #~ msgid "Opertor"
 #~ msgstr "Operador"
+
+#~ msgid "Website Live Chat"
+#~ msgstr "Chat en vivo sitio web"
+
+#~ msgid "Website Live Chat Powered by <strong>Odoo</strong>."
+#~ msgstr " Chat en vivo por sitio web con tecnología <strong>Odoo</strong>."
+
+#~ msgid "Configuration"
+#~ msgstr "Configuración"

@@ -1,4 +1,3 @@
-# #-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_recruitment
@@ -9,33 +8,18 @@
 # Martin Trigaux, 2016
 # Volluta <volluta@tutanota.com>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
-# #-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * hr_recruitment
-#
-# Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-06-13 15:11+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_recruitment
@@ -195,6 +179,15 @@ msgid "Activities"
 msgstr "Activiteiten"
 
 #. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:20
+#, python-format
+msgid ""
+"Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
+"Qualified &gt; First Interview &gt; Recruited</i>"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
 msgid "Address where employees are working"
 msgstr "Adres waar de werknemers werken"
@@ -221,13 +214,8 @@ msgstr "Alias naam"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_domain
-#, fuzzy
 msgid "Alias domain"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Alias domein\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Aliasdomein"
+msgstr "Alias domein"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_model_id
@@ -313,13 +301,8 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
-#, fuzzy
 msgid "Application"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Sollicitatie\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Toepassing"
+msgstr "Sollicitatie"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -433,13 +416,8 @@ msgstr "Op recruiter"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_configuration
-#, fuzzy
 msgid "Cancel"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Annuleren\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Annuleer"
+msgstr "Annuleren"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
@@ -466,12 +444,8 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
-msgid ""
-"Click here to create a new job. You can remove the \"In Recruitment\" filter "
-"to display all the job positions."
+msgid "Click here to create a new job position."
 msgstr ""
-"Klik hier om een nieuwe functie aan te maken. U kunt de filter \"Wordt "
-"geworven\" verwijderen om alle vacatures te tonen."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
@@ -485,15 +459,15 @@ msgid "Click to add a new stage in the recruitment process."
 msgstr "Klik om een nieuwe fase in het wervingsproces toe te voegen."
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
+msgid "Click to add a new tag."
+msgstr "Klik om een nieuw label toe te voegen."
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_closed
-#, fuzzy
 msgid "Closed"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Gesloten\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Afgesloten"
+msgstr "Gesloten"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_color
@@ -506,13 +480,8 @@ msgstr "Kleur index"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_company_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_company_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
-#, fuzzy
 msgid "Company"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bedrijf\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Bedijf"
+msgstr "Bedrijf"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_configuration
@@ -530,21 +499,22 @@ msgid "Configure Recruitment"
 msgstr "Configureer aanwerving"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:388
+#: code:addons/hr_recruitment/models/hr_recruitment.py:389
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_id
-#, fuzzy, python-format
+#, python-format
 msgid "Contact"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Contactpersoon\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Contact"
+msgstr "Contactpersoon"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:390
+#: code:addons/hr_recruitment/models/hr_recruitment.py:391
 #, python-format
 msgid "Contact Email"
 msgstr "E-mail adres contactpersoon"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment
+msgid "Content"
+msgstr "Inhoud"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -562,6 +532,11 @@ msgid "Contract Signed"
 msgstr "Contract getekend"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Create"
+msgstr "Aanmaken"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
 msgid "Create Date"
 msgstr "Aanmaakdatum"
@@ -570,6 +545,12 @@ msgstr "Aanmaakdatum"
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Create Employee"
 msgstr "Werknemer aanmaken"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Create a Job Position"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
@@ -628,6 +609,7 @@ msgid "Default Values"
 msgstr "Standaardwaarden"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid ""
 "Define a specific contact address for this job position. If you keep it "
@@ -648,18 +630,6 @@ msgstr ""
 "Definieer hier de fases in het wervingsproces, bijvoorbeeld:\n"
 "kwalificatie, eerste interview, tweede interview, afgewezen,\n"
 "aangenomen."
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
-msgid ""
-"Define job position profile and manage recruitment in a context of a "
-"particular job: print interview survey, define number of expected new "
-"employees, and manage its recruitment pipe"
-msgstr ""
-"Bepaal het profiel voor de vacature en beheer de werving voor een specifieke "
-"functie: wervingsenquête afdrukken, definiëren van het aantal verwachte "
-"nieuwe werknemers en het beheren van de wervingsreserve."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -685,16 +655,10 @@ msgstr "Diploma's"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-#, fuzzy
 msgid "Delete"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Verwijderen\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Verwijder"
+msgstr "Verwijderen"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_department
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_department_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_department_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -707,6 +671,12 @@ msgid "Department Manager"
 msgstr "Afdelingshoofd"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_department
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_department
+msgid "Departments"
+msgstr "Afdelingen"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_description
 msgid "Description"
 msgstr "Omschrijving"
@@ -715,6 +685,11 @@ msgstr "Omschrijving"
 #: model:survey.label,value:hr_recruitment.rrow_2_1_4
 msgid "Desk space"
 msgstr "Bureauruimte"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Discard"
+msgstr "Negeren"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -784,15 +759,11 @@ msgstr "Opleiding en activiteiten"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_from
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_email
-#, fuzzy
 msgid "Email"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Email\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"E-mail"
+msgstr "Email"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email Alias"
 msgstr "E-mail alias"
@@ -942,18 +913,18 @@ msgstr "Gediplomeerd"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
-#, fuzzy
 msgid "Group By"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Groeperen op\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Groepeer op"
+msgstr "Groeperen op"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
 msgstr "Aangenomen werknemers"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_department
+msgid "Hr Department"
+msgstr "HR afdeling"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -1036,6 +1007,11 @@ msgstr "Functie"
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
 msgid "Job Campaign"
 msgstr "Job campagne"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Job Email"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
@@ -1137,22 +1113,17 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:16
+#, python-format
+msgid ""
+"Let's have a look at the <b>applications pipeline</b> for this job position."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_2_1
 msgid "Male"
 msgstr "Man"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_config_settings_module_document
-msgid ""
-"Manage your CV's and motivation letter related to all applicants.\n"
-"-This installs the module document_ftp. This will install the knowledge "
-"management  module in order to allow you to search using specific keywords "
-"through  the content of all documents (PDF, .DOCx...)"
-msgstr ""
-"Beheer je CV's en motivatiebrieven gerelateerd aan alle sollicitanten.\n"
-"- Dit installeert de module document_ftp. Dit installeert de module "
-"'kennisbeheer' zodat je kan zoeken op specifieke zoekwoorden in de "
-"documenten. (PDF, .DOCx...)"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -1221,7 +1192,7 @@ msgid "New Applications"
 msgstr "Nieuwe sollicitanten"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:438
+#: code:addons/hr_recruitment/models/hr_recruitment.py:439
 #, python-format
 msgid "New Employee %s Hired"
 msgstr "Nieuwe werknemer %s aangenomen"
@@ -1253,13 +1224,8 @@ msgstr "Volgende actie"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_action
-#, fuzzy
 msgid "Next Action Date"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Volgende actiedatum\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Datum volgende actie"
+msgstr "Volgende actiedatum"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1272,10 +1238,15 @@ msgid "No Interview Form"
 msgstr "Geen interview formulier"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:406
+#: code:addons/hr_recruitment/models/hr_recruitment.py:407
 #, python-format
 msgid "No Subject"
 msgstr "Geen onderwerp"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
+msgid "No document yet."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_10
@@ -1332,6 +1303,21 @@ msgid "Office location"
 msgstr "Kantoorlocatie"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
+msgid ""
+"Once a job position is created, you can track related applications\n"
+"                  and manage the recruitment process."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
+msgid ""
+"Once a job position is created, you can track the applicants\n"
+"                  and manage the recruitment process related to the job\n"
+"                  position."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
@@ -1359,21 +1345,14 @@ msgstr "Parent Record Thread ID"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_model_id
-#, fuzzy
 msgid ""
 "Parent model holding the alias. The model holding the alias reference is not "
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Bovenliggend model welke de alias bezit. Het model dat de alias referentie "
 "bezit\n"
 "is niet noodzakelijk het model wat wordt gegeven door alias_model_id\n"
-"(bijvoorbeeld: project (parent_model) en taak (model))\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Bovenliggend model welke de alias bezit. Het model dat de alias referentie "
-"bezit\n"
-"is niet noodzakelijk het model wat wordt gegeven door alias_model_id "
 "(bijvoorbeeld: project (parent_model) en taak (model))"
 
 #. module: hr_recruitment
@@ -1414,13 +1393,8 @@ msgstr "Interview rapport afdrukken"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_probability
-#, fuzzy
 msgid "Probability"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Waarschijnlijkheid\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Kans"
+msgstr "Waarschijnlijkheid"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_proposed
@@ -1446,13 +1420,8 @@ msgstr "Record Thread ID"
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_configuration
-#, fuzzy
 msgid "Recruitment"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Werving\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Werving & Selectie"
+msgstr "Werving"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
@@ -1501,13 +1470,8 @@ msgstr "Doorverwezen door"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-#, fuzzy
 msgid "Refuse"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Weigeren\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Weiger"
+msgstr "Weigeren"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_12
@@ -1597,11 +1561,6 @@ msgstr "Plan een afspraak met deze sollicitant"
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Search Applicants"
 msgstr "Zoek sollicitanten"
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
-msgid "Search through resumes and motivation letters."
-msgstr "Zoek door CV's en motivatiebrieven."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
@@ -1730,26 +1689,19 @@ msgstr "Onderwerp / naam sollicitant"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_survey
-#, fuzzy
 msgid "Survey"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Personeels enquêtes\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Enquête"
+msgstr "Personeels enquêtes"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.applicant.category:0
-#, fuzzy
 msgid "Tag name already exists !"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Label naam bestaat al!\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Labelnaam bestaat al!"
+msgstr "Label naam bestaat al!"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_categ_ids
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 msgid "Tags"
 msgstr "Labels"
 
@@ -1847,29 +1799,29 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_medium_id
-#, fuzzy
 msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Dit is de methode van afleveren. Bijvoorbeeld, Brief, E-mail of Banner "
-"advertantie\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dit is de methode van afleveren. Bijvoorbeeld: Brief, E-mail of Banner "
-"advertentie"
+"advertantie"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_source_id
-#, fuzzy
 msgid ""
 "This is the source of the link Ex: Search Engine, another domain, or name of "
 "email list"
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Dit is de bron van de link. Bijvoorbeeld: Search engine, ander domein of de "
-"naam van de e-mail lijst\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dit is de bron van de link. Bijvoorbeeld: zoekmachine, ander domein of de "
 "naam van de e-mail lijst"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
+msgid ""
+"This menu helps you search through resumes and motivation\n"
+"                letters. Odoo automatically indexes .PDF, .DOC, DOCX, .TXT\n"
+"                files so that you can search keywords from the content of "
+"these\n"
+"                files."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_1
@@ -1891,6 +1843,15 @@ msgid ""
 msgstr ""
 "Deze fase is gevouwen in de kanban weergave, wanneer er geen regels zijn in "
 "deze fase om weer te geven."
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:30
+#, python-format
+msgid ""
+"Try to send an email to this address, it will create an application "
+"automatically."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1916,6 +1877,13 @@ msgid "Use template"
 msgstr "Gebruik sjabloon"
 
 #. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:25
+#, python-format
+msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_user_id
 msgid "User"
 msgstr "Gebruiker"
@@ -1934,6 +1902,13 @@ msgstr "Zeer goed"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_4
 msgid "Very important"
 msgstr "Heel belangrijk"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:11
+#, python-format
+msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_cc
@@ -1968,7 +1943,7 @@ msgstr ""
 "contact data, job positie, beschikbaarheid, enz."
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:442
+#: code:addons/hr_recruitment/models/hr_recruitment.py:443
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr ""
@@ -1979,6 +1954,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "e.g. Call for interview"
 msgstr "Bijv. bellen voor een sollicitatiegesprek"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "e.g. Sales Manager"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_config_settings
@@ -2086,6 +2066,13 @@ msgstr "oe_kanban_text_red"
 #~ msgstr "Campagne"
 
 #~ msgid ""
+#~ "Click here to create a new job. You can remove the \"In Recruitment\" "
+#~ "filter to display all the job positions."
+#~ msgstr ""
+#~ "Klik hier om een nieuwe functie aan te maken. U kunt de filter \"Wordt "
+#~ "geworven\" verwijderen om alle vacatures te tonen."
+
+#~ msgid ""
 #~ "Create email and url for each distinct source. <br>\n"
 #~ "                When the applicant will arrive, you will know from wich "
 #~ "source the Job position is coming."
@@ -2104,6 +2091,15 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
+
+#~ msgid ""
+#~ "Define job position profile and manage recruitment in a context of a "
+#~ "particular job: print interview survey, define number of expected new "
+#~ "employees, and manage its recruitment pipe"
+#~ msgstr ""
+#~ "Bepaal het profiel voor de vacature en beheer de werving voor een "
+#~ "specifieke functie: wervingsenquête afdrukken, definiëren van het aantal "
+#~ "verwachte nieuwe werknemers en het beheren van de wervingsreserve."
 
 #~ msgid "Followers"
 #~ msgstr "Volgers"
@@ -2134,6 +2130,17 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "Last Message Date"
 #~ msgstr "Laatste bericht datum"
+
+#~ msgid ""
+#~ "Manage your CV's and motivation letter related to all applicants.\n"
+#~ "-This installs the module document_ftp. This will install the knowledge "
+#~ "management  module in order to allow you to search using specific "
+#~ "keywords through  the content of all documents (PDF, .DOCx...)"
+#~ msgstr ""
+#~ "Beheer je CV's en motivatiebrieven gerelateerd aan alle sollicitanten.\n"
+#~ "- Dit installeert de module document_ftp. Dit installeert de module "
+#~ "'kennisbeheer' zodat je kan zoeken op specifieke zoekwoorden in de "
+#~ "documenten. (PDF, .DOCx...)"
 
 #~ msgid "Messages"
 #~ msgstr "Berichten"
@@ -2168,6 +2175,9 @@ msgstr "oe_kanban_text_red"
 #~ msgid "Reset Application"
 #~ msgstr "Reset sollicitatie"
 
+#~ msgid "Search through resumes and motivation letters."
+#~ msgstr "Zoek door CV's en motivatiebrieven."
+
 #~ msgid ""
 #~ "This is a name that helps you keep track of your different campaign "
 #~ "efforts Ex: Fall_Drive, Christmas_Special"
@@ -2186,24 +2196,6 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "Welcoming ${object.name} "
 #~ msgstr "Verwelkoming ${object.name}"
-
-#~ msgid "Click to add a new tag."
-#~ msgstr "Klik om een nieuw label toe te voegen."
-
-#~ msgid "Content"
-#~ msgstr "Inhoud"
-
-#~ msgid "Create"
-#~ msgstr "Aanmaken"
-
-#~ msgid "Departments"
-#~ msgstr "Afdelingen"
-
-#~ msgid "Discard"
-#~ msgstr "Negeren"
-
-#~ msgid "Hr Department"
-#~ msgstr "HR afdeling"
 
 #~ msgid "Refused"
 #~ msgstr "Geweigerd"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2015-10-15 12:36+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
@@ -19,7 +19,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                            <span class=\"icon-bar\"/>\n"
+"                            <span class=\"icon-bar\"/>"
+msgstr ""
+"<span class=\"sr-only\">Toggle navigatie</span>\n"
+"                            <span class=\"icon-bar\"/>\n"
+"                            <span class=\"icon-bar\"/>"
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_archive_groups
+msgid "Archives"
+msgstr "Archieven"
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Change"
 msgstr "Verander"
 
@@ -80,14 +96,14 @@ msgid "Email"
 msgstr "Email"
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:73
+#: code:addons/website_portal/controllers/main.py:100
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "Foutieve e-mail! Gelieve een geldig e-mailadres in te geven."
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.details
 #: model:ir.ui.view,arch_db:website_portal.my_account_link
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "My Account"
 msgstr "Mijn account"
 
@@ -102,7 +118,7 @@ msgid "Place your content here."
 msgstr "Plaats uw inhoud hier."
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:88
+#: code:addons/website_portal/controllers/main.py:115
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Sommige verplichte velden zijn leeg."
@@ -123,7 +139,7 @@ msgid "VAT Number"
 msgstr "BTW nummer"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Your Details"
 msgstr "Uw gegevens"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2015-11-11 13:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -28,11 +28,6 @@ msgstr "# produktų"
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
 msgstr "Atsargų apskaitos savybės"
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
-msgid "Accounting"
-msgstr "Apskaita"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -59,18 +54,13 @@ msgid "Average Price"
 msgstr "Vidutinė kaina"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
-msgid "Can be expensed"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Cancel"
 msgstr "Atšaukti"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:278
+#: code:addons/stock_account/stock_account.py:284
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on "
@@ -78,7 +68,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:280
+#: code:addons/stock_account/stock_account.py:286
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -116,13 +106,6 @@ msgid "Choose your date"
 msgstr "Pasirinkite datą"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_coeff
-msgid ""
-"Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
-"coeff"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Company"
@@ -135,7 +118,7 @@ msgid "Compute from average price"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:351
+#: code:addons/stock_account/stock_account.py:357
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -325,14 +308,16 @@ msgid "Location"
 msgstr "Vieta"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+#, fuzzy
+msgid "Lot/Serial Number"
+msgstr "Partija"
+
+#. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
 msgid "Manage Inventory Valuation and Costing Methods"
 msgstr "Tvarkyti atsargų įvertinimą ir savikainos metodus"
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Move"
-msgstr "DK įrašas"
 
 #. module: stock_account
 #: code:addons/stock_account/product.py:125
@@ -386,11 +371,6 @@ msgid "Product"
 msgstr "Produktas"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_alert_time
-msgid "Product Alert Time"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_product_categ_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -398,19 +378,9 @@ msgid "Product Category"
 msgstr "Produkto kategorija"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_life_time
-msgid "Product Life Time"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
 msgid "Product Quantity"
 msgstr "Kiekis"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_removal_time
-msgid "Product Removal Time"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -418,11 +388,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Product Template"
 msgstr "Produkto šablonas"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_use_time
-msgid "Product Use Time"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -446,12 +411,6 @@ msgid "Retrieve the curent stock valuation."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Serial Number"
-msgstr "Partija"
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 #, fuzzy
@@ -462,18 +421,6 @@ msgstr "Standartinė kaina"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
 msgid "Source"
 msgstr "Terminas"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_id
-msgid ""
-"Specify a unit of measure here if invoicing is made in another unit of "
-"measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -514,6 +461,12 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+#, fuzzy
+msgid "Stock Accounting"
+msgstr "Apskaita"
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
@@ -521,7 +474,7 @@ msgid "Stock Input Account"
 msgstr "Atsargų padidėjimo sąskaita"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:464
+#: code:addons/stock_account/stock_account.py:470
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
@@ -530,6 +483,7 @@ msgstr "Atsargų žurnalas"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_move_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Stock Move"
 msgstr "Atsargų perkėlimas"
 
@@ -571,7 +525,7 @@ msgid "Templates for Account Chart"
 msgstr "Sąskaitų plano šablonai"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:306
+#: code:addons/stock_account/stock_account.py:312
 #, python-format
 msgid ""
 "The found valuation amount for product %s is zero. Which means there is "
@@ -583,16 +537,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
 msgid "Total Value"
 msgstr "Bendra vertė"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_coeff
-msgid "Unit of Measure -> UOS Coeff"
-msgstr "Pagrindinis -> Pardavimo mat. vnt. koef."
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_id
-msgid "Unit of Sale"
-msgstr "Pardavimo mat. vnt."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
@@ -618,34 +562,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
 msgid "Value"
 msgstr "Reikšmė"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -729,7 +645,7 @@ msgid "Wizard that opens the stock valuation history table"
 msgstr "Vedlys, kuris atidaro atsargų įvertinimo istorijos lentelę"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:276
+#: code:addons/stock_account/stock_account.py:282
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -737,7 +653,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:282
+#: code:addons/stock_account/stock_account.py:288
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category. "
@@ -766,3 +682,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
 msgid "unknown"
 msgstr "nežinomas"
+
+#~ msgid "Move"
+#~ msgstr "DK įrašas"
+
+#~ msgid "Unit of Measure -> UOS Coeff"
+#~ msgstr "Pagrindinis -> Pardavimo mat. vnt. koef."
+
+#~ msgid "Unit of Sale"
+#~ msgstr "Pardavimo mat. vnt."

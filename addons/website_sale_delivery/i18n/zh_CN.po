@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-07-22 05:53+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -33,6 +33,16 @@ msgstr ""
 "个新的交货方式后\"> 交货:</span>"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
+msgid ""
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
+"Customer Invoice/Refund"
+msgstr ""
+"一个传达给客户的、关于该产品的说明。这个描述将会拷贝到每一个销售单，交货单和"
+"客户发票/退款单。"
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
 msgid "Accessory Products"
 msgstr "配件"
@@ -46,6 +56,16 @@ msgstr "显示在产品页"
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
 msgid "Appear on the shopping cart"
 msgstr "加入购物车"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability
+msgid "Availability"
+msgstr "可用"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability_warning
+msgid "Availability Warning"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_available_in_pos
@@ -74,19 +94,19 @@ msgid "Choose your Delivery Method"
 msgstr "选择你的交货方法"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
-msgid "Country..."
-msgstr "国家..."
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_project_id
-msgid "Create a task under this project on sale order validation."
-msgstr ""
+#: model:ir.model,name:website_sale_delivery.model_res_country
+msgid "Country"
+msgstr "国家"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
 msgstr "交货总额"
+
+#. module: website_sale_delivery
+#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
+msgid "Delivery Methods"
+msgstr "交货方式"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -95,8 +115,8 @@ msgstr "说明"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
-msgid "Description displayed on the eCommerce and on the Online Quotations."
-msgstr "说明显示在电子商务和在线报价单上。"
+msgid "Description displayed on the eCommerce and on online quotations."
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_description
@@ -126,7 +146,7 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_attachment_count
 msgid "File"
-msgstr ""
+msgstr "文件"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
@@ -149,17 +169,12 @@ msgid "Landed Costs"
 msgstr "到岸成本"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn_msg
-msgid "Message for Purchase Order Line"
-msgstr "采购订单明细消息"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_last_value
+msgid "Last Value"
+msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn_msg
-msgid "Message for Sales Order Line"
-msgstr "销售订单行消息"
-
-#. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:138
+#: code:addons/website_sale_delivery/models/sale_order.py:106
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address. "
@@ -169,7 +184,7 @@ msgstr "订单上没有选择正确的送货方式及送货地址，请完善。
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_optional_product_ids
 msgid "Optional Products"
-msgstr ""
+msgstr "可选产品"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_pos_categ_id
@@ -184,17 +199,7 @@ msgstr "补货"
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_optional_product_ids
 msgid "Products to propose when add to cart."
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_project_id
-msgid "Project"
-msgstr "项目"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-msgid "Purchase Order Line"
-msgstr "采购订单明细"
+msgstr "产品添加到购物车时的建议"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
@@ -202,36 +207,20 @@ msgid "Rating"
 msgstr "评级"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_count
+msgid "Rating count"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_rating_last_value
+#, fuzzy
+msgid "Rating value"
+msgstr "评级"
+
+#. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
 msgid "Sales Order"
 msgstr "销售订单"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid "Sales Order Line"
-msgstr "销售订单行"
-
-#. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
-msgid "Select..."
-msgstr "选择"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
-"选择此“警告“选项，将通知用户此消息。\r\n"
-"选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\r\n"
-"消息写入下一个字段。"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
-msgid "Sequence"
-msgstr "序号"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_x
@@ -244,7 +233,7 @@ msgid "Size Y"
 msgstr "Y 码"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:137
+#: code:addons/website_sale_delivery/models/sale_order.py:105
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr "报歉，您的订单我们无法运送"
@@ -270,6 +259,13 @@ msgid "The amount without tax."
 msgstr "不含税金的总额"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_availability
+msgid ""
+"This field is used to display a availability banner with a message on the "
+"ecommerce"
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Those categories are used to group similar products for e-commerce."
 msgstr "那些分类是为了将相似的产品进行分组以进行电子商务的销售."
@@ -290,9 +286,24 @@ msgid "Tracking:"
 msgstr ""
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
+msgid "Visible in Website"
+msgstr "在网站可见"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
+msgid "Website Comments"
+msgstr "网站上的评论"
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Website Product Category"
 msgstr "网站产品目录"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
+msgid "Website Sequence"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
@@ -314,14 +325,47 @@ msgstr "网站meta标题"
 #~ "requests for quotation from procurement."
 #~ msgstr "选中该复选框，生成招标，而不是从补货生成询价单。"
 
+#~ msgid "Country..."
+#~ msgstr "国家..."
+
+#~ msgid "Description displayed on the eCommerce and on the Online Quotations."
+#~ msgstr "说明显示在电子商务和在线报价单上。"
+
+#~ msgid "Message for Purchase Order Line"
+#~ msgstr "采购订单明细消息"
+
+#~ msgid "Message for Sales Order Line"
+#~ msgstr "销售订单行消息"
+
+#~ msgid "Project"
+#~ msgstr "项目"
+
+#~ msgid "Purchase Order Line"
+#~ msgstr "采购订单明细"
+
+#~ msgid "Sales Order Line"
+#~ msgstr "销售订单行"
+
+#~ msgid "Select..."
+#~ msgstr "选择"
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "选择此“警告“选项，将通知用户此消息。\r\n"
+#~ "选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\r\n"
+#~ "消息写入下一个字段。"
+
+#~ msgid "Sequence"
+#~ msgstr "序号"
+
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr "通过网站访问单据的完整URL。"
 
-#~ msgid "Visible in Website"
-#~ msgstr "在网站可见"
-
-#~ msgid "Website Comments"
-#~ msgstr "网站上的评论"
-
 #~ msgid "Website URL"
 #~ msgstr "网站地址"
+
+#~ msgid "Published"
+#~ msgstr "已发布"

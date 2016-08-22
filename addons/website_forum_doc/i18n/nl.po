@@ -7,22 +7,18 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Martin Trigaux, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-02-24 23:00+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"PO-Revision-Date: 2016-08-06 10:39+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_forum_doc
@@ -119,13 +115,8 @@ msgstr "Omschrijf de zakelijke oplossing"
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_display_name
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Weergave naam\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Naam weergeven"
+msgstr "Weergave naam"
 
 #. module: website_forum_doc
 #: model:ir.actions.act_url,name:website_forum_doc.action_open_documentation
@@ -174,15 +165,15 @@ msgid "Employee Contract"
 msgstr "Arbeidsovereenkomst"
 
 #. module: website_forum_doc
-#: constraint:forum.documentation.toc:0
+#: code:addons/website_forum_doc/models/forum_documentation_toc.py:38
+#, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Fout! het is niet mogelijk recursieve categorieën te maken!"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
-#, fuzzy
 msgid "Explain how to configure Odoo"
-msgstr "Leg uit hoe in te stellen in Odoo"
+msgstr ""
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -494,6 +485,9 @@ msgstr "opstellen"
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "official documentation"
 msgstr "officiële documentatie"
+
+#~ msgid "Explain how to configure in Odoo"
+#~ msgstr "Leg uit hoe in te stellen in Odoo"
 
 #~ msgid "Website meta description"
 #~ msgstr "Website meta omschrijving"

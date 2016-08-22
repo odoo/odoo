@@ -3,13 +3,12 @@
 # * hr_timesheet_sheet
 #
 # Translators:
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-20 03:11+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-08-11 04:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/"
 "vi/)\n"
@@ -17,9 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  vi.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  vi.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_timesheet_sheet
@@ -31,26 +27,6 @@ msgid ""
 "user.                 \n"
 "* The 'Done' status is used when users timesheet is accepted by his/her "
 "senior."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
-msgid "# Nbr Timesheet"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
-msgid "# Total Attendance"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
-msgid "# Total Diff"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
-msgid "# Total Timesheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -76,6 +52,11 @@ msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Analytic Line"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_ids
@@ -125,12 +106,6 @@ msgid "Company"
 msgstr "Công ty"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Confirmed"
-msgstr "Đã được xác nhận"
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr ""
@@ -158,23 +133,18 @@ msgid "Date"
 msgstr "Ngày tháng"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "Phòng ban"
 
@@ -203,18 +173,6 @@ msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Done"
-msgstr "Hoàn thành"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Draft"
-msgstr "Bản thảo"
-
-#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
@@ -237,8 +195,8 @@ msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
-msgid "External Timesheet"
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
+msgid "Extra features"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -250,6 +208,12 @@ msgstr "Group By"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Giờ"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+#, fuzzy
+msgid "Hr Department"
+msgstr "Phòng ban"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -271,11 +235,6 @@ msgstr ""
 msgid ""
 "In order to create a timesheet for this employee, you must link him/her to a "
 "user."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
-msgid "Internal Timesheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -304,6 +263,11 @@ msgid "Month"
 msgstr "Tháng"
 
 #. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
+msgid "More Info"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
 msgid "My Timesheet"
 msgstr ""
@@ -315,7 +279,6 @@ msgid "My Timesheets"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
 msgstr "Mới"
@@ -409,9 +372,7 @@ msgid "Sign Out"
 msgstr "Đăng xuất"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Status"
 msgstr "Trạng thái"
 
@@ -434,7 +395,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
@@ -454,6 +414,11 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_res_company_timesheet_max_difference
 msgid "Timesheet allowed difference(Hours)"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_module_project_timesheet_synchro
+msgid "Timesheet app for Chrome/Android/iOS"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -500,6 +465,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_employee_extd_form
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_tree_simplified
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
 msgid "Timesheets"
 msgstr "Chấm công"
 
@@ -694,12 +660,6 @@ msgid "You will be able to register your working hours and activities."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "Analytic Line"
-
-#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
 msgid "hr.timesheet.current.open"
 msgstr "hr.timesheet.current.open"
@@ -707,6 +667,11 @@ msgstr "hr.timesheet.current.open"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 msgid "new timesheet."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_project_config_settings
+msgid "project.config.settings"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -722,11 +687,20 @@ msgstr ""
 #~ msgid "Cancel"
 #~ msgstr "Hủy"
 
+#~ msgid "Confirmed"
+#~ msgstr "Đã được xác nhận"
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Ngày của thông điệp gần nhất được ghi nhận trên một bản ghi"
 
 #~ msgid "Day"
 #~ msgstr "Ngày"
+
+#~ msgid "Done"
+#~ msgstr "Hoàn thành"
+
+#~ msgid "Draft"
+#~ msgstr "Bản thảo"
 
 #~ msgid "Followers"
 #~ msgstr "Người dõi theo"
@@ -754,3 +728,7 @@ msgstr ""
 
 #~ msgid "Website communication history"
 #~ msgstr "Lịch sử thông tin liên lạc website"
+
+#, fuzzy
+#~ msgid "account analytic line"
+#~ msgstr "Analytic Line"

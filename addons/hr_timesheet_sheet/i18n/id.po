@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-01-14 10:09+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -34,26 +34,6 @@ msgstr ""
 "diterima oleh / nya senior."
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
-msgid "# Nbr Timesheet"
-msgstr "# Nbr Timesheet"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
-msgid "# Total Attendance"
-msgstr "# Jumlah Kehadiran"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
-msgid "# Total Diff"
-msgstr "# Jumlah Diff"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
-msgid "# Total Timesheet"
-msgstr "# Jumlah Timesheet"
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "<span class=\"o_stat_text\">Timesheet</span>"
 msgstr ""
@@ -78,6 +58,11 @@ msgid ""
 msgstr ""
 "Diizinkan perbedaan jam antara tanda in / out dan perhitungan absen untuk "
 "satu lembar. Set ini ke 0 jika Anda tidak ingin kontrol apapun."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "analitik entri berdasarkan baris"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_ids
@@ -127,12 +112,6 @@ msgid "Company"
 msgstr "Perusahaan"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Confirmed"
-msgstr "Ditetapkan"
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr "Dikonfirmasi Timesheets"
@@ -160,23 +139,18 @@ msgid "Date"
 msgstr "Tanggal"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr "Tanggal dari"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "Tanggal untuk"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "Departemen"
 
@@ -205,18 +179,6 @@ msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Done"
-msgstr "selesai"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Draft"
-msgstr "Konsep"
-
-#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
@@ -240,9 +202,9 @@ msgstr ""
 "Kesalahan! Masuk (mewadahi keluar) harus mengikuti keluar (mewadahi masuk)"
 
 #. module: hr_timesheet_sheet
-#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
-msgid "External Timesheet"
-msgstr "Timesheet eksternal"
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
+msgid "Extra features"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -253,6 +215,12 @@ msgstr "Dikelompokan berdasarkan .."
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Jam"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+#, fuzzy
+msgid "Hr Department"
+msgstr "Departemen HR"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -277,11 +245,6 @@ msgid ""
 msgstr ""
 "Dalam rangka menciptakan absen untuk karyawan ini, Anda harus menghubungkan "
 "dia / dia untuk pengguna."
-
-#. module: hr_timesheet_sheet
-#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
-msgid "Internal Timesheet"
-msgstr "Timesheet internal"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -309,6 +272,11 @@ msgid "Month"
 msgstr "Bulan"
 
 #. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
+msgid "More Info"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
 msgid "My Timesheet"
 msgstr "Timesheet saya"
@@ -320,7 +288,6 @@ msgid "My Timesheets"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
 msgstr "Baru"
@@ -414,9 +381,7 @@ msgid "Sign Out"
 msgstr "Log Out"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Status"
 msgstr "Status"
 
@@ -441,7 +406,6 @@ msgstr ""
 "seluk beluk menandatangani."
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
@@ -462,6 +426,11 @@ msgstr "Periode absen"
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_res_company_timesheet_max_difference
 msgid "Timesheet allowed difference(Hours)"
 msgstr "Absen diperbolehkan perbedaan (Jam)"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_module_project_timesheet_synchro
+msgid "Timesheet app for Chrome/Android/iOS"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_approved
@@ -507,6 +476,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_employee_extd_form
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_tree_simplified
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
 msgid "Timesheets"
 msgstr "Jadwal"
 
@@ -707,12 +677,6 @@ msgid "You will be able to register your working hours and activities."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "analitik entri berdasarkan baris"
-
-#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
 msgid "hr.timesheet.current.open"
 msgstr ""
@@ -720,6 +684,11 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 msgid "new timesheet."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_project_config_settings
+msgid "project.config.settings"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -732,17 +701,41 @@ msgstr "kepada"
 msgid "waiting approval"
 msgstr ""
 
+#~ msgid "# Nbr Timesheet"
+#~ msgstr "# Nbr Timesheet"
+
+#~ msgid "# Total Attendance"
+#~ msgstr "# Jumlah Kehadiran"
+
+#~ msgid "# Total Diff"
+#~ msgstr "# Jumlah Diff"
+
+#~ msgid "# Total Timesheet"
+#~ msgstr "# Jumlah Timesheet"
+
 #~ msgid "Action Needed"
 #~ msgstr "Tindakan diperlukan"
 
 #~ msgid "Cancel"
 #~ msgstr "Batalkan"
 
+#~ msgid "Confirmed"
+#~ msgstr "Ditetapkan"
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Tanggal pesan terakhir diposting pada catatan."
 
 #~ msgid "Day"
 #~ msgstr "Hari"
+
+#~ msgid "Done"
+#~ msgstr "selesai"
+
+#~ msgid "Draft"
+#~ msgstr "Konsep"
+
+#~ msgid "External Timesheet"
+#~ msgstr "Timesheet eksternal"
 
 #~ msgid "Followers"
 #~ msgstr "Pengikut"
@@ -752,9 +745,6 @@ msgstr ""
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Pengikut (mitra)"
-
-#~ msgid "HR Department"
-#~ msgstr "Departemen HR"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
@@ -771,6 +761,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Dalam rangka menciptakan absen untuk karyawan ini, Anda harus "
 #~ "menghubungkan karyawan untuk suatu produk."
+
+#~ msgid "Internal Timesheet"
+#~ msgstr "Timesheet internal"
 
 #~ msgid "Is Follower"
 #~ msgstr "Adalah pengikut"
@@ -821,3 +814,7 @@ msgstr ""
 
 #~ msgid "Website communication history"
 #~ msgstr "Sejarah komunikasi situs"
+
+#, fuzzy
+#~ msgid "account analytic line"
+#~ msgstr "analitik entri berdasarkan baris"

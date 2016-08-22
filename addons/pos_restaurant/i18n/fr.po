@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:07+0000\n"
 "PO-Revision-Date: 2016-01-08 22:20+0000\n"
 "Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
@@ -85,7 +85,7 @@ msgstr "Apparence"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:543
+#: code:addons/pos_restaurant/static/src/js/floors.js:550
 #, python-format
 msgid "Are you sure ?"
 msgstr "Êtes-vous sûr(e)?"
@@ -146,18 +146,11 @@ msgstr "ANNULÉ"
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:260
-#: code:addons/pos_restaurant/static/src/js/floors.js:404
+#: code:addons/pos_restaurant/static/src/js/floors.js:297
+#: code:addons/pos_restaurant/static/src/js/floors.js:411
 #, python-format
 msgid "Changes could not be saved"
 msgstr "Les changements n'ont pas pu être sauvegardés"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:261
-#: code:addons/pos_restaurant/static/src/js/floors.js:405
-#, python-format
-msgid "Check your internet connection and access rights"
-msgstr "Vérifier votre connexion internet et vos droits d'accès"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -211,7 +204,6 @@ msgstr "Nom affiché"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
-#, fuzzy
 msgid ""
 "Each Order Printer has an IP Address that defines the PosBox/Hardware\n"
 "                Proxy where the printer can be found, and a list of product "
@@ -220,11 +212,6 @@ msgid ""
 "belonging to one of\n"
 "                its categories."
 msgstr ""
-"Chaque imprimante a une adresse IP qui définit le proxy de la PosBox/"
-"Hardware\n"
-"où l'imprimante se situe, et une liste de catégories de produits.\n"
-"Une imprimante n'imprimera uniquement que les mises à jour des produits "
-"appartenant à sa propre catégorie."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_splitbill
@@ -257,7 +244,7 @@ msgstr "Invités"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:918
+#: code:addons/pos_restaurant/static/src/js/floors.js:925
 #, python-format
 msgid "Guests ?"
 msgstr "Invités? "
@@ -266,9 +253,9 @@ msgstr "Invités? "
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:10
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:21
-#, fuzzy, python-format
+#, python-format
 msgid "Guests:"
-msgstr "Invités"
+msgstr "Invités:"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_height
@@ -341,7 +328,7 @@ msgstr "Note"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:476
+#: code:addons/pos_restaurant/static/src/js/floors.js:483
 #, python-format
 msgid "Number of Seats ?"
 msgstr "Nombre de sièges? "
@@ -402,11 +389,6 @@ msgid "Point of Sale"
 msgstr "Point de vente"
 
 #. module: pos_restaurant
-#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_pos_order_ids
-msgid "Pos Orders"
-msgstr "Commandes en PdV"
-
-#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:20
 #, python-format
@@ -430,7 +412,7 @@ msgstr "adresse IP du proxy"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:544
+#: code:addons/pos_restaurant/static/src/js/floors.js:551
 #, python-format
 msgid "Removing a table cannot be undone"
 msgstr "Enlever une table ne peut pas annulé"
@@ -521,7 +503,7 @@ msgstr "Nom de la table"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:464
+#: code:addons/pos_restaurant/static/src/js/floors.js:471
 #, python-format
 msgid "Table Name ?"
 msgstr "Nom de la table? "
@@ -569,11 +551,6 @@ msgid "The list of tables in this floor"
 msgstr "La liste de tables sur cet étage"
 
 #. module: pos_restaurant
-#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_pos_order_ids
-msgid "The orders served at this table"
-msgstr "Les commandes servies à cette table"
-
-#. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_floor_ids
 msgid "The restaurant floors served by this point of sale"
 msgstr "Les étages du restaurant servis par ce point de vente"
@@ -617,7 +594,7 @@ msgstr "La largeur de la table en pixels"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:102
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:106
 #, python-format
 msgid "This floor has no tables yet, use the"
 msgstr "Cet étage n'a pas encore de tables, utilisez le"
@@ -627,7 +604,7 @@ msgstr "Cet étage n'a pas encore de tables, utilisez le"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:37
 #, python-format
 msgid "Transfer"
-msgstr ""
+msgstr "Transfert"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_sequence
@@ -660,6 +637,15 @@ msgstr "Avec un(e)"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/js/floors.js:261
+#: code:addons/pos_restaurant/static/src/js/floors.js:298
+#: code:addons/pos_restaurant/static/src/js/floors.js:412
+#, python-format
+msgid "You must be connected to the internet to save your changes."
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:36
 #, python-format
 msgid "at"
@@ -675,7 +661,7 @@ msgstr "à table"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:103
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:107
 #, python-format
 msgid "button in the editing toolbar to create new tables."
 msgstr "bouton dans la barre d'édition pour créer de nouvelles tables."
@@ -706,3 +692,26 @@ msgstr "restaurant.printer"
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
 msgid "restaurant.table"
 msgstr "restaurant.table"
+
+#~ msgid "Check your internet connection and access rights"
+#~ msgstr "Vérifier votre connexion internet et vos droits d'accès"
+
+#~ msgid ""
+#~ "Each Order Printer has an IP Address that defines the PosBox/Hardware\n"
+#~ "                Proxy where the printer can be found, and a list of "
+#~ "product categories.\n"
+#~ "                An Order Printer will only print updates for prodcuts "
+#~ "belonging to one of\n"
+#~ "                its categories."
+#~ msgstr ""
+#~ "Chaque imprimante a une adresse IP qui définit le proxy de la PosBox/"
+#~ "Hardware\n"
+#~ "où l'imprimante se situe, et une liste de catégories de produits.\n"
+#~ "Une imprimante n'imprimera uniquement que les mises à jour des produits "
+#~ "appartenant à sa propre catégorie."
+
+#~ msgid "Pos Orders"
+#~ msgstr "Commandes en PdV"
+
+#~ msgid "The orders served at this table"
+#~ msgstr "Les commandes servies à cette table"

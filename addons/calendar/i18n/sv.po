@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-06-20 03:26+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
@@ -455,7 +455,7 @@ msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:35
+#: code:addons/calendar/static/src/js/base_calendar.js:95
 #, python-format
 msgid " [Me]"
 msgstr "[Mig]"
@@ -478,7 +478,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr "${object.event_id.name} - Datum har uppdaterats"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:776
+#: code:addons/calendar/calendar.py:777
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -488,7 +488,7 @@ msgstr ""
 " %s klockan %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:774
+#: code:addons/calendar/calendar.py:775
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "%s klockan (%s till %s) (%s)"
@@ -529,7 +529,7 @@ msgstr "Aktiv"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:132
+#: code:addons/calendar/static/src/js/base_calendar.js:75
 #, python-format
 msgid "Add Favorite Calendar"
 msgstr "Lägg till favoritkalender"
@@ -540,7 +540,7 @@ msgid "All Day"
 msgstr "Hela dagen"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:771
+#: code:addons/calendar/calendar.py:772
 #, python-format
 msgid "AllDay , %s"
 msgstr "Heldag , %s"
@@ -566,8 +566,8 @@ msgid "Attendee information"
 msgstr "Deltagarinformation"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_ids
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_partner_ids
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Attendees"
@@ -579,7 +579,7 @@ msgid "Availability"
 msgstr "Tillgänglighet"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1714
+#: code:addons/calendar/calendar.py:1738
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -606,9 +606,7 @@ msgid "Calendar Alarm"
 msgstr "Kalenderlarm"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:43
-#, python-format
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Calendar Invitation"
 msgstr ""
 
@@ -663,6 +661,7 @@ msgstr "Skapad den"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_display_start
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Date"
 msgstr "Datum"
 
@@ -722,9 +721,9 @@ msgstr "Visa namn"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:168
-#, python-format
-msgid "Do you really want to delete this filter from favorite?"
+#: code:addons/calendar/static/src/js/base_calendar.js:156
+#, fuzzy, python-format
+msgid "Do you really want to delete this filter from favorites ?"
 msgstr "Vill du verkligen radera detta filter från dina favoriter?"
 
 #. module: calendar
@@ -746,7 +745,7 @@ msgid "Email"
 msgstr "E-post"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1365
+#: code:addons/calendar/calendar.py:1367
 #, python-format
 msgid "Email addresses not found"
 msgstr "E-postadress saknas"
@@ -813,20 +812,20 @@ msgid "Event alarm"
 msgstr "Evenemangslarm"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1239
+#: code:addons/calendar/calendar.py:1241
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:45
+#: code:addons/calendar/static/src/js/base_calendar.js:96
 #, python-format
 msgid "Everybody's calendars"
 msgstr "Allas kalendrar"
 
 #. module: calendar
-#: selection:calendar.event,class:0
+#: selection:calendar.event,privacy:0
 msgid "Everyone"
 msgstr ""
 
@@ -878,7 +877,7 @@ msgid "Group By"
 msgstr "Gruppera efter"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1656
+#: code:addons/calendar/calendar.py:1680
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr "Gruppering efter datum stöds inte,  använd kalendervyn i stället."
@@ -926,6 +925,12 @@ msgstr "Inbjudnings-token"
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitation details"
 msgstr "Inbjudningsdetaljer"
+
+#. module: calendar
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#, fuzzy
+msgid "Invitation for"
+msgstr "Inbjudning"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -982,6 +987,7 @@ msgstr "Låt evenemanget återkomma automatiskt med det intervallet"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_location
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Location"
 msgstr "Plats"
 
@@ -1090,9 +1096,7 @@ msgid "Needs Action"
 msgstr "Behöver åtgärd"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:36
-#, python-format
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No I'm not going."
 msgstr ""
 
@@ -1114,12 +1118,12 @@ msgid "OK"
 msgstr "OK"
 
 #. module: calendar
-#: selection:calendar.event,class:0
+#: selection:calendar.event,privacy:0
 msgid "Only internal users"
 msgstr ""
 
 #. module: calendar
-#: selection:calendar.event,class:0
+#: selection:calendar.event,privacy:0
 msgid "Only me"
 msgstr ""
 
@@ -1139,18 +1143,23 @@ msgid "Owner"
 msgstr "Ägare"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_ids
+msgid "Participant"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
 msgid "Partner"
 msgstr "Företag"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1252
+#: code:addons/calendar/calendar.py:1254
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_class
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_privacy
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Privacy"
 msgstr "Integritet"
@@ -1363,7 +1372,7 @@ msgid ""
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1361
+#: code:addons/calendar/calendar.py:1363
 #, python-format
 msgid "The following contacts have no email address :"
 msgstr "Följande kontakter saknar e-postadress :"
@@ -1456,35 +1465,12 @@ msgid "Weekday"
 msgstr "Veckodag"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:48
-#, python-format
-msgid "When"
-msgstr ""
-
-#. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:52
-#, python-format
-msgid "Where"
-msgstr ""
-
-#. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:56
-#, python-format
-msgid "Who"
-msgstr ""
-
-#. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Year(s)"
 msgstr "År"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:35
-#, python-format
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
 msgstr ""
 
@@ -1515,7 +1501,7 @@ msgid "e.g. Business Lunch"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1237
+#: code:addons/calendar/calendar.py:1239
 #, python-format
 msgid "interval cannot be negative."
 msgstr "Intervall kan inte vara negativt"
@@ -1529,6 +1515,12 @@ msgstr "ir.attachment"
 #: model:ir.model,name:calendar.model_ir_values
 msgid "ir.values"
 msgstr "ir.values"
+
+#~ msgid "${object.event_id.name}"
+#~ msgstr "${object.event_id.name}"
+
+#~ msgid "${object.event_id.name} - Date has been updated"
+#~ msgstr "${object.event_id.name} - Datum har uppdaterats"
 
 #~ msgid "A email has been send to specify that the date has been changed !"
 #~ msgstr "Ett e-postmeddelande har skickats för att meddela datumändringen !"

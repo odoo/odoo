@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2015-10-11 23:09+0000\n"
 "Last-Translator: Mateus Cerqueira Lopes <mateus1@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
@@ -61,7 +61,7 @@ msgid "Confirmed"
 msgstr "Confirmado"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:150
+#: code:addons/fetchmail/models/fetchmail.py:137
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "Teste de conexão falhou: %s"
@@ -81,13 +81,11 @@ msgid "Create a New Record"
 msgstr "Criar um Novo Registro"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "Criado por"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "Criado em"
@@ -100,7 +98,6 @@ msgstr ""
 "maior"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr "Nome de Exibição"
@@ -116,7 +113,6 @@ msgid "Hostname or IP of the mail server"
 msgstr "Hostname ou IP do servidor de emails"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "ID"
@@ -169,19 +165,16 @@ msgid "Last Fetch Date"
 msgstr "Data da última verificação"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
 msgstr "Última modificação em"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
 msgstr "Última atualização por"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "Última atualização em"
@@ -368,7 +361,14 @@ msgstr ""
 "Se os anexos devem ser baixados. Se não estiver habilitado, os servidores de "
 "email irão excluir qualquer anexo antes de processar"
 
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
-msgstr "fetchmail.config.settings"
+#~ msgid ""
+#~ "Whether a full original copy of each email should be kept for "
+#~ "referenceand attached to each processed message. This will usually double "
+#~ "the size of your message database."
+#~ msgstr ""
+#~ "Se uma cópia completa de cada email deve ser mantida para referência e "
+#~ "anexada a cada mensagem processada, isto geralmente dobra o tamanho do "
+#~ "espaço de mensagens"
+
+#~ msgid "fetchmail.config.settings"
+#~ msgstr "fetchmail.config.settings"

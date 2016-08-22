@@ -1,38 +1,27 @@
-# #-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_blog
 #
 # Translators:
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
-# #-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * website_blog
-#
-# Translators:
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-17 15:04+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"PO-Revision-Date: 2016-07-27 21:13+0000\n"
+"Last-Translator: Kaloyan Naumov <kaloyan@lumnus.net>\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/"
 "bg/)\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:117
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:119
 #, python-format
 msgid " Click on this button to send your blog post online."
 msgstr "Натиснете този бутон за да изпратите вашите статии он-лайн."
@@ -93,6 +82,28 @@ msgid "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 
 #. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.view_blog_blog_form
+msgid ""
+"(Un)archiving a blog automatically (un)archives its posts. Do you want to "
+"proceed?"
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:187
+#, fuzzy, python-format
+msgid ""
+"<p><b>This tutorial is over.</b> Use this button to discover more features "
+"and improve the content of this page.</p><p>You can also add some cool "
+"content with your text in edit mode or keep adding pages with the upper "
+"right buttons.</p>"
+msgstr ""
+"Този инструктаж приключи. Можете да откриете още функционалности и да "
+"подобрите съдържанието на тази страница, като използвате къстамизационното "
+"меню. Можете също да добавите нови блокове, като изберете \"Вмъкни Блок\" в "
+"режим на редактиране."
+
+#. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_1
 msgid ""
 "A mix of push &amp; pull: Today, people\n"
@@ -116,8 +127,14 @@ msgid "Access post"
 msgstr ""
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_active
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_active
+msgid "Active"
+msgstr ""
+
+#. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:24
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:25
 #, python-format
 msgid "Add Content"
 msgstr "Добави съдържание"
@@ -126,6 +143,13 @@ msgstr "Добави съдържание"
 #: model:blog.post,content:website_blog.blog_post_2
 msgid "Adding to industry leading technology"
 msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.blog_blog_view_search
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
+#, fuzzy
+msgid "Archived"
+msgstr "Архиви"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_history
@@ -158,7 +182,6 @@ msgstr "Atom Feed"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_author_id
-#: model:ir.model.fields,field_description:website_blog.field_blog_post_create_uid
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 msgid "Author"
 msgstr "Автор"
@@ -171,6 +194,7 @@ msgstr "Аватар"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_blog_id
 #: model:ir.ui.menu,name:website_blog.menu_website_blog_root
+#: model:ir.ui.view,arch_db:website_blog.blog_blog_view_search
 #: model:ir.ui.view,arch_db:website_blog.view_blog_blog_form
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 #: model:website.menu,name:website_blog.menu_news
@@ -183,7 +207,7 @@ msgid "Blog Name"
 msgstr "Име на Блог"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:283
+#: code:addons/website_blog/models/website_blog.py:303
 #: model:ir.model,name:website_blog.model_blog_post
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -192,14 +216,14 @@ msgid "Blog Post"
 msgstr "Блог Статия"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:287
+#: code:addons/website_blog/models/website_blog.py:307
 #, python-format
 msgid "Blog Post <b>%s</b> seems to have a link to this page !"
 msgstr "Блог статията <b>%s</b> изглежда води към тази страница !"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:37
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:38
 #, python-format
 msgid "Blog Post Created"
 msgstr "Блог Статията е създадена"
@@ -255,7 +279,8 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:58
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:59
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:147
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 #, python-format
 msgid "Change Cover"
@@ -263,28 +288,30 @@ msgstr "Смени Обложка"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:54
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:55
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:144
 #, python-format
 msgid "Change and customize your blog post cover."
 msgstr "Смени и настрой обложката на статията."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:108
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:110
 #, python-format
 msgid "Check Mobile Preview"
 msgstr "Проверка на Изглед на Мобилен телефон"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:68
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:69
 #, python-format
 msgid "Choose an image"
 msgstr "Избери изображение"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:69
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:70
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:153
 #, python-format
 msgid "Choose an image from the library."
 msgstr "изображение от библиотеката."
@@ -298,21 +325,36 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:94
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:95
 #, python-format
 msgid "Click on '<em>Save</em>' button to record changes on the page."
 msgstr "Натисни '<em>Запис</em>' за да запишеш промените по страницата."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:77
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:78
 #, python-format
 msgid "Click on '<em>Save</em>' to set the picture as cover."
 msgstr "Натисни '<em>Запис</em>' за да настроиш снимката за обложка."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:102
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:167
+#, fuzzy, python-format
+msgid "Click on <b>Save</b> button to record changes on the page."
+msgstr "Натисни '<em>Запис</em>' за да запишеш промените по страницата."
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:158
+#, fuzzy, python-format
+msgid "Click on <b>Save</b> to set the picture as cover."
+msgstr "Натисни '<em>Запис</em>' за да настроиш снимката за обложка."
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:103
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:172
 #, python-format
 msgid ""
 "Click on the mobile icon to preview how your blog post will be displayed on "
@@ -328,7 +370,7 @@ msgstr "Натисни за да създадеш нова статия."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:124
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:126
 #, python-format
 msgid "Close Tutorial"
 msgstr "Затвори Ръководството"
@@ -345,7 +387,7 @@ msgstr "За контакти"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:84
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:85
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_content
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 #, python-format
@@ -354,14 +396,14 @@ msgstr "Съдържание"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:39
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:40
 #, python-format
 msgid "Continue"
 msgstr "Продължи"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:60
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:61
 #, python-format
 msgid "Cover"
 msgstr "Обложка"
@@ -373,13 +415,14 @@ msgstr "Свойства на Обложката"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:14
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:15
 #, python-format
 msgid "Create a blog post"
 msgstr "Създай Блог Статия"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_create_uid
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_create_uid
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_create_uid
 msgid "Created by"
 msgstr "Създадено от"
@@ -393,7 +436,7 @@ msgstr "Създадено на"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:53
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:54
 #, python-format
 msgid "Customize Cover"
 msgstr "Настрой Обложка"
@@ -582,7 +625,7 @@ msgstr "Последни Статии"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:18
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:19
 #, python-format
 msgid "Let's go through the first steps to write beautiful blog posts."
 msgstr "Да минем през първите стъпки за писане на хубави статии."
@@ -633,7 +676,7 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:101
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:102
 #, python-format
 msgid "Mobile Preview"
 msgstr "Мобилен Изглед"
@@ -650,8 +693,8 @@ msgstr "Тясно"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:17
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:31
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:18
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:32
 #: code:addons/website_blog/static/src/js/website_blog.editor.js:21
 #: model:ir.ui.view,arch_db:website_blog.content_new_blogpost
 #, python-format
@@ -692,13 +735,6 @@ msgstr "Брой разглеждания"
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "None"
 msgstr "Няма"
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:9
-#, python-format
-msgid "Not Published"
-msgstr "Не е публикувана"
 
 #. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_2
@@ -749,7 +785,7 @@ msgstr "Публикация"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:44
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:45
 #, python-format
 msgid "Post Headline"
 msgstr "Основно заглавие на Статията"
@@ -769,17 +805,31 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
-#: code:addons/website_blog/controllers/main.py:268
+#: code:addons/website_blog/controllers/main.py:261
 #, python-format
 msgid "Public user cannot post comments on blog post."
 msgstr "Не-регистрирани потребители не могат да коментират статий."
 
 #. module: website_blog
 #. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:183
+#, python-format
+msgid "Publish your blog post to make it visible to your visitors."
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
 #: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:10
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_status
 #, python-format
 msgid "Published"
 msgstr "Публикувана"
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_published_date
+#, fuzzy
+msgid "Published Date"
+msgstr "Публикувани Статии"
 
 #. module: website_blog
 #: model:mail.message.subtype,description:website_blog.mt_blog_blog_published
@@ -789,7 +839,7 @@ msgstr "Публикувани Статии"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:116
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:118
 #, python-format
 msgid "Publishing status"
 msgstr "Статус на публикация"
@@ -829,35 +879,38 @@ msgstr "Червено"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:76
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:77
 #, python-format
 msgid "Save"
 msgstr "Запазване"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:93
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:94
 #, python-format
 msgid "Save your modifications once you are done"
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:109
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:111
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:177
 #, python-format
 msgid "Scroll to check rendering and then close the mobile preview."
 msgstr "Скролирай за да видиш визулаизацията и после затвори мобилния изглед."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:61
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:62
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:148
 #, python-format
 msgid "Select this menu item to change blog cover."
 msgstr "Избери този опция за да промениш обложка."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:32
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:33
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:135
 #, python-format
 msgid "Select this menu item to create a new blog post."
 msgstr "Избери този опция за да създадеш обложка."
@@ -876,32 +929,39 @@ msgstr "Размер"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:19
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:20
 #, python-format
 msgid "Skip"
 msgstr "Пропусни"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:19
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:20
 #, python-format
 msgid "Start Tutorial"
 msgstr "Start Tutorial"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/models/website_blog.py:91
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:90
+#: code:addons/website_blog/models/website_blog.py:106
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:91
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:166
 #, python-format
 msgid "Start writing here..."
 msgstr "Започни да пишеш тук..."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:85
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:86
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:162
 #, fuzzy, python-format
 msgid "Start writing your story here."
 msgstr "Започни да пишеш тук..."
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_status
+msgid "Status"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_subtitle
@@ -952,7 +1012,7 @@ msgstr "Бъдещето на емейлите"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:38
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:39
 #, python-format
 msgid "This is your new blog post. Let's edit it."
 msgstr "Това е новата ти статия. Нека да я редактираме."
@@ -980,7 +1040,7 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:123
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:125
 #, fuzzy, python-format
 msgid ""
 "This tutorial is over. To discover more features and improve the content of "
@@ -1014,13 +1074,21 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:9
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_status
+#, fuzzy, python-format
+msgid "Unpublished"
+msgstr "не е публикувана"
+
+#. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Untitled Post"
 msgstr "Неозаглавена Статия"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:25
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:26
 #, fuzzy, python-format
 msgid ""
 "Use this button to create a new blog post like any other document (page, "
@@ -1045,7 +1113,7 @@ msgstr ""
 "уникален път."
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:262
+#: code:addons/website_blog/models/website_blog.py:282
 #, python-format
 msgid "View Blog Post"
 msgstr "Виж Статии"
@@ -1088,7 +1156,8 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:46
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:47
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:139
 #, python-format
 msgid "Write a title, the subtitle is optional."
 msgstr "Напишете заглавие, под-заглавието не е задължително."
@@ -1144,11 +1213,6 @@ msgstr "Нова статия %s беше публикувана в тема %s.
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
-msgid "not published"
-msgstr "не е публикувана"
-
-#. module: website_blog
-#: model:ir.ui.view,arch_db:website_blog.blog_post_short
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid "pull-right"
 msgstr "дръпни в дясно"
@@ -1159,6 +1223,12 @@ msgstr "дръпни в дясно"
 #, python-format
 msgid "to comment."
 msgstr "за коментиране."
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.blog_post_short
+#, fuzzy
+msgid "unpublished"
+msgstr "не е публикувана"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -1592,8 +1662,14 @@ msgstr "изгледи"
 #~ "\n"
 #~ "</div></section>"
 
+#~ msgid "A new post %s has been published on the %s blog."
+#~ msgstr "Нова статия %s беше публикувана в тема %s."
+
 #~ msgid "Action Needed"
 #~ msgstr "Нужно е действие"
+
+#~ msgid "Click here to access the post."
+#~ msgstr "Натиснете тук за да достъпите портала."
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Дата на последното съобщение, публикувано на записа."
@@ -1625,6 +1701,9 @@ msgstr "изгледи"
 #~ msgid "Messages and communication history"
 #~ msgstr "История на събщенията и комуникациите"
 
+#~ msgid "Not Published"
+#~ msgstr "Не е публикувана"
+
 #~ msgid "Number of Actions"
 #~ msgstr "Брой действия"
 
@@ -1647,11 +1726,29 @@ msgstr "изгледи"
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr "Пълният URL за достъп до документа през уебсайта."
 
+#~ msgid ""
+#~ "This tutorial is over. To discover more features and improve the content "
+#~ "of this page, go to the upper right customize menu. You can also add some "
+#~ "cool content with your text by clicking on 'Insert Blocks' in the edit "
+#~ "mode."
+#~ msgstr ""
+#~ "Този инструктаж приключи. Можете да откриете още функционалности и да "
+#~ "подобрите съдържанието на тази страница, като използвате "
+#~ "къстамизационното меню. Можете също да добавите нови блокове, като "
+#~ "изберете \"Вмъкни Блок\" в режим на редактиране."
+
 #~ msgid "Unread Messages"
 #~ msgstr "Непрочетени съобщения"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Брой непрочетени съобщения"
+
+#~ msgid ""
+#~ "Use this <em>'Content'</em> menu to create a new blog post like any other "
+#~ "document (page, menu, products, event, ...)."
+#~ msgstr ""
+#~ "Използвай меню <em>'Съдържание'</em> за да съдадеш нови статии или други "
+#~ "документи (страници, менюта, продукти, събития, ...)."
 
 #~ msgid "Visible in Website"
 #~ msgstr "Видим в уеб сайта"

@@ -1,4 +1,3 @@
-# #-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_expense
@@ -7,22 +6,12 @@
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
 # grazziano <g.negocios@outlook.com.br>, 2015
 # Mateus Lopes <mateus1@gmail.com>, 2015
-# #-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * hr_expense
-#
-# Translators:
-# danimaribeiro <danimaribeiro@gmail.com>, 2016
-# Grazziano Duarte <g.negocios@outlook.com.br>, 2015
-# Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-03-23 13:02+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-07-28 00:08+0000\n"
 "Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
 "language/pt_BR/)\n"
@@ -30,38 +19,117 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"#-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-#, fuzzy
-msgid "<strong>Currency:</strong>"
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<b>Note:</b> Set the same email address on your employee form than\n"
+"                            the one you use are your \"From:\". Otherwise, "
+"your\n"
+"                            expenses will not be accepted by email."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid ""
+"<i class=\"text-muted oe_edit_only\">Use [Reference] as a subject prefix for "
+"incoming receipts</i>"
+msgstr ""
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:29
+#, python-format
+msgid ""
+"<p>Managers can validate or refuse expense reports.</p><p>If you refuse a "
+"report, explain the reason using the <i>New Message</i> button in the bottom."
+"</p>"
+msgstr ""
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:19
+#, python-format
+msgid ""
+"<p>Once completed, you can <b>submit the expense</b> for approval.</"
+"p><p><i>Tip: from the list view, select all expenses to submit them all at "
+"once, in a single report.</i>"
+msgstr ""
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:33
+#, python-format
+msgid ""
+"<p>The accountant receive approved expense reports.</p><p>He can post "
+"journal entries in one click if taxes and accounts are right.</p>"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<strong class=\"text-info\">[PRODUCT CODE]</strong> Free Description <strong "
+"class=\"text-primary\">PRICE</strong>"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "<strong>Date:</strong>"
 msgstr "Data:"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "<strong>Description:</strong>"
+msgstr "<strong>Descrição:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Employee:</strong>"
 msgstr "<strong>Funcionário:</strong>"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 #, fuzzy
-msgid "<strong>Manager:</strong>"
+msgid "<strong>Payment By:</strong>"
 msgstr "Data:"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-#, fuzzy
-msgid "<strong>Status:</strong>"
-msgstr "Data:"
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Total</strong>"
 msgstr "Total"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "<strong>Validated By:</strong>"
+msgstr "<strong>Validado Por:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<strong>Your email gateway is not configured.</strong> Please configure your "
+"email\n"
+"                            gateway from the Settings app, menu <i>General "
+"Settings</i>."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/wizard/hr_expense_register_payment.py:79
+#, python-format
+msgid ""
+"A payment of %s %s with the reference %s related to your expense %s has been "
+"made."
+msgstr ""
+
+#. module: hr_expense
+#: selection:hr.expense.config.settings,alias_expense_open:0
+msgid "Accept expenses from any email address"
+msgstr ""
+
+#. module: hr_expense
+#: selection:hr.expense.config.settings,alias_expense_open:0
+msgid "Accept expenses from employee email addresses only"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_id
@@ -70,10 +138,47 @@ msgid "Account"
 msgstr "Conta Analítica"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+#, fuzzy
+msgid "Accounting"
+msgstr "Conta Analítica"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_accounting_date
+#, fuzzy
+msgid "Accounting Date"
+msgstr "Conta Analítica"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+msgid "Actual expense sheets, not the refused ones"
+msgstr ""
+
+#. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
 #: model:product.template,name:hr_expense.air_ticket_product_template
 msgid "Air Flight"
 msgstr "Voo"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_alias_domain
+msgid "Alias Domain"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_all
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_all
+#, fuzzy
+msgid "All Expenses"
+msgstr "Despesas"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_all
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_all
+#, fuzzy
+msgid "All Reports"
+msgstr "Relatórios"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
@@ -82,28 +187,47 @@ msgid "Analytic Account"
 msgstr "Conta Analítica"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
+msgid "Apply"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Approve"
 msgstr "Aprovar"
 
 #. module: hr_expense
-#: selection:hr.expense,state:0
+#: selection:hr.expense.sheet,state:0
 #: model:mail.message.subtype,name:hr_expense.mt_expense_approved
 msgid "Approved"
 msgstr "Aprovada"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_bank_journal_id
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#, fuzzy
+msgid "Approved Expenses"
+msgstr "Despesas de Funcionário"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_bank_journal_id
 msgid "Bank Journal"
 msgstr "Diário Bancário"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_reference
+msgid "Bill Reference"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_template_can_be_expensed
-msgid "Can be expensed"
+#, fuzzy
+msgid "Can be Expensed"
 msgstr "Pode ser usado como despesa"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_register_payment_view_form
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -114,34 +238,35 @@ msgid "Car Travel Expenses"
 msgstr "Despesas de Viagem de Carro"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Certified honest and conform,<br/>(Date and signature).<br/><br/>"
 msgstr ""
 "Certificado honesto e estar em conformidade, <br/>(Data e assinatura).<br/"
 "><br/>"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_my_tree
-#: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
-msgid "Click here to approve"
-msgstr "Clique aqui para aprovar"
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_to_approve
+#, fuzzy
+msgid "Click here to create a new expense report."
+msgstr "Clique aqui para criar novas despesas."
 
 #. module: hr_expense
-#: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense
-#: model:ir.actions.act_window,help:hr_expense.expense_all
+#: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense_sheet
+#: model:ir.actions.act_window,help:hr_expense.action_request_to_pay_expense_sheet
+#: model:ir.actions.act_window,help:hr_expense.action_request_to_post_expense_sheet
 msgid "Click here to create new expenses."
 msgstr "Clique aqui para criar novas despesas."
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_my_tree
-#: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
-msgid "Click here to refuse"
-msgstr "Clique aqui para recursar"
-
-#. module: hr_expense
-#: model:web.tip,description:hr_expense.expense_tip_2
-msgid "Click on Action to submit multiple expenses to your manager."
-msgstr ""
+#: code:addons/hr_expense/models/hr_expense.py:283
+#, fuzzy, python-format
+msgid "Click to add a new expense,"
+msgstr "Clique para criar uma nova categoria de despesa."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_product
@@ -149,11 +274,28 @@ msgid "Click to create a new expense category."
 msgstr "Clique para criar uma nova categoria de despesa."
 
 #. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:15
+#, python-format
+msgid ""
+"Click to try <b>submitting an expense by email</b>. You can attach a photo "
+"of the receipt to the mail."
+msgstr ""
+
+#. module: hr_expense
 #: selection:hr.expense,payment_mode:0
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_company_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_company_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_company_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Company"
 msgstr "Empresa"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_register_payment_wizard_company_id
+msgid "Company related to this journal"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
@@ -161,37 +303,67 @@ msgid "Configuration"
 msgstr "Configuração"
 
 #. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
+#, fuzzy
+msgid "Configure Expense"
+msgstr "Despesas Confirmadas"
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Confirmed Expenses"
 msgstr "Despesas Confirmadas"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Congratulations, you're done!"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+#, fuzzy
+msgid "Create a new expense.<br>"
+msgstr "Clique para criar uma nova categoria de despesa."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_create_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_create_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_create_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_create_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_create_uid
 msgid "Created by"
 msgstr "Criado por"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_create_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_create_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_create_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_create_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_create_date
 msgid "Created on"
 msgstr "Criado em"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_currency_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_currency_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_currency_id
 msgid "Currency"
 msgstr "Moeda"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_date
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Date"
 msgstr "Data"
 
 #. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_department_id
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_alias_prefix
+msgid "Default Alias Name for Expenses"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_department_id
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Department"
 msgstr "Departamento"
 
@@ -201,20 +373,36 @@ msgid "Description"
 msgstr "Descrição"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_display_name
-#: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense_display_name
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_display_name
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_display_name
 msgid "Display Name"
 msgstr "Nome de Exibição"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Documents"
 msgstr "Documentos"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Don't hesitate to"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_register_payment_view_form
+#, fuzzy
+msgid "Draft Payment"
+msgstr "Esperando pagamento"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_employee_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_employee_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Employee"
 msgstr "Funcionário"
 
@@ -224,14 +412,20 @@ msgid "Employee (to reimburse)"
 msgstr "Funcionário (para reembolsar)"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.action_approved_expense
-#: model:ir.ui.menu,name:hr_expense.menu_expense_approved
-msgid "Employee Expenses"
-msgstr "Despesas de Funcionário"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_address_id
+#, fuzzy
+msgid "Employee Home Address"
+msgstr "Funcionário (para reembolsar)"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "End"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expense"
 msgstr "Despesa"
 
@@ -241,15 +435,72 @@ msgid "Expense Description"
 msgstr "Descrição de Despesa"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_journal_id
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
+#, fuzzy
+msgid "Expense Email Alias"
+msgstr "Análise de Despesas"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_journal_id
 msgid "Expense Journal"
 msgstr "Diário de Despesa"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_expense_line_ids
+#, fuzzy
+msgid "Expense Lines"
+msgstr "Despesas"
+
+#. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
+#: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Expense Products"
 msgstr "Produtos de Despesas"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_sheet
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id
+#, fuzzy
+msgid "Expense Report"
+msgstr "Despesas do Mês"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_state
+#, fuzzy
+msgid "Expense Report State"
+msgstr "Diário de Despesa"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_name
+msgid "Expense Report Summary"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
+#, fuzzy
+msgid "Expense Reports"
+msgstr "Produtos de Despesas"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_filtered
+#, fuzzy
+msgid "Expense Reports Analysis"
+msgstr "Análise de Despesas"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
+#, fuzzy
+msgid "Expense Reports to Approve"
+msgstr "Despesas para Aprovar"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
+#, fuzzy
+msgid "Expense Sheet"
+msgstr "Despesa recusada"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
@@ -273,27 +524,44 @@ msgstr "Despesa recusada"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
-#: model:ir.ui.view,arch_db:hr_expense.hr_department_view_kanban
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_my_tree
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 #: model:product.category,name:hr_expense.cat_expense
+#: model:product.product,name:hr_expense.product_product_fixed_cost
+#: model:product.template,name:hr_expense.product_product_fixed_cost_product_template
 msgid "Expenses"
 msgstr "Despesas"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_report_filtered
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_action
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_view_graph
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_view_pivot
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_graph
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_pivot
 msgid "Expenses Analysis"
 msgstr "Análise de Despesas"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses Month"
 msgstr "Despesas do Mês"
+
+#. module: hr_expense
+#: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense_sheet
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+#, fuzzy
+msgid "Expenses Report"
+msgstr "Despesas do Mês"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_department_expense_sheets_to_approve_count
+#, fuzzy
+msgid "Expenses Reports to Approve"
+msgstr "Despesas para Aprovar"
 
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_department_expense_confirmed
@@ -302,17 +570,18 @@ msgstr "Despesas para Aprovar"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses by Month"
 msgstr "Despesas por Mês"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:209
+#: code:addons/hr_expense/models/hr_expense.py:390
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "Despesas devem pertencer ao mesmo Funcionário."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:212
+#: code:addons/hr_expense/models/hr_expense.py:501
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -322,24 +591,30 @@ msgstr ""
 "conta."
 
 #. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:394
+#, fuzzy, python-format
+msgid "Expenses must have been paid by the same entity (Company or employee)"
+msgstr "Despesas devem pertencer ao mesmo Funcionário."
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses of Your Team Member"
 msgstr "Despesas de Seu Membro de Equipe"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.action_request_approve_expense
-#: model:ir.actions.act_window,name:hr_expense.hr_expense_action_from_department
-#: model:ir.model.fields,field_description:hr_expense.field_hr_department_expense_to_approve_count
-msgid "Expenses to Approve"
-msgstr "Despesas para Aprovar"
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses to Invoice"
 msgstr "Despesas para Faturar"
 
 #. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+msgid "Expenses will go through these steps:"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Former Employees"
 msgstr "Ex-Funcionários"
 
@@ -353,25 +628,35 @@ msgstr ""
 "despesas que são verificadas pelo Gerente de RH."
 
 #. module: hr_expense
-#: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
-#, fuzzy
-msgid "Generate Accounting Entries"
-msgstr "Gerar Única Entrada Contábil"
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "From: Your Email"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "General Information"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Get Mobile"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Group By"
 msgstr "Agrupar por"
 
 #. module: hr_expense
-#: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
-msgid "HR Expense"
-msgstr "Despesas de RH"
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Have a wonderful day,<br/>- The Odoo Team"
+msgstr ""
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "HR Expenses"
-msgstr "Despesas de RH"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_hide_payment_method
+msgid "Hide payment method"
+msgstr ""
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.hotel_rent
@@ -380,19 +665,33 @@ msgid "Hotel Accommodation"
 msgstr "Despesa com Hotel"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
+#, fuzzy
+msgid "Hr Department"
+msgstr "Departamento de RH"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_register_payment_wizard
+#, fuzzy
+msgid "Hr Expense Register Payment wizard"
+msgstr "Assistente de Recusa de Despesas do RH"
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
 msgid "Hr Expense refuse Reason wizard"
 msgstr "Assistente de Recusa de Despesas do RH"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
-#: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_8945
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_move_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_account_move_id
 msgid "Journal Entry"
 msgstr "Lançamento de Diário"
 
@@ -403,29 +702,74 @@ msgstr "Item de Diário"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings___last_update
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard___last_update
-#: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense___last_update
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard___last_update
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet___last_update
 msgid "Last Modified on"
 msgstr "Última modificação em"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_write_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_write_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_write_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_write_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_uid
 msgid "Last Updated by"
 msgstr "Última atualização por"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_write_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_write_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_write_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_write_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_date
 msgid "Last Updated on"
 msgstr "Última atualização em"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_all
-#: model:ir.ui.menu,name:hr_expense.menu_expense_all
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_alias_expense_open
+msgid "Mail Gateway"
+msgstr ""
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:41
+#, python-format
+msgid "Managers can get all reports to approve from this menu."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_communication
+msgid "Memo"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_all
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "My Expenses"
 msgstr "Minhas despesas"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_unsubmitted
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_unsubmitted
+#, fuzzy
+msgid "My Expenses to Report"
+msgstr "Despesas para Aprovar"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_approve
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_pay
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_post
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_to_approve
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#, fuzzy
+msgid "My Reports"
+msgstr "Relatórios"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -433,14 +777,15 @@ msgid "My Team Expenses"
 msgstr "Despesas de Minha Equipe"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "Name"
-msgstr "Nome"
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#, fuzzy
+msgid "My Team Reports"
+msgstr "Despesas de Minha Equipe"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-msgid "New"
-msgstr "Novo"
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Name"
+msgstr "Nome"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -449,11 +794,12 @@ msgstr "Nova Despesa"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "New Mail"
 msgstr "Novo Email"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:276
+#: code:addons/hr_expense/models/hr_expense.py:231
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
@@ -463,7 +809,7 @@ msgstr ""
 "categoria), por favor, configure uma."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:244
+#: code:addons/hr_expense/models/hr_expense.py:199
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr ""
@@ -471,12 +817,18 @@ msgstr ""
 "configure um."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:240
+#: code:addons/hr_expense/models/hr_expense.py:195
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr ""
 "Nenhuma conta de crédito encontrada para o diário %s, por favor, configure "
 "uma."
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#, fuzzy
+msgid "Not Refused"
+msgstr "Recusado"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -485,12 +837,31 @@ msgstr "Notas..."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_attachment_number
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_attachment_number
 msgid "Number of Attachments"
 msgstr "Número de anexos"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense
-#: model:ir.actions.act_window,help:hr_expense.expense_all
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
+msgid "Once approved, your expense report, goes to the accounting,"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+msgid "Once approved, your expenses report goes to the accounting,"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_to_approve
+#: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense_sheet
+#: model:ir.actions.act_window,help:hr_expense.action_request_to_pay_expense_sheet
+#: model:ir.actions.act_window,help:hr_expense.action_request_to_post_expense_sheet
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
@@ -499,17 +870,66 @@ msgstr ""
 "la."
 
 #. module: hr_expense
-#: selection:hr.expense,state:0
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"Once your email gateway is configured, come back to this screen\n"
+"                            to setup the next steps."
+msgstr ""
+
+#. module: hr_expense
+#: selection:hr.expense.sheet,state:0
 msgid "Paid"
 msgstr "Pago"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_partner_id
+msgid "Partner"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_amount
+#, fuzzy
+msgid "Payment Amount"
+msgstr "Pago Por"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_payment_mode
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_payment_mode
 msgid "Payment By"
 msgstr "Pago Por"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:280
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_payment_date
+#, fuzzy
+msgid "Payment Date"
+msgstr "Pago Por"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_journal_id
+#, fuzzy
+msgid "Payment Method"
+msgstr "Pago Por"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_payment_method_id
+#, fuzzy
+msgid "Payment Type"
+msgstr "Pago Por"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
+msgid "Periodically, you submit expenses report to your manager,"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_web_planner
+msgid "Planner"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:235
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -519,12 +939,17 @@ msgstr ""
 "`property_account_expense_categ_id`."
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Post Journal Entries"
 msgstr "Postar Lançamentos de Diário"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
+#: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
+msgid "Posted"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Price"
 msgstr "Preço"
 
@@ -535,12 +960,18 @@ msgid "Product"
 msgstr "Produto"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+#, fuzzy
+msgid "Product Name"
+msgstr "Produto"
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
 msgid "Product Template"
 msgstr "Modelo de Produto"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Qty"
 msgstr "Qtd"
 
@@ -560,8 +991,13 @@ msgid "Reason to refuse expense."
 msgstr "Razão para recusar despesa."
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Ref."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Refuse"
 msgstr "Recusar"
 
@@ -571,23 +1007,88 @@ msgid "Refuse Expense"
 msgstr "Recusar Despesa"
 
 #. module: hr_expense
-#: selection:hr.expense,state:0
+#: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:mail.message.subtype,name:hr_expense.mt_expense_refused
 msgid "Refused"
 msgstr "Recusado"
 
 #. module: hr_expense
-#: model:ir.ui.menu,name:hr_expense.menu_hr_expense
-msgid "Reporting"
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#, fuzzy
+msgid "Refused Expenses"
+msgstr "Recusar Despesa"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_register_payment_wizard_action
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_register_payment_view_form
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#, fuzzy
+msgid "Register Payment"
+msgstr "Esperando pagamento"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#, fuzzy
+msgid "Report"
 msgstr "Relatórios"
 
 #. module: hr_expense
-#: model:web.tip,description:hr_expense.expense_tip_1
-msgid "Select the lines you want to submit to be reimbursed."
+#: selection:hr.expense,state:0
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#, fuzzy
+msgid "Reported"
+msgstr "Relatórios"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_approve
+#, fuzzy
+msgid "Reports To Approve"
+msgstr "Para Aprovar"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_pay
+#, fuzzy
+msgid "Reports To Pay"
+msgstr "A pagar"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_post
+msgid "Reports To Post"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:77
+#: model:ir.actions.act_window,name:hr_expense.action_request_approve_expense_sheet
+#, fuzzy
+msgid "Reports to Approve"
+msgstr "Despesas para Aprovar"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_request_to_pay_expense_sheet
+msgid "Reports to Pay"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_request_to_post_expense_sheet
+msgid "Reports to Post"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Resubmit"
+msgstr ""
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:25
+#, python-format
+msgid ""
+"Save the report, your manager will receive a notification by email to "
+"approve it."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:86
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -597,9 +1098,24 @@ msgstr ""
 "produto"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
-msgid "Set to Draft"
-msgstr "Definir como Provisório"
+#: model:web.planner,tooltip_planner:hr_expense.planner_hr_expense
+msgid "Send receipts by email to create expenses efficiently."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_global_settings
+msgid "Settings"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Setup"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
+msgid "Setup your domain alias"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_template_can_be_expensed
@@ -607,24 +1123,36 @@ msgid "Specify whether the product can be selected in an HR expense."
 msgstr "Especifique se o produto pode ser selecionado em uma despesa de RH."
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_state
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_state
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Status"
 msgstr "Situação"
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_state
+#, fuzzy
+msgid "Status of the expense."
+msgstr "Razão para recusar despesa."
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Subject:"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
-msgid "Submit Expenses"
-msgstr "Enviar Despesa"
+#, fuzzy
+msgid "Submit To Manager"
+msgstr "Enviar ao Gerente"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_my_tree
-#: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 msgid "Submit to Manager"
 msgstr "Enviar ao Gerente"
 
 #. module: hr_expense
-#: selection:hr.expense,state:0
+#: selection:hr.expense.sheet,state:0
 msgid "Submitted"
 msgstr "Enviada"
 
@@ -634,46 +1162,118 @@ msgid "Subtotal"
 msgstr "Subtotal"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "Taxe(s)"
-msgstr "Taxa(s)"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_tax_ids
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Taxes"
 msgstr "Impostos"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_journal_id
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_register_payment_wizard_hide_payment_method
+msgid ""
+"Technical field used to hide the payment method if the selected journal has "
+"only one available which is 'manual'"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"The <strong class=\"text-info\">PRODUCT CODE</strong> is optional and should "
+"be the\n"
+"                            internal code of one of your expense product. "
+"This\n"
+"                            will set the right product automatically on "
+"your\n"
+"                            expense Odoo."
+msgstr ""
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:37
+#, python-format
+msgid ""
+"The accountant can register a payment to reimburse the employee directly."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
+msgid "The accountant validates entries and reimburse you."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+msgid "The accountant validates journal entries and reimburse you."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:477
+#, python-format
+msgid "The expense has been validated by %s"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_journal_id
 msgid "The journal used when the expense is done."
 msgstr "O diário usado quando a despesa é concluída."
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_bank_journal_id
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
 msgstr "O método de pagamento utilizado quando a despesa é paga pela empresa."
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "This document must be dated and signed for reimbursement."
-msgstr "Este documento deve ser datado e assinado para reembolso."
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"The photo of the receipt and the description of the email will\n"
+"                            be attached to the expense. That way, you get "
+"everything attached\n"
+"                            to fill the remaining fields later on."
+msgstr ""
 
 #. module: hr_expense
-#: model:ir.ui.menu,name:hr_expense.menu_expense_to_approve
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
+msgid "The steps to process expenses are:"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_to_approve
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 #: model:mail.message.subtype,name:hr_expense.mt_expense_confirmed
 msgid "To Approve"
 msgstr "Para Aprovar"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "To Pay"
 msgstr "A pagar"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+#, fuzzy
+msgid "To Post"
+msgstr "A pagar"
+
+#. module: hr_expense
 #: selection:hr.expense,state:0
-msgid "To Submit"
-msgstr "Para Enviar"
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#, fuzzy
+msgid "To Report"
+msgstr "Relatórios"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"To create expenses by email, take photos of your\n"
+"                            receipts and send them by email with the "
+"following\n"
+"                            information:"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "To:"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_total_amount
@@ -681,14 +1281,16 @@ msgid "Total"
 msgstr "Total"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_my_tree
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_total_amount
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Total Amount"
 msgstr "Valor Total"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_unit_amount
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Unit Price"
 msgstr "Preço Unitário"
 
@@ -698,66 +1300,106 @@ msgid "Unit of Measure"
 msgstr "Unidade de Medida - UdM"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "UoM"
-msgstr "UoM"
-
-#. module: hr_expense
-#: model:web.tip,description:hr_expense.expense_tip_3
-msgid ""
-"Use the messaging tool to log a note and attach a document to the expense. "
-"(e.g. scan of the bill)"
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense,state:0
-msgid "Waiting Payment"
-msgstr "Esperando pagamento"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_state
+#: model:ir.actions.act_window,name:hr_expense.action_approved_expense
 #, fuzzy
-msgid ""
-"When the expense request is created the status is 'To Submit'.\n"
-" It is submitted by the employee and request is sent to manager, the status "
-"is 'Submitted'.        \n"
-"If the manager approve it, the status is 'Approved'.\n"
-" If the accountant genrate the accounting entries for the expense request, "
-"the status is 'Waiting Payment'."
+msgid "Unreported Expenses"
+msgstr "Despesas Confirmadas"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_register_payment_view_form
+msgid "Validate"
 msgstr ""
-"#-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#\n"
-"Quando a solicitação de despesa é criada o estado é 'Enviar'.\n"
-"Quando o funcionário envia ao gerente, o status é 'Enviada'.\n"
-"Se o gerente aprovar, o status é 'Aprovada'.\n"
-"Se o contador gerar os lançamentos contábeis para a solicitação de despesa, "
-"o status é 'Esperando Pagamento'.\n"
-"#-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#\n"
-"Quando a solicitação de despesa é criada o estado é 'Enviar'.\n"
-"É enviada pelo funcionário e enviada ao gerente, o status é 'Enviada'.\n"
-"Se o gerente de aprová-la, o status é 'Aprovada'.\n"
-"Se o contador gerar os lançamentos contábeis para a solicitação de despesa, "
-"o status é 'Esperando Pagamento'."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:111
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_responsible_id
+msgid "Validation By"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
+msgid "View Attached Documents"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#, fuzzy
+msgid "View Attachments"
+msgstr "Número de anexos"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
+#, fuzzy
+msgid "View Report"
+msgstr "Relatórios"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:11
 #, python-format
-msgid "You can only delete draft or refused expenses!"
-msgstr "Você só pode excluir o rascunho ou despesas recusadas!"
+msgid "Want to manage your employee expenses and receipts? <i>Start here</i>."
+msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:206
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "We hope this feature helped you manage your expenses efficiently."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:498
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr "Você só pode gerar entrada contábil de despesa(s) aprovada(s)."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:117
-#, python-format
-msgid "You can only submit draft expenses!"
-msgstr "Você só pode enviar rascunhos de despesas!"
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"You can set an optionnal <strong class=\"text-primary\">PRICE</strong>\n"
+"                            at the end of the subject of your email."
+msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:128
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
+msgid ""
+"You can setup a generic email alias to create\n"
+"                                    incoming expenses easily. Write an email "
+"with the receipt\n"
+"                                    in attachment to create an expense line "
+"in one click. If the mail\n"
+"                                    subject contains the product's internal "
+"reference between brackets,\n"
+"                                    the product will be set automatically. "
+"Type the expense amount\n"
+"                                    in the mail subject to set it on the "
+"expense too."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:102
+#, python-format
+msgid "You cannot report twice the same line!"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+#, fuzzy
+msgid "You record expenses"
+msgstr "Despesas Confirmadas"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
+#, fuzzy
+msgid "You record expenses,"
+msgstr "Despesas Confirmadas"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Your Email Address"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:472
+#: code:addons/hr_expense/models/hr_expense.py:484
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
@@ -769,9 +1411,38 @@ msgstr ""
 "class=o_timeline_tracking_value>%s</span></li></ul>"
 
 #. module: hr_expense
+#: model:mail.template,subject:hr_expense.mail_template_data_expense_unknown_email_address
+msgid "Your expense has not been created"
+msgstr ""
+
+#. module: hr_expense
+#: model:mail.template,body_html:hr_expense.mail_template_data_expense_unknown_email_address
+msgid ""
+"Your expense has not been created because your email address is not set on "
+"an employee or on a employee's user. Configure your employee's information "
+"correctly and try again."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "e.g. Lunch"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
-msgid "e.g. Business lunch with X"
+#, fuzzy
+msgid "e.g. Lunch with Customer"
 msgstr "por exemplo, Lanche de negócios com X"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "e.g. Trip to NY"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_config_settings
+msgid "hr.expense.config.settings"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -779,18 +1450,29 @@ msgid "or"
 msgstr "ou"
 
 #. module: hr_expense
-#: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
-msgid "report.hr_expense.report_expense"
+#: code:addons/hr_expense/models/hr_expense.py:284
+#, python-format
+msgid "or send receipts by email to %s."
 msgstr ""
 
-#~ msgid "<strong>Description:</strong>"
-#~ msgstr "<strong>Descrição:</strong>"
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "send us an email"
+msgstr ""
 
-#~ msgid "<strong>Validated By:</strong>"
-#~ msgstr "<strong>Validado Por:</strong>"
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "to describe<br/> your experience or to suggest improvements!"
+msgstr ""
 
 #~ msgid "Action Needed"
 #~ msgstr "Ação Necessária"
+
+#~ msgid "Click here to approve"
+#~ msgstr "Clique aqui para aprovar"
+
+#~ msgid "Click here to refuse"
+#~ msgstr "Clique aqui para recursar"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Data da ultima mensagem para o registro."
@@ -804,8 +1486,14 @@ msgstr ""
 #~ msgid "Followers (Partners)"
 #~ msgstr "Seguidores (Parceiros)"
 
-#~ msgid "HR Department"
-#~ msgstr "Departamento de RH"
+#~ msgid "Generate Single Accounting Entry"
+#~ msgstr "Gerar Única Entrada Contábil"
+
+#~ msgid "HR Expense"
+#~ msgstr "Despesas de RH"
+
+#~ msgid "HR Expenses"
+#~ msgstr "Despesas de RH"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
@@ -825,6 +1513,9 @@ msgstr ""
 #~ msgid "Messages and communication history"
 #~ msgstr "Histórico de mensagens e comunicação"
 
+#~ msgid "New"
+#~ msgstr "Novo"
+
 #~ msgid "Number of Actions"
 #~ msgstr "Número de ações"
 
@@ -837,14 +1528,68 @@ msgstr ""
 #~ msgid "Open Expense Menu"
 #~ msgstr "Abrir Menu de Despesas"
 
+#~ msgid "Set to Draft"
+#~ msgstr "Definir como Provisório"
+
+#~ msgid "Submit Expenses"
+#~ msgstr "Enviar Despesa"
+
+#~ msgid "Taxe(s)"
+#~ msgstr "Taxa(s)"
+
+#~ msgid "This document must be dated and signed for reimbursement."
+#~ msgstr "Este documento deve ser datado e assinado para reembolso."
+
+#~ msgid "To Submit"
+#~ msgstr "Para Enviar"
+
 #~ msgid "Unread Messages"
 #~ msgstr "Mensagens não lidas"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Contador de Mensagens Não Lidas."
 
+#~ msgid "UoM"
+#~ msgstr "UoM"
+
 #~ msgid "Website Messages"
 #~ msgstr "Mensagens do Site"
 
 #~ msgid "Website communication history"
 #~ msgstr "Histórico de Comunicação do Site"
+
+#~ msgid ""
+#~ "When the expense request is created the status is 'To Submit'.\n"
+#~ " It is submitted by the employee and request is sent to manager, the "
+#~ "status is 'Submitted'.        \n"
+#~ "If the manager approve it, the status is 'Approved'.\n"
+#~ " If the accountant genrate the accounting entries for the expense "
+#~ "request, the status is 'Waiting Payment'."
+#~ msgstr ""
+#~ "Quando a solicitação de despesa é criada o estado é 'Enviar'.\n"
+#~ "Quando o funcionário envia ao gerente, o status é 'Enviada'.\n"
+#~ "Se o gerente aprovar, o status é 'Aprovada'.\n"
+#~ "Se o contador gerar os lançamentos contábeis para a solicitação de "
+#~ "despesa, o status é 'Esperando Pagamento'."
+
+#~ msgid "You can only delete draft or refused expenses!"
+#~ msgstr "Você só pode excluir o rascunho ou despesas recusadas!"
+
+#~ msgid "You can only submit draft expenses!"
+#~ msgstr "Você só pode enviar rascunhos de despesas!"
+
+#, fuzzy
+#~ msgid "<strong>Currency:</strong>"
+#~ msgstr "Data:"
+
+#, fuzzy
+#~ msgid "<strong>Manager:</strong>"
+#~ msgstr "Data:"
+
+#, fuzzy
+#~ msgid "<strong>Status:</strong>"
+#~ msgstr "Data:"
+
+#, fuzzy
+#~ msgid "Generate Accounting Entries"
+#~ msgstr "Gerar Única Entrada Contábil"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2015-10-24 16:47+0000\n"
 "Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -97,6 +97,13 @@ msgstr "# pregled web stranice"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "${user.name} shared a ${object.slide_type} with you!"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid ""
+"(Un)archiving a channel automatically (un)archives its slides. Do you want "
+"to proceed?"
 msgstr ""
 
 #. module: website_slides
@@ -313,6 +320,19 @@ msgid "Actions"
 msgstr "Akcije"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
+#, fuzzy
+msgid "Active"
+msgstr "Akcije"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Archived"
+msgstr ""
+
+#. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authentified Users Only"
 msgstr "Samo provjereni korisnici"
@@ -355,6 +375,7 @@ msgstr "Kategorija"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_channel_id
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Channel"
@@ -420,7 +441,7 @@ msgstr ""
 "Ovdje je dobiveni odgovor: %sgreška"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:294
+#: code:addons/website_slides/models/slides.py:304
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -640,8 +661,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_slides/controllers/main.py:299
 #: code:addons/website_slides/static/src/js/slides_upload.js:90
-#, python-format
-msgid "File is too big. File size cannot exceed 15MB"
+#, fuzzy, python-format
+msgid "File is too big. File size cannot exceed 25MB"
 msgstr "Datotetka je prevelika. Veličina datoteke ne smije prelaziti 15 MB"
 
 #. module: website_slides
@@ -834,11 +855,6 @@ msgid "No presentation published yet."
 msgstr ""
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
-msgid "Not Published"
-msgstr "Nije objavljeno"
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
 msgid "Number of Documents"
@@ -955,7 +971,7 @@ msgstr "Molim"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:55
+#: code:addons/website_slides/static/src/js/slides.js:56
 #, python-format
 msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr ""
@@ -963,8 +979,8 @@ msgstr ""
 "ovaj slajd"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:297
-#: code:addons/website_slides/models/slides.py:518
+#: code:addons/website_slides/models/slides.py:307
+#: code:addons/website_slides/models/slides.py:532
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "Molim unesite valjani Youtube ili Google dok URL"
@@ -1300,10 +1316,16 @@ msgid "Uncategorized presentation"
 msgstr "Prezentacija bez kategorije"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:507
+#: code:addons/website_slides/models/slides.py:521
 #, python-format
 msgid "Unknown document"
 msgstr "Nepoznat dokument"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
+#, fuzzy
+msgid "Unpublished"
+msgstr "Objavljeno"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
@@ -1355,7 +1377,7 @@ msgid "Videos"
 msgstr "Video"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:436
+#: code:addons/website_slides/models/slides.py:446
 #, fuzzy, python-format
 msgid "View Slide"
 msgstr "Slajdovi web stranice"
@@ -1415,7 +1437,7 @@ msgstr "Ne možete prenijeti lozinkom zaštićene datoteke."
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:64
+#: code:addons/website_slides/static/src/js/slides.js:65
 #, python-format
 msgid "You have already voted for this slide"
 msgstr "Već ste glasali za ovaj slajd"
@@ -1521,8 +1543,23 @@ msgstr "your-friend@domain.com"
 #~ msgid "Action Needed"
 #~ msgstr "Potrebna dodatna radnja"
 
+#~ msgid ""
+#~ "Could not fetch data from url. Document or access right not available.\n"
+#~ "Here is the received response: %serror"
+#~ msgstr ""
+#~ "Nije moguće dohvatiti podatke iz URL-a. Dokument ili pristup pravu nije "
+#~ "dostupan.\n"
+#~ "Ovdje je dobiveni odgovor: %sgreška"
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum zadnjeg zapisa"
+
+#~ msgid ""
+#~ "Document type will be set automatically depending on file type, height "
+#~ "and width."
+#~ msgstr ""
+#~ "Vrsta dokumenta će biti postavljena automatski ovisno o vrsti datoteke, "
+#~ "visini i širini."
 
 #~ msgid "Followers"
 #~ msgstr "Pratitelji"
@@ -1550,6 +1587,9 @@ msgstr "your-friend@domain.com"
 
 #~ msgid "Messages and communication history"
 #~ msgstr "Poruke i povijest"
+
+#~ msgid "Not Published"
+#~ msgstr "Nije objavljeno"
 
 #~ msgid "Number of Actions"
 #~ msgstr "Broj akcija"

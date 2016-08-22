@@ -5,13 +5,12 @@
 # Translators:
 # Bohdan Lisnenko, 2015-2016
 # Bohdan Lisnenko, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-04 09:20+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"PO-Revision-Date: 2016-08-11 11:15+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
 "uk/)\n"
@@ -19,10 +18,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
@@ -35,41 +30,6 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
-msgid "-This installs the module payment_adyen."
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
-msgid "-This installs the module payment_authorize."
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
-msgid "-This installs the module payment_buckaroo."
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
-msgid "-This installs the module payment_ogone."
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
-msgid "-This installs the module payment_paypal."
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_sips
-msgid "-This installs the module payment_sips."
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
-msgid "-This installs the module payment_transfer."
-msgstr ""
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
 msgid "3D Secure HTML"
 msgstr ""
@@ -77,7 +37,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
-"<span class=\"text-danger\">Test</span>\n"
+"<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</"
 "span>"
 msgstr ""
@@ -91,17 +51,91 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_authorize
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_buckaroo
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_custom
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_ogone
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_paypal
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_sips
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_stripe
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_adyen
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_authorize
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_buckaroo
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_custom
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_ogone
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_paypal
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_sips
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_stripe
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_transfer
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_adyen
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_authorize
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_buckaroo
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_custom
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_ogone
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_paypal
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_sips
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_stripe
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_transfer
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_authorize
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_buckaroo
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_custom
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_ogone
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_paypal
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_sips
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_stripe
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
+msgid ""
+"<span><i>Pending</i>... The order will be validated after the payment.</span>"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
+msgid "Account journal used for automatic payment reconciliation."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
+msgid "Accounting Journal"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
 msgid "Acquirer"
 msgstr "Екваєр"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_id
+#: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_id
 msgid "Acquirer Account"
 msgstr "Обліковий запис у еквайєра"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_ref
+#: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_ref
 msgid "Acquirer Ref."
 msgstr "Посилання еквайєра"
 
@@ -111,7 +145,7 @@ msgid "Acquirer Reference"
 msgstr "Посилання еквайєра"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_method_active
+#: model:ir.model.fields,field_description:payment.field_payment_token_active
 msgid "Active"
 msgstr "Активний"
 
@@ -127,7 +161,7 @@ msgid "Address"
 msgstr "Адреса"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_adyen
+#: model:payment.acquirer,name:payment.payment_acquirer_adyen
 msgid "Adyen"
 msgstr ""
 
@@ -138,22 +172,12 @@ msgid "Amount"
 msgstr "Сума"
 
 #. module: payment
-#: selection:payment.acquirer,auto_confirm:0
-msgid "At payment no acquirer confirmation needed"
-msgstr ""
-
-#. module: payment
-#: selection:payment.acquirer,auto_confirm:0
-msgid "At payment with acquirer confirmation"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
+#: model:payment.acquirer,name:payment.payment_acquirer_authorize
 msgid "Authorize.Net"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_buckaroo
+#: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
 msgid "Buckaroo"
 msgstr ""
 
@@ -174,6 +198,16 @@ msgid "City"
 msgstr "Місто"
 
 #. module: payment
+#: model:ir.actions.act_window,help:payment.action_payment_acquirer
+msgid "Click to create a payment acquirer."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment_payment_method_id_code
+msgid "Code"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
 msgid "Company"
 msgstr "Компанія"
@@ -184,13 +218,29 @@ msgid "Configuration"
 msgstr "Налаштування"
 
 #. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_kanban
+#, fuzzy
+msgid "Configure"
+msgstr "Налаштування"
+
+#. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_acquirer_installation
 msgid "Configure payment acquiring methods"
 msgstr "Налаштувати способи оплати еквайрингу"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_count
-msgid "Count Payment Method"
+#: selection:payment.acquirer,auto_confirm:0
+msgid "Confirm the SO on acquirer confirmation"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_id
+msgid "Corresponding Module"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
+msgid "Count Payment Token"
 msgstr ""
 
 #. module: payment
@@ -201,14 +251,14 @@ msgstr "Country"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_uid
-#: model:ir.model.fields,field_description:payment.field_payment_method_create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_token_create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_create_uid
 msgid "Created by"
 msgstr "Створив"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_date
-#: model:ir.model.fields,field_description:payment.field_payment_method_create_date
+#: model:ir.model.fields,field_description:payment.field_payment_token_create_date
 msgid "Created on"
 msgstr "Дата створення"
 
@@ -233,9 +283,19 @@ msgid "Currency"
 msgstr "Валюта"
 
 #. module: payment
+#: model:payment.acquirer,name:payment.payment_acquirer_custom
+msgid "Custom"
+msgstr ""
+
+#. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Customer Details"
 msgstr "Деталі клієнта"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_description
+msgid "Description"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
@@ -244,7 +304,7 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_display_name
-#: model:ir.model.fields,field_description:payment.field_payment_method_display_name
+#: model:ir.model.fields,field_description:payment.field_payment_token_display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
@@ -276,6 +336,7 @@ msgstr "Email"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_environment
+#: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Environment"
 msgstr "Середовище"
 
@@ -341,7 +402,7 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_id
-#: model:ir.model.fields,field_description:payment.field_payment_method_id
+#: model:ir.model.fields,field_description:payment.field_payment_token_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_id
 msgid "ID"
 msgstr "ID"
@@ -350,6 +411,23 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
 msgid "Image"
 msgstr "Зображення"
+
+#. module: payment
+#: model:payment.acquirer,name:payment.payment_acquirer_ogone
+msgid "Ingenico"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_kanban
+msgid "Install"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_state
+#, fuzzy
+msgid "Installation State"
+msgstr "Дата підтвердження"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_reference
@@ -363,21 +441,21 @@ msgstr "Мова"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer___last_update
-#: model:ir.model.fields,field_description:payment.field_payment_method___last_update
+#: model:ir.model.fields,field_description:payment.field_payment_token___last_update
 #: model:ir.model.fields,field_description:payment.field_payment_transaction___last_update
 msgid "Last Modified on"
 msgstr "Остання модифікація"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_uid
-#: model:ir.model.fields,field_description:payment.field_payment_method_write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_token_write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_write_uid
 msgid "Last Updated by"
 msgstr "Востаннє оновив"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_date
-#: model:ir.model.fields,field_description:payment.field_payment_method_write_date
+#: model:ir.model.fields,field_description:payment.field_payment_token_write_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
@@ -447,15 +525,15 @@ msgstr "Повідомлення"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
-#: model:ir.model.fields,field_description:payment.field_payment_method_name
+#: model:ir.model.fields,field_description:payment.field_payment_token_name
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Name"
 msgstr "Name"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_method_name
-msgid "Name of the payment method"
+#: model:ir.model.fields,help:payment.field_payment_token_name
+msgid "Name of the payment token"
 msgstr ""
 
 #. module: payment
@@ -464,8 +542,9 @@ msgid "No automatic confirmation"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_ogone
-msgid "Ogone"
+#: selection:payment.acquirer,auto_confirm:0
+msgid ""
+"On acquirer confirmation, confirm the SO, generate the invoice and pay it"
 msgstr ""
 
 #. module: payment
@@ -475,7 +554,7 @@ msgstr "Підтвердження замовлення"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
-#: model:ir.model.fields,field_description:payment.field_payment_method_partner_id
+#: model:ir.model.fields,field_description:payment.field_payment_token_partner_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_id
 msgid "Partner"
 msgstr "Партнер"
@@ -499,20 +578,23 @@ msgid "Payment Acquirers"
 msgstr "Платіжні еквайєри"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_method_id
-msgid "Payment Method"
-msgstr "Спосіб оплати"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_token_id
+#, fuzzy
+msgid "Payment Token"
+msgstr "Платіжні операції"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_ids
-#: model:ir.ui.view,arch_db:payment.payment_method_form_view
-#: model:ir.ui.view,arch_db:payment.payment_method_tree_view
-#: model:ir.ui.view,arch_db:payment.payment_method_view_search
-msgid "Payment Methods"
-msgstr "Способи оплати"
+#: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_ids
+#: model:ir.ui.view,arch_db:payment.payment_token_form_view
+#: model:ir.ui.view,arch_db:payment.payment_token_tree_view
+#: model:ir.ui.view,arch_db:payment.payment_token_view_search
+#, fuzzy
+msgid "Payment Tokens"
+msgstr "Платежі"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
+#: model:ir.model.fields,field_description:payment.field_account_payment_payment_transaction_id
 msgid "Payment Transaction"
 msgstr "Платіжні операції"
 
@@ -520,7 +602,7 @@ msgstr "Платіжні операції"
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
 #: model:ir.actions.act_window,name:payment.action_payment_tx_ids
 #: model:ir.actions.act_window,name:payment.payment_transaction_action_child
-#: model:ir.model.fields,field_description:payment.field_payment_method_payment_ids
+#: model:ir.model.fields,field_description:payment.field_payment_token_payment_ids
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
@@ -528,14 +610,21 @@ msgid "Payment Transactions"
 msgstr "Платіжні транзакції"
 
 #. module: payment
+#: code:addons/payment/models/account_payment.py:50
+#, fuzzy, python-format
+msgid "Payment transaction failed (%s)"
+msgstr "Платіжні транзакції"
+
+#. module: payment
+#: model:ir.model,name:payment.model_account_payment
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_form
-#: model:ir.ui.view,arch_db:payment.payment_method_form_view
+#: model:ir.ui.view,arch_db:payment.payment_token_form_view
 msgid "Payments"
 msgstr "Платежі"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_paypal
+#: model:payment.acquirer,name:payment.payment_acquirer_paypal
 msgid "Paypal"
 msgstr "Paypal"
 
@@ -591,9 +680,15 @@ msgid "S2S Form Template"
 msgstr ""
 
 #. module: payment
-#: model:ir.actions.act_window,name:payment.payment_method_action
-#: model:ir.ui.menu,name:payment.payment_method_menu
+#: model:ir.actions.act_window,name:payment.payment_token_action
+#: model:ir.ui.menu,name:payment.payment_token_menu
 msgid "Saved Payment Data"
+msgstr "Збережені дані про оплату"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment_payment_token_id
+#, fuzzy
+msgid "Saved payment token"
 msgstr "Збережені дані про оплату"
 
 #. module: payment
@@ -607,7 +702,7 @@ msgid "Server To Server"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_sips
+#: model:payment.acquirer,name:payment.payment_acquirer_sips
 msgid "Sips"
 msgstr ""
 
@@ -628,6 +723,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
 msgid "Status"
 msgstr "Статус"
+
+#. module: payment
+#: model:payment.acquirer,name:payment.payment_acquirer_stripe
+msgid "Stripe"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
@@ -664,6 +764,12 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
+msgid ""
+"Transfer information will be provided after choosing the payment method."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type
 msgid "Type"
 msgstr "Тип"
@@ -689,9 +795,55 @@ msgid "Visible in Portal / Website"
 msgstr "Відображається на сайті/порталі"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_transfer
+#: model:payment.acquirer,name:payment.payment_acquirer_transfer
 msgid "Wire Transfer"
 msgstr "Банківський переказ"
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
+msgid "You will be prompt with Stripe Payment page for payment information."
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_adyen
+msgid ""
+"You will be redirected to the Adyen website after clicking on the payment "
+"button."
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_authorize
+msgid ""
+"You will be redirected to the Authorize website after clicking on the "
+"payment button."
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
+msgid ""
+"You will be redirected to the Buckaroo website after clicking on the payment "
+"button."
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
+msgid ""
+"You will be redirected to the Ingenico website after clicking on the payment "
+"button."
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_paypal
+msgid ""
+"You will be redirected to the Paypal website after clicking on the payment "
+"button."
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_sips
+msgid ""
+"You will be redirected to the Sips website after clicking on payment button."
+msgstr ""
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -702,11 +854,6 @@ msgstr "Індекс"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_zip
 msgid "Zip"
 msgstr "Індекс"
-
-#. module: payment
-#: model:ir.model,name:payment.model_account_config_settings
-msgid "account.config.settings"
-msgstr "account.config.settings"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -741,8 +888,8 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#: model:ir.model,name:payment.model_payment_method
-msgid "payment.method"
+#: model:ir.model,name:payment.model_payment_token
+msgid "payment.token"
 msgstr ""
 
 #. module: payment
@@ -761,9 +908,20 @@ msgid "tx_values: transaction values"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_implemented
+msgid "unknown"
+msgstr "невідомий"
+
+#. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr ""
 
-#~ msgid "unknown"
-#~ msgstr "невідомий"
+#~ msgid "Payment Method"
+#~ msgstr "Спосіб оплати"
+
+#~ msgid "Payment Methods"
+#~ msgstr "Способи оплати"
+
+#~ msgid "account.config.settings"
+#~ msgstr "account.config.settings"

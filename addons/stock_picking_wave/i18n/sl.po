@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2015-10-14 05:35+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -168,7 +168,7 @@ msgid "Name of the picking wave"
 msgstr "Naziv zbirnega vala"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:42
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:46
 #, python-format
 msgid "Nothing to print."
 msgstr "Ničesar za izpis."
@@ -179,10 +179,10 @@ msgid "Person responsible for this wave"
 msgstr "Odgovorna oseba za ta val"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:64
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9973
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -205,7 +205,7 @@ msgid "Picking Waves not finished"
 msgstr "Zbirni valovi niso dokončani"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9973
 msgid "Picking wave associated to this picking"
 msgstr "Zbirni val vezan na ta zbirnik"
 
@@ -217,8 +217,8 @@ msgstr "Zbirniki"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-msgid "Print all pickings"
-msgstr "Izpis vseh zbirnikov"
+msgid "Print"
+msgstr ""
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_user_id
@@ -241,7 +241,7 @@ msgid "Select a wave"
 msgstr "Izbira vala"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:59
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:59
 #, python-format
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
@@ -304,7 +304,7 @@ msgid "Transfer"
 msgstr "Transfer"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:63
 #, python-format
 msgid "Transferred by"
 msgstr "Premestil"
@@ -334,6 +334,9 @@ msgstr "Val"
 #~ msgid "Followers (Partners)"
 #~ msgstr "Sledilci (partnerji)"
 
+#~ msgid "Ice Cream Chocolate with stucks"
+#~ msgstr "Čokoladni sladoled na palčicah"
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
 
@@ -360,6 +363,25 @@ msgstr "Val"
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Število neprebranih sporočil"
+
+#~ msgid "Print all pickings"
+#~ msgstr "Izpis vseh zbirnikov"
+
+#~ msgid ""
+#~ "The Goal of the picking waves is to group operations that may \n"
+#~ "                (needs to) be done together in order to increase their "
+#~ "efficiency.\n"
+#~ "                It may also be useful to assign jobs (one person = one "
+#~ "wave) or\n"
+#~ "                help the timing management of operations (tasks to be "
+#~ "done at 1pm)."
+#~ msgstr ""
+#~ "Cilj zbirnih valov je združevanje operacij, ki (naj) bi se izvajale \n"
+#~ "                skupaj za dosego boljše učinkovitosti. Koristno bi bilo\n"
+#~ "                tudi za dodeljevanje delovnih mest (ena oseba = en val) "
+#~ "ali\n"
+#~ "                pomoč pri upravljanju s časom operacij (opravila za "
+#~ "izvedbo do 13h)."
 
 #~ msgid "Unread Messages"
 #~ msgstr "Neprebrana sporočila"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-04-23 10:51+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -66,6 +66,11 @@ msgid "All at once"
 msgstr "Tümünü birden"
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr ""
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
 msgstr "Vazgeç"
@@ -79,12 +84,6 @@ msgstr "Tedarik İptal Et"
 #: selection:procurement.order,state:0
 msgid "Cancelled"
 msgstr "İptal Edildi"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "%s durumundaki Tedarik Emir(ler)i silinemiyor."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -287,7 +286,7 @@ msgid "Name"
 msgstr "Ad"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:200
+#: code:addons/procurement/models/procurement.py:187
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Bu tedarik eşleşen Hiçbir kural yok"
@@ -425,9 +424,10 @@ msgstr "Kaynak"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
+#, fuzzy
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
 msgstr ""
 "Bu Tedariği oluşturan belgenin referansı.\n"
 "Bu, Odoo tarafından otomatik olarak tamamlanır."
@@ -536,6 +536,12 @@ msgstr ""
 "                siparişi teklifi, üretim siparişi, vs."
 
 #. module: procurement
+#: code:addons/procurement/models/procurement.py:142
+#, fuzzy, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr "%s durumundaki Tedarik Emir(ler)i silinemiyor."
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "e.g. Buy"
 msgstr "örn. Satınal"
@@ -579,6 +585,9 @@ msgstr "örn. SO005"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Kayıta işlenmiş son mesajın tarihi."
+
+#~ msgid "Delivery Method"
+#~ msgstr "Teslim Yöntemi"
 
 #~ msgid "Followers"
 #~ msgstr "İzleyiciler"
@@ -627,3 +636,13 @@ msgstr "örn. SO005"
 
 #~ msgid "Website communication history"
 #~ msgstr "Web Sitesi iletişim geçmişi"
+
+#~ msgid ""
+#~ "When the procurement order is confirmed, it automatically\n"
+#~ "                creates the necessary operations to fullfil the need: "
+#~ "purchase\n"
+#~ "                order proposition, manufacturing order, etc."
+#~ msgstr ""
+#~ "Tedarik emri onaylandığında, gereksinimi karşılamak için tüm\n"
+#~ "                gerekli işlemleri otomatik olarak başlatır: satınalma\n"
+#~ "                siparişi teklifi, üretim siparişi, vs."

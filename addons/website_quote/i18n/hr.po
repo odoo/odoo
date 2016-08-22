@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-06-23 10:39+0000\n"
 "Last-Translator: Mario Jureša <mario.juresa@uvid.hr>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -106,6 +106,12 @@ msgid "% discount"
 msgstr "% popusta"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+#, fuzzy
+msgid "&amp;bull;"
+msgstr "&amp;nbsp;"
+
+#. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
 #: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
 #: model:product.template,quote_description:website_quote.product_template_quote_2
@@ -146,6 +152,12 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept"
+msgstr "<i class=\"fa fa-check\"/> Prihvati"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+#, fuzzy
+msgid "<i class=\"fa fa-check\"/> Accept &amp; Pay"
 msgstr "<i class=\"fa fa-check\"/> Prihvati"
 
 #. module: website_quote
@@ -411,6 +423,11 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Access to the Lead"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
+msgid "Add to order lines"
 msgstr ""
 
 #. module: website_quote
@@ -834,6 +851,11 @@ msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr ""
 
 #. module: website_quote
+#: model:ir.model.fields,help:website_quote.field_sale_order_option_sequence
+msgid "Gives the sequence order when displaying a list of suggested product."
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "Great quotation templates will significantly\n"
@@ -908,8 +930,8 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:76
-#: code:addons/website_quote/controllers/main.py:227
+#: code:addons/website_quote/controllers/main.py:80
+#: code:addons/website_quote/controllers/main.py:230
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -920,6 +942,13 @@ msgstr ""
 #: selection:sale.order,require_payment:0
 #: selection:sale.quote.template,require_payment:0
 msgid "Immediate after website order validation"
+msgstr "Odmah nakon potvrde  narudžbe na web stranici"
+
+#. module: website_quote
+#: selection:sale.order,require_payment:0
+#: selection:sale.quote.template,require_payment:0
+#, fuzzy
+msgid "Immediate after website order validation and save a token"
 msgstr "Odmah nakon potvrde  narudžbe na web stranici"
 
 #. module: website_quote
@@ -1110,8 +1139,9 @@ msgstr "Višejezično upravljanje"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "My Account"
-msgstr "Moj korisnički račun"
+#, fuzzy
+msgid "My Quotations"
+msgstr "Ponuda"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1216,13 +1246,13 @@ msgid "Optional Products Lines"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/models/order.py:294
+#: code:addons/website_quote/models/order.py:300
 #, python-format
 msgid "Order paid by %s. Transaction: %s. Amount: %s."
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:94
+#: code:addons/website_quote/controllers/main.py:98
 #, python-format
 msgid "Order signed by %s"
 msgstr "Narudžbu potpisao %s"
@@ -1310,8 +1340,8 @@ msgstr ""
 "funkcionalni trening)."
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:66
-#: code:addons/website_quote/controllers/main.py:231
+#: code:addons/website_quote/controllers/main.py:70
+#: code:addons/website_quote/controllers/main.py:234
 #, python-format
 msgid "Pay & Confirm"
 msgstr "Plati i potvrdi"
@@ -1328,20 +1358,8 @@ msgid "Payment Method:"
 msgstr "Način plaćanja:"
 
 #. module: website_quote
-#: model:ir.model,name:website_quote.model_payment_transaction
-msgid "Payment Transaction"
-msgstr "Transakcija plaćanja"
-
-#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Preview"
-msgstr ""
-
-#. module: website_quote
-#: model:web.tip,description:website_quote.quotation_tip_1
-msgid ""
-"Preview the online quotation. You'll be able to edit the quotation content "
-"before send it to the customer."
 msgstr ""
 
 #. module: website_quote
@@ -1477,7 +1495,7 @@ msgid "Quotation Viewed"
 msgstr "Ponuda pogledana"
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:32
+#: code:addons/website_quote/controllers/main.py:29
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr "Ponuda pregledana od strane kupca"
@@ -1528,11 +1546,6 @@ msgid "Sale Options"
 msgstr "Opcija prodaje"
 
 #. module: website_quote
-#: model:ir.model.fields,field_description:website_quote.field_payment_transaction_sale_order_id
-msgid "Sale Order"
-msgstr "Prodajna narudžba"
-
-#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_order_id
 msgid "Sale Order Reference"
 msgstr "Broj prodajnog naloga"
@@ -1581,11 +1594,20 @@ msgid "Schedule Phone Calls and Meetings"
 msgstr ""
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_layout_category_id
+#, fuzzy
+msgid "Section"
+msgstr "Opis"
+
+#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_access_token
 msgid "Security Token"
 msgstr "Sigurnosni token"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_sequence
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_sequence
 msgid "Sequence"
 msgstr "Sekvenca"
@@ -1738,6 +1760,12 @@ msgid "To get more information, visit the"
 msgstr "Da biste dobili više informacija, posjetite"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+#, fuzzy
+msgid "Total Price"
+msgstr "Jed. cijena"
+
+#. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
 #: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
 #: model:product.template,quote_description:website_quote.product_template_quote_2
@@ -1880,7 +1908,7 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:143
+#: code:addons/website_quote/controllers/main.py:147
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr "Ne možete dodati opcije na potvrđenu narudžbu."
@@ -2209,11 +2237,20 @@ msgstr "nepoznato"
 #~ "<b> Za pisanje opisa ponude, uredite svoj proizvod, odite na karticu "
 #~ "prodaje i dodajte tekst u \"Opis za dostavljanje ponuda\"</b>"
 
+#~ msgid "Controlers and Views"
+#~ msgstr "Regulatori i pregledi"
+
+#~ msgid "My Account"
+#~ msgstr "Moj korisnički račun"
+
 #~ msgid "Online Training + Certification"
 #~ msgstr "Online trening + certifikat"
 
 #~ msgid "Open Quotations"
 #~ msgstr "Otvorene poude"
+
+#~ msgid "Our offer"
+#~ msgstr "Naša ponuda"
 
 #~ msgid ""
 #~ "Our offer is based on 3 commitments, which drive our business and our "
@@ -2229,13 +2266,25 @@ msgstr "nepoznato"
 #~ "Naše su cijene najniže u regiji, ako drugdje nađete jeftinije, vratit "
 #~ "ćemo vam razliku"
 
+#~ msgid "Payment Transaction"
+#~ msgstr "Transakcija plaćanja"
+
+#~ msgid "Quality"
+#~ msgstr "Kvaliteta"
+
 #~ msgid "Quality in many ways, our reputation was built on the first value."
 #~ msgstr ""
 #~ "Kvaliteta na mnogo načina, naša je reputacija izgrađena na prvoj "
 #~ "vrijednosti."
 
+#~ msgid "Sale Order"
+#~ msgstr "Prodajna narudžba"
+
 #~ msgid "Send by Email"
 #~ msgstr "Pošalji e-poštom"
+
+#~ msgid "Service"
+#~ msgstr "Usluga"
 
 #~ msgid ""
 #~ "The description of products/services from your quotation will be "

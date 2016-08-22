@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-07-21 11:10+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
@@ -44,10 +44,9 @@ msgid "!important; font-size: 8px; min-width: 18px\"&gt;"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:234
-#: code:addons/hr_holidays/hr_holidays.py:361
+#: code:addons/hr_holidays/models/hr_holidays.py:337
 #, python-format
-msgid "%s on %s"
+msgid "%s on %s : %.2f day(s)"
 msgstr ""
 
 #. module: hr_holidays
@@ -94,6 +93,13 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_absence_of_today
 msgid "Absence by Today"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+msgid ""
+"Absent Employee(s), Whose leaves request are either confirmed or validated "
+"on today"
 msgstr ""
 
 #. module: hr_holidays
@@ -174,7 +180,7 @@ msgid "Allocation Requests to Approve"
 msgstr "طلبات تخصيص للموافقة"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:575
+#: code:addons/hr_holidays/models/hr.py:129
 #, python-format
 msgid "Allocation for %s"
 msgstr ""
@@ -233,6 +239,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holidays_leaves_assign_tree_view
 msgid "Assign Leaves"
 msgstr "تعيين المغادرات"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_resource_calendar_uom_id
+msgid ""
+"Average hours of work per day.\n"
+"                It is used in an employee leave request to compute the "
+"number of days consumed based on the resource calendar.\n"
+"                It can be used to handle various contract types, e.g.:\n"
+"                - 38 Hours/Week, 5 Days/Week: 1 Day = 7.6 Hours\n"
+"                - 45 Hours/Week, 5 Days/Week: 1 Day = 9.0 Hours"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -311,6 +328,24 @@ msgstr ""
 "اختر 'طلب تخصيص ' لزيادة عدد ايام العطل المتاحة للموظف"
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_allocation_holidays
+#, fuzzy
+msgid "Click here to create a new leave allocation request."
+msgstr "لا يمكن تقليل طلبات المخصصة للتحقق من صحة"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_allocation_approve
+msgid "Click here to create a new leave allocation."
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_company_allocation
+#: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_approve
+#: model:ir.actions.act_window,help:hr_holidays.open_employee_leaves
+msgid "Click here to create a new leave request."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
 msgid "Click to create a new leave request."
 msgstr ""
@@ -374,12 +409,6 @@ msgid "Created on"
 msgstr "أنشئ في"
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-#, fuzzy
-msgid "Current"
-msgstr "الرئيسي"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_current_leave_state
 msgid "Current Leave Status"
 msgstr "حالات المغادرة الحالية"
@@ -390,12 +419,17 @@ msgid "Current Leave Type"
 msgstr "نوع الإجازة الحالية"
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#, fuzzy
+msgid "Current Year"
+msgstr "إجازات السنة الحالية"
+
+#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Dashboard"
 msgstr "لوحات المعلومات"
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_department
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_department_id
 msgid "Department"
 msgstr "القسم"
@@ -515,6 +549,17 @@ msgstr ""
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
 msgid "HR Leaves Summary Report By Employee"
 msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_uom_id
+msgid "Hours per Day"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_department
+#, fuzzy
+msgid "Hr Department"
+msgstr "قسم الموارد البشرية"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_id
@@ -937,6 +982,11 @@ msgid "Refused"
 msgstr "مرفوض"
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_allocation_tree
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_allocation_tree_customize
@@ -1008,6 +1058,11 @@ msgid "Reset to Draft"
 msgstr "إعادة التعيين لمسودة"
 
 #. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_resource_calendar
+msgid "Resource Calendar"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Search Leave"
 msgstr "بحث الاجازة"
@@ -1063,16 +1118,16 @@ msgstr ""
 "المستخدم الخاص بك المرتبط بهذا الموظف . "
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:570
-#, python-format
+#: code:addons/hr_holidays/models/hr.py:117
+#, fuzzy, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when "
 "there is only one leave type with the option 'Allow to Override Limit' "
 "unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot "
 "decide on which leave type the update has to be done. \n"
-"You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
-"Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
-"the employees if the configuration does not allow to use this field."
+" You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
+"Requests' located in Leaves Application to manage the leave days of the "
+"employees if the configuration does not allow to use this field."
 msgstr ""
 " الميزة من وراء الحقل \"الاجازات القانونية المتبقيه \" تستخدم عندما يكون "
 "هناك واحد فقط نوع إجازة مع خيار \"السماح لتجاوز الحد\" دون رادع. (٪ وجدت). "
@@ -1088,7 +1143,8 @@ msgid "The number of days must be greater than 0."
 msgstr "عدد الأيام يجب أن يكون أكثر من 0"
 
 #. module: hr_holidays
-#: constraint:hr.holidays:0
+#: code:addons/hr_holidays/models/hr_holidays.py:253
+#, python-format
 msgid ""
 "The number of remaining leaves is not sufficient for this leave type.\n"
 "Please verify also the leaves waiting for validation."
@@ -1097,8 +1153,9 @@ msgstr ""
 "يرجى التحقق أيضا الاجازات المنتظره التحقق من صحتها . "
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:304
-#: code:addons/hr_holidays/hr_holidays.py:328 sql_constraint:hr.holidays:0
+#: code:addons/hr_holidays/models/hr_holidays.py:301
+#: code:addons/hr_holidays/models/hr_holidays.py:321
+#: sql_constraint:hr.holidays:0
 #, python-format
 msgid "The start date must be anterior to the end date."
 msgstr "تاريخ البدء يجب أن يكون قبل تاريخ الانتهاء"
@@ -1135,8 +1192,9 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_color_name
+#, fuzzy
 msgid ""
-"This color will be used in the leaves summary located in Reporting\\Leaves "
+"This color will be used in the leaves summary located in Reporting > Leaves "
 "by Department."
 msgstr ""
 "سوف تستخدم هذه الألوان في ملخص الاجازات التى تقع في التقارير \\ أوراق من قبل "
@@ -1260,6 +1318,7 @@ msgid "Wheat"
 msgstr "قمحي"
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_double_validation
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_double_validation
 msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
@@ -1276,32 +1335,33 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: constraint:hr.holidays:0
+#: code:addons/hr_holidays/models/hr_holidays.py:244
+#, python-format
 msgid "You can not have 2 leaves that overlaps on same day!"
 msgstr "لا يمكنك الحصول على (2) إجازتان تتداخلان في نفس اليوم!"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:293
+#: code:addons/hr_holidays/models/hr_holidays.py:373
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
 msgstr "لا يمكنك حذف إجازة وهي في %s حالة."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:577
+#: code:addons/hr_holidays/models/hr.py:139
 #, python-format
 msgid "You cannot reduce validated allocation requests"
 msgstr "لا يمكن تقليل طلبات المخصصة للتحقق من صحة"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:357
-#: code:addons/hr_holidays/hr_holidays.py:369
+#: code:addons/hr_holidays/models/hr_holidays.py:356
+#: code:addons/hr_holidays/models/hr_holidays.py:365
 #, python-format
 msgid ""
 "You cannot set a leave request as '%s'. Contact a human resource manager."
 msgstr "لا يمكنك إعداد طلب الإجازة على شكل \"%s\". اتصل مدير الموارد البشرية. "
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:26
+#: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:27
 #, python-format
 msgid "You have to select at least one Department. And try again."
 msgstr "يجب أن تختار قسم واحد على الأقل. ثم حاول مرة أخرى."
@@ -1335,9 +1395,6 @@ msgstr "إلى"
 #~ msgid "Action Needed"
 #~ msgstr "الاجراء المطلوب"
 
-#~ msgid "Current Year Leaves"
-#~ msgstr "إجازات السنة الحالية"
-
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "تاريخ آخر رسالة في هذا السجل."
 
@@ -1350,9 +1407,6 @@ msgstr "إلى"
 #~ msgid "Followers (Partners)"
 #~ msgstr "المتابعون (الشرماء)"
 
-#~ msgid "HR Department"
-#~ msgstr "قسم الموارد البشرية"
-
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
 
@@ -1364,6 +1418,9 @@ msgstr "إلى"
 
 #~ msgid "Last Message Date"
 #~ msgstr "تاريخ آخر رسالة"
+
+#~ msgid "Legal Leaves 2015"
+#~ msgstr "إجازات قانونية 2015"
 
 #~ msgid "Messages"
 #~ msgstr "الرسائل"
@@ -1400,3 +1457,7 @@ msgstr "إلى"
 
 #~ msgid "Year"
 #~ msgstr "السنة"
+
+#, fuzzy
+#~ msgid "Current"
+#~ msgstr "الرئيسي"

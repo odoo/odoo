@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-07-12 01:02+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -22,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:686
+#: code:addons/resource/resource.py:688
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -31,6 +31,13 @@ msgstr "%s (副本)"
 #: model:ir.model.fields,field_description:resource.field_resource_resource_active
 msgid "Active"
 msgstr "有效"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
+msgid ""
+"An efficiency of 50% means the resource is two times smaller than his usual "
+"speed."
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -338,18 +345,6 @@ msgid "Sunday"
 msgstr "周日"
 
 #. module: resource
-#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
-msgstr ""
-"这个字段描述完成任务的资源的效率。比如：例如： 资源单独投入一个阶段， 5 天 5 "
-"个任务指派给他，这一阶段默认情况将显示 100%的负荷，下，但如果我们把效率设置"
-"为 200%，他的负荷将只是 50%。"
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Thursday"
 msgstr "周四"
@@ -414,3 +409,13 @@ msgstr "工作期间"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Working Time"
 msgstr "工作时间"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
+#~ "will show a load of 100% for this phase by default, but if we put a "
+#~ "efficiency of 200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "这个字段描述完成任务的资源的效率。比如：例如： 资源单独投入一个阶段， 5 "
+#~ "天 5 个任务指派给他，这一阶段默认情况将显示 100%的负荷，下，但如果我们把效"
+#~ "率设置为 200%，他的负荷将只是 50%。"

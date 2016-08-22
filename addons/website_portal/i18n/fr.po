@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2015-11-18 18:03+0000\n"
 "Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
@@ -20,7 +20,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                            <span class=\"icon-bar\"/>\n"
+"                            <span class=\"icon-bar\"/>"
+msgstr ""
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_archive_groups
+msgid "Archives"
+msgstr "Archives"
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Change"
 msgstr "Change"
 
@@ -80,15 +93,15 @@ msgid "Email"
 msgstr "Courriel"
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:73
+#: code:addons/website_portal/controllers/main.py:100
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr ""
 "Adresse courriel incorrecte! Merci de saisir une adresse courriel valable."
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.details
 #: model:ir.ui.view,arch_db:website_portal.my_account_link
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "My Account"
 msgstr "Mon compte"
 
@@ -103,7 +116,7 @@ msgid "Place your content here."
 msgstr "Mettez votre contenu ici."
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:88
+#: code:addons/website_portal/controllers/main.py:115
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Certains champs obligatoires sont vides."
@@ -124,7 +137,7 @@ msgid "VAT Number"
 msgstr "Numéro de TVA intracommunautaire"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Your Details"
 msgstr "Vos détails"
 

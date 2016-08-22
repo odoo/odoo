@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-07-13 06:03+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
@@ -193,6 +193,15 @@ msgstr "Aktiv"
 #: model:survey.question,question:hr_recruitment.recruitment_2_4
 msgid "Activities"
 msgstr "Aktivitäten"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:20
+#, python-format
+msgid ""
+"Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
+"Qualified &gt; First Interview &gt; Recruited</i>"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
@@ -450,13 +459,8 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
-msgid ""
-"Click here to create a new job. You can remove the \"In Recruitment\" filter "
-"to display all the job positions."
+msgid "Click here to create a new job position."
 msgstr ""
-"Klicken Sie hier, um eine neue Stelle anzulegen. Sie können in der Suche den "
-"\"Stelle besetzen\" Filter entfernen, um alle momentan besetzte Stellen "
-"anzuzeigen."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
@@ -468,6 +472,12 @@ msgstr "Klicken Sie hier, um einen neuen Mitarbeiter anzulegen."
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid "Click to add a new stage in the recruitment process."
 msgstr "Klicken, um neue Stufe im Einstellungsprozess zu ergänzen."
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
+#, fuzzy
+msgid "Click to add a new tag."
+msgstr "Klicken Sie hier, um einen neuen Mitarbeiter anzulegen."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
@@ -505,17 +515,23 @@ msgid "Configure Recruitment"
 msgstr "Einstellungen konfigurieren"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:388
+#: code:addons/hr_recruitment/models/hr_recruitment.py:389
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_id
 #, python-format
 msgid "Contact"
 msgstr "Kontakt"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:390
+#: code:addons/hr_recruitment/models/hr_recruitment.py:391
 #, python-format
 msgid "Contact Email"
 msgstr "Kontakt-E-Mail"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment
+#, fuzzy
+msgid "Content"
+msgstr "Kontakt"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -533,6 +549,12 @@ msgid "Contract Signed"
 msgstr "Vertragsunterschrift"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#, fuzzy
+msgid "Create"
+msgstr "Angelegt von"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
 msgid "Create Date"
 msgstr "Erstellungsdatum"
@@ -541,6 +563,13 @@ msgstr "Erstellungsdatum"
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Create Employee"
 msgstr "Mitarbeiter anlegen"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#, fuzzy
+msgid "Create a Job Position"
+msgstr "Position"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
@@ -602,6 +631,7 @@ msgid "Default Values"
 msgstr "Standardeinstellungen"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid ""
 "Define a specific contact address for this job position. If you keep it "
@@ -623,19 +653,6 @@ msgstr ""
 "Erstanruf zur Qualifizierung, erstes Bewerbergespräch, zweites "
 "Bewerbergespräch, \n"
 "keine Einstellung, Einstellung"
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
-msgid ""
-"Define job position profile and manage recruitment in a context of a "
-"particular job: print interview survey, define number of expected new "
-"employees, and manage its recruitment pipe"
-msgstr ""
-"Definieren Sie das Stellenprofil und managen Sie das Einstellungsverfahren "
-"im jeweiligen Kontext der angebotenen Stelle: Bewerberinterview ausdrucken, "
-"Auszuschreibende Stellenanzahl festlegen, Verwaltung der Arbeitsstellen-"
-"Pipeline"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -665,7 +682,6 @@ msgid "Delete"
 msgstr "Löschen"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_department
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_department_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_department_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -678,6 +694,13 @@ msgid "Department Manager"
 msgstr "Abteilungsleiter"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_department
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_department
+#, fuzzy
+msgid "Departments"
+msgstr "Abteilung"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_description
 msgid "Description"
 msgstr "Beschreibung"
@@ -686,6 +709,11 @@ msgstr "Beschreibung"
 #: model:survey.label,value:hr_recruitment.rrow_2_1_4
 msgid "Desk space"
 msgstr "Bürogröße"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Discard"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -760,6 +788,7 @@ msgid "Email"
 msgstr "E-Mail"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email Alias"
 msgstr "E-Mail Alias"
@@ -920,6 +949,12 @@ msgid "Hired Employees"
 msgstr "Eingestellte Mitarbeiter"
 
 #. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_department
+#, fuzzy
+msgid "Hr Department"
+msgstr "Personalabteilung"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_id
@@ -1001,6 +1036,12 @@ msgstr "Arbeitsstelle"
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
 msgid "Job Campaign"
 msgstr "Stellenanzeige"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#, fuzzy
+msgid "Job Email"
+msgstr "E-Mail"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
@@ -1102,22 +1143,17 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:16
+#, python-format
+msgid ""
+"Let's have a look at the <b>applications pipeline</b> for this job position."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_2_1
 msgid "Male"
 msgstr "Männlich"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_config_settings_module_document
-msgid ""
-"Manage your CV's and motivation letter related to all applicants.\n"
-"-This installs the module document_ftp. This will install the knowledge "
-"management  module in order to allow you to search using specific keywords "
-"through  the content of all documents (PDF, .DOCx...)"
-msgstr ""
-"Verwalten Sie Lebensläufe und Anschreiben der Bewerber. \n"
-"                Sie installieren das Modul document_ftp. Gleichzeitig wird "
-"das Wissensmanagement Modul  installiert, um z.B. per Volltextsuche  (PDF, ."
-"DOCx...) die indizierten Dokumente zu durchsuchen."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -1186,7 +1222,7 @@ msgid "New Applications"
 msgstr "Neue Bewerbungen"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:438
+#: code:addons/hr_recruitment/models/hr_recruitment.py:439
 #, python-format
 msgid "New Employee %s Hired"
 msgstr "Neuer Mitarbeiter %s wurde eingestellt"
@@ -1232,10 +1268,15 @@ msgid "No Interview Form"
 msgstr "Kein Bewerberformular"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:406
+#: code:addons/hr_recruitment/models/hr_recruitment.py:407
 #, python-format
 msgid "No Subject"
 msgstr "Kein Betreff"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
+msgid "No document yet."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_10
@@ -1290,6 +1331,21 @@ msgstr "Moderne Büroausstattung"
 #: model:survey.label,value:hr_recruitment.rrow_2_1_6
 msgid "Office location"
 msgstr "Arbeitsort"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
+msgid ""
+"Once a job position is created, you can track related applications\n"
+"                  and manage the recruitment process."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
+msgid ""
+"Once a job position is created, you can track the applicants\n"
+"                  and manage the recruitment process related to the job\n"
+"                  position."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_force_thread_id
@@ -1538,11 +1594,6 @@ msgid "Search Applicants"
 msgstr "Suche Bewerber"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
-msgid "Search through resumes and motivation letters."
-msgstr "Lebensläufe und Bewerbungsschreiben durchsuchen"
-
-#. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
 msgid "Second Interview"
 msgstr "Zweites Bewerberinterview"
@@ -1677,7 +1728,10 @@ msgid "Tag name already exists !"
 msgstr "Schlagwort existiert bereits!"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_categ_ids
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 msgid "Tags"
 msgstr "Tags"
 
@@ -1788,6 +1842,16 @@ msgstr ""
 "Webdomäne, E-Mail Liste"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
+msgid ""
+"This menu helps you search through resumes and motivation\n"
+"                letters. Odoo automatically indexes .PDF, .DOC, DOCX, .TXT\n"
+"                files so that you can search keywords from the content of "
+"these\n"
+"                files."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_1
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_2
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_3
@@ -1807,6 +1871,15 @@ msgid ""
 msgstr ""
 "Diese Stufe ist zugeklappt, wenn es keine anzuzeigenden Daten in dieser "
 "Stufe gibt. "
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:30
+#, python-format
+msgid ""
+"Try to send an email to this address, it will create an application "
+"automatically."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1832,6 +1905,13 @@ msgid "Use template"
 msgstr "Benutze Vorlage"
 
 #. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:25
+#, python-format
+msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_user_id
 msgid "User"
 msgstr "Benutzer"
@@ -1850,6 +1930,13 @@ msgstr "Sehr Gut"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_4
 msgid "Very important"
 msgstr "Sehr wichtig"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:11
+#, python-format
+msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_cc
@@ -1885,7 +1972,7 @@ msgstr ""
 "Stellenbezeichnungen, Verfügbarkeiten, Ausbildung etc. einsehen."
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:442
+#: code:addons/hr_recruitment/models/hr_recruitment.py:443
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr ""
@@ -1896,6 +1983,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "e.g. Call for interview"
 msgstr "z. B.  Zum Vorstellungsgespräch einladen"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#, fuzzy
+msgid "e.g. Sales Manager"
+msgstr "Abteilungsleiter"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_config_settings
@@ -1912,6 +2005,38 @@ msgstr "Bewerber für die Stelle"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
+
+#~ msgid ""
+#~ "\n"
+#~ "            <p>\n"
+#~ "                %if object.department_id:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}\n"
+#~ "                    in ${object.department_id.name}.\n"
+#~ "                %else:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}.\n"
+#~ "                %endif\n"
+#~ "            </p>\n"
+#~ "            <p>Please welcome him/her and help him/her finding his/her "
+#~ "marks.</p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "            <p>\n"
+#~ "                %if object.department_id:\n"
+#~ "                    es freut mich mitteilen zu können, dass <strong> "
+#~ "${object.name} </strong> uns als ${object.job_id.name}\n"
+#~ "                    im ${object.department_id.name} unterstützen wird.\n"
+#~ "                %else:\n"
+#~ "                    es freut mich mitteilen zu können, dass <strong> "
+#~ "${object.name} </strong> uns als ${object.job_id.name} unterstützen "
+#~ "wird.\n"
+#~ "                %endif\n"
+#~ "            </p>\n"
+#~ "            <p>Heissen Sie sie/ihn bitte willkommen und helfen ihr/ihn "
+#~ "bei der Einarbeitung.</p>\n"
+#~ "            "
 
 #~ msgid ""
 #~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
@@ -1970,6 +2095,14 @@ msgstr "oe_kanban_text_red"
 #~ msgstr "Kampagne"
 
 #~ msgid ""
+#~ "Click here to create a new job. You can remove the \"In Recruitment\" "
+#~ "filter to display all the job positions."
+#~ msgstr ""
+#~ "Klicken Sie hier, um eine neue Stelle anzulegen. Sie können in der Suche "
+#~ "den \"Stelle besetzen\" Filter entfernen, um alle momentan besetzte "
+#~ "Stellen anzuzeigen."
+
+#~ msgid ""
 #~ "Create email and url for each distinct source. <br>\n"
 #~ "                When the applicant will arrive, you will know from wich "
 #~ "source the Job position is coming."
@@ -1979,8 +2112,26 @@ msgstr "oe_kanban_text_red"
 #~ "Wenn der Bewerber ankommt, wissen Sie bereits über welche Quelle der "
 #~ "Bewerber zu Ihnen gekommen ist."
 
+#~ msgid ""
+#~ "Create here some alias...\n"
+#~ "                That will allow you to track from where the applicant is "
+#~ "coming from..."
+#~ msgstr ""
+#~ "Einige Aliase erstellen...\n"
+#~ "Hierdurch wissen Sie bereits woher Ihre Bewerber kommen ..."
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum der letzten Nachricht."
+
+#~ msgid ""
+#~ "Define job position profile and manage recruitment in a context of a "
+#~ "particular job: print interview survey, define number of expected new "
+#~ "employees, and manage its recruitment pipe"
+#~ msgstr ""
+#~ "Definieren Sie das Stellenprofil und managen Sie das "
+#~ "Einstellungsverfahren im jeweiligen Kontext der angebotenen Stelle: "
+#~ "Bewerberinterview ausdrucken, Auszuschreibende Stellenanzahl festlegen, "
+#~ "Verwaltung der Arbeitsstellen-Pipeline"
 
 #~ msgid "Followers"
 #~ msgstr "Beobachter"
@@ -1991,14 +2142,14 @@ msgstr "oe_kanban_text_red"
 #~ msgid "Followers (Partners)"
 #~ msgstr "Beobachter (Partner)"
 
-#~ msgid "HR Department"
-#~ msgstr "Personalabteilung"
-
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#~ msgid "If other, precise:"
+#~ msgstr "Andere:"
 
 #~ msgid "Is Follower"
 #~ msgstr "Ist Beobachter"
@@ -2008,6 +2159,17 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "Last Message Date"
 #~ msgstr "Letzte Benachrichtigung"
+
+#~ msgid ""
+#~ "Manage your CV's and motivation letter related to all applicants.\n"
+#~ "-This installs the module document_ftp. This will install the knowledge "
+#~ "management  module in order to allow you to search using specific "
+#~ "keywords through  the content of all documents (PDF, .DOCx...)"
+#~ msgstr ""
+#~ "Verwalten Sie Lebensläufe und Anschreiben der Bewerber. \n"
+#~ "                Sie installieren das Modul document_ftp. Gleichzeitig "
+#~ "wird das Wissensmanagement Modul  installiert, um z.B. per Volltextsuche  "
+#~ "(PDF, .DOCx...) die indizierten Dokumente zu durchsuchen."
 
 #~ msgid "Messages"
 #~ msgstr "Mitteilungen"
@@ -2028,6 +2190,23 @@ msgstr "oe_kanban_text_red"
 #~ msgstr "Personalmenü öffnen"
 
 #~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Regel für den Versand von Mitteilungen über das E-Mail-Gateways.\n"
+#~ "- Alle Benutzer: Jeder kann  uneingeschränkt Mails senden\n"
+#~ "- Authentifizierte Partner: Nur angemeldete Partner\n"
+#~ "- Nur Verfolger: Nur Verfolger dieses Dokuments\n"
+
+#~ msgid "Reset Application"
+#~ msgstr "Anwendung zurücksetzen"
+
+#~ msgid "Search through resumes and motivation letters."
+#~ msgstr "Lebensläufe und Bewerbungsschreiben durchsuchen"
+
+#~ msgid ""
 #~ "This is a name that helps you keep track of your different campaign "
 #~ "efforts Ex: Fall_Drive, Christmas_Special"
 #~ msgstr ""
@@ -2042,3 +2221,6 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "Website communication history"
 #~ msgstr "Website Kommunikationshistorie"
+
+#~ msgid "Welcoming ${object.name} "
+#~ msgstr "Herzlich Willkommen ${object.name} "

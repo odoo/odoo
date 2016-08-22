@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:07+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -84,7 +84,7 @@ msgstr "Megjelenítés"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:543
+#: code:addons/pos_restaurant/static/src/js/floors.js:550
 #, python-format
 msgid "Are you sure ?"
 msgstr "Biztos benne ?"
@@ -145,18 +145,11 @@ msgstr "VISSZAVONT"
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:260
-#: code:addons/pos_restaurant/static/src/js/floors.js:404
+#: code:addons/pos_restaurant/static/src/js/floors.js:297
+#: code:addons/pos_restaurant/static/src/js/floors.js:411
 #, python-format
 msgid "Changes could not be saved"
 msgstr "Változtatások nem menthetőek"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:261
-#: code:addons/pos_restaurant/static/src/js/floors.js:405
-#, python-format
-msgid "Check your internet connection and access rights"
-msgstr "Ellenőrizze internetkapcsolatát, és hozzáférési jogosultságait"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -210,7 +203,6 @@ msgstr "Név megjelenítése"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
-#, fuzzy
 msgid ""
 "Each Order Printer has an IP Address that defines the PosBox/Hardware\n"
 "                Proxy where the printer can be found, and a list of product "
@@ -258,7 +250,7 @@ msgstr "Vendégek"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:918
+#: code:addons/pos_restaurant/static/src/js/floors.js:925
 #, python-format
 msgid "Guests ?"
 msgstr "Vendégek ?"
@@ -267,9 +259,9 @@ msgstr "Vendégek ?"
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:10
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:21
-#, fuzzy, python-format
+#, python-format
 msgid "Guests:"
-msgstr "Vendégek"
+msgstr "Vendégek:"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_height
@@ -342,7 +334,7 @@ msgstr "Megjegyzés"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:476
+#: code:addons/pos_restaurant/static/src/js/floors.js:483
 #, python-format
 msgid "Number of Seats ?"
 msgstr "Székek száma ?"
@@ -403,11 +395,6 @@ msgid "Point of Sale"
 msgstr "Értékesítési pont"
 
 #. module: pos_restaurant
-#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_pos_order_ids
-msgid "Pos Orders"
-msgstr "Értékesítési ponti kassza rendelései"
-
-#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:20
 #, python-format
@@ -431,7 +418,7 @@ msgstr "Proxy IP cím"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:544
+#: code:addons/pos_restaurant/static/src/js/floors.js:551
 #, python-format
 msgid "Removing a table cannot be undone"
 msgstr "Visszaállíthatatlan asztal eltávolítása"
@@ -522,7 +509,7 @@ msgstr "Asztal neve"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:464
+#: code:addons/pos_restaurant/static/src/js/floors.js:471
 #, python-format
 msgid "Table Name ?"
 msgstr "Asztal neve ?"
@@ -570,11 +557,6 @@ msgid "The list of tables in this floor"
 msgstr "Asztalok listája ebben az ülésrendben"
 
 #. module: pos_restaurant
-#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_pos_order_ids
-msgid "The orders served at this table"
-msgstr "Ezen az asztalon felszolgált megrendelések"
-
-#. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_floor_ids
 msgid "The restaurant floors served by this point of sale"
 msgstr "Ezen az értékesítési pont kasszán felszolgált éttermi ülésrendek"
@@ -616,7 +598,7 @@ msgstr "Asztal szélessége pixelekben"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:102
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:106
 #, python-format
 msgid "This floor has no tables yet, use the"
 msgstr "Ennek az ülésrendnek még nincsenek asztalai, használja a"
@@ -626,7 +608,7 @@ msgstr "Ennek az ülésrendnek még nincsenek asztalai, használja a"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:37
 #, python-format
 msgid "Transfer"
-msgstr ""
+msgstr "Átvitel"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_sequence
@@ -659,6 +641,15 @@ msgstr "Ezzel"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/js/floors.js:261
+#: code:addons/pos_restaurant/static/src/js/floors.js:298
+#: code:addons/pos_restaurant/static/src/js/floors.js:412
+#, python-format
+msgid "You must be connected to the internet to save your changes."
+msgstr "Internethez csatlakozva tudja csak mentani a változtatásait."
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:36
 #, python-format
 msgid "at"
@@ -674,7 +665,7 @@ msgstr "asztalnál"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:103
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:107
 #, python-format
 msgid "button in the editing toolbar to create new tables."
 msgstr "a gombot a szerkesztési  eszköztárban az új asztalok létrehozásához."
@@ -705,3 +696,28 @@ msgstr "restaurant.printer"
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
 msgid "restaurant.table"
 msgstr "restaurant.table"
+
+#~ msgid "Check your internet connection and access rights"
+#~ msgstr "Ellenőrizze internetkapcsolatát, és hozzáférési jogosultságait"
+
+#~ msgid ""
+#~ "Each Order Printer has an IP Address that defines the PosBox/Hardware\n"
+#~ "                Proxy where the printer can be found, and a list of "
+#~ "product categories.\n"
+#~ "                An Order Printer will only print updates for prodcuts "
+#~ "belonging to one of\n"
+#~ "                its categories."
+#~ msgstr ""
+#~ " Mindegyik rendelés nyomtató saját IP elérési címmel rendelkezik,  melyik "
+#~ "meghatározza\n"
+#~ "                 a Pénztárgépet/Hardver Proxy ahol a nyomtató található, "
+#~ "és egy termék kategória listát. \n"
+#~ "                 Egy rendelés nyomtató csak akkor nyomtat frissítést, ha "
+#~ "a termék az egyik \n"
+#~ "                kategóriájába tartozik."
+
+#~ msgid "Pos Orders"
+#~ msgstr "Értékesítési ponti kassza rendelései"
+
+#~ msgid "The orders served at this table"
+#~ msgstr "Ezen az asztalon felszolgált megrendelések"

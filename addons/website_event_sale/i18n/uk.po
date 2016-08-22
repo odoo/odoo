@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-04-17 10:49+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -56,6 +56,12 @@ msgid "Product"
 msgstr "Товар"
 
 #. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:63
+#, python-format
+msgid "Registration"
+msgstr ""
+
+#. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Remaining"
 msgstr "Залишилось"
@@ -72,13 +78,13 @@ msgid "Sold Out"
 msgstr "Розпродано"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:71
+#: code:addons/website_event_sale/models/sale_order.py:67
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
 msgstr "Вибачте, квитки %(ticket)s на подію %(event)s вже розпродано."
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:77
+#: code:addons/website_event_sale/models/sale_order.py:73
 #, python-format
 msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
@@ -86,12 +92,6 @@ msgid ""
 msgstr ""
 "Вибачте, тільки %(remaining_seats)d місць залишилось для %(ticket)s квитків "
 "на %(event)s подію."
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:65
-#, python-format
-msgid "Subscription"
-msgstr "Передплата"
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:36
@@ -103,3 +103,6 @@ msgstr "Квиток не співпадає з цим товаром."
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
 msgstr "Веб-сайт"
+
+#~ msgid "Subscription"
+#~ msgstr "Передплата"

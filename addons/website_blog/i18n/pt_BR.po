@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2015-12-10 01:10+0000\n"
 "Last-Translator: Grazziano Duarte <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
@@ -22,7 +22,7 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:117
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:119
 #, python-format
 msgid " Click on this button to send your blog post online."
 msgstr "Clique no botão para enviar sua publicação ao blog."
@@ -83,6 +83,28 @@ msgid "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 
 #. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.view_blog_blog_form
+msgid ""
+"(Un)archiving a blog automatically (un)archives its posts. Do you want to "
+"proceed?"
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:187
+#, fuzzy, python-format
+msgid ""
+"<p><b>This tutorial is over.</b> Use this button to discover more features "
+"and improve the content of this page.</p><p>You can also add some cool "
+"content with your text in edit mode or keep adding pages with the upper "
+"right buttons.</p>"
+msgstr ""
+"Este tutorial acabou. Para descobrir mais recursos e melhorar o conteúdo da "
+"página, vá para o menu da personalização no canto superior direito. Você "
+"também pode adicionar algum conteúdo legal com seu texto clicando em "
+"\"Inserir Blocos\" no modo de edição."
+
+#. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_1
 msgid ""
 "A mix of push &amp; pull: Today, people\n"
@@ -106,8 +128,14 @@ msgid "Access post"
 msgstr ""
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_active
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_active
+msgid "Active"
+msgstr ""
+
+#. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:24
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:25
 #, python-format
 msgid "Add Content"
 msgstr "Adicionar Conteúdo"
@@ -116,6 +144,13 @@ msgstr "Adicionar Conteúdo"
 #: model:blog.post,content:website_blog.blog_post_2
 msgid "Adding to industry leading technology"
 msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.blog_blog_view_search
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
+#, fuzzy
+msgid "Archived"
+msgstr "Arquivos"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_history
@@ -148,7 +183,6 @@ msgstr "Feed Atom"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_author_id
-#: model:ir.model.fields,field_description:website_blog.field_blog_post_create_uid
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 msgid "Author"
 msgstr "Autor"
@@ -161,6 +195,7 @@ msgstr "Avatar"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_blog_id
 #: model:ir.ui.menu,name:website_blog.menu_website_blog_root
+#: model:ir.ui.view,arch_db:website_blog.blog_blog_view_search
 #: model:ir.ui.view,arch_db:website_blog.view_blog_blog_form
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 #: model:website.menu,name:website_blog.menu_news
@@ -173,7 +208,7 @@ msgid "Blog Name"
 msgstr "Nome do Blog"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:283
+#: code:addons/website_blog/models/website_blog.py:303
 #: model:ir.model,name:website_blog.model_blog_post
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -182,14 +217,14 @@ msgid "Blog Post"
 msgstr "Post no Blog"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:287
+#: code:addons/website_blog/models/website_blog.py:307
 #, python-format
 msgid "Blog Post <b>%s</b> seems to have a link to this page !"
 msgstr "A publicação <b>%s</b> parece ter um link para esta página !"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:37
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:38
 #, python-format
 msgid "Blog Post Created"
 msgstr "Post do Blog criado"
@@ -245,7 +280,8 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:58
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:59
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:147
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 #, python-format
 msgid "Change Cover"
@@ -253,28 +289,30 @@ msgstr "Alterar Capa"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:54
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:55
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:144
 #, python-format
 msgid "Change and customize your blog post cover."
 msgstr "Mude e personalize sua capa de publicação no blog."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:108
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:110
 #, python-format
 msgid "Check Mobile Preview"
 msgstr "Verifique visualização móvel"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:68
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:69
 #, python-format
 msgid "Choose an image"
 msgstr "Escolha uma Imagem"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:69
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:70
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:153
 #, python-format
 msgid "Choose an image from the library."
 msgstr "Escolha uma Imagem, da biblioteca."
@@ -287,21 +325,36 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:94
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:95
 #, python-format
 msgid "Click on '<em>Save</em>' button to record changes on the page."
 msgstr "Clique no botão '<em>Salvar</em>' para gravar as alterações na página."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:77
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:78
 #, python-format
 msgid "Click on '<em>Save</em>' to set the picture as cover."
 msgstr "Clique em '<em>Salvar</em>' para definir a imagem como capa."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:102
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:167
+#, fuzzy, python-format
+msgid "Click on <b>Save</b> button to record changes on the page."
+msgstr "Clique no botão '<em>Salvar</em>' para gravar as alterações na página."
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:158
+#, fuzzy, python-format
+msgid "Click on <b>Save</b> to set the picture as cover."
+msgstr "Clique em '<em>Salvar</em>' para definir a imagem como capa."
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:103
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:172
 #, python-format
 msgid ""
 "Click on the mobile icon to preview how your blog post will be displayed on "
@@ -317,7 +370,7 @@ msgstr "Clique para criar um novo post do blog."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:124
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:126
 #, python-format
 msgid "Close Tutorial"
 msgstr "Fechar Tutorial"
@@ -334,7 +387,7 @@ msgstr "Contato"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:84
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:85
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_content
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 #, python-format
@@ -343,14 +396,14 @@ msgstr "Conteúdo"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:39
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:40
 #, python-format
 msgid "Continue"
 msgstr "Continuar"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:60
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:61
 #, python-format
 msgid "Cover"
 msgstr "Capa"
@@ -362,13 +415,14 @@ msgstr "Propriedades da Capa"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:14
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:15
 #, python-format
 msgid "Create a blog post"
 msgstr "Criar um blog"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_create_uid
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_create_uid
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_create_uid
 msgid "Created by"
 msgstr "Criado por"
@@ -382,7 +436,7 @@ msgstr "Criado em"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:53
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:54
 #, python-format
 msgid "Customize Cover"
 msgstr "Personalizar Capa"
@@ -571,7 +625,7 @@ msgstr "Últimas Postagens"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:18
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:19
 #, python-format
 msgid "Let's go through the first steps to write beautiful blog posts."
 msgstr "Vamos percorrer os primeiros passos para escrever belas mensagens."
@@ -622,7 +676,7 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:101
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:102
 #, python-format
 msgid "Mobile Preview"
 msgstr "Visualização com dispositivo Móvel"
@@ -639,8 +693,8 @@ msgstr "Estreito"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:17
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:31
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:18
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:32
 #: code:addons/website_blog/static/src/js/website_blog.editor.js:21
 #: model:ir.ui.view,arch_db:website_blog.content_new_blogpost
 #, python-format
@@ -681,13 +735,6 @@ msgstr "Número de visualizações"
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "None"
 msgstr "Nenhum"
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:9
-#, python-format
-msgid "Not Published"
-msgstr "Não Publicado"
 
 #. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_2
@@ -738,7 +785,7 @@ msgstr "Lançar"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:44
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:45
 #, python-format
 msgid "Post Headline"
 msgstr "Publicar Título"
@@ -758,17 +805,31 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
-#: code:addons/website_blog/controllers/main.py:268
+#: code:addons/website_blog/controllers/main.py:261
 #, python-format
 msgid "Public user cannot post comments on blog post."
 msgstr "Usuários públicos não podem postar comentários neste blog."
 
 #. module: website_blog
 #. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:183
+#, python-format
+msgid "Publish your blog post to make it visible to your visitors."
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
 #: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:10
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_status
 #, python-format
 msgid "Published"
 msgstr "Publicado"
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_published_date
+#, fuzzy
+msgid "Published Date"
+msgstr "Post publicou"
 
 #. module: website_blog
 #: model:mail.message.subtype,description:website_blog.mt_blog_blog_published
@@ -778,7 +839,7 @@ msgstr "Post publicou"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:116
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:118
 #, python-format
 msgid "Publishing status"
 msgstr "Estado de publicação"
@@ -818,21 +879,22 @@ msgstr "Vermelho"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:76
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:77
 #, python-format
 msgid "Save"
 msgstr "Salvar"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:93
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:94
 #, python-format
 msgid "Save your modifications once you are done"
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:109
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:111
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:177
 #, python-format
 msgid "Scroll to check rendering and then close the mobile preview."
 msgstr ""
@@ -841,14 +903,16 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:61
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:62
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:148
 #, python-format
 msgid "Select this menu item to change blog cover."
 msgstr "Selecione este item de menu para alterar a capa do blog."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:32
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:33
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:135
 #, python-format
 msgid "Select this menu item to create a new blog post."
 msgstr "Selecione este item de menu para criar um novo post."
@@ -867,32 +931,39 @@ msgstr "Tamanho"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:19
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:20
 #, python-format
 msgid "Skip"
 msgstr "Ignorar"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:19
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:20
 #, python-format
 msgid "Start Tutorial"
 msgstr "Iniciar Tutorial"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/models/website_blog.py:91
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:90
+#: code:addons/website_blog/models/website_blog.py:106
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:91
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:166
 #, python-format
 msgid "Start writing here..."
 msgstr "Comece a escrever aqui..."
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:85
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:86
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:162
 #, fuzzy, python-format
 msgid "Start writing your story here."
 msgstr "Comece a escrever aqui..."
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_status
+msgid "Status"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_subtitle
@@ -943,7 +1014,7 @@ msgstr "O Futuro do E-mails"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:38
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:39
 #, python-format
 msgid "This is your new blog post. Let's edit it."
 msgstr "Este é o seu novo blog. Vamos editá-lo."
@@ -971,7 +1042,7 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:123
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:125
 #, fuzzy, python-format
 msgid ""
 "This tutorial is over. To discover more features and improve the content of "
@@ -1005,13 +1076,21 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:9
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_status
+#, fuzzy, python-format
+msgid "Unpublished"
+msgstr "não publicado"
+
+#. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Untitled Post"
 msgstr "Publicação sem Título"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:25
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:26
 #, fuzzy, python-format
 msgid ""
 "Use this button to create a new blog post like any other document (page, "
@@ -1036,7 +1115,7 @@ msgstr ""
 "caminho único;"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:262
+#: code:addons/website_blog/models/website_blog.py:282
 #, python-format
 msgid "View Blog Post"
 msgstr "Ver Publicação no Blog"
@@ -1080,7 +1159,8 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:46
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:47
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:139
 #, python-format
 msgid "Write a title, the subtitle is optional."
 msgstr "Escreva um título, o subtítulo é opcional."
@@ -1136,11 +1216,6 @@ msgstr "Uma nova mensagem %s foi publicada no%s blog."
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
-msgid "not published"
-msgstr "não publicado"
-
-#. module: website_blog
-#: model:ir.ui.view,arch_db:website_blog.blog_post_short
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid "pull-right"
 msgstr "pull-right"
@@ -1154,6 +1229,12 @@ msgstr "comentar."
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
+#, fuzzy
+msgid "unpublished"
+msgstr "não publicado"
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "view"
 msgstr "visualizar"
 
@@ -1162,8 +1243,14 @@ msgstr "visualizar"
 msgid "views"
 msgstr "visualizações"
 
+#~ msgid "A new post %s has been published on the %s blog."
+#~ msgstr "Uma nova mensagem %s foi publicada no%s blog."
+
 #~ msgid "Action Needed"
 #~ msgstr "Ação Necessária"
+
+#~ msgid "Click here to access the post."
+#~ msgstr "Clique aqui para acessar o post."
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Data da ultima mensagem para o registro."
@@ -1195,6 +1282,9 @@ msgstr "visualizações"
 #~ msgid "Messages and communication history"
 #~ msgstr "Histórico de mensagens e comunicação"
 
+#~ msgid "Not Published"
+#~ msgstr "Não Publicado"
+
 #~ msgid "Number of Actions"
 #~ msgstr "Número de ações"
 
@@ -1217,11 +1307,29 @@ msgstr "visualizações"
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr "A URL completa para acessar o documento através do site."
 
+#~ msgid ""
+#~ "This tutorial is over. To discover more features and improve the content "
+#~ "of this page, go to the upper right customize menu. You can also add some "
+#~ "cool content with your text by clicking on 'Insert Blocks' in the edit "
+#~ "mode."
+#~ msgstr ""
+#~ "Este tutorial acabou. Para descobrir mais recursos e melhorar o conteúdo "
+#~ "da página, vá para o menu da personalização no canto superior direito. "
+#~ "Você também pode adicionar algum conteúdo legal com seu texto clicando em "
+#~ "\"Inserir Blocos\" no modo de edição."
+
 #~ msgid "Unread Messages"
 #~ msgstr "Mensagens não lidas"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Contador de Mensagens Não Lidas."
+
+#~ msgid ""
+#~ "Use this <em>'Content'</em> menu to create a new blog post like any other "
+#~ "document (page, menu, products, event, ...)."
+#~ msgstr ""
+#~ "Utilize este <em> 'Conteúdo' <em /> menu para criar uma nova postagem no "
+#~ "blog como qualquer outro documento (página, menu, produtos, eventos, ...)."
 
 #~ msgid "Visible in Website"
 #~ msgstr "Visível no Website"

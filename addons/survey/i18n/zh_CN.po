@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-07-12 00:48+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -43,7 +43,7 @@ msgid "#Questions"
 msgstr "问题#"
 
 #. module: survey
-#: code:addons/survey/survey.py:231
+#: code:addons/survey/survey.py:232
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -151,6 +151,9 @@ msgid ""
 "span><span class=\"label label-primary only_right_radius filter-finished"
 "\">Finished surveys</span>"
 msgstr ""
+"<span class=\"label label-default only_left_radius filter-all\">All surveys</"
+"span><span class=\"label label-primary only_right_radius filter-finished"
+"\">Finished surveys</span>"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_number
@@ -179,6 +182,9 @@ msgid ""
 "span><span class=\"label label-default only_right_radius filter-finished"
 "\">Finished surveys</span>"
 msgstr ""
+"<span class=\"label label-primary only_left_radius filter-all\">All surveys</"
+"span><span class=\"label label-default only_right_radius filter-finished\">已"
+"完成的调查</span>"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.no_result
@@ -244,9 +250,8 @@ msgstr "关于您使用Odoo的一些情况"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_active
-#, fuzzy
 msgid "Active"
-msgstr "活动域"
+msgstr "有效"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -304,9 +309,15 @@ msgstr "已答复"
 #: model:ir.model.fields,field_description:survey.field_survey_question_user_input_line_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_user_input_line_ids
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
 msgstr "答案"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Archived"
+msgstr "已归档"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -342,6 +353,11 @@ msgstr "选择"
 #: model:ir.ui.view,arch_db:survey.simple_choice
 msgid "Choose..."
 msgstr "选择..."
+
+#. module: survey
+#: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
+msgid "Clean test answers"
+msgstr ""
 
 #. module: survey
 #: code:addons/survey/survey.py:125
@@ -623,7 +639,6 @@ msgstr "模块化和易用性"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_error_msg
-#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Error message"
 msgstr "错误消息"
 
@@ -759,7 +774,7 @@ msgid "If closed, people won't be able to answer to surveys in this column."
 msgstr "如果关闭，参与者将不能回答这一栏调查中的问题。"
 
 #. module: survey
-#: code:addons/survey/survey.py:624
+#: code:addons/survey/survey.py:631
 #: model:survey.question,comments_message:survey.feedback_1_1
 #: model:survey.question,comments_message:survey.feedback_1_2
 #: model:survey.question,comments_message:survey.feedback_2_1
@@ -773,9 +788,9 @@ msgstr "如果关闭，参与者将不能回答这一栏调查中的问题。"
 #: model:survey.question,comments_message:survey.feedback_3_2
 #: model:survey.question,comments_message:survey.feedback_3_3
 #: model:survey.question,comments_message:survey.feedback_4_1
-#, fuzzy, python-format
+#, python-format
 msgid "If other, please specify:"
-msgstr "如其他的，精确的："
+msgstr ""
 
 #. module: survey
 #: model:survey.page,description:survey.feedback_4
@@ -1223,12 +1238,16 @@ msgstr "采购管理"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id
-#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_question_id
 #: model:ir.ui.view,arch_db:survey.survey_label_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Question"
 msgstr "疑问"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
+msgid "Question 2"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_question
@@ -1506,6 +1525,7 @@ msgstr "建议"
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Survey"
@@ -1636,7 +1656,7 @@ msgid "The answer must be in the right type"
 msgstr "答案必须是正确的类别"
 
 #. module: survey
-#: code:addons/survey/survey.py:622
+#: code:addons/survey/survey.py:629
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1728,19 +1748,19 @@ msgid "They help new users to understand Odoo"
 msgstr "他们帮助新用户了解Odoo"
 
 #. module: survey
-#: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
+#: code:addons/survey/survey.py:678 code:addons/survey/tests/test_survey.py:94
 #, python-format
 msgid "This answer must be an email address"
 msgstr "答案必须为邮件地址"
 
 #. module: survey
-#: code:addons/survey/survey.py:713 code:addons/survey/tests/test_survey.py:115
+#: code:addons/survey/survey.py:720 code:addons/survey/tests/test_survey.py:115
 #, python-format
 msgid "This is not a date/time"
 msgstr "这不是日期/时间"
 
 #. module: survey
-#: code:addons/survey/survey.py:690 code:addons/survey/tests/test_survey.py:105
+#: code:addons/survey/survey.py:697 code:addons/survey/tests/test_survey.py:105
 #, python-format
 msgid "This is not a number"
 msgstr "这不是一个数字"
@@ -1758,7 +1778,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr "此邮件将会在调查结束后显示。"
 
 #. module: survey
-#: code:addons/survey/survey.py:621
+#: code:addons/survey/survey.py:628
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -1911,6 +1931,11 @@ msgid "Validate entry"
 msgstr "验证文本"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
+msgid "Validation Error message"
+msgstr ""
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_form
 msgid "View Results"
 msgstr "查看结果"
@@ -2016,13 +2041,13 @@ msgstr ""
 "使用公共网络链接参与回答（这种情况下，必须设定 \"在网站公开\" 选项）。"
 
 #. module: survey
-#: code:addons/survey/survey.py:424
+#: code:addons/survey/survey.py:425
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr "你不能为没有问题的调查问卷发送邀请。"
 
 #. module: survey
-#: code:addons/survey/survey.py:429
+#: code:addons/survey/survey.py:430
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "不能为已关闭的调查发送邀请。"
@@ -2045,7 +2070,7 @@ msgstr "登录"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid "of"
-msgstr ""
+msgstr "的"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
@@ -2063,6 +2088,11 @@ msgstr "查看你的回答"
 #, python-format
 msgid "try to create and fill survey"
 msgstr "试着创建并填写调查"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
+msgid "unknown"
+msgstr ""
 
 #~ msgid ""
 #~ "\n"
@@ -2094,6 +2124,9 @@ msgstr "试着创建并填写调查"
 
 #~ msgid "Action Needed"
 #~ msgstr "所需行动"
+
+#~ msgid "Active domain"
+#~ msgstr "活动域"
 
 #~ msgid ""
 #~ "Answers do not go in the original document discussion thread. This has an "
@@ -2161,6 +2194,9 @@ msgstr "试着创建并填写调查"
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "确认后, 会出现新消息."
+
+#~ msgid "If other, precise:"
+#~ msgstr "如其他的，精确的："
 
 #~ msgid "Initial thread message."
 #~ msgstr "初始化线索消息"
@@ -2287,3 +2323,9 @@ msgstr "试着创建并填写调查"
 
 #~ msgid "on"
 #~ msgstr "在"
+
+#~ msgid "Thanks Message"
+#~ msgstr "感谢留言"
+
+#~ msgid "ir.autovacuum"
+#~ msgstr "ir.autovacuum"

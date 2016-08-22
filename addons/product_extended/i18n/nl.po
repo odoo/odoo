@@ -4,69 +4,29 @@
 #
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-22 09:50+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"PO-Revision-Date: 2016-08-06 10:39+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:24
-#: code:addons/product_extended/wizard/wizard_price.py:40
-#, python-format
-msgid "Active ID is not set in Context."
-msgstr "Actieve ID is niet ingesteld in Context."
-
-#. module: product_extended
-#: model:ir.model,name:product_extended.model_mrp_bom
-msgid "Bill of Material"
-msgstr "Materiaallijst"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Cancel"
-msgstr "Annuleren"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Change Price"
-msgstr "Verander prijs"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Change Standard Price"
-msgstr "Wijzig kostprijs"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_recursive
-msgid "Change prices of child BoMs too"
-msgstr "Wijzig ook de prijzen van de onderliggende materiaallijsten"
-
-#. module: product_extended
-#: model:ir.actions.act_window,name:product_extended.action_view_compute_price_wizard
-#: model:ir.model,name:product_extended.model_wizard_price
-msgid "Compute Price Wizard"
-msgstr "Bereken prijs wizard"
 
 #. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+#: model:ir.ui.view,arch_db:product_extended.product_product_view_form_normal_inherit_extended
 msgid "Compute from BOM"
 msgstr "Bereken vanuit materiaallijst"
 
 #. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+#: model:ir.ui.view,arch_db:product_extended.product_product_view_form_normal_inherit_extended
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
@@ -75,93 +35,82 @@ msgstr ""
 "gerelateerd aan de materiaallijst, enkel voor geproduceerde producten."
 
 #. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_uid
-msgid "Created by"
-msgstr "Aangemaakt door"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_date
-msgid "Created on"
-msgstr "Aangemaakt op"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_display_name
-#, fuzzy
-msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Weergave naam\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Naam weergeven"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_real_time_accounting
-msgid "Generate accounting entries when real-time"
-msgstr "Bij real-time voorraadwaardering, financiële boekingen maken."
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_id
-msgid "ID"
-msgstr "ID"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_info_field
-msgid "Info"
-msgstr "Info"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price___last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_uid
-msgid "Last Updated by"
-msgstr "Laatst bijgewerkt door"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_date
-msgid "Last Updated on"
-msgstr "Laatst bijgewerkt op"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_get_variant_count
-msgid "Number of variant for the product"
-msgstr ""
+#: model:ir.model,name:product_extended.model_product_product
+msgid "Product"
+msgstr "Product"
 
 #. module: product_extended
 #: model:ir.model,name:product_extended.model_product_template
 msgid "Product Template"
 msgstr "Productsjabloon"
 
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Set price on BoM"
-msgstr "Stel prijs in op materiaallijst"
+#~ msgid "Active ID is not set in Context."
+#~ msgstr "Actieve ID is niet ingesteld in Context."
 
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_standard_price
-msgid "Standard Price"
-msgstr "Kostprijs"
+#~ msgid "Bill of Material"
+#~ msgstr "Materiaallijst"
 
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid ""
-"The price is computed from the bill of material lines which are not variant "
-"specific"
-msgstr ""
-"De prijs wordt berekend op basis van de materiaallijstregels welke niet voor "
-"een variant specifiek zijn"
+#~ msgid "Cancel"
+#~ msgstr "Annuleren"
 
-#. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:38
-#, fuzzy, python-format
-msgid ""
-"This wizard is built for product templates, while you are currently running "
-"it from a product variant."
-msgstr ""
-"deze wizard is gemaakt voor productsjablonen, terwijl u deze nu gestart "
-"heeft vanaf een productvariant."
+#~ msgid "Change Price"
+#~ msgstr "Verander prijs"
+
+#~ msgid "Change Standard Price"
+#~ msgstr "Wijzig kostprijs"
+
+#~ msgid "Change prices of child BoMs too"
+#~ msgstr "Wijzig ook de prijzen van de onderliggende materiaallijsten"
+
+#~ msgid "Compute Price Wizard"
+#~ msgstr "Bereken prijs wizard"
 
 #~ msgid "Compute price wizard"
 #~ msgstr "Bereken prijs wizard"
+
+#~ msgid "Created by"
+#~ msgstr "Aangemaakt door"
+
+#~ msgid "Created on"
+#~ msgstr "Aangemaakt op"
+
+#~ msgid "Display Name"
+#~ msgstr "Weergave naam"
+
+#~ msgid "Generate accounting entries when real-time"
+#~ msgstr "Bij real-time voorraadwaardering, financiële boekingen maken."
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Info"
+#~ msgstr "Info"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Laatst gewijzigd op"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Laatst bijgewerkt door"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Laatst bijgewerkt op"
+
+#~ msgid "Set price on BoM"
+#~ msgstr "Stel prijs in op materiaallijst"
+
+#~ msgid "Standard Price"
+#~ msgstr "Kostprijs"
+
+#~ msgid ""
+#~ "The price is computed from the bill of material lines which are not "
+#~ "variant specific"
+#~ msgstr ""
+#~ "De prijs wordt berekend op basis van de materiaallijstregels welke niet "
+#~ "voor een variant specifiek zijn"
+
+#~ msgid ""
+#~ "This wizard is build for product templates, while you are currently "
+#~ "running it from a product variant."
+#~ msgstr ""
+#~ "deze wizard is gemaakt voor productsjablonen, terwijl u deze nu gestart "
+#~ "heeft vanaf een productvariant."

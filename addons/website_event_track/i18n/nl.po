@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-02-20 11:07+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
@@ -42,27 +42,23 @@ msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
 msgid "<b>Proposed By</b>:"
-msgstr "Voorgesteld door"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
 msgid "<b>Speakers Biography</b>:"
-msgstr "Biografie sprekers"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
 msgid "<b>Talk Introduction</b>:"
-msgstr "Presentatie introductie"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
 msgid "<b>Title</b>:"
-msgstr "<b>Datum</b><br/>"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -129,6 +125,11 @@ msgid "About The Author"
 msgstr "Over de auteur"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_active
+msgid "Active"
+msgstr "Actief"
+
+#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
 msgid "Advanced lead management with Odoo: tips and tricks from the fields"
 msgstr "Geavanceerd lead management met Odoo: Tips en Tricks vanuit het veld"
@@ -139,7 +140,7 @@ msgid "Advanced reporting with Google Spreadsheets integration."
 msgstr "Geavanceerde rapportages met oogle Spreadsheet integratie"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:160
+#: code:addons/website_event_track/models/event.py:45
 #, python-format
 msgid "Agenda"
 msgstr "Agenda"
@@ -169,6 +170,11 @@ msgstr "Aangekondigd"
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Application"
 msgstr "Toepassing"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Archived"
+msgstr "Gearchiveerd"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_allowed_track_tag_ids
@@ -351,11 +357,9 @@ msgstr "Filter op parallelsessies..."
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social
 msgid ""
-"Find out what people see and say about this event, \n"
+"Find out what people see and say about this event,\n"
 "                        and join the conversation."
 msgstr ""
-"Zoek uit wat mensen zien en zeggen over dit evenement, \n"
-"                        en aan neem deel aan het gesprek."
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
@@ -555,9 +559,8 @@ msgstr "Nieuwe parallelsessie aangemaakt"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
 msgid "New track proposal"
-msgstr "Nieuwe parallelsessie voorgesteld"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.tracks
@@ -672,7 +675,7 @@ msgid "Responsible"
 msgstr "Verantwoordelijke"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8478
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8600
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
 msgstr "Zaal"
@@ -704,7 +707,7 @@ msgid "Speaker Biography"
 msgstr "Biografie spreker"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:116
+#: code:addons/website_event_track/models/website_event_track.py:122
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_speaker_ids
 #, python-format
 msgid "Speakers"
@@ -759,13 +762,6 @@ msgid "Submit Proposal"
 msgstr "Voorstel indienen"
 
 #. module: website_event_track
-#: model:web.tip,description:website_event_track.event_track_tip_1
-msgid "Switch to the calendar view to see the availability of each room."
-msgstr ""
-"Schakel over naar de kalender weergave om de beschikbaarheid van iedere "
-"ruimte te zien."
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_name
 msgid "Tag"
 msgstr "Label"
@@ -787,7 +783,7 @@ msgid "Talk Introduction"
 msgstr "Presentatie introductie"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:162
+#: code:addons/website_event_track/models/event.py:47
 #, python-format
 msgid "Talk Proposals"
 msgstr "Presentatie voorstel"
@@ -798,7 +794,7 @@ msgid "Talk Title"
 msgstr "Presentatie titel"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:159
+#: code:addons/website_event_track/models/event.py:44
 #, python-format
 msgid "Talks"
 msgstr "Presentaties"
@@ -999,14 +995,14 @@ msgid "hours"
 msgstr "uren"
 
 #. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.tracks
-msgid "not published"
-msgstr "niet gepubliceerd"
-
-#. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.agenda
 msgid "talks"
 msgstr "presentaties"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.tracks
+msgid "unpublished"
+msgstr "Niet gepubliceerd"
 
 #~ msgid "Action Needed"
 #~ msgstr "Vereist actie"
@@ -1016,6 +1012,13 @@ msgstr "presentaties"
 
 #~ msgid "Event Blog"
 #~ msgstr "Evenementen blog"
+
+#~ msgid ""
+#~ "Find out what people see and say about this event, \n"
+#~ "                        and join the conversation."
+#~ msgstr ""
+#~ "Zoek uit wat mensen zien en zeggen over dit evenement, \n"
+#~ "                        en aan neem deel aan het gesprek."
 
 #~ msgid "Followers"
 #~ msgstr "Volgers"
@@ -1047,6 +1050,9 @@ msgstr "presentaties"
 #~ msgid "Messages and communication history"
 #~ msgstr "Berichten en communicatie historie"
 
+#~ msgid "New Track Proposal"
+#~ msgstr "Nieuwe parallelsessie voorgesteld"
+
 #~ msgid "News"
 #~ msgstr "Nieuws"
 
@@ -1061,6 +1067,17 @@ msgstr "presentaties"
 
 #~ msgid "Phone"
 #~ msgstr "Telefoon"
+
+#~ msgid "Proposed By"
+#~ msgstr "Voorgesteld door"
+
+#~ msgid "Speakers Biography"
+#~ msgstr "Biografie sprekers"
+
+#~ msgid "Switch to the calendar view to see the availability of each room."
+#~ msgstr ""
+#~ "Schakel over naar de kalender weergave om de beschikbaarheid van iedere "
+#~ "ruimte te zien."
 
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr ""
@@ -1089,3 +1106,6 @@ msgstr "presentaties"
 
 #~ msgid "Website meta title"
 #~ msgstr "Website meta titel"
+
+#~ msgid "not published"
+#~ msgstr "niet gepubliceerd"

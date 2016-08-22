@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-05-08 14:15+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -102,6 +102,12 @@ msgid "% discount"
 msgstr "% zľava"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+#, fuzzy
+msgid "&amp;bull;"
+msgstr "&amp;nbsp;"
+
+#. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
 #: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
 #: model:product.template,quote_description:website_quote.product_template_quote_2
@@ -142,6 +148,12 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept"
+msgstr "<i class=\"fa fa-check\"/> Prijať"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+#, fuzzy
+msgid "<i class=\"fa fa-check\"/> Accept &amp; Pay"
 msgstr "<i class=\"fa fa-check\"/> Prijať"
 
 #. module: website_quote
@@ -427,6 +439,11 @@ msgstr ""
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Access to the Lead"
 msgstr "Prístup k iniciatíve"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
+msgid "Add to order lines"
+msgstr ""
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_3
@@ -884,6 +901,14 @@ msgstr ""
 "predaja."
 
 #. module: website_quote
+#: model:ir.model.fields,help:website_quote.field_sale_order_option_sequence
+#, fuzzy
+msgid "Gives the sequence order when displaying a list of suggested product."
+msgstr ""
+"Dáva sekvenčné poradie pri zobrazovaní zoznamu riadkov cenovej ponuky "
+"predaja."
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "Great quotation templates will significantly\n"
@@ -961,8 +986,8 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:76
-#: code:addons/website_quote/controllers/main.py:227
+#: code:addons/website_quote/controllers/main.py:80
+#: code:addons/website_quote/controllers/main.py:230
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -975,6 +1000,13 @@ msgstr ""
 #: selection:sale.order,require_payment:0
 #: selection:sale.quote.template,require_payment:0
 msgid "Immediate after website order validation"
+msgstr "Okamžite po potvrdení webstránkovej objednávky "
+
+#. module: website_quote
+#: selection:sale.order,require_payment:0
+#: selection:sale.quote.template,require_payment:0
+#, fuzzy
+msgid "Immediate after website order validation and save a token"
 msgstr "Okamžite po potvrdení webstránkovej objednávky "
 
 #. module: website_quote
@@ -1177,8 +1209,9 @@ msgstr "Multi-jazykový manažment"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "My Account"
-msgstr "Môj účet"
+#, fuzzy
+msgid "My Quotations"
+msgstr "Cenová ponuka"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1289,13 +1322,13 @@ msgid "Optional Products Lines"
 msgstr "Voliteľné produktové riadky"
 
 #. module: website_quote
-#: code:addons/website_quote/models/order.py:294
+#: code:addons/website_quote/models/order.py:300
 #, fuzzy, python-format
 msgid "Order paid by %s. Transaction: %s. Amount: %s."
 msgstr "Objednávku zaplatil %s. Transakcia: %s. Sumna: %s."
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:94
+#: code:addons/website_quote/controllers/main.py:98
 #, python-format
 msgid "Order signed by %s"
 msgstr "Objednávku podpísal %s."
@@ -1387,8 +1420,8 @@ msgstr ""
 "tréningy)."
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:66
-#: code:addons/website_quote/controllers/main.py:231
+#: code:addons/website_quote/controllers/main.py:70
+#: code:addons/website_quote/controllers/main.py:234
 #, python-format
 msgid "Pay & Confirm"
 msgstr "Zaplatiť a Potvrdiť"
@@ -1405,23 +1438,9 @@ msgid "Payment Method:"
 msgstr "Metóda platby:"
 
 #. module: website_quote
-#: model:ir.model,name:website_quote.model_payment_transaction
-msgid "Payment Transaction"
-msgstr "Platobná transakcia"
-
-#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Preview"
 msgstr ""
-
-#. module: website_quote
-#: model:web.tip,description:website_quote.quotation_tip_1
-msgid ""
-"Preview the online quotation. You'll be able to edit the quotation content "
-"before send it to the customer."
-msgstr ""
-"Zobrazte náhľad on-line cenovej ponuky. Budete vedieť upraviť obsah cenovej "
-"ponuky než ju pošlete zákazníkovi."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -1556,7 +1575,7 @@ msgid "Quotation Viewed"
 msgstr "Cenová ponuka zobrazená"
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:32
+#: code:addons/website_quote/controllers/main.py:29
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr "Cenová ponuka zobrazená zákazníkom"
@@ -1607,11 +1626,6 @@ msgstr "Požiadavky"
 #: model:ir.model,name:website_quote.model_sale_order_option
 msgid "Sale Options"
 msgstr "Možnosti predaja"
-
-#. module: website_quote
-#: model:ir.model.fields,field_description:website_quote.field_payment_transaction_sale_order_id
-msgid "Sale Order"
-msgstr "Objednávka predaja"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_order_id
@@ -1668,11 +1682,20 @@ msgid "Schedule Phone Calls and Meetings"
 msgstr "Naplánovať Telefonické hovory a Stretnutia"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_layout_category_id
+#, fuzzy
+msgid "Section"
+msgstr "Popis"
+
+#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_access_token
 msgid "Security Token"
 msgstr "Bezpečnostný token"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_sequence
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_sequence
 msgid "Sequence"
 msgstr "Postupnosť"
@@ -1833,6 +1856,12 @@ msgid "To get more information, visit the"
 msgstr "Ak chcete získať viac informácií, navštívte"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+#, fuzzy
+msgid "Total Price"
+msgstr "Jednotková cena"
+
+#. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
 #: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
 #: model:product.template,quote_description:website_quote.product_template_quote_2
@@ -1990,7 +2019,7 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:143
+#: code:addons/website_quote/controllers/main.py:147
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr "Nemôžete pridať možnosti do potvrdenej objednávky."
@@ -2324,11 +2353,30 @@ msgstr "neznámy"
 #~ "prejdite na záložku predaja a pridajte text \"Popis pre cenové ponuky\"</"
 #~ "b>"
 
+#~ msgid ""
+#~ "Change the look and feel from the front-end(GUI) rather than aneed of "
+#~ "technical knowledge."
+#~ msgstr ""
+#~ "Zmeňte vzhľad a dojem z front-end (GUI), skôr než potrebuju technických "
+#~ "znalostí."
+
+#~ msgid "Controlers and Views"
+#~ msgstr "Ovládače a Zobrazenia"
+
+#~ msgid "My Account"
+#~ msgstr "Môj účet"
+
 #~ msgid "Online Training + Certification"
 #~ msgstr "Online tréning + Certifikácia"
 
 #~ msgid "Open Quotations"
 #~ msgstr "Otvorené cenové ponuky"
+
+#~ msgid "Order payed by %s. Transaction: %s. Amount: %s."
+#~ msgstr "Objednávku zaplatil %s. Transakcia: %s. Sumna: %s."
+
+#~ msgid "Our offer"
+#~ msgstr "Naša ponuka"
 
 #~ msgid ""
 #~ "Our offer is based on 3 commitments, which drive our business and our "
@@ -2343,18 +2391,53 @@ msgstr "neznámy"
 #~ msgstr ""
 #~ "Naše ceny sú najnižšie v regióne, ak lacnejšie inde, vrátime vám rozdiel"
 
+#~ msgid "Payment Transaction"
+#~ msgstr "Platobná transakcia"
+
+#~ msgid ""
+#~ "Preview the online quotation. You'll be able to edit the quotation "
+#~ "content before send it to the customer."
+#~ msgstr ""
+#~ "Zobrazte náhľad on-line cenovej ponuky. Budete vedieť upraviť obsah "
+#~ "cenovej ponuky než ju pošlete zákazníkovi."
+
+#~ msgid "Quality"
+#~ msgstr "Kvalita"
+
 #~ msgid "Quality in many ways, our reputation was built on the first value."
 #~ msgstr ""
 #~ "Kvalita v mnohých ohľadoch, naša povesť bola postavená na prvej hodnote."
 
+#~ msgid "Sale Order"
+#~ msgstr "Objednávka predaja"
+
 #~ msgid "Send by Email"
 #~ msgstr "Poslať emailom"
+
+#~ msgid "Service"
+#~ msgstr "Služba"
 
 #~ msgid ""
 #~ "The description of products/services from your quotation will be "
 #~ "displayed below"
 #~ msgstr ""
 #~ "Popis produktov / služieb z vašej cenovej ponuky budú zobrazené nižšie"
+
+#~ msgid ""
+#~ "These courses feature the same high quality course content found in our "
+#~ "traditional classroom trainings, supplemented with modular sessions and "
+#~ "cloud-based labs. Many of our online learning courses also include dozens "
+#~ "of recorded webinars and live sessions by our senior instructors. At the "
+#~ "end of the training, you can pass the Odoo Certification exam in one of "
+#~ "the 5000+ Pearson VUE test centers worldwide."
+#~ msgstr ""
+#~ "Tieto kurzy obsahujú rovnako kvalitný obsah kurzu ako ten nájdený v "
+#~ "tradičných tréningoch, doplnený s modulárnymi udalosťami a laboratóriách "
+#~ "lokalizovaných na cloud-och. Mnohí z našich on-line vzdelávacích kurzov "
+#~ "tiež obsahujú desiatky zaznamenaných webinárov a živých relácií od našich "
+#~ "vedúcich inštruktorov. Na konci tréningu, môžete absolvovať Odoo "
+#~ "certifikačnú skúšku v jednom z 5000+ Pearson VUE testovacích stredísk  po "
+#~ "celom svete."
 
 #~ msgid "View Online Quotation"
 #~ msgstr "Zobraziť online cenovú ponuku"

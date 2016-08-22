@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-02-04 16:19+0000\n"
 "Last-Translator: Sadig Adam <sadig41@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
@@ -48,6 +48,12 @@ msgid "Account Date"
 msgstr "التاريخ"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+#, fuzzy
+msgid "Accounting Date"
+msgstr "التاريخ"
+
+#. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
 msgstr "السند المحاسبي"
@@ -69,7 +75,9 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr "هل ترغب حقاً في إلغاء هذا الإيصال؟"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
 msgstr "تاريخ الفاتورة"
 
@@ -99,7 +107,7 @@ msgid "Cancelled"
 msgstr "ملغي"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:147
+#: code:addons/account_voucher/account_voucher.py:153
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "لا يمكن حذف قسيمة (s) التي تم فتحها بالفعل أو المدفوعة."
@@ -152,9 +160,7 @@ msgid "Customer"
 msgstr "العميل"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
-#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Date"
 msgstr "التاريخ"
 
@@ -190,7 +196,7 @@ msgid "Due Date"
 msgstr "تاريخ الاستحقاق"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
 msgid "Effective date for accounting entries"
 msgstr "تاريخ فعال للمدخلات المحاسبية"
 
@@ -308,13 +314,13 @@ msgid "Payment Reference"
 msgstr "مرجع الدفع"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:183
+#: code:addons/account_voucher/account_voucher.py:189
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "الرجاء تفعيل التسلسل لليومية المختارة!"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:186
+#: code:addons/account_voucher/account_voucher.py:192
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "الرجاء تعريف تسلسل لليومية"
@@ -553,7 +559,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:348
+#: code:addons/account_voucher/account_voucher.py:354
 #, python-format
 msgid "You must first select a partner!"
 msgstr "اخر الشريك أولاً!"

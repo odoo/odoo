@@ -1,4 +1,3 @@
-# #-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * report
@@ -6,29 +5,18 @@
 # Translators:
 # Florian Hatat, 2015
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2015
-# #-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * report
-#
-# Translators:
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2015
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-10-08 12:15+0000\n"
-"Last-Translator: Olivier Lenoir <olivier.lenoir@free.fr>\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"PO-Revision-Date: 2015-11-03 12:16+0000\n"
+"Last-Translator: Florian Hatat\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: report
@@ -157,7 +145,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 mm"
 
 #. module: report
-#: code:addons/report/models/report.py:288
+#: code:addons/report/models/report.py:287
 #, python-format
 msgid "Bad Report Reference"
 msgstr "Référence de rapport incorrecte"
@@ -210,6 +198,13 @@ msgid "Default paper format ?"
 msgstr "Format de papier par défaut ?"
 
 #. module: report
+#. openerp-web
+#: code:addons/report/static/src/xml/report.xml:12
+#, python-format
+msgid "Discard"
+msgstr "Annuler"
+
+#. module: report
 #: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_display_name
@@ -223,29 +218,26 @@ msgid "Display a header line"
 msgstr "Afficher une ligne d'en-tête"
 
 #. module: report
+#. openerp-web
+#: code:addons/report/static/src/xml/report.xml:8
+#, python-format
+msgid "Edit"
+msgstr "Modifier"
+
+#. module: report
 #: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
 msgid "Edit external footer"
 msgstr "Éditer le pied de page externe"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
-#, fuzzy
 msgid "Edit external header"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Éditer l'en-tête de page externe\n"
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Éditer l'entête de page externe"
+msgstr "Éditer l'en-tête de page externe"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
-#, fuzzy
 msgid "Edit internal header"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Éditer l'en-tête de page interne\n"
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Éditer l'entête de page interne"
+msgstr "Éditer l'en-tête de page interne"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -254,11 +246,8 @@ msgstr "Courriel :"
 
 #. module: report
 #: constraint:report.paperformat:0
-#, fuzzy
 msgid "Error ! You cannot select a format AND specific page width/height."
 msgstr ""
-"Erreur ! Vous ne pouvez pas sélectionner un format ET une hauteur/largeur de "
-"page."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -279,6 +268,11 @@ msgstr "Fax :"
 #: selection:report.paperformat,format:0
 msgid "Folio 27  210 x 330 mm"
 msgstr "Folio 27  210 x 330 mm"
+
+#. module: report
+#: model:ir.model,name:report.model_ir_http
+msgid "HTTP routing"
+msgstr "Routage HTTP"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_spacing
@@ -419,9 +413,19 @@ msgstr "Aperçu de rapport interne"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:76
-#: code:addons/report/static/src/js/qwebactionmanager.js:84
-#: code:addons/report/static/src/js/qwebactionmanager.js:91
+#: code:addons/report/static/src/xml/report.xml:5
+#, python-format
+msgid "Print"
+msgstr "Imprimer"
+
+#. module: report
+#: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
+msgid "Printed Report Name"
+msgstr ""
+
+#. module: report
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:95
 #: model:ir.model,name:report.model_report
 #, python-format
 msgid "Report"
@@ -438,6 +442,13 @@ msgstr "Rapports"
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_right
 msgid "Right Margin (mm)"
 msgstr "Marge de droite (mm)"
+
+#. module: report
+#. openerp-web
+#: code:addons/report/static/src/xml/report.xml:11
+#, python-format
+msgid "Save"
+msgstr "Sauvegarder"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
@@ -470,7 +481,15 @@ msgid "This is a sample of an internal report."
 msgstr "Ceci est un exemple d'un rapport interne."
 
 #. module: report
-#: code:addons/report/models/report.py:288
+#: model:ir.model.fields,help:report.field_ir_act_report_xml_print_report_name
+msgid ""
+"This is the filename of the report going to download. Keep empty to not "
+"change the report filename. You can use a python expression with the object "
+"and time variables."
+msgstr ""
+
+#. module: report
+#: code:addons/report/models/report.py:287
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr "Ce rapport n'est pas chargé dans la base de données : %s."
@@ -482,7 +501,7 @@ msgstr "Marge supérieure (mm)"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:76
+#: code:addons/report/static/src/js/qwebactionmanager.js:18
 #, python-format
 msgid ""
 "Unable to find Wkhtmltopdf on this \n"
@@ -501,14 +520,14 @@ msgid "Website:"
 msgstr "Site Web :"
 
 #. module: report
-#: code:addons/report/models/report.py:459
+#: code:addons/report/models/report.py:458
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf a échoué (code d'erreur : %s). Message : %s"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:84
+#: code:addons/report/static/src/js/qwebactionmanager.js:19
 #, python-format
 msgid ""
 "You need to start OpenERP with at least two \n"
@@ -519,7 +538,7 @@ msgstr ""
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:91
+#: code:addons/report/static/src/js/qwebactionmanager.js:20
 #, python-format
 msgid ""
 "You should upgrade your version of\n"
@@ -549,3 +568,8 @@ msgstr ""
 #: model:ir.model,name:report.model_report_abstract_report
 msgid "report.abstract_report"
 msgstr "report.abstract_report"
+
+#~ msgid "Error ! You cannot select a format AND speficic page width/height."
+#~ msgstr ""
+#~ "Erreur ! Vous ne pouvez pas sélectionner un format ET une hauteur/largeur "
+#~ "de page."

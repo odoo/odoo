@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-03-22 12:08+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -53,7 +53,6 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Apply"
 msgstr "Примени"
 
@@ -69,20 +68,8 @@ msgstr "Автентикација"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Cancel"
 msgstr "Откажи"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "Клиент"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
-msgid "Configure Sales"
-msgstr "Конфигурација на продажба"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -96,34 +83,18 @@ msgstr "Конфигурирај податоци за компанијата"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Креирано од"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Креирано на"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "Купувач"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 msgid "Display Name"
 msgstr "Прикажи име"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr "Донатор"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -157,19 +128,7 @@ msgid "Google Integration"
 msgstr "Google интеграција"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr "Гостин"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
-msgid "How do you call a Customer"
-msgstr "Како го нарекувате Потрошувачот"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
 
@@ -185,22 +144,16 @@ msgstr "Внатрешна компанија"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "Последна промена на"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Последно ажурирање од"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Последно ажурирање на"
 
@@ -213,11 +166,6 @@ msgstr "Менаџирај внатрешна компанија"
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
 msgid "Manage multiple companies"
 msgstr "Управување со повеќе компании"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "Член"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -237,16 +185,6 @@ msgid ""
 msgstr ""
 "Кога ќе се инсталира, можете да ги конфигурирате вашите API креденцијали за "
 "\"Google календар\""
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "Партнер"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr "Пациент"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -285,16 +223,6 @@ msgid "Shared resources"
 msgstr "Споделени средства"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid "Specify Your Terminology"
-msgstr "Специфицирајте ја вашата терминологија"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr "Потстанар"
-
-#. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
 msgid "This installs the module google_calendar."
 msgstr "Ова го инсталира модулот google_calendar."
@@ -317,13 +245,9 @@ msgstr ""
 "набавка со некоја друга компанија."
 
 #. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "Употреби друг збор за да кажеш \"Потрошувач\""
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers, sign in with Google..."
+#, fuzzy
+msgid "Use external authentication providers (OAuth)"
 msgstr ""
 "Користи надворешни снабдувачи на автентичност, најави се преку Google..."
 
@@ -357,15 +281,6 @@ msgstr ""
 "помеѓу компании."
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
-msgstr ""
-"Може да го користите овој волшебник за промена на терминологијата за "
-"клиентите во целата апликација."
-
-#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "You will find more options in your company details: address for the header "
@@ -379,12 +294,51 @@ msgstr ""
 msgid "base.config.settings"
 msgstr "base.config.settings"
 
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr "base.setup.terminology"
+#~ msgid "Client"
+#~ msgstr "Клиент"
 
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
+#~ msgid "Configure Sales"
+#~ msgstr "Конфигурација на продажба"
+
+#~ msgid "Customer"
+#~ msgstr "Купувач"
+
+#~ msgid "Donor"
+#~ msgstr "Донатор"
+
+#~ msgid "Guest"
+#~ msgstr "Гостин"
+
+#~ msgid "How do you call a Customer"
+#~ msgstr "Како го нарекувате Потрошувачот"
+
+#~ msgid "Member"
+#~ msgstr "Член"
+
+#~ msgid "Partner"
+#~ msgstr "Партнер"
+
+#~ msgid "Patient"
+#~ msgstr "Пациент"
+
+#~ msgid "Specify Your Terminology"
+#~ msgstr "Специфицирајте ја вашата терминологија"
+
+#~ msgid "Tenant"
+#~ msgstr "Потстанар"
+
+#~ msgid "Use another word to say \"Customer\""
+#~ msgstr "Употреби друг збор за да кажеш \"Потрошувач\""
+
+#~ msgid ""
+#~ "You can use this wizard to change the terminologies for customers in the "
+#~ "whole application."
+#~ msgstr ""
+#~ "Може да го користите овој волшебник за промена на терминологијата за "
+#~ "клиентите во целата апликација."
+
+#~ msgid "base.setup.terminology"
+#~ msgstr "base.setup.terminology"
+
+#~ msgid "sale.config.settings"
+#~ msgstr "sale.config.settings"

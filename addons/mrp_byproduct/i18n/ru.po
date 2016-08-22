@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2015-11-13 19:44+0000\n"
 "Last-Translator: SV <svilij@yahoo.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -57,34 +57,9 @@ msgid "Created on"
 msgstr "Создан"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,help:mrp_byproduct.field_mrp_subproduct_subproduct_type
-msgid ""
-"Define how the quantity of byproducts will be set on the production orders "
-"using this BoM.  'Fixed' depicts a situation where the quantity of created "
-"byproduct is always equal to the quantity set on the BoM, regardless of how "
-"many are created in the production order.  By opposition, 'Variable' means "
-"that the quantity will be computed as    '(quantity of byproduct set on the "
-"BoM / quantity of manufactured product set on the BoM * quantity of "
-"manufactured product in the production order.)'"
-msgstr ""
-"Определите, как количество побочных продуктов будет установлено на "
-"производственных заказах, используя этот BoM. \"Фиксированный\" изображает "
-"ситуацию, когда количество созданного побочного продукта всегда равно "
-"количеству установленного в BoM, независимо от того, сколько создано в "
-"порядке производства. В противоположность \"Переменная\" означает, что "
-"количество будет вычисляться как \"(количество побочного продукта "
-"установленного в BoM / количество произведенного продукта, установленного в "
-"BoM *  количество выработанной продукции в порядке производства).\""
-
-#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
 msgid "Display Name"
 msgstr "Отображаемое Имя"
-
-#. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
-msgstr "Фиксированный"
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_id
@@ -107,6 +82,12 @@ msgid "Last Updated on"
 msgstr "Последний раз обновлено"
 
 #. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_operation_id
+#, fuzzy
+msgid "Produced at Operation"
+msgstr "Товар"
+
+#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
 msgid "Product"
 msgstr "Товар"
@@ -117,23 +98,29 @@ msgid "Product Qty"
 msgstr "Кол-во продукции"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom
-msgid "Product Unit of Measure"
-msgstr "Ед. изм. товара"
-
-#. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
 #, fuzzy
 msgid "Production"
 msgstr "Товар"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_subproduct_type
-msgid "Quantity Type"
-msgstr "Количество Тип"
+#: model:ir.model,name:mrp_byproduct.model_stock_move
+msgid "Stock Move"
+msgstr ""
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:45
+#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
+#, fuzzy
+msgid "Subproduct"
+msgstr "Побочный продукт"
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct line that generated the move in a manufacturing order"
+msgstr ""
+
+#. module: mrp_byproduct
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:32
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -143,15 +130,45 @@ msgstr ""
 "указанная в форме продукта."
 
 #. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Variable"
-msgstr "Переменный"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom_id
+#, fuzzy
+msgid "Unit of Measure"
+msgstr "Ед. изм. товара"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:45
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:31
 #, python-format
 msgid "Warning"
 msgstr "Внимание"
 
+#~ msgid ""
+#~ "Define how the quantity of byproducts will be set on the production "
+#~ "orders using this BoM.  'Fixed' depicts a situation where the quantity of "
+#~ "created byproduct is always equal to the quantity set on the BoM, "
+#~ "regardless of how many are created in the production order.  By "
+#~ "opposition, 'Variable' means that the quantity will be computed as    "
+#~ "'(quantity of byproduct set on the BoM / quantity of manufactured product "
+#~ "set on the BoM * quantity of manufactured product in the production "
+#~ "order.)'"
+#~ msgstr ""
+#~ "Определите, как количество побочных продуктов будет установлено на "
+#~ "производственных заказах, используя этот BoM. \"Фиксированный\" "
+#~ "изображает ситуацию, когда количество созданного побочного продукта "
+#~ "всегда равно количеству установленного в BoM, независимо от того, сколько "
+#~ "создано в порядке производства. В противоположность \"Переменная\" "
+#~ "означает, что количество будет вычисляться как \"(количество побочного "
+#~ "продукта установленного в BoM / количество произведенного продукта, "
+#~ "установленного в BoM *  количество выработанной продукции в порядке "
+#~ "производства).\""
+
+#~ msgid "Fixed"
+#~ msgstr "Фиксированный"
+
 #~ msgid "Manufacturing Order"
 #~ msgstr "Производственный заказ"
+
+#~ msgid "Quantity Type"
+#~ msgstr "Количество Тип"
+
+#~ msgid "Variable"
+#~ msgstr "Переменный"

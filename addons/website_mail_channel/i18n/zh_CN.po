@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-06-18 02:40+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -25,6 +25,36 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_mail_channel
+#: model:mail.template,body_html:website_mail_channel.mail_template_list_subscribe
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Hello,</p>\n"
+"<p>You have requested to be subscribed to the mailing list <strong>${object."
+"name}</strong></p>\n"
+"<p>To confirm, please visit the following link:</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
+"p>\n"
+"<p>If this was a mistake or you did not requested this action, please ignore "
+"this message.</p>\n"
+"</data>"
+msgstr ""
+
+#. module: website_mail_channel
+#: model:mail.template,body_html:website_mail_channel.mail_template_list_unsubscribe
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Hello,</p>\n"
+"<p>You have requested to be unsubscribed to the mailing list <strong>"
+"${object.name}</strong></p>\n"
+"<p>To confirm, please visit the following link:</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
+"p>\n"
+"<p>If this was a mistake or you did not requested this action, please ignore "
+"this message.</p>\n"
+"</data>"
+msgstr ""
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
@@ -71,6 +101,11 @@ msgid "Change Discussion List"
 msgstr "变更讨论列表"
 
 #. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_description
+msgid "Description"
+msgstr "说明"
+
+#. module: website_mail_channel
 #. openerp-web
 #: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:19
 #, python-format
@@ -93,6 +128,11 @@ msgid "Follow-Ups"
 msgstr "催款"
 
 #. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.invalid_token_subscription
+msgid "Invalid or expired confirmation link."
+msgstr ""
+
+#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.footer_mailing_list
 msgid "Mailing List"
 msgstr "邮件列表"
@@ -104,7 +144,7 @@ msgid "Mailing Lists"
 msgstr "邮件列表"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:23
+#: code:addons/website_mail_channel/models/mail_mail.py:20
 #, python-format
 msgid "Mailing-List"
 msgstr "邮件列表"
@@ -128,7 +168,17 @@ msgid "Outgoing Mails"
 msgstr "出去的邮件"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:24
+#: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
+msgid "Please confirm subscription to ${object.name}"
+msgstr ""
+
+#. module: website_mail_channel
+#: model:mail.template,subject:website_mail_channel.mail_template_list_unsubscribe
+msgid "Please confirm unsubscription to ${object.name}"
+msgstr ""
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/models/mail_mail.py:21
 #, python-format
 msgid "Post to"
 msgstr "寄到"
@@ -155,7 +205,8 @@ msgid "Subscribe"
 msgstr "订阅"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:25
+#: code:addons/website_mail_channel/models/mail_mail.py:22
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #, python-format
 msgid "Unsubscribe"
 msgstr "退订"
@@ -170,6 +221,16 @@ msgstr "用于显示基于段落的讨论消息，使用统一路径；"
 #: model:ir.model.fields,help:website_mail_channel.field_mail_mail_website_published
 msgid "Visible on the website as a comment"
 msgstr "网站评论可见"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "You have been correctly"
+msgstr ""
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
+msgid "a confirmation email has been sent."
+msgstr ""
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -228,9 +289,14 @@ msgid "show"
 msgstr "显示"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_description
-msgid "unknown"
-msgstr "未知的"
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "subscribed"
+msgstr ""
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "to the mailing list."
+msgstr ""
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -239,7 +305,15 @@ msgid "unsubscribe"
 msgstr "退订"
 
 #. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "unsubscribed"
+msgstr ""
+
+#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "your email..."
 msgstr "你的电子邮件地址..."
+
+#~ msgid "unknown"
+#~ msgstr "未知的"

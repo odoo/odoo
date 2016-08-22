@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-06-04 06:58+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -184,6 +184,15 @@ msgstr "Etkin"
 #: model:survey.question,question:hr_recruitment.recruitment_2_4
 msgid "Activities"
 msgstr "Etkinlikler"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:20
+#, python-format
+msgid ""
+"Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
+"Qualified &gt; First Interview &gt; Recruited</i>"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
@@ -433,9 +442,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
-msgid ""
-"Click here to create a new job. You can remove the \"In Recruitment\" filter "
-"to display all the job positions."
+msgid "Click here to create a new job position."
 msgstr ""
 
 #. module: hr_recruitment
@@ -447,6 +454,11 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid "Click to add a new stage in the recruitment process."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
+msgid "Click to add a new tag."
 msgstr ""
 
 #. module: hr_recruitment
@@ -485,17 +497,23 @@ msgid "Configure Recruitment"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:388
+#: code:addons/hr_recruitment/models/hr_recruitment.py:389
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_id
 #, python-format
 msgid "Contact"
 msgstr "Kontak"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:390
+#: code:addons/hr_recruitment/models/hr_recruitment.py:391
 #, python-format
 msgid "Contact Email"
 msgstr "Kontak E-mail"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment
+#, fuzzy
+msgid "Content"
+msgstr "Kontak"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -513,6 +531,12 @@ msgid "Contract Signed"
 msgstr "Sözleşme İmzaladı"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#, fuzzy
+msgid "Create"
+msgstr "Oluşturan"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
 msgid "Create Date"
 msgstr "Oluşturma Tarihi"
@@ -521,6 +545,13 @@ msgstr "Oluşturma Tarihi"
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Create Employee"
 msgstr "Personel Oluştur"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#, fuzzy
+msgid "Create a Job Position"
+msgstr "İş Pozisyonu"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
@@ -579,6 +610,7 @@ msgid "Default Values"
 msgstr "Ötanımlı Değerler"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid ""
 "Define a specific contact address for this job position. If you keep it "
@@ -594,15 +626,6 @@ msgid ""
 "Define here your stages of the recruitment process, for example:\n"
 "            qualification call, first interview, second interview, refused,\n"
 "            hired."
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
-msgid ""
-"Define job position profile and manage recruitment in a context of a "
-"particular job: print interview survey, define number of expected new "
-"employees, and manage its recruitment pipe"
 msgstr ""
 
 #. module: hr_recruitment
@@ -633,7 +656,6 @@ msgid "Delete"
 msgstr "Sil"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_department
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_department_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_department_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -646,6 +668,13 @@ msgid "Department Manager"
 msgstr "Departman Yöneticisi"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_department
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_department
+#, fuzzy
+msgid "Departments"
+msgstr "Departmen"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_description
 msgid "Description"
 msgstr "Açıklama"
@@ -654,6 +683,11 @@ msgstr "Açıklama"
 #: model:survey.label,value:hr_recruitment.rrow_2_1_4
 msgid "Desk space"
 msgstr "Masa alanı"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Discard"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -725,6 +759,7 @@ msgid "Email"
 msgstr "E-posta"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email Alias"
 msgstr "E-posta Rumuzu"
@@ -883,6 +918,12 @@ msgid "Hired Employees"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_department
+#, fuzzy
+msgid "Hr Department"
+msgstr "İK Bölüm"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_id
@@ -962,6 +1003,12 @@ msgstr "İş"
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
 msgid "Job Campaign"
 msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#, fuzzy
+msgid "Job Email"
+msgstr "E-posta"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
@@ -1063,22 +1110,17 @@ msgid "Last Updated on"
 msgstr "Son Güncellenen"
 
 #. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:16
+#, python-format
+msgid ""
+"Let's have a look at the <b>applications pipeline</b> for this job position."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_2_1
 msgid "Male"
 msgstr "Bay"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_config_settings_module_document
-msgid ""
-"Manage your CV's and motivation letter related to all applicants.\n"
-"-This installs the module document_ftp. This will install the knowledge "
-"management  module in order to allow you to search using specific keywords "
-"through  the content of all documents (PDF, .DOCx...)"
-msgstr ""
-"CV'nizi ve tüm başvuru sahiplerine ilişkin motivasyon mektubu yönetin.\n"
-"-Bu Modül document_ftp yükler. Bu bilgiyi kuracak sırayla yönetim modülü "
-"belirli anahtar kelimeler kullanarak arama yapmak için izin vermek için tüm "
-"belgelerin içeriği ile (PDF, .docx ...)"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -1147,7 +1189,7 @@ msgid "New Applications"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:438
+#: code:addons/hr_recruitment/models/hr_recruitment.py:439
 #, python-format
 msgid "New Employee %s Hired"
 msgstr "Yeni Personel %s İş Alındı"
@@ -1193,10 +1235,15 @@ msgid "No Interview Form"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:406
+#: code:addons/hr_recruitment/models/hr_recruitment.py:407
 #, python-format
 msgid "No Subject"
 msgstr "Konu Yok"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
+msgid "No document yet."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_10
@@ -1247,6 +1294,21 @@ msgstr "Ofis ortamı"
 #: model:survey.label,value:hr_recruitment.rrow_2_1_6
 msgid "Office location"
 msgstr "Ofis konumu"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
+msgid ""
+"Once a job position is created, you can track related applications\n"
+"                  and manage the recruitment process."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
+msgid ""
+"Once a job position is created, you can track the applicants\n"
+"                  and manage the recruitment process related to the job\n"
+"                  position."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_force_thread_id
@@ -1489,11 +1551,6 @@ msgid "Search Applicants"
 msgstr "Başvuruları Arama"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
-msgid "Search through resumes and motivation letters."
-msgstr ""
-
-#. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
 msgid "Second Interview"
 msgstr "İkinci Görüşme"
@@ -1629,7 +1686,10 @@ msgid "Tag name already exists !"
 msgstr "Etiket adı halihazırda mevcut !"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_categ_ids
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 msgid "Tags"
 msgstr "Etiketler"
 
@@ -1737,6 +1797,16 @@ msgstr ""
 "listesi adı"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
+msgid ""
+"This menu helps you search through resumes and motivation\n"
+"                letters. Odoo automatically indexes .PDF, .DOC, DOCX, .TXT\n"
+"                files so that you can search keywords from the content of "
+"these\n"
+"                files."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_1
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_2
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_3
@@ -1753,6 +1823,15 @@ msgstr "Bu soru bir cevap gerektiriyor"
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
+msgstr ""
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:30
+#, python-format
+msgid ""
+"Try to send an email to this address, it will create an application "
+"automatically."
 msgstr ""
 
 #. module: hr_recruitment
@@ -1779,6 +1858,13 @@ msgid "Use template"
 msgstr "Şablonu kullan"
 
 #. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:25
+#, python-format
+msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_user_id
 msgid "User"
 msgstr "Kullanıcı"
@@ -1797,6 +1883,13 @@ msgstr "Çok İyi"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_4
 msgid "Very important"
 msgstr "Çok Önemli"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:11
+#, python-format
+msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_cc
@@ -1828,7 +1921,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:442
+#: code:addons/hr_recruitment/models/hr_recruitment.py:443
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr ""
@@ -1839,6 +1932,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "e.g. Call for interview"
 msgstr "örn. Görüşme çağrısı"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#, fuzzy
+msgid "e.g. Sales Manager"
+msgstr "Departman Yöneticisi"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_config_settings
@@ -1855,6 +1954,37 @@ msgstr "işe başvuranlar"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
+
+#~ msgid ""
+#~ "\n"
+#~ "            <p>\n"
+#~ "                %if object.department_id:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}\n"
+#~ "                    in ${object.department_id.name}.\n"
+#~ "                %else:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}.\n"
+#~ "                %endif\n"
+#~ "            </p>\n"
+#~ "            <p>Please welcome him/her and help him/her finding his/her "
+#~ "marks.</p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "            <p>\n"
+#~ "                %if object.department_id:\n"
+#~ "                    <strong> ${object.name} </strong> bize ${object."
+#~ "job_id.name} olarak katılacaktır, duyurmaktan memnunluk duyarım.\n"
+#~ "                    in ${object.department_id.name}.\n"
+#~ "                %else:\n"
+#~ "                    <strong> ${object.name} </strong> bize ${object."
+#~ "job_id.name} olarak katılacaktır, duyurmaktan memnunluk duyarım.\n"
+#~ "                %endif\n"
+#~ "            </p>\n"
+#~ "            <p>Lütfen ona hoşgeldiniz deyin ve işaretlerini bulmasına "
+#~ "yardımcı olun.</p>\n"
+#~ "            "
 
 #~ msgid ""
 #~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
@@ -1924,20 +2054,31 @@ msgstr "oe_kanban_text_red"
 #~ msgid "Followers (Partners)"
 #~ msgstr "İzleyiciler (İş ortakları)"
 
-#~ msgid "HR Department"
-#~ msgstr "İK Bölüm"
-
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
 
+#~ msgid "If other, precise:"
+#~ msgstr "Eğer diğer, kesin:"
+
 #~ msgid "Is Follower"
 #~ msgstr "Takipçi mi"
 
 #~ msgid "Last Message Date"
 #~ msgstr "Son Mesaj Tarihi"
+
+#~ msgid ""
+#~ "Manage your CV's and motivation letter related to all applicants.\n"
+#~ "-This installs the module document_ftp. This will install the knowledge "
+#~ "management  module in order to allow you to search using specific "
+#~ "keywords through  the content of all documents (PDF, .DOCx...)"
+#~ msgstr ""
+#~ "CV'nizi ve tüm başvuru sahiplerine ilişkin motivasyon mektubu yönetin.\n"
+#~ "-Bu Modül document_ftp yükler. Bu bilgiyi kuracak sırayla yönetim modülü "
+#~ "belirli anahtar kelimeler kullanarak arama yapmak için izin vermek için "
+#~ "tüm belgelerin içeriği ile (PDF, .docx ...)"
 
 #~ msgid "Messages"
 #~ msgstr "Mesajlar"
@@ -1956,6 +2097,18 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "Open HR Menu"
 #~ msgstr "İK Menüsünü Aç"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Mail gateway'i kullanarak gönderilecek mesajların kurallarını "
+#~ "belirleyin:\n"
+#~ " Herkes : Herkes eposta alır.\n"
+#~ " İş Ortakları : Sadece yetkili iş ortakları. \n"
+#~ "Takipçiler : Sadece ilgili doküman veya konunun takipçileri\n"
 
 #~ msgid ""
 #~ "This is a name that helps you keep track of your different campaign "

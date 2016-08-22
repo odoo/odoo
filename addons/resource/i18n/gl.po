@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-04-04 09:08+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Galician (http://www.transifex.com/odoo/odoo-9/language/gl/)\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:686
+#: code:addons/resource/resource.py:688
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -27,6 +27,13 @@ msgstr "%s (copia)"
 #: model:ir.model.fields,field_description:resource.field_resource_resource_active
 msgid "Active"
 msgstr "Activo"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
+msgid ""
+"An efficiency of 50% means the resource is two times smaller than his usual "
+"speed."
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -338,19 +345,6 @@ msgid "Sunday"
 msgstr "domingo"
 
 #. module: resource
-#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
-msgstr ""
-"Este campo representa a eficiencia dos recursos pra compretar as tarefas. "
-"exem. pos un recurso dunha sola fase de 5 días con 5 tarefas asinadas, "
-"amosarase unha carga do 100% pra esta fase por defecto, pero si poñemos unha "
-"eficiencia de 200%, entón a sua carga será só do 50%."
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Thursday"
 msgstr "Xoves"
@@ -415,3 +409,14 @@ msgstr "Período laboral"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Working Time"
 msgstr "Horario de traballo"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
+#~ "will show a load of 100% for this phase by default, but if we put a "
+#~ "efficiency of 200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "Este campo representa a eficiencia dos recursos pra compretar as tarefas. "
+#~ "exem. pos un recurso dunha sola fase de 5 días con 5 tarefas asinadas, "
+#~ "amosarase unha carga do 100% pra esta fase por defecto, pero si poñemos "
+#~ "unha eficiencia de 200%, entón a sua carga será só do 50%."

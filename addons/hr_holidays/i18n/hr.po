@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-05-06 12:36+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -48,11 +48,10 @@ msgid "!important; font-size: 8px; min-width: 18px\"&gt;"
 msgstr "!važno; veličina fonta: 8px; min.širina: 18px\"&gt;"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:234
-#: code:addons/hr_holidays/hr_holidays.py:361
+#: code:addons/hr_holidays/models/hr_holidays.py:337
 #, python-format
-msgid "%s on %s"
-msgstr "%s na %s"
+msgid "%s on %s : %.2f day(s)"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -101,6 +100,13 @@ msgstr "Odsustvo"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_absence_of_today
 msgid "Absence by Today"
 msgstr "Odsutnost danas"
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+msgid ""
+"Absent Employee(s), Whose leaves request are either confirmed or validated "
+"on today"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -181,7 +187,7 @@ msgid "Allocation Requests to Approve"
 msgstr "Zahtjevi za dodjelom za odobriti"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:575
+#: code:addons/hr_holidays/models/hr.py:129
 #, python-format
 msgid "Allocation for %s"
 msgstr "Dodjela za %s"
@@ -240,6 +246,17 @@ msgstr "Odobreni izostanci"
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holidays_leaves_assign_tree_view
 msgid "Assign Leaves"
 msgstr "Dodijeli odsustva"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_resource_calendar_uom_id
+msgid ""
+"Average hours of work per day.\n"
+"                It is used in an employee leave request to compute the "
+"number of days consumed based on the resource calendar.\n"
+"                It can be used to handle various contract types, e.g.:\n"
+"                - 38 Hours/Week, 5 Days/Week: 1 Day = 7.6 Hours\n"
+"                - 45 Hours/Week, 5 Days/Week: 1 Day = 9.0 Hours"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -319,6 +336,26 @@ msgstr ""
 "dana  raspoloživih nekome."
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_allocation_holidays
+#, fuzzy
+msgid "Click here to create a new leave allocation request."
+msgstr "Kliknite za kreiranje novog zahtjeva za odsustvo."
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_allocation_approve
+#, fuzzy
+msgid "Click here to create a new leave allocation."
+msgstr "Kliknite za kreiranje novog zahtjeva za odsustvo."
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_company_allocation
+#: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_approve
+#: model:ir.actions.act_window,help:hr_holidays.open_employee_leaves
+#, fuzzy
+msgid "Click here to create a new leave request."
+msgstr "Kliknite za kreiranje novog zahtjeva za odsustvo."
+
+#. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
 msgid "Click to create a new leave request."
 msgstr "Kliknite za kreiranje novog zahtjeva za odsustvo."
@@ -382,12 +419,6 @@ msgid "Created on"
 msgstr "Datum kreiranja"
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-#, fuzzy
-msgid "Current"
-msgstr "Nadređeni"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_current_leave_state
 msgid "Current Leave Status"
 msgstr "Trenutni status odsustva"
@@ -398,12 +429,17 @@ msgid "Current Leave Type"
 msgstr "Trenutni tip odsustva"
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#, fuzzy
+msgid "Current Year"
+msgstr "Odsustva u trenutnoj godini"
+
+#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Dashboard"
 msgstr "Kontrolna ploča"
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_department
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_department_id
 msgid "Department"
 msgstr "Odjel"
@@ -525,6 +561,17 @@ msgstr "Sažetak izvještaja odsustva po odjelima"
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
 msgid "HR Leaves Summary Report By Employee"
 msgstr "Sažetak izvještaja odsustva po djelatniku"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_uom_id
+msgid "Hours per Day"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_department
+#, fuzzy
+msgid "Hr Department"
+msgstr "Odjel ljudskih resursa"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_id
@@ -953,6 +1000,11 @@ msgid "Refused"
 msgstr "Odbijen"
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_allocation_tree
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_allocation_tree_customize
@@ -1024,6 +1076,11 @@ msgid "Reset to Draft"
 msgstr "Vrati u nacrt"
 
 #. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_resource_calendar
+msgid "Resource Calendar"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Search Leave"
 msgstr "Pretraži odsustva"
@@ -1079,16 +1136,16 @@ msgstr ""
 "provjerite da je vaše korisničko ime povezano sa zaposlenikom."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:570
-#, python-format
+#: code:addons/hr_holidays/models/hr.py:117
+#, fuzzy, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when "
 "there is only one leave type with the option 'Allow to Override Limit' "
 "unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot "
 "decide on which leave type the update has to be done. \n"
-"You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
-"Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
-"the employees if the configuration does not allow to use this field."
+" You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
+"Requests' located in Leaves Application to manage the leave days of the "
+"employees if the configuration does not allow to use this field."
 msgstr ""
 "Značajka iza polja 'Preostala redovna odsustva' može se koristiti samo kada "
 "je samo jedan tip odsustva ima opciju 'Dopusti da nadjača limit' odznačenom. "
@@ -1105,7 +1162,8 @@ msgid "The number of days must be greater than 0."
 msgstr "Broja dana mora biti veći od 0"
 
 #. module: hr_holidays
-#: constraint:hr.holidays:0
+#: code:addons/hr_holidays/models/hr_holidays.py:253
+#, python-format
 msgid ""
 "The number of remaining leaves is not sufficient for this leave type.\n"
 "Please verify also the leaves waiting for validation."
@@ -1114,8 +1172,9 @@ msgstr ""
 "Provjerite da li postoje odsustva koja čekaju odobrenje"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:304
-#: code:addons/hr_holidays/hr_holidays.py:328 sql_constraint:hr.holidays:0
+#: code:addons/hr_holidays/models/hr_holidays.py:301
+#: code:addons/hr_holidays/models/hr_holidays.py:321
+#: sql_constraint:hr.holidays:0
 #, python-format
 msgid "The start date must be anterior to the end date."
 msgstr "Početni datum mora biti prije završnog."
@@ -1156,8 +1215,9 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_color_name
+#, fuzzy
 msgid ""
-"This color will be used in the leaves summary located in Reporting\\Leaves "
+"This color will be used in the leaves summary located in Reporting > Leaves "
 "by Department."
 msgstr ""
 "Ova boja će se koristiti u sažetku odsustva koji se nalazi u Izvještaji"
@@ -1285,6 +1345,7 @@ msgid "Wheat"
 msgstr "Žito"
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_double_validation
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_double_validation
 msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
@@ -1304,25 +1365,26 @@ msgstr ""
 "           "
 
 #. module: hr_holidays
-#: constraint:hr.holidays:0
+#: code:addons/hr_holidays/models/hr_holidays.py:244
+#, python-format
 msgid "You can not have 2 leaves that overlaps on same day!"
 msgstr "Nije moguće imati dva odsustva koja se preklapaju sa datumima"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:293
+#: code:addons/hr_holidays/models/hr_holidays.py:373
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
 msgstr "Ne možete ukloniti odsustvo koje je u %s stanju."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:577
+#: code:addons/hr_holidays/models/hr.py:139
 #, python-format
 msgid "You cannot reduce validated allocation requests"
 msgstr "Ne možete smanjiti odobrenih zahtjeva za dodjelu"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:357
-#: code:addons/hr_holidays/hr_holidays.py:369
+#: code:addons/hr_holidays/models/hr_holidays.py:356
+#: code:addons/hr_holidays/models/hr_holidays.py:365
 #, python-format
 msgid ""
 "You cannot set a leave request as '%s'. Contact a human resource manager."
@@ -1331,7 +1393,7 @@ msgstr ""
 "ljudskih resursa."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:26
+#: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:27
 #, python-format
 msgid "You have to select at least one Department. And try again."
 msgstr "Morate odabrati najmanje jedan odjel, pa pokušajte ponovo."
@@ -1362,11 +1424,11 @@ msgstr "report.hr_holidays.report_holidayssummary"
 msgid "to"
 msgstr "za"
 
+#~ msgid "%s on %s"
+#~ msgstr "%s na %s"
+
 #~ msgid "Action Needed"
 #~ msgstr "Potrebna dodatna radnja"
-
-#~ msgid "Current Year Leaves"
-#~ msgstr "Odsustva u trenutnoj godini"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum zadnjeg zapisa"
@@ -1380,9 +1442,6 @@ msgstr "za"
 #~ msgid "Followers (Partners)"
 #~ msgstr "Pratitelji (Partneri)"
 
-#~ msgid "HR Department"
-#~ msgstr "Odjel ljudskih resursa"
-
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
 
@@ -1395,8 +1454,14 @@ msgstr "za"
 #~ msgid "Last Message Date"
 #~ msgstr "Datum zadnje poruke"
 
+#~ msgid "Leaves/Allocations: first approval"
+#~ msgstr "Odsustva/ Raspodjela: prvo odobrenje"
+
 #~ msgid "Leaves/Allocations: second approval"
 #~ msgstr "Odsustva/ Raspodjela: drugo odobrenje"
+
+#~ msgid "Legal Leaves 2015"
+#~ msgstr "Redovna odsustva 2015"
 
 #~ msgid "Messages"
 #~ msgstr "Poruke"
@@ -1433,3 +1498,7 @@ msgstr "za"
 
 #~ msgid "Year"
 #~ msgstr "Godina"
+
+#, fuzzy
+#~ msgid "Current"
+#~ msgstr "Nadređeni"

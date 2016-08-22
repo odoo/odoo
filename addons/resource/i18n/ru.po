@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2015-11-13 19:44+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -20,7 +20,7 @@ msgstr ""
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:686
+#: code:addons/resource/resource.py:688
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
@@ -29,6 +29,13 @@ msgstr "%s (копия)"
 #: model:ir.model.fields,field_description:resource.field_resource_resource_active
 msgid "Active"
 msgstr "Активен"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
+msgid ""
+"An efficiency of 50% means the resource is two times smaller than his usual "
+"speed."
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -336,19 +343,6 @@ msgid "Sunday"
 msgstr "Воскресенье"
 
 #. module: resource
-#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
-msgstr ""
-"Это поле изображают эффективность ресурса для завершения задачи. например "
-"ресурс поместить в одну фазу на этап 5 дней с 5 задачами, возложенными на "
-"него, покажет нагрузку 100% в течение этой фазы, по умолчанию, но если мы "
-"ставим эффективность 200%, то его нагрузка будет только 50%."
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Thursday"
 msgstr "Четверг"
@@ -413,3 +407,14 @@ msgstr "Рабочий период"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Working Time"
 msgstr "Рабочее время"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
+#~ "will show a load of 100% for this phase by default, but if we put a "
+#~ "efficiency of 200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "Это поле изображают эффективность ресурса для завершения задачи. например "
+#~ "ресурс поместить в одну фазу на этап 5 дней с 5 задачами, возложенными на "
+#~ "него, покажет нагрузку 100% в течение этой фазы, по умолчанию, но если мы "
+#~ "ставим эффективность 200%, то его нагрузка будет только 50%."

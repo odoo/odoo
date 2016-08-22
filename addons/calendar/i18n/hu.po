@@ -1,4 +1,3 @@
-# #-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * calendar
@@ -8,32 +7,19 @@
 # Kris Krnacs, 2015
 # krnkris, 2015-2016
 # krnkris, 2016
-# #-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * calendar
-#
-# Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# krnkris <krnkris@freemail.hu>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
-# Kisrobert <kisrobi@gmail.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-08-18 08:38+0000\n"
-"Last-Translator: Kisrobert <kisrobi@gmail.com>, 2016\n"
-"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"PO-Revision-Date: 2016-06-06 19:55+0000\n"
+"Last-Translator: krnkris\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
+"hu/)\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: calendar
@@ -474,7 +460,7 @@ msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:35
+#: code:addons/calendar/static/src/js/base_calendar.js:95
 #, python-format
 msgid " [Me]"
 msgstr " [Én]"
@@ -495,7 +481,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:776
+#: code:addons/calendar/calendar.py:777
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -505,7 +491,7 @@ msgstr ""
 " %s ekkor %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:774
+#: code:addons/calendar/calendar.py:775
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "%s ekkor (%s Címzett %s) (%s)"
@@ -546,7 +532,7 @@ msgstr "Aktív"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:132
+#: code:addons/calendar/static/src/js/base_calendar.js:75
 #, python-format
 msgid "Add Favorite Calendar"
 msgstr "Kedvenc naptár hozzáadása"
@@ -557,7 +543,7 @@ msgid "All Day"
 msgstr "Egész nap"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:771
+#: code:addons/calendar/calendar.py:772
 #, python-format
 msgid "AllDay , %s"
 msgstr "Minden nap, %s"
@@ -583,8 +569,8 @@ msgid "Attendee information"
 msgstr "Résztvevők információi"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_ids
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_partner_ids
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Attendees"
@@ -596,7 +582,7 @@ msgid "Availability"
 msgstr "Elérhetőség"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1714
+#: code:addons/calendar/calendar.py:1738
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -623,9 +609,7 @@ msgid "Calendar Alarm"
 msgstr "Naptár riasztás"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:43
-#, python-format
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Calendar Invitation"
 msgstr "Meghívási naptár"
 
@@ -658,13 +642,8 @@ msgstr "Jóváhagyott"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_partner_id
-#, fuzzy
 msgid "Contact"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Kapcsolattartó\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Kapcsolat"
+msgstr "Kapcsolattartó"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_create_uid
@@ -686,6 +665,7 @@ msgstr "Létrehozás dátuma"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_display_start
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Date"
 msgstr "Dátum"
 
@@ -707,13 +687,8 @@ msgstr "A hónap napja"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0 selection:calendar.event,rrule_type:0
-#, fuzzy
 msgid "Day(s)"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"nap\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Nap(ok)"
+msgstr "nap"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -745,20 +720,15 @@ msgstr "Részletek"
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts_display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Név megjelenítése\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Megjelenített név"
+msgstr "Név megjelenítése"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:168
+#: code:addons/calendar/static/src/js/base_calendar.js:156
 #, python-format
-msgid "Do you really want to delete this filter from favorite?"
-msgstr "Tényleg szeretné ennek a szűrőnek a törlését a kedvencek közül?"
+msgid "Do you really want to delete this filter from favorites ?"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_duration
@@ -775,16 +745,11 @@ msgstr "Időtartam percekben"
 #. module: calendar
 #: selection:calendar.alarm,type:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_email
-#, fuzzy
 msgid "Email"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Email\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"E-mail"
+msgstr "Email"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1365
+#: code:addons/calendar/calendar.py:1367
 #, python-format
 msgid "Email addresses not found"
 msgstr "E-mail cím nem található"
@@ -812,13 +777,8 @@ msgstr "Alkalmazott"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_stop_date
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
-#, fuzzy
 msgid "End Date"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Dátum-ig:\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Befejezés dátuma"
+msgstr "Dátum-ig:"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_stop_datetime
@@ -842,13 +802,8 @@ msgstr "Hiba! A végső dátum nem lehet a kezséi dátum előtt."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
-#, fuzzy
 msgid "Event"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Rendezvény\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Esemény"
+msgstr "Rendezvény"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_display_time
@@ -861,20 +816,20 @@ msgid "Event alarm"
 msgstr "Esemény figyelmeztető"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1239
+#: code:addons/calendar/calendar.py:1241
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr "Az esemény ismétlődési ideje nem lehet negatív."
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:45
+#: code:addons/calendar/static/src/js/base_calendar.js:96
 #, python-format
 msgid "Everybody's calendars"
 msgstr "Mindenki naptára"
 
 #. module: calendar
-#: selection:calendar.event,class:0
+#: selection:calendar.event,privacy:0
 msgid "Everyone"
 msgstr "Mindenki"
 
@@ -922,16 +877,11 @@ msgstr "Péntek"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
-#, fuzzy
 msgid "Group By"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Csoportosítás...\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Csoportosítás"
+msgstr "Csoportosítás..."
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1656
+#: code:addons/calendar/calendar.py:1680
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -944,13 +894,8 @@ msgstr "HTTP útválasztás"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
-#, fuzzy
 msgid "Hour(s)"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"óra\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Óra(k)"
+msgstr "óra"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_id
@@ -959,13 +904,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type_id
-#, fuzzy
 msgid "ID"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Azonosító ID"
+msgstr "ID"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_active
@@ -992,6 +932,11 @@ msgid "Invitation details"
 msgstr "Meghívó részletei"
 
 #. module: calendar
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Invitation for"
+msgstr ""
+
+#. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitations"
 msgstr "Meghívók"
@@ -1013,13 +958,8 @@ msgstr "Utolsó"
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts___last_update
 #: model:ir.model.fields,field_description:calendar.field_calendar_event___last_update
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Utolsó frissítés dátuma\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Utoljára frissítve ekkor"
+msgstr "Utolsó frissítés dátuma"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_write_uid
@@ -1027,13 +967,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts_write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type_write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Utoljára frissítve, által\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Utoljára frissítette"
+msgstr "Utoljára frissítve, által"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_write_date
@@ -1056,6 +991,7 @@ msgstr "Találkozó automatikus ismétlése ebben az intervallumban"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_location
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Location"
 msgstr "Helyszín"
 
@@ -1164,9 +1100,7 @@ msgid "Needs Action"
 msgstr "Beavatkozás szükséges"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:36
-#, python-format
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No I'm not going."
 msgstr "Nem én nem veszek részt."
 
@@ -1188,12 +1122,12 @@ msgid "OK"
 msgstr "Ok"
 
 #. module: calendar
-#: selection:calendar.event,class:0
+#: selection:calendar.event,privacy:0
 msgid "Only internal users"
 msgstr "Csak belső felhasználók"
 
 #. module: calendar
-#: selection:calendar.event,class:0
+#: selection:calendar.event,privacy:0
 msgid "Only me"
 msgstr "Csak én"
 
@@ -1213,18 +1147,23 @@ msgid "Owner"
 msgstr "Tulajdonos"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_ids
+msgid "Participant"
+msgstr "Résztvevő"
+
+#. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
 msgid "Partner"
 msgstr "Partner"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1252
+#: code:addons/calendar/calendar.py:1254
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr "Kérem válassza ki a hónap megfelelő napját."
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_class
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_privacy
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Privacy"
 msgstr "Adatvédelem"
@@ -1416,13 +1355,8 @@ msgstr "Vasárnap"
 
 #. module: calendar
 #: sql_constraint:calendar.event.type:0
-#, fuzzy
 msgid "Tag name already exists !"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Rendszám már létezik!\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Címke név már létezik!"
+msgstr "Rendszám már létezik!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_categ_ids
@@ -1448,7 +1382,7 @@ msgstr ""
 "            lehetőségek."
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1361
+#: code:addons/calendar/calendar.py:1363
 #, python-format
 msgid "The following contacts have no email address :"
 msgstr "A következő kapcsolatoknak nincs e-amil címük:"
@@ -1541,35 +1475,12 @@ msgid "Weekday"
 msgstr "Hétköznap"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:48
-#, python-format
-msgid "When"
-msgstr "Mikor"
-
-#. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:52
-#, python-format
-msgid "Where"
-msgstr "Hol"
-
-#. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:56
-#, python-format
-msgid "Who"
-msgstr "Kivel"
-
-#. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Year(s)"
 msgstr "Év(ek)"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:35
-#, python-format
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
 msgstr "Igen én résztveszek."
 
@@ -1600,7 +1511,7 @@ msgid "e.g. Business Lunch"
 msgstr "Pl: Üzleti ebéd"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1237
+#: code:addons/calendar/calendar.py:1239
 #, python-format
 msgid "interval cannot be negative."
 msgstr "időköz nem lehet negatív."
@@ -2751,6 +2662,9 @@ msgstr "ir.values"
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
 
+#~ msgid "Do you really want to delete this filter from favorite?"
+#~ msgstr "Tényleg szeretné ennek a szűrőnek a törlését a kedvencek közül?"
+
 #~ msgid "Followers"
 #~ msgstr "Követők"
 
@@ -2800,5 +2714,11 @@ msgstr "ir.values"
 #~ msgid "Website communication history"
 #~ msgstr "Weboldal  kommunikáció történet"
 
-#~ msgid "Participant"
-#~ msgstr "Résztvevő"
+#~ msgid "When"
+#~ msgstr "Mikor"
+
+#~ msgid "Where"
+#~ msgstr "Hol"
+
+#~ msgid "Who"
+#~ msgstr "Kivel"

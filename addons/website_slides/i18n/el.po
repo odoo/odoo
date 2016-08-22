@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-01-02 22:27+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
@@ -96,6 +96,13 @@ msgstr "# από Προβολές ιστοτόπου"
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "${user.name} shared a ${object.slide_type} with you!"
 msgstr "${user.name} μοιράστηκε το ${object.slide_type} μαζί σας!"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid ""
+"(Un)archiving a channel automatically (un)archives its slides. Do you want "
+"to proceed?"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
@@ -318,6 +325,19 @@ msgid "Actions"
 msgstr "Ενέργειες"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
+#, fuzzy
+msgid "Active"
+msgstr "Ενέργειες"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Archived"
+msgstr ""
+
+#. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authentified Users Only"
 msgstr "Μόνο Επικυρωμένοι Χρήστες"
@@ -360,6 +380,7 @@ msgstr "Κατηγορία"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_channel_id
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Channel"
@@ -426,7 +447,7 @@ msgstr ""
 "Εδώ είναι η απάντηση που λήφθηκε: %serror"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:294
+#: code:addons/website_slides/models/slides.py:304
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -650,8 +671,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_slides/controllers/main.py:299
 #: code:addons/website_slides/static/src/js/slides_upload.js:90
-#, python-format
-msgid "File is too big. File size cannot exceed 15MB"
+#, fuzzy, python-format
+msgid "File is too big. File size cannot exceed 25MB"
 msgstr ""
 "Το αρχείο είναι πολύ μεγάλο. Το μέγεθος του αρχείου δεν μπορεί να ξεπερνά τα "
 "15MB"
@@ -850,11 +871,6 @@ msgid "No presentation published yet."
 msgstr "Ακόμη δεν έχει δημοσιευθεί κάποια παρουσίαση."
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
-msgid "Not Published"
-msgstr "Μη δημοσιοποιημένο"
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
 msgid "Number of Documents"
@@ -984,7 +1000,7 @@ msgstr "Παρακαλώ"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:55
+#: code:addons/website_slides/static/src/js/slides.js:56
 #, python-format
 msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr ""
@@ -992,8 +1008,8 @@ msgstr ""
 "την διαφάνεια"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:297
-#: code:addons/website_slides/models/slides.py:518
+#: code:addons/website_slides/models/slides.py:307
+#: code:addons/website_slides/models/slides.py:532
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr ""
@@ -1336,10 +1352,16 @@ msgid "Uncategorized presentation"
 msgstr "Μη κατηγοριοποιημένη παρουσίαση"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:507
+#: code:addons/website_slides/models/slides.py:521
 #, python-format
 msgid "Unknown document"
 msgstr "Άγνωστο έγγραφο"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
+#, fuzzy
+msgid "Unpublished"
+msgstr "Δημοσιοποιημένη"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
@@ -1394,7 +1416,7 @@ msgid "Videos"
 msgstr "Βίντεος"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:436
+#: code:addons/website_slides/models/slides.py:446
 #, fuzzy, python-format
 msgid "View Slide"
 msgstr "Διαφάνειες Ιστότοπου"
@@ -1455,7 +1477,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:64
+#: code:addons/website_slides/static/src/js/slides.js:65
 #, python-format
 msgid "You have already voted for this slide"
 msgstr "Έχετε ήδη ψηφίσατε για αυτή την διαφάνεια."
@@ -1562,6 +1584,14 @@ msgstr "your-friend@domain.com"
 #~ msgstr "Απαιτείται ενέργεια"
 
 #~ msgid ""
+#~ "Could not fetch data from url. Document or access right not available.\n"
+#~ "Here is the received response: %serror"
+#~ msgstr ""
+#~ "Δεν ήταν δυνατή η ανάκτηση δεδομένων από τη διεύθυνση URL. Το έγγραφο ή "
+#~ "τα δικαιώματα πρόσβασης δεν είναι διαθέσιμα.\n"
+#~ "Εδώ είναι η απάντηση που λήφθηκε: %serror"
+
+#~ msgid ""
 #~ "Create enterprise grade website with our super easy builder. Use finely "
 #~ "designed building blocks and edit everything inline. Benefit from out-of-"
 #~ "the-box business features; e-Commerce, events, blogs, jobs announces, "
@@ -1586,6 +1616,13 @@ msgstr "your-friend@domain.com"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Ημερομηνία του τελευταίου μηνύματος "
+
+#~ msgid ""
+#~ "Document type will be set automatically depending on file type, height "
+#~ "and width."
+#~ msgstr ""
+#~ "Ο τύπος του εγγράφου θα οριστεί αυτόματα ανάλογα με τον τύπο αρχείου, το "
+#~ "ύψος και το πλάτος."
 
 #~ msgid "Followers"
 #~ msgstr "Ακόλουθοι"
@@ -1622,6 +1659,9 @@ msgstr "your-friend@domain.com"
 
 #~ msgid "Messages and communication history"
 #~ msgstr "Μηνύματα και ιστορικό επικοινωνίας"
+
+#~ msgid "Not Published"
+#~ msgstr "Μη δημοσιοποιημένο"
 
 #~ msgid "Number of Actions"
 #~ msgstr "Αριθμός ενεργειών"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-06-24 04:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr
-#: code:addons/hr/hr.py:120
+#: code:addons/hr/models/hr.py:76
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
@@ -118,9 +118,17 @@ msgid "A good job in a young and dynamic team"
 msgstr "Pekerjaan yang baik dalam tim muda dan dinamis"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "Aktif"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
+msgid ""
+"An efficiency of 50% means the resource is two times smaller than his usual "
+"speed."
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -128,6 +136,7 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr "Menganalisis kebutuhan, menulis dokumen spesifikasi dan kutipan"
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Diarsipkan"
@@ -209,11 +218,6 @@ msgid "City"
 msgstr "Kota"
 
 #. module: hr
-#: model:web.tip,description:hr.hr_tip_2
-msgid "Click here to change the recruitment goal!"
-msgstr ""
-
-#. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
@@ -223,11 +227,6 @@ msgstr "Klik untuk menambahkan karyawan baru."
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
 msgstr "Klik untuk menciptakan Departemen."
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid "Click to define a new department."
-msgstr "Klik untuk mendefinisikan sebuah departemen baru."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -300,11 +299,6 @@ msgid "Contributions to open source projects"
 msgstr "Kontribusi untuk proyek-proyek sumber terbuka"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr "Buat Departemen Ansa"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
@@ -348,7 +342,6 @@ msgid "Deliver generic Odoo functional training sessions"
 msgstr "Memberikan Odoo generik yang fungsional pelatihan"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -446,13 +439,13 @@ msgid "Employees Tags"
 msgstr "Tags karyawan"
 
 #. module: hr
-#: code:addons/hr/hr.py:294 constraint:hr.department:0
+#: code:addons/hr/models/hr.py:264
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Kesalahan! Anda tidak dapat membuat Departemen rekursif."
 
 #. module: hr
-#: code:addons/hr/hr.py:264 constraint:hr.employee:0
+#: code:addons/hr/models/hr.py:177
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Kesalahan! Anda tidak dapat membuat hierarki rekursif Karyawan(s)."
@@ -499,11 +492,6 @@ msgstr "Pengikut"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
 msgstr "Jenis kelamin"
-
-#. module: hr
-#: model:web.tip,description:hr.hr_tip_1
-msgid "Get all applications related to this job position."
-msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -587,6 +575,12 @@ msgid "Home Address"
 msgstr "Alamat Rumah"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
+#, fuzzy
+msgid "Hr Department"
+msgstr "Departemen HR"
+
+#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
 msgstr "Sumber Daya Manusia"
@@ -663,19 +657,9 @@ msgid "Job Description"
 msgstr "Deskripsi Pekerjaan"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_name
-msgid "Job Name"
-msgstr "Nama Tugas"
-
-#. module: hr
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Position"
 msgstr "Posisi"
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "Job Position Name"
-msgstr "Nama posisi pekerjaan"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -702,6 +686,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Title"
 msgstr "Jabatan"
 
@@ -842,9 +827,7 @@ msgid "Must have ..."
 msgstr "Harus memiliki..."
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
-#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
 msgstr "Nama"
 
@@ -863,6 +846,12 @@ msgstr "Kewarganegaraan (negara)"
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Nice to have"
 msgstr "Baik untuk memiliki"
+
+#. module: hr
+#: selection:hr.job,state:0
+#, fuzzy
+msgid "Not Recruiting"
+msgstr "Berhenti perekrutan"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -994,11 +983,6 @@ msgstr "Cepat dan otonomi pelajar"
 
 #. module: hr
 #: selection:hr.job,state:0
-msgid "Recruitment Closed"
-msgstr "Perekrutan ditutup"
-
-#. module: hr
-#: selection:hr.job,state:0
 msgid "Recruitment in Progress"
 msgstr "Berhenti perekrutan"
 
@@ -1035,6 +1019,12 @@ msgstr "Persyaratan"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
 msgid "Resource"
 msgstr "Sumber Daya"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
+#, fuzzy
+msgid "Resource Name"
+msgstr "Jenis sumber daya"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
@@ -1172,20 +1162,6 @@ msgid "The name of the job position must be unique per department in company!"
 msgstr "Nama Lowongan Kerja harus unik per departemen di perusahaan!"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
-msgstr ""
-"Bidang ini menggambarkan efisiensi sumber daya untuk menyelesaikan tugas. "
-"misalnya sumber daya menempatkan sendirian di fase 5 hari dengan 5 tugas "
-"yang diberikan kepadanya, akan menunjukkan beban 100% untuk fase ini secara "
-"default, tetapi jika kita menempatkan efisiensi suatu dari 200%, maka "
-"bebannya hanya akan menjadi 50%."
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
 msgid ""
 "This field holds the image used as photo for the employee, limited to "
@@ -1216,6 +1192,11 @@ msgstr "Mengubah produk kami ke suite memiliki posisi Bisnis Apps"
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "Pesan Belum Dibaca"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_login
+msgid "Used to log into the system"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1569,18 +1550,6 @@ msgid "You will work closely with all trainees"
 msgstr "Anda akan bekerja sama dengan semua peserta pelatihan"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid ""
-"Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
-"                leaves and holidays, recruitments, etc."
-msgstr ""
-"Struktur Departemen Anda digunakan untuk mengelola semua dokumen yang "
-"berhubungan dengan karyawan oleh Departemen: biaya dan timesheets, daun dan "
-"liburan, perekrutan, dll."
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "Departemen"
@@ -1590,8 +1559,19 @@ msgstr "Departemen"
 msgid "e.g. Part Time"
 msgstr "misal: Paruh Waktu"
 
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "e.g. Sales Manager"
+msgstr ""
+
 #~ msgid "Action Needed"
 #~ msgstr "Tindakan diperlukan"
+
+#~ msgid "Click to define a new department."
+#~ msgstr "Klik untuk mendefinisikan sebuah departemen baru."
+
+#~ msgid "Create Your Departments"
+#~ msgstr "Buat Departemen Ansa"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Tanggal pesan terakhir diposting pada catatan."
@@ -1602,9 +1582,6 @@ msgstr "misal: Paruh Waktu"
 #~ msgid "Followers (Partners)"
 #~ msgstr "Pengikut (mitra)"
 
-#~ msgid "HR Department"
-#~ msgstr "Departemen HR"
-
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
 
@@ -1613,6 +1590,12 @@ msgstr "misal: Paruh Waktu"
 
 #~ msgid "Is Follower"
 #~ msgstr "Adalah pengikut"
+
+#~ msgid "Job Name"
+#~ msgstr "Nama Tugas"
+
+#~ msgid "Job Position Name"
+#~ msgstr "Nama posisi pekerjaan"
 
 #~ msgid "Last Message Date"
 #~ msgstr "Tanggal pesan terakhir"
@@ -1629,11 +1612,59 @@ msgstr "misal: Paruh Waktu"
 #~ msgid "Open HR Menu"
 #~ msgstr "JAM buka Menu"
 
+#~ msgid "Recruitment Closed"
+#~ msgstr "Perekrutan ditutup"
+
 #~ msgid "Subscriptions"
 #~ msgstr "Langganan"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
+#~ "will show a load of 100% for this phase by default, but if we put a "
+#~ "efficiency of 200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "Bidang ini menggambarkan efisiensi sumber daya untuk menyelesaikan tugas. "
+#~ "misalnya sumber daya menempatkan sendirian di fase 5 hari dengan 5 tugas "
+#~ "yang diberikan kepadanya, akan menunjukkan beban 100% untuk fase ini "
+#~ "secara default, tetapi jika kita menempatkan efisiensi suatu dari 200%, "
+#~ "maka bebannya hanya akan menjadi 50%."
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Pesan yang belum dibaca Counter"
 
 #~ msgid "Update Date"
 #~ msgstr "Pembaharuan Tanggal"
+
+#~ msgid ""
+#~ "You will be responsible for developing and improving applications, such "
+#~ "as the You will work autonomously as well as                     "
+#~ "coordinate and supervise small distributed development teams for specific "
+#~ "projects. You will become a technical                 expert of the "
+#~ "product."
+#~ msgstr ""
+#~ "Anda akan bertanggung jawab untuk mengembangkan dan meningkatkan "
+#~ "aplikasi, seperti Anda akan bekerja secara otonom seperti koordinat dan "
+#~ "mengawasi tim pengembangan didistribusikan kecil untuk proyek-proyek "
+#~ "tertentu. Anda akan menjadi seorang ahli teknis produk."
+
+#~ msgid ""
+#~ "You will be responsible for developing and improving applications, such "
+#~ "as the You will work autonomously as well as coordinate and supervise "
+#~ "small distributed development teams for specific projects. You will "
+#~ "become a technical expert of the product."
+#~ msgstr ""
+#~ "Anda akan bertanggung jawab untuk mengembangkan dan meningkatkan "
+#~ "aplikasi, seperti Anda akan bekerja secara otonom seperti koordinat dan "
+#~ "mengawasi tim pengembangan didistribusikan kecil untuk proyek-proyek "
+#~ "tertentu. Anda akan menjadi seorang ahli teknis produk."
+
+#~ msgid ""
+#~ "Your departments structure is used to manage all documents\n"
+#~ "                related to employees by departments: expenses and "
+#~ "timesheets,\n"
+#~ "                leaves and holidays, recruitments, etc."
+#~ msgstr ""
+#~ "Struktur Departemen Anda digunakan untuk mengelola semua dokumen yang "
+#~ "berhubungan dengan karyawan oleh Departemen: biaya dan timesheets, daun "
+#~ "dan liburan, perekrutan, dll."

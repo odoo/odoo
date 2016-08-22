@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2015-11-21 21:26+0000\n"
 "Last-Translator: Marc Tormo i Bochaca <mtbochaca@gmail.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:686
+#: code:addons/resource/resource.py:688
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (còpia)"
@@ -28,6 +28,13 @@ msgstr "%s (còpia)"
 #: model:ir.model.fields,field_description:resource.field_resource_resource_active
 msgid "Active"
 msgstr "Actiu"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
+msgid ""
+"An efficiency of 50% means the resource is two times smaller than his usual "
+"speed."
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -343,20 +350,6 @@ msgid "Sunday"
 msgstr "Diumenge"
 
 #. module: resource
-#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
-msgstr ""
-"Aquest camp representa l'eficiència dels recursos per completar les tasques. "
-"per exemple, posar recursos només en una fase de 5 dies amb 5 tasques que se "
-"li assignen, es mostrarà una càrrega de 100% per aquesta fase per defecte, "
-"però si posem una eficiència del 200%, llavors la seva càrrega només serà "
-"del 50%."
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Thursday"
 msgstr "Dijous"
@@ -421,3 +414,15 @@ msgstr "Horari laboral"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Working Time"
 msgstr "Horari de treball"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
+#~ "will show a load of 100% for this phase by default, but if we put a "
+#~ "efficiency of 200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "Aquest camp representa l'eficiència dels recursos per completar les "
+#~ "tasques. per exemple, posar recursos només en una fase de 5 dies amb 5 "
+#~ "tasques que se li assignen, es mostrarà una càrrega de 100% per aquesta "
+#~ "fase per defecte, però si posem una eficiència del 200%, llavors la seva "
+#~ "càrrega només serà del 50%."

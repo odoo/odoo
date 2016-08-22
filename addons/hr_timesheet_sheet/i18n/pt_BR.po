@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-01-28 13:31+0000\n"
 "Last-Translator: Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
@@ -37,26 +37,6 @@ msgstr ""
 "superior."
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
-msgid "# Nbr Timesheet"
-msgstr "# Planilha de Horas"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
-msgid "# Total Attendance"
-msgstr "# Total de presentes"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
-msgid "# Total Diff"
-msgstr "# Diferença Total"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
-msgid "# Total Timesheet"
-msgstr "# Total da Planilha de Horas"
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "<span class=\"o_stat_text\">Timesheet</span>"
 msgstr "<span class=\"o_stat_text\">Quadro de Horários</span>"
@@ -82,6 +62,11 @@ msgstr ""
 "Diferença permitida em horas entre a entrada/saída e o cálculo do quadro de "
 "horários para uma folha. Defina esta opção para 0 se você não quer nenhum "
 "controle."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Linha Analítica"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_ids
@@ -131,12 +116,6 @@ msgid "Company"
 msgstr "Empresa"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Confirmed"
-msgstr "Confirmado"
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr "Folha de Horas Confirmadas"
@@ -164,23 +143,18 @@ msgid "Date"
 msgstr "Data"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr "Data de"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "Data até"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "Departamento"
 
@@ -209,18 +183,6 @@ msgid "Display Name"
 msgstr "Nome de Exibição"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Done"
-msgstr "Concluído"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Draft"
-msgstr "Provisório"
-
-#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
@@ -243,9 +205,9 @@ msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr "Erro! Entrar (resp. Sair) deve seguir Sair (resp. Entrar)"
 
 #. module: hr_timesheet_sheet
-#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
-msgid "External Timesheet"
-msgstr "Planilha de Horas Externa"
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
+msgid "Extra features"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -256,6 +218,12 @@ msgstr "Agrupar por"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Horas"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+#, fuzzy
+msgid "Hr Department"
+msgstr "Departamento de RH"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -280,11 +248,6 @@ msgid ""
 msgstr ""
 "Para criar uma planilha de horas para este funcionário, você precisa "
 "conectar ele(a) a um usuário."
-
-#. module: hr_timesheet_sheet
-#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
-msgid "Internal Timesheet"
-msgstr "Planilha de Horas Interna"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -312,6 +275,11 @@ msgid "Month"
 msgstr "Mês"
 
 #. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
+msgid "More Info"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
 msgid "My Timesheet"
 msgstr "Minha Planilha de Horas"
@@ -323,7 +291,6 @@ msgid "My Timesheets"
 msgstr "Minhas Planilhas de Horas"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
 msgstr "Novo"
@@ -417,9 +384,7 @@ msgid "Sign Out"
 msgstr "Saída"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Status"
 msgstr "Situação"
 
@@ -444,7 +409,6 @@ msgstr ""
 "de entradas e saídas."
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
@@ -465,6 +429,12 @@ msgstr "Período da Planilha de Horas"
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_res_company_timesheet_max_difference
 msgid "Timesheet allowed difference(Hours)"
 msgstr "Diferença permitida quadro de horários (horas)"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_module_project_timesheet_synchro
+#, fuzzy
+msgid "Timesheet app for Chrome/Android/iOS"
+msgstr "Quadro de horários aprovado"
 
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_approved
@@ -510,6 +480,7 @@ msgstr "Quadro de Horários para Aprovar"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_employee_extd_form
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_tree_simplified
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
 msgid "Timesheets"
 msgstr "Planilhas de Horas"
 
@@ -723,12 +694,6 @@ msgid "You will be able to register your working hours and activities."
 msgstr "Você será capaz de registrar suas horas de trabalho e atividades."
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "Linha Analítica"
-
-#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
 msgid "hr.timesheet.current.open"
 msgstr "hr.timesheet.current.open"
@@ -737,6 +702,11 @@ msgstr "hr.timesheet.current.open"
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 msgid "new timesheet."
 msgstr "Nova planilha de horas."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_project_config_settings
+msgid "project.config.settings"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -748,17 +718,41 @@ msgstr "até"
 msgid "waiting approval"
 msgstr "aguardando aprovação"
 
+#~ msgid "# Nbr Timesheet"
+#~ msgstr "# Planilha de Horas"
+
+#~ msgid "# Total Attendance"
+#~ msgstr "# Total de presentes"
+
+#~ msgid "# Total Diff"
+#~ msgstr "# Diferença Total"
+
+#~ msgid "# Total Timesheet"
+#~ msgstr "# Total da Planilha de Horas"
+
 #~ msgid "Action Needed"
 #~ msgstr "Ação Necessária"
 
 #~ msgid "Cancel"
 #~ msgstr "Cancelar"
 
+#~ msgid "Confirmed"
+#~ msgstr "Confirmado"
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Data da ultima mensagem para o registro."
 
 #~ msgid "Day"
 #~ msgstr "Dia"
+
+#~ msgid "Done"
+#~ msgstr "Concluído"
+
+#~ msgid "Draft"
+#~ msgstr "Provisório"
+
+#~ msgid "External Timesheet"
+#~ msgstr "Planilha de Horas Externa"
 
 #~ msgid "Followers"
 #~ msgstr "Seguidores"
@@ -768,9 +762,6 @@ msgstr "aguardando aprovação"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Seguidores (Parceiros)"
-
-#~ msgid "HR Department"
-#~ msgstr "Departamento de RH"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
@@ -784,6 +775,9 @@ msgstr "aguardando aprovação"
 #~ msgstr ""
 #~ "para criar uma planilha de horas para este funcionário, você precisa "
 #~ "associar o funcionário ao produto."
+
+#~ msgid "Internal Timesheet"
+#~ msgstr "Planilha de Horas Interna"
 
 #~ msgid "Is Follower"
 #~ msgstr "É um seguidor"
@@ -834,3 +828,7 @@ msgstr "aguardando aprovação"
 
 #~ msgid "Website communication history"
 #~ msgstr "Histórico de Comunicação do Site"
+
+#, fuzzy
+#~ msgid "account analytic line"
+#~ msgstr "Linha Analítica"

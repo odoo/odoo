@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-06-22 13:04+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -57,31 +57,9 @@ msgid "Created on"
 msgstr "创建时间"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,help:mrp_byproduct.field_mrp_subproduct_subproduct_type
-msgid ""
-"Define how the quantity of byproducts will be set on the production orders "
-"using this BoM.  'Fixed' depicts a situation where the quantity of created "
-"byproduct is always equal to the quantity set on the BoM, regardless of how "
-"many are created in the production order.  By opposition, 'Variable' means "
-"that the quantity will be computed as    '(quantity of byproduct set on the "
-"BoM / quantity of manufactured product set on the BoM * quantity of "
-"manufactured product in the production order.)'"
-msgstr ""
-"使用BoM定义在生产订单上有多少数量的副产品。\r\n"
-"“固定的” 描绘了生成的副产品的数量总是等于 BoM设置的，无论生产订单生产了多少产"
-"品。\r\n"
-"相对的，“可变的”意味着数量是要被计算的：BoM设置的副产品数量 / BoM 上设置的产"
-"品生产数量 * 在生产订单中的成品数量。)'"
-
-#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
 msgid "Display Name"
 msgstr "显示名称"
-
-#. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
-msgstr "固定的"
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_id
@@ -104,6 +82,11 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_operation_id
+msgid "Produced at Operation"
+msgstr "生产在作业"
+
+#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
 msgid "Product"
 msgstr "产品"
@@ -114,23 +97,27 @@ msgid "Product Qty"
 msgstr "产品数量"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom
-msgid "Product Unit of Measure"
-msgstr "计量单位"
-
-#. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
-#, fuzzy
 msgid "Production"
-msgstr "产品"
+msgstr "生产"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_subproduct_type
-msgid "Quantity Type"
-msgstr "数量类型"
+#: model:ir.model,name:mrp_byproduct.model_stock_move
+msgid "Stock Move"
+msgstr "库存移动"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:45
+#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct"
+msgstr "副产品"
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct line that generated the move in a manufacturing order"
+msgstr "副产品行，在制造订单生成移动"
+
+#. module: mrp_byproduct
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:32
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -138,15 +125,43 @@ msgid ""
 msgstr "你选择的计量单位跟产品表单的计量单位在不同的类别。"
 
 #. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Variable"
-msgstr "可变的"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom_id
+msgid "Unit of Measure"
+msgstr "计量单位"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:45
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:31
 #, python-format
 msgid "Warning"
 msgstr "警告"
 
+#~ msgid ""
+#~ "Define how the quantity of byproducts will be set on the production "
+#~ "orders using this BoM.  'Fixed' depicts a situation where the quantity of "
+#~ "created byproduct is always equal to the quantity set on the BoM, "
+#~ "regardless of how many are created in the production order.  By "
+#~ "opposition, 'Variable' means that the quantity will be computed as    "
+#~ "'(quantity of byproduct set on the BoM / quantity of manufactured product "
+#~ "set on the BoM * quantity of manufactured product in the production "
+#~ "order.)'"
+#~ msgstr ""
+#~ "使用BoM定义在生产订单上有多少数量的副产品。\r\n"
+#~ "“固定的” 描绘了生成的副产品的数量总是等于 BoM设置的，无论生产订单生产了多"
+#~ "少产品。\r\n"
+#~ "相对的，“可变的”意味着数量是要被计算的：BoM设置的副产品数量 / BoM 上设置的"
+#~ "产品生产数量 * 在生产订单中的成品数量。)'"
+
+#~ msgid "Fixed"
+#~ msgstr "固定的"
+
 #~ msgid "Manufacturing Order"
 #~ msgstr "制造订单"
+
+#~ msgid "Product Unit of Measure"
+#~ msgstr "计量单位"
+
+#~ msgid "Quantity Type"
+#~ msgstr "数量类型"
+
+#~ msgid "Variable"
+#~ msgstr "可变的"

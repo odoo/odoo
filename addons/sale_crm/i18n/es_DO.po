@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-07-20 23:39+0000\n"
 "Last-Translator: Gustavo Valverde\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/"
@@ -26,11 +26,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
 msgid "# Issues"
 msgstr "# Incidencias"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_count
-msgid "# Tasks"
-msgstr "# Tareas"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
@@ -57,12 +52,6 @@ msgstr ""
 "de la membresía de los miembros asociados."
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
-#, fuzzy
-msgid "Activation"
-msgstr "Cotización"
-
-#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
 msgid "Associate Member"
 msgstr "Miembro Asociado"
@@ -73,8 +62,16 @@ msgid "Cancel Membership Date"
 msgstr "Cancelar Fecha de Membresía"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
-msgid "Count Payment Method"
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:14
+#, python-format
+msgid "Click here to see more options."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_count
+#, fuzzy
+msgid "Count Payment Token"
 msgstr "Contar Método de Pago"
 
 #. module: sale_crm
@@ -108,23 +105,6 @@ msgid "Free Member"
 msgstr "Socio Gratuito"
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
-msgid ""
-"Gives the probability to assign a lead to this partner. (0 means no "
-"assignation.)"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
-msgid "Implementation References"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
-msgid "Implemented by"
-msgstr ""
-
-#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
 msgid "Invoice"
 msgstr ""
@@ -156,23 +136,15 @@ msgstr ""
 "- Miembro pagado: Un miembro que ha pagado su cuota de membresía."
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
-msgid "Latest Partner Review"
-msgstr ""
-
-#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
 msgstr "Iniciativa/Oportunidad"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
-msgid "Level"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
-msgid "Level Weight"
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:18
+#, python-format
+msgid "Let's have a look at the quotations of this sales team."
 msgstr ""
 
 #. module: sale_crm
@@ -201,14 +173,20 @@ msgid "Membership Start Date"
 msgstr "Fecha Inicio de Membresía"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
+#, fuzzy
+msgid "Message for Sales Order"
+msgstr "# de Pedido de Venta"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
+msgid "Message for Stock Picking"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "New Quotation"
 msgstr "Nueva Cotización"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
-msgid "Next Partner Review"
-msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
@@ -226,14 +204,9 @@ msgid "Orders"
 msgstr "Pedidos"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_ids
 #, fuzzy
-msgid "Partnership Date"
-msgstr "Cancelar Fecha de Membresía"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
-msgid "Payment Methods"
+msgid "Payment Tokens"
 msgstr "Formas de Pago"
 
 #. module: sale_crm
@@ -249,6 +222,7 @@ msgstr "Cotizaciones"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn
 msgid "Sales Order"
 msgstr "Pedido de Venta"
 
@@ -256,6 +230,20 @@ msgstr "Pedido de Venta"
 #: model:ir.model.fields,help:sale_crm.field_res_users_free_member
 msgid "Select if you want to give free membership."
 msgstr "Seleccione si quiere dar membresía gratuita"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_picking_warn
+#: model:ir.model.fields,help:sale_crm.field_res_users_sale_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn
+msgid "Stock Picking"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
@@ -266,11 +254,6 @@ msgstr "Total de Pedidos"
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
 msgid "Tags"
 msgstr "Etiquetas"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
-msgid "Tasks"
-msgstr "Tareas"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
@@ -310,6 +293,9 @@ msgstr "Ubicación Proveedor"
 #~ msgid "# Claims"
 #~ msgstr "# Reclamaciones"
 
+#~ msgid "# Tasks"
+#~ msgstr "# Tareas"
+
 #~ msgid "Campaign"
 #~ msgstr "Campaña"
 
@@ -327,6 +313,9 @@ msgstr "Ubicación Proveedor"
 
 #~ msgid "Source"
 #~ msgstr "Fuente"
+
+#~ msgid "Tasks"
+#~ msgstr "Tareas"
 
 #~ msgid ""
 #~ "This is a name that helps you keep track of your different campaign "
@@ -346,3 +335,11 @@ msgstr "Ubicación Proveedor"
 #~ msgstr ""
 #~ "Ésta es la fuente del enlace. Por ejemplo: motor de búsqueda, otro "
 #~ "dominio o nombre de unos lista de correos"
+
+#, fuzzy
+#~ msgid "Activation"
+#~ msgstr "Cotización"
+
+#, fuzzy
+#~ msgid "Partnership Date"
+#~ msgstr "Cancelar Fecha de Membresía"

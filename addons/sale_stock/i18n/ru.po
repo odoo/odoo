@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-04-30 19:55+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -20,6 +20,12 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+#, fuzzy
+msgid "<strong>Customer Reference:</strong>"
+msgstr "<strong>Инкотермс:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
@@ -90,19 +96,6 @@ msgstr ""
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
 msgstr "Активируйте маршрут в строке заказа на продажу"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_product_product_expense_policy
-msgid "Expense Invoice Policy"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_product_product_expense_policy
-msgid ""
-"If you invoice at cost, the expense will be invoiced on the sale order at "
-"the cost of the analytic line;if you invoice at sales price, the price of "
-"the product will be used instead."
-msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
@@ -224,6 +217,11 @@ msgid "Properties on SO Lines"
 msgstr "Свойства в строках заказа продажи"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
 msgid "Route"
 msgstr "Маршрут"
@@ -303,9 +301,26 @@ msgid "This product is packaged by %s %s. You should sell %s %s."
 msgstr "Этот продукт упакован %d . Вы должны продать %d ."
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking_line_to_refund_so
+msgid "To Refund"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_to_refund_so
+msgid "To Refund in SO"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "Перевод"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_stock_move_to_refund_so
+#: model:ir.model.fields,help:sale_stock.field_stock_return_picking_line_to_refund_so
+msgid ""
+"Trigger a decrease of the delivered quantity in the associated Sale Order"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
@@ -343,3 +358,11 @@ msgstr ""
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr "sale.config.settings"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking_line
+msgid "stock.return.picking.line"
+msgstr ""
+
+#~ msgid "This product is packaged by %d . You should sell %d ."
+#~ msgstr "Этот продукт упакован %d . Вы должны продать %d ."

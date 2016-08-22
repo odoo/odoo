@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:07+0000\n"
 "PO-Revision-Date: 2016-06-22 13:04+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -83,7 +83,7 @@ msgstr "外观"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:543
+#: code:addons/pos_restaurant/static/src/js/floors.js:550
 #, python-format
 msgid "Are you sure ?"
 msgstr "你确定？"
@@ -144,18 +144,11 @@ msgstr "已取消"
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:260
-#: code:addons/pos_restaurant/static/src/js/floors.js:404
+#: code:addons/pos_restaurant/static/src/js/floors.js:297
+#: code:addons/pos_restaurant/static/src/js/floors.js:411
 #, python-format
 msgid "Changes could not be saved"
 msgstr "修改将不会被保存"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:261
-#: code:addons/pos_restaurant/static/src/js/floors.js:405
-#, python-format
-msgid "Check your internet connection and access rights"
-msgstr "请检查你的互联网连接以及访问权限"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -209,7 +202,6 @@ msgstr "显示名称"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
-#, fuzzy
 msgid ""
 "Each Order Printer has an IP Address that defines the PosBox/Hardware\n"
 "                Proxy where the printer can be found, and a list of product "
@@ -218,10 +210,6 @@ msgid ""
 "belonging to one of\n"
 "                its categories."
 msgstr ""
-"每一台订单打印机有一个IP地址，它定义了可以找到此打印机的POS或硬件代理\n"
-"                和产品分类清单。\n"
-"                一个订单打印机只能打印属于\n"
-"               一个它的分类的产品的更新。"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_splitbill
@@ -254,7 +242,7 @@ msgstr "顾客"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:918
+#: code:addons/pos_restaurant/static/src/js/floors.js:925
 #, python-format
 msgid "Guests ?"
 msgstr "顾客？"
@@ -263,9 +251,9 @@ msgstr "顾客？"
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:10
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:21
-#, fuzzy, python-format
+#, python-format
 msgid "Guests:"
-msgstr "顾客"
+msgstr "客人："
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_height
@@ -336,7 +324,7 @@ msgstr "备注"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:476
+#: code:addons/pos_restaurant/static/src/js/floors.js:483
 #, python-format
 msgid "Number of Seats ?"
 msgstr "座位数？"
@@ -396,11 +384,6 @@ msgid "Point of Sale"
 msgstr "POS"
 
 #. module: pos_restaurant
-#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_pos_order_ids
-msgid "Pos Orders"
-msgstr "POS订单"
-
-#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:20
 #, python-format
@@ -424,7 +407,7 @@ msgstr "代理 IP 地址"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:544
+#: code:addons/pos_restaurant/static/src/js/floors.js:551
 #, python-format
 msgid "Removing a table cannot be undone"
 msgstr "移除桌台不能够恢复"
@@ -515,7 +498,7 @@ msgstr "桌台名称"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:464
+#: code:addons/pos_restaurant/static/src/js/floors.js:471
 #, python-format
 msgid "Table Name ?"
 msgstr "桌台名称？"
@@ -561,11 +544,6 @@ msgid "The list of tables in this floor"
 msgstr "本层座位清单"
 
 #. module: pos_restaurant
-#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_pos_order_ids
-msgid "The orders served at this table"
-msgstr "本桌所有订单"
-
-#. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_floor_ids
 msgid "The restaurant floors served by this point of sale"
 msgstr "POS服务的餐厅楼层"
@@ -605,7 +583,7 @@ msgstr "阵列中表格的宽度"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:102
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:106
 #, python-format
 msgid "This floor has no tables yet, use the"
 msgstr "这个楼层没有多余的桌子，请使用"
@@ -615,7 +593,7 @@ msgstr "这个楼层没有多余的桌子，请使用"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:37
 #, python-format
 msgid "Transfer"
-msgstr ""
+msgstr "转账"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_sequence
@@ -648,6 +626,15 @@ msgstr "同"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/js/floors.js:261
+#: code:addons/pos_restaurant/static/src/js/floors.js:298
+#: code:addons/pos_restaurant/static/src/js/floors.js:412
+#, python-format
+msgid "You must be connected to the internet to save your changes."
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:36
 #, python-format
 msgid "at"
@@ -663,7 +650,7 @@ msgstr "桌号为"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:103
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:107
 #, python-format
 msgid "button in the editing toolbar to create new tables."
 msgstr "编辑工具栏的按钮来创建新表。"
@@ -694,3 +681,25 @@ msgstr "restaurant.printer"
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
 msgid "restaurant.table"
 msgstr "restaurant.table"
+
+#~ msgid "Check your internet connection and access rights"
+#~ msgstr "请检查你的互联网连接以及访问权限"
+
+#~ msgid ""
+#~ "Each Order Printer has an IP Address that defines the PosBox/Hardware\n"
+#~ "                Proxy where the printer can be found, and a list of "
+#~ "product categories.\n"
+#~ "                An Order Printer will only print updates for prodcuts "
+#~ "belonging to one of\n"
+#~ "                its categories."
+#~ msgstr ""
+#~ "每一台订单打印机有一个IP地址，它定义了可以找到此打印机的POS或硬件代理\n"
+#~ "                和产品分类清单。\n"
+#~ "                一个订单打印机只能打印属于\n"
+#~ "               一个它的分类的产品的更新。"
+
+#~ msgid "Pos Orders"
+#~ msgstr "POS订单"
+
+#~ msgid "The orders served at this table"
+#~ msgstr "本桌所有订单"

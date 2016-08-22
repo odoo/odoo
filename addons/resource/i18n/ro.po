@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-01-14 20:12+0000\n"
 "Last-Translator: Liliana Stronciu <liliana.stronciu@aeromnia.aero>\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
@@ -20,7 +20,7 @@ msgstr ""
 "2:1));\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:686
+#: code:addons/resource/resource.py:688
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -29,6 +29,13 @@ msgstr "%s (copie)"
 #: model:ir.model.fields,field_description:resource.field_resource_resource_active
 msgid "Active"
 msgstr "Activ(a)"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
+msgid ""
+"An efficiency of 50% means the resource is two times smaller than his usual "
+"speed."
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -344,19 +351,6 @@ msgid "Sunday"
 msgstr "Duminica"
 
 #. module: resource
-#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
-msgstr ""
-"Acest camp prezinta eficienta resurselor pentru a finaliza sarcinile. de "
-"exemplu resursele setate singure pe 5 zile cu 5 sarcini alocate, vor arata o "
-"incarcare de 100% pentru aceasta etapa in mod implicit, dar daca introducem "
-"o eficienta de 200%, atunci incarcarea va fi de doar 50%."
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Thursday"
 msgstr "Joi"
@@ -421,3 +415,14 @@ msgstr "Perioada de lucru"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Working Time"
 msgstr "Program de lucru"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
+#~ "will show a load of 100% for this phase by default, but if we put a "
+#~ "efficiency of 200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "Acest camp prezinta eficienta resurselor pentru a finaliza sarcinile. de "
+#~ "exemplu resursele setate singure pe 5 zile cu 5 sarcini alocate, vor "
+#~ "arata o incarcare de 100% pentru aceasta etapa in mod implicit, dar daca "
+#~ "introducem o eficienta de 200%, atunci incarcarea va fi de doar 50%."

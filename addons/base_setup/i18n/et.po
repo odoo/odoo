@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-03-12 16:43+0000\n"
 "Last-Translator: Arma Gedonsky <armagedonsky@hot.ee>\n"
 "Language-Team: Estonian (http://www.transifex.com/odoo/odoo-9/language/et/)\n"
@@ -50,7 +50,6 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Apply"
 msgstr "Kinnita"
 
@@ -66,20 +65,8 @@ msgstr "Autentimine"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Cancel"
 msgstr "Loobu"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "Klient"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
-msgid "Configure Sales"
-msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -93,34 +80,18 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Loonud"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Loodud"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "Klient"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 msgid "Display Name"
 msgstr "Näidatav nimi"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -154,19 +125,7 @@ msgid "Google Integration"
 msgstr ""
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
-msgid "How do you call a Customer"
-msgstr ""
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
 
@@ -182,22 +141,16 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "Viimati muudetud"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Viimati uuendatud"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Viimati uuendatud"
 
@@ -210,11 +163,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
 msgid "Manage multiple companies"
 msgstr "Halda mitmeid ettevõtteid"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "Liige"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -231,16 +179,6 @@ msgstr ""
 msgid ""
 "Once installed, you can configure your API credentials for \"Google calendar"
 "\""
-msgstr ""
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
 msgstr ""
 
 #. module: base_setup
@@ -274,16 +212,6 @@ msgid "Shared resources"
 msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid "Specify Your Terminology"
-msgstr ""
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr ""
-
-#. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
 msgid "This installs the module google_calendar."
 msgstr ""
@@ -302,13 +230,8 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr ""
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers, sign in with Google..."
+msgid "Use external authentication providers (OAuth)"
 msgstr ""
 
 #. module: base_setup
@@ -332,13 +255,6 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
-msgstr ""
-
-#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "You will find more options in your company details: address for the header "
@@ -350,12 +266,14 @@ msgstr ""
 msgid "base.config.settings"
 msgstr ""
 
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr ""
+#~ msgid "Client"
+#~ msgstr "Klient"
 
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr ""
+#~ msgid "Customer"
+#~ msgstr "Klient"
+
+#~ msgid "Member"
+#~ msgstr "Liige"
+
+#~ msgid "Partner"
+#~ msgstr "Partner"

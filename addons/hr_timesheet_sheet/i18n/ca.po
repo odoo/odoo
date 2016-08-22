@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-07-01 09:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
@@ -32,26 +32,6 @@ msgstr ""
 "* L'estat 'Confirmat' s'estableix quan l'usuari confirma el part d'hores.\n"
 "* L'estat 'Realitzat' s'estableix quan el responsable accepta el part "
 "d'hores."
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
-msgid "# Nbr Timesheet"
-msgstr "Núm. parts d'hores"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
-msgid "# Total Attendance"
-msgstr "Nre. total d'assistencies"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
-msgid "# Total Diff"
-msgstr "Nre. total de deiferencies"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
-msgid "# Total Timesheet"
-msgstr "Nre. total de parts d'hores"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -79,6 +59,11 @@ msgstr ""
 "Diferència permesa, en hores, entre el fitxatge/sortida i el còmput del full "
 "d'assistència per a un full. Poseu-ho a 0 si no desitgeu cap tipus de "
 "control."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Línia analítica"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_ids
@@ -128,12 +113,6 @@ msgid "Company"
 msgstr "Companyia"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Confirmed"
-msgstr "Confirmada"
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr "Parts d'hores confirmades"
@@ -161,23 +140,18 @@ msgid "Date"
 msgstr "Data"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr "Data des de"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "Data fins"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "Departament"
 
@@ -206,18 +180,6 @@ msgid "Display Name"
 msgstr "Mostra Nom"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Done"
-msgstr "Realitzat"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Draft"
-msgstr "Esborrany"
-
-#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
@@ -240,9 +202,9 @@ msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr "Error! Una entrada ha de seguir a un registre de sortida."
 
 #. module: hr_timesheet_sheet
-#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
-msgid "External Timesheet"
-msgstr "Part d'hores externes"
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
+msgid "Extra features"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -253,6 +215,12 @@ msgstr "Agrupa per"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Hores"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+#, fuzzy
+msgid "Hr Department"
+msgstr "Departament"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -277,11 +245,6 @@ msgid ""
 msgstr ""
 "Per crear una part d'hores per aquest treballador, ha d'enllaçar-lo amb un "
 "usuari."
-
-#. module: hr_timesheet_sheet
-#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
-msgid "Internal Timesheet"
-msgstr "Fulla d'hores interna"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -309,6 +272,11 @@ msgid "Month"
 msgstr "Mes"
 
 #. module: hr_timesheet_sheet
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
+msgid "More Info"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
 msgid "My Timesheet"
 msgstr "El meu full d'assistència"
@@ -320,7 +288,6 @@ msgid "My Timesheets"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
 msgstr "Nou"
@@ -414,9 +381,7 @@ msgid "Sign Out"
 msgstr "Registra sortida"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Status"
 msgstr "Estat"
 
@@ -441,7 +406,6 @@ msgstr ""
 "registres d'entrada i sortida."
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
@@ -462,6 +426,11 @@ msgstr "Període del part d'hores"
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_res_company_timesheet_max_difference
 msgid "Timesheet allowed difference(Hours)"
 msgstr "Diferència (hores) permesa en el full d'assistència"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_module_project_timesheet_synchro
+msgid "Timesheet app for Chrome/Android/iOS"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_approved
@@ -507,6 +476,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_employee_extd_form
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_tree_simplified
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
 msgid "Timesheets"
 msgstr "Fulls de treball"
 
@@ -713,12 +683,6 @@ msgid "You will be able to register your working hours and activities."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "Línia analítica"
-
-#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
 msgid "hr.timesheet.current.open"
 msgstr "rrhh.fullassistència.actual.obrir"
@@ -726,6 +690,11 @@ msgstr "rrhh.fullassistència.actual.obrir"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 msgid "new timesheet."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_project_config_settings
+msgid "project.config.settings"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -738,17 +707,41 @@ msgstr "fins"
 msgid "waiting approval"
 msgstr ""
 
+#~ msgid "# Nbr Timesheet"
+#~ msgstr "Núm. parts d'hores"
+
+#~ msgid "# Total Attendance"
+#~ msgstr "Nre. total d'assistencies"
+
+#~ msgid "# Total Diff"
+#~ msgstr "Nre. total de deiferencies"
+
+#~ msgid "# Total Timesheet"
+#~ msgstr "Nre. total de parts d'hores"
+
 #~ msgid "Action Needed"
 #~ msgstr "Cal fer alguna acció"
 
 #~ msgid "Cancel"
 #~ msgstr "Cancel·la"
 
+#~ msgid "Confirmed"
+#~ msgstr "Confirmada"
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Data de l'últim missatge enviat al registre."
 
 #~ msgid "Day"
 #~ msgstr "Dia"
+
+#~ msgid "Done"
+#~ msgstr "Realitzat"
+
+#~ msgid "Draft"
+#~ msgstr "Esborrany"
+
+#~ msgid "External Timesheet"
+#~ msgstr "Part d'hores externes"
 
 #~ msgid "Followers"
 #~ msgstr "Seguidors"
@@ -771,6 +764,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Per crear una fulla d'hores per aquest treballador, ha d'enllaçar el "
 #~ "treballador a un producte."
+
+#~ msgid "Internal Timesheet"
+#~ msgstr "Fulla d'hores interna"
 
 #~ msgid "Is Follower"
 #~ msgstr "És seguidor"
@@ -821,3 +817,7 @@ msgstr ""
 
 #~ msgid "Website communication history"
 #~ msgstr "Historial de comunicacions de la pàgina web"
+
+#, fuzzy
+#~ msgid "account analytic line"
+#~ msgstr "Línia analítica"

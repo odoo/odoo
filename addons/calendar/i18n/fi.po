@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-07-15 13:36+0000\n"
 "Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
@@ -459,7 +459,7 @@ msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:35
+#: code:addons/calendar/static/src/js/base_calendar.js:95
 #, python-format
 msgid " [Me]"
 msgstr "[Me]"
@@ -482,7 +482,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr "${object.event_id.name} - Päivämäärä on päivitetty"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:776
+#: code:addons/calendar/calendar.py:777
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -490,7 +490,7 @@ msgid ""
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:774
+#: code:addons/calendar/calendar.py:775
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr ""
@@ -531,7 +531,7 @@ msgstr "Aktiivinen"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:132
+#: code:addons/calendar/static/src/js/base_calendar.js:75
 #, python-format
 msgid "Add Favorite Calendar"
 msgstr "Lisää kalenteri"
@@ -542,7 +542,7 @@ msgid "All Day"
 msgstr "koko päivän"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:771
+#: code:addons/calendar/calendar.py:772
 #, python-format
 msgid "AllDay , %s"
 msgstr "Koko päivä , %s"
@@ -568,8 +568,8 @@ msgid "Attendee information"
 msgstr "Osallistujan tiedot"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_ids
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_partner_ids
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Attendees"
@@ -581,7 +581,7 @@ msgid "Availability"
 msgstr "Saatavuus"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1714
+#: code:addons/calendar/calendar.py:1738
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -608,9 +608,7 @@ msgid "Calendar Alarm"
 msgstr "Kalenterihälytys"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:43
-#, python-format
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Calendar Invitation"
 msgstr "Kalenterikutsu"
 
@@ -665,6 +663,7 @@ msgstr "Luotu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_display_start
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Date"
 msgstr "Päivämäärä"
 
@@ -724,9 +723,9 @@ msgstr "Näytä nimi"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:168
-#, python-format
-msgid "Do you really want to delete this filter from favorite?"
+#: code:addons/calendar/static/src/js/base_calendar.js:156
+#, fuzzy, python-format
+msgid "Do you really want to delete this filter from favorites ?"
 msgstr "Haluatko todella poistaa tämän suodattimen suosikeista?"
 
 #. module: calendar
@@ -748,7 +747,7 @@ msgid "Email"
 msgstr "Sähköposti"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1365
+#: code:addons/calendar/calendar.py:1367
 #, python-format
 msgid "Email addresses not found"
 msgstr "Sähköpostiosoitetta ei löydy"
@@ -815,20 +814,20 @@ msgid "Event alarm"
 msgstr "Tapahtuman hälytys"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1239
+#: code:addons/calendar/calendar.py:1241
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr "Tapahtuman toistumisväli ei voi olla negatiivinen."
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:45
+#: code:addons/calendar/static/src/js/base_calendar.js:96
 #, python-format
 msgid "Everybody's calendars"
 msgstr "Kaikkien kalenterit"
 
 #. module: calendar
-#: selection:calendar.event,class:0
+#: selection:calendar.event,privacy:0
 msgid "Everyone"
 msgstr "Näytä kaikille"
 
@@ -880,7 +879,7 @@ msgid "Group By"
 msgstr "Ryhmittele"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1656
+#: code:addons/calendar/calendar.py:1680
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -927,6 +926,12 @@ msgstr "Kutsuavain"
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitation details"
 msgstr "Kutsun yksityiskohdat"
+
+#. module: calendar
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#, fuzzy
+msgid "Invitation for"
+msgstr "Kutsu"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -983,6 +988,7 @@ msgstr "Anna tapahtuman toistua säännöllisin väliajoin"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_location
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Location"
 msgstr "Sijainti"
 
@@ -1091,9 +1097,7 @@ msgid "Needs Action"
 msgstr "Vaatii toimia"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:36
-#, python-format
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No I'm not going."
 msgstr "Ei, en osallistu"
 
@@ -1115,12 +1119,12 @@ msgid "OK"
 msgstr "OK"
 
 #. module: calendar
-#: selection:calendar.event,class:0
+#: selection:calendar.event,privacy:0
 msgid "Only internal users"
 msgstr "Näytä vain sisäisille käyttäjille"
 
 #. module: calendar
-#: selection:calendar.event,class:0
+#: selection:calendar.event,privacy:0
 msgid "Only me"
 msgstr "Näytä vain minulle"
 
@@ -1140,18 +1144,23 @@ msgid "Owner"
 msgstr "Omistaja"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_ids
+msgid "Participant"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
 msgid "Partner"
 msgstr "Kumppani"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1252
+#: code:addons/calendar/calendar.py:1254
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_class
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_privacy
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Privacy"
 msgstr "Yksityisyys"
@@ -1364,7 +1373,7 @@ msgid ""
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1361
+#: code:addons/calendar/calendar.py:1363
 #, python-format
 msgid "The following contacts have no email address :"
 msgstr "Seuraavilla yhteystiedoilla ei ole sähköpostia määritelty :"
@@ -1457,35 +1466,12 @@ msgid "Weekday"
 msgstr "Arkipäivä"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:48
-#, python-format
-msgid "When"
-msgstr "Milloin"
-
-#. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:52
-#, python-format
-msgid "Where"
-msgstr "Missä"
-
-#. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:56
-#, python-format
-msgid "Who"
-msgstr "Kuka"
-
-#. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Year(s)"
 msgstr "Vuotta"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:35
-#, python-format
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
 msgstr "Kyllä, osallistun"
 
@@ -1516,7 +1502,7 @@ msgid "e.g. Business Lunch"
 msgstr "esim. lounastapaaminen"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1237
+#: code:addons/calendar/calendar.py:1239
 #, python-format
 msgid "interval cannot be negative."
 msgstr "väli ei voi olla negatiivinen."
@@ -1530,6 +1516,12 @@ msgstr "ir.attachment"
 #: model:ir.model,name:calendar.model_ir_values
 msgid "ir.values"
 msgstr "ir.values"
+
+#~ msgid "${object.event_id.name}"
+#~ msgstr "${object.event_id.name}"
+
+#~ msgid "${object.event_id.name} - Date has been updated"
+#~ msgstr "${object.event_id.name} - Päivämäärä on päivitetty"
 
 #~ msgid "A email has been send to specify that the date has been changed !"
 #~ msgstr "Päivämäärämuutoksesta on lähetetty ilmoitus sähköpostilla!"
@@ -1593,3 +1585,12 @@ msgstr "ir.values"
 
 #~ msgid "Website communication history"
 #~ msgstr "Verkkosivun viestihistoria"
+
+#~ msgid "When"
+#~ msgstr "Milloin"
+
+#~ msgid "Where"
+#~ msgstr "Missä"
+
+#~ msgid "Who"
+#~ msgstr "Kuka"

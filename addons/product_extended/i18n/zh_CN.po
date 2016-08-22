@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-06-22 13:04+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -22,134 +22,92 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:24
-#: code:addons/product_extended/wizard/wizard_price.py:40
-#, python-format
-msgid "Active ID is not set in Context."
-msgstr "Contex中没有 Active ID"
-
-#. module: product_extended
-#: model:ir.model,name:product_extended.model_mrp_bom
-msgid "Bill of Material"
-msgstr "物料清单"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Cancel"
-msgstr "取消"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Change Price"
-msgstr "更改价格"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Change Standard Price"
-msgstr "更改标准价"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_recursive
-msgid "Change prices of child BoMs too"
-msgstr "同时更改子物料清单的价格"
-
-#. module: product_extended
-#: model:ir.actions.act_window,name:product_extended.action_view_compute_price_wizard
-#: model:ir.model,name:product_extended.model_wizard_price
-msgid "Compute Price Wizard"
-msgstr "计算价格向导"
-
-#. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+#: model:ir.ui.view,arch_db:product_extended.product_product_view_form_normal_inherit_extended
 msgid "Compute from BOM"
 msgstr "从物料表计算"
 
 #. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+#: model:ir.ui.view,arch_db:product_extended.product_product_view_form_normal_inherit_extended
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr "只是对生产的产品用产品和和物料表相关的操作计算产品的价格"
 
 #. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_uid
-msgid "Created by"
-msgstr "创建者"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_date
-msgid "Created on"
-msgstr "创建时间"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_display_name
-msgid "Display Name"
-msgstr "显示名称"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_real_time_accounting
-msgid "Generate accounting entries when real-time"
-msgstr "当实时产生会计分录"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_id
-msgid "ID"
-msgstr "ID"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_info_field
-msgid "Info"
-msgstr "信息"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price___last_update
-msgid "Last Modified on"
-msgstr "最后修改时间"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_uid
-msgid "Last Updated by"
-msgstr "最后更新者"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_date
-msgid "Last Updated on"
-msgstr "最后更新时间"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_get_variant_count
-msgid "Number of variant for the product"
-msgstr ""
+#: model:ir.model,name:product_extended.model_product_product
+msgid "Product"
+msgstr "产品"
 
 #. module: product_extended
 #: model:ir.model,name:product_extended.model_product_template
 msgid "Product Template"
 msgstr "产品模板"
 
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Set price on BoM"
-msgstr "在物料清单上设置价格"
+#~ msgid "Active ID is not set in Context."
+#~ msgstr "Contex中没有 Active ID"
 
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_standard_price
-msgid "Standard Price"
-msgstr "标准价"
+#~ msgid "Bill of Material"
+#~ msgstr "物料清单"
 
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid ""
-"The price is computed from the bill of material lines which are not variant "
-"specific"
-msgstr "价格从那些没有指定变型的物料清单行计算得出"
+#~ msgid "Cancel"
+#~ msgstr "取消"
 
-#. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:38
-#, fuzzy, python-format
-msgid ""
-"This wizard is built for product templates, while you are currently running "
-"it from a product variant."
-msgstr "此向导是为产品模板构建的，而您目前正在从一个产品变型中运行它。"
+#~ msgid "Change Price"
+#~ msgstr "更改价格"
+
+#~ msgid "Change Standard Price"
+#~ msgstr "更改标准价"
+
+#~ msgid "Change prices of child BoMs too"
+#~ msgstr "同时更改子物料清单的价格"
+
+#~ msgid "Compute Price Wizard"
+#~ msgstr "计算价格向导"
 
 #~ msgid "Compute price wizard"
 #~ msgstr "计算价格向导"
+
+#~ msgid "Created by"
+#~ msgstr "创建者"
+
+#~ msgid "Created on"
+#~ msgstr "创建时间"
+
+#~ msgid "Display Name"
+#~ msgstr "显示名称"
+
+#~ msgid "Generate accounting entries when real-time"
+#~ msgstr "当实时产生会计分录"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Info"
+#~ msgstr "信息"
+
+#~ msgid "Last Modified on"
+#~ msgstr "最后修改时间"
+
+#~ msgid "Last Updated by"
+#~ msgstr "最后更新者"
+
+#~ msgid "Last Updated on"
+#~ msgstr "最后更新时间"
+
+#~ msgid "Set price on BoM"
+#~ msgstr "在物料清单上设置价格"
+
+#~ msgid "Standard Price"
+#~ msgstr "标准价"
+
+#~ msgid ""
+#~ "The price is computed from the bill of material lines which are not "
+#~ "variant specific"
+#~ msgstr "价格从那些没有指定变型的物料清单行计算得出"
+
+#~ msgid ""
+#~ "This wizard is build for product templates, while you are currently "
+#~ "running it from a product variant."
+#~ msgstr "此向导是为产品模板构建的，而您目前正在从一个产品变型中运行它。"

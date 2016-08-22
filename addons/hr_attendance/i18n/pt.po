@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2015-11-25 14:34+0000\n"
 "Last-Translator: Ricardo Correia <rcorreiavv@gmail.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -235,6 +235,11 @@ msgid "Group By"
 msgstr "Agrupar por"
 
 #. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_ir_http
+msgid "HTTP routing"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
 msgid "Hr Attendance Search"
 msgstr "Procura de Presenças"
@@ -343,14 +348,14 @@ msgid "Reports"
 msgstr "Relatórios"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:156
+#: code:addons/hr_attendance/models/hr_attendance.py:156
 #: selection:hr.attendance,action:0
 #, python-format
 msgid "Sign In"
 msgstr "Sign In"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:156
+#: code:addons/hr_attendance/models/hr_attendance.py:156
 #: selection:hr.attendance,action:0
 #, python-format
 msgid "Sign Out"
@@ -404,7 +409,7 @@ msgid "Worked Hours"
 msgstr "Horas Trabalhadas"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:163
+#: code:addons/hr_attendance/models/hr_attendance.py:163
 #, python-format
 msgid ""
 "You tried to %s with a date anterior to another event !\n"

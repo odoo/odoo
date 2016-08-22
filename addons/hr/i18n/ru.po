@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-04-06 20:36+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -22,7 +22,7 @@ msgstr ""
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr
-#: code:addons/hr/hr.py:120
+#: code:addons/hr/models/hr.py:76
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
@@ -121,9 +121,17 @@ msgid "A good job in a young and dynamic team"
 msgstr "Хорошая работа в молодой и динамичной команде"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "Активен"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
+msgid ""
+"An efficiency of 50% means the resource is two times smaller than his usual "
+"speed."
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -131,6 +139,7 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr ""
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Помещено в архив"
@@ -200,11 +209,6 @@ msgid "City"
 msgstr "Город"
 
 #. module: hr
-#: model:web.tip,description:hr.hr_tip_2
-msgid "Click here to change the recruitment goal!"
-msgstr ""
-
-#. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
@@ -214,11 +218,6 @@ msgstr "Кликните, чтобы добавить нового сотруд�
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
 msgstr "Кликните, чтобы создать отдел."
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid "Click to define a new department."
-msgstr "Кликните, чтобы определить новый отдел."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -291,11 +290,6 @@ msgid "Contributions to open source projects"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr "Укажите ваши отделы"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
@@ -339,7 +333,6 @@ msgid "Deliver generic Odoo functional training sessions"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -437,13 +430,13 @@ msgid "Employees Tags"
 msgstr "Тэги сотрудников"
 
 #. module: hr
-#: code:addons/hr/hr.py:294 constraint:hr.department:0
+#: code:addons/hr/models/hr.py:264
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Ошибка! Вы не можете создавать рекурсивные подразделения."
 
 #. module: hr
-#: code:addons/hr/hr.py:264 constraint:hr.employee:0
+#: code:addons/hr/models/hr.py:177
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Ошибка! Вы не можете создавать рекурсивную иерархию сотрудника(ов)."
@@ -490,11 +483,6 @@ msgstr "Подписчики"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
 msgstr "Пол"
-
-#. module: hr
-#: model:web.tip,description:hr.hr_tip_1
-msgid "Get all applications related to this job position."
-msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -578,6 +566,12 @@ msgid "Home Address"
 msgstr "Домашний адрес"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
+#, fuzzy
+msgid "Hr Department"
+msgstr "Отдел кадров"
+
+#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
 msgstr "Управление персоналом"
@@ -654,19 +648,9 @@ msgid "Job Description"
 msgstr "Описание работы"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_name
-msgid "Job Name"
-msgstr "Наименование должности"
-
-#. module: hr
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Position"
 msgstr "Должность"
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "Job Position Name"
-msgstr "Наименование должности"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -688,6 +672,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Title"
 msgstr "Название должности"
 
@@ -828,9 +813,7 @@ msgid "Must have ..."
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
-#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
 msgstr "Название"
 
@@ -849,6 +832,12 @@ msgstr "Национальность (Страна)"
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Nice to have"
 msgstr ""
+
+#. module: hr
+#: selection:hr.job,state:0
+#, fuzzy
+msgid "Not Recruiting"
+msgstr "Прекращение набора кадров"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -977,11 +966,6 @@ msgstr ""
 
 #. module: hr
 #: selection:hr.job,state:0
-msgid "Recruitment Closed"
-msgstr "Набор закрыт"
-
-#. module: hr
-#: selection:hr.job,state:0
 msgid "Recruitment in Progress"
 msgstr "Идет набор кадров"
 
@@ -1014,6 +998,12 @@ msgstr "Требования"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
 msgid "Resource"
 msgstr "Объект"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
+#, fuzzy
+msgid "Resource Name"
+msgstr "Тип ресурса"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
@@ -1150,19 +1140,6 @@ msgstr ""
 "Наименование должности должно быть уникальным в подразделении компании!"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
-msgstr ""
-"Это поле изображают эффективность ресурса для завершения задачи. например "
-"ресурс поместить в одну фазу на этап 5 дней с 5 задачами, возложенными на "
-"него, покажет нагрузку 100% в течение этой фазы, по умолчанию, но если мы "
-"ставим эффективность 200%, то его нагрузка будет только 50%."
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
 msgid ""
 "This field holds the image used as photo for the employee, limited to "
@@ -1193,6 +1170,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "Непрочитанные"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_login
+msgid "Used to log into the system"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1507,15 +1489,6 @@ msgid "You will work closely with all trainees"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid ""
-"Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
-"                leaves and holidays, recruitments, etc."
-msgstr ""
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "подразделение"
@@ -1525,8 +1498,19 @@ msgstr "подразделение"
 msgid "e.g. Part Time"
 msgstr "т.е. частичная занятость"
 
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "e.g. Sales Manager"
+msgstr ""
+
 #~ msgid "Action Needed"
 #~ msgstr "Требуется реакция"
+
+#~ msgid "Click to define a new department."
+#~ msgstr "Кликните, чтобы определить новый отдел."
+
+#~ msgid "Create Your Departments"
+#~ msgstr "Укажите ваши отделы"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Дата последнего сообщения"
@@ -1537,9 +1521,6 @@ msgstr "т.е. частичная занятость"
 #~ msgid "Followers (Partners)"
 #~ msgstr "Подписчики (Партнеры)"
 
-#~ msgid "HR Department"
-#~ msgstr "Отдел кадров"
-
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
 
@@ -1548,6 +1529,12 @@ msgstr "т.е. частичная занятость"
 
 #~ msgid "Is Follower"
 #~ msgstr "Подписчик"
+
+#~ msgid "Job Name"
+#~ msgstr "Наименование должности"
+
+#~ msgid "Job Position Name"
+#~ msgstr "Наименование должности"
 
 #~ msgid "Last Message Date"
 #~ msgstr "Последнее сообщение по дате"
@@ -1564,8 +1551,22 @@ msgstr "т.е. частичная занятость"
 #~ msgid "Open HR Menu"
 #~ msgstr "Открыть кадровое меню"
 
+#~ msgid "Recruitment Closed"
+#~ msgstr "Набор закрыт"
+
 #~ msgid "Subscriptions"
 #~ msgstr "Подписки"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
+#~ "will show a load of 100% for this phase by default, but if we put a "
+#~ "efficiency of 200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "Это поле изображают эффективность ресурса для завершения задачи. например "
+#~ "ресурс поместить в одну фазу на этап 5 дней с 5 задачами, возложенными на "
+#~ "него, покажет нагрузку 100% в течение этой фазы, по умолчанию, но если мы "
+#~ "ставим эффективность 200%, то его нагрузка будет только 50%."
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Счетчик непрочтённых сообщений"

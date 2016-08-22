@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-03-19 12:02+0000\n"
 "Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -124,11 +124,6 @@ msgid "Conditions"
 msgstr "Условия"
 
 #. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
-msgid "Create Date"
-msgstr "Дата создания"
-
-#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_uid
@@ -136,6 +131,7 @@ msgid "Created by"
 msgstr "Создано"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_date
 msgid "Created on"
@@ -153,10 +149,13 @@ msgstr "Задержка после даты активации"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
+#, fuzzy
 msgid ""
-"Delay after the trigger date.You can put a negative number if you need a "
-"delay before thetrigger date, like sending a reminder 15 minutes before a "
-"meeting."
+"Delay after the trigger date.\n"
+"                                    You can put a negative number if you "
+"need a delay before the\n"
+"                                    trigger date, like sending a reminder 15 "
+"minutes before a meeting."
 msgstr ""
 "Задержка после даты запуска.Вы можете поставить отрицательное число, если "
 "вам нужно задержать дату запуска, например отправить напоминание за 15 минут "
@@ -280,11 +279,6 @@ msgid "Last Modified on"
 msgstr "Последний раз изменено"
 
 #. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
-msgid "Last Run"
-msgstr "Последнее выполнение"
-
-#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_uid
@@ -299,8 +293,19 @@ msgid "Last Updated on"
 msgstr "Последний раз обновлено"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
+#, fuzzy
+msgid "Last run"
+msgstr "Последнее выполнение"
+
+#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
 msgid "Lead id"
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
+msgid "Line ids"
 msgstr ""
 
 #. module: base_action_rule
@@ -483,8 +488,10 @@ msgstr ""
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
+#, fuzzy
 msgid ""
-"When should the condition be triggered. If present, will be checked by the "
+"When should the condition be triggered.\n"
+"                                  If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
 msgstr ""
 "Когда следует условие срабатывает. В случае присутствия, будет проверено "
@@ -510,7 +517,5 @@ msgstr ""
 "Вы также можете использовать фильтры вместо выбора записей. Для того чтобы "
 "создать новый фильтр:"
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
-msgid "unknown"
-msgstr ""
+#~ msgid "Create Date"
+#~ msgstr "Дата создания"

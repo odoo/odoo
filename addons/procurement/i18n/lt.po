@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-03-10 13:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -57,6 +57,11 @@ msgid "All at once"
 msgstr "Viską vienu metu"
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr ""
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
 msgstr "Atšaukti"
@@ -70,12 +75,6 @@ msgstr "Atšaukti užsakymą"
 #: selection:procurement.order,state:0
 msgid "Cancelled"
 msgstr "Atšauktas"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr ""
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -274,7 +273,7 @@ msgid "Name"
 msgstr "Pavadinimas"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:200
+#: code:addons/procurement/models/procurement.py:187
 #, python-format
 msgid "No rule matching this procurement"
 msgstr ""
@@ -413,8 +412,8 @@ msgstr "Numeris"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
 msgstr ""
 
 #. module: procurement
@@ -517,6 +516,12 @@ msgid ""
 msgstr ""
 
 #. module: procurement
+#: code:addons/procurement/models/procurement.py:142
+#, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr ""
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "e.g. Buy"
 msgstr ""
@@ -528,6 +533,9 @@ msgstr "pvz. SO005"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Paskutinė pranešimo publikavimo data šiame įraše."
+
+#~ msgid "Delivery Method"
+#~ msgstr "Pristatymo būdas"
 
 #~ msgid "Followers"
 #~ msgstr "Prenumeratoriai"

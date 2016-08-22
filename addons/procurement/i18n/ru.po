@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-05-10 21:08+0000\n"
 "Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -69,6 +69,11 @@ msgid "All at once"
 msgstr "Все сразу"
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr ""
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
 msgstr "Отмена"
@@ -82,12 +87,6 @@ msgstr "Отменить снабжение"
 #: selection:procurement.order,state:0
 msgid "Cancelled"
 msgstr "Отменен"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "Нельзя удалить заказы снабжения в состоянии  %s"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -290,7 +289,7 @@ msgid "Name"
 msgstr "Название"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:200
+#: code:addons/procurement/models/procurement.py:187
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Нет правила, которое соответствует снабжению"
@@ -428,9 +427,10 @@ msgstr "Ссылка"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
+#, fuzzy
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
 msgstr ""
 "Сноска на документ, создавший этот запрос снабжения.\n"
 "Заполняется автоматически."
@@ -540,6 +540,12 @@ msgstr ""
 "на поставку заказа, производственный заказ и т.д."
 
 #. module: procurement
+#: code:addons/procurement/models/procurement.py:142
+#, fuzzy, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr "Нельзя удалить заказы снабжения в состоянии  %s"
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "e.g. Buy"
 msgstr "например Купить"
@@ -584,6 +590,9 @@ msgstr "например SO005"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Дата последнего сообщения"
+
+#~ msgid "Delivery Method"
+#~ msgstr "Метод доставки"
 
 #~ msgid "Followers"
 #~ msgstr "Подписчики"
@@ -632,3 +641,13 @@ msgstr "например SO005"
 
 #~ msgid "Website communication history"
 #~ msgstr "История общения с сайта"
+
+#~ msgid ""
+#~ "When the procurement order is confirmed, it automatically\n"
+#~ "                creates the necessary operations to fullfil the need: "
+#~ "purchase\n"
+#~ "                order proposition, manufacturing order, etc."
+#~ msgstr ""
+#~ "Когда заказ на закупку будет подтвержден, он автоматически\n"
+#~ "создаст все необходимые для выполнения операции: предложение\n"
+#~ "на поставку заказа, производственный заказ и т.д."

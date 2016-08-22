@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-01-29 21:00+0000\n"
 "Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -28,11 +28,6 @@ msgstr "# Produktov"
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
 msgstr "Vlastnosti účtu skladu"
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
-msgid "Accounting"
-msgstr "Účtovníctvo"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -60,18 +55,13 @@ msgid "Average Price"
 msgstr "Priemerná cena"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
-msgid "Can be expensed"
-msgstr "Môže byť zaúčtované do nákladov"
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Cancel"
 msgstr "Zrušiť"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:278
+#: code:addons/stock_account/stock_account.py:284
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on "
@@ -79,7 +69,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:280
+#: code:addons/stock_account/stock_account.py:286
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -119,15 +109,6 @@ msgid "Choose your date"
 msgstr "Zvoľte svoj dátum"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_coeff
-msgid ""
-"Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
-"coeff"
-msgstr ""
-"Koeficient na konvertovanie predvolenej Mernej jednotky na Predajnu jednotku "
-"redajná jednotka = merná jednotka * koef"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Company"
@@ -140,7 +121,7 @@ msgid "Compute from average price"
 msgstr "Vyrátať z priemernej ceny"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:351
+#: code:addons/stock_account/stock_account.py:357
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -342,14 +323,16 @@ msgid "Location"
 msgstr "Umiestnenie"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+#, fuzzy
+msgid "Lot/Serial Number"
+msgstr "Sériové číslo"
+
+#. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
 msgid "Manage Inventory Valuation and Costing Methods"
 msgstr "Spravovanie Ohodnocovania zásob a Metód kalkulácie"
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Move"
-msgstr "Presunúť"
 
 #. module: stock_account
 #: code:addons/stock_account/product.py:125
@@ -404,11 +387,6 @@ msgid "Product"
 msgstr "Produkt"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_alert_time
-msgid "Product Alert Time"
-msgstr "Čas upozornenia produktu"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_product_categ_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -416,19 +394,9 @@ msgid "Product Category"
 msgstr "Kategória produktu"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_life_time
-msgid "Product Life Time"
-msgstr "Životnosť produktu"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
 msgid "Product Quantity"
 msgstr "Množstvo produktu"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_removal_time
-msgid "Product Removal Time"
-msgstr "Čas odobratia produktu"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -436,11 +404,6 @@ msgstr "Čas odobratia produktu"
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Product Template"
 msgstr "šablona produktu"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_use_time
-msgid "Product Use Time"
-msgstr "Čas použitia výrobku"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -464,12 +427,6 @@ msgid "Retrieve the curent stock valuation."
 msgstr "Opäť získať súčasné hodnotenie skladu."
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Serial Number"
-msgstr "Sériové číslo"
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 #, fuzzy
@@ -480,20 +437,6 @@ msgstr "Štandardná cena"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
 msgid "Source"
 msgstr "Výraz"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_id
-msgid ""
-"Specify a unit of measure here if invoicing is made in another unit of "
-"measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
-"Tu zadajte mernú jednotku, ak sa fakturácia vykonáva v mernej jednotke inej "
-"ako inventár. Ponechajte prázdne pre použitie predvolenej mernej jednotky."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
-msgstr "Špecifikujte či produkt môže byť zvolený ako HR výdaj."
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -546,6 +489,12 @@ msgstr ""
 "produktu (bude sa používať napríklad v prípade straty zásob)."
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+#, fuzzy
+msgid "Stock Accounting"
+msgstr "Účtovníctvo"
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
@@ -553,7 +502,7 @@ msgid "Stock Input Account"
 msgstr "Účet vstupov skladu"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:464
+#: code:addons/stock_account/stock_account.py:470
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
@@ -562,6 +511,7 @@ msgstr "Skladová účtovná kniha"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_move_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Stock Move"
 msgstr "Pohyb na sklade"
 
@@ -603,7 +553,7 @@ msgid "Templates for Account Chart"
 msgstr "Šablóny pre Účtovný graf"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:306
+#: code:addons/stock_account/stock_account.py:312
 #, python-format
 msgid ""
 "The found valuation amount for product %s is zero. Which means there is "
@@ -615,16 +565,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
 msgid "Total Value"
 msgstr "Celková hodnota"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_coeff
-msgid "Unit of Measure -> UOS Coeff"
-msgstr "Merfná jednotka -> Predajná jednotka Koef"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_id
-msgid "Unit of Sale"
-msgstr "Predajná jednotka"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
@@ -660,42 +600,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
 msgid "Value"
 msgstr "Hodnota"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-"Keď je vydané nové sériové číslo, toto je počet dní pred oznámením "
-"upozornenia."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-"Keď je vydané nové sériové číslo, toto je počet dní pred tým než s tovar "
-"môže stať nebezpečným a nesmie byť konzumovaný."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-"Keď je vydané nové sériové číslo, toto je počet dní pred tým než by mal byť "
-"tovar odstránený zo skladu."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"Keď je vydané nové sériové číslo, toto je počet dní pred tým než sa tovar "
-"začne zhoršuje, bez toho aby už bol nebezpečný."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -781,7 +685,7 @@ msgid "Wizard that opens the stock valuation history table"
 msgstr "Sprievodca ktorý otvára tabuľku históriu hodnotenia skladu"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:276
+#: code:addons/stock_account/stock_account.py:282
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -791,7 +695,7 @@ msgstr ""
 "skontrolujte či máte nainštalovanú tabuľku účtov"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:282
+#: code:addons/stock_account/stock_account.py:288
 #, fuzzy, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category. "
@@ -826,5 +730,75 @@ msgstr "neznámy"
 #~ msgid "Asset Type"
 #~ msgstr "Typ aktíva"
 
+#~ msgid "Can be expensed"
+#~ msgstr "Môže byť zaúčtované do nákladov"
+
+#~ msgid ""
+#~ "Coefficient to convert default Unit of Measure to Unit of Sale uos = uom "
+#~ "* coeff"
+#~ msgstr ""
+#~ "Koeficient na konvertovanie predvolenej Mernej jednotky na Predajnu "
+#~ "jednotku redajná jednotka = merná jednotka * koef"
+
 #~ msgid "Deferred Revenue Type"
 #~ msgstr "Typ odložených príjmov"
+
+#~ msgid "Move"
+#~ msgstr "Presunúť"
+
+#~ msgid "Product Alert Time"
+#~ msgstr "Čas upozornenia produktu"
+
+#~ msgid "Product Life Time"
+#~ msgstr "Životnosť produktu"
+
+#~ msgid "Product Removal Time"
+#~ msgstr "Čas odobratia produktu"
+
+#~ msgid "Product Use Time"
+#~ msgstr "Čas použitia výrobku"
+
+#~ msgid ""
+#~ "Specify a unit of measure here if invoicing is made in another unit of "
+#~ "measure than inventory. Keep empty to use the default unit of measure."
+#~ msgstr ""
+#~ "Tu zadajte mernú jednotku, ak sa fakturácia vykonáva v mernej jednotke "
+#~ "inej ako inventár. Ponechajte prázdne pre použitie predvolenej mernej "
+#~ "jednotky."
+
+#~ msgid "Specify whether the product can be selected in an HR expense."
+#~ msgstr "Špecifikujte či produkt môže byť zvolený ako HR výdaj."
+
+#~ msgid "Unit of Measure -> UOS Coeff"
+#~ msgstr "Merfná jednotka -> Predajná jednotka Koef"
+
+#~ msgid "Unit of Sale"
+#~ msgstr "Predajná jednotka"
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "an alert should be notified."
+#~ msgstr ""
+#~ "Keď je vydané nové sériové číslo, toto je počet dní pred oznámením "
+#~ "upozornenia."
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "the goods may become dangerous and must not be consumed."
+#~ msgstr ""
+#~ "Keď je vydané nové sériové číslo, toto je počet dní pred tým než s tovar "
+#~ "môže stať nebezpečným a nesmie byť konzumovaný."
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "the goods should be removed from the stock."
+#~ msgstr ""
+#~ "Keď je vydané nové sériové číslo, toto je počet dní pred tým než by mal "
+#~ "byť tovar odstránený zo skladu."
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "the goods starts deteriorating, without being dangerous yet."
+#~ msgstr ""
+#~ "Keď je vydané nové sériové číslo, toto je počet dní pred tým než sa tovar "
+#~ "začne zhoršuje, bez toho aby už bol nebezpečný."

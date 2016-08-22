@@ -1,4 +1,3 @@
-# #-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_quote
@@ -11,35 +10,18 @@
 # Melanie Bernard <mbe@odoo.com>, 2015
 # ShevAbam, 2016
 # Xavier Symons <xsy@openerp.com>, 2015
-# #-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * website_quote
-#
-# Translators:
-# Clo <clo@odoo.com>, 2015
-# Loic <loic.richard2@gmail.com>, 2015
-# Martin Trigaux, 2015-2016
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015-2016
-# Melanie Bernard <mbe@odoo.com>, 2015
-# ShevAbam, 2016
-# Xavier Symons <xsy@openerp.com>, 2015
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-05-31 13:09+0000\n"
-"Last-Translator: ShevAbam\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"PO-Revision-Date: 2016-08-08 15:43+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_quote
@@ -126,6 +108,11 @@ msgid "% discount"
 msgstr "% de remise"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "&amp;bull;"
+msgstr "&amp;bull;"
+
+#. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
 #: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
 #: model:product.template,quote_description:website_quote.product_template_quote_2
@@ -167,6 +154,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept"
 msgstr "<i class=\"fa fa-check\"/> Accepter"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "<i class=\"fa fa-check\"/> Accept &amp; Pay"
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -445,12 +437,17 @@ msgstr "Un produit de qualité"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "About us"
-msgstr ""
+msgstr "À propos de nous"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Access to the Lead"
 msgstr "Accès au lead"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
+msgid "Add to order lines"
+msgstr ""
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_3
@@ -493,17 +490,12 @@ msgstr "Tableaux"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
-#, fuzzy
 msgid ""
 "As a leading professional services firm,\n"
 "                                       we know that success is all about "
 "the\n"
 "                                       commitment we put on strong services."
 msgstr ""
-"Fournissez <strong>des services à grande valeur ajoutée </strong> vue que "
-"vous pouvez\n"
-"compter sur un logiciel libre, avec\n"
-"le support de l'éditeur."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
@@ -513,7 +505,7 @@ msgstr "Demander une modification"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Back"
-msgstr ""
+msgstr "Retour"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -907,6 +899,11 @@ msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr "Donne l'ordre d'affichage d'une liste de lignes de devis."
 
 #. module: website_quote
+#: model:ir.model.fields,help:website_quote.field_sale_order_option_sequence
+msgid "Gives the sequence order when displaying a list of suggested product."
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "Great quotation templates will significantly\n"
@@ -984,8 +981,8 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:76
-#: code:addons/website_quote/controllers/main.py:227
+#: code:addons/website_quote/controllers/main.py:80
+#: code:addons/website_quote/controllers/main.py:230
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -999,6 +996,12 @@ msgstr ""
 #: selection:sale.quote.template,require_payment:0
 msgid "Immediate after website order validation"
 msgstr "Immédiatement après validation de commande sur le site internet"
+
+#. module: website_quote
+#: selection:sale.order,require_payment:0
+#: selection:sale.quote.template,require_payment:0
+msgid "Immediate after website order validation and save a token"
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1202,8 +1205,8 @@ msgstr "Gestion multi-langue"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "My Account"
-msgstr "Mon compte"
+msgid "My Quotations"
+msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1314,13 +1317,13 @@ msgid "Optional Products Lines"
 msgstr "Ligne de produit optionelle"
 
 #. module: website_quote
-#: code:addons/website_quote/models/order.py:294
+#: code:addons/website_quote/models/order.py:300
 #, python-format
 msgid "Order paid by %s. Transaction: %s. Amount: %s."
-msgstr "Commande payée à %. Transaction: %. Montant: %."
+msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:94
+#: code:addons/website_quote/controllers/main.py:98
 #, python-format
 msgid "Order signed by %s"
 msgstr "Ordre signé par %s"
@@ -1332,9 +1335,8 @@ msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
-#, fuzzy
 msgid "Our Offer"
-msgstr "Notre offre"
+msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1343,15 +1345,13 @@ msgstr "Notre offre de partenariat"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
-#, fuzzy
 msgid "Our Quality"
-msgstr "Qualité"
+msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
-#, fuzzy
 msgid "Our Service"
-msgstr "Service"
+msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1412,8 +1412,8 @@ msgstr ""
 "logiciel (voir Formation Fonctionnelle)."
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:66
-#: code:addons/website_quote/controllers/main.py:231
+#: code:addons/website_quote/controllers/main.py:70
+#: code:addons/website_quote/controllers/main.py:234
 #, python-format
 msgid "Pay & Confirm"
 msgstr "Payer et confirmer"
@@ -1430,21 +1430,9 @@ msgid "Payment Method:"
 msgstr "Méthode de paiement"
 
 #. module: website_quote
-#: model:ir.model,name:website_quote.model_payment_transaction
-msgid "Payment Transaction"
-msgstr "Transaction"
-
-#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Preview"
-msgstr ""
-
-#. module: website_quote
-#: model:web.tip,description:website_quote.quotation_tip_1
-msgid ""
-"Preview the online quotation. You'll be able to edit the quotation content "
-"before send it to the customer."
-msgstr ""
+msgstr "Prévisualiser"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -1580,7 +1568,7 @@ msgid "Quotation Viewed"
 msgstr "Devis vu par le client"
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:32
+#: code:addons/website_quote/controllers/main.py:29
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr "Devis vu par le client"
@@ -1631,11 +1619,6 @@ msgstr "Exigences"
 #: model:ir.model,name:website_quote.model_sale_order_option
 msgid "Sale Options"
 msgstr "Options de vente"
-
-#. module: website_quote
-#: model:ir.model.fields,field_description:website_quote.field_payment_transaction_sale_order_id
-msgid "Sale Order"
-msgstr "Commande client"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_order_id
@@ -1692,11 +1675,19 @@ msgid "Schedule Phone Calls and Meetings"
 msgstr "Planifier un rendez-vous physique ou téléphonique"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_layout_category_id
+msgid "Section"
+msgstr "Section"
+
+#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_access_token
 msgid "Security Token"
 msgstr "Jeton de sécurité"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_sequence
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_sequence
 msgid "Sequence"
 msgstr "Séquence"
@@ -1713,13 +1704,8 @@ msgstr "Magasin, adresse; Configuration de l'entrepôt"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-#, fuzzy
 msgid "Sign &amp; Confirm"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Signer &amp; Confirmer\n"
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Sign &amp; Confirmer"
+msgstr "Signer &amp; Confirmer"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -1863,6 +1849,11 @@ msgid "To get more information, visit the"
 msgstr "Pour plus d'information, visitez le"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "Total Price"
+msgstr "Prix total"
+
+#. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
 #: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
 #: model:product.template,quote_description:website_quote.product_template_quote_2
@@ -1950,17 +1941,12 @@ msgstr "Introduction à la gestion d'entrpôt"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
-#, fuzzy
 msgid ""
 "We always ensure that our products are\n"
 "                                       set at a fair price so that you will "
 "be\n"
 "                                       happy to buy them."
 msgstr ""
-"Fournissez <strong>des services à grande valeur ajoutée </strong> vue que "
-"vous pouvez\n"
-"compter sur un logiciel libre, avec\n"
-"le support de l'éditeur."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -2021,7 +2007,7 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:143
+#: code:addons/website_quote/controllers/main.py:147
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr "Vous ne pouvez pas ajouter d'option sur une commande validée"
@@ -2181,6 +2167,9 @@ msgstr "inconnu"
 #~ "dans l'onglet ventes et ajouter un texte dans \"Description pour les devis"
 #~ "\"</b>"
 
+#~ msgid "My Account"
+#~ msgstr "Mon compte"
+
 #~ msgid "Online Training + Certification"
 #~ msgstr "Formation en ligne + Certification"
 
@@ -2189,6 +2178,9 @@ msgstr "inconnu"
 
 #~ msgid "Order payed by %s. Transaction: %s. Amount: %s."
 #~ msgstr "Commande payée à %. Transaction: %. Montant: %."
+
+#~ msgid "Our offer"
+#~ msgstr "Notre offre"
 
 #~ msgid ""
 #~ "Our offer is based on 3 commitments, which drive our business and our "
@@ -2204,12 +2196,24 @@ msgstr "inconnu"
 #~ "Nos prix sont les moins chers de la région, si vous trouvez moins cher "
 #~ "ailleurs, nous vous remboursons la différence"
 
+#~ msgid "Payment Transaction"
+#~ msgstr "Transaction"
+
+#~ msgid "Quality"
+#~ msgstr "Qualité"
+
 #~ msgid "Quality in many ways, our reputation was built on the first value."
 #~ msgstr ""
 #~ "Qualité en tous sens, notre réputation s'est batie sur la première valeur."
 
+#~ msgid "Sale Order"
+#~ msgstr "Commande client"
+
 #~ msgid "Send by Email"
 #~ msgstr "Envoyer par courriel"
+
+#~ msgid "Service"
+#~ msgstr "Service"
 
 #~ msgid ""
 #~ "The description of products/services from your quotation will be "

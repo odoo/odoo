@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-05-11 08:25+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -55,7 +55,6 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Apply"
 msgstr "Primjeni"
 
@@ -71,20 +70,8 @@ msgstr "Autentifikacija"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Cancel"
 msgstr "Odustani"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "Klijent"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
-msgid "Configure Sales"
-msgstr "Postavke prodaje"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -98,34 +85,18 @@ msgstr "Upišite podatke o Vašoj organizaciji (tvrtci)"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Kreirao"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Datum kreiranja"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "Kupac"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr "Donator"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -159,19 +130,7 @@ msgid "Google Integration"
 msgstr "Google integracija"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr "Gost"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
-msgid "How do you call a Customer"
-msgstr "Koji temin želite koristiti za kupce"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
 
@@ -187,22 +146,16 @@ msgstr "Inter company"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "Zadnja promjena"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Promijenio"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
@@ -215,11 +168,6 @@ msgstr "Postavke Inter Company"
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
 msgid "Manage multiple companies"
 msgstr "Više organizacija (tvrtki)"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "Pripadnik"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -239,16 +187,6 @@ msgid ""
 msgstr ""
 "Jednom kad je instalirano, možete podesiti svoje API pristupne podatke za "
 "\"Google kalendar\""
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr "Pacijent"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -281,16 +219,6 @@ msgid "Shared resources"
 msgstr "Dijeljeni resursi"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid "Specify Your Terminology"
-msgstr "Termin"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr ""
-
-#. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
 msgid "This installs the module google_calendar."
 msgstr "Ovo instalira modul google_calendar."
@@ -309,13 +237,9 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "Termin \"Kupac\""
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers, sign in with Google..."
+#, fuzzy
+msgid "Use external authentication providers (OAuth)"
 msgstr "Koristite vanjsku autentikaciju, prijavite se pomoću Google-a..."
 
 #. module: base_setup
@@ -351,13 +275,6 @@ msgstr ""
 "modul multi_company."
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
-msgstr ""
-
-#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "You will find more options in your company details: address for the header "
@@ -371,12 +288,41 @@ msgstr ""
 msgid "base.config.settings"
 msgstr "base.config.settings"
 
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr "base.setup.terminology"
+#~ msgid "Client"
+#~ msgstr "Klijent"
 
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
+#~ msgid "Configure Sales"
+#~ msgstr "Postavke prodaje"
+
+#~ msgid "Customer"
+#~ msgstr "Kupac"
+
+#~ msgid "Donor"
+#~ msgstr "Donator"
+
+#~ msgid "Guest"
+#~ msgstr "Gost"
+
+#~ msgid "How do you call a Customer"
+#~ msgstr "Koji temin želite koristiti za kupce"
+
+#~ msgid "Member"
+#~ msgstr "Pripadnik"
+
+#~ msgid "Partner"
+#~ msgstr "Partner"
+
+#~ msgid "Patient"
+#~ msgstr "Pacijent"
+
+#~ msgid "Specify Your Terminology"
+#~ msgstr "Termin"
+
+#~ msgid "Use another word to say \"Customer\""
+#~ msgstr "Termin \"Kupac\""
+
+#~ msgid "base.setup.terminology"
+#~ msgstr "base.setup.terminology"
+
+#~ msgid "sale.config.settings"
+#~ msgstr "sale.config.settings"

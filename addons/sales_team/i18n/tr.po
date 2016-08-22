@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-05-31 18:21+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -75,6 +75,26 @@ msgid "Activities Done"
 msgstr "Etkinlikler Tamamlandı"
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
+msgid "Apply"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "Archived"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_config_bank_accounts
+msgid "Bank Accounts"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
+msgid "Cancel"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
@@ -95,11 +115,6 @@ msgid "Click to set"
 msgstr "Belirlemek için tıkla"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
-msgid "Code"
-msgstr "Kodu"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
 msgid "Color Index"
 msgstr "Renk Dizini"
@@ -111,21 +126,66 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_config
+#: model:ir.ui.menu,name:sales_team.menu_sale_config_sales
+msgid "Configuration"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_sale_config
+#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
+#, fuzzy
+msgid "Configure Sales"
+msgstr "Dolaylı Satış"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_partner_category_form
+msgid "Contact Tags"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_partner_title_contact
+msgid "Contact Titles"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_config_address_book
+msgid "Contacts"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_country_partner
+msgid "Countries"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_country_group
+msgid "Country Group"
+msgstr ""
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:215
 #, python-format
-msgid "Create a few opportunities to activate your dashboard."
+msgid "Create a few opportunities in it."
 msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_uid
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Oluşturan"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_date
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Oluşturuldu"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_partner_form
+msgid "Customers"
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
@@ -143,8 +203,14 @@ msgstr "Merkez Satış"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_display_name
 msgid "Display Name"
 msgstr "Adı Göster"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_country_state_partner
+msgid "Fed. States"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -176,8 +242,17 @@ msgstr "Selam!"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_id
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_res_partner_team_id
+#: model:ir.model.fields,help:sales_team.field_res_users_team_id
+msgid ""
+"If set, sale team used notably for sales and assignations related to this "
+"partner"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
@@ -200,6 +275,7 @@ msgstr "Faturalanan"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "Son değiştirme tarihi"
 
@@ -212,13 +288,30 @@ msgstr "Geçen Ay"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_uid
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_date
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Son Güncellenen"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_crm_config_lead
+msgid "Leads & Opportunities"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_localisation
+msgid "Localization"
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_manager
+msgid "Manager"
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
@@ -267,10 +360,15 @@ msgstr "Sonraki İşlemler"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "Sadece tamsayı değeri geçerli olmalıdır."
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_crm_config_opportunity
+msgid "Opportunities"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
@@ -293,6 +391,14 @@ msgstr "Yanıtlama"
 #: model:ir.model.fields,field_description:sales_team.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Satış Fiyat Listesi"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_base_partner
+#: model:ir.ui.menu,name:sales_team.menu_sales
+#: model:ir.ui.menu,name:sales_team.menu_sales_config
+#, fuzzy
+msgid "Sales"
+msgstr "Satış Ekibleri"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -334,6 +440,7 @@ msgid "Salesteams Search"
 msgstr "Satış Ekibi Ara"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_general_settings
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "Settings"
 msgstr "Ayarlar"
@@ -356,11 +463,6 @@ msgstr "Satış Ekip Lideri"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "Satış Ekip Üyeleri"
-
-#. module: sales_team
-#: sql_constraint:crm.team:0
-msgid "The code of the sales team must be unique !"
-msgstr "Satış ekibinin kodu benzersiz olmalıdır!"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
@@ -465,6 +567,16 @@ msgid ""
 msgstr ""
 
 #. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman_all_leads
+msgid "User: All Documents"
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman
+msgid "User: Own Documents Only"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
 msgid "Users"
 msgstr "Kullanıcılar"
@@ -478,7 +590,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Wrong value entered!"
 msgstr "Yanlış değer girildi!"
@@ -491,14 +603,46 @@ msgid "exp. closing"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model,name:sales_team.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr ""
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
 msgid "overdue"
 msgstr ""
 
+#. module: sales_team
+#: model:ir.model,name:sales_team.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic "
+"reports."
+msgstr ""
+
 #~ msgid "Action Needed"
 #~ msgstr "Eylem Gerekiyor"
+
+#~ msgid "Code"
+#~ msgstr "Kodu"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Kayıta işlenmiş son mesajın tarihi."
@@ -539,6 +683,9 @@ msgstr ""
 #~ msgid "Number of unread messages"
 #~ msgstr "Okunmamış mesaj sayısı"
 
+#~ msgid "The code of the sales team must be unique !"
+#~ msgstr "Satış ekibinin kodu benzersiz olmalıdır!"
+
 #~ msgid "Unread Messages"
 #~ msgstr "Okunmamış Mesajlar"
 
@@ -547,3 +694,6 @@ msgstr ""
 
 #~ msgid "Working Hours"
 #~ msgstr "Çalışma Saatleri"
+
+#~ msgid "Your Pipeline"
+#~ msgstr "Sizin Kanalınız"

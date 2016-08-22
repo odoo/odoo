@@ -6,26 +6,21 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2015-2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-12 18:22+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-08-06 10:39+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase
-#: model:mail.template,body_html:purchase.email_template_edi_purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
 "\n"
@@ -54,19 +49,43 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: model:mail.template,body_html:purchase.email_template_edi_purchase
+msgid ""
+"\n"
+"<p>Dear\n"
+"% if object.partner_id.is_company and object.child_ids:\n"
+"    ${object.partner_id.child_ids[0].name}\n"
+"% else :\n"
+"    ${object.partner_id.name}\n"
+"% endif\n"
+",</p><p>\n"
+"Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or "
+"'purchase order confirmation'} <strong>${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    with reference: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"amounting in <strong>${object.amount_total} ${object.currency_id.name}</"
+"strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>If you have any question, do not hesitate to contact us.</p>\n"
+"<p>Best regards,</p>\n"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship Route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Maakt de dropship route aan en voegt meer complexe testen toe.\n"
-"- Dit installeert de module stock_dropshipping."
 
 #. module: purchase
-#: code:addons/purchase/stock.py:81
+#: code:addons/purchase/stock.py:93
 #, python-format
 msgid " Buy"
 msgstr " Kopen"
@@ -172,25 +191,19 @@ msgid "<strong>Your Order Reference</strong>"
 msgstr "<strong>Uw order referentie</strong>"
 
 #. module: purchase
+#: model:res.groups,name:purchase.group_warning_purchase
+msgid "A warning can be set on a product or a customer (Purchase)"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
 msgid "Add Purchase Order"
 msgstr "Inkooporder toevoegen"
 
 #. module: purchase
-#: model:res.groups,name:purchase.group_advance_bidding
-msgid "Advance bidding process"
-msgstr "Uitgebreid biedingen proces"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_advance_purchase_requisition
-msgid "Advanced Calls for Tenders"
-msgstr "Geavanceerde aanbestedingen"
-
-#. module: purchase
-#: selection:purchase.config.settings,group_advance_purchase_requisition:0
-msgid "Advanced call for tender (choose products from different RFQ)"
+#: selection:purchase.config.settings,group_warning_purchase:0
+msgid "All the products and the customers can be used in purchase orders"
 msgstr ""
-"Geavanceerde aanbesteding (kies producten van verschillende offerteaanvragen)"
 
 #. module: purchase
 #: selection:purchase.config.settings,module_stock_dropshipping:0
@@ -226,6 +239,12 @@ msgstr ""
 "onderhouden."
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_account_config_settings_group_analytic_account_for_purchases
+msgid "Allows you to specify an analytic account on purchase order lines."
+msgstr ""
+"Staat u toe een analytische rekening te specificeren op inkooporderregels."
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
 "An administrator can set up default Terms and conditions in your Company "
@@ -233,6 +252,12 @@ msgid ""
 msgstr ""
 "Een administrator kan de standaard verkoopsvoorwaarden instellen bij uw "
 "bedrijfsinstellingen."
+
+#. module: purchase
+#: selection:purchase.config.settings,group_warning_purchase:0
+msgid ""
+"An informative or blocking warning can be set on a product or a customer"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
@@ -243,6 +268,16 @@ msgstr "Kostenplaatsen"
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
+msgstr "Kostenplaatsen voor inkopen"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_analytic_tag_ids
+msgid "Analytic Tags"
+msgstr "Labels kostenplaats"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_config_settings_group_analytic_account_for_purchases
+msgid "Analytic accounting for purchases"
 msgstr "Kostenplaatsen voor inkopen"
 
 #. module: purchase
@@ -290,7 +325,13 @@ msgid "Billed Qty"
 msgstr "In rekening gebrachte Hvh"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:717 code:addons/purchase/stock.py:75
+#: selection:product.template,purchase_line_warn:0
+#: selection:res.partner,purchase_warn:0
+msgid "Blocking Message"
+msgstr "Blokkerend bericht"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:750 code:addons/purchase/stock.py:87
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -313,7 +354,6 @@ msgstr "Aanbestedingen"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_purchase_requisition
-#, fuzzy
 msgid ""
 "Calls for tenders are used when you want to generate requests for quotations "
 "to several vendors for a given set of products.\n"
@@ -321,12 +361,6 @@ msgid ""
 "one vendor or if you want a Call for Tenders to compare offers from several "
 "vendors."
 msgstr ""
-"Aanbestedingen worden gebruikt wanneer u aanvragen wilt genereren voor "
-"offertes naar verschillende Leveranciers voor een gegeven set van "
-"producten.\n"
-"U kan per product configureren of u direct een offerteaanvraag\n"
-"naar een leverancier wilt sturen of dat u meerdere leveranciers wilt vragen "
-"voor een offerte om ze te vergelijken."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_ok
@@ -336,7 +370,7 @@ msgid "Can be Purchased"
 msgstr "Kan gekocht worden"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:733
+#: code:addons/purchase/purchase.py:766
 #, python-format
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
@@ -346,7 +380,7 @@ msgstr ""
 "Annuleer eerst de inkooporder aub."
 
 #. module: purchase
-#: code:addons/purchase/stock.py:78
+#: code:addons/purchase/stock.py:90
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr "Kan geen algemene koop route vinden."
@@ -363,7 +397,7 @@ msgid "Cancelled"
 msgstr "Geannuleerd"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:612
+#: code:addons/purchase/purchase.py:625
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "Het is niet mogelijk een inkooporder te verwijderen in de '%s' status."
@@ -392,6 +426,7 @@ msgstr "Klik om een offerteaanvraag aan te maken."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
+#: model:ir.actions.act_window,help:purchase.product_product_action
 msgid "Click to define a new product."
 msgstr "Klik om een nieuw product te definiëren."
 
@@ -400,12 +435,6 @@ msgstr "Klik om een nieuw product te definiëren."
 msgid "Click to record a vendor bill related to this purchase."
 msgstr ""
 "Klik om een leveranciersfactuur aan te maken gerelateerd aan deze inkoop."
-
-#. module: purchase
-#: model:web.tip,description:purchase.purchase_tip_1
-#, fuzzy
-msgid "Click to scrap products."
-msgstr "Klik om een nieuw product te definiëren."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
@@ -426,7 +455,7 @@ msgid "Company"
 msgstr "Bedrijf"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:254
+#: code:addons/purchase/purchase.py:290
 #, python-format
 msgid "Compose Email"
 msgstr "Email opstellen"
@@ -543,13 +572,8 @@ msgstr "Bestemmingslocatie soort"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Weergave naam\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Naam weergeven"
+msgstr "Weergave naam"
 
 #. module: purchase
 #: selection:purchase.report,state:0
@@ -560,11 +584,6 @@ msgstr "Voltooid"
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation_amount
 msgid "Double validation amount"
 msgstr "Dubbele controle aantal"
-
-#. module: purchase
-#: selection:purchase.order,state:0
-msgid "Draft PO"
-msgstr "Concept inkoopporder"
 
 #. module: purchase
 #: selection:purchase.report,state:0
@@ -588,9 +607,8 @@ msgstr "E-mail samenstellen wizard"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "E-mail samenstellen wizard"
+msgstr "E-mail opmaak wizard voor enquête"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
@@ -601,6 +619,11 @@ msgstr ""
 "Help bij verwerken. Wanneer geselecteerd, dan worden de gekoppelde "
 "inkooporderregels toegevoegd aan de inkoopfactuur. U kunt meerdere "
 "inkooporders selecteren."
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Expected Date"
+msgstr "Datum verwacht"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -620,14 +643,9 @@ msgid "Get 2 levels of approvals to confirm a purchase order"
 msgstr "Krijg 2 niveau's van goedkeuring om een inkooporder te bevestigen"
 
 #. module: purchase
-#: model:web.tip,description:purchase.purchase_tip_3
-msgid "Get all the shipments related to this order."
-msgstr "Open alle leveringen gekoppeld aan deze order."
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Bruto gewicht"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -650,30 +668,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: purchase
-#: model:web.tip,description:purchase.purchase_tip_2
-msgid ""
-"If a product has been broken or damaged during the transport, you can scrap "
-"it with this button."
-msgstr ""
-"Als een product is gebroken of beschadigd tijdens het transport, kunt u het "
-"product afkeuren middels deze knop."
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:186
+#: code:addons/purchase/purchase.py:193
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr ""
 "Om een inkooporder te kunnen verwijderen, dient u deze eerst te annuleren."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_advance_purchase_requisition
-msgid ""
-"In the process of a public tendering, you can compare the tender lines and "
-"choose for each requested product which quantity you will buy from each bid."
-msgstr ""
-"Bij het verwerken van een aanbesteding kan u de aanbestedingsregels "
-"vergelijken en er voor kiezen om voor elk product de hoeveelheid te "
-"specificeren die u wilt aankopen voor elke aanbesteding."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -742,6 +741,11 @@ msgid "Invoices and Incoming Shipments"
 msgstr "Facturen en inkomende leveringen"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_is_shipped
+msgid "Is shipped"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings___last_update
 #: model:ir.model.fields,field_description:purchase.field_purchase_order___last_update
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line___last_update
@@ -777,7 +781,7 @@ msgstr "Locatie & Magazijn"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #, fuzzy
 msgid "Lock Bills"
-msgstr "Leveranciersfacturen"
+msgstr "Rekeningen"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -817,6 +821,17 @@ msgstr ""
 "vertragingen."
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
+msgid "Message for Purchase Order"
+msgstr "Bericht voor inkooporder"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn_msg
+msgid "Message for Purchase Order Line"
+msgstr "Bericht voor inkooporderregel"
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
 msgstr "Minimaal aantal waarvoor een dubbele validatie nodig is"
@@ -841,12 +856,18 @@ msgid "New Mail"
 msgstr "Nieuwe e-mail"
 
 #. module: purchase
+#: selection:product.template,purchase_line_warn:0
+#: selection:res.partner,purchase_warn:0
+msgid "No Message"
+msgstr "Geen bericht"
+
+#. module: purchase
 #: selection:purchase.config.settings,group_product_variant:0
 msgid "No variants on products"
 msgstr "Geen productvarianten"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:893
+#: code:addons/purchase/purchase.py:926
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
@@ -1033,7 +1054,9 @@ msgid "Product Unit of Measure"
 msgstr "Maateenheid product"
 
 #. module: purchase
+#: model:ir.actions.act_window,name:purchase.product_product_action
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_product_variant
+#: model:ir.ui.menu,name:purchase.product_product_menu
 msgid "Product Variants"
 msgstr "Product varianten"
 
@@ -1070,6 +1093,11 @@ msgid "Provide a double validation mechanism for purchases"
 msgstr "Voorzie een dubbel navigatie mechanisme voor inkopen"
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_normal_action_puchased
+msgid "Purchasable Products"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 msgid "Purchase"
 msgstr "Inkoop"
@@ -1100,6 +1128,7 @@ msgstr "Extra dagen levertijd inkoop"
 #: model:ir.model,name:purchase.model_purchase_order
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_id
 #: model:ir.model.fields,field_description:purchase.field_procurement_order_purchase_id
+#: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_graph
 #: model:ir.ui.view,arch_db:purchase.purchase_order_pivot
@@ -1124,6 +1153,8 @@ msgstr "Fiscale positie inkooporder"
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_line_id
 #: model:ir.model.fields,field_description:purchase.field_procurement_order_purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn
+#: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn
 #: model:ir.model.fields,field_description:purchase.field_stock_move_purchase_line_id
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
@@ -1152,7 +1183,7 @@ msgid "Purchase Orders Statistics"
 msgstr "Inkooporder statistieken"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:614
+#: code:addons/purchase/purchase.py:627
 #, python-format
 msgid "Purchase order line deleted."
 msgstr "Inkooporderregel verwijderd."
@@ -1212,6 +1243,11 @@ msgid "Quotations"
 msgstr "Offertes"
 
 #. module: purchase
+#: selection:purchase.order,state:0
+msgid "RFQ"
+msgstr "Offerteaanvraag"
+
+#. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
 msgstr "Offerte goedgekeurd"
@@ -1240,11 +1276,6 @@ msgstr "Offerte_${(object.name or '').replace('/','_')}"
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
 msgstr "Offertes en inkopen"
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Re-Print RFQ"
-msgstr "Offerteaanvraag opnieuw afdrukken"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1342,6 +1373,20 @@ msgid "Search Purchase Order"
 msgstr "Inkooporder zoeken"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_product_product_purchase_line_warn
+#: model:ir.model.fields,help:purchase.field_product_template_purchase_line_warn
+#: model:ir.model.fields,help:purchase.field_res_partner_purchase_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"Door de 'Waarschuwingsoptie' te selecteren wordt het bericht naar de "
+"gebruiker gestuurd. Door het 'Blokkerend bericht' te kiezen wordt een fout "
+"gegenereerd met de boodschap en het proces wordt geblokkeerd. Het bericht "
+"moet in het volgende veld worden ingevoerd."
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send PO by Email"
 msgstr "Verstuur inkooporder per e-mail"
@@ -1358,13 +1403,8 @@ msgstr "Stel een vaste prijs in op elk product"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-#, fuzzy
-msgid ""
-"Set a purchase order as done if you don't want to receive vendor bills "
-"anymore for this purchase order."
+msgid "Set date to all order lines"
 msgstr ""
-"Als een inkooporder klaar is kan u het niet meer handmatig wijzigen. U kan "
-"geen facturen meer ontvangen voor deze inkooporder."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1382,18 +1422,10 @@ msgid "Shipment"
 msgstr "Levering"
 
 #. module: purchase
-#: selection:purchase.config.settings,group_advance_purchase_requisition:0
-msgid "Simple call for tender (only choose from one RFQ)"
-msgstr "Gemakkelijke aanbesteding (kies van één offerteaanvraag)"
-
-#. module: purchase
 #: selection:purchase.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/puchased in different units of measure (advanced)"
 msgstr ""
-"Sommige producten mogen verkocht/ingekocht worden in verschillende "
-"maateenheden (geavanceerd)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_origin
@@ -1429,11 +1461,6 @@ msgid "Supplier Currency"
 msgstr "Valuta leverancier"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
-msgid "Supplier Pricelist"
-msgstr "Prijslijst Leverancier"
-
-#. module: purchase
 #: selection:purchase.config.settings,module_stock_dropshipping:0
 msgid "Suppliers always deliver to your warehouse(s)"
 msgstr "Leveranciers leveren altijd aan uw magazijn(en)"
@@ -1460,6 +1487,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
 msgid "Terms and Conditions"
 msgstr "Voorwaarden"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.product_product_action
+msgid ""
+"The product form contains detailed information to improve the\n"
+"                purchase process: prices, procurement logistics, accounting "
+"data,\n"
+"                available vendors, etc."
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1516,6 +1552,11 @@ msgstr ""
 "kostprijs te boeken."
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "This changes the scheduled date of all order lines to the given date"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
 msgid ""
 "This currency will be used, instead of the default one, for purchases from "
@@ -1523,6 +1564,34 @@ msgid ""
 msgstr ""
 "De valuta wordt gebruikt, in plaats van de standaard valuta, voor aankopen "
 "van de huidige relatie"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:954
+#, python-format
+msgid ""
+"This purchase order has been created from: <a href=# data-oe-"
+"model=procurement.order data-oe-id=%d>%s</a>"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:967
+#, python-format
+msgid ""
+"This purchase order has been modified from: <a href=# data-oe-"
+"model=procurement.order data-oe-id=%d>%s</a>"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/invoice.py:183
+#, python-format
+msgid "This vendor bill has been created from: %s"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/invoice.py:195
+#, python-format
+msgid "This vendor bill has been modified from: %s"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1569,7 +1638,7 @@ msgid "Transfer"
 msgstr "Verplaatsing"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:300
+#: code:addons/purchase/purchase.py:338
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been done."
@@ -1578,14 +1647,12 @@ msgstr ""
 "voltooid zijn."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:303
-#, fuzzy, python-format
+#: code:addons/purchase/purchase.py:341
+#, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
 msgstr ""
-"Onmogelijk om deze inkooporder te annuleren. U moet eerst de gerelateerde "
-"leveranciersfactuur annuleren."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1687,9 +1754,19 @@ msgid "Vendor Price"
 msgstr "Leveranciersprijs"
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
+msgid "Vendor Pricelists"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_partner_ref
 msgid "Vendor Reference"
 msgstr "Leveranciers referentie"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
+msgid "Vendors"
+msgstr "Leveranciers"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -1708,7 +1785,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
@@ -1720,6 +1797,29 @@ msgstr "Wachtende facturen"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_picking_type_id
 msgid "Warehouse"
 msgstr "Magazijn"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_warning_purchase
+#: selection:product.template,purchase_line_warn:0
+#: selection:res.partner,purchase_warn:0
+msgid "Warning"
+msgstr "Waarschuwing"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:247 code:addons/purchase/purchase.py:693
+#, python-format
+msgid "Warning for %s"
+msgstr "Waarschuwing voor %s"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+msgid "Warning on the Purchase Order"
+msgstr "Waarschuwing bij een inkooporder"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid "Warning when Purchasing this Product"
+msgstr "Waarschuw wanneer dit product gekocht wordt"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
@@ -1748,22 +1848,32 @@ msgstr ""
 "wat u heeft ingekocht (diensten) of ontvangen (producten)."
 
 #. module: purchase
+#: model:ir.actions.act_window,help:purchase.product_product_action
+msgid ""
+"You must define a product for everything you purchase, whether\n"
+"                it's a physical product, a consumable or services you buy "
+"to\n"
+"                subcontractors."
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
-#, fuzzy
 msgid ""
 "You must define a product for everything you purchase, whether\n"
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractors."
 msgstr ""
-"U moet een product definiëren voor alles dat u inkoopt, of het nu\n"
-"een fysiek product, verbruiksartikel of een dienst is die u inkoopt bij een\n"
-"uit te besteden opdracht."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:335
+#: code:addons/purchase/purchase.py:374
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "U dient een leverancierslocatie in te stellen voor deze partner %s"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_settings
@@ -2046,6 +2156,15 @@ msgstr "purchase.config.settings"
 #~ "</div>\n"
 #~ "            "
 
+#~ msgid ""
+#~ "\n"
+#~ "Creates the dropship Route and add more complex tests-This installs the "
+#~ "module stock_dropshipping."
+#~ msgstr ""
+#~ "\n"
+#~ "Maakt de dropship route aan en voegt meer complexe testen toe.\n"
+#~ "- Dit installeert de module stock_dropshipping."
+
 #~ msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
 #~ msgstr ""
 #~ "${object.company_id.name|safe} Order (Referentie ${object.name or 'n/a' })"
@@ -2053,12 +2172,31 @@ msgstr "purchase.config.settings"
 #~ msgid "Action Needed"
 #~ msgstr "Vereist actie"
 
-#~ msgid "Allows you to specify an analytic account on purchase order lines."
-#~ msgstr ""
-#~ "Staat u toe een analytische rekening te specificeren op inkooporderregels."
+#~ msgid "Advance bidding process"
+#~ msgstr "Uitgebreid biedingen proces"
 
-#~ msgid "Analytic accounting for purchases"
-#~ msgstr "Kostenplaatsen voor inkopen"
+#~ msgid "Advanced Calls for Tenders"
+#~ msgstr "Geavanceerde aanbestedingen"
+
+#~ msgid "Advanced call for tender (choose products from different RFQ)"
+#~ msgstr ""
+#~ "Geavanceerde aanbesteding (kies producten van verschillende "
+#~ "offerteaanvragen)"
+
+#~ msgid ""
+#~ "Calls for tenders are used when you want to generate requests for "
+#~ "quotations to several vendors for a given set of products.\n"
+#~ "                    You can configure per product if you directly do a "
+#~ "Request for Quotation\n"
+#~ "                    to one vendor or if you want a Call for Tenders to "
+#~ "compare offers from several vendors."
+#~ msgstr ""
+#~ "Aanbestedingen worden gebruikt wanneer u aanvragen wilt genereren voor "
+#~ "offertes naar verschillende Leveranciers voor een gegeven set van "
+#~ "producten.\n"
+#~ "U kan per product configureren of u direct een offerteaanvraag\n"
+#~ "naar een leverancier wilt sturen of dat u meerdere leveranciers wilt "
+#~ "vragen voor een offerte om ze te vergelijken."
 
 #~ msgid "Click to mark products as received."
 #~ msgstr "Klik om aan te geven dat het product is ontvangen."
@@ -2066,8 +2204,8 @@ msgstr "purchase.config.settings"
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
 
-#~ msgid "Expected Date"
-#~ msgstr "Datum verwacht"
+#~ msgid "Draft PO"
+#~ msgstr "Concept inkoopporder"
 
 #~ msgid "Followers"
 #~ msgstr "Volgers"
@@ -2078,11 +2216,37 @@ msgstr "purchase.config.settings"
 #~ msgid "Followers (Partners)"
 #~ msgstr "Volgers (Partners)"
 
+#~ msgid "Get all the shipments related to this order."
+#~ msgstr "Open alle leveringen gekoppeld aan deze order."
+
+#~ msgid ""
+#~ "If a product has been broken or damaged during the transport, you can "
+#~ "scrap it with this button."
+#~ msgstr ""
+#~ "Als een product is gebroken of beschadigd tijdens het transport, kunt u "
+#~ "het product afkeuren middels deze knop."
+
+#~ msgid ""
+#~ "If a purchase order is done, you cannot modify it manually anymore. You "
+#~ "will not be able to receive invoices anymore for this purchase order."
+#~ msgstr ""
+#~ "Als een inkooporder klaar is kan u het niet meer handmatig wijzigen. U "
+#~ "kan geen facturen meer ontvangen voor deze inkooporder."
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+
+#~ msgid ""
+#~ "In the process of a public tendering, you can compare the tender lines "
+#~ "and choose for each requested product which quantity you will buy from "
+#~ "each bid."
+#~ msgstr ""
+#~ "Bij het verwerken van een aanbesteding kan u de aanbestedingsregels "
+#~ "vergelijken en er voor kiezen om voor elk product de hoeveelheid te "
+#~ "specificeren die u wilt aankopen voor elke aanbesteding."
 
 #~ msgid "Incoming Shipments to Invoice"
 #~ msgstr "Inkomende leveringen te factureren"
@@ -2114,8 +2278,31 @@ msgstr "purchase.config.settings"
 #~ msgid "Published"
 #~ msgstr "Gepubliceerd"
 
+#~ msgid "Re-Print RFQ"
+#~ msgstr "Offerteaanvraag opnieuw afdrukken"
+
 #~ msgid "Set to Done"
 #~ msgstr "Zet op voltooid"
+
+#~ msgid "Simple call for tender (only choose from one RFQ)"
+#~ msgstr "Gemakkelijke aanbesteding (kies van één offerteaanvraag)"
+
+#~ msgid ""
+#~ "Some products may be sold/puchased in different unit of measures "
+#~ "(advanced)"
+#~ msgstr ""
+#~ "Sommige producten mogen verkocht/ingekocht worden in verschillende "
+#~ "maateenheden (geavanceerd)"
+
+#~ msgid "Supplier Pricelist"
+#~ msgstr "Prijslijst Leverancier"
+
+#~ msgid ""
+#~ "Unable to cancel this purchase order.i You must first cancel related "
+#~ "vendor bills."
+#~ msgstr ""
+#~ "Onmogelijk om deze inkooporder te annuleren. U moet eerst de gerelateerde "
+#~ "leveranciersfactuur annuleren."
 
 #~ msgid "Unit of Measures"
 #~ msgstr "Maateenheden"
@@ -2135,8 +2322,21 @@ msgstr "purchase.config.settings"
 #~ msgid "Website communication history"
 #~ msgstr "Website communicatie geschiedenis"
 
-#~ msgid "account.config.settings"
-#~ msgstr "account.config.settings"
+#~ msgid ""
+#~ "You must define a product for everything you purchase, whether\n"
+#~ "            it's a physical product, a consumable or services you buy to\n"
+#~ "            subcontractants."
+#~ msgstr ""
+#~ "U moet een product definiëren voor alles dat u inkoopt, of het nu\n"
+#~ "een fysiek product, verbruiksartikel of een dienst is die u inkoopt bij "
+#~ "een\n"
+#~ "uit te besteden opdracht."
 
 #~ msgid "unknown"
 #~ msgstr "onbekend"
+
+#~ msgid "Ordered quantity decreased!"
+#~ msgstr "Bestelde hoeveelheid is verminderd!"
+
+#~ msgid "Sequence"
+#~ msgstr "Reeks"

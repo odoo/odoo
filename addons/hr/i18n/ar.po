@@ -1,38 +1,26 @@
-# #-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr
 #
 # Translators:
 # Noureddine LOUAHEDJ <n.louahedj@gmail.com>, 2016
-# #-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * hr
-#
-# Translators:
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-21 11:10+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-08-12 21:30+0000\n"
+"Last-Translator: Noureddine LOUAHEDJ <n.louahedj@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: hr
-#: code:addons/hr/hr.py:120
+#: code:addons/hr/models/hr.py:76
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (نسخة)"
@@ -124,9 +112,17 @@ msgid "A good job in a young and dynamic team"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "نشط"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
+msgid ""
+"An efficiency of 50% means the resource is two times smaller than his usual "
+"speed."
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -134,6 +130,7 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr ""
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "مؤرشف"
@@ -203,11 +200,6 @@ msgid "City"
 msgstr "المدينة"
 
 #. module: hr
-#: model:web.tip,description:hr.hr_tip_2
-msgid "Click here to change the recruitment goal!"
-msgstr ""
-
-#. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
@@ -216,11 +208,6 @@ msgstr "انقر هنا لإضافة موظف جديد."
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
-msgstr "أنقر هنا لإضافة قسم جديد."
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid "Click to define a new department."
 msgstr "أنقر هنا لإضافة قسم جديد."
 
 #. module: hr
@@ -294,11 +281,6 @@ msgid "Contributions to open source projects"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr "قم بإنشاء الأقسام"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
@@ -342,7 +324,6 @@ msgid "Deliver generic Odoo functional training sessions"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -440,13 +421,13 @@ msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/hr.py:294 constraint:hr.department:0
+#: code:addons/hr/models/hr.py:264
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "خطأ! لا يمكنك انشاء أقسام متداخلة."
 
 #. module: hr
-#: code:addons/hr/hr.py:264 constraint:hr.employee:0
+#: code:addons/hr/models/hr.py:177
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "خطأ! لا يمكنك إنشاء التسلسل الهرمي العودي من الموظف ."
@@ -491,11 +472,6 @@ msgstr "المتابعون"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
 msgstr "الجنس"
-
-#. module: hr
-#: model:web.tip,description:hr.hr_tip_1
-msgid "Get all applications related to this job position."
-msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -579,6 +555,12 @@ msgid "Home Address"
 msgstr "عنوان المنزل"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
+#, fuzzy
+msgid "Hr Department"
+msgstr "قسم الموارد البشرية"
+
+#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
 msgstr "الموارد البشرية"
@@ -653,19 +635,9 @@ msgid "Job Description"
 msgstr "وصف العمل"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_name
-msgid "Job Name"
-msgstr "إسم الوظيفة"
-
-#. module: hr
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Position"
 msgstr "المناصب الوظيفية"
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "Job Position Name"
-msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -687,6 +659,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Title"
 msgstr "المسمى الوظيفي"
 
@@ -826,9 +799,7 @@ msgid "Must have ..."
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
-#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
 msgstr "الاسم"
 
@@ -847,6 +818,12 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Nice to have"
 msgstr ""
+
+#. module: hr
+#: selection:hr.job,state:0
+#, fuzzy
+msgid "Not Recruiting"
+msgstr "وقف التوظيف"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -973,11 +950,6 @@ msgstr ""
 
 #. module: hr
 #: selection:hr.job,state:0
-msgid "Recruitment Closed"
-msgstr "التوظيف مغلق"
-
-#. module: hr
-#: selection:hr.job,state:0
 msgid "Recruitment in Progress"
 msgstr "قيد التوظيف"
 
@@ -1010,6 +982,12 @@ msgstr "المتطلبات"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
 msgid "Resource"
 msgstr "الكائن"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
+#, fuzzy
+msgid "Resource Name"
+msgstr "نوع المصدر"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
@@ -1144,15 +1122,6 @@ msgid "The name of the job position must be unique per department in company!"
 msgstr "يجب أن يكون اسم المنصب الوظيفي فريداً غير مكرراً لكل إدارة في المؤسسة."
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
 msgid ""
 "This field holds the image used as photo for the employee, limited to "
@@ -1181,6 +1150,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "رسائل غير مقروءة"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_login
+msgid "Used to log into the system"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1491,15 +1465,6 @@ msgid "You will work closely with all trainees"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid ""
-"Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
-"                leaves and holidays, recruitments, etc."
-msgstr ""
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "قسم"
@@ -1509,8 +1474,19 @@ msgstr "قسم"
 msgid "e.g. Part Time"
 msgstr "على سبيل المثال دوام جزئي"
 
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "e.g. Sales Manager"
+msgstr ""
+
 #~ msgid "Action Needed"
 #~ msgstr "الاجراء المطلوب"
+
+#~ msgid "Click to define a new department."
+#~ msgstr "أنقر هنا لإضافة قسم جديد."
+
+#~ msgid "Create Your Departments"
+#~ msgstr "قم بإنشاء الأقسام"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "تاريخ آخر رسالة في هذا السجل."
@@ -1521,9 +1497,6 @@ msgstr "على سبيل المثال دوام جزئي"
 #~ msgid "Followers (Partners)"
 #~ msgstr "المتابعون (الشرماء)"
 
-#~ msgid "HR Department"
-#~ msgstr "قسم الموارد البشرية"
-
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
 
@@ -1532,6 +1505,9 @@ msgstr "على سبيل المثال دوام جزئي"
 
 #~ msgid "Is Follower"
 #~ msgstr "متابع"
+
+#~ msgid "Job Name"
+#~ msgstr "إسم الوظيفة"
 
 #~ msgid "Last Message Date"
 #~ msgstr "تاريخ آخر رسالة"
@@ -1550,6 +1526,9 @@ msgstr "على سبيل المثال دوام جزئي"
 
 #~ msgid "Open HR Menu"
 #~ msgstr "افتح القائمة HR"
+
+#~ msgid "Recruitment Closed"
+#~ msgstr "التوظيف مغلق"
 
 #~ msgid "Subscriptions"
 #~ msgstr "الاشتراكات"

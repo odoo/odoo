@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-07-12 00:48+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -45,27 +45,23 @@ msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
 msgid "<b>Proposed By</b>:"
-msgstr "提出"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
 msgid "<b>Speakers Biography</b>:"
-msgstr "演讲者介绍"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
 msgid "<b>Talk Introduction</b>:"
-msgstr "演讲介绍"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
 msgid "<b>Title</b>:"
-msgstr "<b>日期</b><br/>"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -124,6 +120,11 @@ msgid "About The Author"
 msgstr "关于作者"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_active
+msgid "Active"
+msgstr "活跃"
+
+#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
 msgid "Advanced lead management with Odoo: tips and tricks from the fields"
 msgstr "先进领先的管理:字段的提示和技巧"
@@ -134,7 +135,7 @@ msgid "Advanced reporting with Google Spreadsheets integration."
 msgstr "高级报表与谷歌电子表格集成。"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:160
+#: code:addons/website_event_track/models/event.py:45
 #, python-format
 msgid "Agenda"
 msgstr "议程"
@@ -163,6 +164,11 @@ msgstr "公布"
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Application"
 msgstr "应用程序"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Archived"
+msgstr "已归档"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_allowed_track_tag_ids
@@ -340,11 +346,9 @@ msgstr "筛选专场"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social
 msgid ""
-"Find out what people see and say about this event, \n"
+"Find out what people see and say about this event,\n"
 "                        and join the conversation."
 msgstr ""
-"找出哪些人会对这一活动进行观看、发表看法, \n"
-"             和参加交流。"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
@@ -539,9 +543,8 @@ msgstr "新专场创建"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
 msgid "New track proposal"
-msgstr "新轨道提案"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.tracks
@@ -654,7 +657,7 @@ msgid "Responsible"
 msgstr "负责人"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8478
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8600
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
 msgstr "室"
@@ -686,7 +689,7 @@ msgid "Speaker Biography"
 msgstr "演讲人简介"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:116
+#: code:addons/website_event_track/models/website_event_track.py:122
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_speaker_ids
 #, python-format
 msgid "Speakers"
@@ -741,11 +744,6 @@ msgid "Submit Proposal"
 msgstr "提交建议"
 
 #. module: website_event_track
-#: model:web.tip,description:website_event_track.event_track_tip_1
-msgid "Switch to the calendar view to see the availability of each room."
-msgstr ""
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_name
 msgid "Tag"
 msgstr "标签"
@@ -767,7 +765,7 @@ msgid "Talk Introduction"
 msgstr "演讲介绍"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:162
+#: code:addons/website_event_track/models/event.py:47
 #, python-format
 msgid "Talk Proposals"
 msgstr "演讲提案"
@@ -778,7 +776,7 @@ msgid "Talk Title"
 msgstr "演讲主题"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:159
+#: code:addons/website_event_track/models/event.py:44
 #, python-format
 msgid "Talks"
 msgstr "演讲"
@@ -968,14 +966,14 @@ msgid "hours"
 msgstr "小时"
 
 #. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.tracks
-msgid "not published"
-msgstr "未发布的"
-
-#. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.agenda
 msgid "talks"
 msgstr "演讲"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.tracks
+msgid "unpublished"
+msgstr ""
 
 #~ msgid "Action Needed"
 #~ msgstr "所需动作"
@@ -985,6 +983,13 @@ msgstr "演讲"
 
 #~ msgid "Event Blog"
 #~ msgstr "活动博客"
+
+#~ msgid ""
+#~ "Find out what people see and say about this event, \n"
+#~ "                        and join the conversation."
+#~ msgstr ""
+#~ "找出哪些人会对这一活动进行观看、发表看法, \n"
+#~ "             和参加交流。"
 
 #~ msgid "Followers"
 #~ msgstr "关注者"
@@ -1016,6 +1021,9 @@ msgstr "演讲"
 #~ msgid "Messages and communication history"
 #~ msgstr "消息和通信历史"
 
+#~ msgid "New Track Proposal"
+#~ msgstr "新轨道提案"
+
 #~ msgid "News"
 #~ msgstr "新闻"
 
@@ -1030,6 +1038,12 @@ msgstr "演讲"
 
 #~ msgid "Phone"
 #~ msgstr "电话"
+
+#~ msgid "Proposed By"
+#~ msgstr "提出"
+
+#~ msgid "Speakers Biography"
+#~ msgstr "演讲者介绍"
 
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr "通过网站访问单据的完整URL。"
@@ -1057,3 +1071,6 @@ msgstr "演讲"
 
 #~ msgid "Website meta title"
 #~ msgstr "网站meta标题"
+
+#~ msgid "not published"
+#~ msgstr "未发布的"

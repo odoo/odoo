@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-01-02 21:05+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
@@ -19,9 +19,22 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Γραμμή Αναλυτικής"
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_res_company
 msgid "Companies"
 msgstr "Εταιρείες"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
+#: model:ir.model.fields,help:sale_timesheet.field_product_template_project_id
+msgid ""
+"Create a task under this project on sale order validation. This setting must "
+"be set for each company."
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -29,11 +42,55 @@ msgid "Employee"
 msgstr "Υπάλληλος"
 
 #. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
+#, fuzzy
+msgid "Order Line"
+msgstr "Γραμμή Παραγγελίας"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_procurement_order
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
+msgid "Procurement"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_product_product
+#, fuzzy
+msgid "Product"
+msgstr "Πρότυπο Προϊόντος"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_alert_time
+#, fuzzy
+msgid "Product Alert Time"
+msgstr "Πρότυπο Προϊόντος"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_life_time
+#, fuzzy
+msgid "Product Life Time"
+msgstr "Πρότυπο Προϊόντος"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_removal_time
+#, fuzzy
+msgid "Product Removal Time"
+msgstr "Πρότυπο Προϊόντος"
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
 msgid "Product Template"
 msgstr "Πρότυπο Προϊόντος"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_use_time
+#, fuzzy
+msgid "Product Use Time"
+msgstr "Πρότυπο Προϊόντος"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template_project_id
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project"
 msgstr ""
@@ -45,13 +102,38 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
+#: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order"
 msgstr "Παραγγελία"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_sale_line_id
 msgid "Sales Order Line"
 msgstr "Γραμμή Παραγγελίας"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_task
+#: model:ir.model.fields,field_description:sale_timesheet.field_procurement_order_task_id
+msgid "Task"
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/sale_service.py:84
+#, python-format
+msgid "Task created"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
+#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+msgid "Tasks"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
+msgid "Tasks associated to this sale"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
@@ -89,7 +171,35 @@ msgid "Timesheets"
 msgstr "Φύλλα Xρόνου Eργασίας"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_timesheet.py:128
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_alert_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/sale_timesheet.py:143
 #, python-format
 msgid ""
 "You can use only one product on timesheet within the same sale order. You "
@@ -98,7 +208,16 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_account_analytic_line
+#: code:addons/sale_timesheet/models/sale_service.py:103
+#, python-format
+msgid ""
+"You cannot delete a task related to a Sale Order. You can only archive this "
+"task."
+msgstr ""
+
+#~ msgid "Timesheet"
+#~ msgstr "Φύλλο Xρόνου Eργασίας"
+
 #, fuzzy
-msgid "account analytic line"
-msgstr "Γραμμή Αναλυτικής"
+#~ msgid "account analytic line"
+#~ msgstr "Γραμμή Αναλυτικής"

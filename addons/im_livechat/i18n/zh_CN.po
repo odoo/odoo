@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-07-12 01:00+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -134,6 +134,22 @@ msgid "Bad"
 msgstr "坏"
 
 #. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
+#: model:ir.ui.menu,name:im_livechat.canned_responses
+msgid "Canned Responses"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid ""
+"Canned responses allow you to insert prewritten responses in\n"
+"                your messages by typing <i>:shortcut</i>. The shortcut is\n"
+"                replaced directly in your message, so that you can still "
+"edit\n"
+"                it before sending."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_livechat_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_livechat_channel_id
@@ -176,6 +192,11 @@ msgstr "聊天输入为空时显示"
 #, python-format
 msgid "Chat with one of our collaborators"
 msgstr "和我们的合作者聊天"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid "Click to create a new canned response."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -418,6 +439,11 @@ msgid "Last Modified on"
 msgstr "最后修改时间"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_mail_channel_partner
+msgid "Last Seen Many2many"
+msgstr "最后一次见到 Many2many"
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_uid
 msgid "Last Updated by"
@@ -441,6 +467,11 @@ msgid "Leave Channel"
 msgstr "离开频道"
 
 #. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
+msgid "Live Chat"
+msgstr "在线聊天"
+
+#. module: im_livechat
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
 msgid "Live Support"
 msgstr "即时支持"
@@ -460,19 +491,11 @@ msgstr "即时聊天"
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_report_operator_action
-#, fuzzy
 msgid ""
 "Livechat Support Channel Statistics allows you to easily check and analyse "
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
-"实时交流渠道分析能让你便捷的检查和分析贵司的实时聊天会话的表现。提取出来错失"
-"的会话，顾客群，会话持续时间等等"
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "Livechat Support Page"
-msgstr "即时聊天支持页面"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -589,6 +612,13 @@ msgstr ""
 "操作员\n"
 "                                            <br/>\n"
 "                                            <i class=\"fa fa-comments\"/>"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Operators that do not show any activity In Odoo for more than 30 minutes "
+"will be considered as disconnected."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -787,7 +817,7 @@ msgstr "用户"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/controllers/main.py:30
+#: code:addons/im_livechat/controllers/main.py:34
 #: code:addons/im_livechat/static/src/js/im_livechat.js:28
 #, python-format
 msgid "Visitor"
@@ -799,19 +829,9 @@ msgid "Web Page"
 msgstr "Web页"
 
 #. module: im_livechat
-#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
-msgid "Website Live Chat"
-msgstr "网页聊天"
-
-#. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
 msgid "Website Live Chat Channels"
 msgstr "网站在线客服"
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "Website Live Chat Powered by <strong>Odoo</strong>."
-msgstr "<strong>Odoo</strong>的实时聊天"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_default_message
@@ -820,14 +840,19 @@ msgstr "欢迎信息"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
-#, fuzzy
 msgid ""
 "You can create channels for each website on which you want\n"
 "                to integrate the website live chat widget, allowing your "
 "website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
-"你可以给每个你想集成即时聊天功能的网站创建渠道网站的访问者可以和客服实时聊天"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.mail_channel_action
+msgid ""
+"Your chatter history is empty. Create a channel and start chatting to fill "
+"up your history."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -840,6 +865,11 @@ msgid "e.g. YourWebsite.com"
 msgstr "例如：你的网站地址 "
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr "ir.autovacuum"
+
+#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
 msgstr "或者拷贝这个URL并且通过邮件发送给您的客户、供应商："
@@ -849,6 +879,17 @@ msgstr "或者拷贝这个URL并且通过邮件发送给您的客户、供应商
 msgid "seconds"
 msgstr "秒数"
 
+#~ msgid ""
+#~ "Livechat Support Channel Statistics allows you to easily check and "
+#~ "analyse your company livechat session performance. Extract informations "
+#~ "about the missed sessions, the audiance, the duration of a session, etc."
+#~ msgstr ""
+#~ "实时交流渠道分析能让你便捷的检查和分析贵司的实时聊天会话的表现。提取出来错"
+#~ "失的会话，顾客群，会话持续时间等等"
+
+#~ msgid "Livechat Support Page"
+#~ msgstr "即时聊天支持页面"
+
 #~ msgid "My sessions"
 #~ msgstr "我的对话"
 
@@ -857,3 +898,21 @@ msgstr "秒数"
 
 #~ msgid "Opertor"
 #~ msgstr "Opertor"
+
+#~ msgid "Website Live Chat"
+#~ msgstr "网页聊天"
+
+#~ msgid "Website Live Chat Powered by <strong>Odoo</strong>."
+#~ msgstr "<strong>Odoo</strong>的实时聊天"
+
+#~ msgid ""
+#~ "You can create channels for each website on which you want\n"
+#~ "                to integrate the website live chat widget, allowing you "
+#~ "website\n"
+#~ "                visitors to talk in real time with your operators."
+#~ msgstr ""
+#~ "你可以给每个你想集成即时聊天功能的网站创建渠道网站的访问者可以和客服实时聊"
+#~ "天"
+
+#~ msgid "Configuration"
+#~ msgstr "配置"

@@ -1,4 +1,3 @@
-# #-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr
@@ -7,37 +6,22 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
-# #-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * hr
-#
-# Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
-"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-08-06 10:39+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr
-#: code:addons/hr/hr.py:120
+#: code:addons/hr/models/hr.py:76
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -135,9 +119,17 @@ msgid "A good job in a young and dynamic team"
 msgstr "Een goede job in een jong en dynamisch team"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "Actief"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
+msgid ""
+"An efficiency of 50% means the resource is two times smaller than his usual "
+"speed."
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -145,6 +137,7 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr "Analyseer de node, schrijf specificatie documentatie en offerte"
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Gearchiveerd"
@@ -222,18 +215,8 @@ msgstr "Nationaliteit & andere informatie"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_city
-#, fuzzy
 msgid "City"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plaats\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Gemeente"
-
-#. module: hr
-#: model:web.tip,description:hr.hr_tip_2
-msgid "Click here to change the recruitment goal!"
-msgstr "Klik hier om de werving & selectie doelstellingen bij te werken."
+msgstr "Plaats"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
@@ -245,11 +228,6 @@ msgstr "Klik om een nieuwe werknemer toe te voegen."
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
 msgstr "Klik om een nieuw departement aan te maken."
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid "Click to define a new department."
-msgstr "Klik om een nieuw departement te definiëren."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -296,13 +274,8 @@ msgstr "Bedrijven"
 #: model:ir.model.fields,field_description:hr.field_hr_job_company_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
-#, fuzzy
 msgid "Company"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bedrijf\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Bedijf"
+msgstr "Bedrijf"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -325,11 +298,6 @@ msgstr "Contactgegevens"
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Contributions to open source projects"
 msgstr "Bijdrages aan open source projecten"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr "Maak uw afdelingen aan"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
@@ -375,7 +343,6 @@ msgid "Deliver generic Odoo functional training sessions"
 msgstr "Lever generieke functionele trainingssessies over Odoo"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -401,13 +368,8 @@ msgstr "Afdelingen"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Weergave naam\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Schermnaam"
+msgstr "Weergave naam"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -416,13 +378,8 @@ msgstr "Gescheiden"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
-#, fuzzy
 msgid "Efficiency Factor"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Efficiency Factor\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Efficiëntie Factor"
+msgstr "Efficiency Factor"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -483,13 +440,13 @@ msgid "Employees Tags"
 msgstr "Werknemer labels"
 
 #. module: hr
-#: code:addons/hr/hr.py:294 constraint:hr.department:0
+#: code:addons/hr/models/hr.py:264
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Fout! het is niet toegestaan recursieve afdelingen aan te maken."
 
 #. module: hr
-#: code:addons/hr/hr.py:264 constraint:hr.employee:0
+#: code:addons/hr/models/hr.py:177
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
@@ -538,11 +495,6 @@ msgid "Gender"
 msgstr "Geslacht"
 
 #. module: hr
-#: model:web.tip,description:hr.hr_tip_1
-msgid "Get all applications related to this job position."
-msgstr ""
-
-#. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "Good knowledge of HTML and Javascript"
 msgstr "Goede kennis van HTML en JavaScript"
@@ -585,13 +537,8 @@ msgstr "Goede kennis van een andere taal"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
-#, fuzzy
 msgid "Group By"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Groeperen op\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Groepeer op"
+msgstr "Groeperen op"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -627,6 +574,11 @@ msgstr "Aangenomen werknemers"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
 msgid "Home Address"
 msgstr "Privé-adres"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "Hr Department"
+msgstr "HR afdeling"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -705,19 +657,9 @@ msgid "Job Description"
 msgstr "Functieomschrijving"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_name
-msgid "Job Name"
-msgstr "Functienaam"
-
-#. module: hr
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Position"
 msgstr "Functie"
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "Job Position Name"
-msgstr "Functienaam"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -743,6 +685,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Title"
 msgstr "Functietitel"
 
@@ -803,13 +746,8 @@ msgstr "Lanceer nieuwe producten, marketingcampagnes en aanbiedingen"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_login
-#, fuzzy
 msgid "Login"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Gebruiker\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Login"
+msgstr "Gebruiker"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -820,13 +758,8 @@ msgstr "Man"
 #: model:ir.model.fields,field_description:hr.field_hr_department_manager_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_parent_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
-#, fuzzy
 msgid "Manager"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Manager\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Beheerder"
+msgstr "Manager"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_marital
@@ -852,13 +785,8 @@ msgstr "Master of bachelor in computerwetenschappen (IT)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image_medium
-#, fuzzy
 msgid "Medium-sized photo"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Foto van gemiddelde grootte\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Middelgrote afbeelding"
+msgstr "Foto van gemiddelde grootte"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image_medium
@@ -898,9 +826,7 @@ msgid "Must have ..."
 msgstr "Moet hebben ..."
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
-#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
 msgstr "Naam"
 
@@ -921,19 +847,19 @@ msgid "Nice to have"
 msgstr "Leuk om te hebben"
 
 #. module: hr
+#: selection:hr.job,state:0
+msgid "Not Recruiting"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
 msgid "Note"
 msgstr "Notitie"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_notes
-#, fuzzy
 msgid "Notes"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Notities\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Opmerkingen"
+msgstr "Notities"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
@@ -966,13 +892,8 @@ msgstr ""
 
 #. module: hr
 #: selection:hr.employee,gender:0
-#, fuzzy
 msgid "Other"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Overige\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Andere"
+msgstr "Overige"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -1060,11 +981,6 @@ msgstr "Snelle onafhankelijke leerling"
 
 #. module: hr
 #: selection:hr.job,state:0
-msgid "Recruitment Closed"
-msgstr "Recruitment gesloten"
-
-#. module: hr
-#: selection:hr.job,state:0
 msgid "Recruitment in Progress"
 msgstr "Recruitment in behandeling"
 
@@ -1080,13 +996,9 @@ msgstr "Gerelateerde werknemers"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_user_id
-#, fuzzy
 msgid "Related user name for the resource to manage its access."
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Gekoppelde gebruikersnaam voor de resource om van haar toegang te beheren.\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Gekoppelde gebruikersnaam voor de resource om zijn toegang te beheren."
+"Gekoppelde gebruikersnaam voor de resource om van haar toegang te beheren."
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
@@ -1102,6 +1014,11 @@ msgstr "Vereisten"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
 msgid "Resource"
 msgstr "Resource"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
+msgid "Resource Name"
+msgstr "Resourcenaam"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
@@ -1214,13 +1131,8 @@ msgstr "Ondergeschikten"
 
 #. module: hr
 #: sql_constraint:hr.employee.category:0
-#, fuzzy
 msgid "Tag name already exists !"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Label naam bestaat al!\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Labelnaam bestaat al!"
+msgstr "Label naam bestaat al!"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_ids
@@ -1241,26 +1153,6 @@ msgstr "Teamgeest en goede communicatie"
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
 msgstr "De naam van de vacature moet uniek zijn per afdeling in het bedrijf!"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
-#, fuzzy
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Dit veld toont de efficiency van de resource om taken te voltooien. bijv. "
-"resource alleen gedurende 5 dagen met 5 toegewezen taken zal standaard 100% "
-"belasting tonen, maar als we de efficiency op 200% zetten, dan zal zijn "
-"belasting slechts 50% zijn.\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dit veld toont de efficiëntie van de resource om taken te voltooien. Bijv. "
-"resource alleen gedurende 5 dagen met 5 toegewezen taken zal standaard 100% "
-"belasting tonen, maar als we de efficiëntie op 200% zetten, dan zal zijn "
-"belasting slechts 50% zijn."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
@@ -1295,6 +1187,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "Ongelezen berichten"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_login
+msgid "Used to log into the system"
+msgstr "Gebruikt voor aanmelding aan het systeem"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1647,18 +1544,6 @@ msgid "You will work closely with all trainees"
 msgstr "U werkt nauw samen met alle cursisten"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid ""
-"Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
-"                leaves and holidays, recruitments, etc."
-msgstr ""
-"Odoo's departement structuur is gebruikt om alle documenten te beheren\n"
-"die gerelateerd zijn aan werknemers per departement: uitgaven, urenstaten,\n"
-"afwezigheden en vakanties, aanwervingen, enz."
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "afdeling"
@@ -1668,8 +1553,22 @@ msgstr "afdeling"
 msgid "e.g. Part Time"
 msgstr "Bijv. Parttime"
 
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "e.g. Sales Manager"
+msgstr ""
+
 #~ msgid "Action Needed"
 #~ msgstr "Vereist actie"
+
+#~ msgid "Click here to change the recruitment goal!"
+#~ msgstr "Klik hier om de werving & selectie doelstellingen bij te werken."
+
+#~ msgid "Click to define a new department."
+#~ msgstr "Klik om een nieuw departement te definiëren."
+
+#~ msgid "Create Your Departments"
+#~ msgstr "Maak uw afdelingen aan"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
@@ -1692,6 +1591,12 @@ msgstr "Bijv. Parttime"
 #~ msgid "Is Follower"
 #~ msgstr "Is een volger"
 
+#~ msgid "Job Name"
+#~ msgstr "Functienaam"
+
+#~ msgid "Job Position Name"
+#~ msgstr "Functienaam"
+
 #~ msgid "Last Message Date"
 #~ msgstr "Laatste bericht datum"
 
@@ -1710,8 +1615,22 @@ msgstr "Bijv. Parttime"
 #~ msgid "Open HR Menu"
 #~ msgstr "Personeelsbeheer menu openen"
 
+#~ msgid "Recruitment Closed"
+#~ msgstr "Recruitment gesloten"
+
 #~ msgid "Subscriptions"
 #~ msgstr "Abonnementen"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
+#~ "will show a load of 100% for this phase by default, but if we put a "
+#~ "efficiency of 200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "Dit veld toont de efficiency van de resource om taken te voltooien. bijv. "
+#~ "resource alleen gedurende 5 dagen met 5 toegewezen taken zal standaard "
+#~ "100% belasting tonen, maar als we de efficiency op 200% zetten, dan zal "
+#~ "zijn belasting slechts 50% zijn."
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Ongelezen berichten"
@@ -1719,11 +1638,13 @@ msgstr "Bijv. Parttime"
 #~ msgid "Update Date"
 #~ msgstr "Wijzigingsdatum"
 
-#~ msgid "Hr Department"
-#~ msgstr "HR afdeling"
-
-#~ msgid "Resource Name"
-#~ msgstr "Resourcenaam"
-
-#~ msgid "Used to log into the system"
-#~ msgstr "Gebruikt voor aanmelding aan het systeem"
+#~ msgid ""
+#~ "Your departments structure is used to manage all documents\n"
+#~ "                related to employees by departments: expenses and "
+#~ "timesheets,\n"
+#~ "                leaves and holidays, recruitments, etc."
+#~ msgstr ""
+#~ "Odoo's departement structuur is gebruikt om alle documenten te beheren\n"
+#~ "die gerelateerd zijn aan werknemers per departement: uitgaven, "
+#~ "urenstaten,\n"
+#~ "afwezigheden en vakanties, aanwervingen, enz."

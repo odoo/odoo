@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2015-12-05 23:23+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
@@ -19,10 +19,32 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "<span>Timesheet Entries</span>"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "<strong>Total</strong>"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_by_project
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
 msgid "Activities"
 msgstr "Δράσεις"
+
+#. module: hr_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_activity_analysis
+#, fuzzy
+msgid "Activity Analysis"
+msgstr "Δράσεις"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Γραμμή Αναλυτικής"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_delay
@@ -30,7 +52,13 @@ msgid "Avg. Plan.-Eff."
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_project_crossovered_budget_line
+msgid "Budget Lines"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project_subtask_project_id
+#: model:ir.model.fields,help:hr_timesheet.field_project_task_subtask_project_id
 msgid ""
 "Choosing a sub-tasks project will both enable sub-tasks and set their "
 "default project (possibly the project itself)"
@@ -44,14 +72,9 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
 msgid "Click to record activities."
 msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_company_id
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
-msgid "Company"
-msgstr "Εταιρεία"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_delay_hours
@@ -66,17 +89,17 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_project_task_total_hours_spent
+msgid "Computed as: Time Spent + Sub-tasks Hours."
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_effective_hours
 msgid "Computed using the sum of the task work done."
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_cost
-msgid "Cost"
-msgstr "Κόστος"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_date
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Date"
 msgstr "Ημερομηνία"
 
@@ -91,15 +114,21 @@ msgid "Delay Hours"
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_department_id
+msgid "Department"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+#, fuzzy
+msgid "Description"
+msgstr "Διάρκεια"
+
+#. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 #, fuzzy
 msgid "Detailed Activities"
 msgstr "Δράσεις"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_display_name
-msgid "Display Name"
-msgstr "Εμφάνιση Ονόματος"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
@@ -113,47 +142,14 @@ msgid "Effective Hours"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
-msgid "Extended Filters..."
-msgstr "Εκτεταμένα Φίλτρα..."
-
-#. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group By"
 msgstr "Ομαδοποίηση Ανά"
-
-#. module: hr_timesheet
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
-msgid "Group by month of date"
-msgstr "Ομαδοποίηση ανά μήνα ημερομηνίας"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_effective_hours
 msgid "Hours Spent"
 msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_id
-msgid "ID"
-msgstr "ID"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_project_task_progress
-msgid ""
-"If the task has a progress of 99.99% you should close the task if it's "
-"finished or reevaluate the time"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report___last_update
-msgid "Last Modified on"
-msgstr "Τελευταία αλλαγή στις"
-
-#. module: hr_timesheet
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
-msgid "Month"
-msgstr "Μήνας"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
@@ -172,7 +168,6 @@ msgid "Planned Hours"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_product_id
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Product"
 msgstr "Προϊόν"
@@ -185,9 +180,13 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_project
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_project_id
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_project_id
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Project"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "Project -"
 msgstr ""
 
 #. module: hr_timesheet
@@ -207,6 +206,11 @@ msgid "Reports"
 msgstr "Αναφορές"
 
 #. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "Responsible"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Spent Hours"
 msgstr ""
@@ -224,6 +228,7 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_project_task_sub_task
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task_child_ids
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Sub-tasks"
 msgstr ""
@@ -244,6 +249,7 @@ msgstr ""
 #: model:ir.model,name:hr_timesheet.model_project_task
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_task_id
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Task"
 msgstr ""
 
@@ -253,21 +259,13 @@ msgid "Tasks by user and project"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
-msgid "This Month"
-msgstr "Αυτόν τον μήνα"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_quantity
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Time"
 msgstr "Χρόνος"
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_timesheet_report
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_graph
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_pivot
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
+#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 msgid "Timesheet"
 msgstr "Φύλλο Xρόνου Eργασίας"
 
@@ -278,10 +276,11 @@ msgid "Timesheet Activities"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_all
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_filtered
-msgid "Timesheet Analysis"
-msgstr ""
+#: model:ir.actions.act_window,name:hr_timesheet.project_task_action_view_timesheet
+#: model:ir.actions.report.xml,name:hr_timesheet.timesheet_report
+#, fuzzy
+msgid "Timesheet Entries"
+msgstr "Φύλλα Xρόνου Eργασίας"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -295,7 +294,6 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_timesheet_ids
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_report_all
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_root
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_department_view_kanban
 #: model:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
@@ -311,6 +309,7 @@ msgid "Total"
 msgstr "Σύνολο Χρόνου"
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task_total_hours_spent
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_total_hours
 msgid "Total Hours"
 msgstr ""
@@ -321,24 +320,19 @@ msgid "Total time"
 msgstr "Σύνολο Χρόνου"
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_user_id
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
-msgid "User"
-msgstr "Χρήστης"
-
-#. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Users"
 msgstr "Χρήστες"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_progress
-msgid "Working Time Progress (%)"
+msgid "Working Time Recorded"
 msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
 msgid ""
 "You can register and track your workings hours by project every\n"
 "                day. Every time spent on a project will become a cost and "
@@ -354,17 +348,6 @@ msgid ""
 "track customer contracts."
 msgstr ""
 
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "Γραμμή Αναλυτικής"
-
-#. module: hr_timesheet
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
-msgid "month"
-msgstr "μήνας"
-
 #~ msgid "Accounting"
 #~ msgstr "Λογιστική"
 
@@ -377,8 +360,45 @@ msgstr "μήνας"
 #~ msgid "Companies"
 #~ msgstr "Εταιρείες"
 
+#~ msgid "Company"
+#~ msgstr "Εταιρεία"
+
 #~ msgid "Configuration"
 #~ msgstr "Ρυθμίσεις"
 
+#~ msgid "Cost"
+#~ msgstr "Κόστος"
+
+#~ msgid "Display Name"
+#~ msgstr "Εμφάνιση Ονόματος"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Εκτεταμένα Φίλτρα..."
+
+#~ msgid "Group by month of date"
+#~ msgstr "Ομαδοποίηση ανά μήνα ημερομηνίας"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
 #~ msgid "Information"
 #~ msgstr "Πληροφορίες"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Τελευταία αλλαγή στις"
+
+#~ msgid "Month"
+#~ msgstr "Μήνας"
+
+#~ msgid "This Month"
+#~ msgstr "Αυτόν τον μήνα"
+
+#~ msgid "User"
+#~ msgstr "Χρήστης"
+
+#~ msgid "month"
+#~ msgstr "μήνας"
+
+#, fuzzy
+#~ msgid "account analytic line"
+#~ msgstr "Γραμμή Αναλυτικής"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-02-18 01:19+0000\n"
 "Last-Translator: Esteban Echeverry <tebanep@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/"
@@ -138,11 +138,6 @@ msgstr ""
 "siguiente enlace de suscripción:</strong>"
 
 #. module: auth_signup
-#: selection:res.users,state:0
-msgid "Activated"
-msgstr ""
-
-#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
 msgstr "Permitir ingreso a usuarios externos"
@@ -191,6 +186,12 @@ msgstr "Confirmar"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
 msgstr "Confirmar Contraseña"
+
+#. module: auth_signup
+#: selection:res.users,state:0
+#, fuzzy
+msgid "Confirmed"
+msgstr "Confirmar"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:41
@@ -472,3 +473,9 @@ msgstr "ej. Juan Fulano"
 
 #~ msgid "Connected"
 #~ msgstr "Conectado"
+
+#~ msgid "Signup Expiration"
+#~ msgstr "Vencimiento del Ingreso"
+
+#~ msgid "Signup Token"
+#~ msgstr "Palabra de Ingreso"

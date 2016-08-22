@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-03-23 07:24+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
@@ -165,7 +165,7 @@ msgid "Name of the picking wave"
 msgstr "Nome della movimentazione"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:42
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:46
 #, python-format
 msgid "Nothing to print."
 msgstr "Non c'è niente da stampare."
@@ -176,10 +176,10 @@ msgid "Person responsible for this wave"
 msgstr ""
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:64
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9973
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -202,7 +202,7 @@ msgid "Picking Waves not finished"
 msgstr "Movimentazioni non terminate"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9973
 msgid "Picking wave associated to this picking"
 msgstr "Movimentazioni associate a questo prelievo"
 
@@ -214,8 +214,8 @@ msgstr "Prelievi"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-msgid "Print all pickings"
-msgstr "Stampa tutti i prelievi"
+msgid "Print"
+msgstr ""
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_user_id
@@ -238,7 +238,7 @@ msgid "Select a wave"
 msgstr ""
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:59
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:59
 #, python-format
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
@@ -295,7 +295,7 @@ msgid "Transfer"
 msgstr "Trasferimento"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:63
 #, python-format
 msgid "Transferred by"
 msgstr ""
@@ -351,6 +351,9 @@ msgstr ""
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Numero di messaggi non letti"
+
+#~ msgid "Print all pickings"
+#~ msgstr "Stampa tutti i prelievi"
 
 #~ msgid "Unread Messages"
 #~ msgstr "Messaggi Non Letti"

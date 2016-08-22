@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-01-12 22:42+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
@@ -28,11 +28,6 @@ msgstr "# producten"
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
 msgstr "Voorraad rekeningen"
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
-msgid "Accounting"
-msgstr "Boekhouding"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -60,18 +55,13 @@ msgid "Average Price"
 msgstr "Gemiddelde prijs"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
-msgid "Can be expensed"
-msgstr "Kan gedeclareerd worden"
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:278
+#: code:addons/stock_account/stock_account.py:284
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on "
@@ -79,7 +69,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:280
+#: code:addons/stock_account/stock_account.py:286
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -122,15 +112,6 @@ msgid "Choose your date"
 msgstr "KIes uw datum"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_coeff
-msgid ""
-"Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
-"coeff"
-msgstr ""
-"Factor bij de conversie van standaard maateenheid naar verkoopeenheid.\n"
-" Verkoopeenheid = standaard maateenheid * factor"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Company"
@@ -143,7 +124,7 @@ msgid "Compute from average price"
 msgstr "bereken van gemiddelde prijs"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:351
+#: code:addons/stock_account/stock_account.py:357
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -164,9 +145,8 @@ msgstr "Kostprijsbepaling"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
-#, fuzzy
 msgid "Counter-Part Account"
-msgstr "Voorraadafname rekening"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -345,14 +325,15 @@ msgid "Location"
 msgstr "Locatie"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Lot/Serial Number"
+msgstr "Partijnummer"
+
+#. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
 msgid "Manage Inventory Valuation and Costing Methods"
 msgstr "Beheer de voorraadwaarde en kostprijs methodes"
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Move"
-msgstr "Mutatie"
 
 #. module: stock_account
 #: code:addons/stock_account/product.py:125
@@ -408,11 +389,6 @@ msgid "Product"
 msgstr "Product"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_alert_time
-msgid "Product Alert Time"
-msgstr "Product signalering tijd"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_product_categ_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -420,19 +396,9 @@ msgid "Product Category"
 msgstr "Productcategorie"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_life_time
-msgid "Product Life Time"
-msgstr "Product levensduur"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
 msgid "Product Quantity"
 msgstr "Hoeveelheid product"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_removal_time
-msgid "Product Removal Time"
-msgstr "Product verwijdertijd"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -440,11 +406,6 @@ msgstr "Product verwijdertijd"
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Product Template"
 msgstr "Productsjabloon"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_use_time
-msgid "Product Use Time"
-msgstr "Product gebruiksduur"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -468,37 +429,15 @@ msgid "Retrieve the curent stock valuation."
 msgstr "Haal huidige voorraadwaarde op."
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Serial Number"
-msgstr "Partijnummer"
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-#, fuzzy
 msgid "Set standard price"
-msgstr "Kostprijs"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
 msgid "Source"
 msgstr "Bron"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_id
-msgid ""
-"Specify a unit of measure here if invoicing is made in another unit of "
-"measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
-"Specificeer hier de maateenheid indien de facturatie geschied in een andere "
-"maateenheid dan de voorraadboekingen. Laat leeg om de standaard maateenheid "
-"te gebruiken."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
-msgstr "Specificeer of het product kan worden gebruikt als declaratie."
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -551,6 +490,11 @@ msgstr ""
 "uitgaande product (wordt bijvoorbeeld gebruikt bij voorraadverschillen)."
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid "Stock Accounting"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
@@ -558,7 +502,7 @@ msgid "Stock Input Account"
 msgstr "Voorraadtoename rekening"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:464
+#: code:addons/stock_account/stock_account.py:470
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
@@ -567,6 +511,7 @@ msgstr "Voorraadboek"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_move_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Stock Move"
 msgstr "Voorraadmutatie"
 
@@ -608,7 +553,7 @@ msgid "Templates for Account Chart"
 msgstr "Sjabloon voor grootboekschema"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:306
+#: code:addons/stock_account/stock_account.py:312
 #, python-format
 msgid ""
 "The found valuation amount for product %s is zero. Which means there is "
@@ -620,16 +565,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
 msgid "Total Value"
 msgstr "Totaal Waarde"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_coeff
-msgid "Unit of Measure -> UOS Coeff"
-msgstr "Maateenheid -> Verkoopeenheid Coeff."
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_id
-msgid "Unit of Sale"
-msgstr "Verkoopeenheid (VE)"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
@@ -667,44 +602,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
 msgid "Value"
 msgstr "Waarde"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-"Wanneer een nieuw partijnummer wordt aangemaakt, is dit het het aantal dagen "
-"voordat een waarschuwing wordt gegeven."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-"Wanneer een nieuw partijnummer wordt aangemaakt, is dit het aantal dagen "
-"voordat de producten gevaarlijk zijn en niet meer mogen worden geconsumeerd."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-"Wanneer een nieuw partijnummer wordt aangemaakt, is dit het aantal dagen "
-"waarop de producten met dit partijnummer moeten worden verwijderd van de "
-"voorraad."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"Wanneer een nieuw partijnummer wordt aangemaakt, is dit het aantal dagen "
-"waarop de producten verminderen in kwaliteit, maar nog niet gevaarlijk zijn "
-"voor de volksgezondheid."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -791,7 +688,7 @@ msgid "Wizard that opens the stock valuation history table"
 msgstr "Wizard welke de voorraadwaarde historie tabel opent"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:276
+#: code:addons/stock_account/stock_account.py:282
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -801,14 +698,12 @@ msgstr ""
 "u een rekeningschema heeft geïnstalleerd."
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:282
-#, fuzzy, python-format
+#: code:addons/stock_account/stock_account.py:288
+#, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category. "
 "You must define one before processing this operation."
 msgstr ""
-"U heeft geen voorraadboek gedefinieerd op uw productcategorie, controleer of "
-"u een rekeningschema heeft geïnstalleerd."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -833,8 +728,87 @@ msgstr "stock.history"
 msgid "unknown"
 msgstr "onbekend"
 
+#~ msgid "Accounting"
+#~ msgstr "Boekhouding"
+
 #~ msgid "Asset Type"
 #~ msgstr "Soort activa"
 
+#~ msgid "Can be expensed"
+#~ msgstr "Kan gedeclareerd worden"
+
+#~ msgid ""
+#~ "Coefficient to convert default Unit of Measure to Unit of Sale uos = uom "
+#~ "* coeff"
+#~ msgstr ""
+#~ "Factor bij de conversie van standaard maateenheid naar verkoopeenheid.\n"
+#~ " Verkoopeenheid = standaard maateenheid * factor"
+
 #~ msgid "Deferred Revenue Type"
 #~ msgstr "Soort uitgestelde inkomsten"
+
+#~ msgid "Move"
+#~ msgstr "Mutatie"
+
+#~ msgid "Product Alert Time"
+#~ msgstr "Product signalering tijd"
+
+#~ msgid "Product Life Time"
+#~ msgstr "Product levensduur"
+
+#~ msgid "Product Removal Time"
+#~ msgstr "Product verwijdertijd"
+
+#~ msgid "Product Use Time"
+#~ msgstr "Product gebruiksduur"
+
+#~ msgid "Serial Number"
+#~ msgstr "Partijnummer"
+
+#~ msgid ""
+#~ "Specify a unit of measure here if invoicing is made in another unit of "
+#~ "measure than inventory. Keep empty to use the default unit of measure."
+#~ msgstr ""
+#~ "Specificeer hier de maateenheid indien de facturatie geschied in een "
+#~ "andere maateenheid dan de voorraadboekingen. Laat leeg om de standaard "
+#~ "maateenheid te gebruiken."
+
+#~ msgid "Specify whether the product can be selected in an HR expense."
+#~ msgstr "Specificeer of het product kan worden gebruikt als declaratie."
+
+#~ msgid "Unit of Measure -> UOS Coeff"
+#~ msgstr "Maateenheid -> Verkoopeenheid Coeff."
+
+#~ msgid "Unit of Sale"
+#~ msgstr "Verkoopeenheid (VE)"
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "an alert should be notified."
+#~ msgstr ""
+#~ "Wanneer een nieuw partijnummer wordt aangemaakt, is dit het het aantal "
+#~ "dagen voordat een waarschuwing wordt gegeven."
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "the goods may become dangerous and must not be consumed."
+#~ msgstr ""
+#~ "Wanneer een nieuw partijnummer wordt aangemaakt, is dit het aantal dagen "
+#~ "voordat de producten gevaarlijk zijn en niet meer mogen worden "
+#~ "geconsumeerd."
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "the goods should be removed from the stock."
+#~ msgstr ""
+#~ "Wanneer een nieuw partijnummer wordt aangemaakt, is dit het aantal dagen "
+#~ "waarop de producten met dit partijnummer moeten worden verwijderd van de "
+#~ "voorraad."
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "the goods starts deteriorating, without being dangerous yet."
+#~ msgstr ""
+#~ "Wanneer een nieuw partijnummer wordt aangemaakt, is dit het aantal dagen "
+#~ "waarop de producten verminderen in kwaliteit, maar nog niet gevaarlijk "
+#~ "zijn voor de volksgezondheid."

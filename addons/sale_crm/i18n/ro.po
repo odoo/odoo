@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2015-12-04 16:29+0000\n"
 "Last-Translator: Cosmin o <oprisancosmin@yahoo.com>\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
@@ -24,11 +24,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
 msgid "# Issues"
 msgstr "# Probleme"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_count
-msgid "# Tasks"
-msgstr "# Sarcini"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
@@ -55,12 +50,6 @@ msgstr ""
 "considerare starea apartenentei membrului asociat."
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
-#, fuzzy
-msgid "Activation"
-msgstr "Cotatie"
-
-#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
 msgid "Associate Member"
 msgstr "Membru asociat"
@@ -71,8 +60,15 @@ msgid "Cancel Membership Date"
 msgstr "Anuleaza Data Apartenentei"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
-msgid "Count Payment Method"
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:14
+#, python-format
+msgid "Click here to see more options."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_count
+msgid "Count Payment Token"
 msgstr ""
 
 #. module: sale_crm
@@ -106,23 +102,6 @@ msgid "Free Member"
 msgstr "Membru necotizant"
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
-msgid ""
-"Gives the probability to assign a lead to this partner. (0 means no "
-"assignation.)"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
-msgid "Implementation References"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
-msgid "Implemented by"
-msgstr ""
-
-#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
 msgid "Invoice"
 msgstr ""
@@ -146,23 +125,15 @@ msgid ""
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
-msgid "Latest Partner Review"
-msgstr ""
-
-#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
 msgstr "Pista/Oportunitate"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
-msgid "Level"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
-msgid "Level Weight"
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:18
+#, python-format
+msgid "Let's have a look at the quotations of this sales team."
 msgstr ""
 
 #. module: sale_crm
@@ -191,14 +162,20 @@ msgid "Membership Start Date"
 msgstr "Data de Inceput a Calitatii de Membru"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
+#, fuzzy
+msgid "Message for Sales Order"
+msgstr "# Comenzii de Vânzare"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
+msgid "Message for Stock Picking"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "New Quotation"
 msgstr "Ofertă Nouă"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
-msgid "Next Partner Review"
-msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
@@ -216,14 +193,9 @@ msgid "Orders"
 msgstr "Comenzi"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_ids
 #, fuzzy
-msgid "Partnership Date"
-msgstr "Anuleaza Data Apartenentei"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
-msgid "Payment Methods"
+msgid "Payment Tokens"
 msgstr "Metode de plata"
 
 #. module: sale_crm
@@ -239,6 +211,7 @@ msgstr "Cotații (oferte)"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn
 msgid "Sales Order"
 msgstr "Comanda de vanzare"
 
@@ -246,6 +219,20 @@ msgstr "Comanda de vanzare"
 #: model:ir.model.fields,help:sale_crm.field_res_users_free_member
 msgid "Select if you want to give free membership."
 msgstr "Selectati daca doriti sa oferiti apartenenta ca membru gratuit."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_picking_warn
+#: model:ir.model.fields,help:sale_crm.field_res_users_sale_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn
+msgid "Stock Picking"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
@@ -256,11 +243,6 @@ msgstr "Suma Comenzilor"
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
 msgid "Tags"
 msgstr "Etichete"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
-msgid "Tasks"
-msgstr "Sarcini"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
@@ -298,6 +280,9 @@ msgstr ""
 #~ msgid "# Claims"
 #~ msgstr "# Reclamaţii"
 
+#~ msgid "# Tasks"
+#~ msgstr "# Sarcini"
+
 #~ msgid "Campaign"
 #~ msgstr "Campanie"
 
@@ -315,3 +300,14 @@ msgstr ""
 
 #~ msgid "Source"
 #~ msgstr "Sursa"
+
+#~ msgid "Tasks"
+#~ msgstr "Sarcini"
+
+#, fuzzy
+#~ msgid "Activation"
+#~ msgstr "Cotatie"
+
+#, fuzzy
+#~ msgid "Partnership Date"
+#~ msgstr "Anuleaza Data Apartenentei"

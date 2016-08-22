@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-07-05 04:06+0000\n"
 "Last-Translator: Eddie Lim <bhweelim@yahoo.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -31,35 +31,6 @@ msgstr "; 多订单"
 #, python-format
 msgid "; no order found"
 msgstr "; 没有订单"
-
-#. module: payment_ogone
-#: model:payment.acquirer,cancel_msg:payment_ogone.payment_acquirer_ogone
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>取消,</i> 你的付款已被取消.</span>"
-
-#. module: payment_ogone
-#: model:payment.acquirer,done_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr "<span><i>完成,</i> 你的在线支付已成功完成. 感谢你的订单.</span>"
-
-#. module: payment_ogone
-#: model:payment.acquirer,error_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-"<span><i>错误,</i> 请注意交易中会发生的错误. 订单已确认但未支付. 如你有任何关"
-"于订单状态的问题, 请及时联系我们.</span>"
-
-#. module: payment_ogone
-#: model:payment.acquirer,pending_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr "<span><i>待定,</i> 你的在线支付已完成. 但是你的订单还未确认.</span>"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_userid
@@ -124,11 +95,6 @@ msgid "Name"
 msgstr "名称"
 
 #. module: payment_ogone
-#: model:payment.acquirer,name:payment_ogone.payment_acquirer_ogone
-msgid "Ogone"
-msgstr "Ogone"
-
-#. module: payment_ogone
 #: code:addons/payment_ogone/models/ogone.py:249
 #, python-format
 msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
@@ -174,13 +140,39 @@ msgid "SHA Key OUT"
 msgstr "SHA Key OUT"
 
 #. module: payment_ogone
-#: model:payment.acquirer,pre_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"You will be redirected to the Ogone website after clicking on the payment "
-"button."
-msgstr "在点击支付按钮后你将会被重定向到Ogone网站"
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "payment.token"
+msgstr ""
 
-#. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_method
-msgid "payment.method"
-msgstr "payment.method"
+#~ msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+#~ msgstr "<span><i>取消,</i> 你的付款已被取消.</span>"
+
+#~ msgid ""
+#~ "<span><i>Done,</i> Your online payment has been successfully processed. "
+#~ "Thank you for your order.</span>"
+#~ msgstr "<span><i>完成,</i> 你的在线支付已成功完成. 感谢你的订单.</span>"
+
+#~ msgid ""
+#~ "<span><i>Error,</i> Please be aware that an error occurred during the "
+#~ "transaction. The order has been confirmed but won't be paid. Don't "
+#~ "hesitate to contact us if you have any questions on the status of your "
+#~ "order.</span>"
+#~ msgstr ""
+#~ "<span><i>错误,</i> 请注意交易中会发生的错误. 订单已确认但未支付. 如你有任"
+#~ "何关于订单状态的问题, 请及时联系我们.</span>"
+
+#~ msgid ""
+#~ "<span><i>Pending,</i> Your online payment has been successfully "
+#~ "processed. But your order is not validated yet.</span>"
+#~ msgstr "<span><i>待定,</i> 你的在线支付已完成. 但是你的订单还未确认.</span>"
+
+#~ msgid "Ogone"
+#~ msgstr "Ogone"
+
+#~ msgid ""
+#~ "You will be redirected to the Ogone website after clicking on the payment "
+#~ "button."
+#~ msgstr "在点击支付按钮后你将会被重定向到Ogone网站"
+
+#~ msgid "payment.method"
+#~ msgstr "payment.method"

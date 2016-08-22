@@ -1,4 +1,3 @@
-# #-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_event
@@ -8,41 +7,21 @@
 # Bohdan Lisnenko, 2016
 # Yaroslav Molochko <onorua@gmail.com>, 2016
 # ТАрас <tratatuta@i.ua>, 2016
-# #-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * website_event
-#
-# Translators:
-# Bohdan Lisnenko, 2015-2016
-# Bohdan Lisnenko, 2016
-# ТАрас <tratatuta@i.ua>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-01 09:20+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"PO-Revision-Date: 2016-08-12 11:05+0000\n"
+"Last-Translator: Yaroslav Molochko <onorua@gmail.com>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
 "uk/)\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:219
-#, python-format
-msgid "%(month)s %(start_day)s%(end_day)s"
-msgstr "%(month)s %(start_day)s%(end_day)s"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -128,13 +107,13 @@ msgid "Add Content"
 msgstr "Додати вміст"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:106
+#: code:addons/website_event/controllers/main.py:96
 #, python-format
 msgid "All Categories"
 msgstr "Всі категорії"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:117
+#: code:addons/website_event/controllers/main.py:103
 #, python-format
 msgid "All Countries"
 msgstr "Всі країни"
@@ -157,6 +136,7 @@ msgstr "Скасувати реєстрацію"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:48
+#: code:addons/website_event/static/src/js/website.tour.event.js:103
 #, python-format
 msgid "Click <em>Continue</em> to create the event."
 msgstr "Натисніть<em>Продовжити</em> щоб створити подію."
@@ -164,6 +144,7 @@ msgstr "Натисніть<em>Продовжити</em> щоб створити 
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:33
+#: code:addons/website_event/static/src/js/website.tour.event.js:94
 #, python-format
 msgid "Click here to create a new event."
 msgstr "Натисніть тут, щоб створити нову подію."
@@ -171,6 +152,7 @@ msgstr "Натисніть тут, щоб створити нову подію."
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:82
+#: code:addons/website_event/static/src/js/website.tour.event.js:121
 #, python-format
 msgid "Click here to customize your event further."
 msgstr "Натисніть тут, щоб налаштувати подію потім."
@@ -178,6 +160,7 @@ msgstr "Натисніть тут, щоб налаштувати подію по
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:75
+#: code:addons/website_event/static/src/js/website.tour.event.js:116
 #, python-format
 msgid "Click to publish your event."
 msgstr "Натисніть, щоб опублікувати Вашу подію."
@@ -196,6 +179,17 @@ msgstr "Далі"
 #, python-format
 msgid "Create Event"
 msgstr "Створити подію"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website.tour.event.js:98
+#, fuzzy, python-format
+msgid ""
+"Create a name for your new event and click <em>\"Continue\"</em>. e.g: "
+"Technical Training"
+msgstr ""
+"Введіть назву Вашої нової події та натисність <em>'Продовжити'</em>, напр. "
+"Технічна підготовка"
 
 #. module: website_event
 #. openerp-web
@@ -265,6 +259,13 @@ msgid "Drag the 'Image-Text' block and drop it in your page."
 msgstr "Перетягніть блок 'Зображення-Текст' на свою сторінку."
 
 #. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website.tour.event.js:107
+#, fuzzy, python-format
+msgid "Drag this block and drop it in your page."
+msgstr "Перетягніть блок 'Зображення-Текст' на свою сторінку."
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "E-mail"
 msgstr "E-mail"
@@ -276,8 +277,9 @@ msgstr "Редагувати бейдж"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "End of Subscription"
-msgstr "Закінчення передплати"
+#, fuzzy
+msgid "End of Registration"
+msgstr "Скасувати реєстрацію"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -306,8 +308,9 @@ msgstr "Меню події"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Event Subscription"
-msgstr "Підписка на подію"
+#, fuzzy
+msgid "Event Registration"
+msgstr "Скасувати реєстрацію"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
@@ -319,6 +322,12 @@ msgstr "Подію не знайдено!"
 #: model:mail.message.subtype,name:website_event.mt_event_published
 msgid "Event published"
 msgstr "Подію опубліковано"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+#, fuzzy
+msgid "Event registration is closed."
+msgstr "Реєстрація учасників події ще не почалася."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -368,10 +377,15 @@ msgid "Free"
 msgstr "Вільно"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:44
+#: code:addons/website_event/models/event.py:54
 #, python-format
 msgid "Introduction"
 msgstr "Передмова"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
+msgid "Is Participating"
+msgstr ""
 
 #. module: website_event
 #. openerp-web
@@ -381,7 +395,7 @@ msgid "Let's go through the first steps to publish a new event."
 msgstr "Пройдімо перші кроки до публікації нової події."
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:45
+#: code:addons/website_event/models/event.py:55
 #, python-format
 msgid "Location"
 msgstr "Розташування"
@@ -398,7 +412,7 @@ msgstr "Name"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:201
+#: code:addons/website_event/controllers/main.py:184
 #: code:addons/website_event/static/src/js/website.tour.event.js:32
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
@@ -414,19 +428,19 @@ msgid "New Event Created"
 msgstr "Нову подію створено"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:38
+#: code:addons/website_event/controllers/main.py:34
 #, python-format
 msgid "Next Events"
 msgstr "Наступні події"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:47
+#: code:addons/website_event/controllers/main.py:43
 #, python-format
 msgid "Next Week"
 msgstr "Наступного тижня"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:55
+#: code:addons/website_event/controllers/main.py:51
 #, python-format
 msgid "Next month"
 msgstr "Наступного місяця"
@@ -437,7 +451,7 @@ msgid "No event found"
 msgstr "Не знайдено жодної події"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:59
+#: code:addons/website_event/controllers/main.py:55
 #, python-format
 msgid "Old Events"
 msgstr "Минулі події"
@@ -445,6 +459,7 @@ msgstr "Минулі події"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:67
+#: code:addons/website_event/static/src/js/website.tour.event.js:111
 #, python-format
 msgid "Once you click on save, your event is updated."
 msgstr "При натисканні на 'Зберегти', подію буде оновлено."
@@ -473,6 +488,12 @@ msgstr "Наші події"
 #: model:ir.ui.view,arch_db:website_event.event_right_photos
 msgid "Our Trainings"
 msgstr "Наші тренінги"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_details
+#: model:ir.ui.view,arch_db:website_event.index
+msgid "Participating"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -507,7 +528,7 @@ msgid "Reference"
 msgstr "Посилання"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:53
+#: code:addons/website_event/models/event.py:63
 #, python-format
 msgid "Register"
 msgstr "Зареєструватися"
@@ -569,7 +590,7 @@ msgid "Start Tutorial"
 msgstr "Почати інструктаж"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:43
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "This Week"
 msgstr "Цього тижня"
@@ -591,7 +612,7 @@ msgstr ""
 "Це - Ваша нова сторінка події. Ми відредагуємо сторінку презентації події."
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:51
+#: code:addons/website_event/controllers/main.py:47
 #, python-format
 msgid "This month"
 msgstr "Цього місяця"
@@ -607,7 +628,7 @@ msgid "Ticket Type #"
 msgstr "Тип квитка #"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:39
+#: code:addons/website_event/controllers/main.py:35
 #, python-format
 msgid "Today"
 msgstr "Сьогодні"
@@ -635,13 +656,24 @@ msgstr "Видимий на сайті"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "We are glad to confirm your subscription to our event"
+#, fuzzy
+msgid "We are glad to confirm your registration to our event"
 msgstr "Ми раді підтвердити Вашу підписку на нашу подію"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
 msgstr "Головна сторінка"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_message_ids
+msgid "Website Messages"
+msgstr "Повідомлення з веб-сайту"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event_website_message_ids
+msgid "Website communication history"
+msgstr "Історія бесіди на веб-сайті"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -666,13 +698,9 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Your subscription"
-msgstr "Ваша підписка"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "not published"
-msgstr "не опубліковано"
+#, fuzzy
+msgid "Your registration"
+msgstr "Скасувати реєстрацію"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -689,20 +717,36 @@ msgstr "зміщення вправо"
 msgid "to"
 msgstr "по"
 
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.index
+#, fuzzy
+msgid "unpublished"
+msgstr "не опубліковано"
+
+#~ msgid "%(month)s %(start_day)s%(end_day)s"
+#~ msgstr "%(month)s %(start_day)s%(end_day)s"
+
 #~ msgid "Drag the 'Text Block' in your event page."
 #~ msgstr "Перетягніть 'Текстовий блок' на сторінку своєї події."
+
+#~ msgid "End of Subscription"
+#~ msgstr "Закінчення передплати"
+
+#~ msgid "Event Subscription"
+#~ msgstr "Підписка на подію"
+
+#~ msgid ""
+#~ "The <em>Content</em> menu allows you to create new pages, events, menus, "
+#~ "etc."
+#~ msgstr ""
+#~ "Меню <em>Контент</em> дозволяє створювати нові сторінки, події, меню, і т."
+#~ "д.."
 
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr "URL-адреса повністю, для доступу до документації через сайт"
 
-#~ msgid "Website Messages"
-#~ msgstr "Повідомлення з веб-сайту"
-
 #~ msgid "Website URL"
 #~ msgstr "URL сайту"
-
-#~ msgid "Website communication history"
-#~ msgstr "Історія бесіди на веб-сайті"
 
 #~ msgid "Website meta description"
 #~ msgstr "Мета-опис сайту"
@@ -712,3 +756,6 @@ msgstr "по"
 
 #~ msgid "Website meta title"
 #~ msgstr "Мета-заголовок сайту"
+
+#~ msgid "Your subscription"
+#~ msgstr "Ваша підписка"

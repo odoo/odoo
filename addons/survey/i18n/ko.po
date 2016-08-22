@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-01-25 08:56+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
@@ -38,7 +38,7 @@ msgid "#Questions"
 msgstr "#질문"
 
 #. module: survey
-#: code:addons/survey/survey.py:231
+#: code:addons/survey/survey.py:232
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (사본)"
@@ -288,9 +288,15 @@ msgstr "답변함"
 #: model:ir.model.fields,field_description:survey.field_survey_question_user_input_line_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_user_input_line_ids
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
 msgstr "응답"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Archived"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -326,6 +332,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.simple_choice
 msgid "Choose..."
 msgstr "선택..."
+
+#. module: survey
+#: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
+#, fuzzy
+msgid "Clean test answers"
+msgstr "답변 날짜"
 
 #. module: survey
 #: code:addons/survey/survey.py:125
@@ -611,7 +623,6 @@ msgstr "인체 공학 및 사용의 용이성"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_error_msg
-#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Error message"
 msgstr "오류 메시지"
 
@@ -747,7 +758,7 @@ msgid "If closed, people won't be able to answer to surveys in this column."
 msgstr "마감하면 사람들이 이 컬럼의 설문 조사에 응답할 수 없습니다."
 
 #. module: survey
-#: code:addons/survey/survey.py:624
+#: code:addons/survey/survey.py:631
 #: model:survey.question,comments_message:survey.feedback_1_1
 #: model:survey.question,comments_message:survey.feedback_1_2
 #: model:survey.question,comments_message:survey.feedback_2_1
@@ -1211,11 +1222,16 @@ msgstr "구매 관리"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id
-#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_question_id
 #: model:ir.ui.view,arch_db:survey.survey_label_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Question"
+msgstr "질의"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
+#, fuzzy
+msgid "Question 2"
 msgstr "질의"
 
 #. module: survey
@@ -1492,6 +1508,7 @@ msgstr "제안"
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Survey"
@@ -1622,7 +1639,7 @@ msgid "The answer must be in the right type"
 msgstr "오른쪽 유형의 답변이어야 합니다."
 
 #. module: survey
-#: code:addons/survey/survey.py:622
+#: code:addons/survey/survey.py:629
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1714,19 +1731,19 @@ msgid "They help new users to understand Odoo"
 msgstr "새로운 사용자가 Odoo를 이해하는데 도움이 됩니다."
 
 #. module: survey
-#: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
+#: code:addons/survey/survey.py:678 code:addons/survey/tests/test_survey.py:94
 #, python-format
 msgid "This answer must be an email address"
 msgstr "이 답변은 이메일 주소여야 합니다."
 
 #. module: survey
-#: code:addons/survey/survey.py:713 code:addons/survey/tests/test_survey.py:115
+#: code:addons/survey/survey.py:720 code:addons/survey/tests/test_survey.py:115
 #, python-format
 msgid "This is not a date/time"
 msgstr "이것은 날짜/시간이 아닙니다"
 
 #. module: survey
-#: code:addons/survey/survey.py:690 code:addons/survey/tests/test_survey.py:105
+#: code:addons/survey/survey.py:697 code:addons/survey/tests/test_survey.py:105
 #, python-format
 msgid "This is not a number"
 msgstr "이것은 숫자가 아닙니다"
@@ -1746,7 +1763,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr "이 메시지는 설문 조사가 완료되면 표시됩니다."
 
 #. module: survey
-#: code:addons/survey/survey.py:621
+#: code:addons/survey/survey.py:628
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -1899,6 +1916,12 @@ msgid "Validate entry"
 msgstr "항목 검증"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
+#, fuzzy
+msgid "Validation Error message"
+msgstr "오류 메시지"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_form
 msgid "View Results"
 msgstr "결과 화면"
@@ -2003,13 +2026,13 @@ msgstr ""
 "니다)."
 
 #. module: survey
-#: code:addons/survey/survey.py:424
+#: code:addons/survey/survey.py:425
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr "질문이 없는 설문 조사 초대장은 보낼 수 없습니다."
 
 #. module: survey
-#: code:addons/survey/survey.py:429
+#: code:addons/survey/survey.py:430
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "마감된 설문 조사 초대장은 보낼 수 없습니다."
@@ -2051,6 +2074,11 @@ msgstr "귀하의 답변 검토"
 msgid "try to create and fill survey"
 msgstr ""
 
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
+msgid "unknown"
+msgstr ""
+
 #~ msgid ""
 #~ "\n"
 #~ "                \n"
@@ -2079,6 +2107,9 @@ msgstr ""
 #~ "                </div>\n"
 #~ "                \n"
 #~ "            "
+
+#~ msgid "Active domain"
+#~ msgstr "활성 도메인"
 
 #~ msgid "Author"
 #~ msgstr "작성자"
@@ -2117,8 +2148,14 @@ msgstr ""
 #~ msgid "From"
 #~ msgstr "시작일"
 
+#~ msgid "Human Ressources"
+#~ msgstr "인사 관리"
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
+
+#~ msgid "If other, precise:"
+#~ msgstr "다른 경우의 정밀도 :"
 
 #~ msgid "Initial thread message."
 #~ msgstr "초기 스레드 메시지."

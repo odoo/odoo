@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2015-11-18 18:13+0000\n"
 "Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
@@ -30,40 +30,6 @@ msgstr "; plusieurs commandes trouvées"
 #, python-format
 msgid "; no order found"
 msgstr "; aucune commande trouvée"
-
-#. module: payment_sips
-#: model:payment.acquirer,cancel_msg:payment_sips.payment_acquirer_sips
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>Annuler,</i> votre paiement a été annulé.</span>"
-
-#. module: payment_sips
-#: model:payment.acquirer,done_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr ""
-"<span><i>Terminé,</i> votre paiement en ligne a été enregistré. Merci de "
-"votre commande.</span>"
-
-#. module: payment_sips
-#: model:payment.acquirer,error_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-"<span><i>Erreur,</i> une erreur est survenue pendant la transaction. La "
-"commande a été confirmée mais ne sera pas payée. N'hésitez pas à nous "
-"contacter si vous avez une question sur le statut de votre commande.</span>"
-
-#. module: payment_sips
-#: model:payment.acquirer,pending_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr ""
-"<span><i>En cours,</i> votre paiement en ligne a été enregistré. Mais votre "
-"commande n'est pas encore validée.</span>"
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/sips.py:84
@@ -98,20 +64,45 @@ msgid "SIPS Secret"
 msgstr "Secret SIPS"
 
 #. module: payment_sips
-#: model:payment.acquirer,name:payment_sips.payment_acquirer_sips
-msgid "Sips"
-msgstr "Sips"
-
-#. module: payment_sips
 #: code:addons/payment_sips/models/sips.py:159
 #, python-format
 msgid "Sips: received data for reference %s"
 msgstr "Sips: a reçu les données avec pour référence %s"
 
-#. module: payment_sips
-#: model:payment.acquirer,pre_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"You will be redirected to the Sips website after clicking on payment button."
-msgstr ""
-"Vous serez redirigé sur le site Sips après avoir cliqué sur le bouton de "
-"paiement."
+#~ msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+#~ msgstr "<span><i>Annuler,</i> votre paiement a été annulé.</span>"
+
+#~ msgid ""
+#~ "<span><i>Done,</i> Your online payment has been successfully processed. "
+#~ "Thank you for your order.</span>"
+#~ msgstr ""
+#~ "<span><i>Terminé,</i> votre paiement en ligne a été enregistré. Merci de "
+#~ "votre commande.</span>"
+
+#~ msgid ""
+#~ "<span><i>Error,</i> Please be aware that an error occurred during the "
+#~ "transaction. The order has been confirmed but won't be paid. Don't "
+#~ "hesitate to contact us if you have any questions on the status of your "
+#~ "order.</span>"
+#~ msgstr ""
+#~ "<span><i>Erreur,</i> une erreur est survenue pendant la transaction. La "
+#~ "commande a été confirmée mais ne sera pas payée. N'hésitez pas à nous "
+#~ "contacter si vous avez une question sur le statut de votre commande.</"
+#~ "span>"
+
+#~ msgid ""
+#~ "<span><i>Pending,</i> Your online payment has been successfully "
+#~ "processed. But your order is not validated yet.</span>"
+#~ msgstr ""
+#~ "<span><i>En cours,</i> votre paiement en ligne a été enregistré. Mais "
+#~ "votre commande n'est pas encore validée.</span>"
+
+#~ msgid "Sips"
+#~ msgstr "Sips"
+
+#~ msgid ""
+#~ "You will be redirected to the Sips website after clicking on payment "
+#~ "button."
+#~ msgstr ""
+#~ "Vous serez redirigé sur le site Sips après avoir cliqué sur le bouton de "
+#~ "paiement."

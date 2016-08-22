@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-04-04 22:40+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bosnian (http://www.transifex.com/odoo/odoo-9/language/bs/)\n"
@@ -82,11 +82,6 @@ msgid "Manage your payment methods"
 msgstr ""
 
 #. module: website_payment
-#: model:ir.ui.view,arch_db:website_payment.pay_methods
-msgid "My Account"
-msgstr ""
-
-#. module: website_payment
 #: code:addons/website_payment/controllers/main.py:43
 #, python-format
 msgid "Pay Now"
@@ -114,6 +109,12 @@ msgid "Payment Methods"
 msgstr "Metoda plaćanja"
 
 #. module: website_payment
+#: model:ir.model,name:website_payment.model_payment_transaction
+#, fuzzy
+msgid "Payment Transaction"
+msgstr "Način plaćanja"
+
+#. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 msgid "Payment processed by"
 msgstr ""
@@ -123,6 +124,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "Reference"
 msgstr "Referenca"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_payment_transaction_sale_order_id
+msgid "Sale Order"
+msgstr ""
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_sale_order
+msgid "Sales Order"
+msgstr ""
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay

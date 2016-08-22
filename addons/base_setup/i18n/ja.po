@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-07-14 07:14+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
@@ -51,7 +51,6 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Apply"
 msgstr "適用"
 
@@ -67,20 +66,8 @@ msgstr "認証"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Cancel"
 msgstr "取消"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "顧客"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
-msgid "Configure Sales"
-msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -94,34 +81,18 @@ msgstr "会社のデータを設定"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "作成者"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "作成日"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "顧客"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 msgid "Display Name"
 msgstr "表示名"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr "提供者"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -155,19 +126,7 @@ msgid "Google Integration"
 msgstr ""
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr "ゲスト"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
-msgid "How do you call a Customer"
-msgstr "どのように顧客を呼びますか"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
 
@@ -183,22 +142,16 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "最終更新日"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "最終更新者"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "最終更新日"
 
@@ -211,11 +164,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
 msgid "Manage multiple companies"
 msgstr "複数の会社を管理"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "メンバー"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -233,16 +181,6 @@ msgid ""
 "Once installed, you can configure your API credentials for \"Google calendar"
 "\""
 msgstr ""
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "取引先"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr "お待ちください。"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -275,16 +213,6 @@ msgid "Shared resources"
 msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid "Specify Your Terminology"
-msgstr "用語の定義"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr "テナント"
-
-#. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
 msgid "This installs the module google_calendar."
 msgstr "google_calendar モジュールをインストールします。"
@@ -303,13 +231,8 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "\"顧客\"を言い表す他の言葉を使用してください。"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers, sign in with Google..."
+msgid "Use external authentication providers (OAuth)"
 msgstr ""
 
 #. module: base_setup
@@ -333,15 +256,6 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
-msgstr ""
-"アプリケーション全体の顧客の用語を変更するには、このウィザードを使用すること"
-"ができます。"
-
-#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "You will find more options in your company details: address for the header "
@@ -355,12 +269,45 @@ msgstr ""
 msgid "base.config.settings"
 msgstr "base.config.settings"
 
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr "base.setup.terminology"
+#~ msgid "Client"
+#~ msgstr "顧客"
 
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr ""
+#~ msgid "Customer"
+#~ msgstr "顧客"
+
+#~ msgid "Donor"
+#~ msgstr "提供者"
+
+#~ msgid "Guest"
+#~ msgstr "ゲスト"
+
+#~ msgid "How do you call a Customer"
+#~ msgstr "どのように顧客を呼びますか"
+
+#~ msgid "Member"
+#~ msgstr "メンバー"
+
+#~ msgid "Partner"
+#~ msgstr "取引先"
+
+#~ msgid "Patient"
+#~ msgstr "お待ちください。"
+
+#~ msgid "Specify Your Terminology"
+#~ msgstr "用語の定義"
+
+#~ msgid "Tenant"
+#~ msgstr "テナント"
+
+#~ msgid "Use another word to say \"Customer\""
+#~ msgstr "\"顧客\"を言い表す他の言葉を使用してください。"
+
+#~ msgid ""
+#~ "You can use this wizard to change the terminologies for customers in the "
+#~ "whole application."
+#~ msgstr ""
+#~ "アプリケーション全体の顧客の用語を変更するには、このウィザードを使用するこ"
+#~ "とができます。"
+
+#~ msgid "base.setup.terminology"
+#~ msgstr "base.setup.terminology"

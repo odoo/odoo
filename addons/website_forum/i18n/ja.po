@@ -1,4 +1,3 @@
-# #-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_forum
@@ -7,31 +6,18 @@
 # Manami Hashi <manami@roomsfor.hk>, 2016
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
-# #-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * website_forum
-#
-# Translators:
-# Manami Hashi <manami@roomsfor.hk>, 2016
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015
-# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-22 08:38+0000\n"
-"Last-Translator: 高木正勝 <masakatsu.takagi@pro-spire.co.jp>\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"PO-Revision-Date: 2016-07-24 15:17+0000\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_forum
@@ -95,11 +81,16 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:23
+#: code:addons/website_forum/static/src/js/website_forum.js:21
 #, python-format
 msgid ""
 " karma is required to perform this action. You can earn karma by having your "
 "answers upvoted by the community."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_task_count
+msgid "# Tasks"
 msgstr ""
 
 #. module: website_forum
@@ -120,6 +111,20 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "(The above section was adapted from Stackoverflow’s FAQ.)"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid ""
+"(Un)archiving a forum automatically (un)archives its posts. Do you want to "
+"proceed?"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
+msgid ""
+"(Un)archiving a post automatically (un)archives its answers. Do you want to "
+"proceed?"
 msgstr ""
 
 #. module: website_forum
@@ -407,7 +412,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:114
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:118
 #, python-format
 msgid "Accept Answer"
 msgstr ""
@@ -434,6 +439,7 @@ msgstr ""
 
 #. module: website_forum
 #: selection:forum.post,state:0
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_active
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_active
 msgid "Active"
 msgstr "有効"
@@ -445,7 +451,7 @@ msgstr "活動"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:19
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:23
 #, python-format
 msgid "Add Content"
 msgstr ""
@@ -483,14 +489,14 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:94
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:98
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #, python-format
 msgid "Answer"
 msgstr "回答"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:498
+#: code:addons/website_forum/models/forum.py:507
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -499,7 +505,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:108
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:112
 #, python-format
 msgid "Answer Posted"
 msgstr ""
@@ -583,6 +589,12 @@ msgid "Answers"
 msgstr "回答"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_view_search
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Archived"
+msgstr ""
+
+#. module: website_forum
 #: selection:forum.post,post_type:0
 msgid "Article"
 msgstr ""
@@ -594,7 +606,7 @@ msgstr "質問する"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:53
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:57
 #: model:ir.ui.view,arch_db:website_forum.header
 #, python-format
 msgid "Ask a Question"
@@ -612,7 +624,8 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:56
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:60
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:150
 #, python-format
 msgid "Ask the question in this forum by clicking on the button."
 msgstr ""
@@ -679,14 +692,9 @@ msgstr ""
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:322
-#: code:addons/website_forum/controllers/main.py:389
+#: code:addons/website_forum/controllers/main.py:393
 #, python-format
 msgid "Bad Request"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.badge_user
-msgid "Badge \""
 msgstr ""
 
 #. module: website_forum
@@ -828,14 +836,16 @@ msgstr "市区町村"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:44
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:48
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:145
 #, python-format
 msgid "Click <em>Continue</em> to create the forum."
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:117
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:121
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:181
 #, python-format
 msgid "Click here to accept this answer."
 msgstr ""
@@ -859,14 +869,16 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:105
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:109
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:177
 #, python-format
 msgid "Click to post your answer."
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:85
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:89
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:168
 #, python-format
 msgid "Click to post your question."
 msgstr ""
@@ -881,7 +893,7 @@ msgstr "閉じる"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:123
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:127
 #, python-format
 msgid "Close Tutorial"
 msgstr ""
@@ -966,14 +978,14 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:120
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:124
 #, python-format
 msgid "Congratulations"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:122
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:126
 #, python-format
 msgid ""
 "Congratulations! You just created and post your first question and answer."
@@ -994,9 +1006,9 @@ msgstr "コンテンツ"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:50
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:91
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:111
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:54
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:95
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:115
 #, python-format
 msgid "Continue"
 msgstr "続き"
@@ -1043,21 +1055,21 @@ msgstr "作成日"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:40
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:44
 #, python-format
 msgid "Create Forum"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:14
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:18
 #, python-format
 msgid "Create a Question!"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:11
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:15
 #, python-format
 msgid "Create a question"
 msgstr ""
@@ -1259,7 +1271,8 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:37
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:41
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:140
 #, python-format
 msgid "Enter a name for your new forum."
 msgstr ""
@@ -1381,6 +1394,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_forum_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_forum_id
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_view_search
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 #: model:website.menu,name:website_forum.menu_questions
@@ -1400,7 +1414,7 @@ msgstr "フォーラムカルマ"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:33
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:37
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_name
 #, python-format
 msgid "Forum Name"
@@ -1453,14 +1467,15 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:74
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:78
 #, python-format
 msgid "Give Tag"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:63
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:67
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:154
 #, python-format
 msgid "Give your question title."
 msgstr ""
@@ -1594,7 +1609,8 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:78
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:82
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:163
 #, python-format
 msgid "Insert tags related to your question."
 msgstr ""
@@ -1717,7 +1733,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:15
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:19
 #, python-format
 msgid "Let's go through the first steps to create a new question."
 msgstr ""
@@ -1770,6 +1786,14 @@ msgid "Most voted"
 msgstr "投票数が多い"
 
 #. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:48
+#, python-format
+msgid ""
+"Move this question to the top of the list by sharing it on social networks."
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_user_vote
 msgid "My Vote"
 msgstr ""
@@ -1795,7 +1819,7 @@ msgstr "新しいディスカッション"
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_forum.editor.js:14
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:26
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:30
 #: model:ir.ui.view,arch_db:website_forum.content_new_forum
 #, python-format
 msgid "New Forum"
@@ -1803,7 +1827,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:47
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:51
 #, python-format
 msgid "New Forum Created"
 msgstr ""
@@ -1817,7 +1841,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:88
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:92
 #, python-format
 msgid "New Question Created"
 msgstr ""
@@ -1857,20 +1881,20 @@ msgid "Nofollow links"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:833
-#: code:addons/website_forum/models/forum.py:853
+#: code:addons/website_forum/models/forum.py:859
+#: code:addons/website_forum/models/forum.py:879
 #, python-format
 msgid "Not allowed to vote for its own post"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:897
+#: code:addons/website_forum/models/forum.py:923
 #, python-format
 msgid "Not enough karma to create a new Tag"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:488
+#: code:addons/website_forum/models/forum.py:497
 #, python-format
 msgid "Not enough karma to retag."
 msgstr ""
@@ -2005,7 +2029,7 @@ msgstr "投稿"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:101
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:105
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 #, python-format
 msgid "Post Answer"
@@ -2028,7 +2052,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:81
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:85
 #, python-format
 msgid "Post Question"
 msgstr ""
@@ -2069,7 +2093,7 @@ msgid "Posted 100 comments"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:432
+#: code:addons/website_forum/models/forum.py:441
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible"
 msgstr ""
@@ -2100,22 +2124,16 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:48
-#, python-format
-msgid ""
-"Put this question back in the top list by sharing it on social networks."
-msgstr ""
-
-#. module: website_forum
-#. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:98
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:102
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:172
 #, python-format
 msgid "Put your answer here."
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:71
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:75
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:158
 #, python-format
 msgid "Put your question here."
 msgstr ""
@@ -2127,7 +2145,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:66
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:70
 #: selection:forum.forum,default_post_type:0 selection:forum.post,post_type:0
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_parent_id
 #, python-format
@@ -2135,7 +2153,7 @@ msgid "Question"
 msgstr "質問"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:501
+#: code:addons/website_forum/models/forum.py:510
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2144,7 +2162,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:59
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:63
 #, python-format
 msgid "Question Title"
 msgstr ""
@@ -2213,7 +2231,7 @@ msgid "Questions"
 msgstr "質問"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:515
+#: code:addons/website_forum/models/forum.py:528
 #, python-format
 msgid "Re: %s"
 msgstr ""
@@ -2332,7 +2350,8 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:29
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:33
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:136
 #, python-format
 msgid "Select this menu item to create a new forum."
 msgstr ""
@@ -2388,28 +2407,35 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:16
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:20
 #, python-format
 msgid "Skip It"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:66
+#: code:addons/website_forum/static/src/js/website_forum.js:23
+#, python-format
+msgid "Sorry you must be logged in to perform this action"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:70
 #, python-format
 msgid "Sorry you must be logged to flag a post"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:114
+#: code:addons/website_forum/static/src/js/website_forum.js:118
 #, python-format
 msgid "Sorry you must be logged to vote"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:145
+#: code:addons/website_forum/static/src/js/website_forum.js:149
 #, python-format
 msgid "Sorry, anonymous users cannot choose correct answer."
 msgstr ""
@@ -2421,7 +2447,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:109
+#: code:addons/website_forum/static/src/js/website_forum.js:113
 #, python-format
 msgid "Sorry, you cannot vote for your own posts"
 msgstr ""
@@ -2433,7 +2459,7 @@ msgstr "並べ替え順"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:16
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:20
 #, python-format
 msgid "Start Tutorial"
 msgstr ""
@@ -2498,6 +2524,11 @@ msgstr "そのタグ名は既に使われています！"
 #: model:ir.ui.view,arch_db:website_forum.tag
 msgid "Tags"
 msgstr "タグ"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_task_ids
+msgid "Tasks"
+msgstr ""
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_32
@@ -2591,42 +2622,42 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:408
+#: code:addons/website_forum/models/forum.py:417
 #, python-format
 msgid "This forum does not allow %s"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:49
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:53
 #, python-format
 msgid "This page contains all the information related to the new forum."
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:110
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:114
 #, python-format
 msgid "This page contains the newly created questions and its answers."
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:90
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:94
 #, python-format
 msgid "This page contains the newly created questions."
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:76
+#: code:addons/website_forum/static/src/js/website_forum.js:80
 #, python-format
 msgid "This post can not be flagged"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:71
+#: code:addons/website_forum/static/src/js/website_forum.js:75
 #, python-format
 msgid "This post is already flagged"
 msgstr ""
@@ -2654,7 +2685,7 @@ msgstr ""
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:322
-#: code:addons/website_forum/controllers/main.py:389
+#: code:addons/website_forum/controllers/main.py:393
 #, python-format
 msgid "Title should not be empty."
 msgstr ""
@@ -2665,17 +2696,18 @@ msgid "To"
 msgstr "宛先"
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.new_question
-msgid "To improve your chance getting an answer:"
-msgstr "回答を得られる可能性を高めるため、"
-
-#. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "To prevent your question from being flagged and possibly removed, avoid "
 "asking\n"
 "    subjective questions where …"
 msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_count
+#, fuzzy
+msgid "Total Votes"
+msgstr "投票数"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -2759,7 +2791,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:22
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:26
 #, python-format
 msgid ""
 "Use this button to create a new forum like any other document (page, menu, "
@@ -2789,7 +2821,7 @@ msgid "Validate question"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:777
+#: code:addons/website_forum/models/forum.py:803
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #, python-format
 msgid "View"
@@ -2807,7 +2839,6 @@ msgid "Vote"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_count
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_ids
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Votes"
@@ -2821,6 +2852,11 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Waiting for validation"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_forum_waiting_posts_count
+msgid "Waiting post"
 msgstr ""
 
 #. module: website_forum
@@ -2878,7 +2914,15 @@ msgid "Why can other people edit my questions/answers?"
 msgstr "なぜ他の人が自分の質問/回答を編集できるのですか？"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:141
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"You already have one pending post.<br/>\n"
+"            Please wait for a moderator to validate your previous post "
+"before continuing."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:142
 #, python-format
 msgid "You cannot choose %s as default post since the forum does not allow it."
 msgstr ""
@@ -3197,11 +3241,6 @@ msgid "racist and hate speech"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.badge_user
-msgid "received this badge:"
-msgstr ""
-
-#. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "silver"
 msgstr ""
@@ -3251,16 +3290,6 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "upvote, add comments"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.badge_user
-msgid "user"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.badge_user
-msgid "users"
 msgstr ""
 
 #. module: website_forum
@@ -3330,6 +3359,9 @@ msgstr ""
 #~ msgid "Last Message Date"
 #~ msgstr "最終メッセージ日"
 
+#~ msgid "Messages"
+#~ msgstr "メッセージ"
+
 #~ msgid "Messages and communication history"
 #~ msgstr "メッセージと通信履歴"
 
@@ -3341,6 +3373,9 @@ msgstr ""
 
 #~ msgid "Send a message to the group"
 #~ msgstr "グループにメッセージを送信"
+
+#~ msgid "To improve your chance getting an answer:"
+#~ msgstr "回答を得られる可能性を高めるため、"
 
 #~ msgid "Unread Messages"
 #~ msgstr "未読メッセージ"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-01-06 08:49+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
@@ -39,7 +39,7 @@ msgstr ""
 "<strong>Respondeu</strong>"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:632
+#: code:addons/mass_mailing/models/mass_mailing.py:452
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -460,6 +460,11 @@ msgid "Archived"
 msgstr "Arquivado"
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_maintenance_equipment_category
+msgid "Asset Category"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Attach a file"
 msgstr "Anexar um arquivo"
@@ -507,7 +512,13 @@ msgid "Bounced Ratio"
 msgstr "Proporção Devolvida"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3605
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_bounced_ratio
+#, fuzzy
+msgid "Bounced ratio"
+msgstr "Proporção Devolvida"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3629
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Campaign"
 msgstr "Campanha"
@@ -521,6 +532,14 @@ msgstr "Nome da Campanha"
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.menu_view_mass_mailing_stages
 msgid "Campaign Stages"
+msgstr "Estágios da Campanha"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.mass_mailing_tag_action
+#: model:ir.ui.menu,name:mass_mailing.mass_mailing_tag_menu
+#: model:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_tag_view_form
+#, fuzzy
+msgid "Campaign Tags"
 msgstr "Estágios da Campanha"
 
 #. module: mass_mailing
@@ -563,6 +582,18 @@ msgstr "Clique aqui para criar uma nova lista de correspondência.."
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
 msgid "Click here to create a new mailing."
+msgstr "Clique aqui para criar uma nova correspondência."
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_email_template_marketing
+#, fuzzy
+msgid "Click here to create a new template."
+msgstr "Clique aqui para criar uma nova correspondência."
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.mass_mailing_tag_action
+#, fuzzy
+msgid "Click to add a new tag."
 msgstr "Clique aqui para criar uma nova correspondência."
 
 #. module: mass_mailing
@@ -757,11 +788,6 @@ msgid "Delivered"
 msgstr "Entregue"
 
 #. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_hr_department
-msgid "Department"
-msgstr ""
-
-#. module: mass_mailing
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_2
 msgid "Design"
 msgstr "Design"
@@ -819,7 +845,7 @@ msgid "Domain"
 msgstr "Domínio"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:640
+#: code:addons/mass_mailing/models/mass_mailing.py:461
 #: selection:mail.mass_mailing,state:0 selection:mail.statistics.report,state:0
 #, python-format
 msgid "Draft"
@@ -869,6 +895,11 @@ msgstr "Estatísticas de Emails"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_hr_employee
 msgid "Employee"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_maintenance_equipment
+msgid "Equipment"
 msgstr ""
 
 #. module: mass_mailing
@@ -1000,6 +1031,11 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_hr_department
+msgid "Hr Department"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_id
@@ -1037,7 +1073,7 @@ msgstr ""
 "dos mailings."
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:640
+#: code:addons/mass_mailing/models/mass_mailing.py:461
 #: selection:mail.mass_mailing,state:0
 #, python-format
 msgid "In Queue"
@@ -1162,13 +1198,20 @@ msgid "Mail Templates"
 msgstr "Modelos de e-mail"
 
 #. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_email_template_marketing
+msgid ""
+"Mail templates are meant to design e-mails that can be used for several mass "
+"mailing campaigns."
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_mass_mailing_id
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Mailing"
 msgstr "Mailing"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:431
+#: code:addons/mass_mailing/models/mass_mailing.py:304
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_list
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message_mailing_list_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_list_id
@@ -1232,6 +1275,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Mailings"
 msgstr "Mala Direta"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_maintenance_request
+msgid "Maintenance Requests"
+msgstr ""
 
 #. module: mass_mailing
 #: model:res.groups,name:mass_mailing.group_mass_mailing_campaign
@@ -1365,6 +1413,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_module_mass_mailing_themes
+#: model:ir.ui.view,arch_db:mass_mailing.view_mass_mailing_configuration
 msgid "Mass mailing themes"
 msgstr "Temas para email em massa"
 
@@ -1384,6 +1433,11 @@ msgstr "ID da Mensagem"
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "Michael Fletcher"
 msgstr "Michael Fletcher"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mass_mailing_configuration
+msgid "More Info"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -1498,7 +1552,7 @@ msgid "Place Order"
 msgstr "Fazer Pedido"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:764
+#: code:addons/mass_mailing/models/mass_mailing.py:579
 #, python-format
 msgid "Please select recipients."
 msgstr "Por favor, selecione destinatários."
@@ -1632,14 +1686,15 @@ msgid "Scheduled"
 msgstr "Agendado"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_scheduled_date
-msgid "Scheduled Date"
-msgstr "Data Programada"
-
-#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "Scheduled Month"
 msgstr "Agendado Mensalmente"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_scheduled_date
+#, fuzzy
+msgid "Scheduled date"
+msgstr "Data Programada"
 
 #. module: mass_mailing
 #: model:mail.mass_mailing,name:mass_mailing.mass_mail_2
@@ -1709,14 +1764,14 @@ msgid "Send to All"
 msgstr "Enviar para todos"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:640
+#: code:addons/mass_mailing/models/mass_mailing.py:461
 #: selection:mail.mass_mailing,state:0
 #, python-format
 msgid "Sending"
 msgstr "Enviando"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:640
+#: code:addons/mass_mailing/models/mass_mailing.py:461
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_sent
@@ -1874,7 +1929,7 @@ msgid "Templates"
 msgstr "Modelos"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:716
+#: code:addons/mass_mailing/models/mass_mailing.py:516
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #, python-format
 msgid "Test Mailing"
@@ -1924,7 +1979,7 @@ msgstr "Este envio em massa está programado para"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_campaign_id
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3605
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3629
 #, fuzzy
 msgid ""
 "This name helps you tracking your different campaign efforts, e.g. "
@@ -1944,6 +1999,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_total
 msgid "Total"
 msgstr "Total"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_links_search
+msgid "Tracked Link"
+msgstr "Link Rastreado"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
@@ -2018,7 +2078,7 @@ msgid "You get a 20% discount for signing up!"
 msgstr "Você ganha um desconto de 20% para se inscrever!"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/controllers/main.py:25
+#: code:addons/mass_mailing/controllers/main.py:26
 #, python-format
 msgid "You have been unsubscribed successfully"
 msgstr ""
@@ -2084,17 +2144,23 @@ msgid "template"
 msgstr "modelo"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_bounced_ratio
-msgid "unknown"
-msgstr "desconhecido"
-
-#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "© 2014 All Rights Reserved"
 msgstr "© 2014 Todos os direitos registrados"
 
 #~ msgid ""
 #~ "&amp;nbsp;\n"
+#~ "                                                <span class=\"fa fa-10x "
+#~ "fa-music\"/>\n"
+#~ "                                                &amp;nbsp;"
+#~ msgstr ""
+#~ "&amp;nbsp;\n"
+#~ "                                                <span class=\"fa fa-10x "
+#~ "fa-music\"/>\n"
+#~ "                                                &amp;nbsp;"
+
+#~ msgid ""
+#~ "&amp;nbsp;\n"
 #~ "                                <span class=\"fa fa-10x fa-music\"/>\n"
 #~ "                                &amp;nbsp;"
 #~ msgstr ""
@@ -2128,12 +2194,74 @@ msgstr "© 2014 Todos os direitos registrados"
 #~ "&amp;nbsp;\n"
 #~ "                                <span class=\"fa fa-usd fa-3x\"/>\n"
 #~ "                                &amp;nbsp;"
+
+#~ msgid ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-justify fa-stack-1x\" style=\" margin-"
+#~ "top: 0.7em; height: 0.9em; display: inline-block; overflow: hidden;\"/>\n"
+#~ "            <i class=\"fa fa-arrow-down fa-stack-1x\" style=\"display: "
+#~ "inline-block; font-size: 0.6em; margin-top: -0.15em;\"/>\n"
+#~ "        </span> Footers"
+#~ msgstr ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-justify fa-stack-1x\" style=\" margin-"
+#~ "top: 0.7em; height: 0.9em; display: inline-block; overflow: hidden;\"/>\n"
+#~ "            <i class=\"fa fa-arrow-down fa-stack-1x\" style=\"display: "
+#~ "inline-block; font-size: 0.6em; margin-top: -0.15em;\"/>\n"
+#~ "        </span> Rodapés"
+
+#~ msgid ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-justify fa-stack-1x\" style=\"margin-"
+#~ "top: -0.15em; height: 0.9em; display: inline-block; overflow: hidden;\"/"
+#~ ">\n"
+#~ "            <i class=\"fa fa-arrow-up fa-stack-1x\" style=\"margin-top: "
+#~ "0.25em; display: inline-block; font-size: 0.6em;\"/>\n"
+#~ "        </span> Headers"
+#~ msgstr ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "<i class=\"fa fa-align-justify fa-stack-1x\" style=\"margin-top: -0.15em; "
+#~ "height: 0.9em; display: inline-block; overflow: hidden;\"/>\n"
+#~ "<i class=\"fa fa-arrow-up fa-stack-1x\" style=\"margin-top: 0.25em; "
+#~ "display: inline-block; font-size: 0.6em;\"/>\n"
+#~ "</span> Cabeçalhos"
+
+#~ msgid ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-left fa-stack-1x\" style=\"display: "
+#~ "inline-block; height: 0.93em; margin-top: 0.3em; overflow: hidden;\"/>\n"
+#~ "        </span> Extra"
+#~ msgstr ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-left fa-stack-1x\" style=\"display: "
+#~ "inline-block; height: 0.93em; margin-top: 0.3em; overflow: hidden;\"/>\n"
+#~ "        </span> Extra"
+
+#~ msgid ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-left fa-stack-1x\"/>\n"
+#~ "        </span> Body"
+#~ msgstr ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-left fa-stack-1x\"/>\n"
+#~ "        </span> Conteudo"
 
 #~ msgid "Action Needed"
 #~ msgstr "Ação Necessária"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Data da ultima mensagem para o registro."
+
+#~ msgid ""
+#~ "Dear Bob,<br/>\n"
+#~ "                                    We would like you to know that your "
+#~ "order has shipped! To track your order or make any changes please click "
+#~ "the \"my order\" button below."
+#~ msgstr ""
+#~ "Caro Bob,<br/>\n"
+#~ "Gostaríamos que você saiba que o seu pedido foi enviado! Para acompanhar "
+#~ "o seu pedido ou fazer qualquer alteração, por favor clique no botão \"meu "
+#~ "pedido\" abaixo."
 
 #~ msgid "Email Campaign - Products"
 #~ msgstr "Campanha por E-mail - Produtos"
@@ -2147,11 +2275,42 @@ msgstr "© 2014 Todos os direitos registrados"
 #~ msgid "Followers (Partners)"
 #~ msgstr "Seguidores (Parceiros)"
 
+#~ msgid ""
+#~ "Great stories have personality. Consider telling a great story that "
+#~ "provides personality. Writing a story with personality for potential "
+#~ "clients will assist with making a relationship connection. This shows up "
+#~ "in small quirks like word choices or phrases. Write from your point of "
+#~ "view, not from someone else's experience.<br/>"
+#~ msgstr ""
+#~ "Grandes histórias têm personalidade. Considere dizendo\n"
+#~ "uma grande história que oferece personalidade. Escrever uma história\n"
+#~ "com personalidade para os potenciais clientes irão \n"
+#~ "efetuar uma ligação entre vocês.\n"
+#~ "Particularidades como escolhas ou frases da palavra. Faça do seu ponto\n"
+#~ "de vista, não da experiência de outra pessoa."
+
+#~ msgid ""
+#~ "ID of the related mail_mail. This field is an integer field becausethe "
+#~ "related mail_mail can be deleted separately from its statistics.However "
+#~ "the ID is needed for several action and controllers."
+#~ msgstr ""
+#~ "ID do mail_mail relacionada. Este campo é um campo inteiro porque o "
+#~ "mail_mail relacionado pode ser apagada em separado as suas estatísticas. "
+#~ "No entanto, o ID é necessário para várias ações e controladores."
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
+
+#~ msgid ""
+#~ "If checked, recipients will be mailed only once, allowing to sendvarious "
+#~ "mailings in a single campaign to test the effectivenessof the mailings."
+#~ msgstr ""
+#~ "Se selecionado, os destinatários serão enviados apenas uma vez, "
+#~ "permitindo enviar várias correspondências em uma única campanha para "
+#~ "testar a eficácia dos mailings."
 
 #~ msgid "Is Follower"
 #~ msgstr "É um seguidor"
@@ -2174,11 +2333,28 @@ msgstr "© 2014 Todos os direitos registrados"
 #~ msgid "Open Mass Mailing Menu"
 #~ msgstr "Abrir Email em Massa Menu"
 
-#~ msgid "Tracked Link"
-#~ msgstr "Link Rastreado"
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "Este é o nome que te ajuda a rastrear as diferentes campanhas Ex: "
+#~ "Especial de Natal, Páscoa"
+
+#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+#~ msgstr "Este é o método de entrega. Ex: Cartão Postal, Email, Banner"
+
+#~ msgid ""
+#~ "This is the source of the link Ex: Search Engine, another domain, or name "
+#~ "of email list"
+#~ msgstr ""
+#~ "Esta é a fonte do link. Ex: Site de Busca, outro domínio, ou nome da "
+#~ "lista de emails"
 
 #~ msgid "Unread Messages"
 #~ msgstr "Mensagens não lidas"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Contador de Mensagens Não Lidas"
+
+#~ msgid "unknown"
+#~ msgstr "desconhecido"

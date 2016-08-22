@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2015-12-10 17:55+0000\n"
 "Last-Translator: Grazziano Duarte <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
@@ -24,11 +24,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
 msgid "# Issues"
 msgstr "# Ocorrências"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_count
-msgid "# Tasks"
-msgstr "# Tarefas"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
@@ -55,12 +50,6 @@ msgstr ""
 "estado do grupo do membro associado."
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
-#, fuzzy
-msgid "Activation"
-msgstr "Cotação"
-
-#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
 msgid "Associate Member"
 msgstr "Associar Membro"
@@ -71,8 +60,16 @@ msgid "Cancel Membership Date"
 msgstr "Data de Cancelamento da Associação"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
-msgid "Count Payment Method"
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:14
+#, python-format
+msgid "Click here to see more options."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_count
+#, fuzzy
+msgid "Count Payment Token"
 msgstr "Contagem de Método de Pagamento"
 
 #. module: sale_crm
@@ -104,23 +101,6 @@ msgstr "Data de até quando o grupo de membros permanece ativo."
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_free_member
 msgid "Free Member"
 msgstr "Membro Gratuito"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
-msgid ""
-"Gives the probability to assign a lead to this partner. (0 means no "
-"assignation.)"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
-msgid "Implementation References"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
-msgid "Implemented by"
-msgstr ""
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
@@ -157,23 +137,15 @@ msgstr ""
 "adesão."
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
-msgid "Latest Partner Review"
-msgstr ""
-
-#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
 msgstr "Prospecção/Oportunidade"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
-msgid "Level"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
-msgid "Level Weight"
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:18
+#, python-format
+msgid "Let's have a look at the quotations of this sales team."
 msgstr ""
 
 #. module: sale_crm
@@ -202,14 +174,20 @@ msgid "Membership Start Date"
 msgstr "Data de Início da Associação"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
+#, fuzzy
+msgid "Message for Sales Order"
+msgstr "# de Pedidos de Vendas"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
+msgid "Message for Stock Picking"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "New Quotation"
 msgstr "Nova Cotação"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
-msgid "Next Partner Review"
-msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
@@ -227,14 +205,9 @@ msgid "Orders"
 msgstr "Pedidos"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_ids
 #, fuzzy
-msgid "Partnership Date"
-msgstr "Data de Cancelamento da Associação"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
-msgid "Payment Methods"
+msgid "Payment Tokens"
 msgstr "Formas de pagamento"
 
 #. module: sale_crm
@@ -250,6 +223,7 @@ msgstr "Cotações"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn
 msgid "Sales Order"
 msgstr "Pedido de Venda"
 
@@ -257,6 +231,20 @@ msgstr "Pedido de Venda"
 #: model:ir.model.fields,help:sale_crm.field_res_users_free_member
 msgid "Select if you want to give free membership."
 msgstr "Escolha se você deseja oferecer associações gratuítas."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_picking_warn
+#: model:ir.model.fields,help:sale_crm.field_res_users_sale_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn
+msgid "Stock Picking"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
@@ -267,11 +255,6 @@ msgstr "Soma de Pedidos"
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
 msgid "Tags"
 msgstr "Marcadores"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
-msgid "Tasks"
-msgstr "Tarefas"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
@@ -309,6 +292,9 @@ msgstr "Localização de Fornecedor"
 #~ msgid "# Claims"
 #~ msgstr "# Solicitações"
 
+#~ msgid "# Tasks"
+#~ msgstr "# Tarefas"
+
 #~ msgid "Campaign"
 #~ msgstr "Campanha"
 
@@ -327,6 +313,9 @@ msgstr "Localização de Fornecedor"
 #~ msgid "Source"
 #~ msgstr "Origem"
 
+#~ msgid "Tasks"
+#~ msgstr "Tarefas"
+
 #~ msgid ""
 #~ "This is a name that helps you keep track of your different campaign "
 #~ "efforts Ex: Fall_Drive, Christmas_Special"
@@ -343,3 +332,11 @@ msgstr "Localização de Fornecedor"
 #~ msgstr ""
 #~ "Esta é a fonte do link. Ex: Site de Busca, outro domínio, ou nome da "
 #~ "lista de emails"
+
+#, fuzzy
+#~ msgid "Activation"
+#~ msgstr "Cotação"
+
+#, fuzzy
+#~ msgid "Partnership Date"
+#~ msgstr "Data de Cancelamento da Associação"

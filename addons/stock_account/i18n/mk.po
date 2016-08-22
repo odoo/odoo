@@ -4,13 +4,12 @@
 #
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-06-10 12:29+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-08-12 14:50+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
 "mk/)\n"
@@ -18,9 +17,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  mk.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
-"#-#-#-#-#  mk.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: stock_account
@@ -32,11 +28,6 @@ msgstr "# од производи"
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
 msgstr "Својства на сметката за залиха"
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
-msgid "Accounting"
-msgstr "Сметководство"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -64,18 +55,13 @@ msgid "Average Price"
 msgstr "Средна цена"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
-msgid "Can be expensed"
-msgstr "Може да биде внесено како трошок"
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Cancel"
 msgstr "Откажи"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:278
+#: code:addons/stock_account/stock_account.py:284
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on "
@@ -83,7 +69,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:280
+#: code:addons/stock_account/stock_account.py:286
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -121,13 +107,6 @@ msgid "Choose your date"
 msgstr "Изберете го вашиот датум"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_coeff
-msgid ""
-"Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
-"coeff"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Company"
@@ -140,7 +119,7 @@ msgid "Compute from average price"
 msgstr "Компјутирај од просечна цена"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:351
+#: code:addons/stock_account/stock_account.py:357
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -328,14 +307,16 @@ msgid "Location"
 msgstr "Локација"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+#, fuzzy
+msgid "Lot/Serial Number"
+msgstr "Сериски број"
+
+#. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
 msgid "Manage Inventory Valuation and Costing Methods"
 msgstr "Управувај со вреднувањето на залихи и методите на трошоци"
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Move"
-msgstr "Движење"
 
 #. module: stock_account
 #: code:addons/stock_account/product.py:125
@@ -389,11 +370,6 @@ msgid "Product"
 msgstr "Производ"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_alert_time
-msgid "Product Alert Time"
-msgstr "Време на аларм на производ"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_product_categ_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -401,19 +377,9 @@ msgid "Product Category"
 msgstr "Категорија на производ"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_life_time
-msgid "Product Life Time"
-msgstr "Животен век на производ"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
 msgid "Product Quantity"
 msgstr "Количина"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_removal_time
-msgid "Product Removal Time"
-msgstr "Време на отстранување на производ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -421,11 +387,6 @@ msgstr "Време на отстранување на производ"
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Product Template"
 msgstr "Урнек на производ"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_use_time
-msgid "Product Use Time"
-msgstr "Време на употреба на производот"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -449,12 +410,6 @@ msgid "Retrieve the curent stock valuation."
 msgstr "Превземете ја тековната валуација на залихи."
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Serial Number"
-msgstr "Сериски број"
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 #, fuzzy
@@ -465,22 +420,6 @@ msgstr "Стандардна цена"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
 msgid "Source"
 msgstr "Извор"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_id
-msgid ""
-"Specify a unit of measure here if invoicing is made in another unit of "
-"measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
-"Одредете единица мерка ако фактурирањето се прави во различна единица мерка "
-"од инвенторската. Оставете празно за да се искористи стандардната единица "
-"мерка."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
-"Означете доколку производот може да биде избран во трошок за човечки ресурси."
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -521,6 +460,12 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+#, fuzzy
+msgid "Stock Accounting"
+msgstr "Сметководство"
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
@@ -528,7 +473,7 @@ msgid "Stock Input Account"
 msgstr "Конто Влез на залиха"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:464
+#: code:addons/stock_account/stock_account.py:470
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
@@ -537,6 +482,7 @@ msgstr "Дневник залиха"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_move_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Stock Move"
 msgstr "Движење на залиха"
 
@@ -578,7 +524,7 @@ msgid "Templates for Account Chart"
 msgstr "Урнеци за контен план"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:306
+#: code:addons/stock_account/stock_account.py:312
 #, python-format
 msgid ""
 "The found valuation amount for product %s is zero. Which means there is "
@@ -590,16 +536,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
 msgid "Total Value"
 msgstr "Вкупна вредност"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_coeff
-msgid "Unit of Measure -> UOS Coeff"
-msgstr "Мерна единица -> UOS Коефициент"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_id
-msgid "Unit of Sale"
-msgstr "Единица на продажба"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
@@ -635,42 +571,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
 msgid "Value"
 msgstr "Вредност"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-"Кога се издава нов сериски број, ова е бројот на денови пред алармот да "
-"треба да даде известување."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-"Кога е издаден нов сериски број, ова е бројот на денови пред стоките да "
-"станат опасни и да не смеат да се консумираат."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-"Кога се издава нов сериски број, ова е бројот на денови пред стоките да "
-"бидат отстранети од залиха."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"Кога се издава нов сериски број, ова е бројот на денови пред состојбата на "
-"стоките да почне да се влошува, без да бидат опасни."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -755,7 +655,7 @@ msgid "Wizard that opens the stock valuation history table"
 msgstr "Волшебник кој ја отвара табелата на историја на валуација на залиха"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:276
+#: code:addons/stock_account/stock_account.py:282
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -763,7 +663,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:282
+#: code:addons/stock_account/stock_account.py:288
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category. "
@@ -796,5 +696,70 @@ msgstr "непознато"
 #~ msgid "Asset Type"
 #~ msgstr "Тип на средства"
 
+#~ msgid "Can be expensed"
+#~ msgstr "Може да биде внесено како трошок"
+
 #~ msgid "Deferred Revenue Type"
 #~ msgstr "Тип на одложен приход"
+
+#~ msgid "Move"
+#~ msgstr "Движење"
+
+#~ msgid "Product Alert Time"
+#~ msgstr "Време на аларм на производ"
+
+#~ msgid "Product Life Time"
+#~ msgstr "Животен век на производ"
+
+#~ msgid "Product Removal Time"
+#~ msgstr "Време на отстранување на производ"
+
+#~ msgid "Product Use Time"
+#~ msgstr "Време на употреба на производот"
+
+#~ msgid ""
+#~ "Specify a unit of measure here if invoicing is made in another unit of "
+#~ "measure than inventory. Keep empty to use the default unit of measure."
+#~ msgstr ""
+#~ "Одредете единица мерка ако фактурирањето се прави во различна единица "
+#~ "мерка од инвенторската. Оставете празно за да се искористи стандардната "
+#~ "единица мерка."
+
+#~ msgid "Specify whether the product can be selected in an HR expense."
+#~ msgstr ""
+#~ "Означете доколку производот може да биде избран во трошок за човечки "
+#~ "ресурси."
+
+#~ msgid "Unit of Measure -> UOS Coeff"
+#~ msgstr "Мерна единица -> UOS Коефициент"
+
+#~ msgid "Unit of Sale"
+#~ msgstr "Единица на продажба"
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "an alert should be notified."
+#~ msgstr ""
+#~ "Кога се издава нов сериски број, ова е бројот на денови пред алармот да "
+#~ "треба да даде известување."
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "the goods may become dangerous and must not be consumed."
+#~ msgstr ""
+#~ "Кога е издаден нов сериски број, ова е бројот на денови пред стоките да "
+#~ "станат опасни и да не смеат да се консумираат."
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "the goods should be removed from the stock."
+#~ msgstr ""
+#~ "Кога се издава нов сериски број, ова е бројот на денови пред стоките да "
+#~ "бидат отстранети од залиха."
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "the goods starts deteriorating, without being dangerous yet."
+#~ msgstr ""
+#~ "Кога се издава нов сериски број, ова е бројот на денови пред состојбата "
+#~ "на стоките да почне да се влошува, без да бидат опасни."

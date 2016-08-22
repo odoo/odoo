@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-07-01 09:20+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -18,12 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:219
-#, python-format
-msgid "%(month)s %(start_day)s%(end_day)s"
-msgstr "%(month)s %(start_day)s%(end_day)s"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -108,13 +102,13 @@ msgid "Add Content"
 msgstr "Dodaj sadržaj"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:106
+#: code:addons/website_event/controllers/main.py:96
 #, python-format
 msgid "All Categories"
 msgstr "Sve kategorije"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:117
+#: code:addons/website_event/controllers/main.py:103
 #, python-format
 msgid "All Countries"
 msgstr "Sve države"
@@ -137,6 +131,7 @@ msgstr "Otkaži registraciju"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:48
+#: code:addons/website_event/static/src/js/website.tour.event.js:103
 #, python-format
 msgid "Click <em>Continue</em> to create the event."
 msgstr "Klikni <em>Nastavi</em> za kreiranje događaja."
@@ -144,6 +139,7 @@ msgstr "Klikni <em>Nastavi</em> za kreiranje događaja."
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:33
+#: code:addons/website_event/static/src/js/website.tour.event.js:94
 #, python-format
 msgid "Click here to create a new event."
 msgstr "Klikni ovdje za kreiranje novog događaja."
@@ -151,6 +147,7 @@ msgstr "Klikni ovdje za kreiranje novog događaja."
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:82
+#: code:addons/website_event/static/src/js/website.tour.event.js:121
 #, python-format
 msgid "Click here to customize your event further."
 msgstr "Klikni ovdje da bi dalje prilagodili svoj događaj."
@@ -158,6 +155,7 @@ msgstr "Klikni ovdje da bi dalje prilagodili svoj događaj."
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:75
+#: code:addons/website_event/static/src/js/website.tour.event.js:116
 #, python-format
 msgid "Click to publish your event."
 msgstr "Klikni za objavu događaja."
@@ -176,6 +174,17 @@ msgstr "Nastavi"
 #, python-format
 msgid "Create Event"
 msgstr "Kreiraj događaj"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website.tour.event.js:98
+#, fuzzy, python-format
+msgid ""
+"Create a name for your new event and click <em>\"Continue\"</em>. e.g: "
+"Technical Training"
+msgstr ""
+"Kreiraj naziv svog događaja i klikni <em>'Nastavi'</em>. npr.: Tehnički "
+"trening"
 
 #. module: website_event
 #. openerp-web
@@ -243,6 +252,13 @@ msgid "Drag the 'Image-Text' block and drop it in your page."
 msgstr ""
 
 #. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website.tour.event.js:107
+#, python-format
+msgid "Drag this block and drop it in your page."
+msgstr ""
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "E-mail"
 msgstr "E-pošta"
@@ -254,8 +270,9 @@ msgstr "Uredi oznake"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "End of Subscription"
-msgstr "Kraj pretplate"
+#, fuzzy
+msgid "End of Registration"
+msgstr "Otkaži registraciju"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -284,8 +301,9 @@ msgstr "Izbornik događaja"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Event Subscription"
-msgstr "Pretplata na događaj"
+#, fuzzy
+msgid "Event Registration"
+msgstr "Otkaži registraciju"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
@@ -297,6 +315,12 @@ msgstr "Događaj nije pronađen!"
 #: model:mail.message.subtype,name:website_event.mt_event_published
 msgid "Event published"
 msgstr "Događaj objavljen"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+#, fuzzy
+msgid "Event registration is closed."
+msgstr "Registracija događaja još nije počela."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -346,10 +370,15 @@ msgid "Free"
 msgstr "Slobodan"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:44
+#: code:addons/website_event/models/event.py:54
 #, python-format
 msgid "Introduction"
 msgstr "Uvod"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
+msgid "Is Participating"
+msgstr ""
 
 #. module: website_event
 #. openerp-web
@@ -359,7 +388,7 @@ msgid "Let's go through the first steps to publish a new event."
 msgstr "Idemo kroz par prvih koraka kako bismo objavili događaj."
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:45
+#: code:addons/website_event/models/event.py:55
 #, python-format
 msgid "Location"
 msgstr "Lokacija"
@@ -376,7 +405,7 @@ msgstr "Naziv"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:201
+#: code:addons/website_event/controllers/main.py:184
 #: code:addons/website_event/static/src/js/website.tour.event.js:32
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
@@ -392,19 +421,19 @@ msgid "New Event Created"
 msgstr "Kreiran je novi događaj"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:38
+#: code:addons/website_event/controllers/main.py:34
 #, python-format
 msgid "Next Events"
 msgstr "Sljedeći događaji"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:47
+#: code:addons/website_event/controllers/main.py:43
 #, python-format
 msgid "Next Week"
 msgstr "Sljedeći tjedan"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:55
+#: code:addons/website_event/controllers/main.py:51
 #, python-format
 msgid "Next month"
 msgstr "Sljedeći mjesec"
@@ -415,7 +444,7 @@ msgid "No event found"
 msgstr "Događaj nije pronađen"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:59
+#: code:addons/website_event/controllers/main.py:55
 #, python-format
 msgid "Old Events"
 msgstr "Stari događaji"
@@ -423,6 +452,7 @@ msgstr "Stari događaji"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:67
+#: code:addons/website_event/static/src/js/website.tour.event.js:111
 #, python-format
 msgid "Once you click on save, your event is updated."
 msgstr "Nakon što kliknete na spremi, događaj je ažuriran."
@@ -451,6 +481,12 @@ msgstr "Naši događaji"
 #: model:ir.ui.view,arch_db:website_event.event_right_photos
 msgid "Our Trainings"
 msgstr "Naši treninzi"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_details
+#: model:ir.ui.view,arch_db:website_event.index
+msgid "Participating"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -485,7 +521,7 @@ msgid "Reference"
 msgstr "Šifra"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:53
+#: code:addons/website_event/models/event.py:63
 #, python-format
 msgid "Register"
 msgstr "Registracija"
@@ -547,7 +583,7 @@ msgid "Start Tutorial"
 msgstr "Pokreni vodič"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:43
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "This Week"
 msgstr "Ovaj tjedan"
@@ -571,7 +607,7 @@ msgstr ""
 "događaja."
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:51
+#: code:addons/website_event/controllers/main.py:47
 #, python-format
 msgid "This month"
 msgstr "Ovaj mjesec"
@@ -587,7 +623,7 @@ msgid "Ticket Type #"
 msgstr "Vrsta ulaznice #"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:39
+#: code:addons/website_event/controllers/main.py:35
 #, python-format
 msgid "Today"
 msgstr "Danas"
@@ -615,13 +651,24 @@ msgstr "Vidljivo na web stranicama"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "We are glad to confirm your subscription to our event"
+#, fuzzy
+msgid "We are glad to confirm your registration to our event"
 msgstr "Drago nam je što potvrđujete pretplatu na naš događaj"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
 msgstr "Web naslovnica"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_message_ids
+msgid "Website Messages"
+msgstr "Website poruke"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event_website_message_ids
+msgid "Website communication history"
+msgstr "Povijest komunikacije Web stranice"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -643,13 +690,9 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Your subscription"
-msgstr "Vaša pretplata"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "not published"
-msgstr "nije objavljeno"
+#, fuzzy
+msgid "Your registration"
+msgstr "Otkaži registraciju"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -666,17 +709,33 @@ msgstr "povuci-desno"
 msgid "to"
 msgstr "za"
 
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.index
+#, fuzzy
+msgid "unpublished"
+msgstr "nije objavljeno"
+
+#~ msgid "%(month)s %(start_day)s%(end_day)s"
+#~ msgstr "%(month)s %(start_day)s%(end_day)s"
+
+#~ msgid "End of Subscription"
+#~ msgstr "Kraj pretplate"
+
+#~ msgid "Event Subscription"
+#~ msgstr "Pretplata na događaj"
+
+#~ msgid ""
+#~ "The <em>Content</em> menu allows you to create new pages, events, menus, "
+#~ "etc."
+#~ msgstr ""
+#~ "Izbornik <em>Sadržaj</em> omogućuje vam kreiranje novih stranica, "
+#~ "događaja, izbornika, itd."
+
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr "Puni URL za pristup dokumentu putem web stranice."
 
-#~ msgid "Website Messages"
-#~ msgstr "Website poruke"
-
 #~ msgid "Website URL"
 #~ msgstr "URL web stranice"
-
-#~ msgid "Website communication history"
-#~ msgstr "Povijest komunikacije Web stranice"
 
 #~ msgid "Website meta description"
 #~ msgstr "Web meta opis"
@@ -686,3 +745,6 @@ msgstr "za"
 
 #~ msgid "Website meta title"
 #~ msgstr "Web meta naslov"
+
+#~ msgid "Your subscription"
+#~ msgstr "Vaša pretplata"

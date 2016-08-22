@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-02-05 22:12+0000\n"
 "Last-Translator: Esteban Echeverry <tebanep@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/"
@@ -52,6 +52,12 @@ msgid "Account Date"
 msgstr "Fecha de Cuenta"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+#, fuzzy
+msgid "Accounting Date"
+msgstr "Fecha de Cuenta"
+
+#. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
 msgstr "Comprobantes Contables"
@@ -73,7 +79,9 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr "Está seguro/a que quiere cancelar este recibo?"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
 msgstr "Fecha de la Cuenta"
 
@@ -103,7 +111,7 @@ msgid "Cancelled"
 msgstr "Cancelado(a)"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:147
+#: code:addons/account_voucher/account_voucher.py:153
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "No se pueden borrar comprobantes que ya están abiertos o pagados."
@@ -156,9 +164,7 @@ msgid "Customer"
 msgstr "Cliente"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
-#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Date"
 msgstr "Fecha"
 
@@ -194,7 +200,7 @@ msgid "Due Date"
 msgstr "Fecha de Vencimiento"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
 msgid "Effective date for accounting entries"
 msgstr "Fecha efectiva para los asientos contables"
 
@@ -314,13 +320,13 @@ msgid "Payment Reference"
 msgstr "Referencia del Pago"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:183
+#: code:addons/account_voucher/account_voucher.py:189
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "¡Por favor active la secuencia del libro seleccionado!"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:186
+#: code:addons/account_voucher/account_voucher.py:192
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Por favor defina una secuencia en el libro."
@@ -564,7 +570,7 @@ msgstr ""
 "el pago de cliente relacionado a este recibo de venta."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:348
+#: code:addons/account_voucher/account_voucher.py:354
 #, python-format
 msgid "You must first select a partner!"
 msgstr "¡Primero debe seleccionar un asociado!"

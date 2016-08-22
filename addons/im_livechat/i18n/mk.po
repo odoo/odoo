@@ -4,13 +4,12 @@
 #
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-06-10 13:40+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"PO-Revision-Date: 2016-08-09 14:10+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
 "mk/)\n"
@@ -18,9 +17,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  mk.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
-"#-#-#-#-#  mk.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: im_livechat
@@ -127,6 +123,23 @@ msgid "Bad"
 msgstr "Лошо"
 
 #. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
+#: model:ir.ui.menu,name:im_livechat.canned_responses
+#, fuzzy
+msgid "Canned Responses"
+msgstr "Правила на канал"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid ""
+"Canned responses allow you to insert prewritten responses in\n"
+"                your messages by typing <i>:shortcut</i>. The shortcut is\n"
+"                replaced directly in your message, so that you can still "
+"edit\n"
+"                it before sending."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_livechat_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_livechat_channel_id
@@ -169,6 +182,11 @@ msgstr ""
 #, python-format
 msgid "Chat with one of our collaborators"
 msgstr "Чат/Разговарајте со еден од нашите колаборатори"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid "Click to create a new canned response."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -414,6 +432,11 @@ msgid "Last Modified on"
 msgstr "Последна промена на"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_mail_channel_partner
+msgid "Last Seen Many2many"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_uid
 msgid "Last Updated by"
@@ -435,6 +458,12 @@ msgstr "Последна недела"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Leave Channel"
 msgstr "Напушти канал"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
+#, fuzzy
+msgid "Live Chat"
+msgstr "Комуницирање/чет во живо на веб страна"
 
 #. module: im_livechat
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
@@ -461,11 +490,6 @@ msgid ""
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "Livechat Support Page"
-msgstr "Страна за поддршка на чат/комуницирање во живо"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -581,6 +605,13 @@ msgid ""
 "Operators\n"
 "                                            <br/>\n"
 "                                            <i class=\"fa fa-comments\"/>"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Operators that do not show any activity In Odoo for more than 30 minutes "
+"will be considered as disconnected."
 msgstr ""
 
 #. module: im_livechat
@@ -780,7 +811,7 @@ msgstr "Корисник"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/controllers/main.py:30
+#: code:addons/im_livechat/controllers/main.py:34
 #: code:addons/im_livechat/static/src/js/im_livechat.js:28
 #, python-format
 msgid "Visitor"
@@ -792,18 +823,8 @@ msgid "Web Page"
 msgstr "Веб страна"
 
 #. module: im_livechat
-#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
-msgid "Website Live Chat"
-msgstr "Комуницирање/чет во живо на веб страна"
-
-#. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
 msgid "Website Live Chat Channels"
-msgstr ""
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "Website Live Chat Powered by <strong>Odoo</strong>."
 msgstr ""
 
 #. module: im_livechat
@@ -821,6 +842,13 @@ msgid ""
 msgstr ""
 
 #. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.mail_channel_action
+msgid ""
+"Your chatter history is empty. Create a channel and start chatting to fill "
+"up your history."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Hello, how may I help you?"
 msgstr "пр. Здраво, како можам да ви помогнам?"
@@ -829,6 +857,11 @@ msgstr "пр. Здраво, како можам да ви помогнам?"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
 msgstr "пр. vashvebsajt.com"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -841,3 +874,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "seconds"
 msgstr ""
+
+#~ msgid "Livechat Support Page"
+#~ msgstr "Страна за поддршка на чат/комуницирање во живо"

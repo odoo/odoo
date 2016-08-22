@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-07-12 00:48+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -25,7 +25,7 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:117
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:119
 #, python-format
 msgid " Click on this button to send your blog post online."
 msgstr "点击这个按钮，你的博客文章在网上发表。"
@@ -86,6 +86,26 @@ msgid "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 msgstr "xml version=\"1.0\" encoding=\"utf-8\";"
 
 #. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.view_blog_blog_form
+msgid ""
+"(Un)archiving a blog automatically (un)archives its posts. Do you want to "
+"proceed?"
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:187
+#, fuzzy, python-format
+msgid ""
+"<p><b>This tutorial is over.</b> Use this button to discover more features "
+"and improve the content of this page.</p><p>You can also add some cool "
+"content with your text in edit mode or keep adding pages with the upper "
+"right buttons.</p>"
+msgstr ""
+"本教程就结束了。为了发现更多的功能和改善此页面的内容，请右上方定制菜单。您还"
+"可以通过在编辑模式下点击“插入块”添加一些很酷的内容与你的文字。"
+
+#. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_1
 msgid ""
 "A mix of push &amp; pull: Today, people\n"
@@ -109,8 +129,14 @@ msgid "Access post"
 msgstr ""
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_active
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_active
+msgid "Active"
+msgstr "有效"
+
+#. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:24
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:25
 #, python-format
 msgid "Add Content"
 msgstr "新增内容"
@@ -119,6 +145,12 @@ msgstr "新增内容"
 #: model:blog.post,content:website_blog.blog_post_2
 msgid "Adding to industry leading technology"
 msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.blog_blog_view_search
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
+msgid "Archived"
+msgstr "已归档"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_history
@@ -151,7 +183,6 @@ msgstr "Atom 供稿"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_author_id
-#: model:ir.model.fields,field_description:website_blog.field_blog_post_create_uid
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 msgid "Author"
 msgstr "作者"
@@ -164,6 +195,7 @@ msgstr "头像"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_blog_id
 #: model:ir.ui.menu,name:website_blog.menu_website_blog_root
+#: model:ir.ui.view,arch_db:website_blog.blog_blog_view_search
 #: model:ir.ui.view,arch_db:website_blog.view_blog_blog_form
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 #: model:website.menu,name:website_blog.menu_news
@@ -176,7 +208,7 @@ msgid "Blog Name"
 msgstr "博客名称"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:283
+#: code:addons/website_blog/models/website_blog.py:303
 #: model:ir.model,name:website_blog.model_blog_post
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -185,14 +217,14 @@ msgid "Blog Post"
 msgstr "博文"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:287
+#: code:addons/website_blog/models/website_blog.py:307
 #, python-format
 msgid "Blog Post <b>%s</b> seems to have a link to this page !"
 msgstr "博客文章 <b>%s</b> 似乎有一个链接到这个网页！"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:37
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:38
 #, python-format
 msgid "Blog Post Created"
 msgstr "博文已创建"
@@ -247,7 +279,8 @@ msgstr "轻松构建您公司的网站和在线销售您的产品。"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:58
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:59
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:147
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 #, python-format
 msgid "Change Cover"
@@ -255,28 +288,30 @@ msgstr "修改封面"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:54
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:55
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:144
 #, python-format
 msgid "Change and customize your blog post cover."
 msgstr "改变和自定义您的博客文章封面。"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:108
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:110
 #, python-format
 msgid "Check Mobile Preview"
 msgstr "检查移动版预览"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:68
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:69
 #, python-format
 msgid "Choose an image"
 msgstr "选择图像"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:69
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:70
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:153
 #, python-format
 msgid "Choose an image from the library."
 msgstr "选择从库中的图像。"
@@ -288,21 +323,36 @@ msgstr "点击顶部 \"内容\" 菜单来发表你的第一篇博文。"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:94
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:95
 #, python-format
 msgid "Click on '<em>Save</em>' button to record changes on the page."
 msgstr "点击保存按钮来记录页面上进行更改。"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:77
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:78
 #, python-format
 msgid "Click on '<em>Save</em>' to set the picture as cover."
 msgstr "点击保存设置图片作为封面。"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:102
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:167
+#, fuzzy, python-format
+msgid "Click on <b>Save</b> button to record changes on the page."
+msgstr "点击保存按钮来记录页面上进行更改。"
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:158
+#, python-format
+msgid "Click on <b>Save</b> to set the picture as cover."
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:103
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:172
 #, python-format
 msgid ""
 "Click on the mobile icon to preview how your blog post will be displayed on "
@@ -316,7 +366,7 @@ msgstr "点击创建一个新的博客文章。"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:124
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:126
 #, python-format
 msgid "Close Tutorial"
 msgstr "关闭指南"
@@ -333,7 +383,7 @@ msgstr "联系我们"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:84
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:85
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_content
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 #, python-format
@@ -342,14 +392,14 @@ msgstr "内容"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:39
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:40
 #, python-format
 msgid "Continue"
 msgstr "继续"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:60
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:61
 #, python-format
 msgid "Cover"
 msgstr "封面"
@@ -361,13 +411,14 @@ msgstr "封面属性"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:14
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:15
 #, python-format
 msgid "Create a blog post"
 msgstr "新建一条博文"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_create_uid
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_create_uid
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_create_uid
 msgid "Created by"
 msgstr "创建者"
@@ -381,7 +432,7 @@ msgstr "创建时间"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:53
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:54
 #, python-format
 msgid "Customize Cover"
 msgstr "客户封面"
@@ -408,12 +459,12 @@ msgstr "复制"
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Email撰写向导"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_survey_mail_compose_message
 msgid "Email composition wizard for Survey"
-msgstr ""
+msgstr "调查功能电子邮件撰写向导"
 
 #. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_1
@@ -570,7 +621,7 @@ msgstr "最新发布"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:18
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:19
 #, python-format
 msgid "Let's go through the first steps to write beautiful blog posts."
 msgstr "让我们来完成写出漂亮博文的第一步。"
@@ -621,7 +672,7 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:101
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:102
 #, python-format
 msgid "Mobile Preview"
 msgstr "移动预览"
@@ -638,8 +689,8 @@ msgstr "变窄"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:17
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:31
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:18
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:32
 #: code:addons/website_blog/static/src/js/website_blog.editor.js:21
 #: model:ir.ui.view,arch_db:website_blog.content_new_blogpost
 #, python-format
@@ -680,13 +731,6 @@ msgstr "访问数量"
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "None"
 msgstr "无"
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:9
-#, python-format
-msgid "Not Published"
-msgstr "未发布"
 
 #. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_2
@@ -737,7 +781,7 @@ msgstr "过账"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:44
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:45
 #, python-format
 msgid "Post Headline"
 msgstr "帖子标题"
@@ -757,17 +801,30 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
-#: code:addons/website_blog/controllers/main.py:268
+#: code:addons/website_blog/controllers/main.py:261
 #, python-format
 msgid "Public user cannot post comments on blog post."
 msgstr "公众用户不能在博客发表评论。"
 
 #. module: website_blog
 #. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:183
+#, python-format
+msgid "Publish your blog post to make it visible to your visitors."
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
 #: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:10
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_status
 #, python-format
 msgid "Published"
 msgstr "已发布"
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_published_date
+msgid "Published Date"
+msgstr ""
 
 #. module: website_blog
 #: model:mail.message.subtype,description:website_blog.mt_blog_blog_published
@@ -777,7 +834,7 @@ msgstr "已发布的帖子"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:116
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:118
 #, python-format
 msgid "Publishing status"
 msgstr "发布状态"
@@ -817,35 +874,38 @@ msgstr "红色"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:76
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:77
 #, python-format
 msgid "Save"
 msgstr "保存"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:93
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:94
 #, python-format
 msgid "Save your modifications once you are done"
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:109
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:111
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:177
 #, python-format
 msgid "Scroll to check rendering and then close the mobile preview."
 msgstr "滚动来查看渲染效果，然后关闭移动版预览。"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:61
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:62
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:148
 #, python-format
 msgid "Select this menu item to change blog cover."
 msgstr "选择该菜单项来更改博客封面"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:32
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:33
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:135
 #, python-format
 msgid "Select this menu item to create a new blog post."
 msgstr "选择此菜单项新建一篇博文"
@@ -864,32 +924,39 @@ msgstr "大小"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:19
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:20
 #, python-format
 msgid "Skip"
 msgstr "跳过"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:19
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:20
 #, python-format
 msgid "Start Tutorial"
 msgstr "开始教程"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/models/website_blog.py:91
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:90
+#: code:addons/website_blog/models/website_blog.py:106
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:91
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:166
 #, python-format
 msgid "Start writing here..."
 msgstr "在这里写入"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:85
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:86
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:162
 #, fuzzy, python-format
 msgid "Start writing your story here."
 msgstr "在这里写入"
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_status
+msgid "Status"
+msgstr "状态"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_subtitle
@@ -940,7 +1007,7 @@ msgstr "电子邮件的未来"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:38
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:39
 #, python-format
 msgid "This is your new blog post. Let's edit it."
 msgstr "这是你的新博文。请开始编辑。"
@@ -966,7 +1033,7 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:123
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:125
 #, fuzzy, python-format
 msgid ""
 "This tutorial is over. To discover more features and improve the content of "
@@ -998,13 +1065,21 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:9
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_status
+#, python-format
+msgid "Unpublished"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Untitled Post"
 msgstr "无标题发表"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:25
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:26
 #, fuzzy, python-format
 msgid ""
 "Use this button to create a new blog post like any other document (page, "
@@ -1027,7 +1102,7 @@ msgid ""
 msgstr "用于显示基于段落的讨论消息，使用统一路径；"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:262
+#: code:addons/website_blog/models/website_blog.py:282
 #, python-format
 msgid "View Blog Post"
 msgstr "查看博客文章"
@@ -1069,7 +1144,8 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:46
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:47
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:139
 #, python-format
 msgid "Write a title, the subtitle is optional."
 msgstr "写一个标题，副标题是可选的。"
@@ -1092,9 +1168,8 @@ msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
-#, fuzzy
 msgid "blog. Click here to access the blog :"
-msgstr "点击这里访问帖子。"
+msgstr ""
 
 #. module: website_blog
 #. openerp-web
@@ -1117,14 +1192,8 @@ msgstr "备注"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
-#, fuzzy
 msgid "has been published on the"
-msgstr "一个新帖子 %s 已经发布在博客 %s 上。"
-
-#. module: website_blog
-#: model:ir.ui.view,arch_db:website_blog.blog_post_short
-msgid "not published"
-msgstr "未发布的"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -1138,6 +1207,11 @@ msgstr "往右拉"
 #, python-format
 msgid "to comment."
 msgstr "对此发表评论。"
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "unpublished"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -1541,8 +1615,14 @@ msgstr "浏览次数"
 #~ "            </p>\n"
 #~ "        </section>"
 
+#~ msgid "A new post %s has been published on the %s blog."
+#~ msgstr "一个新帖子 %s 已经发布在博客 %s 上。"
+
 #~ msgid "Action Needed"
 #~ msgstr "所需行动"
+
+#~ msgid "Click here to access the post."
+#~ msgstr "点击这里访问帖子。"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "发布到记录上的最后消息的日期"
@@ -1573,6 +1653,9 @@ msgstr "浏览次数"
 
 #~ msgid "Messages and communication history"
 #~ msgstr "消息和通信历史"
+
+#~ msgid "Not Published"
+#~ msgstr "未发布"
 
 #~ msgid "Number of Actions"
 #~ msgstr "动作的序列号"
@@ -1615,5 +1698,16 @@ msgstr "浏览次数"
 #~ msgid "Website meta title"
 #~ msgstr "网站meta标题"
 
+#~ msgid "not published"
+#~ msgstr "未发布的"
+
 #~ msgid "on"
 #~ msgstr "在"
+
+#~ msgid ""
+#~ "Small-sized image of this contact. It is automatically resized as a "
+#~ "64x64px image, with aspect ratio preserved. Use this field anywhere a "
+#~ "small image is required."
+#~ msgstr ""
+#~ "联系人小尺寸图像。自动缩放为64x64px ，保留纵横比。此字段用于任何需要小图像"
+#~ "的场合"

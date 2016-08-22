@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-07-11 09:20+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
@@ -136,11 +136,6 @@ msgstr ""
 "wysłany:</strong>"
 
 #. module: auth_signup
-#: selection:res.users,state:0
-msgid "Activated"
-msgstr ""
-
-#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
 msgstr "Pozwól na logowanie sie zewnętrznych użytkowników"
@@ -184,6 +179,12 @@ msgstr "Potwierdź"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
 msgstr "Potwierdź hasło"
+
+#. module: auth_signup
+#: selection:res.users,state:0
+#, fuzzy
+msgid "Confirmed"
+msgstr "Potwierdź"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:41
@@ -463,3 +464,9 @@ msgstr "np. Jan Kowalski"
 
 #~ msgid "Connected"
 #~ msgstr "Połączono"
+
+#~ msgid "Signup Expiration"
+#~ msgstr "Wygaśnięcie rejestracji"
+
+#~ msgid "Signup Token"
+#~ msgstr "Token rejestracyjny"

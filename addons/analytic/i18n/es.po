@@ -1,59 +1,22 @@
-# #-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * analytic
 #
 # Translators:
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2015
-# #-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * analytic
-#
-# Translators:
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Sergio Hevia <sah@talleresbernesga.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# Luis Martinez Ontalba <tecnisagra.ontalba@gmail.com>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Oihane Crucelaegui <oihanecruce@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Roberto Lizana <robertolizana@trey.es>, 2016
-# Luis Triana <luistriana.28@gmail.com>, 2016
-# Martin Mendoza del Solar <martin@mendozadelsolar.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
-"Last-Translator: Martin Mendoza del Solar <martin@mendozadelsolar.com>, "
-"2016\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2015-09-30 09:25+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "(Keep empty to open the current situation)"
-msgstr "(dejarlo vacío para abrir la situación actual)"
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_chart
-msgid "Account Analytic Chart"
-msgstr "Contabilidad. Plan analítico"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
@@ -61,8 +24,7 @@ msgid "Account Currency"
 msgstr "Cuenta de la moneda"
 
 #. module: analytic
-#: selection:account.analytic.account,account_type:0
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_active
 msgid "Active"
 msgstr "Activo"
 
@@ -83,11 +45,6 @@ msgid "Analytic Account"
 msgstr "Cuenta analítica"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Analytic Account Charts"
-msgstr "Planes de cuentas analíticas"
-
-#. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "Contabilidad analítica"
@@ -97,6 +54,13 @@ msgstr "Contabilidad analítica"
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
 msgstr "Cuentas analíticas"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_tag_action
+#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
+#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
+msgid "Analytic Accounts Tags"
+msgstr "Etiqueta de cuentas analíticas"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -110,6 +74,11 @@ msgstr "Entradas analíticas"
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Entry"
 msgstr "Asiento analítico"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Línea Analítica"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
@@ -127,7 +96,7 @@ msgid "Analytic Tags"
 msgstr "Etiquetas analíticas"
 
 #. module: analytic
-#: selection:account.analytic.account,account_type:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
 msgstr "Archivado"
 
@@ -142,15 +111,14 @@ msgid "Balance"
 msgstr "Saldo pendiente"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Cancel"
-msgstr "Cancelar"
-
-#. module: analytic
-#: model:ir.actions.act_window,name:analytic.action_account_analytic_chart
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
 msgstr "Plan de cuentas analíticas"
+
+#. module: analytic
+#: model:ir.actions.act_window,help:analytic.account_analytic_tag_action
+msgid "Click to add a new tag."
+msgstr "Clic para añadir una nueva etiqueta."
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.action_analytic_account_form
@@ -159,13 +127,8 @@ msgstr "Pulse para añadir una cuenta analítica."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
-#, fuzzy
 msgid "Color Index"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Índice de colores\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Índice de Colores"
+msgstr "Índice de colores"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_company_id
@@ -195,7 +158,6 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_uid
 msgid "Created by"
@@ -203,16 +165,10 @@ msgstr "Creado por"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
-#, fuzzy
 msgid "Created on"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Creado en\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Creado el"
+msgstr "Creado en"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_credit
@@ -246,21 +202,10 @@ msgstr "Descripción"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nombre mostrado\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Nombre a mostrar"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
-msgid "From"
-msgstr "De"
+msgstr "Nombre mostrado"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -270,16 +215,18 @@ msgstr "Agrupar por..."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
-#, fuzzy
 msgid "ID"
+msgstr "ID (identificación)"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the account "
+"without removing it."
 msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID (identificación)\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"ID"
+"Si el campo activo se desmarca, permite ocultar la cuenta sin eliminarla."
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -296,7 +243,6 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
 msgid "Last Modified on"
@@ -304,29 +250,17 @@ msgstr "Última modificación en"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Última actualización de\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Última actualización por"
+msgstr "Última actualización de"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Última actualización en\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Última actualización el"
+msgstr "Última actualización en"
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -337,11 +271,6 @@ msgstr "Sin actividad aún en esta cuenta."
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet."
 msgstr "Sin actividad aún."
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Open Charts"
-msgstr "Abrir plan contable"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
@@ -381,16 +310,6 @@ msgid "Search Analytic Lines"
 msgstr "Buscar líneas analíticas"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Select the Period for Analysis"
-msgstr "Seleccione el período de análisis"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
-msgid "State"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_tag_ids
 msgid "Tags"
@@ -407,11 +326,6 @@ msgid "The related account currency if not equal to the company one."
 msgstr "La moneda contable relacionada si no es igual a la de la compañía."
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_to_date
-msgid "To"
-msgstr "A"
-
-#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Total"
 msgstr "Total"
@@ -422,24 +336,27 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "Contabilidad. Plan analítico"
-
-#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr "Por ejemplo, Proyecto XYZ"
 
+#~ msgid "(Keep empty to open the current situation)"
+#~ msgstr "(dejarlo vacío para abrir la situación actual)"
+
+#~ msgid "Account Analytic Chart"
+#~ msgstr "Contabilidad. Plan analítico"
+
 #~ msgid "Action Needed"
 #~ msgstr "Acción necesaria"
 
-#~ msgid "Analytic Line"
-#~ msgstr "Línea Analítica"
+#~ msgid "Analytic Account Charts"
+#~ msgstr "Planes de cuentas analíticas"
 
 #~ msgid "Analytic View"
 #~ msgstr "Vista analítica"
+
+#~ msgid "Cancel"
+#~ msgstr "Cancelar"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Fecha del último mensaje publicado en el registro."
@@ -452,6 +369,9 @@ msgstr "Por ejemplo, Proyecto XYZ"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Seguidores (Empresas)"
+
+#~ msgid "From"
+#~ msgstr "De"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
@@ -480,6 +400,15 @@ msgstr "Por ejemplo, Proyecto XYZ"
 #~ msgid "Number of unread messages"
 #~ msgstr "Número de mensajes no leidos"
 
+#~ msgid "Open Charts"
+#~ msgstr "Abrir plan contable"
+
+#~ msgid "Select the Period for Analysis"
+#~ msgstr "Seleccione el período de análisis"
+
+#~ msgid "To"
+#~ msgstr "A"
+
 #~ msgid "Type of Account"
 #~ msgstr "Tipo de cuenta"
 
@@ -488,15 +417,3 @@ msgstr "Por ejemplo, Proyecto XYZ"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Contador de mensajes no leidos"
-
-#~ msgid "Analytic Accounts Tags"
-#~ msgstr "Etiqueta de cuentas analíticas"
-
-#~ msgid "Click to add a new tag."
-#~ msgstr "Clic para añadir una nueva etiqueta."
-
-#~ msgid ""
-#~ "If the active field is set to False, it will allow you to hide the "
-#~ "account without removing it."
-#~ msgstr ""
-#~ "Si el campo activo se desmarca, permite ocultar la cuenta sin eliminarla."

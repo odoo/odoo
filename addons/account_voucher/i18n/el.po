@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-03-03 14:18+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
@@ -42,6 +42,12 @@ msgid "Account Date"
 msgstr "Ημερομηνία Λογαριασμού"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+#, fuzzy
+msgid "Accounting Date"
+msgstr "Ημερομηνία Λογαριασμού"
+
+#. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
 msgstr "Παραστατικό Λογιστικής"
@@ -63,7 +69,9 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr "Σίγουρα θέλετε να καταργήσετε αυτή την απόδειξη;"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
 msgstr "Ημερομηνία Λογαριασμού"
 
@@ -93,7 +101,7 @@ msgid "Cancelled"
 msgstr "Ακυρωμένο"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:147
+#: code:addons/account_voucher/account_voucher.py:153
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
@@ -148,9 +156,7 @@ msgid "Customer"
 msgstr "Πελάτης"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
-#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Date"
 msgstr "Ημερομηνία"
 
@@ -186,7 +192,7 @@ msgid "Due Date"
 msgstr "Προθεσμία"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
 msgid "Effective date for accounting entries"
 msgstr "Ημερομηνία έναρξης ισχύος για λογιστικές εγγραφές"
 
@@ -304,13 +310,13 @@ msgid "Payment Reference"
 msgstr "Σχετική Πληρωμή"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:183
+#: code:addons/account_voucher/account_voucher.py:189
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Παρακαλώ ενεργοποιήστε την ακολουθία του επιλεγμένου ημερολογίου !"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:186
+#: code:addons/account_voucher/account_voucher.py:192
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Παρακαλώ ορίστε μια αλληλουχία στο ημερολόγιο."
@@ -549,7 +555,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:348
+#: code:addons/account_voucher/account_voucher.py:354
 #, python-format
 msgid "You must first select a partner!"
 msgstr "Πρέπει πρώτα να επιλέξετε ένα συνεργάτη!"

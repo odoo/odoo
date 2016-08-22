@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-04-23 19:25+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -19,23 +19,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "(Keep empty to open the current situation)"
-msgstr "(Geçerli durumu açmak için boş bırakın)"
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_chart
-msgid "Account Analytic Chart"
-msgstr "Analitik Hesap Planı"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
 msgid "Account Currency"
 msgstr "Hesap Para Birimi"
 
 #. module: analytic
-#: selection:account.analytic.account,account_type:0
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_active
 msgid "Active"
 msgstr ""
 
@@ -56,11 +45,6 @@ msgid "Analytic Account"
 msgstr "Analiz Hesabı"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Analytic Account Charts"
-msgstr "Analitik Hesap Planı"
-
-#. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "Analitik Muhasebe"
@@ -69,6 +53,14 @@ msgstr "Analitik Muhasebe"
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
+msgstr "Analitik Hesaplar"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_tag_action
+#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
+#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
+#, fuzzy
+msgid "Analytic Accounts Tags"
 msgstr "Analitik Hesaplar"
 
 #. module: analytic
@@ -83,6 +75,11 @@ msgstr "Analiz Girişler"
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Entry"
 msgstr "Analitik Kayıt"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Analiz Satır"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
@@ -100,7 +97,7 @@ msgid "Analytic Tags"
 msgstr "Analitik Etiketler"
 
 #. module: analytic
-#: selection:account.analytic.account,account_type:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
 msgstr ""
 
@@ -115,15 +112,15 @@ msgid "Balance"
 msgstr "Bakiye"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Cancel"
-msgstr "Vazgeç"
-
-#. module: analytic
-#: model:ir.actions.act_window,name:analytic.action_account_analytic_chart
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
 msgstr "Analitik Hesap Planı"
+
+#. module: analytic
+#: model:ir.actions.act_window,help:analytic.account_analytic_tag_action
+#, fuzzy
+msgid "Click to add a new tag."
+msgstr "Yeni bir analiz hesap eklemek için tıklayın."
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.action_analytic_account_form
@@ -163,7 +160,6 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_uid
 msgid "Created by"
@@ -171,7 +167,6 @@ msgstr "Oluşturan"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
 msgid "Created on"
@@ -209,16 +204,10 @@ msgstr "Açıklama"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
 msgid "Display Name"
 msgstr "Adı Göster"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
-msgid "From"
-msgstr "From:"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -228,11 +217,17 @@ msgstr "Grupla İle..."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
 msgid "ID"
 msgstr "ID"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the account "
+"without removing it."
+msgstr ""
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -249,7 +244,6 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
 msgid "Last Modified on"
@@ -257,7 +251,6 @@ msgstr "Son değiştirme tarihi"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
 msgid "Last Updated by"
@@ -265,7 +258,6 @@ msgstr "Son Güncelleyen"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_date
 msgid "Last Updated on"
@@ -280,11 +272,6 @@ msgstr "Henüz bu hesap üzerinde bir etkinlik yoktur."
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet."
 msgstr "Henüz bir etkinlik yok."
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Open Charts"
-msgstr "Çizelge Aç"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
@@ -327,16 +314,6 @@ msgid "Search Analytic Lines"
 msgstr "Analitik Kalemleri Ara"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Select the Period for Analysis"
-msgstr "Analiz için Dönemi seçin"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
-msgid "State"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_tag_ids
 msgid "Tags"
@@ -353,11 +330,6 @@ msgid "The related account currency if not equal to the company one."
 msgstr "İlgili hesabın para birimi şirketinkine eşit değil ise."
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_to_date
-msgid "To"
-msgstr "Alıcı"
-
-#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Total"
 msgstr "Toplam"
@@ -368,24 +340,27 @@ msgid "User"
 msgstr "Kullanıcı"
 
 #. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "Analitik Hesap Planı"
-
-#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr "örn. Proje XYZ"
 
+#~ msgid "(Keep empty to open the current situation)"
+#~ msgstr "(Geçerli durumu açmak için boş bırakın)"
+
+#~ msgid "Account Analytic Chart"
+#~ msgstr "Analitik Hesap Planı"
+
 #~ msgid "Action Needed"
 #~ msgstr "Eylem Gerekiyor"
 
-#~ msgid "Analytic Line"
-#~ msgstr "Analiz Satır"
+#~ msgid "Analytic Account Charts"
+#~ msgstr "Analitik Hesap Planı"
 
 #~ msgid "Analytic View"
 #~ msgstr "Analiz Görünümü"
+
+#~ msgid "Cancel"
+#~ msgstr "Vazgeç"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Kayıta işlenmiş son mesajın tarihi."
@@ -398,6 +373,9 @@ msgstr "örn. Proje XYZ"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "İzleyiciler (İş ortakları)"
+
+#~ msgid "From"
+#~ msgstr "From:"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
@@ -426,6 +404,15 @@ msgstr "örn. Proje XYZ"
 #~ msgid "Number of unread messages"
 #~ msgstr "Okunmamış mesaj sayısı"
 
+#~ msgid "Open Charts"
+#~ msgstr "Çizelge Aç"
+
+#~ msgid "Select the Period for Analysis"
+#~ msgstr "Analiz için Dönemi seçin"
+
+#~ msgid "To"
+#~ msgstr "Alıcı"
+
 #~ msgid "Type of Account"
 #~ msgstr "Hesap Türü"
 
@@ -434,3 +421,7 @@ msgstr "örn. Proje XYZ"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Okunmamış Mesaj Sayacı"
+
+#, fuzzy
+#~ msgid "account analytic line"
+#~ msgstr "Analitik Hesap Planı"

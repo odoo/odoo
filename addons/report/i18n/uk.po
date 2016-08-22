@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-05-06 12:24+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -147,7 +147,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 мм"
 
 #. module: report
-#: code:addons/report/models/report.py:288
+#: code:addons/report/models/report.py:287
 #, python-format
 msgid "Bad Report Reference"
 msgstr "Невірне посилання на звіт"
@@ -200,6 +200,13 @@ msgid "Default paper format ?"
 msgstr "Типовий формат сторінки?"
 
 #. module: report
+#. openerp-web
+#: code:addons/report/static/src/xml/report.xml:12
+#, python-format
+msgid "Discard"
+msgstr ""
+
+#. module: report
 #: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_display_name
@@ -211,6 +218,13 @@ msgstr "Назва для відображення"
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_line
 msgid "Display a header line"
 msgstr "Показувати рядок заголовку"
+
+#. module: report
+#. openerp-web
+#: code:addons/report/static/src/xml/report.xml:8
+#, python-format
+msgid "Edit"
+msgstr ""
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
@@ -257,6 +271,11 @@ msgstr "Факс:"
 #: selection:report.paperformat,format:0
 msgid "Folio 27  210 x 330 mm"
 msgstr "Фоліант 27 210 x 330 мм"
+
+#. module: report
+#: model:ir.model,name:report.model_ir_http
+msgid "HTTP routing"
+msgstr ""
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_spacing
@@ -397,9 +416,20 @@ msgstr "Попередній перегляд внутрішнього звіт�
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:76
-#: code:addons/report/static/src/js/qwebactionmanager.js:84
-#: code:addons/report/static/src/js/qwebactionmanager.js:91
+#: code:addons/report/static/src/xml/report.xml:5
+#, python-format
+msgid "Print"
+msgstr ""
+
+#. module: report
+#: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
+#, fuzzy
+msgid "Printed Report Name"
+msgstr "Попередній перегляд внутрішнього звіту"
+
+#. module: report
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:95
 #: model:ir.model,name:report.model_report
 #, python-format
 msgid "Report"
@@ -416,6 +446,13 @@ msgstr "Звіти"
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_right
 msgid "Right Margin (mm)"
 msgstr "Праве поле (мм)"
+
+#. module: report
+#. openerp-web
+#: code:addons/report/static/src/xml/report.xml:11
+#, python-format
+msgid "Save"
+msgstr ""
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
@@ -448,7 +485,15 @@ msgid "This is a sample of an internal report."
 msgstr "Це приклад внутрішнього звіту."
 
 #. module: report
-#: code:addons/report/models/report.py:288
+#: model:ir.model.fields,help:report.field_ir_act_report_xml_print_report_name
+msgid ""
+"This is the filename of the report going to download. Keep empty to not "
+"change the report filename. You can use a python expression with the object "
+"and time variables."
+msgstr ""
+
+#. module: report
+#: code:addons/report/models/report.py:287
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr "Цей звіт не завантажено в базу даних: %s."
@@ -460,7 +505,7 @@ msgstr "Верхнє поле (мм)"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:76
+#: code:addons/report/static/src/js/qwebactionmanager.js:18
 #, python-format
 msgid ""
 "Unable to find Wkhtmltopdf on this \n"
@@ -479,14 +524,14 @@ msgid "Website:"
 msgstr "Веб-сайт:"
 
 #. module: report
-#: code:addons/report/models/report.py:459
+#: code:addons/report/models/report.py:458
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Помилка Wkhtmltopdf (код помилки: %s). Повідомлення: %s"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:84
+#: code:addons/report/static/src/js/qwebactionmanager.js:19
 #, python-format
 msgid ""
 "You need to start OpenERP with at least two \n"
@@ -497,7 +542,7 @@ msgstr ""
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:91
+#: code:addons/report/static/src/js/qwebactionmanager.js:20
 #, python-format
 msgid ""
 "You should upgrade your version of\n"
@@ -528,3 +573,6 @@ msgstr ""
 #: model:ir.model,name:report.model_report_abstract_report
 msgid "report.abstract_report"
 msgstr "report.abstract_report"
+
+#~ msgid "Error ! You cannot select a format AND speficic page width/height."
+#~ msgstr "Помилка! Ви не можете обрати формат та певну ширину/висоту"

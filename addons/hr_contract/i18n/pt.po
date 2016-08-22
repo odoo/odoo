@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2015-11-25 14:35+0000\n"
 "Last-Translator: Ricardo Correia <rcorreiavv@gmail.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -40,6 +40,11 @@ msgid "Basic Salary of the employee"
 msgstr "Salário Base do Funcionário"
 
 #. module: hr_contract
+#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "Click here to create new contracts."
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
 msgid "Company Vehicle"
 msgstr "Veículo da empresa"
@@ -52,7 +57,7 @@ msgstr "Referência Contrato"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5718
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -77,6 +82,12 @@ msgstr "Contrato prestes a acabar"
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
 msgstr "Contrato expirado"
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:84
+#, fuzzy, python-format
+msgid "Contract start date must be less than contract end date."
+msgstr "Erro! A data de início de contrato deve ser anterior à do seu fim."
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
@@ -154,11 +165,6 @@ msgid "End Date"
 msgstr "Data Final"
 
 #. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! Contract start-date must be less than contract end-date."
-msgstr "Erro! A data de início de contrato deve ser anterior à do seu fim."
-
-#. module: hr_contract
 #: selection:hr.contract,state:0
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
@@ -194,6 +200,11 @@ msgstr "Distância entre a casa e o trabalho."
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id
 msgid "ID"
 msgstr "ID"
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Important Messages"
+msgstr "Mensagens Importantes"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
@@ -343,11 +354,6 @@ msgid "Trial Start Date"
 msgstr "Data de Início do Período experimental"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Unread Messages"
-msgstr "Mensagens por ler"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
 msgid "Use employee work schedule"
 msgstr "Usar horário de trabalho do colaborador"
@@ -411,9 +417,6 @@ msgstr "Horário de trabalho"
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
 
-#~ msgid "Important Messages"
-#~ msgstr "Mensagens Importantes"
-
 #~ msgid "Is Follower"
 #~ msgstr "É um seguidor"
 
@@ -434,6 +437,9 @@ msgstr "Horário de trabalho"
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Número de mensagens por ler"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Mensagens por ler"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Contador de Mensagens por Ler"

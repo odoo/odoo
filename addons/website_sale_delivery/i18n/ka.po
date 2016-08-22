@@ -3,22 +3,18 @@
 # * website_sale_delivery
 #
 # Translators:
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-08 10:54+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"PO-Revision-Date: 2015-11-02 07:08+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Georgian (http://www.transifex.com/odoo/odoo-9/language/ka/)\n"
 "Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  ka.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  ka.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_delivery
@@ -26,6 +22,14 @@ msgstr ""
 msgid ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
 "updated after choosing a new delivery method\"> Delivery:</span>"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
+msgid ""
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
+"Customer Invoice/Refund"
 msgstr ""
 
 #. module: website_sale_delivery
@@ -42,6 +46,16 @@ msgstr "წარმოდგენილია პროდუქტის გ�
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
 msgid "Appear on the shopping cart"
 msgstr "წარმოდგენილია კალათაში"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability
+msgid "Availability"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability_warning
+msgid "Availability Warning"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_available_in_pos
@@ -70,18 +84,19 @@ msgid "Choose your Delivery Method"
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
-msgid "Country..."
+#: model:ir.model,name:website_sale_delivery.model_res_country
+#, fuzzy
+msgid "Country"
 msgstr "ქვეყანა..."
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_project_id
-msgid "Create a task under this project on sale order validation."
-msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
+msgid "Delivery Methods"
 msgstr ""
 
 #. module: website_sale_delivery
@@ -91,7 +106,7 @@ msgstr "აღწერილობა"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
-msgid "Description displayed on the eCommerce and on the Online Quotations."
+msgid "Description displayed on the eCommerce and on online quotations."
 msgstr ""
 
 #. module: website_sale_delivery
@@ -145,17 +160,12 @@ msgid "Landed Costs"
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn_msg
-msgid "Message for Purchase Order Line"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_last_value
+msgid "Last Value"
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn_msg
-msgid "Message for Sales Order Line"
-msgstr ""
-
-#. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:138
+#: code:addons/website_sale_delivery/models/sale_order.py:106
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address. "
@@ -183,48 +193,24 @@ msgid "Products to propose when add to cart."
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_project_id
-msgid "Project"
-msgstr "პროექტი"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-msgid "Purchase Order Line"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
+msgid "Rating"
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
-msgid "Rating"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_count
+msgid "Rating count"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_rating_last_value
+msgid "Rating value"
 msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
 msgid "Sales Order"
 msgstr "გაყიდვის ორდერი"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid "Sales Order Line"
-msgstr "გაყიდვის ორდერის ხაზი"
-
-#. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
-msgid "Select..."
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
-msgid "Sequence"
-msgstr "მიმდევრობა"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_x
@@ -237,7 +223,7 @@ msgid "Size Y"
 msgstr ""
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:137
+#: code:addons/website_sale_delivery/models/sale_order.py:105
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr ""
@@ -263,6 +249,13 @@ msgid "The amount without tax."
 msgstr ""
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_availability
+msgid ""
+"This field is used to display a availability banner with a message on the "
+"ecommerce"
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Those categories are used to group similar products for e-commerce."
 msgstr ""
@@ -283,9 +276,25 @@ msgid "Tracking:"
 msgstr ""
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
+msgid "Visible in Website"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
+msgid "Website Comments"
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Website Product Category"
 msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
+#, fuzzy
+msgid "Website Sequence"
+msgstr "მიმდევრობა"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
@@ -301,3 +310,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_title
 msgid "Website meta title"
 msgstr ""
+
+#~ msgid "Project"
+#~ msgstr "პროექტი"
+
+#~ msgid "Sales Order Line"
+#~ msgstr "გაყიდვის ორდერის ხაზი"

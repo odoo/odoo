@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-03-16 21:57+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
@@ -27,11 +27,6 @@ msgstr "# Προϊόντων"
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
 msgstr "Λογαριασμός Ιδιοτήτων Αποθέματος"
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
-msgid "Accounting"
-msgstr "Λογιστική"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -59,18 +54,13 @@ msgid "Average Price"
 msgstr "Μέση Τιμή"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
-msgid "Can be expensed"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Cancel"
 msgstr "Ακύρωση"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:278
+#: code:addons/stock_account/stock_account.py:284
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on "
@@ -78,7 +68,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:280
+#: code:addons/stock_account/stock_account.py:286
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -116,15 +106,6 @@ msgid "Choose your date"
 msgstr "Επιλέξτε την ημερομηνία σας"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_coeff
-msgid ""
-"Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
-"coeff"
-msgstr ""
-"Συντελεστής για τη μετατροπή προεπιλεγμένης Μονάδας Μέτρησης (UOM) σε Μονάδα "
-"Πώλησης (UOS) UOS = UoM * συντελεστής"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Company"
@@ -137,7 +118,7 @@ msgid "Compute from average price"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:351
+#: code:addons/stock_account/stock_account.py:357
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -328,15 +309,17 @@ msgid "Location"
 msgstr "Τοποθεσία"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+#, fuzzy
+msgid "Lot/Serial Number"
+msgstr "Σειριακός Αριθμός"
+
+#. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
 msgid "Manage Inventory Valuation and Costing Methods"
 msgstr ""
 "Διαχειριστείτε την Αποτίμηση των Αποθεμάτων και τις Μεθόδους Κοστολόγησης"
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Move"
-msgstr "Μετακίνηση"
 
 #. module: stock_account
 #: code:addons/stock_account/product.py:125
@@ -390,11 +373,6 @@ msgid "Product"
 msgstr "Προϊόν"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_alert_time
-msgid "Product Alert Time"
-msgstr "Ύπενθύμιση Προϊόντος"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_product_categ_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -402,19 +380,9 @@ msgid "Product Category"
 msgstr "Κατηγορία Προϊόντος"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_life_time
-msgid "Product Life Time"
-msgstr "Διάρκεια Ζωής του προϊόντος"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
 msgid "Product Quantity"
 msgstr "Ποσότητα Προϊόντος"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_removal_time
-msgid "Product Removal Time"
-msgstr "Χρόνος απομάκρυνσης Προϊόντος"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -422,11 +390,6 @@ msgstr "Χρόνος απομάκρυνσης Προϊόντος"
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Product Template"
 msgstr "Πρότυπο Προϊόντος"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_use_time
-msgid "Product Use Time"
-msgstr "Χρόνος Χρήσης Προϊόντος"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -450,12 +413,6 @@ msgid "Retrieve the curent stock valuation."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Serial Number"
-msgstr "Σειριακός Αριθμός"
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 #, fuzzy
@@ -466,21 +423,6 @@ msgstr "Σταθερή Τιμή"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
 msgid "Source"
 msgstr "Πηγή"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_id
-msgid ""
-"Specify a unit of measure here if invoicing is made in another unit of "
-"measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
-"Καθορίστε εδώ μια μονάδα μέτρησης εάν η τιμολόγηση γίνεται σε άλλη μονάδα "
-"μέτρησης από την Αποθήκη. \n"
-"Εάν είναι κενό τότε θα χρησιμοποιηθεί η προεπιλεγμένη μονάδα μέτρησης."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -521,6 +463,12 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+#, fuzzy
+msgid "Stock Accounting"
+msgstr "Λογιστική"
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
@@ -528,7 +476,7 @@ msgid "Stock Input Account"
 msgstr "Λογαριασμός Εισερχομένων Αποθεμάτων"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:464
+#: code:addons/stock_account/stock_account.py:470
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
@@ -537,6 +485,7 @@ msgstr "Ημερολόγιο Αποθέματος"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_move_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Stock Move"
 msgstr "Κίνηση Αποθέματος"
 
@@ -578,7 +527,7 @@ msgid "Templates for Account Chart"
 msgstr "Πρότυπα για Λογιστικά Σχέδια"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:306
+#: code:addons/stock_account/stock_account.py:312
 #, python-format
 msgid ""
 "The found valuation amount for product %s is zero. Which means there is "
@@ -590,16 +539,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
 msgid "Total Value"
 msgstr "Συνολική Αξία"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_coeff
-msgid "Unit of Measure -> UOS Coeff"
-msgstr "Μονάδα Μέτρησης -> UOS Coeff"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_id
-msgid "Unit of Sale"
-msgstr "Μονάδα Πωλήσεων"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
@@ -637,36 +576,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
 msgid "Value"
 msgstr "Τιμή"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-"Όταν ένα νέος Σειριακός Αριθμός εκδοθεί, αυτός είναι ο αριθμός των ημερών "
-"πριν τα αγαθά μπορεί να γίνουν επικίνδυνα και δεν πρέπει να καταναλωθούν."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -755,7 +664,7 @@ msgid "Wizard that opens the stock valuation history table"
 msgstr "Οδηγός που ανοίγει τον πίνακα του ιστορικού της αποτίμησης αποθέματος"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:276
+#: code:addons/stock_account/stock_account.py:282
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -763,7 +672,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:282
+#: code:addons/stock_account/stock_account.py:288
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category. "
@@ -792,3 +701,46 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
 msgid "unknown"
 msgstr "άγνωστο"
+
+#~ msgid ""
+#~ "Coefficient to convert default Unit of Measure to Unit of Sale uos = uom "
+#~ "* coeff"
+#~ msgstr ""
+#~ "Συντελεστής για τη μετατροπή προεπιλεγμένης Μονάδας Μέτρησης (UOM) σε "
+#~ "Μονάδα Πώλησης (UOS) UOS = UoM * συντελεστής"
+
+#~ msgid "Move"
+#~ msgstr "Μετακίνηση"
+
+#~ msgid "Product Alert Time"
+#~ msgstr "Ύπενθύμιση Προϊόντος"
+
+#~ msgid "Product Life Time"
+#~ msgstr "Διάρκεια Ζωής του προϊόντος"
+
+#~ msgid "Product Removal Time"
+#~ msgstr "Χρόνος απομάκρυνσης Προϊόντος"
+
+#~ msgid "Product Use Time"
+#~ msgstr "Χρόνος Χρήσης Προϊόντος"
+
+#~ msgid ""
+#~ "Specify a unit of measure here if invoicing is made in another unit of "
+#~ "measure than inventory. Keep empty to use the default unit of measure."
+#~ msgstr ""
+#~ "Καθορίστε εδώ μια μονάδα μέτρησης εάν η τιμολόγηση γίνεται σε άλλη μονάδα "
+#~ "μέτρησης από την Αποθήκη. \n"
+#~ "Εάν είναι κενό τότε θα χρησιμοποιηθεί η προεπιλεγμένη μονάδα μέτρησης."
+
+#~ msgid "Unit of Measure -> UOS Coeff"
+#~ msgstr "Μονάδα Μέτρησης -> UOS Coeff"
+
+#~ msgid "Unit of Sale"
+#~ msgstr "Μονάδα Πωλήσεων"
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "the goods may become dangerous and must not be consumed."
+#~ msgstr ""
+#~ "Όταν ένα νέος Σειριακός Αριθμός εκδοθεί, αυτός είναι ο αριθμός των ημερών "
+#~ "πριν τα αγαθά μπορεί να γίνουν επικίνδυνα και δεν πρέπει να καταναλωθούν."

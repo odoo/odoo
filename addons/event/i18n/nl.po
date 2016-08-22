@@ -1,4 +1,3 @@
-# #-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event
@@ -7,33 +6,18 @@
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
-# #-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * event
-#
-# Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 08:37+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-02-20 11:14+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: event
@@ -59,26 +43,15 @@ msgstr ""
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
-#, fuzzy
 msgid ""
 "\n"
 "<p>Dear ${object.name},</p>\n"
 "<p>Thank you for your inquiry.</p>\n"
-"<p>We confirm your subscription to the event <b>${object.event_id.name}</b>. "
+"<p>We confirm your registration to the event <b>${object.event_id.name}</b>. "
 "You will receive emails with practical information.</p>\n"
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
-"\n"
-"<p>Beste ${object.name},</p>\n"
-"\n"
-"<p>Bedankt voor uw aanvraag.</p>\n"
-"\n"
-"<p>Hier is uw badge voor evenement ${object.event_id.name}.</p>\n"
-"\n"
-"<p>Wanneer u vragen heeft, laat het ons weten..</p>\n"
-"\n"
-"<p>Met vriendelijke groet,</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -274,7 +247,7 @@ msgstr "Geavanceerde JQuery"
 
 #. module: event
 #: selection:event.mail,interval_type:0
-msgid "After each subscription"
+msgid "After each registration"
 msgstr "Na elke registratie"
 
 #. module: event
@@ -289,7 +262,7 @@ msgstr "Alle evenementen zijn gratis"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
-msgid "Allow adding extra questions on subscriptions"
+msgid "Allow adding extra questions on registrations"
 msgstr "Stel extra vragen bij inschrijven"
 
 #. module: event
@@ -369,6 +342,11 @@ msgid "Auto Confirmation"
 msgstr "Automatische bevestiging"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_seats_available
+msgid "Available Seats"
+msgstr "Beschikbare plaatsen"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_back
 msgid "Badge Back"
 msgstr "Badge achterkant"
@@ -394,6 +372,11 @@ msgstr "Badge binnenkant rechts"
 #: model:event.event,description:event.event_3
 msgid "Banner Odoo Image"
 msgstr "Banner Odoo afbeelding"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_configuration
+msgid "Barcode Interface"
+msgstr "Barcode interface"
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -436,13 +419,8 @@ msgstr "Het ORM aanroepen."
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_configuration
 #: model:ir.ui.view,arch_db:event.view_event_confirm
-#, fuzzy
 msgid "Cancel"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Annuleren\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Annuleer"
+msgstr "Annuleren"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -488,13 +466,8 @@ msgstr "Einddatum kan niet ingesteld worden voor begindatum."
 #: model:ir.model.fields,field_description:event.field_event_registration_company_id
 #: model:ir.model.fields,field_description:event.field_report_event_registration_company_id
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
-#, fuzzy
 msgid "Company"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bedrijf\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Bedijf"
+msgstr "Bedrijf"
 
 #. module: event
 #: code:addons/event/models/event.py:402
@@ -525,13 +498,8 @@ msgstr "Configureer evenement"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
-#, fuzzy
 msgid "Confirm"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bevestig\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Bevestigen"
+msgstr "Bevestig"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -573,13 +541,8 @@ msgstr "Bevestig evenement"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_partner_id
-#, fuzzy
 msgid "Contact"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Contactpersoon\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Contact"
+msgstr "Contactpersoon"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -600,15 +563,6 @@ msgstr "Land"
 #: model:event.event,description:event.event_3
 msgid "Course Summary"
 msgstr "Cursussamenvatting"
-
-#. module: event
-#: model:web.tip,description:event.event_tip_1
-msgid ""
-"Create and manage registrations for this event, send emails to attendees and "
-"print identification badges."
-msgstr ""
-"Maak en beheer registraties van dit evenement. Verstuur e-mails naar de "
-"deelnemers en druk identificatie badges af."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
@@ -687,13 +641,8 @@ msgstr "Standaard minimaal aantal registraties"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
-#, fuzzy
 msgid "Delete"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Verwijderen\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Verwijder"
+msgstr "Verwijderen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_description
@@ -716,13 +665,8 @@ msgstr "Ontwikkel een nieuwe module voor een specifieke toepassing."
 #: model:ir.model.fields,field_description:event.field_event_registration_display_name
 #: model:ir.model.fields,field_description:event.field_event_type_display_name
 #: model:ir.model.fields,field_description:event.field_report_event_registration_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Weergavenaam\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_sequence
@@ -739,13 +683,8 @@ msgstr "Duik in Strings"
 #. module: event
 #: selection:event.event,state:0
 #: selection:report.event.registration,event_state:0
-#, fuzzy
 msgid "Done"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Voltooid\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Verwerkt"
+msgstr "Voltooid"
 
 #. module: event
 #: selection:report.event.registration,event_state:0
@@ -764,13 +703,8 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
-#, fuzzy
 msgid "Email"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Email\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"E-mail"
+msgstr "Email"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -804,13 +738,8 @@ msgstr "Einddatum locatie"
 #: model:ir.model.fields,field_description:event.field_report_event_registration_event_id
 #: model:ir.ui.view,arch_db:event.view_registration_search
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
-#, fuzzy
 msgid "Event"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Evenement\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Gebeurtenis"
+msgstr "Evenement"
 
 #. module: event
 #: model:ir.actions.report.xml,name:event.report_event_event_badge
@@ -821,6 +750,16 @@ msgstr "Evenementenbadge"
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event Beginning Date"
 msgstr "Evenement startdatum"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Event Categories"
+msgstr "Evenement Categorieën "
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
+msgid "Event Category"
+msgstr "Evenement categorie"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
@@ -901,12 +840,16 @@ msgstr "Status evenement"
 #: model:ir.model,name:event.model_event_type
 #: model:ir.model.fields,field_description:event.field_event_type_name
 #: model:ir.model.fields,field_description:event.field_report_event_registration_event_type_id
-#: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 #: model:ir.ui.view,arch_db:event.view_event_type_tree
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event Type"
 msgstr "Soort evenement"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+msgid "Event Types"
+msgstr "Soorten Evenementen"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.report_event_registration_graph
@@ -936,11 +879,6 @@ msgstr "Evenement analyse"
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
 msgstr "Evenementen mail planners"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-msgid "Events Types"
-msgstr "Soorten evenementen"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1029,13 +967,8 @@ msgstr "Functies"
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
-#, fuzzy
 msgid "Group By"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Groeperen op\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Groepeer op"
+msgstr "Groeperen op"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1099,6 +1032,11 @@ msgstr "Direct"
 #: model:event.event,description:event.event_3
 msgid "Install and administer your own server;"
 msgstr "Installeer en beheer uw eigen server;"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_config_settings_module_event_barcode
+msgid "Install the event_barcode module"
+msgstr "Installeer de event_barcode module"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_event_sale
@@ -1239,7 +1177,7 @@ msgid "Mail Scheduler"
 msgstr "Mail planner"
 
 #. module: event
-#: model:ir.ui.menu,name:event.menu_event_type
+#: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
 msgstr "Mail planners"
 
@@ -1260,17 +1198,12 @@ msgstr "Mail registratie ids"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
-#, fuzzy
 msgid "Manager"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Manager\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Beheerder"
+msgstr "Manager"
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
-msgid "Manually confirm every subscription"
+msgid "Manually confirm every registration"
 msgstr "Handmatig elke inschrijving bevestigen"
 
 #. module: event
@@ -1280,7 +1213,6 @@ msgstr "Maximum plaatsen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_availability
-#: model:ir.model.fields,field_description:event.field_event_event_seats_available
 msgid "Maximum Attendees"
 msgstr "Maximaal aantal deelnemers"
 
@@ -1303,13 +1235,8 @@ msgstr "Modules"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
-#, fuzzy
 msgid "Month(s)"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Maand(en)\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Maand(e)"
+msgstr "Maand(en)"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1328,7 +1255,7 @@ msgstr "Geen geautomatiseerde e-mails"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
-msgid "No extra questions on subscriptions"
+msgid "No extra questions on registrations"
 msgstr "Geen extra vragen bij inschrijven"
 
 #. module: event
@@ -1350,8 +1277,8 @@ msgstr "Geen plaatsen meer beschikbaar voor dit evenement."
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
-msgid "No validation step on subscription"
-msgstr "Geen validatie stap op inschrijving"
+msgid "No validation step on registration"
+msgstr "Geen validatie stap bij inschrijving"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_nbevent
@@ -1391,12 +1318,13 @@ msgstr "Odoo Web Client"
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid ""
 "Odoo helps you schedule and efficiently organize your events:\n"
-"    track subscriptions and participations, automate the confirmation "
+"    track registrations and participations, automate the confirmation "
 "emails,\n"
 "    sell tickets, etc."
 msgstr ""
 "Odoo helpt u met het plannen en efficiënt organiseren van evenementen:\n"
-"volg inschrijvingen en deelnames, automatiseer de bevestiging e-mails,\n"
+"\n"
+"volg inschrijvingen en deelnames, automatiseer de bevestiging e-mails, "
 "verkoop tickets, etc."
 
 #. module: event
@@ -1406,13 +1334,8 @@ msgstr "Open dagen in Los Angeles"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
-#, fuzzy
 msgid "Organizer"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Agenda\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Organisator"
+msgstr "Agenda"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1542,6 +1465,11 @@ msgid "Registration State"
 msgstr "Status inschrijving"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_questions
+msgid "Registration Survey"
+msgstr "Registratie Enquête"
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Registration contact"
 msgstr "Registratie contract"
@@ -1602,9 +1530,14 @@ msgid "Responsible"
 msgstr "Verantwoordelijke"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_barcode
+msgid "Scan badges to confirm attendances"
+msgstr "Scan badges om aanwezigheid te bevestigen"
+
+#. module: event
 #: model:res.groups,name:event.group_email_scheduling
-msgid "Schedule Emails on Event Subscription"
-msgstr "Plan e-mails op evenement inschrijving"
+msgid "Schedule Emails on Event Registration"
+msgstr "Plan E-mails op Evenement Inschrijving"
 
 #. module: event
 #: selection:event.config.settings,group_email_scheduling:0
@@ -1658,13 +1591,8 @@ msgstr "Toon"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_origin
-#, fuzzy
 msgid "Source Document"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bron document\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Brondocument"
+msgstr "Bron document"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin
@@ -1693,11 +1621,6 @@ msgstr "Status"
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
 msgstr "Inschrijven"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_questions
-msgid "Subscription Survey"
-msgstr "Abonnement enquête"
 
 #. module: event
 #: model:event.event,name:event.event_3
@@ -1807,10 +1730,8 @@ msgstr "Ongelezen berichten"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
 msgid ""
-"Unselect this option to manually manage draft event and draft subscription"
+"Unselect this option to manually manage draft event and draft registration"
 msgstr ""
-"Deselecteer deze optie om handmatig concept evenementen en concept "
-"inschrijvingen te beheren"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1850,13 +1771,8 @@ msgstr ""
 
 #. module: event
 #: selection:event.mail,interval_unit:0
-#, fuzzy
 msgid "Week(s)"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"We(e)k(en)\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Week/weken"
+msgstr "We(e)k(en)"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1899,10 +1815,8 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_config_settings_group_email_scheduling
 msgid ""
 "You will be able to configure emails, and to schedule them to be "
-"automatically sent to the attendees on subscription and/or attendance"
+"automatically sent to the attendees on registration and/or attendance"
 msgstr ""
-"U zal e-mails kunnen configureren en inplannen dat ze automatisch verzonden "
-"worden aan de aanwezigen wanneer ze zich inschrijven en/of bij aanwezigheid"
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
@@ -1911,7 +1825,7 @@ msgstr "Uw badge voor ${object.event_id.name}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
-msgid "Your subscription at ${object.event_id.name}"
+msgid "Your registration at ${object.event_id.name}"
 msgstr "Uw registratie voor ${object.event_id.name}"
 
 #. module: event
@@ -2054,11 +1968,27 @@ msgstr "training materiaal."
 #~ msgid "Action Needed"
 #~ msgstr "Vereist actie"
 
+#~ msgid "After each subscription"
+#~ msgstr "Na elke registratie"
+
+#~ msgid "Allow adding extra questions on subscriptions"
+#~ msgstr "Stel extra vragen bij inschrijven"
+
 #~ msgid "Badge Innner Left"
 #~ msgstr "Badge binnenkant links"
 
+#~ msgid ""
+#~ "Create and manage registrations for this event, send emails to attendees "
+#~ "and print identification badges."
+#~ msgstr ""
+#~ "Maak en beheer registraties van dit evenement. Verstuur e-mails naar de "
+#~ "deelnemers en druk identificatie badges af."
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
+
+#~ msgid "Events Types"
+#~ msgstr "Soorten evenementen"
 
 #~ msgid "Followers"
 #~ msgstr "Volgers"
@@ -2088,11 +2018,20 @@ msgstr "training materiaal."
 #~ msgid "Last Message Date"
 #~ msgstr "Laatste bericht datum"
 
+#~ msgid "Manually confirm every subscription"
+#~ msgstr "Handmatig elke inschrijving bevestigen"
+
 #~ msgid "Messages"
 #~ msgstr "Berichten"
 
 #~ msgid "Messages and communication history"
 #~ msgstr "Berichten en communicatie historie"
+
+#~ msgid "No extra questions on subscriptions"
+#~ msgstr "Geen extra vragen bij inschrijven"
+
+#~ msgid "No validation step on subscription"
+#~ msgstr "Geen validatie stap op inschrijving"
 
 #~ msgid "Number of Actions"
 #~ msgstr "Aantal acties"
@@ -2103,11 +2042,27 @@ msgstr "training materiaal."
 #~ msgid "Number of unread messages"
 #~ msgstr "Aantal ongelezen berichten"
 
+#~ msgid ""
+#~ "Odoo helps you schedule and efficiently organize your events:\n"
+#~ "    track subscriptions and participations, automate the confirmation "
+#~ "emails,\n"
+#~ "    sell tickets, etc."
+#~ msgstr ""
+#~ "Odoo helpt u met het plannen en efficiënt organiseren van evenementen:\n"
+#~ "volg inschrijvingen en deelnames, automatiseer de bevestiging e-mails,\n"
+#~ "verkoop tickets, etc."
+
 #~ msgid "Open Event Menu"
 #~ msgstr "Open menu Evenementen"
 
 #~ msgid "Read Great Contents"
 #~ msgstr "Lees geweldige inhoud"
+
+#~ msgid "Schedule Emails on Event Subscription"
+#~ msgstr "Plan e-mails op evenement inschrijving"
+
+#~ msgid "Subscription Survey"
+#~ msgstr "Abonnement enquête"
 
 #~ msgid "Thanks for attending ${object.event_id.name}"
 #~ msgstr "Bedankt voor uw deelname aan ${object.event_id.name}"
@@ -2123,6 +2078,12 @@ msgstr "training materiaal."
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Teller ongelezen berichten"
 
+#~ msgid ""
+#~ "Unselect this option to manually manage draft event and draft subscription"
+#~ msgstr ""
+#~ "Deselecteer deze optie om handmatig concept evenementen en concept "
+#~ "inschrijvingen te beheren"
+
 #~ msgid "Website Messages"
 #~ msgstr "Website berichten"
 
@@ -2132,58 +2093,13 @@ msgstr "training materiaal."
 #~ msgid "What do people say about this course?"
 #~ msgstr "Wat zeggen mensen over deze training?"
 
-#~ msgid "After each registration"
-#~ msgstr "Na elke registratie"
-
-#~ msgid "Allow adding extra questions on registrations"
-#~ msgstr "Stel extra vragen bij inschrijven"
-
-#~ msgid "Available Seats"
-#~ msgstr "Beschikbare plaatsen"
-
-#~ msgid "Barcode Interface"
-#~ msgstr "Barcode interface"
-
-#~ msgid "Event Categories"
-#~ msgstr "Evenement Categorieën "
-
-#~ msgid "Event Category"
-#~ msgstr "Evenement categorie"
-
-#~ msgid "Event Types"
-#~ msgstr "Soorten Evenementen"
-
-#~ msgid "Install the event_barcode module"
-#~ msgstr "Installeer de event_barcode module"
-
-#~ msgid "Manually confirm every registration"
-#~ msgstr "Handmatig elke inschrijving bevestigen"
-
-#~ msgid "No extra questions on registrations"
-#~ msgstr "Geen extra vragen bij inschrijven"
-
-#~ msgid "No validation step on registration"
-#~ msgstr "Geen validatie stap bij inschrijving"
-
 #~ msgid ""
-#~ "Odoo helps you schedule and efficiently organize your events:\n"
-#~ "    track registrations and participations, automate the confirmation "
-#~ "emails,\n"
-#~ "    sell tickets, etc."
+#~ "You will be able to configure emails, and to schedule them to be "
+#~ "automatically sent to the attendees on subscription and/or attendance"
 #~ msgstr ""
-#~ "Odoo helpt u met het plannen en efficiënt organiseren van evenementen:\n"
-#~ "\n"
-#~ "volg inschrijvingen en deelnames, automatiseer de bevestiging e-mails, "
-#~ "verkoop tickets, etc."
+#~ "U zal e-mails kunnen configureren en inplannen dat ze automatisch "
+#~ "verzonden worden aan de aanwezigen wanneer ze zich inschrijven en/of bij "
+#~ "aanwezigheid"
 
-#~ msgid "Registration Survey"
-#~ msgstr "Registratie Enquête"
-
-#~ msgid "Scan badges to confirm attendances"
-#~ msgstr "Scan badges om aanwezigheid te bevestigen"
-
-#~ msgid "Schedule Emails on Event Registration"
-#~ msgstr "Plan E-mails op Evenement Inschrijving"
-
-#~ msgid "Your registration at ${object.event_id.name}"
+#~ msgid "Your subscription at ${object.event_id.name}"
 #~ msgstr "Uw registratie voor ${object.event_id.name}"

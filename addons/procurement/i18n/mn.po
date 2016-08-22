@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-03-10 13:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -56,6 +56,11 @@ msgid "All at once"
 msgstr "Нэг мөсөн"
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr ""
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
 msgstr "Цуцлах"
@@ -69,12 +74,6 @@ msgstr "Татан авалтыг цуцлах"
 #: selection:procurement.order,state:0
 msgid "Cancelled"
 msgstr "Цуцлагдсан"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "%s төлөвтэй татан авалтын захиалгыг устгаж чадахгүй."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -276,7 +275,7 @@ msgid "Name"
 msgstr "Нэр"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:200
+#: code:addons/procurement/models/procurement.py:187
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Энэ татан авалтанд тохирох дүрэм алга"
@@ -414,9 +413,10 @@ msgstr "Дугаар"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
+#, fuzzy
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
 msgstr ""
 "Энэ татан авалтыг үүсгэсэн баримтын код.\n"
 "Үүнийг Odoo автоматаар бөглөдөг."
@@ -522,6 +522,12 @@ msgid ""
 msgstr ""
 
 #. module: procurement
+#: code:addons/procurement/models/procurement.py:142
+#, fuzzy, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr "%s төлөвтэй татан авалтын захиалгыг устгаж чадахгүй."
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "e.g. Buy"
 msgstr ""
@@ -536,6 +542,9 @@ msgstr "ж. SO005"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
+
+#~ msgid "Delivery Method"
+#~ msgstr "Хүргэх арга"
 
 #~ msgid "Followers"
 #~ msgstr "Дагагчид"

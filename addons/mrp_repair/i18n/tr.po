@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2015-10-17 13:25+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -19,17 +19,27 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "(<i>Remove</i>)"
+msgstr "(<i>Kaldır</i>)"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "(update)"
+msgstr "(güncelle)"
+
+#. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
+#, fuzzy
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"repair order.             \n"
-"* The 'Confirmed' status is used when a user confirms the repair "
-"order.             \n"
+"* The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"repair order.\n"
+"* The 'Confirmed' status is used when a user confirms the repair order.\n"
 "* The 'Ready to Repair' status is used to start to repairing, user can start "
-"repairing only after repair order is confirmed.             \n"
+"repairing only after repair order is confirmed.\n"
 "* The 'To be Invoiced' status is used to generate the invoice before or "
-"after repairing done.             \n"
-"* The 'Done' status is set when repairing is completed.            \n"
+"after repairing done.\n"
+"* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
 " * 'Taslak' durumu bir kullanıcı bir yeni ve onaylanmamış sipariş emri "
@@ -43,16 +53,6 @@ msgstr ""
 "* 'Yapıldı' durumu onarım tamamlandığında ayarlanır.            \n"
 "* 'İptal edildi' durumu kullanıcı onarım siparişini iptal ettiğinde "
 "kullanılır."
-
-#. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "(<i>Remove</i>)"
-msgstr "(<i>Kaldır</i>)"
-
-#. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-msgid "(update)"
-msgstr "(güncelle)"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -104,12 +104,6 @@ msgstr "<strong>Vergisiz Toplam</strong>"
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total</strong>"
 msgstr "<strong>Toplam</strong>"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:24
-#, python-format
-msgid "Active ID not Found"
-msgstr "Etkin ID Bulunamadı"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -187,7 +181,8 @@ msgid "Confirmed"
 msgstr "Onaylanan"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:524
+#: code:addons/mrp_repair/models/mrp_repair.py:500
+#: code:addons/mrp_repair/models/mrp_repair.py:562
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -230,6 +225,11 @@ msgstr "Oluşturuldu"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_id
 msgid "Current Location"
 msgstr "Geçerli Konum"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
+msgid "Default address id"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -456,32 +456,34 @@ msgid "No Invoice"
 msgstr "Fatura Yok"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:511
+#: code:addons/mrp_repair/models/mrp_repair.py:491
+#: code:addons/mrp_repair/models/mrp_repair.py:553
 #, python-format
 msgid "No Pricelist!"
 msgstr "Fiyat Listesi Yok!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:322
+#: code:addons/mrp_repair/models/mrp_repair.py:250
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "\"%s\" İş Ortağı için tanımlanmış bir hesap yok."
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:350
-#: code:addons/mrp_repair/mrp_repair.py:379
+#: code:addons/mrp_repair/models/mrp_repair.py:275
+#: code:addons/mrp_repair/models/mrp_repair.py:303
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "\"%s\" Ürünü için tanımlı hesap yok."
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:372
+#: code:addons/mrp_repair/models/mrp_repair.py:296
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "Ücretlerde tanımlanmış ürün yok!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:522
+#: code:addons/mrp_repair/models/mrp_repair.py:498
+#: code:addons/mrp_repair/models/mrp_repair.py:560
 #, python-format
 msgid "No valid pricelist line found !"
 msgstr "Geçerli bir fiyat listesi bulunamadı !"
@@ -649,13 +651,13 @@ msgid "Repair Reference"
 msgstr "Onarım Referansı"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:285
+#: code:addons/mrp_repair/models/mrp_repair.py:217
 #, python-format
 msgid "Repair order is already invoiced."
 msgstr "Onarım siparişi zaten faturalandırılmış."
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:32
+#: code:addons/mrp_repair/wizard/mrp_repair_cancel.py:20
 #, python-format
 msgid "Repair order is not invoiced."
 msgstr "Onarım siparişi faturanladırılmamış"
@@ -700,7 +702,7 @@ msgstr ""
 "ise bu onarım siparişi için fatura kesmek istemediğiniz anlamına gelir."
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:272
+#: code:addons/mrp_repair/models/mrp_repair.py:210
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr "Seri numarası, '%s' ürünlü işlem kalemi için gereklidir"
@@ -747,7 +749,7 @@ msgid "Taxes"
 msgstr "Vergiler"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:207
+#: code:addons/mrp_repair/models/mrp_repair.py:166
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -847,7 +849,7 @@ msgid "VAT:"
 msgstr "KDV :"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:207
+#: code:addons/mrp_repair/models/mrp_repair.py:166
 #, python-format
 msgid "Warning"
 msgstr "Uyarı"
@@ -863,25 +865,21 @@ msgid "Yes"
 msgstr "Evet"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:308
+#: code:addons/mrp_repair/models/mrp_repair.py:238
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form!"
 msgstr "Onarım formunda bir İş Ortağı Fatıra Adresi seçmeniz gerekli!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:513
-#, python-format
+#: code:addons/mrp_repair/models/mrp_repair.py:493
+#: code:addons/mrp_repair/models/mrp_repair.py:555
+#, fuzzy, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
-"Please set one before choosing a product."
+" Please set one before choosing a product."
 msgstr ""
 "Onarım formunda bir adet fiyat listesi seçmelisiniz!\n"
 "Bir ürün seçmeden önce lütfen bir tane ayarlayın."
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
-msgid "unknown"
-msgstr "bilinmeyen"
 
 #~ msgid ""
 #~ " * The 'Draft' status is set automatically as draft when repair order in "
@@ -904,6 +902,9 @@ msgstr "bilinmeyen"
 
 #~ msgid "Action Needed"
 #~ msgstr "Eylem Gerekiyor"
+
+#~ msgid "Active ID not Found"
+#~ msgstr "Etkin ID Bulunamadı"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Kayıta işlenmiş son mesajın tarihi."
@@ -947,6 +948,9 @@ msgstr "bilinmeyen"
 #~ msgid "Reair Orders"
 #~ msgstr "Onarım Siparişleri"
 
+#~ msgid "Search Reair Orders"
+#~ msgstr "Onarım Siparişi Ara"
+
 #~ msgid "Shipping address :"
 #~ msgstr "Sevk adresi :"
 
@@ -961,3 +965,6 @@ msgstr "bilinmeyen"
 
 #~ msgid "Website communication history"
 #~ msgstr "Web Sitesi iletişim geçmişi"
+
+#~ msgid "unknown"
+#~ msgstr "bilinmeyen"

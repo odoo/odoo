@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2015-12-18 17:43+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
@@ -60,7 +60,7 @@ msgid "Confirmed"
 msgstr "Επιβεβαιωμένο"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:150
+#: code:addons/fetchmail/models/fetchmail.py:137
 #, python-format
 msgid "Connection test failed: %s"
 msgstr ""
@@ -80,13 +80,11 @@ msgid "Create a New Record"
 msgstr "Δημιουργία Νέας Εγγραφής"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "Δημιουργήθηκε από"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "Δημιουργήθηκε στις"
@@ -99,7 +97,6 @@ msgstr ""
 "προτεραιότητα"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
@@ -116,7 +113,6 @@ msgstr ""
 "Όνομα κεντρικού υπολογιστή ή η διεύθυνση IP του διακομιστή αλληλογραφίας"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "ID"
@@ -169,19 +165,16 @@ msgid "Last Fetch Date"
 msgstr "Ημερομηνία Τελευταίας Παραλαβής"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
 msgstr "Τελευταία αλλαγή στις"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
 msgstr "Τελευταία Ενημέρωση από"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "Τελευταία Ενημέρωση στις"
@@ -371,7 +364,11 @@ msgstr ""
 "εισερχόμενη αλληλογραφία θα αφαιρεθούν όλα τα συνημμένα πριν την "
 "επεξεργασία. "
 
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
-msgstr ""
+#~ msgid ""
+#~ "Whether a full original copy of each email should be kept for "
+#~ "referenceand attached to each processed message. This will usually double "
+#~ "the size of your message database."
+#~ msgstr ""
+#~ "Εάν ένα πλήρες αρχικό αντίγραφο από κάθε e-mail πρέπει να διατηρείται για "
+#~ "αναφορά και επισύναψη σε κάθε επεξεργασμένο μήνυμα. Συνήθως διπλασιάζει "
+#~ "το μέγεθος της βάσης δεδομένων των μηνυμάτων. "

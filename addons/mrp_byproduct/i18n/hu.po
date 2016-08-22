@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -56,34 +56,9 @@ msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,help:mrp_byproduct.field_mrp_subproduct_subproduct_type
-msgid ""
-"Define how the quantity of byproducts will be set on the production orders "
-"using this BoM.  'Fixed' depicts a situation where the quantity of created "
-"byproduct is always equal to the quantity set on the BoM, regardless of how "
-"many are created in the production order.  By opposition, 'Variable' means "
-"that the quantity will be computed as    '(quantity of byproduct set on the "
-"BoM / quantity of manufactured product set on the BoM * quantity of "
-"manufactured product in the production order.)'"
-msgstr ""
-"Annak meghatározása, hogyan lesz beállítva a melléktermék mennyiség ehhez a "
-"darabjegyzékhez a termelési megbízáson. 'Fix' azt a szituációt írja le ahol "
-"a végtermék mennyiség mindig egyenlő a darabjegyzéken lévő  mennyiséggel, "
-"függetlenül attól, mennyi készül a termelési megbízáskor.  Ellenben, "
-"'Variálható' azt jelenti, hogy a mennyiség ki lesz számítva ezzel a "
-"függvénnyel  '(a darabjegyzéken beállított melléktermék mennyiség / a "
-"darabjegyzéken beállított gyártott termék mennyiség * a termelési megbízáson "
-"található gyártott mennyiség.)'"
-
-#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
 msgid "Display Name"
 msgstr "Név megjelenítése"
-
-#. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
-msgstr "Állandó"
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_id
@@ -106,6 +81,11 @@ msgid "Last Updated on"
 msgstr "Utoljára frissítve "
 
 #. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_operation_id
+msgid "Produced at Operation"
+msgstr ""
+
+#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
 msgid "Product"
 msgstr "Termék"
@@ -116,23 +96,27 @@ msgid "Product Qty"
 msgstr "Termékmenny."
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom
-msgid "Product Unit of Measure"
-msgstr "Termék mértékegysége"
-
-#. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
-#, fuzzy
 msgid "Production"
-msgstr "Termék"
+msgstr "Éles"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_subproduct_type
-msgid "Quantity Type"
-msgstr "Mennyiség típusa"
+#: model:ir.model,name:mrp_byproduct.model_stock_move
+msgid "Stock Move"
+msgstr "Készletmozgás"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:45
+#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct"
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
+msgid "Subproduct line that generated the move in a manufacturing order"
+msgstr ""
+
+#. module: mrp_byproduct
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:32
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -142,15 +126,46 @@ msgstr ""
 "űrlapján van."
 
 #. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Variable"
-msgstr "Változó"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom_id
+msgid "Unit of Measure"
+msgstr "Mértékegység"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:45
+#: code:addons/mrp_byproduct/models/mrp_subproduct.py:31
 #, python-format
 msgid "Warning"
 msgstr "Figyelem"
 
+#~ msgid ""
+#~ "Define how the quantity of byproducts will be set on the production "
+#~ "orders using this BoM.  'Fixed' depicts a situation where the quantity of "
+#~ "created byproduct is always equal to the quantity set on the BoM, "
+#~ "regardless of how many are created in the production order.  By "
+#~ "opposition, 'Variable' means that the quantity will be computed as    "
+#~ "'(quantity of byproduct set on the BoM / quantity of manufactured product "
+#~ "set on the BoM * quantity of manufactured product in the production "
+#~ "order.)'"
+#~ msgstr ""
+#~ "Annak meghatározása, hogyan lesz beállítva a melléktermék mennyiség ehhez "
+#~ "a darabjegyzékhez a termelési megbízáson. 'Fix' azt a szituációt írja le "
+#~ "ahol a végtermék mennyiség mindig egyenlő a darabjegyzéken lévő  "
+#~ "mennyiséggel, függetlenül attól, mennyi készül a termelési megbízáskor.  "
+#~ "Ellenben, 'Variálható' azt jelenti, hogy a mennyiség ki lesz számítva "
+#~ "ezzel a függvénnyel  '(a darabjegyzéken beállított melléktermék "
+#~ "mennyiség / a darabjegyzéken beállított gyártott termék mennyiség * a "
+#~ "termelési megbízáson található gyártott mennyiség.)'"
+
+#~ msgid "Fixed"
+#~ msgstr "Állandó"
+
 #~ msgid "Manufacturing Order"
 #~ msgstr "Gyártási utasítás"
+
+#~ msgid "Product Unit of Measure"
+#~ msgstr "Termék mértékegysége"
+
+#~ msgid "Quantity Type"
+#~ msgstr "Mennyiség típusa"
+
+#~ msgid "Variable"
+#~ msgstr "Változó"

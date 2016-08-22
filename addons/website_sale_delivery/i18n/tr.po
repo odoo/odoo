@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-04-23 18:32+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -29,6 +29,14 @@ msgstr ""
 "teslimat yöntemi seçildikten sonra güncellenecek.\"> Teslimat:</span>"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
+msgid ""
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
+"Customer Invoice/Refund"
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
 msgid "Accessory Products"
 msgstr "Ürün Aksesuar"
@@ -42,6 +50,16 @@ msgstr "Ürün sayfasında görünüyor"
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
 msgid "Appear on the shopping cart"
 msgstr "Alışveriş sepetinde görünür"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability
+msgid "Availability"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability_warning
+msgid "Availability Warning"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_available_in_pos
@@ -71,19 +89,21 @@ msgid "Choose your Delivery Method"
 msgstr "Teslimat Yöntemini Seçin"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
-msgid "Country..."
+#: model:ir.model,name:website_sale_delivery.model_res_country
+#, fuzzy
+msgid "Country"
 msgstr "Ülke"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_project_id
-msgid "Create a task under this project on sale order validation."
-msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
 msgstr "Teslimat Tutarı"
+
+#. module: website_sale_delivery
+#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
+#, fuzzy
+msgid "Delivery Methods"
+msgstr "Teslimat Yöntemini Seçin"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -92,7 +112,8 @@ msgstr "Açıklama"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
-msgid "Description displayed on the eCommerce and on the Online Quotations."
+#, fuzzy
+msgid "Description displayed on the eCommerce and on online quotations."
 msgstr "eTicaret ve Çevrimiçi Tekliflerde görüntülenecek açıklama."
 
 #. module: website_sale_delivery
@@ -146,17 +167,12 @@ msgid "Landed Costs"
 msgstr "Maliyet Yüklemeleri"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn_msg
-msgid "Message for Purchase Order Line"
-msgstr "Satınalma Sipariş Satırı için Mesaj"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_last_value
+msgid "Last Value"
+msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn_msg
-msgid "Message for Sales Order Line"
-msgstr "Satış Sipariş Satırı için Mesaj"
-
-#. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:138
+#: code:addons/website_sale_delivery/models/sale_order.py:106
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address. "
@@ -186,51 +202,26 @@ msgid "Products to propose when add to cart."
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_project_id
-msgid "Project"
-msgstr "Proje"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-msgid "Purchase Order Line"
-msgstr "Satınalma Sipariş Satırı"
-
-#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
 msgid "Rating"
+msgstr "Derecelendirme"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_count
+#, fuzzy
+msgid "Rating count"
+msgstr "Derecelendirme"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_rating_last_value
+#, fuzzy
+msgid "Rating value"
 msgstr "Derecelendirme"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
 msgid "Sales Order"
 msgstr "Satış Siparişi"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid "Sales Order Line"
-msgstr "Satış Siparişi Satırı"
-
-#. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
-msgid "Select..."
-msgstr "Seç..."
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
-"\"Uyarı\" seçeneğini seçmek kullanıcıyı mesajla uyaracaktır. \"Mesaj "
-"Engelleme\"yi seçmek mesajla ilgili bir kuraldışı durum oluşturacak ve akışı "
-"durduracaktır. Mesaj bir sonraki alana yazılmalıdır."
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
-msgid "Sequence"
-msgstr "Sıra"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_x
@@ -243,7 +234,7 @@ msgid "Size Y"
 msgstr "Y Boyutu"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:137
+#: code:addons/website_sale_delivery/models/sale_order.py:105
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr "Üzgünüz, siparişinizi gönderememekteyiz."
@@ -269,6 +260,13 @@ msgid "The amount without tax."
 msgstr "Vergisiz tutar"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_availability
+msgid ""
+"This field is used to display a availability banner with a message on the "
+"ecommerce"
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Those categories are used to group similar products for e-commerce."
 msgstr ""
@@ -290,9 +288,25 @@ msgid "Tracking:"
 msgstr ""
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
+msgid "Visible in Website"
+msgstr "Web Sitesinde Görünür"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
+msgid "Website Comments"
+msgstr "Yorumlar"
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Website Product Category"
 msgstr "Websitesi Ürün Kategorisi"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
+#, fuzzy
+msgid "Website Sequence"
+msgstr "Sıra"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
@@ -316,14 +330,35 @@ msgstr "Web sitesi meta başlık"
 #~ "Bu kutuyu, tedarikten teklif isteği oluşturmak yerine Teklif Çağrısı "
 #~ "oluşturmak için işaretleyin."
 
+#~ msgid "Message for Purchase Order Line"
+#~ msgstr "Satınalma Sipariş Satırı için Mesaj"
+
+#~ msgid "Message for Sales Order Line"
+#~ msgstr "Satış Sipariş Satırı için Mesaj"
+
+#~ msgid "Project"
+#~ msgstr "Proje"
+
+#~ msgid "Purchase Order Line"
+#~ msgstr "Satınalma Sipariş Satırı"
+
+#~ msgid "Sales Order Line"
+#~ msgstr "Satış Siparişi Satırı"
+
+#~ msgid "Select..."
+#~ msgstr "Seç..."
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "\"Uyarı\" seçeneğini seçmek kullanıcıyı mesajla uyaracaktır. \"Mesaj "
+#~ "Engelleme\"yi seçmek mesajla ilgili bir kuraldışı durum oluşturacak ve "
+#~ "akışı durduracaktır. Mesaj bir sonraki alana yazılmalıdır."
+
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr "Belgeye web sitesinden erişim için tam adres."
-
-#~ msgid "Visible in Website"
-#~ msgstr "Web Sitesinde Görünür"
-
-#~ msgid "Website Comments"
-#~ msgstr "Yorumlar"
 
 #~ msgid "Website URL"
 #~ msgstr "Web sitesi URL'si"

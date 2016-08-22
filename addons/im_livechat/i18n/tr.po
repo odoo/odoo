@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-05-31 18:08+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -116,6 +116,22 @@ msgid "Bad"
 msgstr "Kötü"
 
 #. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
+#: model:ir.ui.menu,name:im_livechat.canned_responses
+msgid "Canned Responses"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid ""
+"Canned responses allow you to insert prewritten responses in\n"
+"                your messages by typing <i>:shortcut</i>. The shortcut is\n"
+"                replaced directly in your message, so that you can still "
+"edit\n"
+"                it before sending."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_livechat_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_livechat_channel_id
@@ -158,6 +174,11 @@ msgstr "Sohbet giriş yer tutucu"
 #, python-format
 msgid "Chat with one of our collaborators"
 msgstr "Bir bizim ortak çalışanlar ile sohbet"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid "Click to create a new canned response."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -395,6 +416,11 @@ msgid "Last Modified on"
 msgstr "Son değiştirme tarihi"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_mail_channel_partner
+msgid "Last Seen Many2many"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_uid
 msgid "Last Updated by"
@@ -416,6 +442,12 @@ msgstr "Son Hafta"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Leave Channel"
 msgstr "Kanaldan Ayrıl"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
+#, fuzzy
+msgid "Live Chat"
+msgstr "Canlı Sohbet Kanalı"
 
 #. module: im_livechat
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
@@ -442,11 +474,6 @@ msgid ""
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "Livechat Support Page"
-msgstr "Livechat Destek Sayfası"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -560,6 +587,13 @@ msgid ""
 "Operators\n"
 "                                            <br/>\n"
 "                                            <i class=\"fa fa-comments\"/>"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Operators that do not show any activity In Odoo for more than 30 minutes "
+"will be considered as disconnected."
 msgstr ""
 
 #. module: im_livechat
@@ -757,7 +791,7 @@ msgstr "Kullanıcı"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/controllers/main.py:30
+#: code:addons/im_livechat/controllers/main.py:34
 #: code:addons/im_livechat/static/src/js/im_livechat.js:28
 #, python-format
 msgid "Visitor"
@@ -769,18 +803,8 @@ msgid "Web Page"
 msgstr "Web Sayfası"
 
 #. module: im_livechat
-#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
-msgid "Website Live Chat"
-msgstr ""
-
-#. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
 msgid "Website Live Chat Channels"
-msgstr ""
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "Website Live Chat Powered by <strong>Odoo</strong>."
 msgstr ""
 
 #. module: im_livechat
@@ -798,6 +822,13 @@ msgid ""
 msgstr ""
 
 #. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.mail_channel_action
+msgid ""
+"Your chatter history is empty. Create a channel and start chatting to fill "
+"up your history."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Hello, how may I help you?"
 msgstr ""
@@ -810,6 +841,11 @@ msgid "e.g. YourWebsite.com"
 msgstr "örn. websitesi.com"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
 msgstr ""
@@ -820,3 +856,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "seconds"
 msgstr ""
+
+#~ msgid "Livechat Support Page"
+#~ msgstr "Livechat Destek Sayfası"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-03-01 15:58+0000\n"
 "Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -134,11 +134,6 @@ msgstr ""
 "Aşağıdaki abonelik bağlantısını içeren bir davet epostası gönderilmiştir:"
 
 #. module: auth_signup
-#: selection:res.users,state:0
-msgid "Activated"
-msgstr ""
-
-#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
 msgstr "Dış kullanıcıların kayıt olmasına izin ver"
@@ -183,6 +178,12 @@ msgstr "Doğrula"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
 msgstr "Parolayı Doğrula"
+
+#. module: auth_signup
+#: selection:res.users,state:0
+#, fuzzy
+msgid "Confirmed"
+msgstr "Doğrula"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:41
@@ -461,3 +462,9 @@ msgstr "Örn. John Doe"
 
 #~ msgid "Connected"
 #~ msgstr "Bağlandı"
+
+#~ msgid "Signup Expiration"
+#~ msgstr "Kayıt Olma Süresi Aşımı"
+
+#~ msgid "Signup Token"
+#~ msgstr "Kayıt Olma Belirteçi"

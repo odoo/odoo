@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-01-27 18:30+0000\n"
 "Last-Translator: David Hernandez <davidhernandez.ctam@gmail.com>\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/"
@@ -57,7 +57,7 @@ msgid "Active"
 msgstr "Activo"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:34
+#: code:addons/google_drive/models/google_drive.py:40
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
 msgstr ""
@@ -95,7 +95,7 @@ msgid "Created on"
 msgstr "Creado en"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:141
+#: code:addons/google_drive/models/google_drive.py:159
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr ""
@@ -117,15 +117,15 @@ msgid "Filter"
 msgstr "Filtro"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:53
-#: code:addons/google_drive/google_drive.py:73
+#: code:addons/google_drive/models/google_drive.py:59
+#: code:addons/google_drive/models/google_drive.py:80
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Ir a la configuración del panel"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_client_id
-msgid "Google Client "
+msgid "Google Client"
 msgstr ""
 
 #. module: google_drive
@@ -145,8 +145,8 @@ msgid "Google Drive Name Pattern"
 msgstr "Google Drive Nombre del patrón"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:55
-#: code:addons/google_drive/google_drive.py:75
+#: code:addons/google_drive/models/google_drive.py:61
+#: code:addons/google_drive/models/google_drive.py:82
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
 msgstr ""
@@ -195,24 +195,21 @@ msgstr ""
 "utilizan para colaborar con sus empleados."
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model_id
 msgid "Model"
 msgstr "Modelo"
 
 #. module: google_drive
-#: constraint:google.drive.config:0
-msgid ""
-"Model of selected filter is not matching with model of current template."
-msgstr ""
-"Modelo de selección de filtro no corresponde con el modelo de plantilla de "
-"moneda"
-
-#. module: google_drive
-#: code:addons/google_drive/google_drive.py:173
+#: code:addons/google_drive/models/google_drive.py:201
 #, python-format
 msgid "Please enter a valid Google Document URL."
 msgstr ""
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
+#, fuzzy
+msgid "Related Model"
+msgstr "Creado en"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_resource_id
@@ -220,7 +217,7 @@ msgid "Resource Id"
 msgstr "Id recurso"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:72
+#: code:addons/google_drive/models/google_drive.py:79
 #, python-format
 msgid ""
 "Something went wrong during the token generation. Please request again an "
@@ -244,7 +241,7 @@ msgid "Templates"
 msgstr "Plantillas"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:90
+#: code:addons/google_drive/models/google_drive.py:97
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
 msgstr "La plantilla Google no puede ser encontrada. Quizá es ha sido borrada."
@@ -267,7 +264,7 @@ msgid ""
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:117
+#: code:addons/google_drive/models/google_drive.py:135
 #, python-format
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
@@ -280,7 +277,7 @@ msgid "URI"
 msgstr "URI"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:52
+#: code:addons/google_drive/models/google_drive.py:58
 #, python-format
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
@@ -305,3 +302,9 @@ msgid ""
 "https://docs.google.com/document/"
 "d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
 msgstr ""
+
+#~ msgid ""
+#~ "Model of selected filter is not matching with model of current template."
+#~ msgstr ""
+#~ "Modelo de selección de filtro no corresponde con el modelo de plantilla "
+#~ "de moneda"

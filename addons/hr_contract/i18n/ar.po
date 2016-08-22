@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-01-07 14:46+0000\n"
 "Last-Translator: salah Elabbar <salah@elshaden.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
@@ -41,6 +41,11 @@ msgid "Basic Salary of the employee"
 msgstr "الراتب الأساسي للموظف"
 
 #. module: hr_contract
+#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "Click here to create new contracts."
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
 msgid "Company Vehicle"
 msgstr "سيارة الشركة"
@@ -53,7 +58,7 @@ msgstr "مرجع العقد"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5718
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -78,6 +83,12 @@ msgstr "عقود للتجديد"
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
 msgstr "العقد منتهي"
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:84
+#, fuzzy, python-format
+msgid "Contract start date must be less than contract end date."
+msgstr "خطأ! تاريخ بدء العقد يجب أن يكون قبل تاريخ انتهاء العقد."
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
@@ -155,11 +166,6 @@ msgid "End Date"
 msgstr "تاريخ الإنتهاء"
 
 #. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! Contract start-date must be less than contract end-date."
-msgstr "خطأ! تاريخ بدء العقد يجب أن يكون قبل تاريخ انتهاء العقد."
-
-#. module: hr_contract
 #: selection:hr.contract,state:0
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
@@ -195,6 +201,11 @@ msgstr "المنزل / العمل"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id
 msgid "ID"
 msgstr "المعرف"
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Important Messages"
+msgstr "رسائل مهمة"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
@@ -344,11 +355,6 @@ msgid "Trial Start Date"
 msgstr "تاريخ بدء المحاولة"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Unread Messages"
-msgstr "رسائل غير مقروءة"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
 msgid "Use employee work schedule"
 msgstr "استخدم جدول عمل العامل"
@@ -412,9 +418,6 @@ msgstr "جدول العمل"
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "عند التفعيل، توجد رسالة جديدة"
 
-#~ msgid "Important Messages"
-#~ msgstr "رسائل مهمة"
-
 #~ msgid "Is Follower"
 #~ msgstr "متابع"
 
@@ -435,6 +438,9 @@ msgstr "جدول العمل"
 
 #~ msgid "Number of unread messages"
 #~ msgstr "عدد الرسائل غير المقروءة"
+
+#~ msgid "Unread Messages"
+#~ msgstr "رسائل غير مقروءة"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "عداد الرسائل الغير مقروءة"

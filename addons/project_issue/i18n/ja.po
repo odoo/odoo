@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-07-20 14:37+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
@@ -30,12 +30,12 @@ msgid "# Issues"
 msgstr "課題数"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr_issues
 msgid "# of Issues"
 msgstr "課題数"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:215
+#: code:addons/project_issue/models/project_issue.py:162
 #, python-format
 msgid "%s (copy)"
 msgstr "%s（コピー）"
@@ -56,13 +56,8 @@ msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
-msgid ""
-"A Issue's kanban state indicates special situations affecting it:\n"
-" * Normal is the default situation\n"
-" * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the "
-"next stage"
+#: selection:project.config.settings,module_project_issue_sheet:0
+msgid "Activate timesheets on issues"
 msgstr ""
 
 #. module: project_issue
@@ -74,6 +69,21 @@ msgstr "有効"
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Add an internal note..."
 msgstr "内部注記を追加..."
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
+msgid ""
+"An Issue's kanban state indicates special situations affecting it:\n"
+"\n"
+"                                           * Normal is the default "
+"situation\n"
+"\n"
+"                                           * Blocked indicates something is "
+"preventing the progress of this issue\n"
+"\n"
+"                                           * Ready for next stage indicates "
+"the issue is ready to be pulled to the next stage"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -124,6 +134,18 @@ msgid "Blocked"
 msgstr "ブロック"
 
 #. module: project_issue
+#: model:project.issue,legend_done:project_issue.crm_case_buginaccountsmodule0
+#: model:project.issue,legend_done:project_issue.crm_case_constrainterror0
+#: model:project.issue,legend_done:project_issue.crm_case_errorinprogram0
+#: model:project.issue,legend_done:project_issue.crm_case_improvereportsinpms0
+#: model:project.issue,legend_done:project_issue.crm_case_includeattendancesheetinproject0
+#: model:project.issue,legend_done:project_issue.crm_case_newfeaturestobeadded0
+#: model:project.issue,legend_done:project_issue.crm_case_patcheserrorinprogram0
+#: model:project.issue,legend_done:project_issue.crm_case_programnotgivingproperoutput0
+msgid "Buzz or set as done"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
 msgid "By Responsible"
 msgstr ""
@@ -138,11 +160,6 @@ msgstr "チャネル"
 #: model:ir.model.fields,help:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,help:project_issue.field_project_project_use_issues
 msgid "Check this box to manage customer activities through this project"
-msgstr ""
-
-#. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.open_view_issue
-msgid "Click to create an issue."
 msgstr ""
 
 #. module: project_issue
@@ -199,17 +216,23 @@ msgstr "作成者"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
+#, fuzzy
+msgid "Created on"
+msgstr "作成者"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
 msgid "Creation Date"
 msgstr "作成日"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:384
+#: code:addons/project_issue/models/project_issue.py:300
 #, python-format
 msgid "Customer"
 msgstr "顧客"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:386
+#: code:addons/project_issue/models/project_issue.py:302
 #, python-format
 msgid "Customer Email"
 msgstr "顧客Eメール"
@@ -291,6 +314,11 @@ msgid "Display Name"
 msgstr "表示名"
 
 #. module: project_issue
+#: selection:project.config.settings,module_project_issue_sheet:0
+msgid "Do not track working hours on issues"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
 msgid "Duration"
 msgstr "期間"
@@ -327,12 +355,17 @@ msgid "Group By"
 msgstr "グループ化"
 
 #. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Helpdesk & Support"
+msgstr ""
+
+#. module: project_issue
 #: selection:project.issue,priority:0 selection:project.issue.report,priority:0
 msgid "High"
 msgstr "高"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:362
+#: code:addons/project_issue/models/project_issue.py:275
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -407,15 +440,11 @@ msgstr "次のステージに移動できる課題"
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,name:project_issue.action_view_issues
-#: model:ir.actions.act_window,name:project_issue.open_view_issue
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
-#: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_needaction_count
-#: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
-#: model:ir.ui.menu,name:project_issue.portal_services_issues
 #: model:ir.ui.view,arch_db:project_issue.project_issue_calendar_view
 #: model:ir.ui.view,arch_db:project_issue.res_partner_issues_button_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
@@ -478,6 +507,12 @@ msgid "Last Updated by"
 msgstr "最終更新者"
 
 #. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
+#, fuzzy
+msgid "Last Updated on"
+msgstr "最終更新者"
+
+#. module: project_issue
 #: selection:project.issue,priority:0 selection:project.issue.report,priority:0
 msgid "Low"
 msgstr "低い"
@@ -488,13 +523,25 @@ msgid "My Issues"
 msgstr "自分の課題"
 
 #. module: project_issue
+#: model:project.issue,legend_blocked:project_issue.crm_case_buginaccountsmodule0
+#: model:project.issue,legend_blocked:project_issue.crm_case_constrainterror0
+#: model:project.issue,legend_blocked:project_issue.crm_case_errorinprogram0
+#: model:project.issue,legend_blocked:project_issue.crm_case_improvereportsinpms0
+#: model:project.issue,legend_blocked:project_issue.crm_case_includeattendancesheetinproject0
+#: model:project.issue,legend_blocked:project_issue.crm_case_newfeaturestobeadded0
+#: model:project.issue,legend_blocked:project_issue.crm_case_patcheserrorinprogram0
+#: model:project.issue,legend_blocked:project_issue.crm_case_programnotgivingproperoutput0
+msgid "Need functional or technical help"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "New"
 msgstr "新規"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:364
+#: code:addons/project_issue/models/project_issue.py:279
 #, python-format
 msgid "New Issue"
 msgstr ""
@@ -505,16 +552,30 @@ msgid "Next Action"
 msgstr "次のアクション"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:413
+#: code:addons/project_issue/models/project_issue.py:326
 #, python-format
 msgid "No Subject"
 msgstr "件名なし"
+
+#. module: project_issue
+#: selection:project.config.settings,module_rating_project_issue:0
+#, fuzzy
+msgid "No customer rating"
+msgstr "顧客Eメール"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
 msgstr "通常"
+
+#. module: project_issue
+#: model:project.issue,legend_blocked:project_issue.crm_case_createnewobject0
+#: model:project.issue,legend_blocked:project_issue.crm_case_pagenotfound0
+#: model:project.issue,legend_blocked:project_issue.crm_case_problemloadingpage0
+#: model:project.issue,legend_blocked:project_issue.crm_case_programmingerror0
+msgid "Not validated"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -527,12 +588,33 @@ msgid "Number of Days to open the project issue."
 msgstr ""
 
 #. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_blocked
+msgid ""
+"Override the default value displayed for the blocked state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_done
+msgid ""
+"Override the default value displayed for the done state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_normal
+msgid ""
+"Override the default value displayed for the normal state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+
+#. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
 msgid "Partner"
 msgstr "取引先"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:530
+#: code:addons/project_issue/models/account_analytic_account.py:16
 #, python-format
 msgid ""
 "Please remove existing issues in the project linked to the accounts you want "
@@ -564,6 +646,7 @@ msgid "Project"
 msgstr "プロジェクト"
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_graph
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_pivot
 msgid "Project Issue"
@@ -576,28 +659,27 @@ msgid "Project Issues"
 msgstr ""
 
 #. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_project_issue_sheet
+msgid ""
+"Provides timesheet support for the issues/bugs management in project.\n"
+"-This installs the module project_issue_sheet."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
+msgid "Rating on issue"
+msgstr ""
+
+#. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
 msgstr "次のステージに移動可"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_team_id
-msgid "Sale Team"
-msgstr "販売チーム"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_team_id
-msgid "Sales Team"
-msgstr "営業チーム"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_team_id
-msgid ""
-"Sales team to which Case belongs to.                             Define "
-"Responsible user and Email account for mail gateway."
-msgstr ""
-"このケースに属する販売チーム。メールゲートウェイのために担当ユーザとEメールを"
-"定義します。"
+#: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
+#, fuzzy
+msgid "Ready to reopen"
+msgstr "割当までの遅延平均"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -645,7 +727,7 @@ msgstr "ステージ"
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
 msgid ""
-"The Odoo issues tacker allows you to efficiently manage things\n"
+"The Odoo issues tracker allows you to efficiently manage things\n"
 "                    like internal requests, software development bugs, "
 "customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
@@ -654,17 +736,18 @@ msgstr ""
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
 msgid ""
-"The Odoo issues tacker allows you to efficiently manage things\n"
+"The Odoo issues tracker allows you to efficiently manage things\n"
 "                like internal requests, software development bugs, customer\n"
 "                complaints, project troubles, material breakdowns, etc."
 msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
+#, fuzzy
 msgid ""
-"These email addresses will be added to the CC field of all inbound and "
-"outbound emails for this record before being sent. Separate multiple email "
-"addresses with a comma"
+"These email addresses will be added to the CC field of all inbound\n"
+"        and outbound emails for this record before being sent. Separate "
+"multiple email addresses with a comma"
 msgstr ""
 "これらのEメールアドレスは送受信するEメールの CC 欄に追加されます。複数のEメー"
 "ルアドレスの間にはコンマを入れてください。"
@@ -673,6 +756,11 @@ msgstr ""
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
 msgid "These people will receive email."
 msgstr "これらの人がEメールを受け取ります。"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
+msgid "This allows customers to give rating on issue"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -688,6 +776,21 @@ msgstr ""
 "メールの数や平均消費時間等が分析できます。"
 
 #. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_config_settings_form_inherit_project_issue
+msgid "Timesheets"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
+msgid "Timesheets on Issues"
+msgstr ""
+
+#. module: project_issue
+#: selection:project.config.settings,module_rating_project_issue:0
+msgid "Track customer satisfaction on issues"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Unassigned"
@@ -700,12 +803,8 @@ msgid "Unread Messages"
 msgstr "未読メッセージ"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
-msgid "Update Date"
-msgstr "更新日"
-
-#. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
+#: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
+#: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 msgid "Use Issues"
 msgstr ""
 
@@ -742,23 +841,15 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.open_view_issue
-msgid ""
-"You can track your issues from this menu and the action we     \n"
-"                will take."
-msgstr ""
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:263
+#: code:addons/project_issue/models/project_issue.py:197
 #, python-format
 msgid "issues"
 msgstr "課題"
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_project_issue
-#, fuzzy
-msgid "project issue"
-msgstr "プロジェクト課題"
+#: model:ir.model,name:project_issue.model_project_config_settings
+msgid "project.config.settings"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
@@ -780,6 +871,9 @@ msgstr ""
 #~ msgid "Followers (Partners)"
 #~ msgstr "フォロワー(取引先)"
 
+#~ msgid "Issue ready for next sStage"
+#~ msgstr "次のステージに移動できる課題"
+
 #~ msgid "Last Message Date"
 #~ msgstr "最終メッセージ日"
 
@@ -795,11 +889,31 @@ msgstr ""
 #~ msgid "Number of unread messages"
 #~ msgstr "未読メッセージの件数"
 
+#~ msgid "Sale Team"
+#~ msgstr "販売チーム"
+
+#~ msgid "Sales Team"
+#~ msgstr "営業チーム"
+
+#~ msgid ""
+#~ "Sales team to which Case belongs to.                             Define "
+#~ "Responsible user and Email account for mail gateway."
+#~ msgstr ""
+#~ "このケースに属する販売チーム。メールゲートウェイのために担当ユーザとEメー"
+#~ "ルを定義します。"
+
 #~ msgid "Unread Messages Counter"
 #~ msgstr "未読メッセージカウンター"
+
+#~ msgid "Update Date"
+#~ msgstr "更新日"
 
 #~ msgid "Website Messages"
 #~ msgstr "ウェブサイトメッセージ"
 
 #~ msgid "Website communication history"
 #~ msgstr "ウェブサイトコミュニケーション履歴"
+
+#, fuzzy
+#~ msgid "project issue"
+#~ msgstr "プロジェクト課題"

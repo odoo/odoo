@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2015-12-09 19:48+0000\n"
 "Last-Translator: Grazziano Duarte <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
@@ -85,11 +85,6 @@ msgid "Manage your payment methods"
 msgstr "Gerencie seus métodos de pagamento"
 
 #. module: website_payment
-#: model:ir.ui.view,arch_db:website_payment.pay_methods
-msgid "My Account"
-msgstr "Minha Conta"
-
-#. module: website_payment
 #: code:addons/website_payment/controllers/main.py:43
 #, python-format
 msgid "Pay Now"
@@ -117,6 +112,12 @@ msgid "Payment Methods"
 msgstr "Formas de pagamento"
 
 #. module: website_payment
+#: model:ir.model,name:website_payment.model_payment_transaction
+#, fuzzy
+msgid "Payment Transaction"
+msgstr "Método de Pagamento"
+
+#. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 msgid "Payment processed by"
 msgstr "Pagamento processado por"
@@ -126,6 +127,16 @@ msgstr "Pagamento processado por"
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "Reference"
 msgstr "Referência"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_payment_transaction_sale_order_id
+msgid "Sale Order"
+msgstr ""
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_sale_order
+msgid "Sales Order"
+msgstr ""
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay
@@ -147,6 +158,9 @@ msgstr "account.config.settings"
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "payment_provider_logo"
 msgstr "payment_provider_logo"
+
+#~ msgid "My Account"
+#~ msgstr "Minha Conta"
 
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr "A URL completa para acessar o documento através do site."

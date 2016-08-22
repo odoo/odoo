@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -168,7 +168,7 @@ msgid "Name of the picking wave"
 msgstr "Kiválogatási hullám neve"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:42
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:46
 #, python-format
 msgid "Nothing to print."
 msgstr "Nincs nyomtatandó anyag."
@@ -179,10 +179,10 @@ msgid "Person responsible for this wave"
 msgstr "Ennek a hullámnak a felelőse"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:64
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9973
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -205,7 +205,7 @@ msgid "Picking Waves not finished"
 msgstr "Befejezetlen kiválogatási hullámok"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9973
 msgid "Picking wave associated to this picking"
 msgstr "Ezzel a kiválogatással összefüggő kiválogatási hullám"
 
@@ -217,8 +217,8 @@ msgstr "Kiválogatások"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-msgid "Print all pickings"
-msgstr "Összes kiválogatás nyomtatása"
+msgid "Print"
+msgstr "Nyomtatás"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_user_id
@@ -241,7 +241,7 @@ msgid "Select a wave"
 msgstr "Egy hullám kiválasztása"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:59
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:59
 #, python-format
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
@@ -282,7 +282,6 @@ msgstr "Raktár kiválogatási hullám"
 
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
-#, fuzzy
 msgid ""
 "The goal of the picking waves is to group operations that may\n"
 "                (needs to) be done together in order to increase their "
@@ -292,14 +291,6 @@ msgid ""
 "                help the timing management of operations (tasks to be done "
 "at 1pm)."
 msgstr ""
-"A kiválogatási hullámok célja olyan műveletek lehetséges (szükséges) "
-"csoportba \n"
-"                szedése, melyeket együtt elvégezni ahhoz, hogy növeljük a "
-"hatékonyságot.\n"
-"                Hasznosa lehet munkák iktatásához (egy személy =egy hullám) "
-"vagy\n"
-"                a műveletek, idő kiosztás kezelés segítségének (feladatnak "
-"du. 1 órára kész kell lennie)."
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking
@@ -307,7 +298,7 @@ msgid "Transfer"
 msgstr "Átvitel"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:63
 #, python-format
 msgid "Transferred by"
 msgstr "Átvitel ezzel "
@@ -363,6 +354,27 @@ msgstr "Hullám"
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Olvasatlan üzenetek száma"
+
+#~ msgid "Print all pickings"
+#~ msgstr "Összes kiválogatás nyomtatása"
+
+#~ msgid ""
+#~ "The Goal of the picking waves is to group operations that may \n"
+#~ "                (needs to) be done together in order to increase their "
+#~ "efficiency.\n"
+#~ "                It may also be useful to assign jobs (one person = one "
+#~ "wave) or\n"
+#~ "                help the timing management of operations (tasks to be "
+#~ "done at 1pm)."
+#~ msgstr ""
+#~ "A kiválogatási hullámok célja olyan műveletek lehetséges (szükséges) "
+#~ "csoportba \n"
+#~ "                szedése, melyeket együtt elvégezni ahhoz, hogy növeljük a "
+#~ "hatékonyságot.\n"
+#~ "                Hasznosa lehet munkák iktatásához (egy személy =egy "
+#~ "hullám) vagy\n"
+#~ "                a műveletek, idő kiosztás kezelés segítségének "
+#~ "(feladatnak du. 1 órára kész kell lennie)."
 
 #~ msgid "Unread Messages"
 #~ msgstr "Olvasatlan üzenetek"

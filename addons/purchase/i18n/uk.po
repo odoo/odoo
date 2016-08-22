@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-06-28 10:36+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -23,7 +23,6 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: purchase
-#: model:mail.template,body_html:purchase.email_template_edi_purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
 "\n"
@@ -52,6 +51,34 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: model:mail.template,body_html:purchase.email_template_edi_purchase
+msgid ""
+"\n"
+"<p>Dear\n"
+"% if object.partner_id.is_company and object.child_ids:\n"
+"    ${object.partner_id.child_ids[0].name}\n"
+"% else :\n"
+"    ${object.partner_id.name}\n"
+"% endif\n"
+",</p><p>\n"
+"Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or "
+"'purchase order confirmation'} <strong>${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    with reference: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"amounting in <strong>${object.amount_total} ${object.currency_id.name}</"
+"strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>If you have any question, do not hesitate to contact us.</p>\n"
+"<p>Best regards,</p>\n"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_stock_dropshipping
 #, fuzzy
 msgid ""
@@ -64,7 +91,7 @@ msgstr ""
 "модуль stock_dropshipping."
 
 #. module: purchase
-#: code:addons/purchase/stock.py:81
+#: code:addons/purchase/stock.py:93
 #, python-format
 msgid " Buy"
 msgstr " Купити"
@@ -170,24 +197,19 @@ msgid "<strong>Your Order Reference</strong>"
 msgstr "<strong>Посилання вашого замовлення</strong>"
 
 #. module: purchase
+#: model:res.groups,name:purchase.group_warning_purchase
+msgid "A warning can be set on a product or a customer (Purchase)"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
 msgid "Add Purchase Order"
 msgstr "Додати замовлення на купівлю"
 
 #. module: purchase
-#: model:res.groups,name:purchase.group_advance_bidding
-msgid "Advance bidding process"
-msgstr "Розширений процес пропозицій"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_advance_purchase_requisition
-msgid "Advanced Calls for Tenders"
-msgstr "Розширені тендери"
-
-#. module: purchase
-#: selection:purchase.config.settings,group_advance_purchase_requisition:0
-msgid "Advanced call for tender (choose products from different RFQ)"
-msgstr "Розширені тендери (обирати товари з різних ЗКП)"
+#: selection:purchase.config.settings,group_warning_purchase:0
+msgid "All the products and the customers can be used in purchase orders"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.config.settings,module_stock_dropshipping:0
@@ -218,6 +240,11 @@ msgid ""
 msgstr "Дозволяє обирати та керувати різними одиницями виміру товарів."
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_account_config_settings_group_analytic_account_for_purchases
+msgid "Allows you to specify an analytic account on purchase order lines."
+msgstr "Дозволяє вам вказувати аналітичний рахунок в замовленнях на купівлю."
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
 "An administrator can set up default Terms and conditions in your Company "
@@ -225,6 +252,12 @@ msgid ""
 msgstr ""
 "Адміністратор може встановлювати типові терміни та умови в параметрах вашої "
 "компанії"
+
+#. module: purchase
+#: selection:purchase.config.settings,group_warning_purchase:0
+msgid ""
+"An informative or blocking warning can be set on a product or a customer"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
@@ -235,6 +268,17 @@ msgstr "Аналітичний рахунок"
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
+msgstr "Аналітичний облік для закупівель"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line_analytic_tag_ids
+#, fuzzy
+msgid "Analytic Tags"
+msgstr "Аналітичний рахунок"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_config_settings_group_analytic_account_for_purchases
+msgid "Analytic accounting for purchases"
 msgstr "Аналітичний облік для закупівель"
 
 #. module: purchase
@@ -282,7 +326,13 @@ msgid "Billed Qty"
 msgstr "К-сть в рахунку"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:717 code:addons/purchase/stock.py:75
+#: selection:product.template,purchase_line_warn:0
+#: selection:res.partner,purchase_warn:0
+msgid "Blocking Message"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:750 code:addons/purchase/stock.py:87
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -328,7 +378,7 @@ msgid "Can be Purchased"
 msgstr "Можна купити"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:733
+#: code:addons/purchase/purchase.py:766
 #, python-format
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
@@ -338,7 +388,7 @@ msgstr ""
 "вже підтверджено. Будь ласка, скасуйте спочатку замовлення на купівлю."
 
 #. module: purchase
-#: code:addons/purchase/stock.py:78
+#: code:addons/purchase/stock.py:90
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr "Неможливо знайти звичайний маршрут купівлі."
@@ -355,7 +405,7 @@ msgid "Cancelled"
 msgstr "Скасовано"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:612
+#: code:addons/purchase/purchase.py:625
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "Неможливо видалити замовлення на купівлю якщо воно в стані '%s'."
@@ -385,6 +435,7 @@ msgstr "Натисніть, щоб створити запит комерцій�
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
+#: model:ir.actions.act_window,help:purchase.product_product_action
 msgid "Click to define a new product."
 msgstr "Натисніть, щоб створити новий товар."
 
@@ -393,12 +444,6 @@ msgstr "Натисніть, щоб створити новий товар."
 msgid "Click to record a vendor bill related to this purchase."
 msgstr ""
 "Натисніть, щоб створити рахунок постачальника пов’язаний з цією закупівлею."
-
-#. module: purchase
-#: model:web.tip,description:purchase.purchase_tip_1
-#, fuzzy
-msgid "Click to scrap products."
-msgstr "Натисніть, щоб створити новий товар."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
@@ -419,7 +464,7 @@ msgid "Company"
 msgstr "Компанія"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:254
+#: code:addons/purchase/purchase.py:290
 #, python-format
 msgid "Compose Email"
 msgstr "Створити лист"
@@ -550,11 +595,6 @@ msgid "Double validation amount"
 msgstr "Кількість подвійне затвердження"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-msgid "Draft PO"
-msgstr "Чорнове ЗНК"
-
-#. module: purchase
 #: selection:purchase.report,state:0
 msgid "Draft RFQ"
 msgstr "Чорновий ЗКП"
@@ -590,6 +630,11 @@ msgstr ""
 "постачальника. Може бути обрано декілька ЗНК."
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Expected Date"
+msgstr "Очікувана дата"
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Extended Filters"
 msgstr "Розширені фільтри"
@@ -606,11 +651,6 @@ msgstr "Схема оподаткування"
 msgid "Get 2 levels of approvals to confirm a purchase order"
 msgstr ""
 "Використовувати 2 рівні підтвердження, щоб затвердити замовлення на купівлю"
-
-#. module: purchase
-#: model:web.tip,description:purchase.purchase_tip_3
-msgid "Get all the shipments related to this order."
-msgstr "Отримати всі доставки пов’язані з цим замовленням."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
@@ -638,30 +678,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: purchase
-#: model:web.tip,description:purchase.purchase_tip_2
-msgid ""
-"If a product has been broken or damaged during the transport, you can scrap "
-"it with this button."
-msgstr ""
-"Якщо товар було пошкоджено під час доставки, ви можете забракувати його за "
-"допомогою цієї кнопки."
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:186
+#: code:addons/purchase/purchase.py:193
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr ""
 "Щоб видалити замовлення на купівлю вам необхідно спочатку його скасувати"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_advance_purchase_requisition
-msgid ""
-"In the process of a public tendering, you can compare the tender lines and "
-"choose for each requested product which quantity you will buy from each bid."
-msgstr ""
-"В процесі публічних тендерів ви можете порівняти рядки пропозицій та обрати "
-"для кожного товару скільки та у кого будете купувати.\n"
-"  "
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -728,6 +749,11 @@ msgstr "Рахунки"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Invoices and Incoming Shipments"
 msgstr "Рахунки та вхідні поставки"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_is_shipped
+msgid "Is shipped"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings___last_update
@@ -805,6 +831,19 @@ msgstr ""
 "постачальників."
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
+#, fuzzy
+msgid "Message for Purchase Order"
+msgstr "Шукати замовлення на купівлю"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn_msg
+#, fuzzy
+msgid "Message for Purchase Order Line"
+msgstr "Рядок замовлення на купівлю"
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
 msgstr "Мінімальна кількість, для якої необхідне дворівневе підтвердження"
@@ -829,12 +868,19 @@ msgid "New Mail"
 msgstr "Новий лист"
 
 #. module: purchase
+#: selection:product.template,purchase_line_warn:0
+#: selection:res.partner,purchase_warn:0
+#, fuzzy
+msgid "No Message"
+msgstr "Повідомлення"
+
+#. module: purchase
 #: selection:purchase.config.settings,group_product_variant:0
 msgid "No variants on products"
 msgstr "Немає варіантів товару"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:893
+#: code:addons/purchase/purchase.py:926
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
@@ -1021,7 +1067,9 @@ msgid "Product Unit of Measure"
 msgstr "Одиниця виміру товару"
 
 #. module: purchase
+#: model:ir.actions.act_window,name:purchase.product_product_action
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_product_variant
+#: model:ir.ui.menu,name:purchase.product_product_menu
 msgid "Product Variants"
 msgstr "Варіанти товару"
 
@@ -1058,6 +1106,12 @@ msgid "Provide a double validation mechanism for purchases"
 msgstr "Використовувати механізм подвійного підтвердження для закупівель."
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_normal_action_puchased
+#, fuzzy
+msgid "Purchasable Products"
+msgstr "Замовлення на купівлю"
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 msgid "Purchase"
 msgstr "Купівля"
@@ -1089,6 +1143,7 @@ msgstr "Час виконання купівлі"
 #: model:ir.model,name:purchase.model_purchase_order
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_id
 #: model:ir.model.fields,field_description:purchase.field_procurement_order_purchase_id
+#: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_graph
 #: model:ir.ui.view,arch_db:purchase.purchase_order_pivot
@@ -1113,6 +1168,8 @@ msgstr "Схема оподаткування для замовлення на �
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_line_id
 #: model:ir.model.fields,field_description:purchase.field_procurement_order_purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn
+#: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn
 #: model:ir.model.fields,field_description:purchase.field_stock_move_purchase_line_id
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
@@ -1141,7 +1198,7 @@ msgid "Purchase Orders Statistics"
 msgstr "Статистика замовленнь на купівлю"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:614
+#: code:addons/purchase/purchase.py:627
 #, python-format
 msgid "Purchase order line deleted."
 msgstr "Вилучено рядок із замовлення."
@@ -1203,6 +1260,11 @@ msgid "Quotations"
 msgstr "Комерційні пропозиції"
 
 #. module: purchase
+#: selection:purchase.order,state:0
+msgid "RFQ"
+msgstr ""
+
+#. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
 msgstr "ЗКП затвердженно"
@@ -1231,11 +1293,6 @@ msgstr "ЗКП_${(object.name or '').replace('/','_')}"
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
 msgstr "ЗКП та купівлі"
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Re-Print RFQ"
-msgstr "Друк ЗКП"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1332,6 +1389,16 @@ msgid "Search Purchase Order"
 msgstr "Шукати замовлення на купівлю"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_product_product_purchase_line_warn
+#: model:ir.model.fields,help:purchase.field_product_template_purchase_line_warn
+#: model:ir.model.fields,help:purchase.field_res_partner_purchase_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send PO by Email"
 msgstr "Відправити ЗНК по пошті"
@@ -1348,13 +1415,8 @@ msgstr "Встановити фіксовану ціну на кожен тов�
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-#, fuzzy
-msgid ""
-"Set a purchase order as done if you don't want to receive vendor bills "
-"anymore for this purchase order."
+msgid "Set date to all order lines"
 msgstr ""
-"Якщо замовлення на купівлю виконано, ви більше не можете його модифікувати. "
-"Також більше не можна отримувати рахунки по цьому замовленню."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1370,11 +1432,6 @@ msgstr "Налаштування"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Shipment"
 msgstr "Доставка"
-
-#. module: purchase
-#: selection:purchase.config.settings,group_advance_purchase_requisition:0
-msgid "Simple call for tender (only choose from one RFQ)"
-msgstr "Простий тендер (обирати тільки з одного ЗКП)"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_uom:0
@@ -1418,11 +1475,6 @@ msgid "Supplier Currency"
 msgstr "Валюта постачальника"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
-msgid "Supplier Pricelist"
-msgstr "Прайс-лист постачальника"
-
-#. module: purchase
 #: selection:purchase.config.settings,module_stock_dropshipping:0
 msgid "Suppliers always deliver to your warehouse(s)"
 msgstr "Постачальник завжди робить доставку на ваш(і) склад(и)"
@@ -1449,6 +1501,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
 msgid "Terms and Conditions"
 msgstr "Терміни та умови"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.product_product_action
+#, fuzzy
+msgid ""
+"The product form contains detailed information to improve the\n"
+"                purchase process: prices, procurement logistics, accounting "
+"data,\n"
+"                available vendors, etc."
+msgstr ""
+"Картка товару містить детальну інформацію для процесу закупівель: ціни, "
+"правила поповнень запасів, бухгалтерські налаштування, наявні постачальники, "
+"тощо."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1504,6 +1569,11 @@ msgstr ""
 "товар та ціною в замовленні на купівлю."
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "This changes the scheduled date of all order lines to the given date"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
 msgid ""
 "This currency will be used, instead of the default one, for purchases from "
@@ -1511,6 +1581,34 @@ msgid ""
 msgstr ""
 "Ця валюта буде використовуватись замість типової для закупівель у даного "
 "постачальника."
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:954
+#, python-format
+msgid ""
+"This purchase order has been created from: <a href=# data-oe-"
+"model=procurement.order data-oe-id=%d>%s</a>"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:967
+#, python-format
+msgid ""
+"This purchase order has been modified from: <a href=# data-oe-"
+"model=procurement.order data-oe-id=%d>%s</a>"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/invoice.py:183
+#, python-format
+msgid "This vendor bill has been created from: %s"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/invoice.py:195
+#, python-format
+msgid "This vendor bill has been modified from: %s"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1557,7 +1655,7 @@ msgid "Transfer"
 msgstr "Перемістити"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:300
+#: code:addons/purchase/purchase.py:338
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been done."
@@ -1566,7 +1664,7 @@ msgstr ""
 "виконано деякі надходження."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:303
+#: code:addons/purchase/purchase.py:341
 #, fuzzy, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
@@ -1675,9 +1773,21 @@ msgid "Vendor Price"
 msgstr "Ціна постачальника"
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
+#, fuzzy
+msgid "Vendor Pricelists"
+msgstr "Ціна постачальника"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_partner_ref
 msgid "Vendor Reference"
 msgstr "Посилання на постачальника"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
+#, fuzzy
+msgid "Vendors"
+msgstr "Постачальник"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -1708,6 +1818,30 @@ msgid "Warehouse"
 msgstr "Warehouse"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_warning_purchase
+#: selection:product.template,purchase_line_warn:0
+#: selection:res.partner,purchase_warn:0
+msgid "Warning"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:247 code:addons/purchase/purchase.py:693
+#, python-format
+msgid "Warning for %s"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+#, fuzzy
+msgid "Warning on the Purchase Order"
+msgstr "Шукати замовлення на купівлю"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid "Warning when Purchasing this Product"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
 msgid "When products are bought, they can be delivered to this warehouse"
 msgstr "Коли товари куплкно, вони можуть бути доставлені на цей склад."
@@ -1732,6 +1866,18 @@ msgstr ""
 "придбали (послуги) або отримали (товари)."
 
 #. module: purchase
+#: model:ir.actions.act_window,help:purchase.product_product_action
+#, fuzzy
+msgid ""
+"You must define a product for everything you purchase, whether\n"
+"                it's a physical product, a consumable or services you buy "
+"to\n"
+"                subcontractors."
+msgstr ""
+"Ви повинні створити товар для всього, що ви купуєте не залежно від того чи "
+"це послуга, чи матеріальні цінності."
+
+#. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
 #, fuzzy
 msgid ""
@@ -1743,10 +1889,15 @@ msgstr ""
 "це послуга, чи матеріальні цінності."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:335
+#: code:addons/purchase/purchase.py:374
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Ви повинні вказати розташування для цього партнера %s"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_settings
@@ -2028,6 +2179,15 @@ msgstr "purchase.config.settings"
 #~ "</div>\n"
 #~ "            "
 
+#~ msgid ""
+#~ "\n"
+#~ "Creates the dropship Route and add more complex tests-This installs the "
+#~ "module stock_dropshipping."
+#~ msgstr ""
+#~ "\n"
+#~ "Створює спосіб прямої доставки та додає складніші перевірки. Це "
+#~ "встановлює модуль stock_dropshipping."
+
 #~ msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
 #~ msgstr ""
 #~ "${object.company_id.name|safe} Замовлення (Ref ${object.name or 'немає' })"
@@ -2035,12 +2195,29 @@ msgstr "purchase.config.settings"
 #~ msgid "Action Needed"
 #~ msgstr "Необхідна дія"
 
-#~ msgid "Allows you to specify an analytic account on purchase order lines."
-#~ msgstr ""
-#~ "Дозволяє вам вказувати аналітичний рахунок в замовленнях на купівлю."
+#~ msgid "Advance bidding process"
+#~ msgstr "Розширений процес пропозицій"
 
-#~ msgid "Analytic accounting for purchases"
-#~ msgstr "Аналітичний облік для закупівель"
+#~ msgid "Advanced Calls for Tenders"
+#~ msgstr "Розширені тендери"
+
+#~ msgid "Advanced call for tender (choose products from different RFQ)"
+#~ msgstr "Розширені тендери (обирати товари з різних ЗКП)"
+
+#~ msgid ""
+#~ "Calls for tenders are used when you want to generate requests for "
+#~ "quotations to several vendors for a given set of products.\n"
+#~ "                    You can configure per product if you directly do a "
+#~ "Request for Quotation\n"
+#~ "                    to one vendor or if you want a Call for Tenders to "
+#~ "compare offers from several vendors."
+#~ msgstr ""
+#~ "Пошук пропозицій за допомогою тендерів використовується коли ви хочете "
+#~ "згенерувати запити комерційної пропозиції для декількох постачальників по "
+#~ "певному переліку товарів.\n"
+#~ "Ви можете налаштувати це по кожному товару окремо, якщо ви відправляєте "
+#~ "ЗКП вручну \n"
+#~ "або якщо ви хочете порівняти ціни від різних постачальників."
 
 #~ msgid "Click to mark products as received."
 #~ msgstr "Натисніть, щоб позначити товари як отримані."
@@ -2048,8 +2225,8 @@ msgstr "purchase.config.settings"
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Дата останнього повідомлення по запису."
 
-#~ msgid "Expected Date"
-#~ msgstr "Очікувана дата"
+#~ msgid "Draft PO"
+#~ msgstr "Чорнове ЗНК"
 
 #~ msgid "Followers"
 #~ msgstr "Підписники"
@@ -2060,12 +2237,39 @@ msgstr "purchase.config.settings"
 #~ msgid "Followers (Partners)"
 #~ msgstr "Підписники (Партнери)"
 
+#~ msgid "Get all the shipments related to this order."
+#~ msgstr "Отримати всі доставки пов’язані з цим замовленням."
+
+#~ msgid ""
+#~ "If a product has been broken or damaged during the transport, you can "
+#~ "scrap it with this button."
+#~ msgstr ""
+#~ "Якщо товар було пошкоджено під час доставки, ви можете забракувати його "
+#~ "за допомогою цієї кнопки."
+
+#~ msgid ""
+#~ "If a purchase order is done, you cannot modify it manually anymore. You "
+#~ "will not be able to receive invoices anymore for this purchase order."
+#~ msgstr ""
+#~ "Якщо замовлення на купівлю виконано, ви більше не можете його "
+#~ "модифікувати. Також більше не можна отримувати рахунки по цьому "
+#~ "замовленню."
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr ""
 #~ "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
+
+#~ msgid ""
+#~ "In the process of a public tendering, you can compare the tender lines "
+#~ "and choose for each requested product which quantity you will buy from "
+#~ "each bid."
+#~ msgstr ""
+#~ "В процесі публічних тендерів ви можете порівняти рядки пропозицій та "
+#~ "обрати для кожного товару скільки та у кого будете купувати.\n"
+#~ "  "
 
 #~ msgid "Incoming Shipments to Invoice"
 #~ msgstr "Вхідні поставки по рахунку"
@@ -2075,9 +2279,6 @@ msgstr "purchase.config.settings"
 
 #~ msgid "Last Message Date"
 #~ msgstr "Дата останнього повідомлення"
-
-#~ msgid "Messages"
-#~ msgstr "Повідомлення"
 
 #~ msgid "Messages and communication history"
 #~ msgstr "Повідомлення та історія бесіди"
@@ -2097,8 +2298,31 @@ msgstr "purchase.config.settings"
 #~ msgid "Published"
 #~ msgstr "Опубліковано"
 
+#~ msgid "Re-Print RFQ"
+#~ msgstr "Друк ЗКП"
+
 #~ msgid "Set to Done"
 #~ msgstr "Зробити виконаним"
+
+#~ msgid "Simple call for tender (only choose from one RFQ)"
+#~ msgstr "Простий тендер (обирати тільки з одного ЗКП)"
+
+#~ msgid ""
+#~ "Some products may be sold/puchased in different unit of measures "
+#~ "(advanced)"
+#~ msgstr ""
+#~ "Деякі товари можуть бути продані/куплені в інших одиницях виміру "
+#~ "(розширено)"
+
+#~ msgid "Supplier Pricelist"
+#~ msgstr "Прайс-лист постачальника"
+
+#~ msgid ""
+#~ "Unable to cancel this purchase order.i You must first cancel related "
+#~ "vendor bills."
+#~ msgstr ""
+#~ "Неможливо скасувати це замовлення на купівлю. Спочатку вам необхідно "
+#~ "скасувати пов’язані рахунки постачальника."
 
 #~ msgid "Unit of Measures"
 #~ msgstr "Одиниці виміру"
@@ -2118,8 +2342,26 @@ msgstr "purchase.config.settings"
 #~ msgid "Website communication history"
 #~ msgstr "Історія бесіди на веб-сайті"
 
-#~ msgid "account.config.settings"
-#~ msgstr "account.config.settings"
+#~ msgid ""
+#~ "You must define a product for everything you purchase, whether\n"
+#~ "            it's a physical product, a consumable or services you buy to\n"
+#~ "            subcontractants."
+#~ msgstr ""
+#~ "Ви повинні створити товар для всього, що ви купуєте не залежно від того "
+#~ "чи це послуга, чи матеріальні цінності."
 
 #~ msgid "unknown"
 #~ msgstr "невідомо"
+
+#, fuzzy
+#~ msgid "Click to scrap products."
+#~ msgstr "Натисніть, щоб створити новий товар."
+
+#, fuzzy
+#~ msgid ""
+#~ "Set a purchase order as done if you don't want to receive vendor bills "
+#~ "anymore for this purchase order."
+#~ msgstr ""
+#~ "Якщо замовлення на купівлю виконано, ви більше не можете його "
+#~ "модифікувати. Також більше не можна отримувати рахунки по цьому "
+#~ "замовленню."

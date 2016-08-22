@@ -1,4 +1,3 @@
-# #-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sales_team
@@ -7,31 +6,18 @@
 # Ali zuaby <ali@zuaby.net>, 2015
 # Ghaith Gammar <contact.saharaips@gmail.com>, 2015
 # Mohammed Albasha <m.albasha.ma@gmail.com>, 2016
-# #-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * sales_team
-#
-# Translators:
-# Ali zuaby <ali@zuaby.net>, 2015
-# Ghaith Gammar <contact.saharaips@gmail.com>, 2015
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-06-18 18:06+0000\n"
-"Last-Translator: Ghaith Gammar <contact.saharaips@gmail.com>\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"PO-Revision-Date: 2016-08-09 14:04+0000\n"
+"Last-Translator: Mohammed Albasha <m.albasha.ma@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
@@ -91,6 +77,26 @@ msgid "Activities Done"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
+msgid "Apply"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "Archived"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_config_bank_accounts
+msgid "Bank Accounts"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
+msgid "Cancel"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
@@ -111,11 +117,6 @@ msgid "Click to set"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
-msgid "Code"
-msgstr "الكود"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
 msgid "Color Index"
 msgstr "اللون"
@@ -127,21 +128,66 @@ msgid "Company"
 msgstr "المؤسسة"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_config
+#: model:ir.ui.menu,name:sales_team.menu_sale_config_sales
+msgid "Configuration"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_sale_config
+#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
+#, fuzzy
+msgid "Configure Sales"
+msgstr "المبيعات غير المباشرة"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_partner_category_form
+msgid "Contact Tags"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_partner_title_contact
+msgid "Contact Titles"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_config_address_book
+msgid "Contacts"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_country_partner
+msgid "Countries"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_country_group
+msgid "Country Group"
+msgstr ""
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:215
 #, python-format
-msgid "Create a few opportunities to activate your dashboard."
+msgid "Create a few opportunities in it."
 msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_uid
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "أنشئ بواسطة"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_date
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "أنشئ في"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_partner_form
+msgid "Customers"
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
@@ -159,8 +205,14 @@ msgstr "المبيعات المباشر"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_display_name
 msgid "Display Name"
 msgstr "اسم العرض"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_country_state_partner
+msgid "Fed. States"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -190,8 +242,17 @@ msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_id
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_id
 msgid "ID"
 msgstr "المعرف"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_res_partner_team_id
+#: model:ir.model.fields,help:sales_team.field_res_users_team_id
+msgid ""
+"If set, sale team used notably for sales and assignations related to this "
+"partner"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
@@ -214,6 +275,7 @@ msgstr "مفوتر"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "آخر تعديل في"
 
@@ -226,13 +288,30 @@ msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_uid
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "آخر تحديث بواسطة"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_date
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "آخر تحديث في"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_crm_config_lead
+msgid "Leads & Opportunities"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_localisation
+msgid "Localization"
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_manager
+msgid "Manager"
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
@@ -281,10 +360,15 @@ msgstr "الاجراء التالي"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "يمكنك استخدام الأعداد الطبيعية فقط."
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_crm_config_opportunity
+msgid "Opportunities"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
@@ -307,6 +391,14 @@ msgstr "رد على"
 #: model:ir.model.fields,field_description:sales_team.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "قائمة اسعار البيع"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_base_partner
+#: model:ir.ui.menu,name:sales_team.menu_sales
+#: model:ir.ui.menu,name:sales_team.menu_sales_config
+#, fuzzy
+msgid "Sales"
+msgstr "فريق المبيعات"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -348,6 +440,7 @@ msgid "Salesteams Search"
 msgstr "بحث فرق المبيعات"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_general_settings
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "Settings"
 msgstr "الإعدادات"
@@ -370,11 +463,6 @@ msgstr "قائد المجموعة"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "اعضاء الفريق"
-
-#. module: sales_team
-#: sql_constraint:crm.team:0
-msgid "The code of the sales team must be unique !"
-msgstr "الترميز لفريق المبيعات يجب أن يكون فريداً !"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
@@ -477,6 +565,16 @@ msgid ""
 msgstr ""
 
 #. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman_all_leads
+msgid "User: All Documents"
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman
+msgid "User: Own Documents Only"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
 msgid "Users"
 msgstr "المستخدمون"
@@ -490,7 +588,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Wrong value entered!"
 msgstr "أدخلت قيمة خاطئة!"
@@ -503,14 +601,46 @@ msgid "exp. closing"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model,name:sales_team.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr ""
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
 msgid "overdue"
 msgstr "المتأخر"
 
+#. module: sales_team
+#: model:ir.model,name:sales_team.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic "
+"reports."
+msgstr ""
+
 #~ msgid "Action Needed"
 #~ msgstr "الاجراء المطلوب"
+
+#~ msgid "Code"
+#~ msgstr "الكود"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "تاريخ آخر رسالة في هذا السجل."
@@ -550,6 +680,9 @@ msgstr "المتأخر"
 
 #~ msgid "Number of unread messages"
 #~ msgstr "عدد الرسائل غير المقروءة"
+
+#~ msgid "The code of the sales team must be unique !"
+#~ msgstr "الترميز لفريق المبيعات يجب أن يكون فريداً !"
 
 #~ msgid "Unread Messages"
 #~ msgstr "رسائل غير مقروءة"

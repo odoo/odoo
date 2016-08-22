@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-03-12 10:27+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -68,6 +68,11 @@ msgid "All at once"
 msgstr "Všetko naraz"
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr ""
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
 msgstr "Zrušiť"
@@ -81,12 +86,6 @@ msgstr "Zrušiť obstarávanie"
 #: selection:procurement.order,state:0
 msgid "Cancelled"
 msgstr "Zrušené"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "Nemožno zrušiť obstarávciu objednávku(y) ktoré sú v  %s stave."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -288,7 +287,7 @@ msgid "Name"
 msgstr "Meno"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:200
+#: code:addons/procurement/models/procurement.py:187
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Žiadne pravidlo zodpovedajúce tomuto obstarávaniu"
@@ -426,9 +425,10 @@ msgstr "Odkaz"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
+#, fuzzy
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
 msgstr ""
 "Odkaz na dokument ktorý vytvoril toto obstarávanie.\n"
 "\n"
@@ -540,6 +540,12 @@ msgstr ""
 "nákupnej objednávky, výrobná objednávka, atď."
 
 #. module: procurement
+#: code:addons/procurement/models/procurement.py:142
+#, fuzzy, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr "Nemožno zrušiť obstarávciu objednávku(y) ktoré sú v  %s stave."
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "e.g. Buy"
 msgstr "napr. kúpiť"
@@ -585,6 +591,9 @@ msgstr "napr. SO005"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Dátum poslednej správy zaslanej záznamu."
+
+#~ msgid "Delivery Method"
+#~ msgstr "Dodacia metóda"
 
 #~ msgid "Followers"
 #~ msgstr "Odberatelia"
@@ -633,3 +642,15 @@ msgstr "napr. SO005"
 
 #~ msgid "Website communication history"
 #~ msgstr "História komunikácie webovej stránky"
+
+#~ msgid ""
+#~ "When the procurement order is confirmed, it automatically\n"
+#~ "                creates the necessary operations to fullfil the need: "
+#~ "purchase\n"
+#~ "                order proposition, manufacturing order, etc."
+#~ msgstr ""
+#~ "Keď je obstarávacia objednávka potvrdená, automaticky\n"
+#~ "\n"
+#~ "vytvorí potrebné operácie pre naplnenie potrieb: návrh\n"
+#~ "\n"
+#~ "nákupnej objednávky, výrobná objednávka, atď."
