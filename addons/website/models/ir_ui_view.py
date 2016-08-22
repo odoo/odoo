@@ -153,7 +153,9 @@ class View(models.Model):
 
             values = qcontext
 
-        return super(View, self.with_context(new_context)).render(values, engine=engine)
+        if self._context != new_context:
+            self = self.with_context(new_context)
+        return super(View, self).render(values, engine=engine)
 
     @api.model
     def _prepare_qcontext(self):
