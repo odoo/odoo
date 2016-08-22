@@ -117,6 +117,7 @@ import collections
 
 import logging
 import traceback
+from functools import partial
 from zlib import crc32
 
 import openerp.modules
@@ -1182,9 +1183,9 @@ class expression(object):
                     if left == 'id':
                         instr = ','.join(['%s'] * len(params))
                     else:
-                        ss = model._columns[left]._symbol_set
-                        instr = ','.join([ss[0]] * len(params))
-                        params = map(ss[1], params)
+                        field = model._fields[left]
+                        instr = ','.join([field.column_format] * len(params))
+                        params = map(partial(field.convert_to_column, record=model), params)
                     query = '(%s."%s" %s (%s))' % (table_alias, left, operator, instr)
                 else:
                     # The case for (left, 'in', []) or (left, 'not in', []).
@@ -1235,7 +1236,7 @@ class expression(object):
             cast = '::text' if  sql_operator.endswith('like') else ''
 
             if left in model._columns:
-                format = need_wildcard and '%s' or model._columns[left]._symbol_set[0]
+                format = need_wildcard and '%s' or model._fields[left].column_format
                 unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x
                 column = '%s.%s' % (table_alias, _quote(left))
                 query = '(%s %s %s)' % (unaccent(column + cast), sql_operator, unaccent(format))
@@ -1256,7 +1257,7 @@ class expression(object):
                 params = '%%%s%%' % str_utf8
                 add_null = not str_utf8
             elif left in model._columns:
-                params = model._columns[left]._symbol_set[1](right)
+                params = model._fields[left].convert_to_column(right, model)
 
             if add_null:
                 query = '(%s OR %s."%s" IS NULL)' % (query, table_alias, left)

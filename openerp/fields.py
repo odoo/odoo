@@ -8,13 +8,16 @@ from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
 from types import NoneType
+import json
 import logging
 import pytz
 import xmlrpclib
 
+import psycopg2
+
 from openerp.sql_db import LazyCursor
-from openerp.tools import float_precision, float_round, frozendict, \
-                          html_sanitize, pg_varchar, ustr, OrderedSet
+from openerp.tools import float_precision, float_repr, float_round, frozendict, \
+                          html_sanitize, human_size, pg_varchar, ustr, OrderedSet
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from openerp.tools.translate import html_translate
@@ -291,6 +294,7 @@ class Field(object):
     relational = False                  # whether the field is a relational one
 
     column_type = None                  # database column type (ident, spec)
+    column_format = '%s'                # placeholder for value in queries
 
     _slots = {
         'args': EMPTY_DICT,             # the parameters given to __init__()
@@ -797,6 +801,14 @@ class Field(object):
         """ Return the null value for this field in the record format. """
         return False
 
+    def convert_to_column(self, value, record):
+        """ Convert ``value`` from the ``write`` format to the SQL format. """
+        if value is None or value == False:
+            return None
+        if isinstance(value, unicode):
+            return value.encode('utf8')
+        return str(value)
+
     def convert_to_cache(self, value, record, validate=True):
         """ Convert ``value`` to the cache format; ``value`` may come from an
         assignment, or have the format of methods :meth:`BaseModel.read` or
@@ -1090,6 +1102,9 @@ class Boolean(Field):
     type = 'boolean'
     column_type = ('bool', 'bool')
 
+    def convert_to_column(self, value, record):
+        return bool(value)
+
     def convert_to_cache(self, value, record, validate=True):
         return bool(value)
 
@@ -1105,6 +1120,9 @@ class Integer(Field):
     _slots = {
         'group_operator': 'sum',
     }
+
+    def convert_to_column(self, value, record):
+        return int(value or 0)
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, dict):
@@ -1169,6 +1187,14 @@ class Float(Field):
     _column_digits = property(lambda self: not callable(self._digits) and self._digits)
     _column_digits_compute = property(lambda self: callable(self._digits) and self._digits)
 
+    def convert_to_column(self, value, record):
+        result = float(value or 0.0)
+        digits = self.digits
+        if digits:
+            precision, scale = digits
+            result = float_repr(float_round(result, precision_digits=scale), precision_digits=scale)
+        return result
+
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
         value = float(value or 0.0)
@@ -1214,6 +1240,12 @@ class Monetary(Field):
         super(Monetary, self)._setup_regular_full(model)
         assert self.currency_field in model._fields, \
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
+
+    def convert_to_column(self, value, record):
+        try:
+            return value.float_repr()         # see float_precision.float_repr()
+        except Exception:
+            return float(value or 0.0)
 
     def convert_to_cache(self, value, record, validate=True):
         if validate:
@@ -1307,6 +1339,17 @@ class Char(_String):
         assert isinstance(self.size, (NoneType, int)), \
             "Char field %s with non-integer size %r" % (self, self.size)
 
+    def convert_to_column(self, value, record):
+        #TODO:
+        # * we need to remove the "value==False" from the next line BUT
+        #   for now too many things rely on this broken behavior
+        # * the value==None test should be common to all data types
+        if value is None or value == False:
+            return None
+        # we need to convert the string to a unicode object to be able
+        # to evaluate its length (and possibly truncate it) reliably
+        return ustr(value)[:self.size].encode('utf8')
+
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return False
@@ -1373,6 +1416,19 @@ class Html(_String):
     _column_strip_classes = property(attrgetter('strip_classes'))
     _related_strip_classes = property(attrgetter('strip_classes'))
     _description_strip_classes = property(attrgetter('strip_classes'))
+
+    def convert_to_column(self, value, record):
+        if value is None or value is False:
+            return None
+        if self.sanitize:
+            return html_sanitize(
+                value, silent=True,
+                sanitize_tags=self.sanitize_tags,
+                sanitize_attributes=self.sanitize_attributes,
+                sanitize_style=self.sanitize_style,
+                strip_style=self.strip_style,
+                strip_classes=self.strip_classes)
+        return value
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
@@ -1539,6 +1595,27 @@ class Binary(Field):
 
     _column_attachment = property(attrgetter('attachment'))
     _description_attachment = property(attrgetter('attachment'))
+
+    def convert_to_column(self, value, record):
+        # Binary values may be byte strings (python 2.6 byte array), but
+        # the legacy OpenERP convention is to transfer and store binaries
+        # as base64-encoded strings. The base64 string may be provided as a
+        # unicode in some circumstances, hence the str() cast here.
+        # This str() coercion will only work for pure ASCII unicode strings,
+        # on purpose - non base64 data must be passed as a 8bit byte strings.
+        return psycopg2.Binary(str(value)) if value else None
+
+    def convert_to_cache(self, value, record, validate=True):
+        if isinstance(value, buffer):
+            return str(value)
+        if isinstance(value, (int, long)) and \
+                (record._context.get('bin_size') or
+                 record._context.get('bin_size_' + self.name)):
+            # If the client requests only the size of the field, we return that
+            # instead of the content. Presumably a separate request will be done
+            # to read the actual content, if necessary.
+            return human_size(value)
+        return value
 
 
 class Selection(Field):
@@ -1785,6 +1862,9 @@ class Many2one(_Relational):
         ``name`` is the inverse field of ``self``.
         """
         records._cache[self] = self.convert_to_cache(value, records, validate=False)
+
+    def convert_to_column(self, value, record):
+        return value or None
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)
@@ -2122,8 +2202,13 @@ class Serialized(Field):
     type = 'serialized'
     column_type = ('text', 'text')
 
+    def convert_to_column(self, value, record):
+        return json.dumps(value)
+
     def convert_to_cache(self, value, record, validate=True):
-        return value or {}
+        # cache format: dict
+        value = value or {}
+        return value if isinstance(value, dict) else json.loads(value)
 
 
 class Id(Field):

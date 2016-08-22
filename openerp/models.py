@@ -2312,13 +2312,12 @@ class BaseModel(object):
         # get the default value; ideally, we should use default_get(), but it
         # fails due to ir.values not being ready
         field = self._fields[column_name]
-        setc, setf = field.column._symbol_set
         if field.default:
             value = field.default(self)
             value = field.convert_to_cache(value, self, validate=False)
             value = field.convert_to_record(value, self)
             value = field.convert_to_write(value, self)
-            value = setf(value)
+            value = field.convert_to_column(value, self)
         else:
             value = None
         # Write value if non-NULL, except for booleans for which False means
@@ -2328,7 +2327,7 @@ class BaseModel(object):
             _logger.debug("Table '%s': setting default value of new column %s to %r",
                           self._table, column_name, value)
             query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" IS NULL' % (
-                self._table, column_name, setc, column_name)
+                self._table, column_name, field.column_format, column_name)
             self._cr.execute(query, (value,))
             # this is a disgrace
             self._cr.commit()
@@ -3230,14 +3229,6 @@ class BaseModel(object):
                         for vals in result:
                             vals[f] = translate(vals['id'], vals[f])
 
-            # apply the symbol_get functions of the fields we just read
-            for field in fields_pre:
-                symbol_get = field.base_field.column._symbol_get
-                if symbol_get:
-                    f = field.name
-                    for vals in result:
-                        vals[f] = symbol_get(vals[f])
-
             # store result in cache for POST fields
             for vals in result:
                 record = self.browse(vals['id'], self._prefetch)
@@ -3710,15 +3701,14 @@ class BaseModel(object):
             field = self._fields[name]
             if field and field.deprecated:
                 _logger.warning('Field %s.%s is deprecated: %s', self._name, name, field.deprecated)
-            if field.column:
-                column = field.column
-                if hasattr(column, 'selection') and val:
+            if field.store:
+                if hasattr(field, 'selection') and val:
                     self._check_selection_field_value(name, val)
-                if column._classic_write and not hasattr(column, '_fnct_inv'):
-                    if single_lang or not (has_trans and column.translate and not callable(column.translate)):
+                if field.column_type:
+                    if single_lang or not (has_trans and getattr(field, 'translate', None) and not callable(field.translate)):
                         # val is not a translation: update the table
-                        setc, setf = column._symbol_set
-                        updates.append((name, setc, setf(val)))
+                        val = field.convert_to_column(val, self)
+                        updates.append((name, field.column_format, val))
                     direct.append(name)
                 else:
                     upd_todo.append(name)
@@ -3744,20 +3734,22 @@ class BaseModel(object):
 
             # TODO: optimize
             for name in direct:
-                column = self._columns[name]
-                if callable(column.translate):
+                field = self._fields[name]
+                translate = getattr(field, 'translate', None)
+
+                if callable(translate):
                     # The source value of a field has been modified,
                     # synchronize translated terms when possible.
                     self.env['ir.translation']._sync_terms_translations(self._fields[name], self)
 
-                elif has_trans and column.translate:
+                elif has_trans and translate:
                     # The translated value of a field has been modified.
                     src_trans = self.read([name])[0][name]
                     if not src_trans:
                         # Insert value to DB
                         src_trans = vals[name]
                         self.with_context(lang=None).write({name: src_trans})
-                    val = column._symbol_set[1](vals[name])
+                    val = field.convert_to_column(vals[name], self)
                     tname = "%s,%s" % (self._name, name)
                     self.env['ir.translation']._set_ids(
                         tname, 'model', self.env.lang, self.ids, val, src_trans)
@@ -3987,14 +3979,13 @@ class BaseModel(object):
 
         # determine SQL values
         for name, val in vals.iteritems():
-            column = self._columns[name]
-            if column._classic_write:
-                setc, setf = column._symbol_set
-                updates.append((name, setc, setf(val)))
+            field = self._fields[name]
+            if field.store and field.column_type:
+                updates.append((name, field.column_format, field.convert_to_column(val, self)))
             else:
                 upd_todo.append(name)
 
-            if hasattr(column, 'selection') and val:
+            if hasattr(field, 'selection') and val:
                 self._check_selection_field_value(name, val)
 
         if self._log_access:
