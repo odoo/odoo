@@ -1,25 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * survey
-#
+# 
 # Translators:
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2015
+# Talway <9010446@qq.com>, 2016
 # mrshelly <mrshelly@hotmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2015
+# Gary Wei <Gary.wei@elico-corp.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# waveyeung <waveyeung@qq.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
+# THL <wt39181819@gmail.com>, 2016
+# fausthuang <faust_huang@hotmail.com>, 2016
+# 厦门-许舟 <windedge99@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-12 00:48+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_CN/)\n"
-"Language: zh_CN\n"
+"POT-Creation-Date: 2016-08-18 08:38+0000\n"
+"PO-Revision-Date: 2016-08-18 08:38+0000\n"
+"Last-Translator: 厦门-许舟 <windedge99@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: survey
@@ -29,9 +34,7 @@ msgid ""
 "                \n"
 "<p>Hello,</p>\n"
 "<p>We are conducting a survey, and your response would be appreciated.</p>\n"
-"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; "
-"background-color:#a24689; text-align:center; text-decoration:none; color:"
-"#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
+"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#a24689; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
 "<p>Thanks for your participation!</p>\n"
 "                \n"
 "            "
@@ -43,7 +46,7 @@ msgid "#Questions"
 msgstr "问题#"
 
 #. module: survey
-#: code:addons/survey/survey.py:231
+#: code:addons/survey/models/survey.py:136
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -51,7 +54,7 @@ msgstr "%s (副本)"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid "&amp;times;"
-msgstr "次数"
+msgstr "&amp;次数;"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
@@ -137,20 +140,23 @@ msgstr "<i class=\"fa fa-square-o fa-lg\"/> 回答"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid "<i class=\"fa fa-times\"/> Clear All Filters"
-msgstr "<i class=\"fa fa-times\"/> 清空所有过滤"
+msgstr "<i class=\"fa fa-times\"/> 清空所有筛选"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid "<span class=\"fa fa-filter\"/>  Filters"
-msgstr "<span class=\"fa fa-filter\"/>  过滤"
+msgstr "<span class=\"fa fa-filter\"/>  筛选"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid ""
-"<span class=\"label label-default only_left_radius filter-all\">All surveys</"
-"span><span class=\"label label-primary only_right_radius filter-finished"
-"\">Finished surveys</span>"
+"<span class=\"label label-default only_left_radius filter-all\">All "
+"surveys</span><span class=\"label label-primary only_right_radius filter-"
+"finished\">Finished surveys</span>"
 msgstr ""
+"<span class=\"label label-default only_left_radius filter-all\">All "
+"surveys</span><span class=\"label label-primary only_right_radius filter-"
+"finished\">Finished surveys</span>"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_number
@@ -175,30 +181,26 @@ msgstr "<span class=\"label label-default only_left_radius\">和 </span>"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid ""
-"<span class=\"label label-primary only_left_radius filter-all\">All surveys</"
-"span><span class=\"label label-default only_right_radius filter-finished"
-"\">Finished surveys</span>"
+"<span class=\"label label-primary only_left_radius filter-all\">All "
+"surveys</span><span class=\"label label-default only_right_radius filter-"
+"finished\">Finished surveys</span>"
 msgstr ""
+"<span class=\"label label-primary only_left_radius filter-all\">All "
+"surveys</span><span class=\"label label-default only_right_radius filter-"
+"finished\">已完成的调查</span>"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.no_result
 msgid ""
 "<span>\n"
-"                            <i style=\"font-size:1.8em\" class=\"fa fa-users "
-"pull-right\"/>\n"
+"                            <i style=\"font-size:1.8em\" class=\"fa fa-users pull-right\"/>\n"
 "                        </span>\n"
 "                        Sorry, No one answered this survey yet"
 msgstr ""
 "<span>\n"
-"                            <i style=\"font-size:1.8em\" class=\"fa fa-users "
-"pull-right\"/>\n"
+"                            <i style=\"font-size:1.8em\" class=\"fa fa-users pull-right\"/>\n"
 "                        </span>\n"
 "                        不好意思, 还没有人针对这份调查回答"
-
-#. module: survey
-#: constraint:survey.label:0
-msgid "A label must be attached to one and only one question"
-msgstr "一个标签必须而且只能附加到一个问题"
 
 #. module: survey
 #: sql_constraint:survey.question:0
@@ -223,12 +225,8 @@ msgid "A problem has occured"
 msgstr "已发生的问题"
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_2_4
-msgid "A process is defined for all enterprise flows"
-msgstr "一种作业被定义为所有企业流程"
-
-#. module: survey
-#: constraint:survey.user_input_line:0
+#: code:addons/survey/models/survey.py:820
+#, python-format
 msgid "A question cannot be unanswered and skipped"
 msgstr "不能够被取消答案和跳过的问题"
 
@@ -238,15 +236,9 @@ msgid "A token must be unique!"
 msgstr "标记必须唯一！"
 
 #. module: survey
-#: model:survey.page,title:survey.feedback_1
-msgid "About your Odoo usage"
-msgstr "关于您使用Odoo的一些情况"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_active
-#, fuzzy
 msgid "Active"
-msgstr "活动域"
+msgstr "有效"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -259,14 +251,6 @@ msgstr "增加收件人列表（不会转化为业务伙伴），由逗号、封
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Add list of existing contacts..."
 msgstr "新增现有联系人 ..."
-
-#. module: survey
-#: model:survey.label,value:survey.fcol_2_1_3
-#: model:survey.label,value:survey.fcol_2_2_3
-#: model:survey.label,value:survey.fcol_2_5_3
-#: model:survey.label,value:survey.fcol_2_7_3
-msgid "Agree"
-msgstr "同意"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -304,14 +288,15 @@ msgstr "已答复"
 #: model:ir.model.fields,field_description:survey.field_survey_question_user_input_line_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_user_input_line_ids
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
 msgstr "答案"
 
 #. module: survey
-#: model:survey.question,question:survey.feedback_1_1
-msgid "Are you using Odoo on a daily basis?"
-msgstr "你现在每天使用Odoo吗?"
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Archived"
+msgstr "已归档"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_attachment_ids
@@ -319,14 +304,16 @@ msgid "Attachments"
 msgstr "附件"
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_attachment_ids
+msgid ""
+"Attachments are linked to a document through model / res_id and to the "
+"message through this field."
+msgstr ""
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.back
 msgid "Back to Survey"
 msgstr "回到调查"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_1_2_4
-msgid "CRM"
-msgstr "CRM"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -344,17 +331,15 @@ msgid "Choose..."
 msgstr "选择..."
 
 #. module: survey
-#: code:addons/survey/survey.py:125
-#: code:addons/survey/wizard/survey_email_compose_message.py:34
+#: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
+msgid "Clean test answers"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey.py:111
 #, python-format
 msgid "Click here to start survey"
 msgstr "点击此处开始调查"
-
-#. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:92
-#, python-format
-msgid "Click here to take survey"
-msgstr "点击此处参与调查"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form
@@ -394,11 +379,6 @@ msgid "Comment Message"
 msgstr "评论消息"
 
 #. module: survey
-#: model:survey.page,title:survey.feedback_3
-msgid "Community and contributors"
-msgstr "社区和贡献者"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 #: selection:survey.user_input,state:0
@@ -408,17 +388,12 @@ msgstr "已完成"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Compose Email"
-msgstr "撰写电子邮件"
+msgstr "撰写邮件"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_surveys_configuration
 msgid "Configuration"
 msgstr "配置"
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_7_2
-msgid "Configuration wizard exists for each important setting"
-msgstr "为每个重要的设置配置向导"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -427,7 +402,8 @@ msgstr "限制"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid "Copy and paste the HTML code below to add this web link to any webpage."
+msgid ""
+"Copy and paste the HTML code below to add this web link to any webpage."
 msgstr "复制粘贴下方的HTML代码，把该链接增加到任意网页。"
 
 #. module: survey
@@ -462,7 +438,7 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_create_date
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_create_date
 msgid "Created on"
-msgstr "创建时间"
+msgstr "创建于"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_date_create
@@ -497,9 +473,9 @@ msgstr "截止日期"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_date_deadline
 msgid ""
-"Deadline to which the invitation to respond for this survey is valid. If the "
-"field is empty, the invitation is still valid."
-msgstr "邀请回馈该调查的截止日期有效。如果该字段为空，邀请依然有效。"
+"Deadline to which the invitation to respond for this survey is valid. If the"
+" field is empty,        the invitation is still valid."
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_date_deadline
@@ -519,11 +495,6 @@ msgid "Description"
 msgstr "说明"
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_7_1
-msgid "Descriptions and help tooltips are clear enough"
-msgstr "描述和帮助工具提示是否足够明显"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Design"
 msgstr "设计"
@@ -539,14 +510,6 @@ msgid ""
 "Design easily your survey, send invitations to answer by email and analyse "
 "answers."
 msgstr "便捷的设计你的调查，然后通过邮件发送给被调查者，最后分析调查的回答"
-
-#. module: survey
-#: model:survey.label,value:survey.fcol_2_1_2
-#: model:survey.label,value:survey.fcol_2_2_2
-#: model:survey.label,value:survey.fcol_2_5_2
-#: model:survey.label,value:survey.fcol_2_7_2
-msgid "Disagree"
-msgstr "反对"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_display_name
@@ -565,21 +528,6 @@ msgstr "显示名称"
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Display mode"
 msgstr "显示模式"
-
-#. module: survey
-#: model:survey.question,question:survey.feedback_3_3
-msgid "Do you have a proposition to attract new contributors?"
-msgstr "你有一个方案来吸引新的参与者?"
-
-#. module: survey
-#: model:survey.question,question:survey.feedback_3_2
-msgid "Do you have a proposition to help people to contribute?"
-msgstr "你是否有一个构想来吸引新的贡献者?"
-
-#. module: survey
-#: model:survey.question,question:survey.feedback_2_3
-msgid "Do you have suggestions on how to improve the process view ?"
-msgstr "你是否有新的建议来如何改善流程视图?"
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_draft
@@ -609,7 +557,7 @@ msgstr "Email"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_email_template_id
 msgid "Email Template"
-msgstr "邮件模板"
+msgstr "Email模板"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
@@ -617,13 +565,7 @@ msgid "Email composition wizard for Survey"
 msgstr "调查功能电子邮件撰写向导"
 
 #. module: survey
-#: model:survey.page,title:survey.feedback_2
-msgid "Ergonomy and ease of use"
-msgstr "模块化和易用性"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_error_msg
-#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Error message"
 msgstr "错误消息"
 
@@ -631,16 +573,6 @@ msgstr "错误消息"
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_partner_ids
 msgid "Existing contacts"
 msgstr "现有联系人"
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_7_3
-msgid "Extra modules proposed are relevant"
-msgstr "提出额外的模块是相关"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_1_2_3
-msgid "Financial Management"
-msgstr "财务管理"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage_fold
@@ -671,67 +603,6 @@ msgid "Group By"
 msgstr "分组"
 
 #. module: survey
-#: model:survey.question,question:survey.feedback_3_1
-msgid "How do you contribute or plan to contribute to Odoo?"
-msgstr "你如何为Odoo贡献或计划贡献?"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_1_2_6
-#, fuzzy
-msgid "Human Resources"
-msgstr "人力资源"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_3_1_3
-msgid "I develop new features"
-msgstr "我开发新功能"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_4_1_4
-msgid "I do not publish my developments"
-msgstr "本人不愿公开。"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_3_1_4
-msgid "I help to translate"
-msgstr "我帮忙翻译"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_4_1_3
-msgid "I host them on my own website"
-msgstr "我在自己的网站上推广Odoo"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_3_1_1
-msgid "I participate to discussion and forums"
-msgstr "我参与论坛讨论"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_4_1_1
-msgid "I use Github, like all official Odoo projects"
-msgstr "就像官方odoo的项目一样，我用Github"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_4_1_2
-msgid "I use another repository system (SourceForge...)"
-msgstr "我使用另外一个托管系统(如 sourceforge...)"
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_1_3
-msgid "I use the contextual help in Odoo"
-msgstr "我在Odoo使用上下文相关的帮助"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_3_1_5
-msgid "I write documentations"
-msgstr "我写文档"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_3_1_2
-msgid "I'd like to contribute but I don't know how?"
-msgstr "我想贡献但我不知道该如何做?"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_id
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_id
 #: model:ir.model.fields,field_description:survey.field_survey_page_id
@@ -755,32 +626,15 @@ msgstr "如果选中，用户能够返回上页。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_stage_closed
+#: model:ir.model.fields,help:survey.field_survey_survey_is_closed
 msgid "If closed, people won't be able to answer to surveys in this column."
 msgstr "如果关闭，参与者将不能回答这一栏调查中的问题。"
 
 #. module: survey
-#: code:addons/survey/survey.py:624
-#: model:survey.question,comments_message:survey.feedback_1_1
-#: model:survey.question,comments_message:survey.feedback_1_2
-#: model:survey.question,comments_message:survey.feedback_2_1
-#: model:survey.question,comments_message:survey.feedback_2_2
-#: model:survey.question,comments_message:survey.feedback_2_3
-#: model:survey.question,comments_message:survey.feedback_2_4
-#: model:survey.question,comments_message:survey.feedback_2_5
-#: model:survey.question,comments_message:survey.feedback_2_6
-#: model:survey.question,comments_message:survey.feedback_2_7
-#: model:survey.question,comments_message:survey.feedback_3_1
-#: model:survey.question,comments_message:survey.feedback_3_2
-#: model:survey.question,comments_message:survey.feedback_3_3
-#: model:survey.question,comments_message:survey.feedback_4_1
-#, fuzzy, python-format
+#: code:addons/survey/models/survey.py:485
+#, python-format
 msgid "If other, please specify:"
-msgstr "如其他的，精确的："
-
-#. module: survey
-#: model:survey.page,description:survey.feedback_4
-msgid "If you do not contribute or develop in Odoo, skip this page."
-msgstr "如果你不打算贡献并开发Odoo，可以跳过这一页"
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
@@ -793,6 +647,12 @@ msgid "In progress"
 msgstr "进行中"
 
 #. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:66
+#, python-format
+msgid "Incorrect Email Address: %s"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_email
 msgid "Input must be an email"
 msgstr "输入必须是电子邮件"
@@ -803,39 +663,14 @@ msgid "Invitations sent"
 msgstr "已发送邀请"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
+msgid "Is closed"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_designed
 msgid "Is designed?"
 msgstr "是故意的？"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_2_4_2
-msgid "It can be improved"
-msgstr "它可以用来改善"
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_1_2
-msgid "It helps in the beginning"
-msgstr "它有助于在开始时"
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_1_5
-msgid "It is clear"
-msgstr "无隐藏"
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_1_4
-msgid "It is complete"
-msgstr "它是完整的"
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_1_1
-msgid "It is up-to-date"
-msgstr "这是最新的"
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_2_5
-msgid "It's easy to find the process you need"
-msgstr "很容易找到你所需要的流程"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_sequence
@@ -846,7 +681,7 @@ msgstr "标签序列顺序"
 #: model:ir.actions.act_window,name:survey.action_survey_label_form
 #: model:ir.ui.menu,name:survey.menu_survey_label_form1
 msgid "Labels"
-msgstr "标签打印"
+msgstr "Labels"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label___last_update
@@ -858,7 +693,7 @@ msgstr "标签打印"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input___last_update
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line___last_update
 msgid "Last Modified on"
-msgstr "最后修改时间"
+msgstr "最后修改日"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_write_uid
@@ -870,7 +705,7 @@ msgstr "最后修改时间"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_write_uid
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_write_date
@@ -882,7 +717,7 @@ msgstr "最后更新者"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_write_date
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "最近更新时间"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_last_displayed_page_id
@@ -1004,17 +839,12 @@ msgstr "名称"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "New"
-msgstr "新建"
+msgstr "新的"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid "Next page"
 msgstr "下一页"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_1_1_4
-msgid "No, I just tested it"
-msgstr "不,我只是测试它"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_selected_survey_user_input
@@ -1088,12 +918,6 @@ msgid "One choice per row"
 msgstr "每行一个选项"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:78
-#, python-format
-msgid "One email at least is incorrect: %s"
-msgstr "最少有一个邮件是正确的： %s"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Options"
@@ -1105,13 +929,13 @@ msgstr "选项"
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Page"
-msgstr "页面"
+msgstr "网页"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_page_title
 #: model:ir.ui.view,arch_db:survey.survey_page_form
 msgid "Page Title"
-msgstr "页面标题"
+msgstr "网页标题"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_page_sequence
@@ -1150,16 +974,10 @@ msgid "Permanent"
 msgstr "永久"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:199
+#: code:addons/survey/wizard/survey_email_compose_message.py:164
 #, python-format
 msgid "Please enter at least one valid recipient."
 msgstr "请至少输入一个可用的收件人。"
-
-#. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:95
-#, python-format
-msgid "Please select a survey"
-msgstr "请选择一个调查"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -1180,11 +998,6 @@ msgstr "打印此答案"
 #: model:ir.model.fields,field_description:survey.field_survey_survey_print_url
 msgid "Print link"
 msgstr "打印链接"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_1_2_5
-msgid "Project Management"
-msgstr "项目管理"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_public_url_html
@@ -1217,18 +1030,17 @@ msgid "Public url"
 msgstr "公开网址"
 
 #. module: survey
-#: model:survey.label,value:survey.choice_1_2_2
-msgid "Purchases Management"
-msgstr "采购管理"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id
-#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_question_id
 #: model:ir.ui.view,arch_db:survey.survey_label_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Question"
 msgstr "疑问"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
+msgid "Question 2"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_question
@@ -1251,14 +1063,9 @@ msgid "Questions"
 msgstr "问题"
 
 #. module: survey
-#: model:survey.page,title:survey.feedback_4
-msgid "Questions for developers"
-msgstr "开发人员的问题"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_quizz_mode
-msgid "Quiz mode"
-msgstr "测试模式"
+msgid "Quizz Mode"
+msgstr ""
 
 #. module: survey
 #: selection:survey.question,display_mode:0
@@ -1299,16 +1106,6 @@ msgstr "行"
 #: model:ir.model.fields,field_description:survey.field_survey_question_labels_ids_2
 msgid "Rows of the Matrix"
 msgstr "表格行数"
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_7_4
-msgid "Running the configuration wizards is a good way to spare time"
-msgstr "运行配置向导是一个消遣时间的好方法"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_1_2_1
-msgid "Sales Management"
-msgstr "销售管理"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -1371,6 +1168,11 @@ msgid "Send"
 msgstr "发送"
 
 #. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_user_input_form
+msgid "Send Invitation Again"
+msgstr ""
+
+#. module: survey
 #: selection:survey.mail.compose.message,public:0
 msgid "Send by email the public web link to your audience."
 msgstr "通过邮件发送公开链接给你的粉丝。"
@@ -1381,11 +1183,6 @@ msgid ""
 "Send private invitation to your audience (only one response per recipient "
 "and per invitation)."
 msgstr "发送私人要求给你的粉丝（每个收件人和邀请只有一个反应）。"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_user_input_form
-msgid "Sent Invitation Again"
-msgstr "再次发送邀请"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_sequence
@@ -1441,8 +1238,7 @@ msgid ""
 "danger\">Your answers have probably not been recorded.</strong> Try "
 "refreshing."
 msgstr ""
-"在连接调查服务的时候出错。 <strong class=\"text-danger\">你的回答可能已经被记"
-"录下来.</strong> 试着更新一下 "
+"在连接调查服务的时候出错。 <strong class=\"text-danger\">你的回答可能已经被记录下来.</strong> 试着更新一下 "
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
@@ -1506,10 +1302,11 @@ msgstr "建议"
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Survey"
-msgstr "调查"
+msgstr "问卷"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_response_line_tree
@@ -1611,63 +1408,34 @@ msgid "Text answer"
 msgstr "文本答案"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_thank_you_message
-msgid "Thank you message"
-msgstr "谢谢你的信息"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
 msgid "Thank you!"
 msgstr "谢谢！"
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_5_3
-msgid "The 'Usability/Extended View' group helps in daily work"
-msgstr "\"可用性/扩展视图\"的构架在日常工作中很有帮助"
+#: model:ir.model.fields,field_description:survey.field_survey_survey_thank_you_message
+msgid "Thanks Message"
+msgstr "感谢留言"
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_5_4
-msgid "The 'Usability/Extended View' group hides only optional fields"
-msgstr "“可用性/扩展视图'架构隐藏可选字段"
-
-#. module: survey
-#: constraint:survey.user_input_line:0
+#: code:addons/survey/models/survey.py:833
+#, python-format
 msgid "The answer must be in the right type"
 msgstr "答案必须是正确的类别"
 
 #. module: survey
-#: code:addons/survey/survey.py:622
-#: model:survey.question,validation_error_msg:survey.feedback_1_1
-#: model:survey.question,validation_error_msg:survey.feedback_1_2
-#: model:survey.question,validation_error_msg:survey.feedback_2_1
-#: model:survey.question,validation_error_msg:survey.feedback_2_2
-#: model:survey.question,validation_error_msg:survey.feedback_2_3
-#: model:survey.question,validation_error_msg:survey.feedback_2_4
-#: model:survey.question,validation_error_msg:survey.feedback_2_5
-#: model:survey.question,validation_error_msg:survey.feedback_2_6
-#: model:survey.question,validation_error_msg:survey.feedback_2_7
-#: model:survey.question,validation_error_msg:survey.feedback_3_1
-#: model:survey.question,validation_error_msg:survey.feedback_3_2
-#: model:survey.question,validation_error_msg:survey.feedback_3_3
-#: model:survey.question,validation_error_msg:survey.feedback_4_1
+#: code:addons/survey/models/survey.py:499
 #, python-format
 msgid "The answer you entered has an invalid format."
 msgstr "您输入的答案格式不正确。"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:174
+#: code:addons/survey/wizard/survey_email_compose_message.py:138
 #, python-format
 msgid ""
-"The content of the text don't contain '__URL__'.                     __URL__ "
-"is automaticaly converted into the special url of the survey."
-msgstr ""
-"文本内容中不包含 '__URL__'.                     __URL__ 会被自动转换成特殊的"
-"调查URL。"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_2_4_1
-msgid "The current menu structure is good"
-msgstr "当前的菜单结构很好"
+"The content of the text don't contain '__URL__'.                     __URL__"
+" is automaticaly converted into the special url of the survey."
+msgstr "文本内容中不包含 '__URL__'.                     __URL__ 会被自动转换成特殊的调查URL。"
 
 #. module: survey
 #: sql_constraint:survey.user_input:0
@@ -1675,72 +1443,22 @@ msgid "The deadline cannot be in the past"
 msgstr "截止日期不能是过去的时间。"
 
 #. module: survey
-#: model:survey.label,value:survey.frow_2_5_5
-msgid "The groups set on menu items are relevant"
-msgstr "在菜单上设置分组是相关的"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_2_6_3
-msgid "The number of groups is good"
-msgstr "组的数量是恰当的"
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_5_1
-msgid "The security rules defined on groups are useful"
-msgstr "基于群组定义安全规则有很有的。"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_2_6_2
-msgid "There are too few groups defined, security isn't accurate enough"
-msgstr "定义太少组，安全性不够全面"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_2_6_1
-msgid "There are too many groups defined, security is too complex to set"
-msgstr "定义太多组，安全设置起来太复杂"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_2_4_3
-msgid "There are too much menus, it's complex to understand"
-msgstr "有太多的菜单,理解起来比较复杂"
-
-#. module: survey
-#: model:survey.page,description:survey.feedback_2
-msgid ""
-"These questions relate to the ergonomy and ease of use of Odoo. Try to "
-"remind your firsts days on Odoo and\n"
-"what have been your difficulties."
-msgstr ""
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_2_2
-msgid "They are clean and correct"
-msgstr "他们是简洁的和正确的"
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_2_3
-msgid "They are useful on a daily usage"
-msgstr "他们是在日常中使用"
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_2_1
-msgid "They help new users to understand Odoo"
-msgstr "他们帮助新用户了解Odoo"
-
-#. module: survey
-#: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
+#: code:addons/survey/models/survey.py:558
+#: code:addons/survey/tests/test_survey.py:86
 #, python-format
 msgid "This answer must be an email address"
 msgstr "答案必须为邮件地址"
 
 #. module: survey
-#: code:addons/survey/survey.py:713 code:addons/survey/tests/test_survey.py:115
+#: code:addons/survey/models/survey.py:602
+#: code:addons/survey/tests/test_survey.py:107
 #, python-format
 msgid "This is not a date/time"
 msgstr "这不是日期/时间"
 
 #. module: survey
-#: code:addons/survey/survey.py:690 code:addons/survey/tests/test_survey.py:105
+#: code:addons/survey/models/survey.py:579
+#: code:addons/survey/tests/test_survey.py:97
 #, python-format
 msgid "This is not a number"
 msgstr "这不是一个数字"
@@ -1748,9 +1466,9 @@ msgstr "这不是一个数字"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_multi_email
 msgid ""
-"This list of emails of recipients will not converted in contacts. Emails "
-"separated by commas, semicolons or newline."
-msgstr "此收件人列表不会转为联系人。邮件用逗号、封号、或新行分隔。"
+"This list of emails of recipients will not be converted in contacts.        "
+"Emails must be separated by commas, semicolons or newline."
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_thank_you_message
@@ -1758,20 +1476,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr "此邮件将会在调查结束后显示。"
 
 #. module: survey
-#: code:addons/survey/survey.py:621
-#: model:survey.question,constr_error_msg:survey.feedback_1_1
-#: model:survey.question,constr_error_msg:survey.feedback_1_2
-#: model:survey.question,constr_error_msg:survey.feedback_2_1
-#: model:survey.question,constr_error_msg:survey.feedback_2_2
-#: model:survey.question,constr_error_msg:survey.feedback_2_3
-#: model:survey.question,constr_error_msg:survey.feedback_2_4
-#: model:survey.question,constr_error_msg:survey.feedback_2_5
-#: model:survey.question,constr_error_msg:survey.feedback_2_6
-#: model:survey.question,constr_error_msg:survey.feedback_2_7
-#: model:survey.question,constr_error_msg:survey.feedback_3_1
-#: model:survey.question,constr_error_msg:survey.feedback_3_2
-#: model:survey.question,constr_error_msg:survey.feedback_3_3
-#: model:survey.question,constr_error_msg:survey.feedback_4_1
+#: code:addons/survey/models/survey.py:503
 #, python-format
 msgid "This question requires an answer."
 msgstr "此问题需要答案。"
@@ -1792,37 +1497,9 @@ msgid "This survey is open only to registered people. Please"
 msgstr "此调查只针对已注册用户，请"
 
 #. module: survey
-#: model:survey.survey,description:survey.feedback_form
-msgid "This survey should take less than five minutes."
-msgstr "本调查应少于5分钟"
-
-#. module: survey
-#: model:survey.label,value:survey.frow_2_5_2
-msgid ""
-"Those security rules are standard and can be used out-of-the-box in most "
-"cases"
-msgstr "这些安全规则是标准化，在大多数情况下能够开箱即用"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_title
 msgid "Title"
-msgstr "标题"
-
-#. module: survey
-#: model:survey.label,value:survey.fcol_2_1_4
-#: model:survey.label,value:survey.fcol_2_2_4
-#: model:survey.label,value:survey.fcol_2_5_4
-#: model:survey.label,value:survey.fcol_2_7_4
-msgid "Totally agree"
-msgstr "完全同意"
-
-#. module: survey
-#: model:survey.label,value:survey.fcol_2_1_1
-#: model:survey.label,value:survey.fcol_2_2_1
-#: model:survey.label,value:survey.fcol_2_5_1
-#: model:survey.label,value:survey.fcol_2_7_1
-msgid "Totally disagree"
-msgstr "完全不同意"
+msgstr "称谓"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_search
@@ -1852,13 +1529,8 @@ msgstr "使用模版"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_description
 msgid ""
-"Use this field to add             additional explanations about your question"
-msgstr "使用此字段增加             关于问题的额外解释"
-
-#. module: survey
-#: model:survey.survey,title:survey.feedback_form
-msgid "User Feedback Form"
-msgstr "用户反馈"
+"Use this field to add         additional explanations about your question"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_user_input_id
@@ -1911,6 +1583,11 @@ msgid "Validate entry"
 msgstr "验证文本"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
+msgid "Validation Error message"
+msgstr ""
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_form
 msgid "View Results"
 msgstr "查看结果"
@@ -1926,44 +1603,6 @@ msgid "Vote"
 msgstr "投票"
 
 #. module: survey
-#: model:survey.question,question:survey.feedback_2_7
-msgid "What do you think about configuration wizards?"
-msgstr "你怎么看配置向导?"
-
-#. module: survey
-#: model:survey.question,question:survey.feedback_2_1
-msgid "What do you think about the documentation available on doc.odoo.com?"
-msgstr "你觉得在doc.odoo.com的文档怎么样？"
-
-#. module: survey
-#: model:survey.question,question:survey.feedback_2_5
-msgid "What do you think about the groups of users?"
-msgstr "你怎么看待用户组?"
-
-#. module: survey
-#: model:survey.question,question:survey.feedback_2_2
-msgid ""
-"What do you think about the process views of Odoo, available in the web "
-"client ?"
-msgstr "你怎么看待Odoo的流程视图,在web客户端是否匹配?"
-
-#. module: survey
-#: model:survey.question,question:survey.feedback_2_4
-#: model:survey.question,question:survey.feedback_2_6
-msgid "What do you think about the structure of the menus?"
-msgstr "你怎么看菜单的结构?"
-
-#. module: survey
-#: model:survey.question,question:survey.feedback_4_1
-msgid "Where do you develop your new features?"
-msgstr "你开发新功能在哪里?"
-
-#. module: survey
-#: model:survey.question,question:survey.feedback_1_2
-msgid "Which modules are you using/testing?"
-msgstr "哪个模块你现在在使用或测试?"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.datetime
 msgid "YYYY-MM-DD hh:mm:ss"
 msgstr "YYYY-MM-DD hh:mm:ss"
@@ -1972,27 +1611,10 @@ msgstr "YYYY-MM-DD hh:mm:ss"
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
 "YYYY-MM-DD hh:mm:ss\n"
-"                                            <i class=\"fa fa-calendar fa-2x"
-"\"/>"
+"                                            <i class=\"fa fa-calendar fa-2x\"/>"
 msgstr ""
 "YYYY-MM-DD hh:mm:ss\n"
-"                                            <i class=\"fa fa-calendar fa-2x"
-"\"/>"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_1_1_1
-msgid "Yes, I use a version < 7.0"
-msgstr "是的,我使用低于7.0的版本"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_1_1_2
-msgid "Yes, I use the 7.0 version, installed locally"
-msgstr "是的,我使用7.0版本,在本地安装"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_1_1_3
-msgid "Yes, I use the online version of Odoo"
-msgstr "是的,我使用Odoo的在线版本"
+"                                            <i class=\"fa fa-calendar fa-2x\"/>"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form
@@ -2000,29 +1622,27 @@ msgid ""
 "You can create surveys for different purposes: customer opinion, services "
 "feedback, recruitment interviews, employee's periodical evaluations, "
 "marketing campaigns, etc."
-msgstr ""
-"你可以根据不同的目的创建调查：客户观点，服务回馈，招聘面试员工定期评估，市场"
-"活动等等"
+msgstr "你可以根据不同的目的创建调查：客户观点，服务回馈，招聘面试员工定期评估，市场活动等等"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid ""
-"You can share your survey web public link and/or send private invitations to "
-"your audience. People can answer once per invitation, and whenever they want "
-"with the public web link (in this case, the \"Public in website\" setting "
-"must be enabled)."
+"You can share your survey web public link and/or send private invitations to"
+" your audience. People can answer once per invitation, and whenever they "
+"want with the public web link (in this case, the \"Public in website\" "
+"setting must be enabled)."
 msgstr ""
-"您能够分享问卷的网络链接和/或私下邀请你的粉丝。 无论什么时候，受到邀请者都可"
-"使用公共网络链接参与回答（这种情况下，必须设定 \"在网站公开\" 选项）。"
+"您能够分享问卷的网络链接和/或私下邀请你的粉丝。 无论什么时候，受到邀请者都可使用公共网络链接参与回答（这种情况下，必须设定 \"在网站公开\" "
+"选项）。"
 
 #. module: survey
-#: code:addons/survey/survey.py:424
+#: code:addons/survey/models/survey.py:330
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr "你不能为没有问题的调查问卷发送邀请。"
 
 #. module: survey
-#: code:addons/survey/survey.py:429
+#: code:addons/survey/models/survey.py:333
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "不能为已关闭的调查发送邀请。"
@@ -2038,6 +1658,11 @@ msgid "ans"
 msgstr "ans"
 
 #. module: survey
+#: model:ir.model,name:survey.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr "ir.autovacuum"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.auth_required
 msgid "log in"
 msgstr "登录"
@@ -2045,7 +1670,7 @@ msgstr "登录"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid "of"
-msgstr ""
+msgstr "的"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
@@ -2063,227 +1688,3 @@ msgstr "查看你的回答"
 #, python-format
 msgid "try to create and fill survey"
 msgstr "试着创建并填写调查"
-
-#~ msgid ""
-#~ "\n"
-#~ "                \n"
-#~ "                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
-#~ "Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
-#~ "                    <p>Hello,</p>\n"
-#~ "                    <p>We are conducting a survey, and your response "
-#~ "would be appreciated.</p>\n"
-#~ "                    <p><a href=\"__URL__\">Please, click here to start "
-#~ "survey</a></p>\n"
-#~ "                    <p>Thanks for your participation!</p>\n"
-#~ "                </div>\n"
-#~ "                \n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "                \n"
-#~ "                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
-#~ "Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
-#~ "                    <p>Hello,</p>\n"
-#~ "                    <p>我们正在开展一项调查，非常期望得到您的意见反馈。</"
-#~ "p>\n"
-#~ "                    <p><a href=\"__URL__\">请点击此处开始调查</a></p>\n"
-#~ "                    <p>谢谢您的热情参与!</p>\n"
-#~ "                </div>\n"
-#~ "                \n"
-#~ "            "
-
-#~ msgid "Action Needed"
-#~ msgstr "所需行动"
-
-#~ msgid ""
-#~ "Answers do not go in the original document discussion thread. This has an "
-#~ "impact on the generated message-id."
-#~ msgstr "答案不在原来的讨论区中，会对生成的message-id中有影响"
-
-#~ msgid "Author"
-#~ msgstr "作者"
-
-#~ msgid ""
-#~ "Author of the message. If not set, email_from may hold an email address "
-#~ "that did not match any partner."
-#~ msgstr ""
-#~ "消息的作者。如果没设置，email_from 可能保存一个不匹配任何合作伙伴的 email"
-#~ "地址，"
-
-#~ msgid "Author's avatar"
-#~ msgstr "作者头像"
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "自动整理HTML内容"
-
-#~ msgid "Channels"
-#~ msgstr "渠道"
-
-#~ msgid "Child Messages"
-#~ msgstr "子信息"
-
-#~ msgid "Composition mode"
-#~ msgstr "写作模式"
-
-#~ msgid "Contents"
-#~ msgstr "内容"
-
-#~ msgid "Current user has a starred notification linked to this message"
-#~ msgstr "当前用户用 星号 提醒关联到这条消息"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid ""
-#~ "Email address of the sender. This field is set when no matching partner "
-#~ "is found and replaces the author_id field in the chatter."
-#~ msgstr ""
-#~ "发送者的电子邮件地址。当找不到业务伙伴的匹配的邮件时候，这个字段就被设置。"
-#~ "并且Chatter中的作者id被替换掉"
-
-#~ msgid "Favorited By"
-#~ msgstr "收藏夹"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid "From"
-#~ msgstr "从"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid "Initial thread message."
-#~ msgstr "初始化线索消息"
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Log an Internal Note"
-#~ msgstr "记录内部日志"
-
-#~ msgid "Message Record Name"
-#~ msgstr "消息记录名称"
-
-#~ msgid ""
-#~ "Message type: email for email message, notification for system message, "
-#~ "comment for other messages such as user replies"
-#~ msgstr ""
-#~ "消息类型：Email 用于 邮件消息， 通知用户系统消息，评论用于其他消息，例如用"
-#~ "户回复。"
-
-#~ msgid "Message unique identifier"
-#~ msgstr "消息唯一编号"
-
-#~ msgid "Message-Id"
-#~ msgstr "Message-Id"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "消息和通信历史"
-
-#~ msgid "Name get of the related document."
-#~ msgstr "获得相关文档的名称"
-
-#~ msgid "Need Action"
-#~ msgstr "待处理"
-
-#~ msgid "No threading for answers"
-#~ msgstr "没有响应的线程"
-
-#~ msgid "Notify followers"
-#~ msgstr "通知关注者"
-
-#~ msgid "Notify followers of the document (mass post only)"
-#~ msgstr "通知此文档的追随者（只用于批量发送）"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Open Survey Menu"
-#~ msgstr "打开调查菜单"
-
-#~ msgid "Outgoing mail server"
-#~ msgstr "发出邮件服务器"
-
-#~ msgid "Parent Message"
-#~ msgstr "父消息"
-
-#~ msgid "Related Document ID"
-#~ msgstr "相关单据编号"
-
-#~ msgid "Related Document Model"
-#~ msgstr "相关单据模型"
-
-#~ msgid ""
-#~ "Reply email address. Setting the reply_to bypasses the automatic thread "
-#~ "creation."
-#~ msgstr "回复邮件地址。设定“回复到”避免自动创建线索。"
-
-#~ msgid "Reply-To"
-#~ msgstr "回复到"
-
-#~ msgid ""
-#~ "Small-sized image of this contact. It is automatically resized as a "
-#~ "64x64px image, with aspect ratio preserved. Use this field anywhere a "
-#~ "small image is required."
-#~ msgstr ""
-#~ "联系人小尺寸图像。自动缩放为64x64px ，保留纵横比。此字段用于任何需要小图像"
-#~ "的场合"
-
-#~ msgid "Starred"
-#~ msgstr "加星的邮件"
-
-#~ msgid "Subject"
-#~ msgstr "主题"
-
-#~ msgid "Subtype"
-#~ msgstr "子类型"
-
-#~ msgid "System notification"
-#~ msgstr "系统通知"
-
-#~ msgid ""
-#~ "Tracked values are stored in a separate model. This field allow to "
-#~ "reconstructthe tracking and to generate statistics on the model."
-#~ msgstr ""
-#~ "追踪值被保存在一个单一的模型中。这个字段允许重新构建追踪值并且在模型上生成"
-#~ "统计分析"
-
-#~ msgid "Tracking values"
-#~ msgstr "追踪值"
-
-#~ msgid "Unread Messages"
-#~ msgstr "未读消息"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Use active domain"
-#~ msgstr "使用活动域"
-
-#~ msgid "Whether the message is an internal note (comment mode only)"
-#~ msgstr "无论消息是内部记录（只适用评论模式）"
-
-#~ msgid "on"
-#~ msgstr "在"

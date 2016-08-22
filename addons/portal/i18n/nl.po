@@ -1,110 +1,55 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * portal
-#
+# 
 # Translators:
-# Eric Geens <ericgeens@yahoo.com>, 2015
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
-#, fuzzy
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-01-23 14:45+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
-"Language: nl\n"
+"POT-Creation-Date: 2016-08-18 08:37+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: portal
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
-#, fuzzy
 msgid ""
 "\n"
 "<p>\n"
 "    Dear ${object.user_id.name or ''},\n"
 "</p>\n"
 "<p>\n"
-"    You have been given access to ${user.company_id.name}'s ${object."
-"wizard_id.portal_id.name}.\n"
+"    You have been given access to ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
 "</p>\n"
 "<p>\n"
 "    Your login account data is:\n"
 "</p>\n"
 "<ul>\n"
 "    <li>Username: ${object.user_id.login or ''}</li>\n"
-"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or "
-"''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
 "\t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
 "</ul>\n"
 "<p>\n"
 "\tYou can set or change your password via the following url:\n"
 "</p>\n"
 "<ul>\n"
-"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}"
-"</a></li>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
 "</ul>\n"
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
 msgstr ""
-"\n"
-"            \t<p>\n"
-"                    Beste ${object.user_id.name or ''},\n"
-"                </p>\n"
-"                <p>\n"
-"                    U hebt toegang gekregen tot ${user.company_id.name}'s "
-"${object.wizard_id.portal_id.name}.\n"
-"                </p>\n"
-"                <p>\n"
-"                    Uw login gegevens zijn:\n"
-"                </p>\n"
-"                <ul>\n"
-"                    <li>Gebruikersnaam: ${object.user_id.login or ''}</li>\n"
-"                </ul>\n"
-"                <ul>\n"
-"                    <li>Portaal: <a href=\"${'portal_url' in ctx and "
-"ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}"
-"</a></li>\n"
-"                </ul>\n"
-"                <ul>\n"
-"                \t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</"
-"li>\n"
-"                </ul>\n"
-"                <p>\n"
-"                \tU kan een wachtwoord aanmaken of wijzigen via de volgende "
-"link:\n"
-"                </p>\n"
-"                <ul>\n"
-"                    <li><a href=\"${object.user_id.signup_url}\">${object."
-"user_id.signup_url}</a></li>\n"
-"                </ul>\n"
-"                <p>\n"
-"                \t${object.wizard_id.welcome_message or ''}\n"
-"                </p>\n"
-"                <p>---<br />\n"
-"                    Odoo - Open Source Business Applcaties<br />\n"
-"                    http://www.odoo.com<br />\n"
-"                </p>\n"
-"            \n"
-"            "
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
 msgid "Access Groups"
-msgstr "Toegangsgroepen"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_after_sales
-msgid "After Sale Services"
-msgstr "Nazorg"
+msgstr "Toegang groepen"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -112,14 +57,9 @@ msgid "Apply"
 msgstr "Toepassen"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Billing"
-msgstr "Facturatie"
-
-#. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Cancel"
-msgstr "Annuleren"
+msgstr "Annuleer"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
@@ -146,18 +86,13 @@ msgstr "Aangemaakt op"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Weergave naam\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Naam weergeven"
+msgstr "Schermnaam"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_id
@@ -211,7 +146,6 @@ msgstr "Niet portaal groepen"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
 #: model:ir.model.fields,field_description:portal.field_res_groups_is_portal
-#: model:ir.ui.menu,name:portal.portal_menu
 msgid "Portal"
 msgstr "Portaal"
 
@@ -220,7 +154,7 @@ msgstr "Portaal"
 #: model:ir.model,name:portal.model_portal_wizard
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Portal Access Management"
-msgstr "Portaal toegang beheer"
+msgstr "Portaal toegangsbeheer"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.group_search_view
@@ -233,39 +167,30 @@ msgid "Portal User Config"
 msgstr "Portaal gebruikers instellingen"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_projects
-msgid "Projects"
-msgstr "Projecten"
-
-#. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
-"                        The email address of each selected contact must be "
-"valid and unique.\n"
-"                        If necessary, you can fix any contact's email "
-"address directly in the list."
+"                        The email address of each selected contact must be valid and unique.\n"
+"                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
-"Selecteer welke contacten onderdeel moeten uitmaken van het portaal.\n"
-"                        Het e-mail adres van ieder geselecteerd "
-"contactpersoon moet geldig en uniek zijn.\n"
-"                        Indien nodig, kunt u een e-mail adres van een "
-"contactpersoon direct in de lijst wijzigen."
+"Selecteer welke contactpersonen onderdeel moeten uitmaken van het portaal.\n"
+"                        Het e-mail adres van ieder geselecteerd contactpersoon moet geldig en uniek zijn.\n"
+"                        Indien nodig, kunt u een e-mail adres van een contactpersoon direct in de lijst wijzigen."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:114
+#: code:addons/portal/wizard/portal_wizard.py:106
 #, python-format
 msgid "Several contacts have the same email: "
 msgstr "Sommige contacten hebben hetzelfde e-mailadres: "
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:111
+#: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts don't have a valid email: "
 msgstr "Sommige contacten hebben geen geldig e-mailadres: "
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:117
+#: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
@@ -282,8 +207,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
-"Deze tekst wordt ingevoegd in de e-mail welke wordt verzonden aan de portaal "
-"gebruikers."
+"Deze tekst wordt ingevoegd in de e-mail welke wordt verzonden aan de portaal"
+" gebruikers."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
@@ -293,7 +218,7 @@ msgstr ""
 "gebruikers van het portaal."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:120
+#: code:addons/portal/wizard/portal_wizard.py:112
 #, python-format
 msgid ""
 "To resolve this error, you can: \n"
@@ -312,18 +237,18 @@ msgstr "Gebruikers"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_wizard_id
 msgid "Wizard"
-msgstr "Assistent"
+msgstr "Wizard"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:189
+#: code:addons/portal/wizard/portal_wizard.py:179
 #, python-format
-msgid "You must have an email address in your User Preferences to send emails."
+msgid ""
+"You must have an email address in your User Preferences to send emails."
 msgstr ""
 "U moet een e-mail adres in uw voorkeuren hebben ingesteld om e-mails te "
 "kunnen versturen."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
-#, fuzzy
 msgid "Your Odoo account at ${user.company_id.name}"
-msgstr "Uw Odoo account op ${user.company_id.name|safe}"
+msgstr "Uw Odoo account op ${user.company_id.name}"

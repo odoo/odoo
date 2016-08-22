@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_sale_delivery
-#
+# 
 # Translators:
-# Kris Krnacs, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-03-08 19:50+0000\n"
-"Last-Translator: Kris Krnacs\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
-"hu/)\n"
-"Language: hu\n"
+"POT-Creation-Date: 2016-08-18 08:38+0000\n"
+"PO-Revision-Date: 2016-08-18 08:38+0000\n"
+"Last-Translator: krnkris <krnkris@freemail.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_delivery
@@ -27,6 +27,17 @@ msgid ""
 msgstr ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
 "updated after choosing a new delivery method\"> Szállítás:</span>"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
+msgid ""
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sale Order, Delivery Order and "
+"Customer Invoice/Refund"
+msgstr ""
+"Egy termék leírása, melyről beszélgetést szeretne fojtatni a vásárlókkal.  "
+"Ez a leírás lesz átmásolva minden egyes árajánlatra, szállítási "
+"megbízásra/szállítólevélre és vásárlói számlára/visszatérítésre."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -44,6 +55,16 @@ msgid "Appear on the shopping cart"
 msgstr "Bevásárló kocsiban jelenik meg"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability
+msgid "Availability"
+msgstr "Elérhetőség"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability_warning
+msgid "Availability Warning"
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_available_in_pos
 msgid "Available in the Point of Sale"
 msgstr "Elérhető az értékesítési pontban"
@@ -51,7 +72,7 @@ msgstr "Elérhető az értékesítési pontban"
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_delivery_carrier
 msgid "Carrier"
-msgstr "Fuvarozás"
+msgstr "Fuvarozó"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_to_weight
@@ -63,7 +84,8 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
-msgstr "Jelölje be, ha a ezt a terméket látni szeretné az Értékesítési Pontban"
+msgstr ""
+"Jelölje be, ha a ezt a terméket látni szeretné az Értékesítési Pontban"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -71,19 +93,19 @@ msgid "Choose your Delivery Method"
 msgstr "Válassza ki a szállítási módját"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
-msgid "Country..."
-msgstr "Ország..."
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_project_id
-msgid "Create a task under this project on sale order validation."
-msgstr ""
+#: model:ir.model,name:website_sale_delivery.model_res_country
+msgid "Country"
+msgstr "Ország"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
 msgstr "Szállítási mennyiség"
+
+#. module: website_sale_delivery
+#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
+msgid "Delivery Methods"
+msgstr "Szállítás módja"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -92,8 +114,8 @@ msgstr "Leírás"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
-msgid "Description displayed on the eCommerce and on the Online Quotations."
-msgstr "Leírás az eÉrtékesítésen és az Online árajánlaton megjelenítve"
+msgid "Description displayed on the eCommerce and on online quotations."
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_description
@@ -124,7 +146,7 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_attachment_count
 msgid "File"
-msgstr ""
+msgstr "Fájl"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
@@ -147,21 +169,11 @@ msgid "Landed Costs"
 msgstr "Össz költségek"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn_msg
-msgid "Message for Purchase Order Line"
-msgstr "Üzenet a szállítói megrendelés sorról"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn_msg
-msgid "Message for Sales Order Line"
-msgstr "Üzenet a vevői megrendelés sorára"
-
-#. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:138
+#: code:addons/website_sale_delivery/models/sale_order.py:99
 #, python-format
 msgid ""
-"No shipping method is available for your current order and shipping address. "
-"Please contact us for more information."
+"No shipping method is available for your current order and shipping address."
+" Please contact us for more information."
 msgstr ""
 "Nincs elérhető szállítási mód a jelenlegi vásárlói megrendelésére és "
 "szállítási címre. Kérem lépjen velünk kapcsolatba további információért."
@@ -169,7 +181,7 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_optional_product_ids
 msgid "Optional Products"
-msgstr ""
+msgstr "Kiegészítő termékek"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_pos_categ_id
@@ -184,17 +196,12 @@ msgstr "Beszerzés"
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_optional_product_ids
 msgid "Products to propose when add to cart."
-msgstr ""
+msgstr "Javasolt termék, ha kosárhoz adja."
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_project_id
-msgid "Project"
-msgstr "Projekt"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-msgid "Purchase Order Line"
-msgstr "Szállítói megrendelés sor"
+#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
+msgid "Published"
+msgstr "Közzétett"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
@@ -202,36 +209,24 @@ msgid "Rating"
 msgstr "Értékelés"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_last_value
+msgid "Rating Last Value"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_count
+msgid "Rating count"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_rating_last_value
+msgid "Rating value: 0=Unhappy, 10=Happy"
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
 msgid "Sales Order"
-msgstr "Vevői megrendelés"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid "Sales Order Line"
-msgstr "Vásárlói megrendelés sor"
-
-#. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
-msgid "Select..."
-msgstr "Kiválaszt..."
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
-"A \"Figyelmeztetés\" lehetőség kiválasztása a felhasználót egy üzenettel "
-"értesíti, az \"Üzenet blokkolása\" lehetőség egy kivételt küld az üzenethez "
-"és leblokkolja a folyamatot. Az üzenetet a következő mezőbe kell beírni."
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
-msgid "Sequence"
-msgstr "Sorszám"
+msgstr "Vásárlói megrendelés"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_x
@@ -244,7 +239,7 @@ msgid "Size Y"
 msgstr "Méret Y"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:137
+#: code:addons/website_sale_delivery/models/sale_order.py:98
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr "Bocsánat, nem tudjuk szállítani a megrendelését"
@@ -270,6 +265,13 @@ msgid "The amount without tax."
 msgstr "Összeg adó nélkül."
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_availability
+msgid ""
+"This field is used to display a availability banner with a message on the "
+"ecommerce"
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Those categories are used to group similar products for e-commerce."
 msgstr ""
@@ -292,9 +294,24 @@ msgid "Tracking:"
 msgstr ""
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
+msgid "Visible in Website"
+msgstr "Látható a weboldalon"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
+msgid "Website Comments"
+msgstr "Honlap hozzászólások"
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Website Product Category"
 msgstr "Weboldal termék kategória"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
+msgid "Website Sequence"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
@@ -310,23 +327,3 @@ msgstr "Honlap meta kulcsszavai"
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_title
 msgid "Website meta title"
 msgstr "Honlap meta cím"
-
-#~ msgid ""
-#~ "Check this box to generate Call for Tenders instead of generating "
-#~ "requests for quotation from procurement."
-#~ msgstr ""
-#~ "Jelölje be a négyzetet árajánlat tender generálásához, az igények alapján "
-#~ "történő árajánlat kérések generálása helyett."
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr ""
-#~ "A teljes URL elérési út a dokumentum weboldalon keresztüli eléréséhez."
-
-#~ msgid "Visible in Website"
-#~ msgstr "Látható a weboldalon"
-
-#~ msgid "Website Comments"
-#~ msgstr "Honlap hozzászólások"
-
-#~ msgid "Website URL"
-#~ msgstr "Honlap URL"

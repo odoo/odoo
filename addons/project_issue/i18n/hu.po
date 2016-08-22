@@ -1,29 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * project_issue
-#
+# 
 # Translators:
-# krnkris, 2015
-# krnkris, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-04-12 10:04+0000\n"
-"Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
-"hu/)\n"
-"Language: hu\n"
+"POT-Creation-Date: 2016-08-18 08:36+0000\n"
+"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_email
 msgid "# Emails"
-msgstr "E-mailek száma"
+msgstr "# E-mailek száma"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_res_partner_issue_count
@@ -31,12 +31,12 @@ msgid "# Issues"
 msgstr "# Bejelentések"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr_issues
 msgid "# of Issues"
 msgstr "# ügyből"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:215
+#: code:addons/project_issue/models/project_issue.py:148
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -57,18 +57,9 @@ msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
 msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">mint</span>"
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
-msgid ""
-"A Issue's kanban state indicates special situations affecting it:\n"
-" * Normal is the default situation\n"
-" * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the "
-"next stage"
-msgstr ""
-"Az ügyek kanban állapota megmutatja milyen speciális állapotot érint:\n"
-" * Normál az alap állapot\n"
-" * Blokkolt azt jelzi, hogy valami akadályozza az ügy végrehajtását\n"
-" * Készenáll a következő szintre jelzi az ügy egy fokkal feljebb lépését"
+#: selection:project.config.settings,module_project_issue_sheet:0
+msgid "Activate timesheets on issues"
+msgstr "Aktiválja az ügyek munkaidő-időkiosztásait"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -81,14 +72,26 @@ msgid "Add an internal note..."
 msgstr "Belső jegyzet hozzáadása..."
 
 #. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
+msgid ""
+"An Issue's kanban state indicates special situations affecting it:\n"
+"\n"
+"                                           * Normal is the default situation\n"
+"\n"
+"                                           * Blocked indicates something is preventing the progress of this issue\n"
+"\n"
+"                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Gyűjtő/elemző könyvelés"
+msgstr "Analitikus/elemző könyvelés"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Archived"
-msgstr "Archívált"
+msgstr "Archivált"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_open
@@ -101,7 +104,7 @@ msgstr "Hozzárendelve"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Assigned to"
-msgstr "Hozzárendelve"
+msgstr "Hozzárendelve ehhez"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_close
@@ -148,11 +151,6 @@ msgstr ""
 "tevékenységek kezeléséhez."
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.open_view_issue
-msgid "Click to create an issue."
-msgstr "Kattintson egy garanciális ügy létrehozásához."
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
 msgid "Closed"
 msgstr "Lezárt"
@@ -160,7 +158,7 @@ msgstr "Lezárt"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_color
 msgid "Color Index"
-msgstr "Szín meghatározó"
+msgstr "Szín jegyzék"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_channel
@@ -184,14 +182,14 @@ msgstr "Vállalat"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_partner_id
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_partner_id
 msgid "Contact"
-msgstr "Kapcsolattartó"
+msgstr "Kapcsolat"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_create_date
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Create Date"
-msgstr "Létrehozás dátuma"
+msgstr "Dátum létrehozás"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -206,17 +204,22 @@ msgstr "Készítette"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
+msgid "Created on"
+msgstr "Létrehozás dátuma"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
 msgid "Creation Date"
 msgstr "Létrehozás dátuma"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:384
+#: code:addons/project_issue/models/project_issue.py:286
 #, python-format
 msgid "Customer"
-msgstr "Vevő"
+msgstr "Vásárló"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:386
+#: code:addons/project_issue/models/project_issue.py:288
 #, python-format
 msgid "Customer Email"
 msgstr "Vevői e-mail"
@@ -297,7 +300,12 @@ msgstr "Az utolsó művelet és az aktuális dátum különbsége napokban"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_display_name
 msgid "Display Name"
-msgstr "Név megjelenítése"
+msgstr "Megjelenített név"
+
+#. module: project_issue
+#: selection:project.config.settings,module_project_issue_sheet:0
+msgid "Do not track working hours on issues"
+msgstr "Ne kövesse a munkával eltöltött időt az ügyön"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
@@ -312,7 +320,7 @@ msgstr "Reklamációs ügy szerkesztése"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_email_from
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
@@ -333,24 +341,30 @@ msgstr "Tulajdonás leírása"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Group By"
-msgstr "Csoportosítás..."
+msgstr "Csoportosítás"
 
 #. module: project_issue
-#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Helpdesk & Support"
+msgstr "Ügyfélszolgálat & Támogatás"
+
+#. module: project_issue
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
 msgid "High"
 msgstr "Magas"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:362
+#: code:addons/project_issue/models/project_issue.py:261
 #, python-format
 msgid "I take it"
-msgstr "Én intézem"
+msgstr "Átveszem"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_id
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_id
 msgid "ID"
-msgstr "ID"
+msgstr "Azonosító ID"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_name
@@ -409,22 +423,17 @@ msgstr "Ügyet indítása"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
-#, fuzzy
 msgid "Issue ready for next stage"
-msgstr "Bejelentett ügy készen áll a következő szintre"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,name:project_issue.action_view_issues
-#: model:ir.actions.act_window,name:project_issue.open_view_issue
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
-#: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_needaction_count
-#: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
-#: model:ir.ui.menu,name:project_issue.portal_services_issues
 #: model:ir.ui.view,arch_db:project_issue.project_issue_calendar_view
 #: model:ir.ui.view,arch_db:project_issue.res_partner_issues_button_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
@@ -473,7 +482,7 @@ msgstr "Utolsó üzenet"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue___last_update
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report___last_update
 msgid "Last Modified on"
-msgstr "Utolsó frissítés dátuma"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_last_stage_update
@@ -484,10 +493,16 @@ msgstr "Utolsó szint frissítése"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr "Utoljára frissítette"
 
 #. module: project_issue
-#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
+msgid "Last Updated on"
+msgstr "Utoljára frissítve "
+
+#. module: project_issue
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
 msgid "Low"
 msgstr "Alacsony"
 
@@ -503,7 +518,7 @@ msgid "New"
 msgstr "Új"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:364
+#: code:addons/project_issue/models/project_issue.py:265
 #, python-format
 msgid "New Issue"
 msgstr "Új ügy"
@@ -514,10 +529,15 @@ msgid "Next Action"
 msgstr "Következő művelet"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:413
+#: code:addons/project_issue/models/project_issue.py:312
 #, python-format
 msgid "No Subject"
 msgstr "Nincs tárgy"
+
+#. module: project_issue
+#: selection:project.config.settings,module_rating_project_issue:0
+msgid "No customer rating"
+msgstr "Nincs vásárló értékelés"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
@@ -536,16 +556,43 @@ msgid "Number of Days to open the project issue."
 msgstr "A projekt ügy megynyitásáig használt napok száma."
 
 #. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_blocked
+msgid ""
+"Override the default value displayed for the blocked state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+"Írja felül az alapértelmezett kanban kiválasztás blokkolt állapotú kijelzett"
+" értéket, ha a feladat vagy ügy ebben az állapotban van."
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_done
+msgid ""
+"Override the default value displayed for the done state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+"Írja felül az alapértelmezett kanban kiválasztás elvégzett állapotú "
+"kijelzett értéket, ha a feladat vagy ügy ebben az állapotban van."
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_normal
+msgid ""
+"Override the default value displayed for the normal state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+"Írja felül az alapértelmezett kanban kiválasztás normál állapotú kijelzett "
+"értéket, ha a feladat vagy ügy ebben az állapotban van."
+
+#. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
 msgid "Partner"
 msgstr "Partner"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:530
+#: code:addons/project_issue/models/account_analytic_account.py:16
 #, python-format
 msgid ""
-"Please remove existing issues in the project linked to the accounts you want "
-"to delete."
+"Please remove existing issues in the project linked to the accounts you want"
+" to delete."
 msgstr ""
 "Kérem vegye le a törölni kívánt számlákhoz tartozó projekt meglévő "
 "reklamációs ügyeit."
@@ -558,7 +605,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Priority"
-msgstr "Prioritás"
+msgstr "Elsőbbségi"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_description
@@ -572,9 +619,10 @@ msgstr "Leírás"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Project"
-msgstr "Projekt"
+msgstr "Projekt téma"
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_graph
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_pivot
 msgid "Project Issue"
@@ -587,28 +635,23 @@ msgid "Project Issues"
 msgstr "Bejelentett ügyek projektje"
 
 #. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_project_issue_sheet
+msgid ""
+"Provides timesheet support for the issues/bugs management in project.\n"
+"-This installs the module project_issue_sheet."
+msgstr ""
+"A projekt témák ügyeinek/hibáinak szervezéséhez időbeosztás támogatást ad.\n"
+"-Ez a project_issue_sheet modult telepíti."
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
+msgid "Rating on issue"
+msgstr ""
+
+#. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
 msgstr "Következő fokra ugorhat"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_team_id
-msgid "Sale Team"
-msgstr "Értékesítési csapat"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_team_id
-msgid "Sales Team"
-msgstr "Értékesítési csapat"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_team_id
-msgid ""
-"Sales team to which Case belongs to.                             Define "
-"Responsible user and Email account for mail gateway."
-msgstr ""
-"Eladó csoport, melyhez ez az eset tartozik. Határozzon meg felelős "
-"felhasználót és email-t az email átjáróhoz."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -621,7 +664,7 @@ msgstr "Keresés"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Stage"
-msgstr "Szakasz"
+msgstr "Értékesítési szint"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_stage
@@ -644,57 +687,46 @@ msgstr "Címkék"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_task_id
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Task"
-msgstr "Feladat"
+msgstr "Fladat"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_task_type
-#, fuzzy
 msgid "Task Stage"
-msgstr "Szakasz"
+msgstr "Feladat szakasza"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
 msgid ""
-"The Odoo issues tacker allows you to efficiently manage things\n"
-"                    like internal requests, software development bugs, "
-"customer\n"
+"The Odoo issues tracker allows you to efficiently manage things\n"
+"                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
-"                    Az Odoo bejelentett ügyek követő rendszere lehetővé "
-"teszi a belső igénylések,\n"
-"                    szoftver fejlesztői hibák, vásárlói reklamációk, projekt "
-"gondok, \n"
-"                    anyag hibák, stb. hatékony kezelését."
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
 msgid ""
-"The Odoo issues tacker allows you to efficiently manage things\n"
+"The Odoo issues tracker allows you to efficiently manage things\n"
 "                like internal requests, software development bugs, customer\n"
 "                complaints, project troubles, material breakdowns, etc."
 msgstr ""
-"                    Az Odoo bejelentett ügyek követő rendszere lehetővé "
-"teszi a belső igénylések,\n"
-"                    szoftver fejlesztői hibák, vásárlói reklamációk, projekt "
-"gondok, \n"
-"                    anyag hibák, stb. hatékony kezelését."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
 msgid ""
-"These email addresses will be added to the CC field of all inbound and "
-"outbound emails for this record before being sent. Separate multiple email "
-"addresses with a comma"
+"These email addresses will be added to the CC field of all inbound\n"
+"        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
-"Ezek az email címek lesznek hozzáadva a CC /Carbon copy,másolat/ mezőhöz "
-"minden bejövő és kimenő email-hez amit ezzel a feljegyzéssel küld. Több "
-"email felsorolását vesszővel elválasztva adja meg."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
 msgid "These people will receive email."
 msgstr "Ezek az emberek fogják megkapni az e-mailt."
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
+msgid "This allows customers to give rating on issue"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -706,10 +738,25 @@ msgid ""
 "exchange and the time spent on average by issues."
 msgstr ""
 "Ez a projekt ügyi jelentés lehetővé teszi a támogatása minőségének és az "
-"eladás utáni szolgáltatásainak az elemzését. Nyomon követheti az ügyet koruk "
-"szerint. Elemezheti az ügy megnyitásához és bezárásához felhasznált időt, az "
-"ügyben váltott emailek számát és az átlag időt, mennyit töltöttek egyes "
+"eladás utáni szolgáltatásainak az elemzését. Nyomon követheti az ügyet koruk"
+" szerint. Elemezheti az ügy megnyitásához és bezárásához felhasznált időt, "
+"az ügyben váltott emailek számát és az átlag időt, mennyit töltöttek egyes "
 "ügyekkel."
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_config_settings_form_inherit_project_issue
+msgid "Timesheets"
+msgstr "Munkaidő-beosztás"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
+msgid "Timesheets on Issues"
+msgstr ""
+
+#. module: project_issue
+#: selection:project.config.settings,module_rating_project_issue:0
+msgid "Track customer satisfaction on issues"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -724,12 +771,8 @@ msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
-msgid "Update Date"
-msgstr "Frissítés Dátuma"
-
-#. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
+#: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
+#: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 msgid "Use Issues"
 msgstr "Használjon ügyeket"
 
@@ -768,78 +811,17 @@ msgstr ""
 "egy újat itt"
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.open_view_issue
-msgid ""
-"You can track your issues from this menu and the action we     \n"
-"                will take."
-msgstr ""
-"Nyomon követheti az ügyeit ebből a menüből  és az elvégezni kívánt \n"
-"           műveletekből."
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:263
+#: code:addons/project_issue/models/project_issue.py:183
 #, python-format
 msgid "issues"
 msgstr "bejelentett ügyek"
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_project_issue
-#, fuzzy
-msgid "project issue"
-msgstr "Projekt ügy"
+#: model:ir.model,name:project_issue.model_project_config_settings
+msgid "project.config.settings"
+msgstr "project.config.settings"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
 msgstr "project.issue.report"
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid "Followers"
-#~ msgstr "Követők"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (Csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "Is Follower"
-#~ msgstr "Ez egy követő"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Messages"
-#~ msgstr "Üzenetek"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Üzenetek és kommunikáció történet"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid "Website Messages"
-#~ msgstr "Weboldal üzenetek"
-
-#~ msgid "Website communication history"
-#~ msgstr "Weboldal  kommunikáció történet"

@@ -1,16 +1,7 @@
-# #-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * anonymization
-#
-# Translators:
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2015
-# #-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * anonymization
-#
+# 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
@@ -20,22 +11,18 @@
 # Xavier Symons <xsy@openerp.com>, 2016
 # Miguel Vidali <mvidali129@gmail.com>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-18 08:36+0000\n"
 "PO-Revision-Date: 2016-08-18 08:36+0000\n"
 "Last-Translator: Melanie Bernard <mbe@odoo.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: anonymization
@@ -76,23 +63,23 @@ msgid "Anonymized Fields"
 msgstr "Champs masqués"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:434
+#: code:addons/anonymization/wizard/anonymize_wizard.py:194
 #, python-format
 msgid "Anonymized value can not be empty."
 msgstr "Une valeur masquée ne peut pas être vide."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:284
+#: code:addons/anonymization/wizard/anonymize_wizard.py:69
 #, python-format
 msgid ""
-"Before executing the anonymization process, you should make a backup of your "
-"database."
+"Before executing the anonymization process, you should make a backup of your"
+" database."
 msgstr ""
 "Avant d'exécuter le processus d'anonymisation, vous devriez faire une copie "
 "de sauvegarde de la base de données."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:430
+#: code:addons/anonymization/wizard/anonymize_wizard.py:191
 #, python-format
 msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
@@ -104,13 +91,8 @@ msgstr ""
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 #: selection:ir.model.fields.anonymize.wizard,state:0
-#, fuzzy
 msgid "Clear"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Vider\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Effacer"
+msgstr "Effacer"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_create_uid
@@ -140,13 +122,8 @@ msgstr "Masquage de la base de données"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_date
-#, fuzzy
 msgid "Date"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Date\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Date "
+msgstr "Date "
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_direction
@@ -158,27 +135,17 @@ msgstr "Direction"
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_display_name
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_display_name
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nom affiché\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Afficher le nom"
+msgstr "Afficher le nom"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
-#, fuzzy
 msgid "Done"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Terminé\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Fait"
+msgstr "Fait"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:373
-#: code:addons/anonymization/anonymization.py:434
+#: code:addons/anonymization/wizard/anonymize_wizard.py:139
+#: code:addons/anonymization/wizard/anonymize_wizard.py:263
 #, python-format
 msgid "Error !"
 msgstr "Erreur !"
@@ -201,8 +168,8 @@ msgstr "Champ"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_field_name
-msgid "Field Name"
-msgstr "Nom de champ"
+msgid "Field name"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_field_ids
@@ -212,13 +179,8 @@ msgstr "Champs"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_name
-#, fuzzy
 msgid "File Name"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nom du fichier\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Nom de Fichier"
+msgstr "Nom de Fichier"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_filepath
@@ -239,53 +201,38 @@ msgid "Import"
 msgstr "Importer"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:521
+#: code:addons/anonymization/wizard/anonymize_wizard.py:263
 #, python-format
 msgid ""
 "It is not possible to reverse the anonymization process without supplying "
 "the anonymization export file."
 msgstr ""
-"Il n'est pas possible de renverser le processus d'anonymisation sans fournir "
-"le fichier d'export d'anonymisation."
+"Il n'est pas possible de renverser le processus d'anonymisation sans fournir"
+" le fichier d'export d'anonymisation."
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization___last_update
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history___last_update
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix___last_update
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Dernière modification le\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière Modification le"
+msgstr "Dernière Modification le"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_write_uid
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_write_uid
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_write_uid
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mis à jour par\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière mise à jour par"
+msgstr "Dernière mise à jour par"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_write_date
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_write_date
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_write_date
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mis à jour le\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière mise à jour le"
+msgstr "Dernière mise à jour le"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_msg
@@ -305,6 +252,12 @@ msgid "New"
 msgstr "Nouveau"
 
 #. module: anonymization
+#: code:addons/anonymization/wizard/anonymize_wizard.py:153
+#, python-format
+msgid "No fields are going to be anonymized."
+msgstr ""
+
+#. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 msgid "Not Existing"
 msgstr "Inexistant"
@@ -316,13 +269,8 @@ msgstr "Objet"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_model_name
-#, fuzzy
 msgid "Object Name"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nom de l'objet\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Nom d'objet"
+msgstr "Nom d'objet"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_query
@@ -347,19 +295,15 @@ msgstr "Démarré"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_state
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_state
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_state
 msgid "Status"
 msgstr "Statut"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_summary
-#, fuzzy
 msgid "Summary"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Résumé\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Résumé"
+msgstr "Résumé"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_target_version
@@ -367,7 +311,7 @@ msgid "Target Version"
 msgstr "Version visée"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:75
+#: code:addons/anonymization/models/anonymization.py:55
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
@@ -380,7 +324,7 @@ msgstr ""
 "supprimer des champs."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:342
+#: code:addons/anonymization/wizard/anonymize_wizard.py:120
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
@@ -389,11 +333,12 @@ msgid ""
 msgstr ""
 "L'anonymisation de base de données est actuellement dans un état instable. "
 "Certains champs sont anonymes, alors que d'autres ne le sont pas. Vous "
-"devriez essayer de résoudre ce problème avant d'essayer de faire autre chose."
+"devriez essayer de résoudre ce problème avant d'essayer de faire autre "
+"chose."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:375
-#: code:addons/anonymization/anonymization.py:514
+#: code:addons/anonymization/wizard/anonymize_wizard.py:143
+#: code:addons/anonymization/wizard/anonymize_wizard.py:259
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
@@ -402,10 +347,11 @@ msgid ""
 msgstr ""
 "L'anonymisation de la base de données est présentement dans un état "
 "instable. Certains champs sont anonymes, alors que d'autres ne le sont pas. "
-"Vous devriez essayez de résoudre le problème avant de faire quoi que ce soit."
+"Vous devriez essayez de résoudre le problème avant de faire quoi que ce "
+"soit."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:373
+#: code:addons/anonymization/wizard/anonymize_wizard.py:141
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
 msgstr ""
@@ -413,7 +359,7 @@ msgstr ""
 "anonyme à nouveau."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:73
+#: code:addons/anonymization/models/anonymization.py:53
 #, python-format
 msgid ""
 "The database is currently anonymized, you cannot create, modify or delete "
@@ -423,7 +369,7 @@ msgstr ""
 "détruire des champs."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:512
+#: code:addons/anonymization/wizard/anonymize_wizard.py:257
 #, python-format
 msgid ""
 "The database is not currently anonymized, you cannot reverse the "
@@ -435,8 +381,8 @@ msgstr ""
 #. module: anonymization
 #: model:ir.model.fields,help:anonymization.field_ir_model_fields_anonymize_wizard_file_import
 msgid ""
-"This is the file created by the anonymization process. It should have the '."
-"pickle' extention."
+"This is the file created by the anonymization process. It should have the "
+"'.pickle' extention."
 msgstr ""
 "Ceci est le fichier créé par le processus d'anonymisation. Il devrait avoir "
 "l'extension \".pickle\"."
@@ -447,7 +393,7 @@ msgid "Unstable"
 msgstr "Non stabilisé"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:49
+#: code:addons/anonymization/models/anonymization.py:32
 #: sql_constraint:ir.model.fields.anonymization:0
 #, python-format
 msgid "You cannot have two fields with the same name on the same object!"
@@ -493,8 +439,3 @@ msgstr "python"
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "sql"
 msgstr "sql"
-
-#. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_state
-msgid "unknown"
-msgstr "inconnu"
