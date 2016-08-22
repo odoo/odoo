@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+    <!-- activate the following options in the global settings:
+         * Manage multiple shops
+         * Allow setting a discount on the sales order lines
+         * Allow a different address for delivery and invoicing
+    -->
+    <record model="res.groups" id="base.group_user">
+        <field name="implied_ids" eval="[(4, ref('stock.group_locations')), (4, ref('sale.group_discount_per_so_line')), (4, ref('sale.group_delivery_invoice_address'))]"/>
+    </record>
+
+    <!-- the connector managers always need theses rights to import or export products,
+         sales orders, ... -->
+    <record id="connector.group_connector_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('base.group_sale_manager'))]"/>
+    </record>
+
+    </data>
+</openerp>
+

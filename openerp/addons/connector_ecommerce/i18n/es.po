@@ -1,0 +1,430 @@
+# Spanish translation for openerp-connector-ecommerce
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openerp-connector-ecommerce package.
+# Alberto Garcia <alberto.garcia@factorlibre.com>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openerp-connector-ecommerce\n"
+"Report-Msgid-Bugs-To: Alberto Garcia <alberto.garcia@factorlibre.com>\n"
+"POT-Creation-Date: 2013-05-01 14:34+0000\n"
+"PO-Revision-Date: 2014-06-06 00:02+0000\n"
+"Last-Translator: Alberto Garcia (Factor Libre) "
+"<alberto.garcia@factorlibre.com>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2014-06-06 06:38+0000\n"
+"X-Generator: Launchpad (build 17031)\n"
+
+#. module: connector_ecommerce
+#: field:sale.order,cancellation_resolved:0
+msgid "Cancellation from the backend resolved"
+msgstr "Cancelelación resuelta desde el área de administración"
+
+#. module: connector_ecommerce
+#: model:sale.exception,description:connector_ecommerce.excep_product_has_checkpoint
+msgid ""
+"A product has been imported from a backend and needs to be reviewed.\n"
+"Go to Connectors > Checkpoint and review the new products."
+msgstr ""
+"Un producto ha sido importado de un área de administración y debe ser "
+"revisado.\n"
+"Vaya a Conectores > Punto de Control y revise los nuevos productos."
+
+#. module: connector_ecommerce
+#: model:ir.model,name:connector_ecommerce.model_account_invoice
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: connector_ecommerce
+#: view:sale.ignore.cancel:0
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: connector_ecommerce
+#: view:sale.order:0
+msgid "Ignore backend's cancellation, Keep Open"
+msgstr "Ignorar cancelaciones del área de administración, Mantener Abierto"
+
+#. module: connector_ecommerce
+#: view:sale.order:0
+msgid "Canceled in backend, to cancel"
+msgstr "Cancelado en el área de administración, a cancelar"
+
+#. module: connector_ecommerce
+#: view:sale.order:0
+msgid "Only sales orders canceled in their backend"
+msgstr "Solo las órdenes de venta canceladas en sus áreas de administración"
+
+#. module: connector_ecommerce
+#: model:sale.exception,description:connector_ecommerce.excep_parent_order_need_cancel
+msgid ""
+"The parent sales order has been canceled on the backend.\n"
+"You will not be able to process this sales order until the parent's one is "
+"canceled."
+msgstr ""
+"El pedido de venta padre ha sido cancelado en el área de administración.\n"
+"No podrá procesar este pedido de venta hasta que el padre sea cancelado."
+
+#. module: connector_ecommerce
+#: view:payment.method:0
+msgid "The sales orders using the payment method will always be imported."
+msgstr ""
+"Los pedidos de venta que usan el método de pago serán siempre importados."
+
+#. module: connector_ecommerce
+#: view:sale.ignore.cancel:0
+msgid ""
+"This sales order has been canceled from the backend.\n"
+"                    The usual action would be to cancel it in OpenERP along\n"
+"                    all the documents generated (delivery orders, invoices, "
+"...)."
+msgstr ""
+"Este pedido de venta ha sido cancelado desde el área de administración.\n"
+"                    La acción habitual sería cancelarlo en OpenERP junto "
+"con\n"
+"                    todos los documentos generados (ordenes de entrega, "
+"facturas, ...)."
+
+#. module: connector_ecommerce
+#: help:account.tax,group_id:0
+msgid ""
+"Choose the tax group. This is needed for example with magento or prestashop"
+msgstr ""
+"Elija el grupo fiscal. Esto es necesario por ejemplo con Magento o Prestashop"
+
+#. module: connector_ecommerce
+#: model:ir.model,name:connector_ecommerce.model_stock_picking
+msgid "Picking List"
+msgstr "Albarán"
+
+#. module: connector_ecommerce
+#: model:ir.actions.act_window,name:connector_ecommerce.action_sale_ignore_cancel
+#: view:sale.ignore.cancel:0
+msgid "Ignore the cancellation on the Backend"
+msgstr "Ignorar la cancelación en el Área de Administración"
+
+#. module: connector_ecommerce
+#: model:product.template,name:connector_ecommerce.product_product_gift_product_template
+msgid "Gift Certificate"
+msgstr "Certificado de Regalo"
+
+#. module: connector_ecommerce
+#: model:ir.model,name:connector_ecommerce.model_sale_ignore_cancel
+msgid "Ignore Sales Order Cancel"
+msgstr "Ignorar Órdenes de Venta Canceladas"
+
+#. module: connector_ecommerce
+#: model:ir.model,name:connector_ecommerce.model_product_product
+msgid "Product"
+msgstr "Producto"
+
+#. module: connector_ecommerce
+#: model:ir.model,name:connector_ecommerce.model_payment_method
+msgid "Payment Method"
+msgstr "Método de Pago"
+
+#. module: connector_ecommerce
+#: model:ir.actions.act_window,name:connector_ecommerce.action_tax_group_form
+#: model:ir.ui.menu,name:connector_ecommerce.menu_action_tax_group_form
+msgid "Tax Groups"
+msgstr "Gupo Fiscal"
+
+#. module: connector_ecommerce
+#: view:sale.order:0
+msgid "View Parent Sales Order"
+msgstr "Ver Pedido de Venta Padre"
+
+#. module: connector_ecommerce
+#: field:stock.picking,related_backorder_ids:0
+msgid "Related backorders"
+msgstr "Pedidos pendientes relacionados"
+
+#. module: connector_ecommerce
+#: view:account.tax.group:0
+msgid "Account Tax Group"
+msgstr "Grupo de Cuenta Fiscal"
+
+#. module: connector_ecommerce
+#: field:payment.method,days_before_cancel:0
+msgid "Days before cancel"
+msgstr "Días antes de cancelar"
+
+#. module: connector_ecommerce
+#: view:payment.method:0
+msgid "The sales orders using the payment method will never be imported."
+msgstr ""
+"Los pedidos de venta que usan el método de pago nunca serán importados."
+
+#. module: connector_ecommerce
+#: field:sale.ignore.cancel,reason:0
+msgid "Reason"
+msgstr "Razón"
+
+#. module: connector_ecommerce
+#: model:sale.exception,name:connector_ecommerce.excep_order_need_cancel
+msgid "Sales order canceled on the backend."
+msgstr "Pedido de venta cancelado en el área de administración."
+
+#. module: connector_ecommerce
+#: model:ir.model,name:connector_ecommerce.model_sale_shop
+msgid "Sales Shop"
+msgstr "Tienda ventas"
+
+#. module: connector_ecommerce
+#: model:product.category,name:connector_ecommerce.product_categ_services
+msgid "Services"
+msgstr "Servicios"
+
+#. module: connector_ecommerce
+#: view:sale.order:0
+msgid "Other Information"
+msgstr "Otra información"
+
+#. module: connector_ecommerce
+#: help:product.template,tax_group_id:0
+msgid ""
+"Tax groups are used with some external system like magento or prestashop"
+msgstr ""
+"El grupo fiscal se usa con algún sistema externo como magento do prestashop"
+
+#. module: connector_ecommerce
+#: field:product.price.type,pricelist_item_ids:0
+msgid "Pricelist Items"
+msgstr "Listado de Precios de Artículos"
+
+#. module: connector_ecommerce
+#: field:sale.order,parent_need_cancel:0
+msgid "A parent sales order needs cancel"
+msgstr "Una orden de venta padre debe cancelar"
+
+#. module: connector_ecommerce
+#: view:payment.method:0
+msgid "Import Rules"
+msgstr "Importar Reglas"
+
+#. module: connector_ecommerce
+#: field:payment.method,import_rule:0
+msgid "Import Rule"
+msgstr "Importar Regla"
+
+#. module: connector_ecommerce
+#: view:sale.ignore.cancel:0
+msgid ""
+"However, if for any reason you need to keep it open in OpenERP,\n"
+"                    write the reason here and it will stay open."
+msgstr ""
+"Sin embargo. si por alguna razón necesita mantenerlo abierto en OpenERP,\n"
+"\t\t\t\t\tescriba la razón aquí y se mantendrá abierto."
+
+#. module: connector_ecommerce
+#: view:payment.method:0
+msgid ""
+"The sales orders using the payment method will be imported\n"
+"                                only when they receive a payment on the E-"
+"Commerce backend."
+msgstr ""
+"Los pedidos de venta que usan el método de pago serán importados\n"
+"                                solo cuando recivan un pago en el area de "
+"administración del comercio electrónico."
+
+#. module: connector_ecommerce
+#: field:account.tax.group,tax_ids:0
+msgid "Taxes"
+msgstr "Impuestos"
+
+#. module: connector_ecommerce
+#: model:sale.exception,description:connector_ecommerce.excep_order_need_cancel
+msgid "The sales order has been canceled on the backend."
+msgstr "El pedido de venta ha sido cancelado en el área de administración."
+
+#. module: connector_ecommerce
+#: field:sale.order,need_cancel:0
+msgid "Need to be canceled"
+msgstr "Debe ser cancelado"
+
+#. module: connector_ecommerce
+#: help:sale.order,parent_need_cancel:0
+msgid ""
+"A parent sales order has been canceled on the backend and needs to be "
+"canceled."
+msgstr ""
+"Una orden de venta padre ha sido cancelada en el área de administración y "
+"debe ser cancelada."
+
+#. module: connector_ecommerce
+#: field:account.tax,group_id:0
+#: field:product.template,tax_group_id:0
+msgid "Tax Group"
+msgstr "Tax Group"
+
+#. module: connector_ecommerce
+#: view:account.invoice:0
+msgid "Payments"
+msgstr "Pagos"
+
+#. module: connector_ecommerce
+#: model:sale.exception,name:connector_ecommerce.excep_parent_order_need_cancel
+msgid "Parent sales order canceled on the backend."
+msgstr "Órdenes de venta padres canceladas en el área de administración."
+
+#. module: connector_ecommerce
+#: help:sale.order,need_cancel:0
+msgid "Has been canceled on the backend, need to be canceled."
+msgstr "Ha sido cancelado en el área de administración, debe ser cancelado."
+
+#. module: connector_ecommerce
+#: model:product.template,name:connector_ecommerce.product_product_discount_product_template
+msgid "Discount Coupon"
+msgstr "Cupón de Descuento"
+
+#. module: connector_ecommerce
+#: model:ir.model,name:connector_ecommerce.model_sale_order
+msgid "Sales Order"
+msgstr "Pedidos de venta"
+
+#. module: connector_ecommerce
+#: help:payment.method,days_before_cancel:0
+msgid ""
+"After 'n' days, if the 'Import Rule' is not fulfilled, the import of the "
+"sales order will be canceled."
+msgstr ""
+"Después de 'n' días, si la 'Regla de Importación' no está realizada, la "
+"importación de la orden de venta será cancelada."
+
+#. module: connector_ecommerce
+#: model:ir.model,name:connector_ecommerce.model_product_template
+msgid "Product Template"
+msgstr "Plantilla de producto"
+
+#. module: connector_ecommerce
+#: model:ir.model,name:connector_ecommerce.model_stock_picking_out
+msgid "Delivery Orders"
+msgstr "Albaranes de salida"
+
+#. module: connector_ecommerce
+#: model:product.template,name:connector_ecommerce.product_product_shipping_product_template
+msgid "Shipping costs"
+msgstr "Gastos de envio"
+
+#. module: connector_ecommerce
+#: model:product.template,name:connector_ecommerce.product_product_cash_on_delivery_product_template
+msgid "Cash on delivery"
+msgstr "Contra reembolso"
+
+#. module: connector_ecommerce
+#: field:sale.order,canceled_in_backend:0
+msgid "Canceled in backend"
+msgstr "Cancelado en el área de administración"
+
+#. module: connector_ecommerce
+#: help:account.invoice,sale_order_ids:0
+msgid "This is the list of sales orders related to this invoice."
+msgstr "Esta es la lista de pedidos de venta relacionados con esta factura."
+
+#. module: connector_ecommerce
+#: model:ir.model,name:connector_ecommerce.model_account_tax_group
+msgid "account tax group"
+msgstr "cuenta de grupo fiscal"
+
+#. module: connector_ecommerce
+#: model:ir.model,name:connector_ecommerce.model_account_tax
+msgid "Tax"
+msgstr "Impuesto"
+
+#. module: connector_ecommerce
+#: view:account.invoice:0
+#: view:product.product:0
+#: view:sale.order:0
+#: view:stock.picking.out:0
+msgid "Connectors"
+msgstr "Conectores"
+
+#. module: connector_ecommerce
+#: model:sale.exception,name:connector_ecommerce.excep_product_has_checkpoint
+msgid "A product needs to be reviewed."
+msgstr "Un nuevo producto debe ser revisado."
+
+#. module: connector_ecommerce
+#: help:sale.order,parent_id:0
+msgid "A parent sales order is a sales order replaced by this one."
+msgstr ""
+"Una orden de venta padre is una orden de venta reeplazada por esta otra."
+
+#. module: connector_ecommerce
+#: view:sale.ignore.cancel:0
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: connector_ecommerce
+#: field:sale.order,parent_id:0
+msgid "Parent Order"
+msgstr "Orden Padre"
+
+#. module: connector_ecommerce
+#: field:account.tax.group,name:0
+msgid "Name"
+msgstr "Nombre"
+
+#. module: connector_ecommerce
+#: field:account.invoice,sale_order_ids:0
+msgid "Sales Orders"
+msgstr "Pedido de Venta"
+
+#. module: connector_ecommerce
+#: field:product.product,has_checkpoint:0
+msgid "Has Checkpoint"
+msgstr "Tiene Punto de Control"
+
+#. module: connector_ecommerce
+#: view:sale.ignore.cancel:0
+msgid "or"
+msgstr "o"
+
+#. module: connector_ecommerce
+#: view:stock.picking.out:0
+msgid "Additional Info"
+msgstr "Info Adicional"
+
+#. module: connector_ecommerce
+#: model:ir.model,name:connector_ecommerce.model_product_price_type
+msgid "Price Type"
+msgstr "Tipo precio"
+
+#~ msgid ""
+#~ "<p>Resolution:<ol><li>Cancel the linked invoices, delivery orders, automatic "
+#~ "payments.</li><li>Cancel the sales order manually.</li></ol></p>"
+#~ msgstr ""
+#~ "<p>Resolución:<ol><li>Cancelar las facturas vinculadas, órdenes de entraga, "
+#~ "pagos automáticos.</li><li>Cancelar las órdenes de venta "
+#~ "manualmente.</li></ol></p>"
+
+#~ msgid ""
+#~ "Despite the cancellation of the sales order on the backend, it should stay "
+#~ "open.<br/><br/>Reason: %s"
+#~ msgstr ""
+#~ "Apesar de la cancelación de la orden de vente en el área de administración. "
+#~ "debería permanecer abierto.<br/><br/>Razón: %s"
+
+#~ msgid ""
+#~ "The sales order cannot be automatically canceled because it is already done."
+#~ msgstr ""
+#~ "El pedido de venta no pudesn ser cancelado automáticamente porque ya está "
+#~ "'hecho'."
+
+#~ msgid "The sales order could not be automatically canceled for this status."
+#~ msgstr ""
+#~ "El pedido de venta podría no ser cancelado automáticamente por este estado."
+
+#~ msgid "The sales order could not be automatically canceled."
+#~ msgstr "El pedido de vente podría no ser cancelado automáticamente."
+
+#~ msgid "The sales order has been automatically canceled."
+#~ msgstr "El pedido de venta ha sido cancelado automáticamente."
+
+#~ msgid "Warning: the origin sales order %s has been canceled on the backend."
+#~ msgstr ""
+#~ "Aviso: el pedido de venta original %s ha sido cancelado en el área de "
+#~ "administración."

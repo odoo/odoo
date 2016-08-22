@@ -50,8 +50,3 @@ class product_template(osv.osv):
             'sales_return': res['sales_return'] or self.property_account_sales_return_id or self.categ_id.property_account_sales_return_categ_id,
         })
         return accounts
-
-#class product_product(osv.osv):
-#    _inherits = 'product.product'
-
-#    id_prestashop = fields.Integer(readonly=True, index=True, help="ID Prestashop", copy=False) 

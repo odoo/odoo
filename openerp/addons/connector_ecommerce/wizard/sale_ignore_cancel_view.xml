@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <record id="view_sale_ignore_cancel" model="ir.ui.view">
+            <field name="name">Sale Ignore Cancel</field>
+            <field name="model">sale.ignore.cancel</field>
+            <field name="arch" type="xml">
+             <form string="Ignore the cancellation on the Backend" version="7.0">
+                <p class="oe_grey">
+                    This sales order has been canceled from the backend.
+                    The usual action would be to cancel it in OpenERP along
+                    all the documents generated (delivery orders, invoices, ...).
+                </p>
+                <p class="oe_grey">
+                    However, if for any reason you need to keep it open in OpenERP,
+                    write the reason here and it will stay open.
+                </p>
+                <group>
+                    <label for="reason" colspan="2"/>
+                    <field name="reason" nolabel="1" colspan="2"/>
+                </group>
+                <footer>
+                    <button name="confirm_ignore_cancel"
+                        string="Confirm" type="object"
+                        class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_sale_ignore_cancel" model="ir.actions.act_window">
+            <field name="name">Ignore the cancellation on the Backend</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.ignore.cancel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_sale_ignore_cancel"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</openerp>

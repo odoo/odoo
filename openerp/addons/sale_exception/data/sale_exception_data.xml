@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record forcecreate="True" id="ir_cron_test_orders" model="ir.cron">
+            <field name="name">Test Draft Orders</field>
+            <field eval="False" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">20</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'sale.order'" name="model"/>
+            <field eval="'test_all_draft_orders'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+
+        <record id ="excep_no_zip" model="sale.exception">
+            <field name="name">No ZIP code on destination</field>
+            <field name="description">No ZIP code on destination</field>
+            <field name="sequence">50</field>
+            <field name="model">sale.order</field>
+            <field name="code">if not order.partner_shipping_id.zip:
+    failed=True</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id ="excep_no_stock" model="sale.exception">
+            <field name="name">Not Enough Virtual Stock</field>
+            <field name="description">Not Enough Virtual Stock</field>
+            <field name="sequence">50</field>
+            <field name="model">sale.order.line</field>
+            <field name="code">if line.product_id and line.product_id.type == 'product' and line.product_id.virtual_available &lt; line.product_uom_qty:
+    failed=True</field>
+            <field name="active" eval="False"/>
+        </record>
+
+    </data>
+</openerp>

@@ -8,6 +8,9 @@
         Version 1:
             - Add posting journal Sales Discount
             - Add posting journal Sales Return
+        
+        Version 2:
+            - Add Connector Odoo - Prestashop 
     """,
 
     'author': "Internal Development - PT. Social Bella Indonesia",
@@ -17,7 +20,13 @@
     'installable': True,
     'application': True,
 
-    'depends': ['base', 'account', 'product', 'sale'],
+    'depends': [
+        'base', 
+        'account', 
+        'product', 
+        'sale', 
+        'product_brand', 
+        'connector'],
 
     'data': [
         'views/product_view.xml',
