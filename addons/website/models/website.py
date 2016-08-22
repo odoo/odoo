@@ -122,8 +122,7 @@ def slugify(s, max_length=None):
 def slug(value):
     if isinstance(value, models.BaseModel):
         if isinstance(value.id, models.NewId):
-            # it's not possible to slug a record if it's not saved
-            return None
+            raise ValueError("Cannot slug non-existent record %s" % value)
         # [(id, name)] = value.name_get()
         identifier, name = value.id, value.display_name
     else:
