@@ -5,8 +5,8 @@
     'depends' : ['stock'],
     'demo' : ['data/product_expiry_demo.xml'],
     'description': """
-Track different dates on products and production lots.
-======================================================
+Track different dates on products and Serial Numbers/lots.
+==========================================================
 
 Following dates can be tracked:
 -------------------------------
@@ -15,7 +15,8 @@ Following dates can be tracked:
     - removal date
     - alert date
 
-Also implements the removal strategy First Expiry First Out (FEFO) widely used, for example, in food industries.
+Also implements the removal strategy First Expiry First Out (FEFO) based on the removal date.
+This strategy is widely used, for example, in food industries.
 """,
     'data': ['views/production_lot_views.xml',
              'views/product_template_views.xml',

@@ -12,6 +12,7 @@ class ProductTemplate(models.Model):
     use_time = fields.Integer(string='Product Use Time',
         help='When a new a Serial Number is issued, this is the number of days before the goods starts deteriorating, without being dangerous yet.')
     removal_time = fields.Integer(string='Product Removal Time',
-        help='When a new a Serial Number is issued, this is the number of days before the goods should be removed from the stock.')
+        help='When a new a Serial Number is issued, this is the number of days before the goods should be taken out of the stock (delivered, consumed, scraped...). '
+             'When a Stock Location is configured for FEFO procurements (First Expired, First Out), the goods will be reserved based on this date.')
     alert_time = fields.Integer(string='Product Alert Time',
         help='When a new a Serial Number is issued, this is the number of days before an alert should be notified.')
