@@ -1,15 +1,7 @@
-# #-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_import_module
-#
-# Translators:
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
-# #-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * base_import_module
-#
+# 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
@@ -17,22 +9,18 @@
 # Richard Mathot <rim@odoo.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Miguel Vidali <mvidali129@gmail.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-18 08:37+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Miguel Vidali <mvidali129@gmail.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_import_module
@@ -46,6 +34,12 @@ msgid "Close"
 msgstr "Fermer"
 
 #. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:31
+#, python-format
+msgid "Could not select database '%s'"
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
 msgid "Created by"
 msgstr "Créé par"
@@ -57,22 +51,17 @@ msgstr "Créé le"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nom affiché\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Afficher le nom"
+msgstr "Afficher le nom"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:94
+#: code:addons/base_import_module/models/ir_module.py:96
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "Le fichier '%s'  dépasse la taille maximale autorisée"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:86
+#: code:addons/base_import_module/models/ir_module.py:88
 #, python-format
 msgid "File is not a zip file!"
 msgstr "Le ficier n'est pas reconnu comme un .zip!"
@@ -84,7 +73,8 @@ msgstr "Forcer la réinitialisation"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module_force
-msgid "Force init mode even if installed. (will update `noupdate='1'` records)"
+msgid ""
+"Force init mode even if installed. (will update `noupdate='1'` records)"
 msgstr ""
 "Forcer la réinitialisation même si le module a déjà été installé. (remettra "
 "même à jour les enregistrements de type 'noupdate='1'')"
@@ -124,33 +114,18 @@ msgstr "Module importé"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Dernière modification le\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière Modification le"
+msgstr "Dernière Modification le"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mis à jour par\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière mise à jour par"
+msgstr "Dernière mise à jour par"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mis à jour le\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière mise à jour le"
+msgstr "Dernière mise à jour le"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
@@ -161,6 +136,18 @@ msgstr "Module"
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_module_file
 msgid "Module .ZIP file"
 msgstr "Fichier .ZIP du module"
+
+#. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:86
+#, python-format
+msgid "No file sent."
+msgstr ""
+
+#. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:25
+#, python-format
+msgid "Only administrators can upload a module"
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -178,20 +165,15 @@ msgid "Status"
 msgstr "Statut"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:33
+#: code:addons/base_import_module/models/ir_module.py:35
 #, python-format
 msgid "Unmet module dependencies: %s"
 msgstr "Dépendances du module non satisfaites : %s"
 
 #. module: base_import_module
 #: selection:base.import.module,state:0
-#, fuzzy
 msgid "done"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"terminer\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"terminée"
+msgstr "terminée"
 
 #. module: base_import_module
 #: selection:base.import.module,state:0

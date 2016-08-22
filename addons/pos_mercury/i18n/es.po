@@ -1,38 +1,36 @@
-# #-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * pos_mercury
-#
+# 
 # Translators:
-# Ana Juaristi <ajuaristio@gmail.com>, 2015
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Sergio Flores <vitavitae1@gmail.com>, 2015-2016
-# #-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * pos_mercury
-#
-# Translators:
-# Ana Juaristi <ajuaristio@gmail.com>, 2015
-# Ivan Nieto <ivan.nieto.sousa@gmail.com>, 2016
-# Sergio Flores <vitavitae1@gmail.com>, 2015-2016
-#, fuzzy
+# Sergio Flores <vitavitae1@gmail.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Oihane Crucelaegui <oihanecruce@gmail.com>, 2016
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Luis Martinez Ontalba <tecnisagra.ontalba@gmail.com>, 2016
+# Albert Cabedo GAFIC <albertgafic@gmail.com>, 2016
+# Alejandro Santana <alejandrosantana@anubia.es>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Martin Mendoza del Solar <martin@mendozadelsolar.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-03-04 20:53+0000\n"
-"Last-Translator: Ivan Nieto <ivan.nieto.sousa@gmail.com>\n"
-"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
-"Language: es\n"
+"POT-Creation-Date: 2016-08-18 08:36+0000\n"
+"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"Last-Translator: Martin Mendoza del Solar <martin@mendozadelsolar.com>, 2016\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_mercury
@@ -53,14 +51,10 @@ msgstr "128 bit CryptoAPI ha fallado"
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "<i>Mercury Configurations</i> define what Mercury account will be used when\n"
-"                                processing credit card transactions in the "
-"Point Of Sale. Setting up a Mercury\n"
-"                                configuration will enable you to allow "
-"payments with various credit cards\n"
-"                                (eg. Visa, MasterCard, Discovery, American "
-"Express, ...). After setting up this\n"
-"                                configuration you should associate it with a "
-"Point Of Sale payment method."
+"                                processing credit card transactions in the Point Of Sale. Setting up a Mercury\n"
+"                                configuration will enable you to allow payments with various credit cards\n"
+"                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
+"                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
 
 #. module: pos_mercury
@@ -174,13 +168,13 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_create_date
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_create_date
 msgid "Created on"
-msgstr "Creado en"
+msgstr "Creado el"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury.py:17
+#: code:addons/pos_mercury/models/pos_mercury.py:15
 #, python-format
 msgid "Credit Card"
-msgstr ""
+msgstr "Tarjetas de Crédito"
 
 #. module: pos_mercury
 #. openerp-web
@@ -193,7 +187,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_display_name
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre a mostrar"
 
 #. module: pos_mercury
 #. openerp-web
@@ -233,10 +227,8 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"For quickly handling orders: just swiping a credit card when on the payment "
-"screen\n"
-"                                (without having pressed anything else) will "
-"charge the full amount of the order to\n"
+"For quickly handling orders: just swiping a credit card when on the payment screen\n"
+"                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
 
@@ -286,7 +278,7 @@ msgstr "Gestionando transacción..."
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_id
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_id
 msgid "ID"
-msgstr "ID (identificación)"
+msgstr "ID"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_merchant_id
@@ -296,8 +288,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"If you don't already have a Mercury account, contact Mercury at +1 (800) "
-"846-4472\n"
+"If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
 
@@ -553,13 +544,13 @@ msgstr "Última modificación en"
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_write_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_write_uid
 msgid "Last Updated by"
-msgstr "Última actualización de"
+msgstr "Última actualización por"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_write_date
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_write_date
 msgid "Last Updated on"
-msgstr "Última actualización en"
+msgstr "Última actualización el"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.mercury_transaction
@@ -714,7 +705,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
 msgid "Point of Sale"
-msgstr "Terminal punto de venta"
+msgstr "Punto de Venta"
 
 #. module: pos_mercury
 #. openerp-web
@@ -918,10 +909,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "Using the Mercury integration in the Point Of Sale is easy: just press the\n"
-"                                associated payment method. After that the "
-"amount can be adjusted (eg. for cashback)\n"
-"                                just like on any other payment line. "
-"Whenever the payment line is set up, a card\n"
+"                                associated payment method. After that the amount can be adjusted (eg. for cashback)\n"
+"                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
 
@@ -942,10 +931,8 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"We currently support the MagTek Dynamag card reader device. It can be "
-"connected\n"
-"                                directly to the Point Of Sale device or it "
-"can be connected to the POSBox."
+"We currently support the MagTek Dynamag card reader device. It can be connected\n"
+"                                directly to the Point Of Sale device or it can be connected to the POSBox."
 msgstr ""
 
 #. module: pos_mercury
@@ -973,6 +960,11 @@ msgstr ""
 #: model:ir.model,name:pos_mercury.model_barcode_rule
 msgid "barcode.rule"
 msgstr "barcode.rule"
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr "ir.autovacuum"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration

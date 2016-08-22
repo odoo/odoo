@@ -1,49 +1,26 @@
-# #-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * analytic
-#
-# Translators:
-# Eric Geens <ericgeens@yahoo.com>, 2015
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
-# #-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * analytic
-#
+# 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-18 08:36+0000\n"
 "PO-Revision-Date: 2016-08-18 08:36+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "(Keep empty to open the current situation)"
-msgstr "(laat leeg om de huidige situatie te behouden)"
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_chart
-msgid "Account Analytic Chart"
-msgstr "Kostenplaatsschema"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
@@ -51,8 +28,7 @@ msgid "Account Currency"
 msgstr "Rekening valuta"
 
 #. module: analytic
-#: selection:account.analytic.account,account_type:0
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_active
 msgid "Active"
 msgstr "Actief"
 
@@ -69,18 +45,8 @@ msgstr "Bedrag"
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
-#, fuzzy
 msgid "Analytic Account"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Kostenplaatsen\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Kostenplaats"
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Analytic Account Charts"
-msgstr "Kostenplaatsschema's"
+msgstr "Kostenplaats"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
@@ -94,6 +60,13 @@ msgid "Analytic Accounts"
 msgstr "Kostenplaatsen"
 
 #. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_tag_action
+#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
+#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
+msgid "Analytic Accounts Tags"
+msgstr "Kostenplaatslabels"
+
+#. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
@@ -105,6 +78,11 @@ msgstr "Kostenplaatsboekingen"
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Entry"
 msgstr "Kostenplaatsboeking"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Kostenplaatsregel"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
@@ -122,7 +100,7 @@ msgid "Analytic Tags"
 msgstr "Labels kostenplaats"
 
 #. module: analytic
-#: selection:account.analytic.account,account_type:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
 msgstr "Gearchiveerd"
 
@@ -137,15 +115,14 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Cancel"
-msgstr "Annuleren"
-
-#. module: analytic
-#: model:ir.actions.act_window,name:analytic.action_account_analytic_chart
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
 msgstr "Kostenplaatsenschema"
+
+#. module: analytic
+#: model:ir.actions.act_window,help:analytic.account_analytic_tag_action
+msgid "Click to add a new tag."
+msgstr "Klik om een nieuw label toe te voegen."
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.action_analytic_account_form
@@ -160,13 +137,8 @@ msgstr "Kleur index"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_company_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_company_id
-#, fuzzy
 msgid "Company"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bedrijf\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Bedijf"
+msgstr "Bedijf"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
@@ -190,7 +162,6 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_uid
 msgid "Created by"
@@ -198,7 +169,6 @@ msgstr "Aangemaakt door"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
 msgid "Created on"
@@ -236,21 +206,10 @@ msgstr "Omschrijving"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Weergave naam\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Schermnaam"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
-msgid "From"
-msgstr "Van"
+msgstr "Schermnaam"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -260,19 +219,26 @@ msgstr "Groepeer op..."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
 msgid "ID"
 msgstr "ID"
 
 #. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the account "
+"without removing it."
+msgstr ""
+"Als het veld \"actief\" uitstaat, kunt u de grootboekrekening verbergen "
+"zonder deze te verwijderen."
+
+#. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sale orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to "
-"analyse\n"
+"                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
 "In Odoo worden verkopen en projecten geïmplementeerd door gebruik\n"
@@ -281,7 +247,6 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
 msgid "Last Modified on"
@@ -289,7 +254,6 @@ msgstr "Laatst gewijzigd op"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
 msgid "Last Updated by"
@@ -297,7 +261,6 @@ msgstr "Laatst bijgewerkt door"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_date
 msgid "Last Updated on"
@@ -312,11 +275,6 @@ msgstr "Nog geen activiteit voor deze kostenplaats."
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet."
 msgstr "Nog geen activiteit."
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Open Charts"
-msgstr "Open rekeningschema"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
@@ -339,15 +297,12 @@ msgstr "Referentie"
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sale "
-"orders\n"
-"                (fixed price invoices), on timesheets (based on the work "
-"done) or\n"
+"                invoices. Customer invoices can be created based on sale orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "Omzetten worden automatisch aangemaakt wanneer u verkoopfacturen\n"
-"aanmaakt. Verkoopfacturen kunnen gebaseerd zijn op verkopen (met vaste "
-"prijs),\n"
+"aanmaakt. Verkoopfacturen kunnen gebaseerd zijn op verkopen (met vaste prijs),\n"
 "op urenstaten (gebaseerd op de geleverde prestaties) of op declaraties\n"
 "(bijv. herfactureren van reiskosten)."
 
@@ -355,16 +310,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
 msgstr "Zoek kostenplaats boekingen"
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
-msgid "Select the Period for Analysis"
-msgstr "Kies de analyseperiode"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
-msgid "State"
-msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
@@ -384,11 +329,6 @@ msgstr ""
 "De valuta van de rekening is niet gelijk aan de valuta van het bedrijf."
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_to_date
-msgid "To"
-msgstr "Aan"
-
-#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Total"
 msgstr "Totaal"
@@ -399,87 +339,6 @@ msgid "User"
 msgstr "Gebruiker"
 
 #. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "Kostenplaatsschema"
-
-#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr "bijv. Project XYZ"
-
-#~ msgid "Action Needed"
-#~ msgstr "Vereist actie"
-
-#, fuzzy
-#~ msgid "Analytic Line"
-#~ msgstr ""
-#~ "#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-#~ "Kostenplaatsboeking\n"
-#~ "#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-#~ "Kostenplaatsregel"
-
-#~ msgid "Analytic View"
-#~ msgstr "Kostenplaats weergave"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
-
-#~ msgid "Followers"
-#~ msgstr "Volgers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Volgers (Kanalen)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Volgers (Partners)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
-
-#~ msgid "Is Follower"
-#~ msgstr "Is een volger"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Laatste bericht datum"
-
-#~ msgid "Messages"
-#~ msgstr "Berichten"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Berichten en communicatie historie"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Aantal acties"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Aantal berichten die actie vereisen"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Aantal ongelezen berichten"
-
-#~ msgid "Type of Account"
-#~ msgstr "Type Rekening"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Ongelezen berichten"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Teller ongelezen berichten"
-
-#~ msgid "Analytic Accounts Tags"
-#~ msgstr "Kostenplaatslabels"
-
-#~ msgid "Click to add a new tag."
-#~ msgstr "Klik om een nieuw label toe te voegen."
-
-#~ msgid ""
-#~ "If the active field is set to False, it will allow you to hide the "
-#~ "account without removing it."
-#~ msgstr ""
-#~ "Als het veld \"actief\" uitstaat, kunt u de grootboekrekening verbergen "
-#~ "zonder deze te verwijderen."

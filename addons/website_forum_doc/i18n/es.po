@@ -1,22 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_forum_doc
-#
+# 
 # Translators:
-# Jesus Alan Ramos Rodriguez <alan.ramos@jarsa.com.mx>, 2015
-# Martin Trigaux, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Sergio Flores <vitavitae1@gmail.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
+# Oihane Crucelaegui <oihanecruce@gmail.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Luis Martinez Ontalba <tecnisagra.ontalba@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-02-15 09:58+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
-"Language: es\n"
+"POT-Creation-Date: 2016-08-18 08:38+0000\n"
+"PO-Revision-Date: 2016-08-18 08:38+0000\n"
+"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2016\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_forum_doc
@@ -28,11 +38,6 @@ msgstr "&amp;times;"
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "<span class=\"text-muted\">or</span>"
 msgstr "<span class=\"text-muted\">o</span>"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm_after_sale
-msgid "After-sale communication"
-msgstr "Comunicación post-venta"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -59,24 +64,14 @@ msgid "Benefits of having done this setup"
 msgstr "Beneficios de haber realizado esta configuración"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_cms_ecommerce
-msgid "CMS & eCommerce"
-msgstr "CMS y comercio electrónico"
-
-#. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_child_ids
 msgid "Children Table Of Content"
 msgstr "Tabla de contenidos hija"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm_claim
-msgid "Claims"
-msgstr "Reclamaciones"
-
-#. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_post_color
 msgid "Color Index"
-msgstr "Índice de colores"
+msgstr "Índice de Colores"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_create_uid
@@ -88,17 +83,7 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_create_date
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_create_date
 msgid "Created on"
-msgstr "Creado en"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm
-msgid "Customer Relationship Management"
-msgstr "Gestión relaciones con el cliente (CRM)"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_sale_customer
-msgid "Customers"
-msgstr "Clientes"
+msgstr "Creado el"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.view_forum_post_kanban
@@ -114,7 +99,7 @@ msgstr "Describa la solución de negocios"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_display_name
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre a mostrar"
 
 #. module: website_forum_doc
 #: model:ir.actions.act_url,name:website_forum_doc.action_open_documentation
@@ -158,20 +143,15 @@ msgid "Edit Post"
 msgstr "Editar Entrada"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_hrm_contract
-msgid "Employee Contract"
-msgstr "Contrato de empleado"
-
-#. module: website_forum_doc
-#: constraint:forum.documentation.toc:0
+#: code:addons/website_forum_doc/models/forum_documentation_toc.py:38
+#, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "¡Error! No puede crear categorías recursivas"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
-#, fuzzy
 msgid "Explain how to configure Odoo"
-msgstr "Explique cómo configurarlo en Odoo"
+msgstr ""
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -187,11 +167,6 @@ msgstr "Foro"
 #: model:ir.model,name:website_forum_doc.model_forum_post
 msgid "Forum Post"
 msgstr "Mensaje del foro"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_functional_doc
-msgid "Functional Documentation"
-msgstr "Documentación funcional"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -214,15 +189,10 @@ msgid "How to forecast sales revenues?"
 msgstr "¿Cómo hacer una previsión de ventas?"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_hrm
-msgid "Human Resources Management"
-msgstr "Gestión de recursos humanos"
-
-#. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_id
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_id
 msgid "ID"
-msgstr "ID (identificación)"
+msgstr "ID"
 
 #. module: website_forum_doc
 #: model:forum.documentation.stage,name:website_forum_doc.stage_ideas
@@ -244,18 +214,13 @@ msgstr "Última modificación en"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_write_uid
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_write_uid
 msgid "Last Updated by"
-msgstr "Última actualización de"
+msgstr "Última actualización por"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_write_date
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_write_date
 msgid "Last Updated on"
-msgstr "Última actualización en"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm_lead
-msgid "Lead & Opportunity"
-msgstr "Iniciativa y oportunidad"
+msgstr "Última actualización el"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_parent_left
@@ -343,21 +308,6 @@ msgid "Right Parent"
 msgstr "Padre derecho"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_0
-msgid "Sales & Warehouse"
-msgstr "Ventas y almacén"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_sale
-msgid "Sales Management"
-msgstr "Gestión de ventas"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_sale_so
-msgid "Sales orders"
-msgstr "Pedidos de venta"
-
-#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Samples"
 msgstr "Ejemplos"
@@ -394,7 +344,8 @@ msgstr "La respuesta debe ser comprensible para alguien que no conoce Odoo"
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "The question describes a real business problem, not a software problem"
 msgstr ""
-"La pregunta describe un problema de negocios real, no un problema de software"
+"La pregunta describe un problema de negocios real, no un problema de "
+"software"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -402,16 +353,10 @@ msgid "The question title is short and descriptive"
 msgstr "El título de la pregunta es corto y descriptivo"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,introduction:website_forum_doc.toc_functional_doc
-msgid "This documentation is produced using the best posts from the"
-msgstr "Esta documentación es generada usando las mejores entradas desde"
-
-#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
 msgid ""
 "This documentation page has been extracted\n"
-"                                        from the Q&amp;A section where you "
-"can\n"
+"                                        from the Q&amp;A section where you can\n"
 "                                        discuss it and get feedback."
 msgstr ""
 "La página de documentación ha sido extraída de \n"
@@ -433,21 +378,6 @@ msgstr ""
 "deben satisfacer los siguientes criterios:"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,introduction:website_forum_doc.toc_sale
-msgid ""
-"Tracks leads, boost opportunities and close deals.\n"
-"                    This serie of how-to will help you develop your business."
-msgstr ""
-"Gestione iniciativas, impulse oportunidades y cierre tratos.\n"
-"Esta serie de tutoriales le ayudará a desarrollar su negocio.\n"
-"            "
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_website
-msgid "Website"
-msgstr "Sitio web"
-
-#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "What report should I use to compute probabilities per stage?"
 msgstr "¿Qué informe debo usar para calcular las probabilidades por etapa?"
@@ -463,11 +393,6 @@ msgid "cancel"
 msgstr "cancelar"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,introduction:website_forum_doc.toc_functional_doc
-msgid "community forum"
-msgstr "forúm de la comunidad"
-
-#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.toc
 msgid "essay"
 msgstr "ensayo"
@@ -481,12 +406,3 @@ msgstr "ensayos"
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "official documentation"
 msgstr "documentación oficial"
-
-#~ msgid "Website meta description"
-#~ msgstr "Meta descripción del sitio web"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Meta palabras clave del sitio web"
-
-#~ msgid "Website meta title"
-#~ msgstr "Meta título del sitio web"

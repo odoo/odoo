@@ -1,16 +1,7 @@
-# #-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_attendance
-#
-# Translators:
-# Luis Triana <luistriana.28@gmail.com>, 2015
-# Martin Trigaux, 2016
-# #-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * hr_attendance
-#
+# 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
@@ -26,201 +17,223 @@
 # Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # David Perez <david@closemarketing.es>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-18 08:36+0000\n"
 "PO-Revision-Date: 2016-08-18 08:36+0000\n"
 "Last-Translator: David Perez <david@closemarketing.es>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
-msgid ""
-"(*) A positive delay means that the employee worked less than recorded.<br/"
-">\n"
-"(*) A negative delay means that the employee worked more than encoded."
+#: code:addons/hr_attendance/models/hr_attendance.py:55
+#, python-format
+msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
 msgstr ""
-"(*) Un retraso positivo significa que el empleado trabajó menos de grabado."
-"<br/>\n"
-"(*) Un retraso negativo significa que el empleado trabajó más de codificado."
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
-msgid "<strong>Total period</strong>"
-msgstr "<strong>Periodo Total</strong>"
-
-#. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Absent"
-msgstr "Ausente"
-
-#. module: hr_attendance
-#: selection:hr.attendance,action:0
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_action
-msgid "Action"
-msgstr "Acción"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_action_reason
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_action_desc
-msgid "Action Reason"
-msgstr "Razón de la acción"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_action_type
-msgid "Action Type"
-msgstr "Tipo de acción"
-
-#. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_hr_attendance_error_max_delay
-msgid ""
-"Allowed difference in minutes between the signin/signout and the timesheet "
-"computation for one sheet. Set this to 0 for no tolerance."
+#: code:addons/hr_attendance/models/hr_attendance.py:29
+#, python-format
+msgid "%(empl_name)s from %(check_in)s"
 msgstr ""
-"Permita diferencia en minutos entre entrada/salida y el cálculo de hoja de "
-"asistencia para una hoja. Establezca 0 para sin tolerancia."
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
-msgid "Analysis Information"
-msgstr "Información para el análisis"
+#: code:addons/hr_attendance/models/hr_attendance.py:34
+#, python-format
+msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
+msgstr ""
 
 #. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:108
+#, python-format
+msgid "An apple a day keeps the doctor away"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:97
+#, python-format
+msgid "Another good day's work! See you soon!"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Apply"
+msgstr "Aplicar"
+
+#. module: hr_attendance
+#: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_main_menu
 #: model:ir.model,name:hr_attendance.model_hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_state
-#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
-#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_graph
-#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_pivot
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_state
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_graph
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
 msgid "Attendance"
 msgstr "Servicio"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_access
-msgid "Attendance Access"
-msgstr "Acceso a la asistencia"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph_filtered
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph_filtered
 msgid "Attendance Analysis"
 msgstr "Análisis de asistencias"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
-#: model:ir.actions.report.xml,name:hr_attendance.action_report_hrattendanceerror
-msgid "Attendance Error Report"
-msgstr "Informe errores de asistencia"
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
+msgid "Attendance Settings"
+msgstr ""
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
-msgid "Attendance Errors:"
-msgstr "Errores de asistencia:"
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_ids
+msgid "Attendance ids"
+msgstr ""
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
-msgid "Attendance Reasons"
-msgstr "Causas de asistencia/ausencia"
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_attendance_reason
-msgid "Attendance reasons"
-msgstr "Causas de asistencia/ausencia"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
+#: model:ir.actions.client,name:hr_attendance.hr_attendance_action_main_menu
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
 #: model:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
 msgid "Attendances"
 msgstr "Asistencias"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
-msgid ""
-"Below the maximum tolerance, the attendance error will not be taken into "
-"account. Above the maximum tolerance, the error is considered to be "
-"voluntary and will be taken into account."
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_barcode
+msgid "Badge ID"
 msgstr ""
-"Por debajo de la tolerancia máxima , no se tomará el error de asistencia en "
-"cuenta. Por encima de la tolerancia máxima , el error se considera que es "
-"voluntario y se tendrá en cuenta."
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/attendance.js:41
+#: code:addons/hr_attendance/models/hr_attendance.py:85
 #, python-format
-msgid "Click to Sign In at %s."
-msgstr "Pulse para registar la entrada a %s."
+msgid ""
+"Cannot create new attendance record for %(empl_name)s, the employee hasn't "
+"checked out since %(datetime)s"
+msgstr ""
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_config
+#: code:addons/hr_attendance/models/hr_attendance.py:72
+#: code:addons/hr_attendance/models/hr_attendance.py:98
+#, python-format
+msgid ""
+"Cannot create new attendance record for %(empl_name)s, the employee was "
+"already checked in on %(datetime)s"
+msgstr ""
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:113
+#, python-format
+msgid "Cannot perform check in or check out on multiple employees."
+msgstr ""
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:131
+#, python-format
+msgid ""
+"Cannot perform check out on %(empl_name)s, could not find corresponding "
+"check in. Your attendances have probably been modified manually by human "
+"resources."
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
+msgid "Check In"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_out
+msgid "Check Out"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:53
+#, python-format
+msgid "Check in"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:49
+#, python-format
+msgid "Check out"
+msgstr ""
+
+#. module: hr_attendance
+#: selection:hr.employee,attendance_state:0
+msgid "Checked in"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:109
+#, python-format
+msgid "Checked in at"
+msgstr ""
+
+#. module: hr_attendance
+#: selection:hr.employee,attendance_state:0
+msgid "Checked out"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:97
+#, python-format
+msgid "Checked out at"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:27
+#, python-format
+msgid "Click to check in"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:31
+#, python-format
+msgid "Click to check out"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:12
+#: model:ir.ui.view,arch_db:hr_attendance.print_employee_badge
+#, python-format
+msgid "Company Logo"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
 msgid "Configuration"
 msgstr "Configuración"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_create_uid
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_uid
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_create_uid
 msgid "Created by"
 msgstr "Creado por"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_create_date
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_date
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_create_date
-#, fuzzy
 msgid "Created on"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Creado en\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Creado el"
+msgstr "Creado el"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Current Month"
 msgstr "Mes actual"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_name
-msgid "Date"
-msgstr "Fecha"
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
-msgid "Date Recorded"
-msgstr "Fecha registrada"
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
-msgid "Date Signed"
-msgstr "Fecha registro"
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.edit_attendance_reason
-msgid "Define attendance reason"
-msgstr "Defina motivo ausencia"
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
-msgid "Delay"
-msgstr "Retraso"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_department_id
@@ -228,164 +241,308 @@ msgid "Department"
 msgstr "Departamento"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_display_name
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_display_name
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_display_name
-#: model:ir.model.fields,field_description:hr_attendance.field_report_hr_attendance_report_attendanceerrors_display_name
-#, fuzzy
 msgid "Display Name"
+msgstr "Nombre a mostrar"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:114
+#, python-format
+msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
 msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nombre mostrado\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Nombre a mostrar"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:106
+#, python-format
+msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_employee_id
-#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Employee"
 msgstr "Empleado"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_attendance_form
+#: model:ir.ui.view,arch_db:hr_attendance.print_employee_badge
+msgid "Employee Image"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_base_config_settings_group_attendance_use_pin
+msgid "Employee PIN"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 #: model:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-#: model:ir.ui.view,arch_db:hr_attendance.view_attendance_who
 msgid "Employee attendances"
 msgstr "Asistencia empleado"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_end_date
-msgid "Ending Date"
-msgstr "Fecha de fin"
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_kanban_inherit_hr_attendance
+msgid "Employee's Name"
+msgstr "Nombre del empleado"
 
 #. module: hr_attendance
-#: constraint:hr.attendance:0
-msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr "¡Error! Una entrada debe seguir a un registro de salida."
+#: model:ir.actions.act_window,name:hr_attendance.hr_employee_attendance_action_kanban
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_employees_kanban
+msgid "Employees"
+msgstr "Empleados"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
+#: selection:base.config.settings,group_attendance_use_pin:0
+msgid ""
+"Employees do not need to enter their PIN to check in manually in the "
+"\"Company Screen\"."
+msgstr ""
+
+#. module: hr_attendance
+#: selection:base.config.settings,group_attendance_use_pin:0
+msgid ""
+"Employees must enter their PIN to check in manually in the \"Company "
+"Screen\"."
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_base_config_settings_group_attendance_use_pin
+msgid "Enable or disable employee PIN identification at check in"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/my_main_menu.js:29
+#, python-format
+msgid "Error : Could not find employee linked to user"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:35
+#, python-format
+msgid "Error : Could not find employee linked to user."
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:81
+#, python-format
+msgid "Error: could not find corresponding employee."
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:61
+#, python-format
+msgid "First come, first served"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:77
+#, python-format
+msgid "Glad to have you back, it's been a while!"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:68
+#, python-format
+msgid "Good afternoon"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:70
+#, python-format
+msgid "Good evening"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:65
+#, python-format
+msgid "Good morning"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:55
+#: code:addons/hr_attendance/static/src/js/message.js:72
+#, python-format
+msgid "Good night"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:100
+#, python-format
+msgid "Goodbye"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Group By"
 msgstr "Agrupar por"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:111
+#, python-format
+msgid "Have a good afternoon"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:102
+#, python-format
+msgid "Have a good day!"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:116
+#, python-format
+msgid "Have a good evening"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:104
+#, python-format
+msgid "Have a nice lunch!"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Hr Attendance Search"
 msgstr "Buscar presencias RH"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_id
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_id
-#: model:ir.model.fields,field_description:hr_attendance.field_report_hr_attendance_report_attendanceerrors_id
-#, fuzzy
 msgid "ID"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID (identificación)\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"ID"
+msgstr "ID"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason___last_update
+#: model:ir.model.fields,help:hr_attendance.field_hr_employee_barcode
+msgid "ID used for employee identification."
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:80
+#, python-format
+msgid "If a job is worth doing, it is worth doing well!"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:120
+#, python-format
+msgid "Invalid request, please return to the main menu."
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_Kiosk_mode
+msgid "Kiosk Mode"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance___last_update
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error___last_update
-#: model:ir.model.fields,field_description:hr_attendance.field_report_hr_attendance_report_attendanceerrors___last_update
 msgid "Last Modified on"
 msgstr "Última modificación en"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_sign
-msgid "Last Sign"
-msgstr "Último registro"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_write_uid
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_write_uid
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Última actualización de\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Última actualización por"
+msgstr "Última actualización por"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_write_date
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_write_date
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_write_date
-#, fuzzy
 msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
+msgid "Last attendance id"
 msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Última actualización en\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Última actualización el"
 
 #. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/attendance.js:39
-#, python-format
-msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr "Última entrada: %s,<br/>%s.<br/>Pulse para registrar salida."
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
+msgid "Manage Attendances"
+msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_max_delay
-msgid "Maximum Tolerance (in minutes)"
-msgstr "Tolerancia Máxima(en minutos)"
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
+msgid "Manual Attendance"
+msgstr ""
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
-msgid "Min Delay"
-msgstr "Mín. retraso"
+#: model:ir.actions.client,name:hr_attendance.hr_attendance_action_message
+msgid "Message"
+msgstr "Mensaje"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Month"
 msgstr "Mes"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
-msgid "My Attendance"
-msgstr "Mi asistencia"
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "My Attendances"
+msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:34
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "No Check Out"
+msgstr ""
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:74
 #, python-format
-msgid "No records are found for your selection!"
-msgstr "¡No se han encontrado registros para su selección!"
+msgid "No employee corresponding to barcode %(barcode)s"
+msgstr ""
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
-msgid "Operation"
-msgstr "Operación"
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_pin
+msgid "PIN"
+msgstr ""
 
 #. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Present"
-msgstr "Presente"
+#: model:ir.model.fields,help:hr_attendance.field_hr_employee_pin
+msgid "PIN used for Check In/Out in Attendance."
+msgstr ""
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
-msgid "Print"
-msgstr "Imprimir"
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:62
+#, python-format
+msgid "Please enter your PIN to check in"
+msgstr ""
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
-msgid "Print Attendance Report Error"
-msgstr "Imprimir informe errores presencias"
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:59
+#, python-format
+msgid "Please enter your PIN to check out"
+msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_error
-msgid "Print Error Attendance Report"
-msgstr "Error en la impresión del informe de asistencia"
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:82
+#, python-format
+msgid "Please return to the main menu."
+msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_name
-msgid "Reason"
-msgstr "Motivo"
+#: model:ir.actions.report.xml,name:hr_attendance.hr_employee_print_badge
+msgid "Print Badge"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
@@ -393,60 +550,88 @@ msgid "Reports"
 msgstr "Informes"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:156
-#: selection:hr.attendance,action:0
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:13
 #, python-format
-msgid "Sign In"
-msgstr "Registrar entrada"
+msgid "Scan your badge"
+msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:156
-#: selection:hr.attendance,action:0
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:15
 #, python-format
-msgid "Sign Out"
-msgstr "Registrar salida"
+msgid "Select Employee"
+msgstr ""
 
 #. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-msgid "Sign in"
-msgstr "Registrar entrada"
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Settings"
+msgstr "Configuración"
 
 #. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-msgid "Sign out"
-msgstr "Registrar salida"
+#: sql_constraint:hr.employee:0
+msgid ""
+"The Badge ID must be unique, this one is already assigned to another "
+"employee."
+msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_hr_attendance_action_desc
-msgid "Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr "Especifique la razón de entrada y salida en el caso de horas extras."
+#: code:addons/hr_attendance/models/hr_employee.py:65
+#, python-format
+msgid "The PIN must be a sequence of digits."
+msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_hr_action_reason_name
-msgid "Specifies the reason for Signing In/Signing Out."
-msgstr "Indique el motivo de la entrada/salida."
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_init_date
-msgid "Starting Date"
-msgstr "Fecha de inicio"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+#: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 msgid ""
 "The Time Tracking functionality aims to manage employee attendances from "
-"Sign in/Sign out actions. You can also link this feature to an attendance "
+"Check in/Check out actions. You can also link this feature to an attendance "
 "device using Odoo's web service features."
 msgstr ""
-"La funcionalidad de seguimiento de tiempos permite gestionar las asistencias "
-"de los empleados desde las acciones de Fichar entrada / Fichar salida. Puede "
-"enlazar esta característica con un dispositivo de asistencia usando los "
-"servicios web de Odoo."
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:59
+#, python-format
+msgid "The early bird catches the worm"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_employee_manual_attendance
+msgid ""
+"The employee will have access to the \"My Attendances\" menu to perform his "
+"check in and out from his session"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Today"
 msgstr "Hoy"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/message.js:94
+#, python-format
+msgid ""
+"Warning! Last check in was over 12 hours ago.<br/>If this isn't right, "
+"please contact Human Resources."
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:25
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:112
+#, python-format
+msgid "Welcome"
+msgstr "Bienvenido"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:11
+#, python-format
+msgid "Welcome to"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_worked_hours
@@ -454,49 +639,45 @@ msgid "Worked Hours"
 msgstr "Horas trabajadas"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:163
+#: code:addons/hr_attendance/models/hr_employee.py:81
 #, python-format
-msgid ""
-"You tried to %s with a date anterior to another event !\n"
-"Try to contact the HR Manager to correct attendances."
+msgid "Wrong PIN"
 msgstr ""
-"¡Ha intentado %s con una fecha anterior a otro evento!\n"
-"Intente contactar con el responsable de RRHH para corregir las asistencias."
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_report_hr_attendance_report_attendanceerrors
-msgid "report.hr_attendance.report_attendanceerrors"
-msgstr "report.hr_attendance.report_attendanceerrors"
+#: code:addons/hr_attendance/models/hr_attendance.py:105
+#, python-format
+msgid "You cannot duplicate an attendance."
+msgstr ""
 
-#~ msgid "Time Tracking"
-#~ msgstr "Seguimiento de tiempo"
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
 
-#~ msgid "Timesheets"
-#~ msgstr "Partes de tiempo"
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/presence_widgets.js:18
+#: code:addons/hr_attendance/static/src/js/presence_widgets.js:37
+#, python-format
+msgid "employee presence<br/>green: checked in<br/>red: checked out"
+msgstr ""
 
-#~ msgid "Apply"
-#~ msgstr "Aplicar"
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_employee_attendance_ids
+msgid "list of attendances for the employee"
+msgstr ""
 
-#~ msgid "Employee's Name"
-#~ msgstr "Nombre del empleado"
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:123
+#, python-format
+msgid "ok"
+msgstr "ok"
 
-#~ msgid "Employees"
-#~ msgstr "Empleados"
-
-#~ msgid "Message"
-#~ msgstr "Mensaje"
-
-#~ msgid "Settings"
-#~ msgstr "Configuración"
-
-#~ msgid "Welcome"
-#~ msgstr "Bienvenido"
-
-#~ msgid "base.config.settings"
-#~ msgstr "base.config.settings"
-
-#~ msgid "ok"
-#~ msgstr "ok"
-
-#~ msgid "or"
-#~ msgstr "o"
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:14
+#, python-format
+msgid "or"
+msgstr "o"

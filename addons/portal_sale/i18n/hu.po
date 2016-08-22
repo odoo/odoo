@@ -1,35 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * portal_sale
-#
+# 
 # Translators:
-# Kris Krnacs, 2015
-# krnkris, 2015-2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-23 10:09+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
-"hu/)\n"
-"Language: hu\n"
+"POT-Creation-Date: 2016-08-18 08:37+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_account_invoice
 msgid "Invoice"
-msgstr "Számlázás"
-
-#. module: portal_sale
-#: model:ir.actions.act_window,name:portal_sale.portal_action_invoices
-#: model:ir.ui.menu,name:portal_sale.portal_invoices
-msgid "Invoices"
-msgstr "Számlák"
+msgstr "Számla"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_mail_mail
@@ -37,51 +30,6 @@ msgid "Outgoing Mails"
 msgstr "Kimenő levelek"
 
 #. module: portal_sale
-#: model:ir.actions.act_window,name:portal_sale.action_quotations_portal
-#: model:ir.ui.menu,name:portal_sale.portal_quotations
-msgid "Quotations"
-msgstr "Árajánlatok"
-
-#. module: portal_sale
-#: model:ir.actions.act_window,name:portal_sale.action_orders_portal
-msgid "Sale Orders"
-msgstr "Vevői rendelések"
-
-#. module: portal_sale
 #: model:ir.model,name:portal_sale.model_sale_order
 msgid "Sales Order"
-msgstr "Vevői megrendelés"
-
-#. module: portal_sale
-#: model:ir.ui.menu,name:portal_sale.portal_sales_orders
-msgid "Sales Orders"
-msgstr "Vevői megrendelések"
-
-#. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
-msgid "We haven't sent you any invoice."
-msgstr "Nem küldtünk semmilyen számlát."
-
-#. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
-msgid "We haven't sent you any quotation."
-msgstr "Nem küldtünk semmilyen árajánlatot."
-
-#. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.action_orders_portal
-msgid "We haven't sent you any sales order."
-msgstr "Nem küldtünk semmilyen megrendelést."
-
-#~ msgid ""
-#~ "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-#~ "'draft' or ''}"
-#~ msgstr ""
-#~ "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-#~ "'draft' or ''}"
-
-#~ msgid ""
-#~ "Invoice_${(object.number or '').replace('/','_')}_${object.state == "
-#~ "'draft' and 'draft' or ''}"
-#~ msgstr ""
-#~ "Invoice_${(object.number or '').replace('/','_')}_${object.state == "
-#~ "'draft' and 'draft' or ''}"
+msgstr "Vásárlói megrendelés"

@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_picking_wave
-#
+# 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2015
-# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
-# Joray <13637815@qq.com>, 2016
-# Joray <13637815@qq.com>, 2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Gary Wei <Gary.wei@elico-corp.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
+# waveyeung <waveyeung@qq.com>, 2016
+# Talway <9010446@qq.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-12 00:48+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_CN/)\n"
-"Language: zh_CN\n"
+"POT-Creation-Date: 2016-08-18 08:37+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Talway <9010446@qq.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_picking_wave
@@ -80,7 +81,7 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_create_date
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_create_date
 msgid "Created on"
-msgstr "创建时间"
+msgstr "创建于"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_display_name
@@ -116,27 +117,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_picking_wave
-#: model:product.product,name:stock_picking_wave.product_product_ice_cream_choco
-#: model:product.template,name:stock_picking_wave.product_product_ice_cream_choco_product_template
-msgid "Ice Cream Chocolate"
-msgstr "冰激凌巧克力"
-
-#. module: stock_picking_wave
-#: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_choco
-#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_choco_product_template
-#, fuzzy
-msgid "Ice Cream Chocolate with sticks"
-msgstr "冰激凌粘有巧克力"
-
-#. module: stock_picking_wave
-#: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_vani
-#: model:product.product,name:stock_picking_wave.product_product_ice_cream_vani
-#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_vani_product_template
-#: model:product.template,name:stock_picking_wave.product_product_ice_cream_vani_product_template
-msgid "Ice Cream Vanilla"
-msgstr "香草冰激凌"
-
-#. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 msgid "In Progress"
 msgstr "进行中"
@@ -145,19 +125,19 @@ msgstr "进行中"
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave___last_update
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave___last_update
 msgid "Last Modified on"
-msgstr "最后修改时间"
+msgstr "最后修改日"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_write_uid
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_write_date
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "最近更新时间"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_picking_ids
@@ -170,7 +150,7 @@ msgid "Name of the picking wave"
 msgstr "捡货波次名称"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:42
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:52
 #, python-format
 msgid "Nothing to print."
 msgstr "没有需要打印的项目"
@@ -181,10 +161,10 @@ msgid "Person responsible for this wave"
 msgstr "该波次负责人"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:64
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_10313
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -207,7 +187,7 @@ msgid "Picking Waves not finished"
 msgstr "捡货波次没有结束"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_10313
 msgid "Picking wave associated to this picking"
 msgstr "这次分拣相关的分拣波次"
 
@@ -219,8 +199,8 @@ msgstr "分拣"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-msgid "Print all pickings"
-msgstr "打印所有分检单"
+msgid "Print"
+msgstr "打印"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_user_id
@@ -243,24 +223,12 @@ msgid "Select a wave"
 msgstr "选择一个波次"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:59
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:59
 #, python-format
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
 "availability before setting this wave to done."
 msgstr "部分捡货作业还在等待可用，请检查或者强制可用以便完成本次捡货作业。"
-
-#. module: stock_picking_wave
-#: model:product.product,name:stock_picking_wave.product_product_dry_specu
-#: model:product.template,name:stock_picking_wave.product_product_dry_specu_product_template
-msgid "Speculoos"
-msgstr "Speculoos"
-
-#. module: stock_picking_wave
-#: model:product.product,description_sale:stock_picking_wave.product_product_dry_specu
-#: model:product.template,description_sale:stock_picking_wave.product_product_dry_specu_product_template
-msgid "Speculoos - A belgian speciality"
-msgstr "Speculoos - A belgian speciality"
 
 #. module: stock_picking_wave
 #: model:mail.message.subtype,description:stock_picking_wave.mt_wave_state
@@ -282,19 +250,12 @@ msgstr "库存分拣波次"
 
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
-#, fuzzy
 msgid ""
 "The goal of the picking waves is to group operations that may\n"
-"                (needs to) be done together in order to increase their "
-"efficiency.\n"
-"                It may also be useful to assign jobs (one person = one wave) "
-"or\n"
-"                help the timing management of operations (tasks to be done "
-"at 1pm)."
+"                (needs to) be done together in order to increase their efficiency.\n"
+"                It may also be useful to assign jobs (one person = one wave) or\n"
+"                help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"拣货波次的目标是把拣货操作分组，这样可以提高效率\n"
-"它也可以定义为分配工作（一个人等于一个拣货波次）\n"
-"或者操作的时间管理方式（任务在下午一点完成）"
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking
@@ -302,7 +263,7 @@ msgid "Transfer"
 msgstr "调拨"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:63
 #, python-format
 msgid "Transferred by"
 msgstr "调拨"
@@ -316,57 +277,3 @@ msgstr "用户"
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_stock_picking_wave_search_inherit
 msgid "Wave"
 msgstr "波次"
-
-#~ msgid "Action Needed"
-#~ msgstr "所需行动"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "消息和通信历史"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Unread Messages"
-#~ msgstr "未读消息"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
-
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"

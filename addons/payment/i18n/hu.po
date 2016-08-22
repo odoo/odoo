@@ -1,77 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-#
+# 
 # Translators:
-# krnkris, 2015
-# krnkris, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Kovács Tibor <kovika@gmail.com>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-06-06 19:55+0000\n"
-"Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
-"hu/)\n"
-"Language: hu\n"
+"POT-Creation-Date: 2016-08-18 08:37+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
 msgid ""
-"            Will be safe_eval with `self` being the current transaction. i."
-"e.:\n"
-"                self.env['my.model'].payment_validated(self)"
+"        Will be safe_eval with `self` being the current transaction. i.e.:\n"
+"            self.env['my.model'].payment_validated(self)"
 msgstr ""
-"            Bizt_ért /safe_eval/ lesz a `saját` jelenlegi tranzakciójával. "
-"pl.:\n"
-"                self.env['my.model'].payment_validated(self)"
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
-#, fuzzy
-msgid "-This installs the module payment_adyen."
-msgstr "-Ez a payment_adyen modult telepíti."
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
-#, fuzzy
-msgid "-This installs the module payment_authorize."
-msgstr "-Ez a payment_authorize modult telepíti."
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
-#, fuzzy
-msgid "-This installs the module payment_buckaroo."
-msgstr "-Ez a payment_buckaroo modult telepíti."
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
-#, fuzzy
-msgid "-This installs the module payment_ogone."
-msgstr "-Ez a payment_ogone modult telepíti."
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
-#, fuzzy
-msgid "-This installs the module payment_paypal."
-msgstr "-Ez a payment_paypal modult telepíti."
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_sips
-#, fuzzy
-msgid "-This installs the module payment_sips."
-msgstr "-Ez a payment_paypal modult telepíti."
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
-#, fuzzy
-msgid "-This installs the module payment_transfer."
-msgstr "-Ez a payment_transfer modult telepít."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
@@ -81,17 +36,99 @@ msgstr "3D Secure biztonsági HTML"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
-"<span class=\"text-danger\">Test</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</"
-"span>"
+"<span class=\"o_warning_text\">Test</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</"
-"span>"
+"                                    <span class=\"o_stat_text\">Environment</span>"
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_authorize
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_buckaroo
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_custom
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_ogone
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_paypal
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_payu
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_sips
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_stripe
+#: model:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr "<span><i>Mégse,</i> A fizetése elutasítva.</span>"
+
+#. module: payment
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_adyen
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_authorize
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_buckaroo
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_custom
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_ogone
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_paypal
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_payu
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_sips
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_stripe
+#: model:payment.acquirer,done_msg:payment.payment_acquirer_transfer
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr ""
+"<span><i>Elvégezve,</i> Az online fizetése sikeresen végrehajtva. Köszönjük "
+"a megrendelést.</span>"
+
+#. module: payment
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_adyen
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_authorize
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_buckaroo
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_custom
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_ogone
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_paypal
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_payu
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_sips
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_stripe
+#: model:payment.acquirer,error_msg:payment.payment_acquirer_transfer
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but will not be paid. Do not "
+"hesitate to contact us if you have any questions on the status of your "
+"order.</span>"
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_authorize
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_buckaroo
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_custom
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_ogone
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_paypal
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_payu
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_sips
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_stripe
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr ""
+"<span><i>Függőben,</i> Az online fizetése sikeresen teljesítve. De a "
+"megrendelését még nem hagyták jóvá.</span>"
+
+#. module: payment
+#: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
+msgid ""
+"<span><i>Pending</i>... The order will be validated after the "
+"payment.</span>"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
+msgid "Account journal used for automatic payment reconciliation."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
+msgid "Accounting Journal"
 msgstr ""
 
 #. module: payment
@@ -100,12 +137,12 @@ msgid "Acquirer"
 msgstr "Lebonyolító"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_id
+#: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_id
 msgid "Acquirer Account"
 msgstr "Igénylői számla"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_ref
+#: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_ref
 msgid "Acquirer Ref."
 msgstr "Igénylői hiv."
 
@@ -115,7 +152,7 @@ msgid "Acquirer Reference"
 msgstr "Igénylő hivatkozása"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_method_active
+#: model:ir.model.fields,field_description:payment.field_payment_token_active
 msgid "Active"
 msgstr "Aktív"
 
@@ -131,7 +168,8 @@ msgid "Address"
 msgstr "Cím"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_adyen
+#: model:payment.acquirer,name:payment.payment_acquirer_adyen
+#: selection:payment.acquirer,provider:0
 msgid "Adyen"
 msgstr "Adyen"
 
@@ -142,22 +180,14 @@ msgid "Amount"
 msgstr "Összeg"
 
 #. module: payment
-#: selection:payment.acquirer,auto_confirm:0
-msgid "At payment no acquirer confirmation needed"
-msgstr "A fizetésnél nem kell igénylői visszaigazolás"
-
-#. module: payment
-#: selection:payment.acquirer,auto_confirm:0
-msgid "At payment with acquirer confirmation"
-msgstr "Fizetés igénylői visszaigazolással"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
+#: model:payment.acquirer,name:payment.payment_acquirer_authorize
+#: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_buckaroo
+#: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
+#: selection:payment.acquirer,provider:0
 msgid "Buckaroo"
 msgstr "Buckaroo"
 
@@ -178,6 +208,16 @@ msgid "City"
 msgstr "Város"
 
 #. module: payment
+#: model:ir.actions.act_window,help:payment.action_payment_acquirer
+msgid "Click to create a payment acquirer."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment_payment_method_id_code
+msgid "Code"
+msgstr "Kód"
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
 msgid "Company"
 msgstr "Vállalat"
@@ -188,14 +228,29 @@ msgid "Configuration"
 msgstr "Beállítások"
 
 #. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_kanban
+msgid "Configure"
+msgstr "Beállít"
+
+#. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_acquirer_installation
 msgid "Configure payment acquiring methods"
 msgstr "Fizetési beszedési mód beállítása"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_count
-msgid "Count Payment Method"
-msgstr "Számolt fizetési mód"
+#: selection:payment.acquirer,auto_confirm:0
+msgid "Confirm the SO on acquirer confirmation"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_id
+msgid "Corresponding Module"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
+msgid "Count Payment Token"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
@@ -205,14 +260,14 @@ msgstr "Ország"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_uid
-#: model:ir.model.fields,field_description:payment.field_payment_method_create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_token_create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_create_uid
 msgid "Created by"
 msgstr "Készítette"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_date
-#: model:ir.model.fields,field_description:payment.field_payment_method_create_date
+#: model:ir.model.fields,field_description:payment.field_payment_token_create_date
 msgid "Created on"
 msgstr "Létrehozás dátuma"
 
@@ -234,12 +289,22 @@ msgstr "Hitel kártya(k)"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_currency_id
 msgid "Currency"
-msgstr "Valuta"
+msgstr "Pénznem"
+
+#. module: payment
+#: model:payment.acquirer,name:payment.payment_acquirer_custom
+msgid "Custom"
+msgstr "Egyéni"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Customer Details"
 msgstr "Vevők részletezése"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_description
+msgid "Description"
+msgstr "Leírás"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
@@ -248,15 +313,15 @@ msgstr "Megjelenített értékek sorrendjének meghatározása"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_display_name
-#: model:ir.model.fields,field_description:payment.field_payment_method_display_name
+#: model:ir.model.fields,field_description:payment.field_payment_token_display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_display_name
 msgid "Display Name"
-msgstr "Név megjelenítése"
+msgstr "Megjelenített név"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Done"
-msgstr "Kész"
+msgstr "Elvégezve"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
@@ -276,10 +341,11 @@ msgstr "E-mail"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_environment
+#: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Environment"
 msgstr "Környezet"
 
@@ -297,6 +363,11 @@ msgstr "Hibaüzenet"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
 msgid "Fees"
 msgstr "Díjak"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_implemented
+msgid "Fees Computation Supported"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
@@ -338,7 +409,7 @@ msgstr "Személyi okmányokat tároló űrlap"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Group By"
-msgstr "Csoportosítás..."
+msgstr "Csoportosítás"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
@@ -347,15 +418,31 @@ msgstr "Segítség üzenet"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_id
-#: model:ir.model.fields,field_description:payment.field_payment_method_id
+#: model:ir.model.fields,field_description:payment.field_payment_token_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_id
 msgid "ID"
-msgstr "ID"
+msgstr "Azonosító ID"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
 msgid "Image"
 msgstr "Kép"
+
+#. module: payment
+#: model:payment.acquirer,name:payment.payment_acquirer_ogone
+msgid "Ingenico"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.acquirer_kanban
+msgid "Install"
+msgstr "Telepítés"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_state
+msgid "Installation State"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_reference
@@ -369,21 +456,21 @@ msgstr "Nyelv"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer___last_update
-#: model:ir.model.fields,field_description:payment.field_payment_method___last_update
+#: model:ir.model.fields,field_description:payment.field_payment_token___last_update
 #: model:ir.model.fields,field_description:payment.field_payment_transaction___last_update
 msgid "Last Modified on"
-msgstr "Utolsó frissítés dátuma"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_uid
-#: model:ir.model.fields,field_description:payment.field_payment_method_write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_token_write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr "Utoljára frissítette"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_date
-#: model:ir.model.fields,field_description:payment.field_payment_method_write_date
+#: model:ir.model.fields,field_description:payment.field_payment_token_write_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_write_date
 msgid "Last Updated on"
 msgstr "Utoljára frissítve "
@@ -392,6 +479,11 @@ msgstr "Utoljára frissítve "
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
 msgstr "Tegye elérhetővé ezt a lebonyolítót (Vásárlók számlái, stb.)"
+
+#. module: payment
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
@@ -423,7 +515,8 @@ msgstr "A fizetési művelet végrehajtása után üzenetet jelez ki."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pre_msg
 msgid "Message displayed to explain and help the payment process."
-msgstr "Üzenentet jelez ki a fizetési művelet támogatásához és magyarázatához."
+msgstr ""
+"Üzenentet jelez ki a fizetési művelet támogatásához és magyarázatához."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
@@ -434,8 +527,8 @@ msgstr "A fizetési művelet végrehajtása közbeni hibákra üzenetet jelez ki
 #: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
 msgstr ""
-"A fizetési művelet végrehajtása közbeni megrendelés visszavonásokra üzenetet "
-"jelez ki."
+"A fizetési művelet végrehajtása közbeni megrendelés visszavonásokra üzenetet"
+" jelez ki."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
@@ -443,8 +536,8 @@ msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
 msgstr ""
-"A fizetési művelet végrehajtása után, a megfelelően lefutott megrendelésekre "
-"üzenetet jelez ki."
+"A fizetési művelet végrehajtása után, a megfelelően lefutott megrendelésekre"
+" üzenetet jelez ki."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
@@ -462,16 +555,16 @@ msgstr "Üzenetek"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
-#: model:ir.model.fields,field_description:payment.field_payment_method_name
+#: model:ir.model.fields,field_description:payment.field_payment_token_name
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Name"
 msgstr "Név"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_method_name
-msgid "Name of the payment method"
-msgstr "Fizetési mód neve."
+#: model:ir.model.fields,help:payment.field_payment_token_name
+msgid "Name of the payment token"
+msgstr ""
 
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
@@ -479,9 +572,15 @@ msgid "No automatic confirmation"
 msgstr "Nincs automatikus jóváhagyás"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_ogone
+#: selection:payment.acquirer,provider:0
 msgid "Ogone"
 msgstr "Ogone"
+
+#. module: payment
+#: selection:payment.acquirer,auto_confirm:0
+msgid ""
+"On acquirer confirmation, confirm the SO, generate the invoice and pay it"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
@@ -490,7 +589,7 @@ msgstr "Vásárlói megrendelés jóváhagyása"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
-#: model:ir.model.fields,field_description:payment.field_payment_method_partner_id
+#: model:ir.model.fields,field_description:payment.field_payment_token_partner_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_id
 msgid "Partner"
 msgstr "Partner"
@@ -498,13 +597,23 @@ msgstr "Partner"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_name
 msgid "Partner Name"
-msgstr "Partner név"
+msgstr "Partner neve"
+
+#. module: payment
+#: model:payment.acquirer,name:payment.payment_acquirer_payu
+msgid "PayU"
+msgstr ""
+
+#. module: payment
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr ""
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr "Fizetést kézhezvevő"
+msgstr "Fizetést lebonyolító"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
@@ -514,20 +623,21 @@ msgid "Payment Acquirers"
 msgstr "Fizetés kézhezvevői"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_method_id
-msgid "Payment Method"
-msgstr "Fizetési módszer"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_token_id
+msgid "Payment Token"
+msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_ids
-#: model:ir.ui.view,arch_db:payment.payment_method_form_view
-#: model:ir.ui.view,arch_db:payment.payment_method_tree_view
-#: model:ir.ui.view,arch_db:payment.payment_method_view_search
-msgid "Payment Methods"
-msgstr "Elérhető fizetési módok"
+#: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_ids
+#: model:ir.ui.view,arch_db:payment.payment_token_form_view
+#: model:ir.ui.view,arch_db:payment.payment_token_tree_view
+#: model:ir.ui.view,arch_db:payment.payment_token_view_search
+msgid "Payment Tokens"
+msgstr ""
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
+#: model:ir.model.fields,field_description:payment.field_account_payment_payment_transaction_id
 msgid "Payment Transaction"
 msgstr "Fizetési tranzakció"
 
@@ -535,7 +645,7 @@ msgstr "Fizetési tranzakció"
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
 #: model:ir.actions.act_window,name:payment.action_payment_tx_ids
 #: model:ir.actions.act_window,name:payment.payment_transaction_action_child
-#: model:ir.model.fields,field_description:payment.field_payment_method_payment_ids
+#: model:ir.model.fields,field_description:payment.field_payment_token_payment_ids
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
@@ -543,21 +653,29 @@ msgid "Payment Transactions"
 msgstr "Fizetési tranzakciók"
 
 #. module: payment
-#: model:ir.ui.menu,name:payment.root_payment_menu
-#: model:ir.ui.view,arch_db:payment.acquirer_form
-#: model:ir.ui.view,arch_db:payment.payment_method_form_view
-msgid "Payments"
-msgstr "Kifizetések"
+#: code:addons/payment/models/account_payment.py:56
+#, python-format
+msgid "Payment transaction failed (%s)"
+msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_paypal
+#: model:ir.model,name:payment.model_account_payment
+#: model:ir.ui.menu,name:payment.root_payment_menu
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.payment_token_form_view
+msgid "Payments"
+msgstr "Vevői befizetések"
+
+#. module: payment
+#: model:payment.acquirer,name:payment.payment_acquirer_paypal
+#: selection:payment.acquirer,provider:0
 msgid "Paypal"
 msgstr "Paypal"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Pending"
-msgstr "Függőben lévő"
+msgstr "Függő"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
@@ -572,7 +690,7 @@ msgstr "Telefon"
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Production"
-msgstr "Termelési üzemmód"
+msgstr "Éles"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_provider
@@ -606,10 +724,15 @@ msgid "S2S Form Template"
 msgstr "S2S űrlap sablon"
 
 #. module: payment
-#: model:ir.actions.act_window,name:payment.payment_method_action
-#: model:ir.ui.menu,name:payment.payment_method_menu
+#: model:ir.actions.act_window,name:payment.payment_token_action
+#: model:ir.ui.menu,name:payment.payment_token_menu
 msgid "Saved Payment Data"
 msgstr "Elmentett fizetési adatok"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment_payment_token_id
+msgid "Saved payment token"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
@@ -622,30 +745,37 @@ msgid "Server To Server"
 msgstr "Szervertől szerverhez"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_sips
+#: model:payment.acquirer,name:payment.payment_acquirer_sips
+#: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips fizetés"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
 msgid "Small-sized image"
-msgstr "Kis méretű ábra"
+msgstr "Kis méretű kép"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+"Small-sized image of this provider. It is automatically resized as a 64x64px"
+" image, with aspect ratio preserved. Use this field anywhere a small image "
+"is required."
 msgstr ""
-"Kis-méretű kép a szolgáltatóról. Automatikusan át lesz alakítva mint 64x64px "
-"képpontos kép, az arányt megtartva. Használja ezt a mezőt mindenhol ahol kis "
-"képre van szükség."
+"Kis-méretű kép a szolgáltatóról. Automatikusan át lesz alakítva mint 64x64px"
+" képpontos kép, az arányt megtartva. Használja ezt a mezőt mindenhol ahol "
+"kis képre van szükség."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
 msgid "Status"
 msgstr "Állapot"
+
+#. module: payment
+#: model:payment.acquirer,name:payment.payment_acquirer_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
@@ -663,7 +793,8 @@ msgid "Thanks Message"
 msgstr "Köszönetnyilvánító üzenet"
 
 #. module: payment
-#: constraint:payment.transaction:0
+#: code:addons/payment/models/payment_acquirer.py:441
+#, python-format
 msgid "The payment transaction reference must be unique!"
 msgstr "A kifizetés tranzakció hivatkozásának egyedinek kell lennie!"
 
@@ -677,13 +808,16 @@ msgstr "Ez a szolgáltató képét tartalmazza, limitálva 1024x1024px képpontr
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is be rendered with qWeb with "
-"the following evaluation context:"
+"                                            It is be rendered with qWeb with the following evaluation context:"
 msgstr ""
-"Ez a sablon a lebonyolító gombjaihoz hozzárendeli az összes szükséges "
-"értékeket.\n"
-"                                    Ez a qWeb használatával rendeli hozzá a "
-"következő értékelési összefüggésekkel:"
+"Ez a sablon a lebonyolító gombjaihoz hozzárendeli az összes szükséges értékeket.\n"
+"                                    Ez a qWeb használatával rendeli hozzá a következő értékelési összefüggésekkel:"
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
+msgid ""
+"Transfer information will be provided after choosing the payment method."
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type
@@ -711,9 +845,60 @@ msgid "Visible in Portal / Website"
 msgstr "Látható a Portálon / Weboldalon"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_transfer
+#: model:payment.acquirer,name:payment.payment_acquirer_transfer
+#: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
 msgstr "Banki átutalás"
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
+msgid "You will be prompt with Stripe Payment page for payment information."
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_adyen
+msgid ""
+"You will be redirected to the Adyen website after clicking on the payment "
+"button."
+msgstr ""
+"Át lesz irányítva az Adyen weboldalra miután a fizetés gombra kattintott."
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_authorize
+msgid ""
+"You will be redirected to the Authorize website after clicking on the "
+"payment button."
+msgstr ""
+"Át lesz irányítva az Authorize.Net weboldalra miután a fizetés gombra "
+"kattintott."
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
+msgid ""
+"You will be redirected to the Buckaroo website after clicking on the payment"
+" button."
+msgstr ""
+"Át lesz irányítva a Buckaroo weboldalára a fizetés gomb lenyomása után."
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
+msgid ""
+"You will be redirected to the Ingenico website after clicking on the payment"
+" button."
+msgstr ""
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_paypal
+msgid ""
+"You will be redirected to the Paypal website after clicking on the payment "
+"button."
+msgstr "Át lesz irányítva a Paypal weboldalra a fizetés gomb megnyomása után."
+
+#. module: payment
+#: model:payment.acquirer,pre_msg:payment.payment_acquirer_sips
+msgid ""
+"You will be redirected to the Sips website after clicking on payment button."
+msgstr "Át lesz irányítva a Sips weboldalra a fizetés gomb megnyomása után."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -723,12 +908,7 @@ msgstr "Irányítószám"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_zip
 msgid "Zip"
-msgstr "Irsz"
-
-#. module: payment
-#: model:ir.model,name:payment.model_account_config_settings
-msgid "account.config.settings"
-msgstr "account.config.settings"
+msgstr "Irsz."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -766,9 +946,9 @@ msgstr ""
 "űrlapjáról levett"
 
 #. module: payment
-#: model:ir.model,name:payment.model_payment_method
-msgid "payment.method"
-msgstr "payment.method"
+#: model:ir.model,name:payment.model_payment_token
+msgid "payment.token"
+msgstr ""
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -789,6 +969,3 @@ msgstr "tx_values: tranzakció értékei"
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr "user: jelenlegi felhasználó böngésézsi rekord"
-
-#~ msgid "unknown"
-#~ msgstr "ismeretlen"
