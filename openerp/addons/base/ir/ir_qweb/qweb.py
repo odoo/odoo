@@ -372,6 +372,9 @@ class QWeb(object):
 
     def _profiling(self, astmod, options):
         """ Add profiling code into the givne module AST. """
+        if not astor:
+            _logger.warning("Please install astor to display the code profiling")
+            return
         code_line = astor.to_source(astmod)
 
         # code = $code_lines.split(u"\n")
