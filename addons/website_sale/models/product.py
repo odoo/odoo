@@ -156,9 +156,8 @@ class Product(models.Model):
         partner = self.env.user.partner_id
         pricelist = self.env['website'].get_current_website().get_current_pricelist()
 
-        self2 = self.with_context(pricelist=pricelist.id, partner=partner)
-        if self2._context == self._context:
-            self2 = self
+        context = dict(self._context, pricelist=pricelist.id, partner=partner)
+        self2 = self.with_context(context) if self._context != context else self
 
         ret = self.env.user.has_group('sale.group_show_price_subtotal') and 'total_excluded' or 'total_included'
 
