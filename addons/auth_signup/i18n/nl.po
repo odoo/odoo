@@ -1,4 +1,3 @@
-# #-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_signup
@@ -7,32 +6,18 @@
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015-2016
-# #-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * auth_signup
-#
-# Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 08:37+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-01-06 09:32+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_signup
@@ -153,11 +138,6 @@ msgstr ""
 "strong>"
 
 #. module: auth_signup
-#: selection:res.users,state:0
-msgid "Activated"
-msgstr ""
-
-#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
 msgstr "Toestaan dat externe gebruikers inloggen"
@@ -197,18 +177,18 @@ msgstr ""
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
-#, fuzzy
 msgid "Confirm"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bevestig\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Bevestigen"
+msgstr "Bevestig"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
 msgstr "Bevestig wachtwoord"
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Confirmed"
+msgstr "Bevestigd"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:41
@@ -265,13 +245,9 @@ msgstr "Stel wachtwoord opnieuw in"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:108
-#, fuzzy, python-format
+#, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Wachtwoord opnieuw instellen: ongeldige gebruikersnaam of e-mail\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Reset wachtwoord: Ongeldige gebruikersnaam en wachtwoord"
+msgstr "Wachtwoord opnieuw instellen: ongeldige gebruikersnaam of e-mail"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_self
@@ -322,7 +298,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
 msgid "Signup token"
-msgstr ""
+msgstr "Aanmeld token"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
@@ -497,6 +473,3 @@ msgstr "b.v. John Doe"
 
 #~ msgid "Signup Token"
 #~ msgstr "Aanmeld token"
-
-#~ msgid "Confirmed"
-#~ msgstr "Bevestigd"

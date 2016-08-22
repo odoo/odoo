@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-02-20 10:36+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
@@ -22,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr
-#: code:addons/hr/hr.py:120
+#: code:addons/hr/models/hr.py:76
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -121,9 +121,17 @@ msgid "A good job in a young and dynamic team"
 msgstr "Um ótimo trabalho em uma jovem e dinâmica equipe"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "Ativo"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
+msgid ""
+"An efficiency of 50% means the resource is two times smaller than his usual "
+"speed."
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -131,6 +139,7 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr "Análise necessária, escreva os documentos de especificação e cotação"
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Arquivado"
@@ -212,11 +221,6 @@ msgid "City"
 msgstr "Cidade"
 
 #. module: hr
-#: model:web.tip,description:hr.hr_tip_2
-msgid "Click here to change the recruitment goal!"
-msgstr ""
-
-#. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
@@ -226,11 +230,6 @@ msgstr "Clique para adicionar um novo funcionário"
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
 msgstr "Clique aqui para criar um novo departamento."
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid "Click to define a new department."
-msgstr "Clique aqui para definir um novo departamento."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -303,11 +302,6 @@ msgid "Contributions to open source projects"
 msgstr "Contribuições para projetos de código aberto"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr "Crie Seus Departamentos"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
@@ -351,7 +345,6 @@ msgid "Deliver generic Odoo functional training sessions"
 msgstr "Fornecer sessões de treinamento funcional genéricas Odoo"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -449,13 +442,13 @@ msgid "Employees Tags"
 msgstr "Marcadores de Funcionários"
 
 #. module: hr
-#: code:addons/hr/hr.py:294 constraint:hr.department:0
+#: code:addons/hr/models/hr.py:264
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Erro! Você não pode criar departamentos recursivos."
 
 #. module: hr
-#: code:addons/hr/hr.py:264 constraint:hr.employee:0
+#: code:addons/hr/models/hr.py:177
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Erro! Você não pode criar hierarquias recursivas para Funcionários"
@@ -501,11 +494,6 @@ msgstr "Seguidores"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
 msgstr "Sexo"
-
-#. module: hr
-#: model:web.tip,description:hr.hr_tip_1
-msgid "Get all applications related to this job position."
-msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -589,6 +577,12 @@ msgid "Home Address"
 msgstr "Endereço Residencial"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
+#, fuzzy
+msgid "Hr Department"
+msgstr "Departamento de RH"
+
+#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
 msgstr "Recursos Humanos"
@@ -665,19 +659,9 @@ msgid "Job Description"
 msgstr "Descritivo da Função"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_name
-msgid "Job Name"
-msgstr "Nome da Função"
-
-#. module: hr
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Position"
 msgstr "Cargo"
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "Job Position Name"
-msgstr "Nome do Cargo"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -703,6 +687,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Title"
 msgstr "Função"
 
@@ -842,9 +827,7 @@ msgid "Must have ..."
 msgstr "Deve ter ..."
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
-#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
 msgstr "Nome"
 
@@ -863,6 +846,12 @@ msgstr "Nacionalidade (país)"
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Nice to have"
 msgstr "Bom ter"
+
+#. module: hr
+#: selection:hr.job,state:0
+#, fuzzy
+msgid "Not Recruiting"
+msgstr "Parar Recrutamento"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -996,11 +985,6 @@ msgstr "Aprendiz rápido e autônomo"
 
 #. module: hr
 #: selection:hr.job,state:0
-msgid "Recruitment Closed"
-msgstr "Recrutamento Concluído"
-
-#. module: hr
-#: selection:hr.job,state:0
 msgid "Recruitment in Progress"
 msgstr "Recrutamento em Andamento"
 
@@ -1033,6 +1017,12 @@ msgstr "Pré-requisitos"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
 msgid "Resource"
 msgstr "Recurso"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
+#, fuzzy
+msgid "Resource Name"
+msgstr "Tipo de Recurso"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
@@ -1169,20 +1159,6 @@ msgid "The name of the job position must be unique per department in company!"
 msgstr "O nome do cargo precisa ser único por departamento na empresa!"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
-msgstr ""
-"Este campo descrevem a eficiência do recurso a tarefas completas. Por "
-"exemplo colocar um recurso sozinho em uma fase de 5 dias com 5 tarefas "
-"atribuídas a ele, irá mostrar uma carga de 100% para esta fase por padrão, "
-"mas se colocarmos uma eficiência de 200%, então a sua carga será apenas de "
-"50%."
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
 msgid ""
 "This field holds the image used as photo for the employee, limited to "
@@ -1215,6 +1191,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "Mensagens não lidas"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_login
+msgid "Used to log into the system"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1569,19 +1550,6 @@ msgid "You will work closely with all trainees"
 msgstr "Você vai trabalhar em estreita colaboração com todos os estagiários"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid ""
-"Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
-"                leaves and holidays, recruitments, etc."
-msgstr ""
-"Sua estrutura de departamentos é usada para gerenciar todos os documentos\n"
-"relacionados aos funcionários por departamentos: despesas e tquadros de "
-"horários,\n"
-"licenças e feriados, recrutamentos, etc."
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "departamento"
@@ -1591,8 +1559,19 @@ msgstr "departamento"
 msgid "e.g. Part Time"
 msgstr "Ex. Meio Período"
 
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "e.g. Sales Manager"
+msgstr ""
+
 #~ msgid "Action Needed"
 #~ msgstr "Ação Necessária"
+
+#~ msgid "Click to define a new department."
+#~ msgstr "Clique aqui para definir um novo departamento."
+
+#~ msgid "Create Your Departments"
+#~ msgstr "Crie Seus Departamentos"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Data da ultima mensagem para o registro."
@@ -1603,9 +1582,6 @@ msgstr "Ex. Meio Período"
 #~ msgid "Followers (Partners)"
 #~ msgstr "Seguidores (Parceiros)"
 
-#~ msgid "HR Department"
-#~ msgstr "Departamento de RH"
-
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
 
@@ -1614,6 +1590,12 @@ msgstr "Ex. Meio Período"
 
 #~ msgid "Is Follower"
 #~ msgstr "É um seguidor"
+
+#~ msgid "Job Name"
+#~ msgstr "Nome da Função"
+
+#~ msgid "Job Position Name"
+#~ msgstr "Nome do Cargo"
 
 #~ msgid "Last Message Date"
 #~ msgstr "Data da última mensagem"
@@ -1630,8 +1612,58 @@ msgstr "Ex. Meio Período"
 #~ msgid "Open HR Menu"
 #~ msgstr "Abrir Menu RH"
 
+#~ msgid "Recruitment Closed"
+#~ msgstr "Recrutamento Concluído"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
+#~ "will show a load of 100% for this phase by default, but if we put a "
+#~ "efficiency of 200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "Este campo descrevem a eficiência do recurso a tarefas completas. Por "
+#~ "exemplo colocar um recurso sozinho em uma fase de 5 dias com 5 tarefas "
+#~ "atribuídas a ele, irá mostrar uma carga de 100% para esta fase por "
+#~ "padrão, mas se colocarmos uma eficiência de 200%, então a sua carga será "
+#~ "apenas de 50%."
+
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Contador de Mensagens Não Lidas."
 
 #~ msgid "Update Date"
 #~ msgstr "Data de Atualização"
+
+#~ msgid ""
+#~ "You will be responsible for developing and improving applications, such "
+#~ "as the You will work autonomously as well as                     "
+#~ "coordinate and supervise small distributed development teams for specific "
+#~ "projects. You will become a technical                 expert of the "
+#~ "product."
+#~ msgstr ""
+#~ "Você será responsável por desenvolver e melhorar aplicativos, como o que "
+#~ "você vai trabalhar de forma autônoma, bem como coordenar e supervisionar "
+#~ "as pequenas equipes de desenvolvimento distribuídas para projetos "
+#~ "específicos. Você vai se tornar um especialista técnico do produto."
+
+#~ msgid ""
+#~ "You will be responsible for developing and improving applications, such "
+#~ "as the You will work autonomously as well as coordinate and supervise "
+#~ "small distributed development teams for specific projects. You will "
+#~ "become a technical expert of the product."
+#~ msgstr ""
+#~ "Você será responsável por desenvolver e melhorar aplicativos, como o que "
+#~ "você vai trabalhar de forma autônoma, bem como coordenar e supervisionar "
+#~ "as pequenas equipes de desenvolvimento distribuídas para projetos "
+#~ "específicos. Você vai se tornar um especialista técnico do produto."
+
+#~ msgid ""
+#~ "Your departments structure is used to manage all documents\n"
+#~ "                related to employees by departments: expenses and "
+#~ "timesheets,\n"
+#~ "                leaves and holidays, recruitments, etc."
+#~ msgstr ""
+#~ "Sua estrutura de departamentos é usada para gerenciar todos os "
+#~ "documentos\n"
+#~ "relacionados aos funcionários por departamentos: despesas e tquadros de "
+#~ "horários,\n"
+#~ "licenças e feriados, recrutamentos, etc."

@@ -5,22 +5,18 @@
 # Translators:
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-04-18 07:16+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"PO-Revision-Date: 2016-08-06 10:39+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_picking_wave
@@ -86,13 +82,8 @@ msgstr "Aangemaakt op"
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_display_name
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Weergave naam\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Naam weergeven"
+msgstr "Weergave naam"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -176,7 +167,7 @@ msgid "Name of the picking wave"
 msgstr "Naam van de picking wave"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:42
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:46
 #, python-format
 msgid "Nothing to print."
 msgstr "Niets om af te drukken."
@@ -187,10 +178,10 @@ msgid "Person responsible for this wave"
 msgstr "Persoon verantwoordelijk voor deze wave"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:64
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9973
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -213,7 +204,7 @@ msgid "Picking Waves not finished"
 msgstr "Picking waves nog niet gereed"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9973
 msgid "Picking wave associated to this picking"
 msgstr "Picking wave behorende bij deze levering"
 
@@ -225,8 +216,8 @@ msgstr "Leveringen"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-msgid "Print all pickings"
-msgstr "Alle leveringen afdrukken"
+msgid "Print"
+msgstr "Afdrukken"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_user_id
@@ -249,7 +240,7 @@ msgid "Select a wave"
 msgstr "Selecteer een wave"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:59
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:59
 #, python-format
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
@@ -290,7 +281,6 @@ msgstr "Voorraad picking waves"
 
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
-#, fuzzy
 msgid ""
 "The goal of the picking waves is to group operations that may\n"
 "                (needs to) be done together in order to increase their "
@@ -300,12 +290,6 @@ msgid ""
 "                help the timing management of operations (tasks to be done "
 "at 1pm)."
 msgstr ""
-"Het doel van picking waves is om bewerkingen te groeperen die mogelijk "
-"samen\n"
-"(moeten) gedaan worden om de efficiëntie te verhogen.\n"
-"Het kan ook handig zijn om functies toe te wijzen (één persoon = één wave) "
-"of\n"
-"helpt het tijdsbeheer van functies (taken die klaar moeten zijn voor 1u)."
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking
@@ -313,7 +297,7 @@ msgid "Transfer"
 msgstr "Verplaatsing"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:63
 #, python-format
 msgid "Transferred by"
 msgstr "Overgeplaatst door"
@@ -369,6 +353,25 @@ msgstr "Wave"
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Aantal ongelezen berichten"
+
+#~ msgid "Print all pickings"
+#~ msgstr "Alle leveringen afdrukken"
+
+#~ msgid ""
+#~ "The Goal of the picking waves is to group operations that may \n"
+#~ "                (needs to) be done together in order to increase their "
+#~ "efficiency.\n"
+#~ "                It may also be useful to assign jobs (one person = one "
+#~ "wave) or\n"
+#~ "                help the timing management of operations (tasks to be "
+#~ "done at 1pm)."
+#~ msgstr ""
+#~ "Het doel van picking waves is om bewerkingen te groeperen die mogelijk "
+#~ "samen\n"
+#~ "(moeten) gedaan worden om de efficiëntie te verhogen.\n"
+#~ "Het kan ook handig zijn om functies toe te wijzen (één persoon = één "
+#~ "wave) of\n"
+#~ "helpt het tijdsbeheer van functies (taken die klaar moeten zijn voor 1u)."
 
 #~ msgid "Unread Messages"
 #~ msgstr "Ongelezen berichten"

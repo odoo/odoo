@@ -1,4 +1,3 @@
-# #-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * google_drive
@@ -7,31 +6,18 @@
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
-# #-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * google_drive
-#
-# Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 08:37+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"PO-Revision-Date: 2016-08-06 10:39+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: google_drive
@@ -75,7 +61,7 @@ msgid "Active"
 msgstr "Actief"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:34
+#: code:addons/google_drive/models/google_drive.py:40
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
 msgstr ""
@@ -102,13 +88,8 @@ msgstr "Klik om een nieuw sjabloon toe te voegen."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
-#, fuzzy
 msgid "Configure your templates"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Stel uw sjabloon in\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Configureer uw sjablonen"
+msgstr "Stel uw sjabloon in"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_create_uid
@@ -121,7 +102,7 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:141
+#: code:addons/google_drive/models/google_drive.py:159
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr "Google Drive aanmaken mag maar door één persoon per keer gebeuren."
@@ -133,13 +114,8 @@ msgstr "Klant"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Weergave naam\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Schermnaam"
+msgstr "Weergave naam"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_filter_id
@@ -147,15 +123,15 @@ msgid "Filter"
 msgstr "Filter"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:53
-#: code:addons/google_drive/google_drive.py:73
+#: code:addons/google_drive/models/google_drive.py:59
+#: code:addons/google_drive/models/google_drive.py:80
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Ga naar het configuratie paneel"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_client_id
-msgid "Google Client "
+msgid "Google Client"
 msgstr "Google Client "
 
 #. module: google_drive
@@ -171,17 +147,12 @@ msgstr "Google Drive instellingen"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name_template
-#, fuzzy
 msgid "Google Drive Name Pattern"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Google Drive naam variabelen\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Google Drive naampatroon"
+msgstr "Google Drive naam variabelen"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:55
-#: code:addons/google_drive/google_drive.py:75
+#: code:addons/google_drive/models/google_drive.py:61
+#: code:addons/google_drive/models/google_drive.py:82
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
 msgstr ""
@@ -190,13 +161,8 @@ msgstr ""
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
-#, fuzzy
 msgid "Google Drive templates config"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Google Drive sjabloon instellingen\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Google Drive sjabloon configuratie"
+msgstr "Google Drive sjabloon instellingen"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_id
@@ -235,37 +201,28 @@ msgstr ""
 "te linken en ze te gebruiken om met collega's samen te werken. "
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model_id
 msgid "Model"
 msgstr "Model"
 
 #. module: google_drive
-#: constraint:google.drive.config:0
-msgid ""
-"Model of selected filter is not matching with model of current template."
-msgstr ""
-"Het model van de geselecteerde filter is niet passend bij het model van het "
-"huidige sjabloon."
-
-#. module: google_drive
-#: code:addons/google_drive/google_drive.py:173
+#: code:addons/google_drive/models/google_drive.py:201
 #, python-format
 msgid "Please enter a valid Google Document URL."
 msgstr "Vul alsjeblieft een geldige Google Document URL in."
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_resource_id
-#, fuzzy
-msgid "Resource Id"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bron ID\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Bron Id"
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
+msgid "Related Model"
+msgstr "Gerelateerd model"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:72
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_resource_id
+msgid "Resource Id"
+msgstr "Bron ID"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:79
 #, python-format
 msgid ""
 "Something went wrong during the token generation. Please request again an "
@@ -291,7 +248,7 @@ msgid "Templates"
 msgstr "Sjablonen"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:90
+#: code:addons/google_drive/models/google_drive.py:97
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
 msgstr ""
@@ -322,7 +279,7 @@ msgstr ""
 "document komt dan te staan: 'Agrolait_SO0001_Verkoop'."
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:117
+#: code:addons/google_drive/models/google_drive.py:135
 #, python-format
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
@@ -337,17 +294,13 @@ msgid "URI"
 msgstr "URL"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:52
-#, fuzzy, python-format
+#: code:addons/google_drive/models/google_drive.py:58
+#, python-format
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Er is geen 'Autorisatie Code' gegenereerd voor Google Drive. Gelieve deze te "
-"genereren en configureren.\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Er is geen 'Autorisatie Code' gegenereerd vanuit Google, gelieve deze te "
 "genereren en configureren."
 
 #. module: google_drive
@@ -369,8 +322,11 @@ msgstr ""
 "https://docs.google.com/document/"
 "d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
 
-#~ msgid "Google Client"
+#~ msgid "Google Client "
 #~ msgstr "Google Client "
 
-#~ msgid "Related Model"
-#~ msgstr "Gerelateerd model"
+#~ msgid ""
+#~ "Model of selected filter is not matching with model of current template."
+#~ msgstr ""
+#~ "Het model van de geselecteerde filter is niet passend bij het model van "
+#~ "het huidige sjabloon."

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-04-17 21:18+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -22,74 +22,141 @@ msgstr ""
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
-msgid "<span>Show more</span><span class=\"hidden\">Show less</span>"
-msgstr "<span>Развернуть</span><span class=\"hidden\">Свернуть</span>"
-
-#. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Assigned to</strong>"
 msgstr "<strong>Исполнитель</strong>"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Date:</strong>"
 msgstr "<strong>Дата:</strong>"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
+#, fuzzy
+msgid "<strong>Description</strong>"
+msgstr "<strong>Дата:</strong>"
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Message and communication history</strong>"
 msgstr "<strong>История сообщений и обсуждений</strong>"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Reported by</strong>"
 msgstr "<strong>Автор</strong>"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: code:addons/website_project_issue/controllers/main.py:37
+#, python-format
+msgid "All"
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#, fuzzy
+msgid "Current stage of the issue"
+msgstr "Состояние заявки"
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "Current stage of this issue"
 msgstr "Состояние заявки"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
 msgid "Description"
 msgstr "Описание"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 #, fuzzy
 msgid "Edit Issue"
 msgstr "Посмотреть заявку"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "Issue"
 msgstr "Заявка"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
-msgid "My Account"
-msgstr "Моя учетная запись"
+#: model:ir.ui.view,arch_db:website_project_issue.portal_layout
+#, fuzzy
+msgid "Issues"
+msgstr "Заявка"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
-msgid "Status"
-msgstr "Статус"
+#: code:addons/website_project_issue/controllers/main.py:31
+#, python-format
+msgid "Last Stage Update"
+msgstr ""
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
+#, fuzzy
+msgid "My Issues"
+msgstr "Заявка"
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:29
+#, python-format
+msgid "Name"
+msgstr ""
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:28
+#, python-format
+msgid "Newest"
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.model,name:website_project_issue.model_project_issue
+msgid "Project Issue"
+msgstr "Заявка в проекте"
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#, fuzzy
+msgid "Projects:"
+msgstr "Заявка в проекте"
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:30
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#, python-format
+msgid "Stage"
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.portal_my_home
 msgid "There are currently no issues for your account."
 msgstr "На данный момент в вашем аккаунте нет заявок."
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+msgid "There are no issues."
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#: model:ir.ui.view,arch_db:website_project_issue.portal_my_home
 msgid "Your Issues"
 msgstr "Ваши заявки"
 
-#. module: website_project_issue
-#: model:ir.model,name:website_project_issue.model_project_issue
+#~ msgid "<span>Show more</span><span class=\"hidden\">Show less</span>"
+#~ msgstr "<span>Развернуть</span><span class=\"hidden\">Свернуть</span>"
+
+#~ msgid "My Account"
+#~ msgstr "Моя учетная запись"
+
+#~ msgid "Status"
+#~ msgstr "Статус"
+
+#~ msgid "View Issue"
+#~ msgstr "Посмотреть заявку"
+
 #, fuzzy
-msgid "project issue"
-msgstr "Заявка в проекте"
+#~ msgid "project issue"
+#~ msgstr "Заявка в проекте"

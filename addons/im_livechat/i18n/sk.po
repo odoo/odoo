@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-05-27 09:03+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -126,6 +126,23 @@ msgid "Bad"
 msgstr "Zlé"
 
 #. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
+#: model:ir.ui.menu,name:im_livechat.canned_responses
+#, fuzzy
+msgid "Canned Responses"
+msgstr "Pravidlá kanála"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid ""
+"Canned responses allow you to insert prewritten responses in\n"
+"                your messages by typing <i>:shortcut</i>. The shortcut is\n"
+"                replaced directly in your message, so that you can still "
+"edit\n"
+"                it before sending."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_livechat_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_livechat_channel_id
@@ -168,6 +185,11 @@ msgstr "Vlastník vstupu chatu-u"
 #, python-format
 msgid "Chat with one of our collaborators"
 msgstr "Chatujte s jedným z našich spolupracovníkov"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid "Click to create a new canned response."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -415,6 +437,11 @@ msgid "Last Modified on"
 msgstr "Posledná modifikácia"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_mail_channel_partner
+msgid "Last Seen Many2many"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_uid
 msgid "Last Updated by"
@@ -436,6 +463,12 @@ msgstr "Posledný týždeň"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Leave Channel"
 msgstr "Opustiť kanál"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
+#, fuzzy
+msgid "Live Chat"
+msgstr "Živý chat"
 
 #. module: im_livechat
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
@@ -466,11 +499,6 @@ msgstr ""
 "Štatistiky kanálov podpory živého chatu vám umožňuje jednoducho skontrolovať "
 "výkon relácií živého chatu. Extrahujte informácie o zmeškaných reláciach, "
 "publikum, trvanie relácie, atď."
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "Livechat Support Page"
-msgstr "Stránka podpory živého chatu"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -589,6 +617,13 @@ msgstr ""
 "Operátori\n"
 "<br/>\n"
 "<i class=\"fa fa-comments\"/"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Operators that do not show any activity In Odoo for more than 30 minutes "
+"will be considered as disconnected."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -795,7 +830,7 @@ msgstr "Používateľ"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/controllers/main.py:30
+#: code:addons/im_livechat/controllers/main.py:34
 #: code:addons/im_livechat/static/src/js/im_livechat.js:28
 #, python-format
 msgid "Visitor"
@@ -807,19 +842,9 @@ msgid "Web Page"
 msgstr "Webstránka"
 
 #. module: im_livechat
-#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
-msgid "Website Live Chat"
-msgstr "Chat webovej stránky"
-
-#. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
 msgid "Website Live Chat Channels"
 msgstr "Kanály živého chatu webstránky"
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "Website Live Chat Powered by <strong>Odoo</strong>."
-msgstr "Živý chat webstránky poháňa <strong>Odoo</strong>."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_default_message
@@ -840,6 +865,13 @@ msgstr ""
 "vašej webstránky rozprávaˇsa v reálnom čase s vašimi operátormi."
 
 #. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.mail_channel_action
+msgid ""
+"Your chatter history is empty. Create a channel and start chatting to fill "
+"up your history."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Hello, how may I help you?"
 msgstr "napr. Dobrý deň, ako vám môžem pomôcť?"
@@ -848,6 +880,11 @@ msgstr "napr. Dobrý deň, ako vám môžem pomôcť?"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
 msgstr "napr. VasaWebstranka.com"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -861,6 +898,18 @@ msgstr ""
 msgid "seconds"
 msgstr "sekundy"
 
+#~ msgid ""
+#~ "Livechat Support Channel Statistics allows you to easily check and "
+#~ "analyse your company livechat session performance. Extract informations "
+#~ "about the missed sessions, the audiance, the duration of a session, etc."
+#~ msgstr ""
+#~ "Štatistiky kanálov podpory živého chatu vám umožňuje jednoducho "
+#~ "skontrolovať výkon relácií živého chatu. Extrahujte informácie o "
+#~ "zmeškaných reláciach, publikum, trvanie relácie, atď."
+
+#~ msgid "Livechat Support Page"
+#~ msgstr "Stránka podpory živého chatu"
+
 #~ msgid "My sessions"
 #~ msgstr "Moje relácie"
 
@@ -869,3 +918,19 @@ msgstr "sekundy"
 
 #~ msgid "Opertor"
 #~ msgstr "Operator"
+
+#~ msgid "Website Live Chat"
+#~ msgstr "Chat webovej stránky"
+
+#~ msgid "Website Live Chat Powered by <strong>Odoo</strong>."
+#~ msgstr "Živý chat webstránky poháňa <strong>Odoo</strong>."
+
+#~ msgid ""
+#~ "You can create channels for each website on which you want\n"
+#~ "                to integrate the website live chat widget, allowing you "
+#~ "website\n"
+#~ "                visitors to talk in real time with your operators."
+#~ msgstr ""
+#~ "Môžete vytvoriť kanály pre každú webstránku na ktorej chcete\n"
+#~ "integrovať miniaplikáciu živého chatu webstránky, povoliť návštevníkom\n"
+#~ "vašej webstránky rozprávaˇsa v reálnom čase s vašimi operátormi."

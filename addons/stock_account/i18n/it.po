@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-03-21 19:49+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
@@ -26,11 +26,6 @@ msgstr "Numero di prodotti"
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
 msgstr "Proprietà contabilità di magazzino"
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
-msgid "Accounting"
-msgstr "Contabilità"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -58,18 +53,13 @@ msgid "Average Price"
 msgstr "Prezzo medio"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
-msgid "Can be expensed"
-msgstr "Può essere addebitato"
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Cancel"
 msgstr "Annulla"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:278
+#: code:addons/stock_account/stock_account.py:284
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on "
@@ -77,7 +67,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:280
+#: code:addons/stock_account/stock_account.py:286
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -115,16 +105,6 @@ msgid "Choose your date"
 msgstr "Scegli una data"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_coeff
-msgid ""
-"Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
-"coeff"
-msgstr ""
-"Coefficiente per convertire l'unità di misura di default in unità di "
-"vendita.\n"
-" uos = uom * coeff"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Company"
@@ -137,7 +117,7 @@ msgid "Compute from average price"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:351
+#: code:addons/stock_account/stock_account.py:357
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -327,14 +307,16 @@ msgid "Location"
 msgstr "Ubicazione"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+#, fuzzy
+msgid "Lot/Serial Number"
+msgstr "Numero di Serie"
+
+#. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
 msgid "Manage Inventory Valuation and Costing Methods"
 msgstr "Gestisci la Valutazioni d'Inventario e i Metodi di Costo"
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Move"
-msgstr "Muovi"
 
 #. module: stock_account
 #: code:addons/stock_account/product.py:125
@@ -388,11 +370,6 @@ msgid "Product"
 msgstr "Prodotto"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_alert_time
-msgid "Product Alert Time"
-msgstr "Tempo di avviso del prodotto"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_product_categ_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -400,19 +377,9 @@ msgid "Product Category"
 msgstr "Categoria prodotto"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_life_time
-msgid "Product Life Time"
-msgstr "Tempo di vita del prodotto"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
 msgid "Product Quantity"
 msgstr "Quantità"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_removal_time
-msgid "Product Removal Time"
-msgstr "Tempo di rimozione del prodotto"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -420,11 +387,6 @@ msgstr "Tempo di rimozione del prodotto"
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Product Template"
 msgstr "Modello Prodotto"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_use_time
-msgid "Product Use Time"
-msgstr "Periodo di utilizzabilità prodotto"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -448,12 +410,6 @@ msgid "Retrieve the curent stock valuation."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Serial Number"
-msgstr "Numero di Serie"
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 #, fuzzy
@@ -464,21 +420,6 @@ msgstr "Prezzo Standard"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
 msgid "Source"
 msgstr "Origine"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_id
-msgid ""
-"Specify a unit of measure here if invoicing is made in another unit of "
-"measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
-"Specifica un unità di misura qui, se la fatturazione viene fatta in un'altra "
-"unità di misura rispetto all'inventario. Lascia il campo vuoto se vuoi "
-"utilizzare l'unità di misura predefinita."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
-msgstr "Indica se l'articolo può essere selezionato come costo per le HR"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -525,6 +466,12 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+#, fuzzy
+msgid "Stock Accounting"
+msgstr "Contabilità"
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
@@ -532,7 +479,7 @@ msgid "Stock Input Account"
 msgstr "Contabilità Stock in Ingresso"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:464
+#: code:addons/stock_account/stock_account.py:470
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
@@ -541,6 +488,7 @@ msgstr "Giornale di magazzino"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_move_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Stock Move"
 msgstr "Movimento Magazzino"
 
@@ -582,7 +530,7 @@ msgid "Templates for Account Chart"
 msgstr "Template per il piano dei conti"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:306
+#: code:addons/stock_account/stock_account.py:312
 #, python-format
 msgid ""
 "The found valuation amount for product %s is zero. Which means there is "
@@ -594,16 +542,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
 msgid "Total Value"
 msgstr "Valore totale"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_coeff
-msgid "Unit of Measure -> UOS Coeff"
-msgstr "Unità di Misura -> Coefficiente UoS"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_id
-msgid "Unit of Sale"
-msgstr "Unità di Vendita"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
@@ -634,43 +572,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
 msgid "Value"
 msgstr "Valore"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-"Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni di "
-"anticipo con cui un avviso dovrebbe essere notificato."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-"Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni di "
-"anticipo con cui i beni possono diventare pericolosi e dovrebbero essere "
-"consumati."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-"Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni di "
-"anticipo con cui i beni dovrebbero essere rimossi dal magazzino."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni di "
-"anticipo con cui i beni cominciano a degradare, senza diventare pericolosi."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -752,7 +653,7 @@ msgstr ""
 "disponibilità"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:276
+#: code:addons/stock_account/stock_account.py:282
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -760,7 +661,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:282
+#: code:addons/stock_account/stock_account.py:288
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category. "
@@ -793,5 +694,78 @@ msgstr "Sconosciuto"
 #~ msgid "Asset Type"
 #~ msgstr "Tipo di beni"
 
+#~ msgid "Can be expensed"
+#~ msgstr "Può essere addebitato"
+
+#~ msgid ""
+#~ "Coefficient to convert default Unit of Measure to Unit of Sale uos = uom "
+#~ "* coeff"
+#~ msgstr ""
+#~ "Coefficiente per convertire l'unità di misura di default in unità di "
+#~ "vendita.\n"
+#~ " uos = uom * coeff"
+
 #~ msgid "Deferred Revenue Type"
 #~ msgstr "Tipo Ricavi Differiti"
+
+#~ msgid "Move"
+#~ msgstr "Muovi"
+
+#~ msgid "Product Alert Time"
+#~ msgstr "Tempo di avviso del prodotto"
+
+#~ msgid "Product Life Time"
+#~ msgstr "Tempo di vita del prodotto"
+
+#~ msgid "Product Removal Time"
+#~ msgstr "Tempo di rimozione del prodotto"
+
+#~ msgid "Product Use Time"
+#~ msgstr "Periodo di utilizzabilità prodotto"
+
+#~ msgid ""
+#~ "Specify a unit of measure here if invoicing is made in another unit of "
+#~ "measure than inventory. Keep empty to use the default unit of measure."
+#~ msgstr ""
+#~ "Specifica un unità di misura qui, se la fatturazione viene fatta in "
+#~ "un'altra unità di misura rispetto all'inventario. Lascia il campo vuoto "
+#~ "se vuoi utilizzare l'unità di misura predefinita."
+
+#~ msgid "Specify whether the product can be selected in an HR expense."
+#~ msgstr "Indica se l'articolo può essere selezionato come costo per le HR"
+
+#~ msgid "Unit of Measure -> UOS Coeff"
+#~ msgstr "Unità di Misura -> Coefficiente UoS"
+
+#~ msgid "Unit of Sale"
+#~ msgstr "Unità di Vendita"
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "an alert should be notified."
+#~ msgstr ""
+#~ "Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni "
+#~ "di anticipo con cui un avviso dovrebbe essere notificato."
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "the goods may become dangerous and must not be consumed."
+#~ msgstr ""
+#~ "Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni "
+#~ "di anticipo con cui i beni possono diventare pericolosi e dovrebbero "
+#~ "essere consumati."
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "the goods should be removed from the stock."
+#~ msgstr ""
+#~ "Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni "
+#~ "di anticipo con cui i beni dovrebbero essere rimossi dal magazzino."
+
+#~ msgid ""
+#~ "When a new a Serial Number is issued, this is the number of days before "
+#~ "the goods starts deteriorating, without being dangerous yet."
+#~ msgstr ""
+#~ "Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni "
+#~ "di anticipo con cui i beni cominciano a degradare, senza diventare "
+#~ "pericolosi."

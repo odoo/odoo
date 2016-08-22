@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-07-05 08:00+0000\n"
 "Last-Translator: Eddie Lim <bhweelim@yahoo.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -27,12 +27,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:219
-#, python-format
-msgid "%(month)s %(start_day)s%(end_day)s"
-msgstr "%(month)s %(start_day)s%(end_day)s"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -115,13 +109,13 @@ msgid "Add Content"
 msgstr "新增内容"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:106
+#: code:addons/website_event/controllers/main.py:96
 #, python-format
 msgid "All Categories"
 msgstr "所有分类"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:117
+#: code:addons/website_event/controllers/main.py:103
 #, python-format
 msgid "All Countries"
 msgstr "所有国家"
@@ -144,6 +138,7 @@ msgstr "取消登记记录"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:48
+#: code:addons/website_event/static/src/js/website.tour.event.js:103
 #, python-format
 msgid "Click <em>Continue</em> to create the event."
 msgstr "点击 <em>继续</em> 创建一个事件."
@@ -151,6 +146,7 @@ msgstr "点击 <em>继续</em> 创建一个事件."
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:33
+#: code:addons/website_event/static/src/js/website.tour.event.js:94
 #, python-format
 msgid "Click here to create a new event."
 msgstr "点击这儿添加一个新的事件."
@@ -158,6 +154,7 @@ msgstr "点击这儿添加一个新的事件."
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:82
+#: code:addons/website_event/static/src/js/website.tour.event.js:121
 #, python-format
 msgid "Click here to customize your event further."
 msgstr "点击这里进一步定制您的事件。"
@@ -165,6 +162,7 @@ msgstr "点击这里进一步定制您的事件。"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:75
+#: code:addons/website_event/static/src/js/website.tour.event.js:116
 #, python-format
 msgid "Click to publish your event."
 msgstr "点击发布您的活动。"
@@ -183,6 +181,15 @@ msgstr "继续"
 #, python-format
 msgid "Create Event"
 msgstr "创建活动"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website.tour.event.js:98
+#, python-format
+msgid ""
+"Create a name for your new event and click <em>\"Continue\"</em>. e.g: "
+"Technical Training"
+msgstr ""
 
 #. module: website_event
 #. openerp-web
@@ -248,6 +255,13 @@ msgid "Drag the 'Image-Text' block and drop it in your page."
 msgstr "拖动此区块并放在你的页面中。"
 
 #. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website.tour.event.js:107
+#, python-format
+msgid "Drag this block and drop it in your page."
+msgstr "拖动此区块并放在你的页面中。"
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "E-mail"
 msgstr "电子邮件"
@@ -259,8 +273,8 @@ msgstr "编辑徽章"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "End of Subscription"
-msgstr "订阅结束"
+msgid "End of Registration"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -289,8 +303,8 @@ msgstr "活动菜单"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Event Subscription"
-msgstr "订阅活动"
+msgid "Event Registration"
+msgstr "事件记录"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
@@ -302,6 +316,11 @@ msgstr "没有活动"
 #: model:mail.message.subtype,name:website_event.mt_event_published
 msgid "Event published"
 msgstr "发布的活动"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "Event registration is closed."
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -349,10 +368,15 @@ msgid "Free"
 msgstr "空闲"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:44
+#: code:addons/website_event/models/event.py:54
 #, python-format
 msgid "Introduction"
 msgstr "说明"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
+msgid "Is Participating"
+msgstr ""
 
 #. module: website_event
 #. openerp-web
@@ -362,7 +386,7 @@ msgid "Let's go through the first steps to publish a new event."
 msgstr "让我们浏览的第一步来发布一个新的活动。"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:45
+#: code:addons/website_event/models/event.py:55
 #, python-format
 msgid "Location"
 msgstr "地点"
@@ -379,7 +403,7 @@ msgstr "名称"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:201
+#: code:addons/website_event/controllers/main.py:184
 #: code:addons/website_event/static/src/js/website.tour.event.js:32
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
@@ -395,19 +419,19 @@ msgid "New Event Created"
 msgstr "新活动已创建"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:38
+#: code:addons/website_event/controllers/main.py:34
 #, python-format
 msgid "Next Events"
 msgstr "下一个活动"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:47
+#: code:addons/website_event/controllers/main.py:43
 #, python-format
 msgid "Next Week"
 msgstr "下周"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:55
+#: code:addons/website_event/controllers/main.py:51
 #, python-format
 msgid "Next month"
 msgstr "次月"
@@ -418,7 +442,7 @@ msgid "No event found"
 msgstr "没有活动"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:59
+#: code:addons/website_event/controllers/main.py:55
 #, python-format
 msgid "Old Events"
 msgstr "历史活动"
@@ -426,6 +450,7 @@ msgstr "历史活动"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:67
+#: code:addons/website_event/static/src/js/website.tour.event.js:111
 #, python-format
 msgid "Once you click on save, your event is updated."
 msgstr "当您点击保存,您的产品信息将被更新."
@@ -454,6 +479,12 @@ msgstr "我们的活动"
 #: model:ir.ui.view,arch_db:website_event.event_right_photos
 msgid "Our Trainings"
 msgstr "我们的培训"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_details
+#: model:ir.ui.view,arch_db:website_event.index
+msgid "Participating"
+msgstr "参与"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -488,7 +519,7 @@ msgid "Reference"
 msgstr "引用"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:53
+#: code:addons/website_event/models/event.py:63
 #, python-format
 msgid "Register"
 msgstr "发起者"
@@ -550,7 +581,7 @@ msgid "Start Tutorial"
 msgstr "开始教程"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:43
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "This Week"
 msgstr "本周"
@@ -570,7 +601,7 @@ msgid "This is your new event page. We will edit the event presentation page."
 msgstr "这是您的新事件页面。我们将编辑事件的演示页面。"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:51
+#: code:addons/website_event/controllers/main.py:47
 #, python-format
 msgid "This month"
 msgstr "本月"
@@ -586,7 +617,7 @@ msgid "Ticket Type #"
 msgstr "门票类型#"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:39
+#: code:addons/website_event/controllers/main.py:35
 #, python-format
 msgid "Today"
 msgstr "今天"
@@ -613,13 +644,23 @@ msgstr "在网站可见"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "We are glad to confirm your subscription to our event"
-msgstr "我们高兴地确认您订阅我们的活动"
+msgid "We are glad to confirm your registration to our event"
+msgstr ""
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
 msgstr "网站首页"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_message_ids
+msgid "Website Messages"
+msgstr "网站消息"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event_website_message_ids
+msgid "Website communication history"
+msgstr "网站沟通记录"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -643,13 +684,8 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Your subscription"
-msgstr "你的订阅"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "not published"
-msgstr "未发布的"
+msgid "Your registration"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -666,20 +702,31 @@ msgstr "往右拉"
 msgid "to"
 msgstr "到"
 
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.index
+msgid "unpublished"
+msgstr ""
+
+#~ msgid "%(month)s %(start_day)s%(end_day)s"
+#~ msgstr "%(month)s %(start_day)s%(end_day)s"
+
 #~ msgid "Drag the 'Text Block' in your event page."
 #~ msgstr "拖动此区块并放在你的活动页面中。"
+
+#~ msgid "End of Subscription"
+#~ msgstr "订阅结束"
+
+#~ msgid "Event Subscription"
+#~ msgstr "订阅活动"
 
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr "通过网站访问单据的完整URL。"
 
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
+#~ msgid "We are glad to confirm your subscription to our event"
+#~ msgstr "我们高兴地确认您订阅我们的活动"
 
 #~ msgid "Website URL"
 #~ msgstr "网站地址"
-
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"
 
 #~ msgid "Website meta description"
 #~ msgstr "网站meta描述"
@@ -689,3 +736,9 @@ msgstr "到"
 
 #~ msgid "Website meta title"
 #~ msgstr "网站meta标题"
+
+#~ msgid "Your subscription"
+#~ msgstr "你的订阅"
+
+#~ msgid "not published"
+#~ msgstr "未发布的"

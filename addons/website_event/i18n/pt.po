@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-07-01 09:20+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -18,12 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:219
-#, python-format
-msgid "%(month)s %(start_day)s%(end_day)s"
-msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -106,13 +100,13 @@ msgid "Add Content"
 msgstr "Adicionar Conteúdo"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:106
+#: code:addons/website_event/controllers/main.py:96
 #, python-format
 msgid "All Categories"
 msgstr "Todas as Categorias"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:117
+#: code:addons/website_event/controllers/main.py:103
 #, python-format
 msgid "All Countries"
 msgstr "Todos os Países"
@@ -135,6 +129,7 @@ msgstr "Cancelar Registro"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:48
+#: code:addons/website_event/static/src/js/website.tour.event.js:103
 #, python-format
 msgid "Click <em>Continue</em> to create the event."
 msgstr "Clique <em>Continuar</em> para criar o evento."
@@ -142,6 +137,7 @@ msgstr "Clique <em>Continuar</em> para criar o evento."
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:33
+#: code:addons/website_event/static/src/js/website.tour.event.js:94
 #, python-format
 msgid "Click here to create a new event."
 msgstr "Clique aqui para criar um novo evento."
@@ -149,6 +145,7 @@ msgstr "Clique aqui para criar um novo evento."
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:82
+#: code:addons/website_event/static/src/js/website.tour.event.js:121
 #, python-format
 msgid "Click here to customize your event further."
 msgstr "Clique aqui para customizar mais o seu evento."
@@ -156,6 +153,7 @@ msgstr "Clique aqui para customizar mais o seu evento."
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:75
+#: code:addons/website_event/static/src/js/website.tour.event.js:116
 #, python-format
 msgid "Click to publish your event."
 msgstr "Clique para publicar o seu evento."
@@ -174,6 +172,17 @@ msgstr "Continuar"
 #, python-format
 msgid "Create Event"
 msgstr "Criar Evento"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website.tour.event.js:98
+#, fuzzy, python-format
+msgid ""
+"Create a name for your new event and click <em>\"Continue\"</em>. e.g: "
+"Technical Training"
+msgstr ""
+"Crie um nome para o novo evento e clique <em> 'Continuar' </em>. por "
+"exemplo: Formação Técnica"
 
 #. module: website_event
 #. openerp-web
@@ -241,6 +250,13 @@ msgid "Drag the 'Image-Text' block and drop it in your page."
 msgstr "Arraste o bloco 'Imagem-Texto \"e solte-o na sua página."
 
 #. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website.tour.event.js:107
+#, fuzzy, python-format
+msgid "Drag this block and drop it in your page."
+msgstr "Arraste o bloco 'Imagem-Texto \"e solte-o na sua página."
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "E-mail"
 msgstr "Email"
@@ -252,8 +268,9 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "End of Subscription"
-msgstr ""
+#, fuzzy
+msgid "End of Registration"
+msgstr "Cancelar Registro"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -282,8 +299,9 @@ msgstr "Menu do Evento"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Event Subscription"
-msgstr "Inscrição em evento"
+#, fuzzy
+msgid "Event Registration"
+msgstr "Cancelar Registro"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
@@ -294,6 +312,11 @@ msgstr "Evento não encontrado!"
 #: model:mail.message.subtype,description:website_event.mt_event_published
 #: model:mail.message.subtype,name:website_event.mt_event_published
 msgid "Event published"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "Event registration is closed."
 msgstr ""
 
 #. module: website_event
@@ -344,10 +367,15 @@ msgid "Free"
 msgstr "Gratuito"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:44
+#: code:addons/website_event/models/event.py:54
 #, python-format
 msgid "Introduction"
 msgstr "Introdução"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
+msgid "Is Participating"
+msgstr ""
 
 #. module: website_event
 #. openerp-web
@@ -357,7 +385,7 @@ msgid "Let's go through the first steps to publish a new event."
 msgstr "Vamos percorrer os primeiros passos para publicar um novo evento."
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:45
+#: code:addons/website_event/models/event.py:55
 #, python-format
 msgid "Location"
 msgstr "Localização"
@@ -374,7 +402,7 @@ msgstr "Nome"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:201
+#: code:addons/website_event/controllers/main.py:184
 #: code:addons/website_event/static/src/js/website.tour.event.js:32
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
@@ -390,19 +418,19 @@ msgid "New Event Created"
 msgstr "Novo Evento Criado"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:38
+#: code:addons/website_event/controllers/main.py:34
 #, python-format
 msgid "Next Events"
 msgstr "Próximos eventos"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:47
+#: code:addons/website_event/controllers/main.py:43
 #, python-format
 msgid "Next Week"
 msgstr "Próxima Semana"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:55
+#: code:addons/website_event/controllers/main.py:51
 #, python-format
 msgid "Next month"
 msgstr "Mês seguinte"
@@ -413,7 +441,7 @@ msgid "No event found"
 msgstr "Nenhum evento encontrado"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:59
+#: code:addons/website_event/controllers/main.py:55
 #, python-format
 msgid "Old Events"
 msgstr "Eventos Antigos"
@@ -421,6 +449,7 @@ msgstr "Eventos Antigos"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:67
+#: code:addons/website_event/static/src/js/website.tour.event.js:111
 #, python-format
 msgid "Once you click on save, your event is updated."
 msgstr "Quando clicar em salvar, o seu evento é actualizado"
@@ -449,6 +478,12 @@ msgstr "Nossos Eventos"
 #: model:ir.ui.view,arch_db:website_event.event_right_photos
 msgid "Our Trainings"
 msgstr "Nossas Formações"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_details
+#: model:ir.ui.view,arch_db:website_event.index
+msgid "Participating"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -483,7 +518,7 @@ msgid "Reference"
 msgstr "Referência"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:53
+#: code:addons/website_event/models/event.py:63
 #, python-format
 msgid "Register"
 msgstr "Registar"
@@ -545,7 +580,7 @@ msgid "Start Tutorial"
 msgstr "Iniciar o Tutorial"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:43
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "This Week"
 msgstr "Esta semana"
@@ -569,7 +604,7 @@ msgstr ""
 "evento."
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:51
+#: code:addons/website_event/controllers/main.py:47
 #, python-format
 msgid "This month"
 msgstr "Este mês"
@@ -585,7 +620,7 @@ msgid "Ticket Type #"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:39
+#: code:addons/website_event/controllers/main.py:35
 #, python-format
 msgid "Today"
 msgstr "Hoje"
@@ -612,13 +647,23 @@ msgstr "Visível no Website"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "We are glad to confirm your subscription to our event"
+msgid "We are glad to confirm your registration to our event"
 msgstr ""
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
 msgstr "Website Home"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_message_ids
+msgid "Website Messages"
+msgstr "Mensagens do Website"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event_website_message_ids
+msgid "Website communication history"
+msgstr "Histórico de Comunicação do Website"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -643,13 +688,9 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Your subscription"
-msgstr ""
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "not published"
-msgstr "não publicado"
+#, fuzzy
+msgid "Your registration"
+msgstr "Cancelar Registro"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -666,21 +707,31 @@ msgstr "encostar à direita"
 msgid "to"
 msgstr "para"
 
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.index
+#, fuzzy
+msgid "unpublished"
+msgstr "não publicado"
+
 #~ msgid "Drag the 'Text Block' in your event page."
 #~ msgstr "Arraste o 'Bloco de Texto' na página do evento."
+
+#~ msgid "Event Subscription"
+#~ msgstr "Inscrição em evento"
+
+#~ msgid ""
+#~ "The <em>Content</em> menu allows you to create new pages, events, menus, "
+#~ "etc."
+#~ msgstr ""
+#~ "O <em> Conteúdo </em> menu permite-lhe criar novas páginas, eventos, "
+#~ "menus, etc"
 
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr ""
 #~ "O endereço URL completo para aceder ao documento através do website."
 
-#~ msgid "Website Messages"
-#~ msgstr "Mensagens do Website"
-
 #~ msgid "Website URL"
 #~ msgstr "URL da Página Web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Histórico de Comunicação do Website"
 
 #~ msgid "Website meta description"
 #~ msgstr "Website Meta Descrição"

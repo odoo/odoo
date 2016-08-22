@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-03-10 13:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
@@ -67,6 +67,11 @@ msgid "All at once"
 msgstr "Todo junto"
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr "Archivado"
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
 msgstr "Cancelar"
@@ -80,12 +85,6 @@ msgstr "Cancelar abastecimiento"
 #: selection:procurement.order,state:0
 msgid "Cancelled"
 msgstr "Cancelada"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "No se puede borrar un abastacimiento que está en estado %s."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -148,9 +147,8 @@ msgstr "Creado en"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Método entrega"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -287,7 +285,7 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:200
+#: code:addons/procurement/models/procurement.py:187
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Ninguna regla casa con este abastecimiento"
@@ -426,11 +424,9 @@ msgstr "Referencia"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
 msgstr ""
-"Referecia del documento que creó este abastecimiento.\n"
-"Es rellenado automáticamente por Odoo."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -524,16 +520,18 @@ msgstr "Muy urgente"
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
-#, fuzzy
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
 "                creates the necessary operations to fulfill the need: "
 "purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
-"Cuando la orden de compra se confirma , automáticamente\n"
-"crea las operaciones necesarias para fullfil la necesidad de: compra\n"
-"propuesta de pedido, orden de producción, etc."
+
+#. module: procurement
+#: code:addons/procurement/models/procurement.py:142
+#, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr ""
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
@@ -555,6 +553,9 @@ msgstr "Por ejemplo, SO005"
 #~ msgid "Action Needed"
 #~ msgstr "Necesaria acción"
 
+#~ msgid "Cannot delete Procurement Order(s) which are in %s state."
+#~ msgstr "No se puede borrar un abastacimiento que está en estado %s."
+
 #~ msgid ""
 #~ "Click to create a Procurement order in exception state, or remove the "
 #~ "filter on the search bar to display all the procurements."
@@ -565,6 +566,9 @@ msgstr "Por ejemplo, SO005"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Fecha del último mensaje publicado en el registro."
+
+#~ msgid "Delivery Method"
+#~ msgstr "Método entrega"
 
 #~ msgid "Followers"
 #~ msgstr "Seguidores"
@@ -602,6 +606,13 @@ msgstr "Por ejemplo, SO005"
 #~ msgid "Number of unread messages"
 #~ msgstr "Número de mensajes no leidos"
 
+#~ msgid ""
+#~ "Reference of the document that created this Procurement.\n"
+#~ "This is automatically completed by Odoo."
+#~ msgstr ""
+#~ "Referecia del documento que creó este abastecimiento.\n"
+#~ "Es rellenado automáticamente por Odoo."
+
 #~ msgid "Unread Messages"
 #~ msgstr "Mensajes sin leer"
 
@@ -613,3 +624,13 @@ msgstr "Por ejemplo, SO005"
 
 #~ msgid "Website communication history"
 #~ msgstr "Historial de comunicaciones del sitio web"
+
+#~ msgid ""
+#~ "When the procurement order is confirmed, it automatically\n"
+#~ "                creates the necessary operations to fullfil the need: "
+#~ "purchase\n"
+#~ "                order proposition, manufacturing order, etc."
+#~ msgstr ""
+#~ "Cuando la orden de compra se confirma , automáticamente\n"
+#~ "crea las operaciones necesarias para fullfil la necesidad de: compra\n"
+#~ "propuesta de pedido, orden de producción, etc."

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-06-22 13:11+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -87,11 +87,6 @@ msgid "Manage your payment methods"
 msgstr "管理您的付款方式"
 
 #. module: website_payment
-#: model:ir.ui.view,arch_db:website_payment.pay_methods
-msgid "My Account"
-msgstr "我的账户"
-
-#. module: website_payment
 #: code:addons/website_payment/controllers/main.py:43
 #, python-format
 msgid "Pay Now"
@@ -119,6 +114,11 @@ msgid "Payment Methods"
 msgstr "付款方法"
 
 #. module: website_payment
+#: model:ir.model,name:website_payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "付款交易"
+
+#. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 msgid "Payment processed by"
 msgstr "付款被...处理过"
@@ -128,6 +128,16 @@ msgstr "付款被...处理过"
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "Reference"
 msgstr "引用"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_payment_transaction_sale_order_id
+msgid "Sale Order"
+msgstr "销售订单"
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_sale_order
+msgid "Sales Order"
+msgstr "销售订单"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay
@@ -149,6 +159,9 @@ msgstr "会计.配置.设定"
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "payment_provider_logo"
 msgstr "付款_提供者_徽标"
+
+#~ msgid "My Account"
+#~ msgstr "我的账户"
 
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr "通过网站访问单据的完整URL。"

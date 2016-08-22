@@ -6,22 +6,18 @@
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-06-06 18:04+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"PO-Revision-Date: 2016-08-06 10:39+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_slides
@@ -102,6 +98,13 @@ msgstr "# weergaven op website"
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "${user.name} shared a ${object.slide_type} with you!"
 msgstr "${user.name} deelde een ${object.slide_type} met u!"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid ""
+"(Un)archiving a channel automatically (un)archives its slides. Do you want "
+"to proceed?"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
@@ -327,6 +330,18 @@ msgid "Actions"
 msgstr "Acties"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
+msgid "Active"
+msgstr "Actief"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Archived"
+msgstr "Gearchiveerd"
+
+#. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authentified Users Only"
 msgstr "Enkel geauthentificeerde gebruikers"
@@ -369,6 +384,7 @@ msgstr "Categorie"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_channel_id
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Channel"
@@ -424,17 +440,14 @@ msgstr "Voorbeeldweergave inhoud"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:289
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
 "Here is the received response: %s"
 msgstr ""
-"Kon geen gegevens ophalen vanaf deze url. Het document of de juiste "
-"toegangsrechten zijn niet beschikbaar.\n"
-"Foutmelding: %serror"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:294
+#: code:addons/website_slides/models/slides.py:304
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -524,13 +537,8 @@ msgstr "Vind-ik-niet-leuks"
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Weergave naam\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Naam weergeven"
+msgstr "Weergave naam"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_category_sequence
@@ -660,8 +668,8 @@ msgstr "Beleidsregelsopties"
 #. openerp-web
 #: code:addons/website_slides/controllers/main.py:299
 #: code:addons/website_slides/static/src/js/slides_upload.js:90
-#, python-format
-msgid "File is too big. File size cannot exceed 15MB"
+#, fuzzy, python-format
+msgid "File is too big. File size cannot exceed 25MB"
 msgstr "Bestand is te groot. Bestand mag niet groter zijn dan 15MB"
 
 #. module: website_slides
@@ -858,11 +866,6 @@ msgid "No presentation published yet."
 msgstr "Nog geen presentatie gepubliceerd."
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
-msgid "Not Published"
-msgstr "Niet gepubliceerd"
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
 msgid "Number of Documents"
@@ -990,7 +993,7 @@ msgstr "Gelieve"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:55
+#: code:addons/website_slides/static/src/js/slides.js:56
 #, python-format
 msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr ""
@@ -998,8 +1001,8 @@ msgstr ""
 "kunnen stemmen"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:297
-#: code:addons/website_slides/models/slides.py:518
+#: code:addons/website_slides/models/slides.py:307
+#: code:addons/website_slides/models/slides.py:532
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "Geef een geldige Youtube of Google Doc URL in"
@@ -1253,13 +1256,10 @@ msgstr "Het"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_slide_type
-#, fuzzy
 msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
 msgstr ""
-"Het documenttype wordt automatisch ingesteld op basis van bestandstype, "
-"hoogte en breedte."
 
 #. module: website_slides
 #: sql_constraint:slide.slide:0
@@ -1337,10 +1337,15 @@ msgid "Uncategorized presentation"
 msgstr "Presentatie niet gecategoriseerd"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:507
+#: code:addons/website_slides/models/slides.py:521
 #, python-format
 msgid "Unknown document"
 msgstr "Document onbekend"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
+msgid "Unpublished"
+msgstr "Niet gepubliceerd"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
@@ -1394,10 +1399,10 @@ msgid "Videos"
 msgstr "Video's"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:436
-#, fuzzy, python-format
+#: code:addons/website_slides/models/slides.py:446
+#, python-format
 msgid "View Slide"
-msgstr "Website presentaties"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1454,7 +1459,7 @@ msgstr "Bestanden beveiligd met een wachtwoord kunt u niet uploaden."
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:64
+#: code:addons/website_slides/static/src/js/slides.js:65
 #, python-format
 msgid "You have already voted for this slide"
 msgstr "U hebt al voor deze presentatie gestemd"
@@ -1813,6 +1818,14 @@ msgstr "uw-vriend@domein.com"
 #~ msgstr "Vereist actie"
 
 #~ msgid ""
+#~ "Could not fetch data from url. Document or access right not available.\n"
+#~ "Here is the received response: %serror"
+#~ msgstr ""
+#~ "Kon geen gegevens ophalen vanaf deze url. Het document of de juiste "
+#~ "toegangsrechten zijn niet beschikbaar.\n"
+#~ "Foutmelding: %serror"
+
+#~ msgid ""
 #~ "Create enterprise grade website with our super easy builder. Use finely "
 #~ "designed building blocks and edit everything inline. Benefit from out-of-"
 #~ "the-box business features; e-Commerce, events, blogs, jobs announces, "
@@ -1835,6 +1848,13 @@ msgstr "uw-vriend@domein.com"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
+
+#~ msgid ""
+#~ "Document type will be set automatically depending on file type, height "
+#~ "and width."
+#~ msgstr ""
+#~ "Het documenttype wordt automatisch ingesteld op basis van bestandstype, "
+#~ "hoogte en breedte."
 
 #~ msgid "Followers"
 #~ msgstr "Volgers"
@@ -1871,6 +1891,9 @@ msgstr "uw-vriend@domein.com"
 
 #~ msgid "Messages and communication history"
 #~ msgstr "Berichten en communicatie historie"
+
+#~ msgid "Not Published"
+#~ msgstr "Niet gepubliceerd"
 
 #~ msgid "Number of Actions"
 #~ msgstr "Aantal acties"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-02-17 16:29+0000\n"
 "Last-Translator: Felipe Palomino <omega@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/"
@@ -168,7 +168,7 @@ msgid "Name of the picking wave"
 msgstr "Nombre de la agrupación"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:42
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:46
 #, python-format
 msgid "Nothing to print."
 msgstr "Nada que imprimir."
@@ -179,10 +179,10 @@ msgid "Person responsible for this wave"
 msgstr "Persona responsable de la agrupación"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:64
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9973
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -205,7 +205,7 @@ msgid "Picking Waves not finished"
 msgstr "Agrupaciones de Movimientos de Inventario no finalizados"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9973
 msgid "Picking wave associated to this picking"
 msgstr "Agrupación asociada este Movimiento de inventario"
 
@@ -217,8 +217,8 @@ msgstr "Movimientos de Inventario"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-msgid "Print all pickings"
-msgstr "Imprimir todos los movimientos de inventario"
+msgid "Print"
+msgstr ""
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_user_id
@@ -241,7 +241,7 @@ msgid "Select a wave"
 msgstr "Seleccione una agrupación"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:59
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:59
 #, python-format
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
@@ -306,7 +306,7 @@ msgid "Transfer"
 msgstr "Transferir"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:63
 #, python-format
 msgid "Transferred by"
 msgstr "Transferido por"
@@ -336,6 +336,9 @@ msgstr "Usuario"
 #~ msgid "Followers (Partners)"
 #~ msgstr "Seguidores (Asociados)"
 
+#~ msgid "Ice Cream Chocolate with stucks"
+#~ msgstr "￼Helado de Chocolate con trocitos"
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
 
@@ -362,6 +365,26 @@ msgstr "Usuario"
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Número de mensajes no leidos"
+
+#~ msgid "Print all pickings"
+#~ msgstr "Imprimir todos los movimientos de inventario"
+
+#~ msgid ""
+#~ "The Goal of the picking waves is to group operations that may \n"
+#~ "                (needs to) be done together in order to increase their "
+#~ "efficiency.\n"
+#~ "                It may also be useful to assign jobs (one person = one "
+#~ "wave) or\n"
+#~ "                help the timing management of operations (tasks to be "
+#~ "done at 1pm)."
+#~ msgstr ""
+#~ "El objetivo de las agrupaciones es agrupar operaciones que pueden "
+#~ "necesitar (requieren) ser completadas conjuntamente para incrementar la "
+#~ "eficiencia.\n"
+#~ "También puede ser útil para asignar trabajos (una persona = una "
+#~ "agrupación) o\n"
+#~ "para ayudar a contabilizar el tiempo de gestión de las operaciones "
+#~ "(tareas por ser completadas antes de la 1pm)."
 
 #~ msgid "Unread Messages"
 #~ msgstr "Mensajes sin Leer"

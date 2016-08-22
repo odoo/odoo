@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-01-08 22:13+0000\n"
 "Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
@@ -167,7 +167,7 @@ msgid "Name of the picking wave"
 msgstr "Nom de la vague de prélèvement"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:42
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:46
 #, python-format
 msgid "Nothing to print."
 msgstr "Rien à imprimer."
@@ -178,10 +178,10 @@ msgid "Person responsible for this wave"
 msgstr "Utilisateur responsable pour cette vague "
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:64
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9973
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -204,7 +204,7 @@ msgid "Picking Waves not finished"
 msgstr "Vagues de prélèvements non terminé"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9973
 msgid "Picking wave associated to this picking"
 msgstr "Vague de prélèvement associé à ce prélèvement"
 
@@ -216,8 +216,8 @@ msgstr "Préparations"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-msgid "Print all pickings"
-msgstr "Imprimer tous les prélèvements"
+msgid "Print"
+msgstr "Imprimer"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_user_id
@@ -240,7 +240,7 @@ msgid "Select a wave"
 msgstr "Choisir une vague"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:59
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:59
 #, python-format
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
@@ -281,7 +281,6 @@ msgstr "Vagues de prélèvements de stock"
 
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
-#, fuzzy
 msgid ""
 "The goal of the picking waves is to group operations that may\n"
 "                (needs to) be done together in order to increase their "
@@ -291,12 +290,6 @@ msgid ""
 "                help the timing management of operations (tasks to be done "
 "at 1pm)."
 msgstr ""
-"L'objectif de la vague de cueillette est de grouper les opérations qui "
-"peuvent\n"
-"être fait ensemble pour augmenter leur efficacité.\n"
-"Il peut également être utile d'attribuer une tâche (une personne = une "
-"cueillette ) pour\n"
-"aider à la gestion du calendrier des opérations."
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking
@@ -304,7 +297,7 @@ msgid "Transfer"
 msgstr "Transfert"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:63
 #, python-format
 msgid "Transferred by"
 msgstr "Transféré par"
@@ -360,6 +353,25 @@ msgstr "Vague"
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Nombre de messages non lus"
+
+#~ msgid "Print all pickings"
+#~ msgstr "Imprimer tous les prélèvements"
+
+#~ msgid ""
+#~ "The Goal of the picking waves is to group operations that may \n"
+#~ "                (needs to) be done together in order to increase their "
+#~ "efficiency.\n"
+#~ "                It may also be useful to assign jobs (one person = one "
+#~ "wave) or\n"
+#~ "                help the timing management of operations (tasks to be "
+#~ "done at 1pm)."
+#~ msgstr ""
+#~ "L'objectif de la vague de cueillette est de grouper les opérations qui "
+#~ "peuvent\n"
+#~ "être fait ensemble pour augmenter leur efficacité.\n"
+#~ "Il peut également être utile d'attribuer une tâche (une personne = une "
+#~ "cueillette ) pour\n"
+#~ "aider à la gestion du calendrier des opérations."
 
 #~ msgid "Unread Messages"
 #~ msgstr "Messages non lus"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-06-19 06:30+0000\n"
 "Last-Translator: larmar <martin.wilderoth@linserv.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:686
+#: code:addons/resource/resource.py:688
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopia)"
@@ -28,6 +28,13 @@ msgstr "%s (kopia)"
 #: model:ir.model.fields,field_description:resource.field_resource_resource_active
 msgid "Active"
 msgstr "Aktiv"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
+msgid ""
+"An efficiency of 50% means the resource is two times smaller than his usual "
+"speed."
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -341,19 +348,6 @@ msgid "Sunday"
 msgstr "Söndag"
 
 #. module: resource
-#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
-msgstr ""
-"Detta fält visar effektiviteten av resursen för att utföra uppgifter. t.ex. "
-"resurs sattes på en etapp i 5 dagar med 5 uppgifter som tilldelats honom, "
-"kommer att visa en 100% beläggning för denna etapp som standard, men om vi "
-"lägger en verkningsgrad på 200%, då kommer hans beläggning endast vara 50%."
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Thursday"
 msgstr "torsdag"
@@ -418,3 +412,15 @@ msgstr "Arbetsperiod"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Working Time"
 msgstr "Arbetstid"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
+#~ "will show a load of 100% for this phase by default, but if we put a "
+#~ "efficiency of 200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "Detta fält visar effektiviteten av resursen för att utföra uppgifter. t."
+#~ "ex. resurs sattes på en etapp i 5 dagar med 5 uppgifter som tilldelats "
+#~ "honom, kommer att visa en 100% beläggning för denna etapp som standard, "
+#~ "men om vi lägger en verkningsgrad på 200%, då kommer hans beläggning "
+#~ "endast vara 50%."

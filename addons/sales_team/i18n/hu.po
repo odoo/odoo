@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -76,6 +76,26 @@ msgid "Activities Done"
 msgstr "Tevékenységek elvégezve"
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
+msgid "Apply"
+msgstr "Alkalmaz"
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "Archived"
+msgstr "Archivált"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_config_bank_accounts
+msgid "Bank Accounts"
+msgstr "Bankszámlák"
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
+msgid "Cancel"
+msgstr "Mégse"
+
+#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
@@ -96,11 +116,6 @@ msgid "Click to set"
 msgstr "Beállításhoz kattintson"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
-msgid "Code"
-msgstr "Kód"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
 msgid "Color Index"
 msgstr "Szín meghatározó"
@@ -112,21 +127,65 @@ msgid "Company"
 msgstr "Vállalat"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_config
+#: model:ir.ui.menu,name:sales_team.menu_sale_config_sales
+msgid "Configuration"
+msgstr "Beállítások"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_sale_config
+#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
+msgid "Configure Sales"
+msgstr "Értékesítés beállításai"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_partner_category_form
+msgid "Contact Tags"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_partner_title_contact
+msgid "Contact Titles"
+msgstr "Kapcsolattartó megszólítások"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_config_address_book
+msgid "Contacts"
+msgstr "Kapcsolattartók"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_country_partner
+msgid "Countries"
+msgstr "Országok"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_country_group
+msgid "Country Group"
+msgstr "Ország csoport"
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:215
 #, python-format
-msgid "Create a few opportunities to activate your dashboard."
-msgstr "Hozzon létre egy pár lehetőséget a műszerfala aktiválásához."
+msgid "Create a few opportunities in it."
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_uid
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Készítette"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_date
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Létrehozás dátuma"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_partner_form
+msgid "Customers"
+msgstr "Vásárlók"
 
 #. module: sales_team
 #. openerp-web
@@ -144,8 +203,14 @@ msgstr "Direkt értékesítés"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_display_name
 msgid "Display Name"
 msgstr "Név megjelenítése"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_country_state_partner
+msgid "Fed. States"
+msgstr "Szövetségi Államok"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -178,8 +243,17 @@ msgstr "Légy üdvözölve!"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_id
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_res_partner_team_id
+#: model:ir.model.fields,help:sales_team.field_res_users_team_id
+msgid ""
+"If set, sale team used notably for sales and assignations related to this "
+"partner"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
@@ -204,6 +278,7 @@ msgstr "Számlázott"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "Utolsó frissítés dátuma"
 
@@ -216,13 +291,30 @@ msgstr "Utolsó hónap"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_uid
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Utoljára frissítve, által"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_date
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Utoljára frissítve "
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_crm_config_lead
+msgid "Leads & Opportunities"
+msgstr "Érdeklődések és lehetőségek"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_localisation
+msgid "Localization"
+msgstr "Lokalizáció"
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_manager
+msgid "Manager"
+msgstr "Igazgató"
 
 #. module: sales_team
 #. openerp-web
@@ -246,9 +338,9 @@ msgstr "További információ"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:44
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
-#, fuzzy, python-format
+#, python-format
 msgid "My Pipeline"
-msgstr "Az Ön értékesítési folyamata"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -271,10 +363,15 @@ msgstr "Következő műveletek"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "Kizárólag egész érték lehet érvényes."
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_crm_config_opportunity
+msgid "Opportunities"
+msgstr "Lehetőségek"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
@@ -297,6 +394,13 @@ msgstr "Válaszcím"
 #: model:ir.model.fields,field_description:sales_team.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Eladási árlista"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_base_partner
+#: model:ir.ui.menu,name:sales_team.menu_sales
+#: model:ir.ui.menu,name:sales_team.menu_sales_config
+msgid "Sales"
+msgstr "Értékesítések"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -338,6 +442,7 @@ msgid "Salesteams Search"
 msgstr "Értékesítési csoportok keresése"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_general_settings
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "Settings"
 msgstr "Beállítások"
@@ -360,11 +465,6 @@ msgstr "Csoportvezető"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "Csoport tag"
-
-#. module: sales_team
-#: sql_constraint:crm.team:0
-msgid "The code of the sales team must be unique !"
-msgstr "Az értékesítési csapat kódjának egyedinek kell lennie !"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
@@ -472,6 +572,16 @@ msgstr ""
 "Mindegyik csoport a saját lehetőség listáin dolgozik."
 
 #. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman_all_leads
+msgid "User: All Documents"
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman
+msgid "User: Own Documents Only"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
 msgid "Users"
 msgstr "Felhasználók"
@@ -485,7 +595,7 @@ msgstr "Megnyert a Lehetőségen"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Wrong value entered!"
 msgstr "Rosszérték lett megadva!"
@@ -498,14 +608,55 @@ msgid "exp. closing"
 msgstr "exp. closing"
 
 #. module: sales_team
+#: model:ir.model,name:sales_team.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr "ir.ui.view"
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
 msgid "overdue"
 msgstr "lejárt"
 
+#. module: sales_team
+#: model:ir.model,name:sales_team.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr "sale.config.settings"
+
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr ""
+"a felhasználónak hozzáférése lesz az összes rekordhoz az értékesítés "
+"alkalmazáson belül."
+
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
+msgstr ""
+"a felhasználónak be kell lépnie a saját adataihoz, az értékesítés "
+"alkalmazásban."
+
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic "
+"reports."
+msgstr ""
+"a felhasználónak hozzáférése lesz az Értékesítés konfigurálásához, valamint "
+"a statikus kimutatásokhoz."
+
 #~ msgid "Action Needed"
 #~ msgstr "Művelet szükséges"
+
+#~ msgid "Code"
+#~ msgstr "Kód"
+
+#~ msgid "Create a few opportunities to activate your dashboard."
+#~ msgstr "Hozzon létre egy pár lehetőséget a műszerfala aktiválásához."
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
@@ -546,6 +697,9 @@ msgstr "lejárt"
 #~ msgid "Number of unread messages"
 #~ msgstr "Olvasatlan üzenetek száma"
 
+#~ msgid "The code of the sales team must be unique !"
+#~ msgstr "Az értékesítési csapat kódjának egyedinek kell lennie !"
+
 #~ msgid "Unread Messages"
 #~ msgstr "Olvasatlan üzenetek"
 
@@ -554,3 +708,12 @@ msgstr "lejárt"
 
 #~ msgid "Working Hours"
 #~ msgstr "Munkaórák"
+
+#~ msgid "Your Pipeline"
+#~ msgstr "Az Ön értékesítési folyamata"
+
+#~ msgid "Product Variants"
+#~ msgstr "Termékváltozatok"
+
+#~ msgid "Products"
+#~ msgstr "Termékek"

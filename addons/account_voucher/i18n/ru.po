@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2015-12-27 21:31+0000\n"
 "Last-Translator: SV <svilij@yahoo.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -51,6 +51,12 @@ msgid "Account Date"
 msgstr "Отчетная Дата"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+#, fuzzy
+msgid "Accounting Date"
+msgstr "Отчетная Дата"
+
+#. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
 msgstr "Бухгалтерский учет Ваучера"
@@ -72,7 +78,9 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr "Вы уверены, что хотите отменить это получение?"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
 msgstr "Дата выставления Счета"
 
@@ -102,7 +110,7 @@ msgid "Cancelled"
 msgstr "Отменен"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:147
+#: code:addons/account_voucher/account_voucher.py:153
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Не удается удалить ваучер(ы), которые уже открыты или оплачены."
@@ -155,9 +163,7 @@ msgid "Customer"
 msgstr "Заказчик"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
-#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Date"
 msgstr "Дата"
 
@@ -193,7 +199,7 @@ msgid "Due Date"
 msgstr "Срок оплаты"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
 msgid "Effective date for accounting entries"
 msgstr "Дата вступления в силу бухгалтерских проводок"
 
@@ -313,13 +319,13 @@ msgid "Payment Reference"
 msgstr "Описание платежа"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:183
+#: code:addons/account_voucher/account_voucher.py:189
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Пожалуйста, включите нумерацию выбранного журнала!"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:186
+#: code:addons/account_voucher/account_voucher.py:192
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Пожалуйста, определите нумерацию журнала."
@@ -562,7 +568,7 @@ msgstr ""
 "покупателя, связанной с этой квитанцией продаж."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:348
+#: code:addons/account_voucher/account_voucher.py:354
 #, python-format
 msgid "You must first select a partner!"
 msgstr "Вы должны сначала выбрать партнера!"

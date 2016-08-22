@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-07-05 21:08+0000\n"
 "Last-Translator: sharkutz <sharkutz4life@yahoo.com>\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
@@ -22,12 +22,12 @@ msgstr ""
 "2:1));\n"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Pay Now"
 msgstr "<i class=\"fa fa-arrow-circle-right\"/> Achită acum"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid ""
 "<span class=\"label label-danger\"><i class=\"fa fa-fw fa-warning\"/> "
 "Problem</span>"
@@ -36,7 +36,7 @@ msgstr ""
 "Problema</span>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/> Done</"
 "span>"
@@ -45,7 +45,7 @@ msgstr ""
 "Efectuat</span>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/> Paid</"
 "span>"
@@ -54,7 +54,7 @@ msgstr ""
 "span>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-clock-o\"/> "
 "Expired</span>"
@@ -63,8 +63,8 @@ msgstr ""
 "Expirata</span>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
 "Cancelled</span>"
@@ -82,7 +82,7 @@ msgstr ""
 "fa-clock-o\"/> In asteptare</span>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid ""
 "<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/> "
 "Invoiced</span>"
@@ -91,7 +91,7 @@ msgstr ""
 "Facturat</span>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid ""
 "<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/> Waiting "
 "for Payment</span>"
@@ -107,14 +107,6 @@ msgid ""
 msgstr ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa fa-"
 "fw fa-check\"/> Platita</span>"
-
-#. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
-msgid "<span>Show more</span><span class=\"hidden\">Show less</span>"
-msgstr ""
-"<span>Arata mai mult</span><span class=\"hidden\">Arata mai putin</span>"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
@@ -172,12 +164,12 @@ msgid "Access the complete Sale application"
 msgstr "Acces aplicatie Vanzari"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Amount Due"
 msgstr ""
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Due Date"
 msgstr "Data scadenței"
 
@@ -191,19 +183,32 @@ msgstr ""
 "puteți urmări"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Invoice #"
 msgstr "Factura #"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Invoice Date"
 msgstr "Data facturii"
 
 #. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_menu_sale
+#, fuzzy
+msgid "Invoices"
+msgstr "Factura #"
+
+#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
-msgid "My Account"
-msgstr "Contul meu"
+#, fuzzy
+msgid "My Orders"
+msgstr "Comanda"
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
+#, fuzzy
+msgid "My Quotes"
+msgstr "Cotatiile tale"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
@@ -211,12 +216,18 @@ msgid "Order"
 msgstr "Comanda"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid "Order Date"
 msgstr "Data comanda"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_menu_sale
+#, fuzzy
+msgid "Orders"
+msgstr "Comanda"
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Pay Now"
 msgstr "Achită acum"
 
@@ -226,12 +237,18 @@ msgid "Quotation"
 msgstr "Cotatie"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid "Quotation #"
 msgstr "Cotatie # "
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_menu_sale
+#, fuzzy
+msgid "Quotes"
+msgstr "Cotatiile tale"
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid "Sale Order #"
 msgstr "Comenzi#"
 
@@ -246,23 +263,26 @@ msgid "Taxes:"
 msgstr "Taxe:"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "There are currently no invoices for your account."
 msgstr "În prezent nu există facturi pentru contul tau."
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid "There are currently no orders for your account."
 msgstr "În prezent nu există comenzi pentru contul tau."
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid "There are currently no quotes for your account."
 msgstr "În prezent nu există cotatii pentru contul tau."
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid "Total"
 msgstr "Total"
 
@@ -272,22 +292,25 @@ msgid "Untaxed Amount:"
 msgstr "Valoare fara TVA:"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid "Valid Until"
 msgstr "Valabil pana la"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Your Invoices and Payments"
 msgstr "Platile si facturile tale"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Comenzile Dumneavoastra"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid "Your Quotes"
 msgstr "Cotatiile tale"
 
@@ -295,3 +318,10 @@ msgstr "Cotatiile tale"
 #: model:ir.ui.view,arch_db:website_portal_sale.sales_backend_access
 msgid "this link"
 msgstr "acest link"
+
+#~ msgid "<span>Show more</span><span class=\"hidden\">Show less</span>"
+#~ msgstr ""
+#~ "<span>Arata mai mult</span><span class=\"hidden\">Arata mai putin</span>"
+
+#~ msgid "My Account"
+#~ msgstr "Contul meu"

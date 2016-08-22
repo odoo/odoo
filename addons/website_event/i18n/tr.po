@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-07-01 09:20+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -17,12 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:219
-#, python-format
-msgid "%(month)s %(start_day)s%(end_day)s"
-msgstr "%(month)s %(start_day)s%(end_day)s"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -108,13 +102,13 @@ msgid "Add Content"
 msgstr "İçerik Ekle"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:106
+#: code:addons/website_event/controllers/main.py:96
 #, python-format
 msgid "All Categories"
 msgstr "Tüm Kategoriler"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:117
+#: code:addons/website_event/controllers/main.py:103
 #, python-format
 msgid "All Countries"
 msgstr "Tüm Ülkeler"
@@ -137,6 +131,7 @@ msgstr "Kaydı İptal et"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:48
+#: code:addons/website_event/static/src/js/website.tour.event.js:103
 #, python-format
 msgid "Click <em>Continue</em> to create the event."
 msgstr "Etkinlik oluşturmak için <em>Devam&#39;ı</em> tıklatın."
@@ -144,6 +139,7 @@ msgstr "Etkinlik oluşturmak için <em>Devam&#39;ı</em> tıklatın."
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:33
+#: code:addons/website_event/static/src/js/website.tour.event.js:94
 #, python-format
 msgid "Click here to create a new event."
 msgstr "Yeni bir ürün eklemek için buraya tıklayın."
@@ -151,6 +147,7 @@ msgstr "Yeni bir ürün eklemek için buraya tıklayın."
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:82
+#: code:addons/website_event/static/src/js/website.tour.event.js:121
 #, python-format
 msgid "Click here to customize your event further."
 msgstr "Daha da olay özelleştirmek için buraya tıklayın."
@@ -158,6 +155,7 @@ msgstr "Daha da olay özelleştirmek için buraya tıklayın."
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:75
+#: code:addons/website_event/static/src/js/website.tour.event.js:116
 #, python-format
 msgid "Click to publish your event."
 msgstr "Etkinlik yayınlamak için tıklayın."
@@ -176,6 +174,17 @@ msgstr "Devam Et"
 #, python-format
 msgid "Create Event"
 msgstr "Etkinlik Oluştur"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website.tour.event.js:98
+#, fuzzy, python-format
+msgid ""
+"Create a name for your new event and click <em>\"Continue\"</em>. e.g: "
+"Technical Training"
+msgstr ""
+"Etkinliğiniz için bir isim oluşturun ve <em>'Devam'</em> tuşuna basın. Örn: "
+"Teknik Eğitim"
 
 #. module: website_event
 #. openerp-web
@@ -243,6 +252,13 @@ msgid "Drag the 'Image-Text' block and drop it in your page."
 msgstr "Bu nesneyi sürükleyin ve sayfanızda bırakın."
 
 #. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website.tour.event.js:107
+#, fuzzy, python-format
+msgid "Drag this block and drop it in your page."
+msgstr "Bu nesneyi sürükleyin ve sayfanızda bırakın."
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "E-mail"
 msgstr "E-mail"
@@ -254,8 +270,9 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "End of Subscription"
-msgstr ""
+#, fuzzy
+msgid "End of Registration"
+msgstr "Kaydı İptal et"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -284,8 +301,9 @@ msgstr "Menu"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Event Subscription"
-msgstr "Etkinlik Abonelik"
+#, fuzzy
+msgid "Event Registration"
+msgstr "Kaydı İptal et"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
@@ -297,6 +315,11 @@ msgstr "Olay bulunamadı!"
 #: model:mail.message.subtype,name:website_event.mt_event_published
 msgid "Event published"
 msgstr "Yayınlanan"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "Event registration is closed."
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -346,10 +369,15 @@ msgid "Free"
 msgstr "Serbest"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:44
+#: code:addons/website_event/models/event.py:54
 #, python-format
 msgid "Introduction"
 msgstr "Giriş"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
+msgid "Is Participating"
+msgstr ""
 
 #. module: website_event
 #. openerp-web
@@ -359,7 +387,7 @@ msgid "Let's go through the first steps to publish a new event."
 msgstr "Yeni bir etkinlik yayınlamak için ilk adımları görelim"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:45
+#: code:addons/website_event/models/event.py:55
 #, python-format
 msgid "Location"
 msgstr "Konum"
@@ -376,7 +404,7 @@ msgstr "Ad"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:201
+#: code:addons/website_event/controllers/main.py:184
 #: code:addons/website_event/static/src/js/website.tour.event.js:32
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
@@ -392,19 +420,19 @@ msgid "New Event Created"
 msgstr "Yeni Etkinlik düzenlendi"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:38
+#: code:addons/website_event/controllers/main.py:34
 #, python-format
 msgid "Next Events"
 msgstr "Sonraki Etkinlikler"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:47
+#: code:addons/website_event/controllers/main.py:43
 #, python-format
 msgid "Next Week"
 msgstr "Sonraki Hafta"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:55
+#: code:addons/website_event/controllers/main.py:51
 #, python-format
 msgid "Next month"
 msgstr "Sonraki Ay"
@@ -415,7 +443,7 @@ msgid "No event found"
 msgstr "Hiçbir olay bulunamadı"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:59
+#: code:addons/website_event/controllers/main.py:55
 #, python-format
 msgid "Old Events"
 msgstr "Eski Etkinlikler"
@@ -423,6 +451,7 @@ msgstr "Eski Etkinlikler"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:67
+#: code:addons/website_event/static/src/js/website.tour.event.js:111
 #, python-format
 msgid "Once you click on save, your event is updated."
 msgstr "Kaydet'e tıkladığınızda etkinlik güncellenmiş olacak."
@@ -451,6 +480,12 @@ msgstr "Etkinliklerimiz"
 #: model:ir.ui.view,arch_db:website_event.event_right_photos
 msgid "Our Trainings"
 msgstr "Eğitimlerimiz"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_details
+#: model:ir.ui.view,arch_db:website_event.index
+msgid "Participating"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -485,7 +520,7 @@ msgid "Reference"
 msgstr "Kaynak"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:53
+#: code:addons/website_event/models/event.py:63
 #, python-format
 msgid "Register"
 msgstr "Kayıt Ol"
@@ -547,7 +582,7 @@ msgid "Start Tutorial"
 msgstr "Öğretici başlatın"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:43
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "This Week"
 msgstr "Bu Hafta"
@@ -569,7 +604,7 @@ msgid "This is your new event page. We will edit the event presentation page."
 msgstr "Bu yeni bir etkinlik sayfasıdır. Etkinlik sunumunu düzenleyelim."
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:51
+#: code:addons/website_event/controllers/main.py:47
 #, python-format
 msgid "This month"
 msgstr "Bu ay"
@@ -585,7 +620,7 @@ msgid "Ticket Type #"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:39
+#: code:addons/website_event/controllers/main.py:35
 #, python-format
 msgid "Today"
 msgstr "Bugün"
@@ -612,13 +647,23 @@ msgstr "Web Sitesinde Görünür"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "We are glad to confirm your subscription to our event"
+msgid "We are glad to confirm your registration to our event"
 msgstr ""
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
 msgstr "Websitesi Anasayfa"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_message_ids
+msgid "Website Messages"
+msgstr "Websitesi Mesajları"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event_website_message_ids
+msgid "Website communication history"
+msgstr "Web Sitesi iletişim geçmişi"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -643,13 +688,9 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Your subscription"
-msgstr ""
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "not published"
-msgstr "Yayınlanmadı"
+#, fuzzy
+msgid "Your registration"
+msgstr "Kaydı İptal et"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -666,20 +707,33 @@ msgstr "sağa-çek"
 msgid "to"
 msgstr "to"
 
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.index
+#, fuzzy
+msgid "unpublished"
+msgstr "Yayınlanmadı"
+
+#~ msgid "%(month)s %(start_day)s%(end_day)s"
+#~ msgstr "%(month)s %(start_day)s%(end_day)s"
+
 #~ msgid "Drag the 'Text Block' in your event page."
 #~ msgstr "Bu nesneyi sürükleyin ve sayfanızda bırakın."
+
+#~ msgid "Event Subscription"
+#~ msgstr "Etkinlik Abonelik"
+
+#~ msgid ""
+#~ "The <em>Content</em> menu allows you to create new pages, events, menus, "
+#~ "etc."
+#~ msgstr ""
+#~ "<em>İçerik</em> menüsü vb yeni sayfalar, etkinlikler, menüler, "
+#~ "oluşturmanıza olanak sağlar"
 
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr "Belgeye web sitesinden erişim için tam adres."
 
-#~ msgid "Website Messages"
-#~ msgstr "Websitesi Mesajları"
-
 #~ msgid "Website URL"
 #~ msgstr "Web sitesi URL'si"
-
-#~ msgid "Website communication history"
-#~ msgstr "Web Sitesi iletişim geçmişi"
 
 #~ msgid "Website meta description"
 #~ msgstr "Web sitesi meta açıklaması"

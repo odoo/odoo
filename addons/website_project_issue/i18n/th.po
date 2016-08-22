@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-04-03 13:57+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
@@ -19,74 +19,140 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
-msgid "<span>Show more</span><span class=\"hidden\">Show less</span>"
-msgstr "<span>แสดงมากขึ้น</span><span class=\"hidden\">แสดงน้อยลง</span>"
-
-#. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Assigned to</strong>"
 msgstr "<strong>มอบหมายให้</strong>"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Date:</strong>"
 msgstr "<strong>;yomuj:</strong>"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
+#, fuzzy
+msgid "<strong>Description</strong>"
+msgstr "<strong>;yomuj:</strong>"
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Message and communication history</strong>"
 msgstr "<strong>ข้อความและประวัติการสื่อสาร</strong>"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Reported by</strong>"
 msgstr "<strong>รายงานโดย</strong>"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: code:addons/website_project_issue/controllers/main.py:37
+#, python-format
+msgid "All"
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+msgid "Current stage of the issue"
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "Current stage of this issue"
 msgstr ""
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
 msgid "Description"
 msgstr "รายละเอียด"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 #, fuzzy
 msgid "Edit Issue"
 msgstr "ดูปัญหา"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "Issue"
 msgstr "ปัญหา"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
-msgid "My Account"
-msgstr "บัญชีของฉัน"
+#: model:ir.ui.view,arch_db:website_project_issue.portal_layout
+#, fuzzy
+msgid "Issues"
+msgstr "ปัญหา"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
-msgid "Status"
-msgstr "สถานะ"
+#: code:addons/website_project_issue/controllers/main.py:31
+#, python-format
+msgid "Last Stage Update"
+msgstr ""
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
+#, fuzzy
+msgid "My Issues"
+msgstr "ปัญหา"
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:29
+#, python-format
+msgid "Name"
+msgstr ""
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:28
+#, python-format
+msgid "Newest"
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.model,name:website_project_issue.model_project_issue
+msgid "Project Issue"
+msgstr "ปัญหาของโปรเจค"
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#, fuzzy
+msgid "Projects:"
+msgstr "ปัญหาของโปรเจค"
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:30
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#, python-format
+msgid "Stage"
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.portal_my_home
 msgid "There are currently no issues for your account."
 msgstr ""
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+msgid "There are no issues."
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#: model:ir.ui.view,arch_db:website_project_issue.portal_my_home
 msgid "Your Issues"
 msgstr "ปัญหาของคุณ"
 
-#. module: website_project_issue
-#: model:ir.model,name:website_project_issue.model_project_issue
+#~ msgid "<span>Show more</span><span class=\"hidden\">Show less</span>"
+#~ msgstr "<span>แสดงมากขึ้น</span><span class=\"hidden\">แสดงน้อยลง</span>"
+
+#~ msgid "My Account"
+#~ msgstr "บัญชีของฉัน"
+
+#~ msgid "Status"
+#~ msgstr "สถานะ"
+
+#~ msgid "View Issue"
+#~ msgstr "ดูปัญหา"
+
 #, fuzzy
-msgid "project issue"
-msgstr "ปัญหาของโปรเจค"
+#~ msgid "project issue"
+#~ msgstr "ปัญหาของโปรเจค"

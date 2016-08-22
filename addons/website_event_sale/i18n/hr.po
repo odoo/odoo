@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2015-10-24 16:45+0000\n"
 "Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -55,6 +55,12 @@ msgid "Product"
 msgstr "Proizvod"
 
 #. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:63
+#, python-format
+msgid "Registration"
+msgstr ""
+
+#. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Remaining"
 msgstr "Preostalo"
@@ -71,13 +77,13 @@ msgid "Sold Out"
 msgstr "Rasprodano"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:71
+#: code:addons/website_event_sale/models/sale_order.py:67
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
 msgstr "Žao nam je %(ticket)s karte za %(event)s događaj su rasprodane."
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:77
+#: code:addons/website_event_sale/models/sale_order.py:73
 #, python-format
 msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
@@ -85,12 +91,6 @@ msgid ""
 msgstr ""
 "Žao nam je, samo %(remaining_seats)d sjedala su još slobodne %(ticket)s "
 "karte za %(event)s događaj."
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:65
-#, python-format
-msgid "Subscription"
-msgstr "Pretplata"
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:36
@@ -102,3 +102,6 @@ msgstr "Ulaznica se ne podudara sa ovim proizvodom."
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
 msgstr "Web stranice"
+
+#~ msgid "Subscription"
+#~ msgstr "Pretplata"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2015-11-25 14:00+0000\n"
 "Last-Translator: Manuela Silva <h_manuela_rodsilva@gmail.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -26,6 +26,14 @@ msgid ""
 msgstr ""
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
+msgid ""
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
+"Customer Invoice/Refund"
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
 msgid "Accessory Products"
 msgstr "Produtos Acessórios"
@@ -39,6 +47,16 @@ msgstr "Aparece na página do produto"
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
 msgid "Appear on the shopping cart"
 msgstr "Aparece no carrinho de compras"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability
+msgid "Availability"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability_warning
+msgid "Availability Warning"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_available_in_pos
@@ -69,19 +87,21 @@ msgid "Choose your Delivery Method"
 msgstr "Escolha o seu Método de Entrega"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
-msgid "Country..."
+#: model:ir.model,name:website_sale_delivery.model_res_country
+#, fuzzy
+msgid "Country"
 msgstr "País..."
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_project_id
-msgid "Create a task under this project on sale order validation."
-msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
 msgstr "Montante de Entrega"
+
+#. module: website_sale_delivery
+#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
+#, fuzzy
+msgid "Delivery Methods"
+msgstr "Escolha o seu Método de Entrega"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -90,7 +110,7 @@ msgstr "Descrição"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
-msgid "Description displayed on the eCommerce and on the Online Quotations."
+msgid "Description displayed on the eCommerce and on online quotations."
 msgstr ""
 
 #. module: website_sale_delivery
@@ -144,17 +164,12 @@ msgid "Landed Costs"
 msgstr "Custos de Entrega"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn_msg
-msgid "Message for Purchase Order Line"
-msgstr "Mensagem para Linha de Ordem de Compra"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_last_value
+msgid "Last Value"
+msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn_msg
-msgid "Message for Sales Order Line"
-msgstr "Mensagem para a linha da ordem de venda"
-
-#. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:138
+#: code:addons/website_sale_delivery/models/sale_order.py:106
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address. "
@@ -182,51 +197,26 @@ msgid "Products to propose when add to cart."
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_project_id
-msgid "Project"
-msgstr "Projeto"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-msgid "Purchase Order Line"
-msgstr "Linha de Ordem de Compra"
-
-#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
 msgid "Rating"
+msgstr "Classificação"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_count
+#, fuzzy
+msgid "Rating count"
+msgstr "Classificação"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_rating_last_value
+#, fuzzy
+msgid "Rating value"
 msgstr "Classificação"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
 msgid "Sales Order"
 msgstr "Ordem de Vendas"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid "Sales Order Line"
-msgstr "Linha da ordem de venda"
-
-#. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
-msgid "Select..."
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
-"Selecionar a opção \"Aviso\" vai notificar o utilizador com a mensagem, "
-"Selecionar \"Bloquear Mensagem\" vai iniciar uma excepção com a mensagem e o "
-"bloqueio de fluxo. A mensagem tem de ser escrita no próximo campo."
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
-msgid "Sequence"
-msgstr "Sequência"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_x
@@ -239,7 +229,7 @@ msgid "Size Y"
 msgstr "Tamanho Y"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:137
+#: code:addons/website_sale_delivery/models/sale_order.py:105
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr ""
@@ -263,6 +253,13 @@ msgstr "Produtos Sugeridos"
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
 msgid "The amount without tax."
 msgstr "Valor sem Imposto"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_availability
+msgid ""
+"This field is used to display a availability banner with a message on the "
+"ecommerce"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
@@ -289,9 +286,25 @@ msgid "Tracking:"
 msgstr ""
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
+msgid "Visible in Website"
+msgstr "Visível no Website"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
+msgid "Website Comments"
+msgstr "Comentários do Website"
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Website Product Category"
 msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
+#, fuzzy
+msgid "Website Sequence"
+msgstr "Sequência"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
@@ -308,15 +321,33 @@ msgstr "Website meta Palavra-Chaves"
 msgid "Website meta title"
 msgstr "Website meta Título"
 
+#~ msgid "Message for Purchase Order Line"
+#~ msgstr "Mensagem para Linha de Ordem de Compra"
+
+#~ msgid "Message for Sales Order Line"
+#~ msgstr "Mensagem para a linha da ordem de venda"
+
+#~ msgid "Project"
+#~ msgstr "Projeto"
+
+#~ msgid "Purchase Order Line"
+#~ msgstr "Linha de Ordem de Compra"
+
+#~ msgid "Sales Order Line"
+#~ msgstr "Linha da ordem de venda"
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "Selecionar a opção \"Aviso\" vai notificar o utilizador com a mensagem, "
+#~ "Selecionar \"Bloquear Mensagem\" vai iniciar uma excepção com a mensagem "
+#~ "e o bloqueio de fluxo. A mensagem tem de ser escrita no próximo campo."
+
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr ""
 #~ "O endereço URL completo para aceder ao documento através do website."
-
-#~ msgid "Visible in Website"
-#~ msgstr "Visível no Website"
-
-#~ msgid "Website Comments"
-#~ msgstr "Comentários do Website"
 
 #~ msgid "Website URL"
 #~ msgstr "URL da Página Web"

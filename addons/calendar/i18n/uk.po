@@ -1,4 +1,3 @@
-# #-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * calendar
@@ -11,36 +10,19 @@
 # Zoriana Zaiats, 2015
 # Zoriana Zaiats, 2015
 # ТАрас <tratatuta@i.ua>, 2016
-# #-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * calendar
-#
-# Translators:
-# Bogdan, 2015
-# Bohdan Lisnenko, 2015
-# Bohdan Lisnenko, 2016
-# Zoriana Zaiats, 2015
-# Zoriana Zaiats, 2015
-# ТАрас <tratatuta@i.ua>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-06-09 05:32+0000\n"
-"Last-Translator: ТАрас <tratatuta@i.ua>\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"PO-Revision-Date: 2016-08-12 11:15+0000\n"
+"Last-Translator: Yaroslav Molochko <onorua@gmail.com>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
 "uk/)\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
@@ -482,7 +464,7 @@ msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:35
+#: code:addons/calendar/static/src/js/base_calendar.js:95
 #, python-format
 msgid " [Me]"
 msgstr "[Я]"
@@ -505,7 +487,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr "${object.event_id.name} - Дату було оновлено"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:776
+#: code:addons/calendar/calendar.py:777
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -515,7 +497,7 @@ msgstr ""
 "%s о %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:774
+#: code:addons/calendar/calendar.py:775
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "%s о (%s до %s) (%s)"
@@ -556,7 +538,7 @@ msgstr "Активний"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:132
+#: code:addons/calendar/static/src/js/base_calendar.js:75
 #, python-format
 msgid "Add Favorite Calendar"
 msgstr "Додати Улюблений Календар"
@@ -567,7 +549,7 @@ msgid "All Day"
 msgstr "Весь день"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:771
+#: code:addons/calendar/calendar.py:772
 #, python-format
 msgid "AllDay , %s"
 msgstr "Весь день, %s"
@@ -593,8 +575,8 @@ msgid "Attendee information"
 msgstr "Інформація про учасників"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_ids
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_partner_ids
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Attendees"
@@ -606,7 +588,7 @@ msgid "Availability"
 msgstr "Наявність"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1714
+#: code:addons/calendar/calendar.py:1738
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -633,9 +615,7 @@ msgid "Calendar Alarm"
 msgstr "Сповіщення календаря"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:43
-#, python-format
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Calendar Invitation"
 msgstr "Запрошення"
 
@@ -689,6 +669,7 @@ msgstr "Дата створення"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_display_start
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Date"
 msgstr "Дата"
 
@@ -748,9 +729,9 @@ msgstr "Назва для відображення"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:168
-#, python-format
-msgid "Do you really want to delete this filter from favorite?"
+#: code:addons/calendar/static/src/js/base_calendar.js:156
+#, fuzzy, python-format
+msgid "Do you really want to delete this filter from favorites ?"
 msgstr "Ви дійсно хочете видалити цей фільтр із закладок?"
 
 #. module: calendar
@@ -772,7 +753,7 @@ msgid "Email"
 msgstr "Ел. пошта"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1365
+#: code:addons/calendar/calendar.py:1367
 #, python-format
 msgid "Email addresses not found"
 msgstr "Ел. пошти не було знайдено"
@@ -839,20 +820,20 @@ msgid "Event alarm"
 msgstr "Сповіщення про подію"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1239
+#: code:addons/calendar/calendar.py:1241
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr "Інтервал повторень події не може бути від’ємним."
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:45
+#: code:addons/calendar/static/src/js/base_calendar.js:96
 #, python-format
 msgid "Everybody's calendars"
 msgstr "Календарі усіх користувачів"
 
 #. module: calendar
-#: selection:calendar.event,class:0
+#: selection:calendar.event,privacy:0
 msgid "Everyone"
 msgstr "Всі"
 
@@ -904,7 +885,7 @@ msgid "Group By"
 msgstr "Групувати за"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1656
+#: code:addons/calendar/calendar.py:1680
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -953,6 +934,12 @@ msgstr "Знак запрошення"
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitation details"
 msgstr "Деталі запрошення"
+
+#. module: calendar
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#, fuzzy
+msgid "Invitation for"
+msgstr "Запрошення"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1009,6 +996,7 @@ msgstr "Дозволити події автоматично повторюва�
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_location
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Location"
 msgstr "Розташування"
 
@@ -1117,9 +1105,7 @@ msgid "Needs Action"
 msgstr "Очікується"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:36
-#, python-format
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No I'm not going."
 msgstr "Ні, не піду."
 
@@ -1141,12 +1127,12 @@ msgid "OK"
 msgstr "Ок"
 
 #. module: calendar
-#: selection:calendar.event,class:0
+#: selection:calendar.event,privacy:0
 msgid "Only internal users"
 msgstr "Тільки внутрішні користувачі"
 
 #. module: calendar
-#: selection:calendar.event,class:0
+#: selection:calendar.event,privacy:0
 msgid "Only me"
 msgstr "Тільки я"
 
@@ -1166,18 +1152,23 @@ msgid "Owner"
 msgstr "Власник"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_ids
+msgid "Participant"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
 msgid "Partner"
 msgstr "Партнер"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1252
+#: code:addons/calendar/calendar.py:1254
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr "Будь ласка, виберіть відповідний день місяця."
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_class
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_privacy
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Privacy"
 msgstr "Приватність"
@@ -1392,7 +1383,7 @@ msgstr ""
 "з такими програмами як відпустки чи бізнес можливості."
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1361
+#: code:addons/calendar/calendar.py:1363
 #, python-format
 msgid "The following contacts have no email address :"
 msgstr "Ці контакти не мають ел.пошти :"
@@ -1485,35 +1476,12 @@ msgid "Weekday"
 msgstr "День тижня"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:48
-#, python-format
-msgid "When"
-msgstr "Коли"
-
-#. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:52
-#, python-format
-msgid "Where"
-msgstr "Де"
-
-#. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:56
-#, python-format
-msgid "Who"
-msgstr "Хто"
-
-#. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Year(s)"
 msgstr "Рік(роки)"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:35
-#, python-format
+#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
 msgstr "Так, я піду."
 
@@ -1544,7 +1512,7 @@ msgid "e.g. Business Lunch"
 msgstr "напр. Бізнес ланч"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1237
+#: code:addons/calendar/calendar.py:1239
 #, python-format
 msgid "interval cannot be negative."
 msgstr "інтервал не може бути від’ємним."
@@ -2566,6 +2534,12 @@ msgstr "ir.values"
 #~ "</div> \n"
 #~ "</div>"
 
+#~ msgid "${object.event_id.name}"
+#~ msgstr "${object.event_id.name}"
+
+#~ msgid "${object.event_id.name} - Date has been updated"
+#~ msgstr "${object.event_id.name} - Дату було оновлено"
+
 #~ msgid "A email has been send to specify that the date has been changed !"
 #~ msgstr ""
 #~ "Електронний лист було надіслано, щоб уточнити, що дату було змінено!"
@@ -2630,3 +2604,12 @@ msgstr "ir.values"
 
 #~ msgid "Website communication history"
 #~ msgstr "Історія бесіди на веб-сайті"
+
+#~ msgid "When"
+#~ msgstr "Коли"
+
+#~ msgid "Where"
+#~ msgstr "Де"
+
+#~ msgid "Who"
+#~ msgstr "Хто"

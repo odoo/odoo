@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2015-09-26 18:28+0000\n"
 "Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
@@ -34,6 +34,11 @@ msgstr "Archiver"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Par catégorie de note collante"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
+msgstr "Cliquez sur pour ajouter une nouvelle étiquette."
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -132,7 +137,7 @@ msgid "New"
 msgstr "Nouveau"
 
 #. module: note
-#: code:addons/note/note.py:165
+#: code:addons/note/models/note.py:128
 #, python-format
 msgid "New Note"
 msgstr "Nouvelle note"
@@ -180,8 +185,8 @@ msgstr "Propriétaire"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
-msgstr "Propriétaire de l'étape de la note."
+msgid "Owner of the note stage"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
@@ -233,13 +238,15 @@ msgid "Tag name already exists !"
 msgstr "Le nom de l'étiquette existe déjà!"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Étiquettes"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "Cette semaine"
@@ -333,6 +340,9 @@ msgstr ""
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Nombre de messages non lus"
+
+#~ msgid "Owner of the note stage."
+#~ msgstr "Propriétaire de l'étape de la note."
 
 #~ msgid "Unread Messages"
 #~ msgstr "Messages non lus"

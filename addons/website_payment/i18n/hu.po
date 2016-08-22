@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-03-08 19:50+0000\n"
 "Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -85,11 +85,6 @@ msgid "Manage your payment methods"
 msgstr "Fizetési módjainak kezelése"
 
 #. module: website_payment
-#: model:ir.ui.view,arch_db:website_payment.pay_methods
-msgid "My Account"
-msgstr "Fiókom"
-
-#. module: website_payment
 #: code:addons/website_payment/controllers/main.py:43
 #, python-format
 msgid "Pay Now"
@@ -117,6 +112,11 @@ msgid "Payment Methods"
 msgstr "Elérhető fizetési módok"
 
 #. module: website_payment
+#: model:ir.model,name:website_payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Fizetési tranzakció"
+
+#. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 msgid "Payment processed by"
 msgstr "Fizetés végrehajtója"
@@ -126,6 +126,16 @@ msgstr "Fizetés végrehajtója"
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "Reference"
 msgstr "Hivatkozás"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_payment_transaction_sale_order_id
+msgid "Sale Order"
+msgstr "Vásárlói megrendelés"
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_sale_order
+msgid "Sales Order"
+msgstr "Vásárlói megrendelés"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay
@@ -147,6 +157,9 @@ msgstr "account.config.settings"
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "payment_provider_logo"
 msgstr "payment_provider_logo"
+
+#~ msgid "My Account"
+#~ msgstr "Fiókom"
 
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr ""

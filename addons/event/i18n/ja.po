@@ -1,4 +1,3 @@
-# #-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event
@@ -6,29 +5,18 @@
 # Translators:
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
-# #-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * event
-#
-# Translators:
-# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-22 08:14+0000\n"
-"Last-Translator: 高木正勝 <masakatsu.takagi@pro-spire.co.jp>\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-07-26 14:05+0000\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: event
@@ -48,7 +36,7 @@ msgid ""
 "\n"
 "<p>Dear ${object.name},</p>\n"
 "<p>Thank you for your inquiry.</p>\n"
-"<p>We confirm your subscription to the event <b>${object.event_id.name}</b>. "
+"<p>We confirm your registration to the event <b>${object.event_id.name}</b>. "
 "You will receive emails with practical information.</p>\n"
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
@@ -226,8 +214,9 @@ msgstr ""
 
 #. module: event
 #: selection:event.mail,interval_type:0
-msgid "After each subscription"
-msgstr ""
+#, fuzzy
+msgid "After each registration"
+msgstr "登録をキャンセル"
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -241,7 +230,8 @@ msgstr "全てのイベントを無料にする （設定注意）"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
-msgid "Allow adding extra questions on subscriptions"
+#, fuzzy
+msgid "Allow adding extra questions on registrations"
 msgstr "申し込みに関する追加質問をする"
 
 #. module: event
@@ -321,6 +311,12 @@ msgid "Auto Confirmation"
 msgstr "自動確認"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_seats_available
+#, fuzzy
+msgid "Available Seats"
+msgstr "満席です"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_back
 msgid "Badge Back"
 msgstr ""
@@ -345,6 +341,11 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Banner Odoo Image"
+msgstr ""
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_configuration
+msgid "Barcode Interface"
 msgstr ""
 
 #. module: event
@@ -533,13 +534,6 @@ msgid "Course Summary"
 msgstr ""
 
 #. module: event
-#: model:web.tip,description:event.event_tip_1
-msgid ""
-"Create and manage registrations for this event, send emails to attendees and "
-"print identification badges."
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
 #: model:ir.model.fields,field_description:event.field_event_confirm_create_uid
 #: model:ir.model.fields,field_description:event.field_event_event_create_uid
@@ -725,6 +719,18 @@ msgid "Event Beginning Date"
 msgstr "イベントの開始日"
 
 #. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+#, fuzzy
+msgid "Event Categories"
+msgstr "イベント日"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
+#, fuzzy
+msgid "Event Category"
+msgstr "イベント日"
+
+#. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
@@ -803,11 +809,16 @@ msgstr ""
 #: model:ir.model,name:event.model_event_type
 #: model:ir.model.fields,field_description:event.field_event_type_name
 #: model:ir.model.fields,field_description:event.field_report_event_registration_event_type_id
-#: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 #: model:ir.ui.view,arch_db:event.view_event_type_tree
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event Type"
+msgstr "イベントタイプ"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+#, fuzzy
+msgid "Event Types"
 msgstr "イベントタイプ"
 
 #. module: event
@@ -838,11 +849,6 @@ msgstr "イベント分析"
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
 msgstr ""
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-msgid "Events Types"
-msgstr "イベントタイプ"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -986,6 +992,11 @@ msgid "Install and administer your own server;"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_config_settings_module_event_barcode
+msgid "Install the event_barcode module"
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_event_sale
 msgid "Install the event_sale module"
 msgstr ""
@@ -1120,7 +1131,7 @@ msgid "Mail Scheduler"
 msgstr ""
 
 #. module: event
-#: model:ir.ui.menu,name:event.menu_event_type
+#: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
 msgstr ""
 
@@ -1146,7 +1157,8 @@ msgstr "マネジャ"
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
-msgid "Manually confirm every subscription"
+#, fuzzy
+msgid "Manually confirm every registration"
 msgstr "各申し込みごとに、手動で承認"
 
 #. module: event
@@ -1156,7 +1168,6 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_availability
-#: model:ir.model.fields,field_description:event.field_event_event_seats_available
 msgid "Maximum Attendees"
 msgstr "最大出席者数"
 
@@ -1199,7 +1210,8 @@ msgstr "自動配信無し"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
-msgid "No extra questions on subscriptions"
+#, fuzzy
+msgid "No extra questions on registrations"
 msgstr "申し込みに関する追加質問をしない"
 
 #. module: event
@@ -1221,7 +1233,8 @@ msgstr "本イベントには満席です"
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
-msgid "No validation step on subscription"
+#, fuzzy
+msgid "No validation step on registration"
 msgstr "確認ステップを省略"
 
 #. module: event
@@ -1262,7 +1275,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid ""
 "Odoo helps you schedule and efficiently organize your events:\n"
-"    track subscriptions and participations, automate the confirmation "
+"    track registrations and participations, automate the confirmation "
 "emails,\n"
 "    sell tickets, etc."
 msgstr ""
@@ -1398,6 +1411,12 @@ msgid "Registration State"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_questions
+#, fuzzy
+msgid "Registration Survey"
+msgstr "登録日"
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Registration contact"
 msgstr ""
@@ -1458,8 +1477,14 @@ msgid "Responsible"
 msgstr "担当"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_barcode
+msgid "Scan badges to confirm attendances"
+msgstr ""
+
+#. module: event
 #: model:res.groups,name:event.group_email_scheduling
-msgid "Schedule Emails on Event Subscription"
+#, fuzzy
+msgid "Schedule Emails on Event Registration"
 msgstr "イベント參加申請につきメールをスケジュール"
 
 #. module: event
@@ -1544,11 +1569,6 @@ msgstr "ステータス"
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
 msgstr "参加申請する"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_questions
-msgid "Subscription Survey"
-msgstr "申し込みに関する調査"
 
 #. module: event
 #: model:event.event,name:event.event_3
@@ -1653,7 +1673,7 @@ msgstr "未読メッセージ"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
 msgid ""
-"Unselect this option to manually manage draft event and draft subscription"
+"Unselect this option to manually manage draft event and draft registration"
 msgstr ""
 
 #. module: event
@@ -1733,7 +1753,7 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_config_settings_group_email_scheduling
 msgid ""
 "You will be able to configure emails, and to schedule them to be "
-"automatically sent to the attendees on subscription and/or attendance"
+"automatically sent to the attendees on registration and/or attendance"
 msgstr ""
 
 #. module: event
@@ -1743,7 +1763,7 @@ msgstr ""
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
-msgid "Your subscription at ${object.event_id.name}"
+msgid "Your registration at ${object.event_id.name}"
 msgstr ""
 
 #. module: event
@@ -1834,6 +1854,9 @@ msgstr ""
 
 #~ msgid "Number of unread messages"
 #~ msgstr "未読メッセージの件数"
+
+#~ msgid "Subscription Survey"
+#~ msgstr "申し込みに関する調査"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "未読メッセージカウンター"

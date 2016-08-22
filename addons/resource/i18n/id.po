@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2015-11-17 11:59+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:686
+#: code:addons/resource/resource.py:688
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
@@ -28,6 +28,13 @@ msgstr "%s (copy)"
 #: model:ir.model.fields,field_description:resource.field_resource_resource_active
 msgid "Active"
 msgstr "Aktif"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
+msgid ""
+"An efficiency of 50% means the resource is two times smaller than his usual "
+"speed."
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -340,20 +347,6 @@ msgid "Sunday"
 msgstr "Minggu"
 
 #. module: resource
-#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
-msgstr ""
-"Bidang ini menggambarkan efisiensi sumber daya untuk menyelesaikan tugas. "
-"misalnya sumber daya menempatkan sendirian di fase 5 hari dengan 5 tugas "
-"yang diberikan kepadanya, akan menunjukkan beban 100% untuk fase ini secara "
-"default, tetapi jika kita menempatkan efisiensi suatu dari 200%, maka "
-"bebannya hanya akan menjadi 50%."
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Thursday"
 msgstr "Kamis"
@@ -418,3 +411,15 @@ msgstr "Masa kerja"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Working Time"
 msgstr "Hari Kerja"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
+#~ "will show a load of 100% for this phase by default, but if we put a "
+#~ "efficiency of 200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "Bidang ini menggambarkan efisiensi sumber daya untuk menyelesaikan tugas. "
+#~ "misalnya sumber daya menempatkan sendirian di fase 5 hari dengan 5 tugas "
+#~ "yang diberikan kepadanya, akan menunjukkan beban 100% untuk fase ini "
+#~ "secara default, tetapi jika kita menempatkan efisiensi suatu dari 200%, "
+#~ "maka bebannya hanya akan menjadi 50%."

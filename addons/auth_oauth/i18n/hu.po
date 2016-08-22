@@ -1,4 +1,3 @@
-# #-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_oauth
@@ -6,56 +5,20 @@
 # Translators:
 # krnkris, 2015
 # krnkris, 2016
-# #-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * auth_oauth
-#
-# Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# krnkris <krnkris@freemail.hu>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 08:37+0000\n"
-"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
-"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-06-06 19:55+0000\n"
+"Last-Translator: krnkris\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
+"hu/)\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-#, fuzzy
-msgid ""
-"<br/>\n"
-"                                    - Create a new project<br/>\n"
-"                                    - Go to Api Access<br/>\n"
-"                                    - Create an oauth client_id<br/>\n"
-"                                    - Edit settings and set both Authorized "
-"Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
-"                                    <br/>\n"
-"                                    Now copy paste the client_id here:"
-msgstr ""
-"<br/>\n"
-"                                    - Hozzon létre új projektet<br/>\n"
-"                                    - Menjen az Alk eléréshez<br/>\n"
-"                                    - Hozza létre a felhat client_id<br/>\n"
-"                                    - Szerkessze a beállításokat és állítsa "
-"be  Átirányító URI jogosultságokat és a JavaScript jogosult forrásokat a "
-"hosztnevére.<br/>\n"
-"                                    <br/>\n"
-"                                    Most másoja és illessze be a client_id "
-"ide:"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:98
@@ -70,16 +33,12 @@ msgstr "Fizetendő, beszállító számla"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_receivable_id
-#, fuzzy
 msgid "Account Receivable"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Vevői,  követelés számla\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Kintlévőség számla"
+msgstr "Vevői,  követelés számla"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_enabled
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Allow users to sign in with Google"
 msgstr "Engedélyezze a felhasználók Google bejelentkezését"
 
@@ -87,6 +46,11 @@ msgstr "Engedélyezze a felhasználók Google bejelentkezését"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_enabled
 msgid "Allowed"
 msgstr "Engedélyezett"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Authentication"
+msgstr "Azonosítás"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
@@ -109,6 +73,26 @@ msgid "CSS class"
 msgstr "CSS osztály"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Check that the application type is set on <b>Web Application</b>. \n"
+"                                        Now configure the allowed pages on "
+"which you will be redirected."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Click on <b>Create Project</b> and enter the project name and \n"
+"                                        other details."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Click on <b>Use Google APIs</b>"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_client_id
 msgid "Client ID"
@@ -118,6 +102,11 @@ msgstr "Ügyfál ID azonosító"
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_ref_company_ids
 msgid "Companies that refers to partner"
 msgstr "A partnerre hivatkozó vállalatok"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Connect to your Google account and go to"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contract_ids
@@ -157,48 +146,40 @@ msgstr "Ebbe az adósba vetett hitének mértéke"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Név megjelenítése\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Megjelenített név"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
-#, fuzzy
-msgid "Fiscal Position"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"ÁFA pozíció\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Költségvetési pozíció"
+msgstr "Név megjelenítése"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Google APIs console"
-msgstr "Google API-k konzolja"
+msgid ""
+"Fill in your address, email and the product name (for example odoo) \n"
+"                                        and then save."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
+msgid "Fiscal Position"
+msgstr "ÁFA pozíció"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Google Client ID:"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
-#, fuzzy
 msgid "Has unreconciled entries"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Vannak nem egyeztetett tételek\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Vannak egyeztetetlen tételek"
+msgstr "Vannak nem egyeztetett tételek"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
-#, fuzzy
 msgid "ID"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Azonosító ID"
+msgstr "ID"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
+msgid "Invoice"
+msgstr "Számla"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
@@ -213,23 +194,13 @@ msgstr "Könyvelési napló tételsorok"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Utolsó frissítés dátuma\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Utoljára frissítve ekkor"
+msgstr "Utolsó frissítés dátuma"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Utoljára frissítve, által\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Utoljára frissítette"
+msgstr "Utoljára frissítve, által"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_write_date
@@ -238,27 +209,25 @@ msgstr "Utoljára frissítve "
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_last_time_entries_checked
-#, fuzzy
 msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
 "Az ügyfélre vonatkozó legutolsó számlák & fizetések párosításának időpontja. "
 "Ez elvégzett, ha nincs legalább egy könyveléssel egyeztetetlen terhelés és "
 "egy könyveléssel egyeztetetlen jóváírás vagy ha rákattintott az \"Elvégezve"
-"\" gombra.\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Az ügyfélre vonatkozó legutolsó számlák & fizetések egyeztetésének "
-"időpontja. Ez elvégzett, ha nincs legalább egy könyveléssel egyeztetetlen "
-"terhelés és egy könyveléssel egyeztetetlen jóváírás vagy ha rákattintott az "
-"\"Elvégezve\" gombra."
+"\" gombra."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
 msgstr "Legutóbbi Számlák & Fizetések könyvelői párosításának dátuma"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
+msgid "Message for Invoice"
+msgstr "Üzenet a számláról"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
@@ -301,6 +270,23 @@ msgid "Oauth Provider user_id"
 msgstr "Oauth szolgáltatói felhasználó_id"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"On the left side menu, select the sub menu <b>Credentials</b> \n"
+"                                        (from <b>API Manager</b>) then "
+"select <b>OAuth consent screen</b>."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Once done, you receive two information (your <b>Client ID</b> and <b>\n"
+"                                        Client Secret</b>). You have to "
+"insert your <b>Client ID</b> in \n"
+"                                        the field below."
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
 msgid "Payable Limit"
 msgstr "Szállítói tartozás limitösszege"
@@ -316,9 +302,40 @@ msgid "Providers"
 msgstr "Szolgáltatók"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Return to Top"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
 msgid "Scope"
 msgstr "Hatáskör"
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_invoice_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"A \"Figyelmeztetés\" lehetőség kiválasztása a felhasználót egy üzenettel "
+"értesíti, az \"Üzenet blokkolása\" lehetőség egy kivételt küld az üzenethez "
+"és leblokkolja a folyamatot. Az üzenetet a következő mezőbe kell beírni."
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
+msgid "Server uri"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Show Tutorial"
+msgstr "Bemutató megjelenítése"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
+msgid "Show tutorial"
+msgstr ""
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:96
@@ -336,17 +353,24 @@ msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_has_unreconciled_entries
-#, fuzzy
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
 msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
 "Az ügyfélnek legalább egy könyveléssel egyeztetetlen terhelése és jóváírása "
-"van a legutóbbi számlák & fizetések párosítás végrehajtásától.\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Az ügyfélnek legalább egy könyveléssel egyeztetetlen terhelése és jóváírása "
-"van a legutóbbi számlák & fizetések egyeztetés végrehajtásától."
+"van a legutóbbi számlák & fizetések párosítás végrehajtásától."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Then click on <b>Add Credentials</b> and select the second option \n"
+"                                        (OAuth 2.0 Client ID)."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Then click on <b>Create</b>."
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
@@ -359,17 +383,12 @@ msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_receivable_id
-#, fuzzy
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
 "A rendszer az alapértelmezett helyett ezt a számlát fogja használni a "
-"partner vevő számlájaként.\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"A rendszer az alapértelmezett helyett ezt a számlát fogja használni ehhez a "
-"partnerhez, mint  vevői Kintlévőség számlát."
+"partner vevő számlájaként."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_supplier_payment_term_id
@@ -392,45 +411,32 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
-"To setup the signin process with Google, first you have to perform the "
-"following steps:<br/>\n"
-"                                    <br/>\n"
-"                                    - Go to the"
+"To achieve this, complete the field <b>Authorized redirect URIs</b>.\n"
+"                                        Copy paste the following link in the "
+"box"
 msgstr ""
-"A Google belépési folyamat beállításhoz, először a következő lépéseket kell "
-"levégeznie:<br/>\n"
-"                                    <br/>\n"
-"                                    - Menjen a"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"To setup the sign in process with Google, you have to perform \n"
+"                                    the following steps first."
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
-#, fuzzy
 msgid "Total Invoiced"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Teljes számlázva\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Összesen számlázva"
+msgstr "Teljes számlázva"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit
-#, fuzzy
 msgid "Total Payable"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Fizetendő tartozás összesen\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Beszállítónak fizetendő összesen"
+msgstr "Fizetendő tartozás összesen"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_credit
-#, fuzzy
 msgid "Total Receivable"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Összes vevőkövetelés\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Összes vevőkövetelés, kintlévőség"
+msgstr "Összes vevőkövetelés"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_credit
@@ -463,16 +469,6 @@ msgid "Vendor Payment Term"
 msgstr "Beszállító kifizetési határidő"
 
 #. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:100
 #, python-format
 msgid ""
@@ -501,6 +497,11 @@ msgid "e.g. 1234-xyz.apps.googleusercontent.com"
 msgstr "pl. 1234-xyz.apps.googleusercontent.com"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "https://console.developers.google.com/"
+msgstr "https://console.developers.google.com/"
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "ir.config_parameter"
 msgstr "ir.config_parameter"
@@ -510,33 +511,45 @@ msgstr "ir.config_parameter"
 msgid "unknown"
 msgstr "ismeretlen"
 
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                                    - Ceate a new project<br/>\n"
+#~ "                                    - Go to Api Access<br/>\n"
+#~ "                                    - Create an oauth client_id<br/>\n"
+#~ "                                    - Edit settings and set both "
+#~ "Authorized Redirect URIs and Authorized JavaScript Origins to your "
+#~ "hostname.<br/>\n"
+#~ "                                    <br/>\n"
+#~ "                                    Now copy paste the client_id here:"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                                    - Hozzon létre új projektet<br/>\n"
+#~ "                                    - Menjen az Alk eléréshez<br/>\n"
+#~ "                                    - Hozza létre a felhat client_id<br/"
+#~ ">\n"
+#~ "                                    - Szerkessze a beállításokat és "
+#~ "állítsa be  Átirányító URI jogosultságokat és a JavaScript jogosult "
+#~ "forrásokat a hosztnevére.<br/>\n"
+#~ "                                    <br/>\n"
+#~ "                                    Most másoja és illessze be a "
+#~ "client_id ide:"
+
 #~ msgid "Currency id"
 #~ msgstr "Pénznem id"
 
-#~ msgid "Authentication"
-#~ msgstr "Azonosítás"
-
-#~ msgid "Invoice"
-#~ msgstr "Számla"
-
-#~ msgid "Message for Invoice"
-#~ msgstr "Üzenet a számláról"
+#~ msgid "Google APIs console"
+#~ msgstr "Google API-k konzolja"
 
 #~ msgid ""
-#~ "Selecting the \"Warning\" option will notify user with the message, "
-#~ "Selecting \"Blocking Message\" will throw an exception with the message "
-#~ "and block the flow. The Message has to be written in the next field."
+#~ "To setup the signin process with Google, first you have to perform the "
+#~ "following steps:<br/>\n"
+#~ "                                    <br/>\n"
+#~ "                                    - Go to the"
 #~ msgstr ""
-#~ "A \"Figyelmeztetés\" lehetőség kiválasztása a felhasználót egy üzenettel "
-#~ "értesíti, az \"Üzenet blokkolása\" lehetőség egy kivételt küld az "
-#~ "üzenethez és leblokkolja a folyamatot. Az üzenetet a következő mezőbe "
-#~ "kell beírni."
+#~ "A Google belépési folyamat beállításhoz, először a következő lépéseket "
+#~ "kell levégeznie:<br/>\n"
+#~ "                                    <br/>\n"
+#~ "                                    - Menjen a"
 
 #~ msgid "Sequence"
 #~ msgstr "Sorszám"
-
-#~ msgid "Show Tutorial"
-#~ msgstr "Bemutató megjelenítése"
-
-#~ msgid "https://console.developers.google.com/"
-#~ msgstr "https://console.developers.google.com/"

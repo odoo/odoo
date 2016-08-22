@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-07-04 09:20+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -40,7 +40,7 @@ msgid ""
 "\n"
 "<p>Dear ${object.name},</p>\n"
 "<p>Thank you for your inquiry.</p>\n"
-"<p>We confirm your subscription to the event <b>${object.event_id.name}</b>. "
+"<p>We confirm your registration to the event <b>${object.event_id.name}</b>. "
 "You will receive emails with practical information.</p>\n"
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
@@ -240,7 +240,8 @@ msgstr "Розширений JQuery"
 
 #. module: event
 #: selection:event.mail,interval_type:0
-msgid "After each subscription"
+#, fuzzy
+msgid "After each registration"
 msgstr "Після кожної підписки"
 
 #. module: event
@@ -255,7 +256,8 @@ msgstr "Всі події - безкоштовні"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
-msgid "Allow adding extra questions on subscriptions"
+#, fuzzy
+msgid "Allow adding extra questions on registrations"
 msgstr "Дозволити додаткові запитання у підписках"
 
 #. module: event
@@ -335,6 +337,12 @@ msgid "Auto Confirmation"
 msgstr "Авто-підтвердження"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_seats_available
+#, fuzzy
+msgid "Available Seats"
+msgstr "Не залишилося вільних місць."
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_back
 msgid "Badge Back"
 msgstr "Тильна сторона"
@@ -361,6 +369,12 @@ msgstr "Всередині зправа"
 #: model:event.event,description:event.event_3
 msgid "Banner Odoo Image"
 msgstr "Зображення банера Odoo"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_configuration
+#, fuzzy
+msgid "Barcode Interface"
+msgstr "Всередині зліва"
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -549,15 +563,6 @@ msgid "Course Summary"
 msgstr "Підсумок курсу"
 
 #. module: event
-#: model:web.tip,description:event.event_tip_1
-msgid ""
-"Create and manage registrations for this event, send emails to attendees and "
-"print identification badges."
-msgstr ""
-"Створюйте та керуйте реєстраціями на подію, надсилайте запрошення та "
-"друкуйте перепустки"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
 #: model:ir.model.fields,field_description:event.field_event_confirm_create_uid
 #: model:ir.model.fields,field_description:event.field_event_event_create_uid
@@ -682,13 +687,8 @@ msgstr "Виконано"
 #. module: event
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
-#, fuzzy
 msgid "Draft"
-msgstr ""
-"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
-"Чорновий\n"
-"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
-"Чернетка"
+msgstr "Чорновий"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -746,6 +746,18 @@ msgstr "Бейдж"
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event Beginning Date"
 msgstr "Дата початку події"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+#, fuzzy
+msgid "Event Categories"
+msgstr "Дата проведення"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
+#, fuzzy
+msgid "Event Category"
+msgstr "Дата проведення"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
@@ -826,12 +838,17 @@ msgstr "Статус"
 #: model:ir.model,name:event.model_event_type
 #: model:ir.model.fields,field_description:event.field_event_type_name
 #: model:ir.model.fields,field_description:event.field_report_event_registration_event_type_id
-#: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 #: model:ir.ui.view,arch_db:event.view_event_type_tree
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event Type"
 msgstr "Тип Події"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+#, fuzzy
+msgid "Event Types"
+msgstr "Типи подій"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.report_event_registration_graph
@@ -861,11 +878,6 @@ msgstr "Аналіз подій"
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
 msgstr "Планувальники пошти подій"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-msgid "Events Types"
-msgstr "Типи подій"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1015,6 +1027,12 @@ msgid "Install and administer your own server;"
 msgstr "Встановіть та адмініструйте свій власний сервер;"
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_config_settings_module_event_barcode
+#, fuzzy
+msgid "Install the event_barcode module"
+msgstr "Розуміти різні модулі;"
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_event_sale
 msgid "Install the event_sale module"
 msgstr ""
@@ -1153,7 +1171,7 @@ msgid "Mail Scheduler"
 msgstr "Планувальник розсилок"
 
 #. module: event
-#: model:ir.ui.menu,name:event.menu_event_type
+#: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
 msgstr "Планувальники розсилок"
 
@@ -1179,7 +1197,8 @@ msgstr "Менеджер"
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
-msgid "Manually confirm every subscription"
+#, fuzzy
+msgid "Manually confirm every registration"
 msgstr "Вручну підтверджувати кожну підписку"
 
 #. module: event
@@ -1189,7 +1208,6 @@ msgstr "Макс. к-ть місць"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_availability
-#: model:ir.model.fields,field_description:event.field_event_event_seats_available
 msgid "Maximum Attendees"
 msgstr "Максимальна к-ть учасників"
 
@@ -1232,7 +1250,8 @@ msgstr "Без автоматизованої розсилки"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
-msgid "No extra questions on subscriptions"
+#, fuzzy
+msgid "No extra questions on registrations"
 msgstr "Немає додаткових запитань у підписках"
 
 #. module: event
@@ -1254,7 +1273,8 @@ msgstr "Не залишилося вільних місць."
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
-msgid "No validation step on subscription"
+#, fuzzy
+msgid "No validation step on registration"
 msgstr "Без підтверджувального кроку на підписках"
 
 #. module: event
@@ -1293,9 +1313,10 @@ msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
+#, fuzzy
 msgid ""
 "Odoo helps you schedule and efficiently organize your events:\n"
-"    track subscriptions and participations, automate the confirmation "
+"    track registrations and participations, automate the confirmation "
 "emails,\n"
 "    sell tickets, etc."
 msgstr ""
@@ -1438,6 +1459,12 @@ msgid "Registration State"
 msgstr "Статус реєстрації"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_questions
+#, fuzzy
+msgid "Registration Survey"
+msgstr "Статус реєстрації"
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Registration contact"
 msgstr "Контакт"
@@ -1498,8 +1525,14 @@ msgid "Responsible"
 msgstr "Відповідальний"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_barcode
+msgid "Scan badges to confirm attendances"
+msgstr ""
+
+#. module: event
 #: model:res.groups,name:event.group_email_scheduling
-msgid "Schedule Emails on Event Subscription"
+#, fuzzy
+msgid "Schedule Emails on Event Registration"
 msgstr "Запланувати Email-и для підписки на подію"
 
 #. module: event
@@ -1584,11 +1617,6 @@ msgstr "Статус"
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
 msgstr "Підписатися"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_questions
-msgid "Subscription Survey"
-msgstr "Контроль підписки"
 
 #. module: event
 #: model:event.event,name:event.event_3
@@ -1692,8 +1720,9 @@ msgstr "Непрочитані повідомлення"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
+#, fuzzy
 msgid ""
-"Unselect this option to manually manage draft event and draft subscription"
+"Unselect this option to manually manage draft event and draft registration"
 msgstr ""
 "Скасуйте вибір цієї опції, щоб вручну керувати чернетками подій та підписок"
 
@@ -1776,9 +1805,10 @@ msgstr "Для цього потрібно дочекатися дня поча�
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_group_email_scheduling
+#, fuzzy
 msgid ""
 "You will be able to configure emails, and to schedule them to be "
-"automatically sent to the attendees on subscription and/or attendance"
+"automatically sent to the attendees on registration and/or attendance"
 msgstr ""
 "Ви зможете налаштувати листи та спланувати їх автоматичне надсилання "
 "учасникам для підписки та/або запрошення"
@@ -1790,7 +1820,8 @@ msgstr "Ваш бейдж для ${object.event_id.name}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
-msgid "Your subscription at ${object.event_id.name}"
+#, fuzzy
+msgid "Your registration at ${object.event_id.name}"
 msgstr "Ваша підписка на ${object.event_id.name}"
 
 #. module: event
@@ -1853,6 +1884,13 @@ msgid "training material."
 msgstr ""
 
 #~ msgid ""
+#~ "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br/"
+#~ ">the event or change the dates on which it is held.)</em>"
+#~ msgstr ""
+#~ "<em>(Chamber Works зберігає за собою право скасовувати, перейменовувати, "
+#~ "змінювати місце або час проведення заходу.)</em>"
+
+#~ msgid ""
 #~ "<p>Hello ${object.name},</p>\n"
 #~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
 #~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
@@ -1867,6 +1905,20 @@ msgstr ""
 #~ "date_begin_located} по ${object.event_id.date_end_located}.\n"
 #~ "За більш детальною інформацією зв'яжіться з нашим відділом проведення "
 #~ "заходів.</p>\n"
+#~ "<p>Дякуємо Вам за участь!</p>\n"
+#~ "<p>Всіх благ</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
+#~ "has been recorded.\n"
+#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>Привіт ${object.name},</p>\n"
+#~ "<p>Ми підтверджуємо, що Вашу заявку на ${object.event_id.name} прийнято.\n"
+#~ "Знайдіть, будь ласка, свій <b>Бейдж</b> прикріплений до цього листа.</p>\n"
 #~ "<p>Дякуємо Вам за участь!</p>\n"
 #~ "<p>Всіх благ</p>"
 
@@ -1917,6 +1969,19 @@ msgstr ""
 #~ msgid "Action Needed"
 #~ msgstr "Необхідна дія"
 
+#~ msgid "Badge Innner Left"
+#~ msgstr "Всередині зліва"
+
+#~ msgid "Controlers and Views"
+#~ msgstr "Регулятори і "
+
+#~ msgid ""
+#~ "Create and manage registrations for this event, send emails to attendees "
+#~ "and print identification badges."
+#~ msgstr ""
+#~ "Створюйте та керуйте реєстраціями на подію, надсилайте запрошення та "
+#~ "друкуйте перепустки"
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Дата останнього повідомлення по запису."
 
@@ -1959,6 +2024,9 @@ msgstr ""
 
 #~ msgid "Open Event Menu"
 #~ msgstr "Відкрити меню подій"
+
+#~ msgid "Subscription Survey"
+#~ msgstr "Контроль підписки"
 
 #~ msgid "Thanks for attending ${object.event_id.name}"
 #~ msgstr "Дякуємо за участь ${object.event_id.name}"

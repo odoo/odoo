@@ -1,33 +1,22 @@
-# #-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_quote
 #
 # Translators:
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
-# #-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * website_quote
-#
-# Translators:
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-16 09:27+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"PO-Revision-Date: 2016-07-28 15:56+0000\n"
+"Last-Translator: Kaloyan Naumov <kaloyan@lumnus.net>\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/"
 "bg/)\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_quote
@@ -114,6 +103,12 @@ msgid "% discount"
 msgstr "отстъпка"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+#, fuzzy
+msgid "&amp;bull;"
+msgstr "&amp;nbsp;"
+
+#. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
 #: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
 #: model:product.template,quote_description:website_quote.product_template_quote_2
@@ -154,6 +149,12 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept"
+msgstr "<i class=\"fa fa-check\"/> Приеми"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+#, fuzzy
+msgid "<i class=\"fa fa-check\"/> Accept &amp; Pay"
 msgstr "<i class=\"fa fa-check\"/> Приеми"
 
 #. module: website_quote
@@ -418,6 +419,11 @@ msgstr ""
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Access to the Lead"
 msgstr "Достъп до Следата"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
+msgid "Add to order lines"
+msgstr ""
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_3
@@ -842,6 +848,12 @@ msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr "Показва в последователен ред при показване на редове от офертата."
 
 #. module: website_quote
+#: model:ir.model.fields,help:website_quote.field_sale_order_option_sequence
+#, fuzzy
+msgid "Gives the sequence order when displaying a list of suggested product."
+msgstr "Показва в последователен ред при показване на редове от офертата."
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "Great quotation templates will significantly\n"
@@ -916,8 +928,8 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:76
-#: code:addons/website_quote/controllers/main.py:227
+#: code:addons/website_quote/controllers/main.py:80
+#: code:addons/website_quote/controllers/main.py:230
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -930,6 +942,13 @@ msgstr ""
 #: selection:sale.order,require_payment:0
 #: selection:sale.quote.template,require_payment:0
 msgid "Immediate after website order validation"
+msgstr "Незабавно след валидацията на поръчката от сайта"
+
+#. module: website_quote
+#: selection:sale.order,require_payment:0
+#: selection:sale.quote.template,require_payment:0
+#, fuzzy
+msgid "Immediate after website order validation and save a token"
 msgstr "Незабавно след валидацията на поръчката от сайта"
 
 #. module: website_quote
@@ -1120,8 +1139,9 @@ msgstr "Управление на Много Езици"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "My Account"
-msgstr "Моят Профил"
+#, fuzzy
+msgid "My Quotations"
+msgstr "Оферта"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1226,13 +1246,13 @@ msgid "Optional Products Lines"
 msgstr "Списък с Опционни Продукти"
 
 #. module: website_quote
-#: code:addons/website_quote/models/order.py:294
+#: code:addons/website_quote/models/order.py:300
 #, python-format
 msgid "Order paid by %s. Transaction: %s. Amount: %s."
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:94
+#: code:addons/website_quote/controllers/main.py:98
 #, python-format
 msgid "Order signed by %s"
 msgstr "Поръчката е подписана от %s"
@@ -1313,8 +1333,8 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:66
-#: code:addons/website_quote/controllers/main.py:231
+#: code:addons/website_quote/controllers/main.py:70
+#: code:addons/website_quote/controllers/main.py:234
 #, python-format
 msgid "Pay & Confirm"
 msgstr "Плати и Потвърди"
@@ -1331,23 +1351,9 @@ msgid "Payment Method:"
 msgstr "Payment Method:"
 
 #. module: website_quote
-#: model:ir.model,name:website_quote.model_payment_transaction
-msgid "Payment Transaction"
-msgstr "Плащане"
-
-#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Preview"
 msgstr ""
-
-#. module: website_quote
-#: model:web.tip,description:website_quote.quotation_tip_1
-msgid ""
-"Preview the online quotation. You'll be able to edit the quotation content "
-"before send it to the customer."
-msgstr ""
-"Покажи онлай офертата. Ще можете да я редактирате преди да я изпратите към "
-"клиента."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -1482,7 +1488,7 @@ msgid "Quotation Viewed"
 msgstr "Офертата е видяна"
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:32
+#: code:addons/website_quote/controllers/main.py:29
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr "Офертата е видяна от клиента"
@@ -1535,11 +1541,6 @@ msgid "Sale Options"
 msgstr "Опции"
 
 #. module: website_quote
-#: model:ir.model.fields,field_description:website_quote.field_payment_transaction_sale_order_id
-msgid "Sale Order"
-msgstr "Поръчка за продажба"
-
-#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_order_id
 msgid "Sale Order Reference"
 msgstr "Референция към Поръчката"
@@ -1588,11 +1589,20 @@ msgid "Schedule Phone Calls and Meetings"
 msgstr "Насрочи Телефонни Обаждания и Срещи"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_layout_category_id
+#, fuzzy
+msgid "Section"
+msgstr "Описание"
+
+#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_access_token
 msgid "Security Token"
 msgstr "Ключ за сигурност"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_sequence
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_sequence
 msgid "Sequence"
 msgstr "Последователност"
@@ -1746,6 +1756,12 @@ msgid "To get more information, visit the"
 msgstr "За повече информация, посетете"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+#, fuzzy
+msgid "Total Price"
+msgstr "Единична цена"
+
+#. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
 #: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
 #: model:product.template,quote_description:website_quote.product_template_quote_2
@@ -1893,7 +1909,7 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:143
+#: code:addons/website_quote/controllers/main.py:147
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr "Не можете да добавяте опции към потвърдена поръчка."
@@ -2222,6 +2238,12 @@ msgstr "неизвестен"
 #~ "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 #~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
+#~ msgid "Controlers and Views"
+#~ msgstr "Контролери и Изгледи"
+
+#~ msgid "My Account"
+#~ msgstr "Моят Профил"
+
 #~ msgid "Online Training + Certification"
 #~ msgstr "Онлайн Обучения + Сертификация"
 
@@ -2231,11 +2253,33 @@ msgstr "неизвестен"
 #~ msgid "Order payed by %s. Transaction: %s. Amount: %s."
 #~ msgstr "Поръчката е Платена от %s. Транзакция: %s. Сума: %s."
 
+#~ msgid "Our offer"
+#~ msgstr "Нашата Оферта"
+
+#~ msgid "Payment Transaction"
+#~ msgstr "Плащане"
+
+#~ msgid ""
+#~ "Preview the online quotation. You'll be able to edit the quotation "
+#~ "content before send it to the customer."
+#~ msgstr ""
+#~ "Покажи онлай офертата. Ще можете да я редактирате преди да я изпратите "
+#~ "към клиента."
+
+#~ msgid "Quality"
+#~ msgstr "Качество"
+
 #~ msgid "Quality in many ways, our reputation was built on the first value."
 #~ msgstr "."
 
+#~ msgid "Sale Order"
+#~ msgstr "Поръчка за продажба"
+
 #~ msgid "Send by Email"
 #~ msgstr "Изпращане по ел. поща"
+
+#~ msgid "Service"
+#~ msgstr "Услуга"
 
 #~ msgid ""
 #~ "The description of products/services from your quotation will be "

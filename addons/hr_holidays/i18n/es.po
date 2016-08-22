@@ -1,4 +1,3 @@
-# #-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_holidays
@@ -8,43 +7,18 @@
 # Antonio Trueba, 2015-2016
 # Gonzalo Tagliabue <zaphalo@gmail.com>, 2016
 # Ivan Nieto <ivan.nieto.sousa@gmail.com>, 2016
-# #-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * hr_holidays
-#
-# Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Gonzalo Tagliabue <zaphalo@gmail.com>, 2016
-# Oihane Crucelaegui <oihanecruce@gmail.com>, 2016
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Luis Triana <luistriana.28@gmail.com>, 2016
-# Sergio Flores <vitavitae1@gmail.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
-"Last-Translator: Sergio Flores <vitavitae1@gmail.com>, 2016\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-03-04 21:03+0000\n"
+"Last-Translator: Ivan Nieto <ivan.nieto.sousa@gmail.com>\n"
+"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_holidays
@@ -73,11 +47,10 @@ msgid "!important; font-size: 8px; min-width: 18px\"&gt;"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:234
-#: code:addons/hr_holidays/hr_holidays.py:361
+#: code:addons/hr_holidays/models/hr_holidays.py:337
 #, python-format
-msgid "%s on %s"
-msgstr "%s en %s"
+msgid "%s on %s : %.2f day(s)"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -124,6 +97,13 @@ msgstr "Ausencia"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_absence_of_today
 msgid "Absence by Today"
 msgstr "Ausentes del día"
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+msgid ""
+"Absent Employee(s), Whose leaves request are either confirmed or validated "
+"on today"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -203,7 +183,7 @@ msgid "Allocation Requests to Approve"
 msgstr "Peticiones de asignación a aprobar"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:575
+#: code:addons/hr_holidays/models/hr.py:129
 #, python-format
 msgid "Allocation for %s"
 msgstr "Asignación para %s"
@@ -263,6 +243,17 @@ msgid "Assign Leaves"
 msgstr "Asignar ausencias"
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_resource_calendar_uom_id
+msgid ""
+"Average hours of work per day.\n"
+"                It is used in an employee leave request to compute the "
+"number of days consumed based on the resource calendar.\n"
+"                It can be used to handle various contract types, e.g.:\n"
+"                - 38 Hours/Week, 5 Days/Week: 1 Day = 7.6 Hours\n"
+"                - 45 Hours/Week, 5 Days/Week: 1 Day = 9.0 Hours"
+msgstr ""
+
+#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Black"
 msgstr "Negro"
@@ -316,13 +307,8 @@ msgstr "Cancelar"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
-#, fuzzy
 msgid "Cancelled"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Cancelada\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Cancelado"
+msgstr "Cancelada"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -344,6 +330,23 @@ msgstr ""
 "Seleccione 'petición de ausencia' si alguien quiere cogerse un día libre. \n"
 "Seleccione 'petición de asignación' si quiere incrementar el número de "
 "ausencias disponibles para alguien."
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_allocation_holidays
+msgid "Click here to create a new leave allocation request."
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_allocation_approve
+msgid "Click here to create a new leave allocation."
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_company_allocation
+#: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_approve
+#: model:ir.actions.act_window,help:hr_holidays.open_employee_leaves
+msgid "Click here to create a new leave request."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -405,19 +408,8 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_create_date
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_create_date
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_create_date
-#, fuzzy
 msgid "Created on"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Creado en\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Creado el"
-
-#. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-#, fuzzy
-msgid "Current"
-msgstr "Padre"
+msgstr "Creado en"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_current_leave_state
@@ -430,12 +422,16 @@ msgid "Current Leave Type"
 msgstr "Tipo de ausencia actual"
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Current Year"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Dashboard"
 msgstr "Tablero"
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_department
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_department_id
 msgid "Department"
 msgstr "Departamento"
@@ -468,13 +464,8 @@ msgstr "Descripción"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nombre mostrado\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Nombre a mostrar"
+msgstr "Nombre mostrado"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
@@ -507,13 +498,8 @@ msgstr "Empleado(s)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_date_to
-#, fuzzy
 msgid "End Date"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Fecha final\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Fecha finalización"
+msgstr "Fecha final"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -569,19 +555,24 @@ msgid "HR Leaves Summary Report By Employee"
 msgstr "Informe resumen de aisencia de RRHH por empleado"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_uom_id
+msgid "Hours per Day"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_department
+msgid "Hr Department"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_remaining_leaves_user_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary_id
-#, fuzzy
 msgid "ID"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID (identificación)\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"ID"
+msgstr "ID (identificación)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_active
@@ -623,26 +614,16 @@ msgstr "Última modificación en"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_write_uid
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_write_uid
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Última actualización de\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Última actualización por"
+msgstr "Última actualización de"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_write_date
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_write_date
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_write_date
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Última actualización en\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Última actualización el"
+msgstr "Última actualización en"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -1007,6 +988,11 @@ msgid "Refused"
 msgstr "Rechazada"
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "Usuario relacionado con el recurso para gestionar su acceso."
+
+#. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_allocation_tree
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_allocation_tree_customize
@@ -1078,6 +1064,11 @@ msgid "Reset to Draft"
 msgstr "Cambiar a borrador"
 
 #. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_resource_calendar
+msgid "Resource Calendar"
+msgstr "Calendario recurso"
+
+#. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Search Leave"
 msgstr "Buscar ausencia"
@@ -1105,13 +1096,8 @@ msgstr "Ausencias por enfermedad"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_date_from
-#, fuzzy
 msgid "Start Date"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Fecha inicial\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Fecha de inicio"
+msgstr "Fecha inicial"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1138,26 +1124,17 @@ msgstr ""
 "Asegúrese por favor de que hay un usuario asociado con el empleado."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:570
+#: code:addons/hr_holidays/models/hr.py:117
 #, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when "
 "there is only one leave type with the option 'Allow to Override Limit' "
 "unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot "
 "decide on which leave type the update has to be done. \n"
-"You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
-"Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
-"the employees if the configuration does not allow to use this field."
+" You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
+"Requests' located in Leaves Application to manage the leave days of the "
+"employees if the configuration does not allow to use this field."
 msgstr ""
-"La funcionalidad detrás del campo 'Ausencias permitidas restantes' puede ser "
-"usada sólo cuando sólo hay un tipo de ausencias con la opción 'Permitir "
-"sobrepasar límite' desmarcada. (Encontradas %s). Por otra parte, la "
-"actualización es ambigua, ya que no se puede decidir en qué tipo de ausencia "
-"se debe realizar la actualización.\n"
-"Es posible que prefiera utilizar los menús clásicos \"Peticiones de ausencia"
-"\" y \"Peticiones de asignación\" situado en \"Recursos humanos \\ Ausencias "
-"'para gestionar los días de vacaciones de los empleados si la configuración "
-"no permite utilizar este campo."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -1165,7 +1142,8 @@ msgid "The number of days must be greater than 0."
 msgstr "El número de días debe ser mayor de 0."
 
 #. module: hr_holidays
-#: constraint:hr.holidays:0
+#: code:addons/hr_holidays/models/hr_holidays.py:253
+#, python-format
 msgid ""
 "The number of remaining leaves is not sufficient for this leave type.\n"
 "Please verify also the leaves waiting for validation."
@@ -1175,8 +1153,9 @@ msgstr ""
 "Verifique por favor también las ausencias que están pendientes de validación."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:304
-#: code:addons/hr_holidays/hr_holidays.py:328 sql_constraint:hr.holidays:0
+#: code:addons/hr_holidays/models/hr_holidays.py:301
+#: code:addons/hr_holidays/models/hr_holidays.py:321
+#: sql_constraint:hr.holidays:0
 #, python-format
 msgid "The start date must be anterior to the end date."
 msgstr "La fecha de inicio debe ser anterior a la fecha de fin."
@@ -1216,11 +1195,9 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_color_name
 msgid ""
-"This color will be used in the leaves summary located in Reporting\\Leaves "
+"This color will be used in the leaves summary located in Reporting > Leaves "
 "by Department."
 msgstr ""
-"Este color se usará en el resumen de ausencias localizado en "
-"Informes>Ausencias por departamento."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_leaves_taken
@@ -1299,13 +1276,8 @@ msgstr "Impagada"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-#, fuzzy
 msgid "Unread Messages"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mensajes sin leer\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Mensajes por leer"
+msgstr "Mensajes sin leer"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_remaining_leaves_user_user_id
@@ -1349,6 +1321,7 @@ msgid "Wheat"
 msgstr "Amarillo"
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_double_validation
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_double_validation
 msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
@@ -1368,25 +1341,26 @@ msgstr ""
 "           "
 
 #. module: hr_holidays
-#: constraint:hr.holidays:0
+#: code:addons/hr_holidays/models/hr_holidays.py:244
+#, python-format
 msgid "You can not have 2 leaves that overlaps on same day!"
 msgstr "¡No puede tener dos ausencias que se solapan en el mismo día!"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:293
+#: code:addons/hr_holidays/models/hr_holidays.py:373
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
 msgstr "No puede eliminar una ausencia que está en estado %s."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:577
+#: code:addons/hr_holidays/models/hr.py:139
 #, python-format
 msgid "You cannot reduce validated allocation requests"
 msgstr "No puede reducir la asignación de peticiones validadas"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:357
-#: code:addons/hr_holidays/hr_holidays.py:369
+#: code:addons/hr_holidays/models/hr_holidays.py:356
+#: code:addons/hr_holidays/models/hr_holidays.py:365
 #, python-format
 msgid ""
 "You cannot set a leave request as '%s'. Contact a human resource manager."
@@ -1395,7 +1369,7 @@ msgstr ""
 "responsable de RRHH."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:26
+#: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:27
 #, python-format
 msgid "You have to select at least one Department. And try again."
 msgstr "Debe seleccionar al menos un departamento y probar otra vez."
@@ -1425,6 +1399,9 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "to"
 msgstr "a"
+
+#~ msgid "%s on %s"
+#~ msgstr "%s en %s"
 
 #~ msgid "Action Needed"
 #~ msgstr "Se necesita acción"
@@ -1489,6 +1466,32 @@ msgstr "a"
 #~ msgid "Open HR Menu"
 #~ msgstr "Abrir menú RRHH"
 
+#~ msgid ""
+#~ "The feature behind the field 'Remaining Legal Leaves' can only be used "
+#~ "when there is only one leave type with the option 'Allow to Override "
+#~ "Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we "
+#~ "cannot decide on which leave type the update has to be done. \n"
+#~ "You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
+#~ "Requests' located in 'Human Resources \\ Leaves' to manage the leave days "
+#~ "of the employees if the configuration does not allow to use this field."
+#~ msgstr ""
+#~ "La funcionalidad detrás del campo 'Ausencias permitidas restantes' puede "
+#~ "ser usada sólo cuando sólo hay un tipo de ausencias con la opción "
+#~ "'Permitir sobrepasar límite' desmarcada. (Encontradas %s). Por otra "
+#~ "parte, la actualización es ambigua, ya que no se puede decidir en qué "
+#~ "tipo de ausencia se debe realizar la actualización.\n"
+#~ "Es posible que prefiera utilizar los menús clásicos \"Peticiones de "
+#~ "ausencia\" y \"Peticiones de asignación\" situado en \"Recursos humanos "
+#~ "\\ Ausencias 'para gestionar los días de vacaciones de los empleados si "
+#~ "la configuración no permite utilizar este campo."
+
+#~ msgid ""
+#~ "This color will be used in the leaves summary located in Reporting"
+#~ "\\Leaves by Department."
+#~ msgstr ""
+#~ "Este color se usará en el resumen de ausencias localizado en "
+#~ "Informes>Ausencias por departamento."
+
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Contador de mensajes no leidos"
 
@@ -1503,9 +1506,3 @@ msgstr "a"
 
 #~ msgid "Year"
 #~ msgstr "Año"
-
-#~ msgid "Related user name for the resource to manage its access."
-#~ msgstr "Usuario relacionado con el recurso para gestionar su acceso."
-
-#~ msgid "Resource Calendar"
-#~ msgstr "Calendario recurso"

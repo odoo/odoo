@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-02-20 10:36+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr
-#: code:addons/hr/hr.py:120
+#: code:addons/hr/models/hr.py:76
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
@@ -111,9 +111,17 @@ msgid "A good job in a young and dynamic team"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "Идэвхитэй"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
+msgid ""
+"An efficiency of 50% means the resource is two times smaller than his usual "
+"speed."
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -121,6 +129,7 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr ""
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr ""
@@ -190,11 +199,6 @@ msgid "City"
 msgstr "Сум/Дүүрэг"
 
 #. module: hr
-#: model:web.tip,description:hr.hr_tip_2
-msgid "Click here to change the recruitment goal!"
-msgstr ""
-
-#. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
@@ -203,11 +207,6 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid "Click to define a new department."
 msgstr ""
 
 #. module: hr
@@ -281,11 +280,6 @@ msgid "Contributions to open source projects"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr "Алба, хэлтсүүдээ үүсгэх"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
@@ -329,7 +323,6 @@ msgid "Deliver generic Odoo functional training sessions"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -427,13 +420,13 @@ msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/hr.py:294 constraint:hr.department:0
+#: code:addons/hr/models/hr.py:264
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Алдаа! Та рекурс хэлтэсүүд үүсгэж чадахгүй."
 
 #. module: hr
-#: code:addons/hr/hr.py:264 constraint:hr.employee:0
+#: code:addons/hr/models/hr.py:177
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Алдаа! Тойрог хамааралтай ажилчдыг үүсгэх боломжгүй."
@@ -480,11 +473,6 @@ msgstr "Дагагчид"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
 msgstr "Хүйс"
-
-#. module: hr
-#: model:web.tip,description:hr.hr_tip_1
-msgid "Get all applications related to this job position."
-msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -568,6 +556,12 @@ msgid "Home Address"
 msgstr "Гэрийн хаяг"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
+#, fuzzy
+msgid "Hr Department"
+msgstr "Хэлтэс"
+
+#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
 msgstr "Хүний нөөц"
@@ -644,19 +638,9 @@ msgid "Job Description"
 msgstr "Ажлын байрны тодорхойлолт"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_name
-msgid "Job Name"
-msgstr "Ажлын байрны нэр"
-
-#. module: hr
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Position"
 msgstr "Албан тушаал"
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "Job Position Name"
-msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -678,6 +662,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Title"
 msgstr "Албан тушаал"
 
@@ -818,9 +803,7 @@ msgid "Must have ..."
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
-#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
 msgstr "Нэр"
 
@@ -839,6 +822,12 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Nice to have"
 msgstr ""
+
+#. module: hr
+#: selection:hr.job,state:0
+#, fuzzy
+msgid "Not Recruiting"
+msgstr "Ажилтан авах ажлыг зогсоох"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -965,11 +954,6 @@ msgstr ""
 
 #. module: hr
 #: selection:hr.job,state:0
-msgid "Recruitment Closed"
-msgstr "Хүний нөөцийн бүрдүүлэлт хаагдсан"
-
-#. module: hr
-#: selection:hr.job,state:0
 msgid "Recruitment in Progress"
 msgstr "Хүнийн нөөцийн бүрдүүлэлт явагдаж байгаа"
 
@@ -1002,6 +986,12 @@ msgstr "Шаардлагууд"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
 msgid "Resource"
 msgstr "Нөөц"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
+#, fuzzy
+msgid "Resource Name"
+msgstr "Нөөцийн төрөл"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
@@ -1137,19 +1127,6 @@ msgid "The name of the job position must be unique per department in company!"
 msgstr "Ажлын байрны нэр нь компаний хэлтэс тус бүрт үл давтагдах байх ёстой!"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
-msgstr ""
-"Энэ талбар нь даалгаврыг гүйцээхэд нөөцийн оновчтой байдлыг илэрхийлнэ. Ө.х "
-"нөөц нь 5 өдөрт 5 даалгавар биелүүлэхээр шат дээр ганцаараа тавигдсан гэж "
-"үзвэл энэ шат дээр 100% ачаалалтай гэж анхныхаараа үзнэ. Гэхдээ оновчтой "
-"байдлыг 200% гэж тавьбал ачаалал нь 50% болно."
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
 msgid ""
 "This field holds the image used as photo for the employee, limited to "
@@ -1180,6 +1157,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "Уншаагүй Зурвасууд"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_login
+msgid "Used to log into the system"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1490,15 +1472,6 @@ msgid "You will work closely with all trainees"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid ""
-"Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
-"                leaves and holidays, recruitments, etc."
-msgstr ""
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "Хэлтэс"
@@ -1508,8 +1481,16 @@ msgstr "Хэлтэс"
 msgid "e.g. Part Time"
 msgstr "ж. Хагас Цаг"
 
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "e.g. Sales Manager"
+msgstr ""
+
 #~ msgid "Action Needed"
 #~ msgstr "Үйлдэл Шаардлагатай"
+
+#~ msgid "Create Your Departments"
+#~ msgstr "Алба, хэлтсүүдээ үүсгэх"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
@@ -1531,6 +1512,9 @@ msgstr "ж. Хагас Цаг"
 #~ msgid "Is Follower"
 #~ msgstr "Дагагч эсэх"
 
+#~ msgid "Job Name"
+#~ msgstr "Ажлын байрны нэр"
+
 #~ msgid "Last Message Date"
 #~ msgstr "Сүүлийн зурвасын огноо"
 
@@ -1545,6 +1529,20 @@ msgstr "ж. Хагас Цаг"
 
 #~ msgid "Open HR Menu"
 #~ msgstr "Хүний Нөөц Менюг Нээх"
+
+#~ msgid "Recruitment Closed"
+#~ msgstr "Хүний нөөцийн бүрдүүлэлт хаагдсан"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
+#~ "will show a load of 100% for this phase by default, but if we put a "
+#~ "efficiency of 200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "Энэ талбар нь даалгаврыг гүйцээхэд нөөцийн оновчтой байдлыг илэрхийлнэ. Ө."
+#~ "х нөөц нь 5 өдөрт 5 даалгавар биелүүлэхээр шат дээр ганцаараа тавигдсан "
+#~ "гэж үзвэл энэ шат дээр 100% ачаалалтай гэж анхныхаараа үзнэ. Гэхдээ "
+#~ "оновчтой байдлыг 200% гэж тавьбал ачаалал нь 50% болно."
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Уншаагүй зурвасын тоолуур"

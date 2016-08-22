@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-03-05 17:38+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -39,7 +39,7 @@ msgid "#Questions"
 msgstr "#Sorular"
 
 #. module: survey
-#: code:addons/survey/survey.py:231
+#: code:addons/survey/survey.py:232
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopya)"
@@ -289,9 +289,15 @@ msgstr "Cevaplanmış"
 #: model:ir.model.fields,field_description:survey.field_survey_question_user_input_line_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_user_input_line_ids
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
 msgstr "Yanıtlar"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Archived"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -327,6 +333,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.simple_choice
 msgid "Choose..."
 msgstr "Seç..."
+
+#. module: survey
+#: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
+#, fuzzy
+msgid "Clean test answers"
+msgstr "Cevap"
 
 #. module: survey
 #: code:addons/survey/survey.py:125
@@ -612,7 +624,6 @@ msgstr "Görünüm arayüz ve kullanım kolaylığı"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_error_msg
-#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Error message"
 msgstr "Hata mesajı"
 
@@ -751,7 +762,7 @@ msgstr ""
 "Kapattıysanız, insanlar anketler bu sütunda cevap vermek mümkün olmayacaktır."
 
 #. module: survey
-#: code:addons/survey/survey.py:624
+#: code:addons/survey/survey.py:631
 #: model:survey.question,comments_message:survey.feedback_1_1
 #: model:survey.question,comments_message:survey.feedback_1_2
 #: model:survey.question,comments_message:survey.feedback_2_1
@@ -1215,11 +1226,16 @@ msgstr "Satın alma yönetimi"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id
-#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_question_id
 #: model:ir.ui.view,arch_db:survey.survey_label_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Question"
+msgstr "Soru"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
+#, fuzzy
+msgid "Question 2"
 msgstr "Soru"
 
 #. module: survey
@@ -1497,6 +1513,7 @@ msgstr "öneri"
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Survey"
@@ -1631,7 +1648,7 @@ msgid "The answer must be in the right type"
 msgstr "Cevap doğru tipinde olmalı"
 
 #. module: survey
-#: code:addons/survey/survey.py:622
+#: code:addons/survey/survey.py:629
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1724,19 +1741,19 @@ msgid "They help new users to understand Odoo"
 msgstr "Kullanıcı tarafından anlaşılabilir olması"
 
 #. module: survey
-#: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
+#: code:addons/survey/survey.py:678 code:addons/survey/tests/test_survey.py:94
 #, python-format
 msgid "This answer must be an email address"
 msgstr "Bu cevap e-posta adresi olmalıdır."
 
 #. module: survey
-#: code:addons/survey/survey.py:713 code:addons/survey/tests/test_survey.py:115
+#: code:addons/survey/survey.py:720 code:addons/survey/tests/test_survey.py:115
 #, python-format
 msgid "This is not a date/time"
 msgstr "Bu bir tarih/saat değil."
 
 #. module: survey
-#: code:addons/survey/survey.py:690 code:addons/survey/tests/test_survey.py:105
+#: code:addons/survey/survey.py:697 code:addons/survey/tests/test_survey.py:105
 #, python-format
 msgid "This is not a number"
 msgstr "Bu bir numara değil."
@@ -1756,7 +1773,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr "Anket tamamlandığında bu ileti görüntülenir"
 
 #. module: survey
-#: code:addons/survey/survey.py:621
+#: code:addons/survey/survey.py:628
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -1913,6 +1930,12 @@ msgid "Validate entry"
 msgstr "Girdisini doğrulamak"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
+#, fuzzy
+msgid "Validation Error message"
+msgstr "Hata mesajı"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_form
 msgid "View Results"
 msgstr "Sonuçları Görüntüleyin"
@@ -2016,13 +2039,13 @@ msgstr ""
 "olması gerekir)."
 
 #. module: survey
-#: code:addons/survey/survey.py:424
+#: code:addons/survey/survey.py:425
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr "Hiç soru yok bir anket için davetiye gönderemezsiniz."
 
 #. module: survey
-#: code:addons/survey/survey.py:429
+#: code:addons/survey/survey.py:430
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "Kapalı anketler için davetiye gönderemezsiniz."
@@ -2064,6 +2087,11 @@ msgstr "verdiğiniz yanıtları gözden geçirin"
 msgid "try to create and fill survey"
 msgstr ""
 
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
+msgid "unknown"
+msgstr ""
+
 #~ msgid ""
 #~ "\n"
 #~ "                \n"
@@ -2090,6 +2118,9 @@ msgstr ""
 
 #~ msgid "Action Needed"
 #~ msgstr "Eylem Gerekiyor"
+
+#~ msgid "Active domain"
+#~ msgstr "Etkin alan adı"
 
 #~ msgid "Author"
 #~ msgstr "Yazan"
@@ -2134,11 +2165,17 @@ msgstr ""
 #~ msgid "From"
 #~ msgstr "From:"
 
+#~ msgid "Human Ressources"
+#~ msgstr "İnsan kaynakları"
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
+
+#~ msgid "If other, precise:"
+#~ msgstr "Eğer diğer, kesin:"
 
 #~ msgid "Initial thread message."
 #~ msgstr "İlk konu mesaj."

@@ -1,4 +1,3 @@
-# #-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * crm
@@ -10,33 +9,18 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2015-2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
-# #-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * crm
-#
-# Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"POT-Creation-Date: 2016-08-22 10:07+0000\n"
+"PO-Revision-Date: 2016-08-06 10:39+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: crm
@@ -74,7 +58,7 @@ msgid ""
 "                            <p dir=\"ltr\" style=\"font-size:15px;margin-"
 "top:0pt;margin-bottom:0pt;\">\n"
 "                                <span>Your Odoo CRM application is up and "
-"running</span></p><br>\n"
+"running.</span></p><br>\n"
 "                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-"
 "bottom:8pt;\">\n"
 "                                <span style=\"font-size:13px;font-weight:"
@@ -166,11 +150,11 @@ msgid ""
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-"
 "top:0pt;margin-bottom:8pt;\">\n"
 "                                <span>We would be delighted to assist you "
-"along the way. Contact us at \n"
+"along the way. Contact us at\n"
 "                                <a href=\"mailto:help@odoo.com\"><span style="
 "\"text-decoration:underline;\">\n"
 "                                help@odoo.com</span></a> if you have any "
-"question. You can also discover \n"
+"question. You can also discover\n"
 "                                how to get the best out of Odoo CRM with our "
 "</span>\n"
 "                                <a href=\"https://www.odoo.com/documentation/"
@@ -178,8 +162,8 @@ msgid ""
 "                                <span style=\"text-decoration:underline;"
 "\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
-"                                <a href=\"https://www.odoo.com/"
-"documentation/9.0/\">\n"
+"                                <a href=\"https://www.odoo.com/documentation"
+"\">\n"
 "                                <span style=\"text-decoration:underline;"
 "\">API Documentation</span></a>\n"
 "                            </p>\n"
@@ -237,13 +221,24 @@ msgstr "(u kan dit hier wijzigen)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid ", if accounting or purchase is installed"
+msgstr ", indien boekhouding of inkoop geïnstalleerd zijn"
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/tour.js:25
+#, python-format
+msgid ""
+"<b>Drag &amp; drop opportunities</b> between columns as you progress in your "
+"sales cycle."
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-", indien boekhouding of inkoop geïnstalleerd zijn\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-", als boekhouding of aankoop geinstalleerd is"
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/tour.js:62
+#, python-format
+msgid "<b>Invite collegues</b> via email.<br/><i>Enter one email per line.</i>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
@@ -256,6 +251,16 @@ msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\"> voorbeelden bekijken</i>"
 
 #. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/tour.js:44
+#, python-format
+msgid ""
+"<p><b>Send messages</b> to your prospect and get replies automatically "
+"attached to this opportunity.</p><p class=\"mb0\">Type <i>'@'</i> to mention "
+"people - it's like cc-ing on emails.</p>"
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.server,body_html:crm.action_email_reminder_lead
 msgid ""
 "<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
@@ -266,6 +271,17 @@ msgid ""
 "description}</i>\n"
 "%endif\n"
 "</p><p>Thank you!</p>\n"
+msgstr ""
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/tour.js:35
+#, python-format
+msgid ""
+"<p>You will be able to customize your followup activities. Examples:</"
+"p><ol><li>introductory email</li><li>call 10 days after</li><li>second call "
+"3 days after, ...</li></ol><p class='mb0'><i>Select a standard activity for "
+"now on.</i></p>"
 msgstr ""
 
 #. module: crm
@@ -416,7 +432,6 @@ msgstr "<span class=\"oe_grey\"> met </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-laptop\"/>\n"
@@ -424,22 +439,14 @@ msgid ""
 "strong>\n"
 "                                        </span>"
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-laptop\"/>\n"
 "                                            <strong>Schermaanpassingen</"
 "strong>\n"
-"                                        </span>\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"<span class=\"panel-title\">\n"
-"                                            <span class=\"fa fa-laptop\"/>\n"
-"                                            <strong> "
-"Schermpersonaliseringen</strong>\n"
 "                                        </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-pencil-"
@@ -448,24 +455,15 @@ msgid ""
 "strong>\n"
 "                                        </span>"
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-pencil-"
 "square-o\"/>\n"
 "                                            <strong> Maak aangepaste "
 "rapporten aan</strong>\n"
-"                                        </span>\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"<span class=\"panel-title\">\n"
-"                                            <span class=\"fa fa-pencil-"
-"square-o\"/>\n"
-"                                            <strong> Maak gepersonaliseerde "
-"rapporten</strong>\n"
 "                                        </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-sitemap\"/>\n"
@@ -473,22 +471,14 @@ msgid ""
 "strong>\n"
 "                                        </span>"
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-sitemap\"/>\n"
 "                                            <strong>Aanpassen van de de "
 "workflow</strong>\n"
-"                                        </span>\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"<span class=\"panel-title\">\n"
-"                                            <span class=\"fa fa-sitemap\"/>\n"
-"                                            <strong> Workflow "
-"personalisering</strong>\n"
 "                                        </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon="
@@ -498,7 +488,6 @@ msgid ""
 "&gt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon="
 "\"&#57408;\"/>\n"
@@ -506,20 +495,10 @@ msgstr ""
 "strong><br/>\n"
 "                                        <span class=\"small\">Aanbevolen "
 "indien &gt;100 producten</span>\n"
-"                                    </span>\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon="
-"\"&#57408;\"/>\n"
-"                                        <strong>Een bestand importeren</"
-"strong><br/>\n"
-"                                        <span class=\"small\">Aanbevolen "
-"indien >100 producten</span>\n"
 "                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon="
@@ -529,20 +508,11 @@ msgid ""
 "contacts</span>\n"
 "                                    </span>"
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon="
 "\"&#57408;\"/>\n"
 "                                        <strong>Importeren</strong><br/>\n"
 "                                        <span class=\"small\">&gt; 200 "
-"contacten</span>\n"
-"                                    </span>\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon="
-"\"&#57408;\"/>\n"
-"                                        <strong>Importeren</strong><br/>\n"
-"                                        <span class=\"small\">> 200 "
 "contacten</span>\n"
 "                                    </span>"
 
@@ -565,7 +535,6 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon="
@@ -576,7 +545,6 @@ msgid ""
 "contacts</span>\n"
 "                                    </span>"
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon="
 "\"&#57440;\"/>\n"
@@ -584,20 +552,10 @@ msgstr ""
 "strong><br/>\n"
 "                                        <span class=\"small\">&lt; 200 "
 "contacten</span>\n"
-"                                    </span>\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon="
-"\"&#57440;\"/>\n"
-"                                        <strong> Handmatig aanmaken</"
-"strong><br/>\n"
-"                                        <span class=\"small\">< 200 "
-"contacten</span>\n"
 "                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon="
@@ -608,7 +566,6 @@ msgid ""
 "&lt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon="
 "\"&#57440;\"/>\n"
@@ -616,15 +573,6 @@ msgstr ""
 "strong><br/>\n"
 "                                        <span class=\"small\">Aanbevolen "
 "indien &lt;100 producten</span>\n"
-"                                    </span>\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon="
-"\"&#57440;\"/>\n"
-"                                        <strong> Handmatig aanmaken</"
-"strong><br/>\n"
-"                                        <span class=\"small\">Aanbevolen "
-"indien <100 producten</span>\n"
 "                                    </span>"
 
 #. module: crm
@@ -713,28 +661,6 @@ msgstr ""
 "<span class=\"panel-title\"><span data-icon=\"&#57463;\"/><strong> Oefening "
 "2</strong></span>\n"
 "                                    <span>(Verkoopmanager)</span>"
-
-#. module: crm
-#: model:web.tip,description:crm.crm_tip_4
-msgid ""
-"<span><b>This is a business opportunity.</b> Drag and drop it to another "
-"column while you move forward in the sales cycle. Click to zoom in the "
-"opportunity.</span>"
-msgstr ""
-"<span><b>Dit is een prospect.</b> Sleep de prospect naar een andere kolom "
-"bij vooruitgang in het verkoopproces. Klik op de prospect om de details van "
-"de prospect te bekijken.</span>"
-
-#. module: crm
-#: model:web.tip,description:crm.crm_tip_6
-msgid ""
-"<span><strong>Click to register a new business opportunity</strong>. Once "
-"the opportunity is created, you will be able to drag and drop it in your "
-"sales pipeline.</span>"
-msgstr ""
-"<span><strong>Klik om een nieuwe prospect aan te maken</strong>. Zodra de "
-"prospect is aangemaakt kun je deze slepen naar een andere kolom van je "
-"verkoop pijplijn.</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1100,6 +1026,7 @@ msgid "Activated by default when subscribing."
 msgstr "Standaard activeren bij abonneren"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_activity_report_active
 #: model:ir.model.fields,field_description:crm.field_crm_lead_active
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason_active
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_active
@@ -1108,10 +1035,14 @@ msgstr "Actief"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_action
+#: model:ir.actions.act_window,name:crm.crm_activity_report_action_tree
+#: model:ir.model.fields,field_description:crm.field_res_partner_activities_count
+#: model:ir.model.fields,field_description:crm.field_res_users_activities_count
 #: model:ir.ui.menu,name:crm.crm_activity_menu
 #: model:ir.ui.menu,name:crm.crm_activity_report_menu
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_form
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_tree
+#: model:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Activities"
 msgstr "Activiteiten"
 
@@ -1137,7 +1068,7 @@ msgid "Activity"
 msgstr "Activiteit"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_activity_log.py:75
+#: code:addons/crm/wizard/crm_activity_log.py:80
 #, python-format
 msgid "Activity Done"
 msgstr "Datum activiteit"
@@ -1180,13 +1111,8 @@ msgstr "Alias naam"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_domain
-#, fuzzy
 msgid "Alias domain"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Alias domein\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Aliasdomein"
+msgstr "Alias domein"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_model_id
@@ -1205,7 +1131,7 @@ msgstr ""
 "kunnen verbeteren."
 
 #. module: crm
-#: code:addons/crm/base_partner_merge.py:312
+#: code:addons/crm/wizard/base_partner_merge.py:310
 #, python-format
 msgid ""
 "All contacts must have the same email. Only the Administrator can merge "
@@ -1215,17 +1141,14 @@ msgstr ""
 "kunnen contacten met verschillende e-mail adressen samenvoegen."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:865
+#: code:addons/crm/models/crm_lead.py:880
 #, python-format
 msgid ""
-"All email incoming to %(link)s  will automatically create new opportunity.\n"
-"Update your business card, phone book, social media,... Send an email right "
-"now and see it here."
+"All email incoming to %s will automatically\n"
+"                    create new opportunity. Update your business card, phone "
+"book, social media,...\n"
+"                    Send an email right now and see it here."
 msgstr ""
-"Alle inkomende e-mails aan %(link)s zullen automatische een nieuwe prospects "
-"aanmaken.\n"
-"Voeg dit ook toe aan uw visitekaartjes, telefoonboek, sociale media, ... "
-"Stuur nu een mail en zie het hier tot leven komen."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1288,13 +1211,8 @@ msgstr "Wijs deze prospect toe aan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_opening_date
-#, fuzzy
 msgid "Assignation Date"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Datum toewijzing\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Toegewezen datum"
+msgstr "Datum toewijzing"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_open
@@ -1319,11 +1237,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Attach a qualification form to every house opportunity"
 msgstr "Voeg een kwalificatieformulier toe aan elke woning prospect"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_activity_report_author_id
-msgid "Author"
-msgstr "Auteur"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1360,11 +1273,6 @@ msgstr "Het verkoopproces beter structureren "
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Better visibility on team activities"
 msgstr "Een betere zichtbaarheid op de activiteiten van het team"
-
-#. module: crm
-#: selection:crm.lead,kanban_state:0
-msgid "Blocked"
-msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1428,13 +1336,8 @@ msgstr "Campagne"
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
-#, fuzzy
 msgid "Cancel"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Annuleren\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Annuleer"
+msgstr "Annuleren"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_team_act_tree
@@ -1482,13 +1385,8 @@ msgstr "Kies een datum..."
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#, fuzzy
 msgid "City"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plaats\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Gemeente"
+msgstr "Plaats"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_tag_ids
@@ -1499,7 +1397,30 @@ msgstr ""
 "Service"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:870
+#. openerp-web
+#: code:addons/crm/static/src/js/tour.js:21
+#, python-format
+msgid ""
+"Click here to <b>create your first opportunity</b> and add it to your "
+"pipeline."
+msgstr ""
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/tour.js:40
+#, python-format
+msgid "Click on an opportunity to zoom to it."
+msgstr ""
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/tour.js:53
+#, python-format
+msgid "Click the <i>Home icon</i> to navigate across apps."
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:883
 #, python-format
 msgid "Click to add a new opportunity"
 msgstr "Klik om een nieuwe prospect toe te voegen"
@@ -1530,19 +1451,9 @@ msgid "Click to set a new stage in your opportunity pipeline."
 msgstr ""
 
 #. module: crm
-#: model:web.tip,description:crm.crm_tip_2
-msgid "Click to view the opportunities related to this customer."
-msgstr "Klik om de prospects van deze klant te bekijken."
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
-#, fuzzy
 msgid "Close"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Afsluiten\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Sluiten"
+msgstr "Afsluiten"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_closed
@@ -1551,11 +1462,11 @@ msgstr "Sluitdatum"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_closed
-msgid "Closed"
-msgstr "Gesloten"
+msgid "Closed Date"
+msgstr "Afsluitdatum"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:90
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:87
 #, python-format
 msgid "Closed/Dead leads cannot be converted into opportunities."
 msgstr "Gesloten leads kunnen niet worden geconverteerd naar prospects."
@@ -1573,13 +1484,8 @@ msgstr "Kleur index"
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-#, fuzzy
 msgid "Company"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bedrijf\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Bedijf"
+msgstr "Bedrijf"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1595,6 +1501,13 @@ msgstr "Bedrijf XYZ"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Competition Matrix comparing prices"
 msgstr "Concurrentiematrix met prijsvergelijk"
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/tour.js:58
+#, python-format
+msgid "Configuration options are available in the Settings app."
+msgstr "Configuratie mogelijkheden zijn beschikbaar in de Instellingen app."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1623,13 +1536,8 @@ msgstr "Naam contactpersoon"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Contact Us"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Neem contact met ons op\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Contacteer ons"
+msgstr "Neem contact met ons op"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_partner_ids
@@ -1701,9 +1609,19 @@ msgid "Country"
 msgstr "Land"
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
+msgid "Create"
+msgstr "Aanmaken"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create Customers"
 msgstr "Klanten aanmaken"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead_create_date
+msgid "Create Date"
+msgstr "Aanmaakdatum"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -1721,6 +1639,12 @@ msgstr "Maak leveranciers aan"
 #: selection:crm.partner.binding,action:0
 msgid "Create a new customer"
 msgstr "Maak een nieuwe klant"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.create_opportunity_simplified
+#: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
+msgid "Create an Opportunity"
+msgstr "Maak een prospect aan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1760,6 +1684,12 @@ msgid "Create your templates of offers"
 msgstr "Maak uw offertevoorbeelden aan"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_activity_report_author_id
+#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+msgid "Created By"
+msgstr "Aangemaakt door"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_create_uid
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_create_uid
 #: model:ir.model.fields,field_description:crm.field_crm_activity_create_uid
@@ -1793,7 +1723,6 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead_create_date
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_create_date
 msgid "Creation Date"
 msgstr "Aanmaakdatum"
@@ -1821,10 +1750,11 @@ msgid "Current Line"
 msgstr "Huidige regel"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:945
+#: code:addons/crm/models/crm_lead.py:1101
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2projectissue_wizard_partner_id
+#: model:ir.model.fields,field_description:crm.field_crm_lead_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_partner_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -1836,7 +1766,7 @@ msgid "Customer"
 msgstr "Klant"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:947
+#: code:addons/crm/models/crm_lead.py:1103
 #, python-format
 msgid "Customer Email"
 msgstr "Klant email"
@@ -1910,13 +1840,8 @@ msgstr "Vertraging tot sluiten"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
-#, fuzzy
 msgid "Delete"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Verwijderen\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Verwijder"
+msgstr "Verwijderen"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1967,6 +1892,11 @@ msgid "Destination Contact"
 msgstr "Bestemming contactpersoon"
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
+msgid "Discard"
+msgstr "Negeren"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_display_name
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_display_name
 #: model:ir.model.fields,field_description:crm.field_crm_activity_display_name
@@ -1982,13 +1912,8 @@ msgstr "Bestemming contactpersoon"
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_display_name
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_display_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Weergave naam\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Schermnaam"
+msgstr "Weergave naam"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2076,13 +2001,8 @@ msgstr "Bewerken"
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:mail.message.subtype,name:crm.crm_activity_data_email_mail_message_subtype
-#, fuzzy
 msgid "Email"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Email\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"E-mail"
+msgstr "Email"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -2122,13 +2042,8 @@ msgstr "Schat de datum in waarop u verwacht dat de prospect wordt gewonnen."
 
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
-#, fuzzy
 msgid "Event"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Evenement\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Gebeurtenis"
+msgstr "Evenement"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2183,14 +2098,17 @@ msgstr "Bestaande hulpmiddelen"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_deadline
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_deadline
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing"
 msgstr "Verwachte sluiting"
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+msgid "Expected Closing Date"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_planned_revenue
 #: model:ir.model.fields,field_description:crm.field_crm_lead_planned_revenue
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_expected_revenue
 msgid "Expected Revenue"
 msgstr "Verwachte omzet"
 
@@ -2272,7 +2190,7 @@ msgstr ""
 "pijnpunten, de verwachte opbrengsten, het inkoopproces, enz."
 
 #. module: crm
-#: code:addons/crm/base_partner_merge.py:303
+#: code:addons/crm/wizard/base_partner_merge.py:299
 #, python-format
 msgid ""
 "For safety reasons, you cannot merge more than 3 contacts together. You can "
@@ -2296,7 +2214,7 @@ msgid "Force assignation"
 msgstr "Forceer toewijzing"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:504
+#: code:addons/crm/models/crm_lead.py:554
 #, python-format
 msgid "From %s : %s"
 msgstr "Van %s : %s"
@@ -2311,13 +2229,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Gamification"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Gamification\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Gamificatie"
+msgstr "Gamification"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -2343,13 +2256,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-#, fuzzy
 msgid "Group By"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Groeperen op\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Groepeer op"
+msgstr "Groeperen op"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_number_group
@@ -2407,12 +2315,9 @@ msgstr ""
 msgid ""
 "Here is the list of your next activities. Those are linked to your "
 "opportunities.\n"
-"               To set a next activity, go on an opportunity and add one. It "
-"will then appear in this list."
+"                   To set a next activity, go on an opportunity and add one. "
+"It will then appear in this list."
 msgstr ""
-"Dit is een lijst met de vervolgacties, die gekoppeld zijn aan uw prospects.\n"
-"Om een vervolgactie in te geven, ga naar een prospect en voeg ze toe. De "
-"activiteit verschijnt dan in deze lijst."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_hidden
@@ -2642,9 +2547,11 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:780 selection:crm.activity.report,lead_type:0
-#: selection:crm.lead,type:0 selection:crm.opportunity.report,type:0
+#: code:addons/crm/models/crm_lead.py:857
+#: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
+#: selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_lead_id
+#: model:ir.model.fields,field_description:crm.field_crm_activity_report_lead_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost_lead_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
@@ -2707,7 +2614,7 @@ msgid "Leads"
 msgstr "Leads"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:60
+#: code:addons/crm/models/crm_lead.py:59
 #, python-format
 msgid "Leads / Opportunities"
 msgstr "Leads / Prospects"
@@ -2795,19 +2702,21 @@ msgid "Leads/Opportunities"
 msgstr "Leads/prospects"
 
 #. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/tour.js:16
+#, python-format
+msgid "Let's have a look at your opportunities pipeline."
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Licences"
 msgstr "Licenties"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_line_ids
-#, fuzzy
 msgid "Lines"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Regels\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Lijnen"
+msgstr "Regels"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -2928,7 +2837,7 @@ msgid "Medium"
 msgstr "Kanaal"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1010
+#: code:addons/crm/models/crm_lead.py:899
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr "Afspraak ingeplant op '%s'<br> Onderwerp: %s <br> Duur: %s Uur"
@@ -3005,31 +2914,31 @@ msgid "Merge with existing opportunities"
 msgstr "Samenvoegen met bestaande prospects"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:489
+#: code:addons/crm/models/crm_lead.py:502
 #, python-format
 msgid "Merged lead"
 msgstr "Leads samenvoegen"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:483
+#: code:addons/crm/models/crm_lead.py:536
 #, python-format
 msgid "Merged leads"
 msgstr "Leads samengevoegd"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:485
+#: code:addons/crm/models/crm_lead.py:536
 #, python-format
 msgid "Merged opportunities"
 msgstr "Samengevoegde prospects"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:489
+#: code:addons/crm/models/crm_lead.py:502
 #, python-format
 msgid "Merged opportunity"
 msgstr "Samengevoegde prospect."
 
 #. module: crm
-#: code:addons/crm/base_partner_merge.py:334
+#: code:addons/crm/wizard/base_partner_merge.py:331
 #, python-format
 msgid "Merged with the following partners:"
 msgstr "Samengevoegd met de volgende relaties:"
@@ -3075,13 +2984,8 @@ msgstr "MinID"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-#, fuzzy
 msgid "Misc"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Overig\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Overige"
+msgstr "Overig"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_mobile
@@ -3105,6 +3009,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Month"
 msgstr "Maand"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
+msgid "More Info"
+msgstr "Meer info"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3174,13 +3083,23 @@ msgid "Next Activity Summary"
 msgstr "Omschrijving volgende actie"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_activity_log.py:56
+#: code:addons/crm/wizard/crm_activity_log.py:61
 #, python-format
 msgid "Next activity"
 msgstr "Volgende activiteit"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:966
+#: selection:crm.lead,kanban_state:0
+msgid "Next activity is planned"
+msgstr "Volgende activiteit is gepland"
+
+#. module: crm
+#: selection:crm.lead,kanban_state:0
+msgid "Next activity late"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:1123
 #, python-format
 msgid "No Subject"
 msgstr "Geen onderwerp"
@@ -3191,14 +3110,18 @@ msgid "No activity"
 msgstr "Geen activiteit"
 
 #. module: crm
+#: selection:crm.lead,kanban_state:0
+msgid "No next activity planned"
+msgstr "Geen volgende activiteit gepland"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "No salesperson"
 msgstr "Geen verkoper"
 
 #. module: crm
-#: selection:crm.lead,kanban_state:0 selection:crm.lead,priority:0
-#: selection:crm.opportunity.report,priority:0
+#: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Normal"
 msgstr "Normaal"
 
@@ -3219,13 +3142,8 @@ msgstr "Opmerking: Om deze toepassingen te gebruiken, installeert u de"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_description
-#, fuzzy
 msgid "Notes"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Notities\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Opmerkingen"
+msgstr "Notities"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_delay_close
@@ -3269,22 +3187,12 @@ msgstr "Odoo ondertekenen"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
-msgid ""
-"Odoo helps you keep track of your sales pipeline to follow\n"
-"                    up potential sales and better forecast your future "
-"revenues."
-msgstr ""
-"Odoo helpt u bij het opvolgen van uw verkooppijplijn om mogelijke verkopen "
-"te\n"
-"ontdekken en betere inschattingen te kunnen maken van toekomstige "
-"opbrengsten."
-
-#. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_opportunities
 #: model:ir.actions.act_window,help:crm.crm_lead_opportunities_tree_view
 msgid ""
 "Odoo helps you keep track of your sales pipeline to follow\n"
-"                up potential sales and better forecast your future revenues."
+"                    up potential sales and better forecast your future "
+"revenues."
 msgstr ""
 "Odoo helpt u bij het opvolgen van uw verkooppijplijn om mogelijke verkopen "
 "te\n"
@@ -3322,18 +3230,10 @@ msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
-msgid ""
-"Once qualified, the lead can be converted into a business\n"
-"                    opportunity and/or a new customer in your address book."
-msgstr ""
-"Zodra een lead gekwalificeerd is, kan hij omgezet worden naar\n"
-"een prospect en/of een nieuwe klant in uw adresboek."
-
-#. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid ""
 "Once qualified, the lead can be converted into a business\n"
-"                opportunity and/or a new customer in your address book."
+"                    opportunity and/or a new customer in your address book."
 msgstr ""
 "Zodra een lead gekwalificeerd is, kan hij omgezet worden naar\n"
 "een prospect en/of een nieuwe klant in uw adresboek."
@@ -3352,7 +3252,7 @@ msgstr ""
 "die vergaderingen kan de pijplijn besproken worden."
 
 #. module: crm
-#: code:addons/crm/base_partner_merge.py:324
+#: code:addons/crm/wizard/base_partner_merge.py:323
 #, python-format
 msgid ""
 "Only the destination contact may be linked to existing Journal Items. Please "
@@ -3380,13 +3280,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model:ir.ui.view,arch_db:crm.view_partners_form_crm1
-#, fuzzy
 msgid "Opportunities"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Prospects\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"prospects"
+msgstr "Prospects"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -3430,13 +3325,13 @@ msgid "Opportunities that are assigned to me"
 msgstr "Prospects toegewezen aan mij"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:759 selection:crm.activity.report,lead_type:0
-#: selection:crm.lead,type:0 selection:crm.opportunity.report,type:0
+#: code:addons/crm/models/crm_lead.py:832
+#: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
+#: selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_calendar_event_opportunity_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_name
 #: model:ir.model.fields,field_description:crm.field_res_partner_opportunity_count
 #: model:ir.model.fields,field_description:crm.field_res_users_opportunity_count
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
@@ -3455,6 +3350,11 @@ msgstr "Prospect verloren"
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
 msgid "Opportunity Stage Changed"
 msgstr "Prospect fase veranderd"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
+msgid "Opportunity Title"
+msgstr "Titel opportuniteit"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_won
@@ -3495,13 +3395,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
-#, fuzzy
 msgid "Options"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Instellingen\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Opties"
+msgstr "Instellingen"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -3520,13 +3415,8 @@ msgstr "Eigenaar"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_parent_id
-#, fuzzy
 msgid "Parent"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bovenliggende\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Bovenliggend"
+msgstr "Bovenliggende"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_parent_id
@@ -3545,21 +3435,14 @@ msgstr "Parent Record Thread ID"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_parent_model_id
-#, fuzzy
 msgid ""
 "Parent model holding the alias. The model holding the alias reference is not "
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Bovenliggend model welke de alias bezit. Het model dat de alias referentie "
 "bezit\n"
 "is niet noodzakelijk het model wat wordt gegeven door alias_model_id\n"
-"(bijvoorbeeld: project (parent_model) en taak (model))\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Bovenliggend model welke de alias bezit. Het model dat de alias referentie "
-"bezit\n"
-"is niet noodzakelijk het model wat wordt gegeven door alias_model_id "
 "(bijvoorbeeld: project (parent_model) en taak (model))"
 
 #. module: crm
@@ -3575,7 +3458,6 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
-#: model:ir.model.fields,field_description:crm.field_crm_lead_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_partner_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Partner"
@@ -3676,7 +3558,7 @@ msgid "Planner"
 msgstr "Planner"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:574
+#: code:addons/crm/models/crm_lead.py:608
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -3737,6 +3619,7 @@ msgid "Priority Management Explanation"
 msgstr "Toelichting bij het toekennen van prioriteiten"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_activity_report_probability
 #: model:ir.model.fields,field_description:crm.field_crm_lead_probability
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_probability
 msgid "Probability"
@@ -3746,6 +3629,11 @@ msgstr "Kans"
 #: model:ir.model.fields,field_description:crm.field_crm_stage_probability
 msgid "Probability (%)"
 msgstr "Kans (%)"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_expected_revenue
+msgid "Probable Turnover"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3780,8 +3668,12 @@ msgid "Rating"
 msgstr "Beoordeling"
 
 #. module: crm
-#: selection:crm.lead,kanban_state:0
-msgid "Ready for next stage"
+#. openerp-web
+#: code:addons/crm/static/src/js/tour.js:11
+#, python-format
+msgid ""
+"Ready to boost you sales? Your <b>sales pipeline</b> can be found here, "
+"under this app."
 msgstr ""
 
 #. module: crm
@@ -3837,24 +3729,14 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Reporting"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Rapportages\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Rapportering"
+msgstr "Rapportages"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_requirements
 #: model:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Requirements"
 msgstr "Vereisten"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_activity_report_user_id
-msgid "Responsible"
-msgstr "Verantwoordelijke"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3915,11 +3797,11 @@ msgid "Salesmen"
 msgstr "Verkoper"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_activity_report_user_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_user_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_user_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_user_id
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity_user_id
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -3942,6 +3824,11 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 msgid "Schedule Next Activity"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_activity_schedule_action
+msgid "Schedule an Activity"
 msgstr ""
 
 #. module: crm
@@ -4214,13 +4101,8 @@ msgstr "Straat..."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_street2
-#, fuzzy
 msgid "Street2"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Adres 2\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Straat2"
+msgstr "Adres 2"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
@@ -4234,17 +4116,9 @@ msgstr "Beheer abonnementen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_title_action
+#: model:ir.model.fields,field_description:crm.field_crm_activity_report_subject
 msgid "Summary"
 msgstr "Samenvatting"
-
-#. module: crm
-#: model:web.tip,description:crm.crm_tip_5
-msgid ""
-"Switch to the graph view to get a clear reporting on your opportunities "
-"pipeline."
-msgstr ""
-"Schakel over naar de grafiekweergave om een rapportage te krijgen van je "
-"prospects in de verkoop pijplijn."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4266,13 +4140,8 @@ msgstr "Label"
 
 #. module: crm
 #: sql_constraint:crm.lead.tag:0
-#, fuzzy
 msgid "Tag name already exists !"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Label naam bestaat al!\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Labelnaam bestaat al!"
+msgstr "Label naam bestaat al!"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag_ids
@@ -4409,17 +4278,17 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
-"There are several ways for your company to generate leads with Odoo CRM. \n"
+"There are several ways for your company to generate leads with Odoo CRM.\n"
 "                        One of them is using your company's generic email "
-"address as a trigger \n"
+"address as a trigger\n"
 "                        to create a new lead in the system. In Odoo, each "
-"one of your sales teams \n"
+"one of your sales teams\n"
 "                        is linked to its own email address from which "
-"prospects can reach them. \n"
+"prospects can reach them.\n"
 "                        For example, if the personal email address of your "
-"Direct team is \n"
+"Direct team is\n"
 "                        direct@mycompany.example.com, every email sent when "
-"a new prospect \n"
+"a new prospect\n"
 "                        contacts you will automatically create a new "
 "opportunity into the sales team.\n"
 "\n"
@@ -4463,6 +4332,15 @@ msgid "This is the default configuration, there is nothing to setup."
 msgstr "Dit is de standaard configuratie, geen verdere aanpassingen nodig."
 
 #. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/tour.js:30
+#, python-format
+msgid ""
+"This opportunity has <b>no next activity scheduled</b>. <i>Click to set one."
+"</i>"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_probability
 msgid ""
 "This percentage depicts the default/average probability of the Case for this "
@@ -4490,7 +4368,7 @@ msgstr ""
 "deze fase om weer te geven."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1164
+#: code:addons/crm/models/crm_lead.py:1026
 #, python-format
 msgid "This target does not exist."
 msgstr "Dit doel bestaat niet."
@@ -4529,13 +4407,8 @@ msgstr "Totale omzet"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#, fuzzy
 msgid "Tracking"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Traceren\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Volgen"
+msgstr "Traceren"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_lead_type
@@ -4590,13 +4463,8 @@ msgstr "Meer verkopen aan bestaande klanten"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Use"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Gebruik\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Gebruiken"
+msgstr "Gebruik"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner.mass,action:0
@@ -4605,6 +4473,7 @@ msgstr "Gebruik bestaande relatie of maak aan"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
+#: model:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid ""
 "Use leads if you need a qualification step before creating an\n"
 "                    opportunity or a customer. It can be a business card you "
@@ -4612,21 +4481,6 @@ msgid ""
 "                    a contact form filled in your website, or a file of "
 "unqualified\n"
 "                    prospects you import, etc."
-msgstr ""
-"Gebruik leads als u eerst een kwalificatie wilt toevoegen voordat u\n"
-"een prospect of klant aanmaakt. Het kan bijvoorbeeld een visitekaartje\n"
-"zijn welke u heeft gehad, of een contactformulier van uw website. Maar het "
-"kan ook een lijst met ongekwalificeerde prospects zijn welke u importeert."
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.crm_lead_all_leads
-msgid ""
-"Use leads if you need a qualification step before creating an\n"
-"                opportunity or a customer. It can be a business card you "
-"received,\n"
-"                a contact form filled in your website, or a file of "
-"unqualified\n"
-"                prospects you import, etc."
 msgstr ""
 "Gebruik leads als u eerst een kwalificatie wilt toevoegen voordat u\n"
 "een prospect of klant aanmaakt. Het kan bijvoorbeeld een visitekaartje\n"
@@ -4674,9 +4528,21 @@ msgstr ""
 "maandelijks abonnement op een dienst, enz."
 
 #. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/tour.js:49
+#, python-format
+msgid "Use the breadcrumbs to <b>go back to your sales pipeline</b>."
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_resource_calendar_id
 msgid "Used to compute open days"
 msgstr "Gebruikt om open dagen te berekenen"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead_user_login
+msgid "Used to log into the system"
+msgstr "Gebruikt voor aanmelding aan het systeem"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_sequence
@@ -4721,6 +4587,11 @@ msgstr "Zeer hoog"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_crm_voip
 msgid "VoIP integration"
+msgstr "VoIP integratie"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
+msgid "Voip integration"
 msgstr "VoIP integratie"
 
 #. module: crm
@@ -4815,13 +4686,8 @@ msgstr "Wekelijkse meetings"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Welcome"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Welkom\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Welko"
+msgstr "Welkom"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4866,13 +4732,8 @@ msgstr "Winst / Verlies ratio"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_wizard_id
-#, fuzzy
 msgid "Wizard"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Assistent\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Wizard"
+msgstr "Assistent"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead4
@@ -4922,7 +4783,7 @@ msgstr ""
 "die aan uw eisen voldoet."
 
 #. module: crm
-#: code:addons/crm/base_partner_merge.py:309
+#: code:addons/crm/wizard/base_partner_merge.py:306
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
 msgstr "U kan geen contact samenvoegen met één van de bovenliggende."
@@ -4947,7 +4808,7 @@ msgstr ""
 "geen behoefte gevonden, enz."
 
 #. module: crm
-#: code:addons/crm/base_partner_merge.py:453
+#: code:addons/crm/wizard/base_partner_merge.py:398
 #, python-format
 msgid "You have to specify a filter for your selection"
 msgstr "U dient een filter te definiëren voor uw selectie"
@@ -4989,12 +4850,10 @@ msgstr ""
 #: model:ir.actions.act_window,help:crm.crm_lead_opportunities_tree_view
 msgid ""
 "You will be able to plan meetings and phone calls from\n"
-"                opportunities, convert them into quotations, attach related\n"
-"                documents, track all discussions, and much more."
+"                    opportunities, convert them into quotations, attach "
+"related\n"
+"                    documents, track all discussions, and much more."
 msgstr ""
-"U kunt afspraken en telefoongesprekken plannen vanuit\n"
-"prospects, ze omzetten in offertes, bijbehorende documenten\n"
-"bijvoegen, discussies opvolgen en nog veel meer."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -5073,6 +4932,11 @@ msgid "browse the documentation"
 msgstr "doorzoek de documentatie"
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
+msgid "e.g. Customer Deal"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -5085,7 +4949,7 @@ msgid "e.g. Product Pricing"
 msgstr "Bijv. Productprijs"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:861
+#: code:addons/crm/models/crm_lead.py:887
 #, python-format
 msgid "opportunities"
 msgstr "prospects"
@@ -5103,13 +4967,8 @@ msgstr "sale.config.settings"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "send us an email"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"ons een e-mail te sturen\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"verzend ons een e-mail"
+msgstr "ons een e-mail te sturen"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -5172,7 +5031,7 @@ msgstr ""
 "zetten (bijv. verkoop@mijnbedrijf.nl)"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1004
+#: code:addons/crm/models/crm_lead.py:893
 #, python-format
 msgid "unknown"
 msgstr "onbekend"
@@ -5199,8 +5058,40 @@ msgstr "met behulp van uw voorgaande werk"
 #~ "<li>Omschrijving: ${object.description}</li>\n"
 #~ "</ul>"
 
+#~ msgid ""
+#~ "<span><b>This is a business opportunity.</b> Drag and drop it to another "
+#~ "column while you move forward in the sales cycle. Click to zoom in the "
+#~ "opportunity.</span>"
+#~ msgstr ""
+#~ "<span><b>Dit is een prospect.</b> Sleep de prospect naar een andere kolom "
+#~ "bij vooruitgang in het verkoopproces. Klik op de prospect om de details "
+#~ "van de prospect te bekijken.</span>"
+
+#~ msgid ""
+#~ "<span><strong>Click to register a new business opportunity</strong>. Once "
+#~ "the opportunity is created, you will be able to drag and drop it in your "
+#~ "sales pipeline.</span>"
+#~ msgstr ""
+#~ "<span><strong>Klik om een nieuwe prospect aan te maken</strong>. Zodra de "
+#~ "prospect is aangemaakt kun je deze slepen naar een andere kolom van je "
+#~ "verkoop pijplijn.</span>"
+
 #~ msgid "Action Needed"
 #~ msgstr "Vereist actie"
+
+#~ msgid ""
+#~ "All email incoming to %(link)s  will automatically create new "
+#~ "opportunity.\n"
+#~ "Update your business card, phone book, social media,... Send an email "
+#~ "right now and see it here."
+#~ msgstr ""
+#~ "Alle inkomende e-mails aan %(link)s zullen automatische een nieuwe "
+#~ "prospects aanmaken.\n"
+#~ "Voeg dit ook toe aan uw visitekaartjes, telefoonboek, sociale media, ... "
+#~ "Stuur nu een mail en zie het hier tot leven komen."
+
+#~ msgid "Author"
+#~ msgstr "Auteur"
 
 #~ msgid "Both"
 #~ msgstr "Beide"
@@ -5208,6 +5099,12 @@ msgstr "met behulp van uw voorgaande werk"
 #~ msgid "Click to set a new stage in your lead/opportunity pipeline."
 #~ msgstr ""
 #~ "Klik om een nieuwe fase in uw pijplijn voor leads/prospects toe te voegen."
+
+#~ msgid "Click to view the opportunities related to this customer."
+#~ msgstr "Klik om de prospects van deze klant te bekijken."
+
+#~ msgid "Closed"
+#~ msgstr "Gesloten"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
@@ -5238,6 +5135,17 @@ msgstr "met behulp van uw voorgaande werk"
 
 #~ msgid "Function"
 #~ msgstr "Functie"
+
+#~ msgid ""
+#~ "Here is the list of your next activities. Those are linked to your "
+#~ "opportunities.\n"
+#~ "               To set a next activity, go on an opportunity and add one. "
+#~ "It will then appear in this list."
+#~ msgstr ""
+#~ "Dit is een lijst met de vervolgacties, die gekoppeld zijn aan uw "
+#~ "prospects.\n"
+#~ "Om een vervolgactie in te geven, ga naar een prospect en voeg ze toe. De "
+#~ "activiteit verschijnt dan in deze lijst."
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
@@ -5321,6 +5229,23 @@ msgstr "met behulp van uw voorgaande werk"
 #~ msgid "Number of unread messages"
 #~ msgstr "Aantal ongelezen berichten"
 
+#~ msgid ""
+#~ "Odoo helps you keep track of your sales pipeline to follow\n"
+#~ "                up potential sales and better forecast your future "
+#~ "revenues."
+#~ msgstr ""
+#~ "Odoo helpt u bij het opvolgen van uw verkooppijplijn om mogelijke "
+#~ "verkopen te\n"
+#~ "ontdekken en betere inschattingen te kunnen maken van toekomstige "
+#~ "opbrengsten."
+
+#~ msgid ""
+#~ "Once qualified, the lead can be converted into a business\n"
+#~ "                opportunity and/or a new customer in your address book."
+#~ msgstr ""
+#~ "Zodra een lead gekwalificeerd is, kan hij omgezet worden naar\n"
+#~ "een prospect en/of een nieuwe klant in uw adresboek."
+
 #~ msgid "Open Sale Menu"
 #~ msgstr "Open verkoop menu"
 
@@ -5346,6 +5271,9 @@ msgstr "met behulp van uw voorgaande werk"
 #~ "Herinnering van Lead: ${object.id} from ${object.partner_id != False and "
 #~ "object.partner_id.name or object.contact_name}"
 
+#~ msgid "Responsible"
+#~ msgstr "Verantwoordelijke"
+
 #~ msgid "Sales Tags"
 #~ msgstr "Verkoop labels"
 
@@ -5364,6 +5292,13 @@ msgstr "met behulp van uw voorgaande werk"
 #~ msgstr ""
 #~ "Fases biedt verkopers de mogelijkheid om eenvoudig te bepalen\n"
 #~ "waar een lead of prospect zich in de verkoopcyclus bevindt."
+
+#~ msgid ""
+#~ "Switch to the graph view to get a clear reporting on your opportunities "
+#~ "pipeline."
+#~ msgstr ""
+#~ "Schakel over naar de grafiekweergave om een rapportage te krijgen van je "
+#~ "prospects in de verkoop pijplijn."
 
 #~ msgid "Teams"
 #~ msgstr "Teams"
@@ -5411,6 +5346,20 @@ msgstr "met behulp van uw voorgaande werk"
 #~ msgid "Unreconciled aml ids"
 #~ msgstr "Onafgeletterde aml ids"
 
+#~ msgid ""
+#~ "Use leads if you need a qualification step before creating an\n"
+#~ "                opportunity or a customer. It can be a business card you "
+#~ "received,\n"
+#~ "                a contact form filled in your website, or a file of "
+#~ "unqualified\n"
+#~ "                prospects you import, etc."
+#~ msgstr ""
+#~ "Gebruik leads als u eerst een kwalificatie wilt toevoegen voordat u\n"
+#~ "een prospect of klant aanmaakt. Het kan bijvoorbeeld een visitekaartje\n"
+#~ "zijn welke u heeft gehad, of een contactformulier van uw website. Maar "
+#~ "het kan ook een lijst met ongekwalificeerde prospects zijn welke u "
+#~ "importeert."
+
 #~ msgid "Website Messages"
 #~ msgstr "Website berichten"
 
@@ -5422,6 +5371,16 @@ msgstr "met behulp van uw voorgaande werk"
 #~ msgstr ""
 #~ "Welke zijn de voornaamste KPI's die u wenst op te volgen met betrekking "
 #~ "tot uw verkoopactiviteiten?"
+
+#~ msgid ""
+#~ "You will be able to plan meetings and phone calls from\n"
+#~ "                opportunities, convert them into quotations, attach "
+#~ "related\n"
+#~ "                documents, track all discussions, and much more."
+#~ msgstr ""
+#~ "U kunt afspraken en telefoongesprekken plannen vanuit\n"
+#~ "prospects, ze omzetten in offertes, bijbehorende documenten\n"
+#~ "bijvoegen, discussies opvolgen en nog veel meer."
 
 #~ msgid "Your Customers"
 #~ msgstr "Uw klanten"
@@ -5440,42 +5399,3 @@ msgstr "met behulp van uw voorgaande werk"
 
 #~ msgid "oe_kanban_text_red"
 #~ msgstr "oe_kanban_text_red"
-
-#~ msgid "Closed Date"
-#~ msgstr "Afsluitdatum"
-
-#~ msgid "Configuration options are available in the Settings app."
-#~ msgstr "Configuratie mogelijkheden zijn beschikbaar in de Instellingen app."
-
-#~ msgid "Create"
-#~ msgstr "Aanmaken"
-
-#~ msgid "Create Date"
-#~ msgstr "Aanmaakdatum"
-
-#~ msgid "Create an Opportunity"
-#~ msgstr "Maak een prospect aan"
-
-#~ msgid "Created By"
-#~ msgstr "Aangemaakt door"
-
-#~ msgid "Discard"
-#~ msgstr "Negeren"
-
-#~ msgid "More Info"
-#~ msgstr "Meer info"
-
-#~ msgid "Next activity is planned"
-#~ msgstr "Volgende activiteit is gepland"
-
-#~ msgid "No next activity planned"
-#~ msgstr "Geen volgende activiteit gepland"
-
-#~ msgid "Opportunity Title"
-#~ msgstr "Titel opportuniteit"
-
-#~ msgid "Used to log into the system"
-#~ msgstr "Gebruikt voor aanmelding aan het systeem"
-
-#~ msgid "Voip integration"
-#~ msgstr "VoIP integratie"

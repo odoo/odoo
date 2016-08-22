@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2015-10-20 07:10+0000\n"
 "Last-Translator: Max Belyanin <maxbelyanin@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -41,7 +41,7 @@ msgid "#Questions"
 msgstr "#Вопросы"
 
 #. module: survey
-#: code:addons/survey/survey.py:231
+#: code:addons/survey/survey.py:232
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
@@ -314,9 +314,15 @@ msgstr "Отвечено"
 #: model:ir.model.fields,field_description:survey.field_survey_question_user_input_line_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_user_input_line_ids
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
 msgstr "Ответы"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Archived"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -352,6 +358,12 @@ msgstr "Возможные значения"
 #: model:ir.ui.view,arch_db:survey.simple_choice
 msgid "Choose..."
 msgstr "Выбрать..."
+
+#. module: survey
+#: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
+#, fuzzy
+msgid "Clean test answers"
+msgstr "Дата ответа"
 
 #. module: survey
 #: code:addons/survey/survey.py:125
@@ -641,7 +653,6 @@ msgstr "Эргономия и легкость использования"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_error_msg
-#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Error message"
 msgstr "Сообщение об ошибке"
 
@@ -777,7 +788,7 @@ msgid "If closed, people won't be able to answer to surveys in this column."
 msgstr "Если закрыто, люди не смогут ответить на соцопросы в этой рубрике."
 
 #. module: survey
-#: code:addons/survey/survey.py:624
+#: code:addons/survey/survey.py:631
 #: model:survey.question,comments_message:survey.feedback_1_1
 #: model:survey.question,comments_message:survey.feedback_1_2
 #: model:survey.question,comments_message:survey.feedback_2_1
@@ -1246,11 +1257,16 @@ msgstr "Управление покупками"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id
-#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_question_id
 #: model:ir.ui.view,arch_db:survey.survey_label_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Question"
+msgstr "Вопрос"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
+#, fuzzy
+msgid "Question 2"
 msgstr "Вопрос"
 
 #. module: survey
@@ -1534,6 +1550,7 @@ msgstr "Предложение"
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Survey"
@@ -1668,7 +1685,7 @@ msgid "The answer must be in the right type"
 msgstr "Ответ должен быть правильно напечатан"
 
 #. module: survey
-#: code:addons/survey/survey.py:622
+#: code:addons/survey/survey.py:629
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1763,19 +1780,19 @@ msgid "They help new users to understand Odoo"
 msgstr "Они помогают новым пользователям разобраться в Odoo"
 
 #. module: survey
-#: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
+#: code:addons/survey/survey.py:678 code:addons/survey/tests/test_survey.py:94
 #, python-format
 msgid "This answer must be an email address"
 msgstr "Этим ответом должен быть адрес электронной почты"
 
 #. module: survey
-#: code:addons/survey/survey.py:713 code:addons/survey/tests/test_survey.py:115
+#: code:addons/survey/survey.py:720 code:addons/survey/tests/test_survey.py:115
 #, python-format
 msgid "This is not a date/time"
 msgstr "Это не дата/время"
 
 #. module: survey
-#: code:addons/survey/survey.py:690 code:addons/survey/tests/test_survey.py:105
+#: code:addons/survey/survey.py:697 code:addons/survey/tests/test_survey.py:105
 #, python-format
 msgid "This is not a number"
 msgstr "Это не число"
@@ -1796,7 +1813,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr "Это сообщения появится, когда соцопрос будет завершен"
 
 #. module: survey
-#: code:addons/survey/survey.py:621
+#: code:addons/survey/survey.py:628
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -1956,6 +1973,12 @@ msgid "Validate entry"
 msgstr "Подтвердить запись"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
+#, fuzzy
+msgid "Validation Error message"
+msgstr "Сообщение об ошибке"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_form
 msgid "View Results"
 msgstr "Посмотреть результаты"
@@ -2065,14 +2088,14 @@ msgstr ""
 "активирована)."
 
 #. module: survey
-#: code:addons/survey/survey.py:424
+#: code:addons/survey/survey.py:425
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr ""
 "Вы не можете отправить приглашение на соцопрос, в котором нет вопросов."
 
 #. module: survey
-#: code:addons/survey/survey.py:429
+#: code:addons/survey/survey.py:430
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "Вы не можете отправлять приглашения на закрытые соцопросы."
@@ -2114,6 +2137,11 @@ msgstr "посмотреть ваши ответы"
 msgid "try to create and fill survey"
 msgstr "попробуйте создать и заполнить опрос"
 
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
+msgid "unknown"
+msgstr ""
+
 #~ msgid ""
 #~ "\n"
 #~ "                \n"
@@ -2145,6 +2173,9 @@ msgstr "попробуйте создать и заполнить опрос"
 
 #~ msgid "Action Needed"
 #~ msgstr "Требуется реакция"
+
+#~ msgid "Active domain"
+#~ msgstr "Активный домен"
 
 #~ msgid ""
 #~ "Answers do not go in the original document discussion thread. This has an "
@@ -2211,11 +2242,17 @@ msgstr "попробуйте создать и заполнить опрос"
 #~ msgid "From"
 #~ msgstr "От"
 
+#~ msgid "Human Ressources"
+#~ msgstr "Кадровые ресурсы"
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
+
+#~ msgid "If other, precise:"
+#~ msgstr "Если прочее, уточните:"
 
 #~ msgid "Initial thread message."
 #~ msgstr "Первое сообщение цепочки."

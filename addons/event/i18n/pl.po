@@ -6,23 +6,18 @@
 # zbik2607 <darek@krokus.com.pl>, 2016
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-13 09:17+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-08-12 09:18+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  pl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
-"#-#-#-#-#  pl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
@@ -44,7 +39,7 @@ msgid ""
 "\n"
 "<p>Dear ${object.name},</p>\n"
 "<p>Thank you for your inquiry.</p>\n"
-"<p>We confirm your subscription to the event <b>${object.event_id.name}</b>. "
+"<p>We confirm your registration to the event <b>${object.event_id.name}</b>. "
 "You will receive emails with practical information.</p>\n"
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
@@ -235,7 +230,8 @@ msgstr "zaawansowane JQuery"
 
 #. module: event
 #: selection:event.mail,interval_type:0
-msgid "After each subscription"
+#, fuzzy
+msgid "After each registration"
 msgstr "Po każdej subskrypcji"
 
 #. module: event
@@ -250,7 +246,8 @@ msgstr "Wszystkie wydarzenia są bezpłatne"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
-msgid "Allow adding extra questions on subscriptions"
+#, fuzzy
+msgid "Allow adding extra questions on registrations"
 msgstr "Pozwól na dodawanie dodatkowych pytań do subskrypcji"
 
 #. module: event
@@ -330,6 +327,12 @@ msgid "Auto Confirmation"
 msgstr "Autopotwierdzenie"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_seats_available
+#, fuzzy
+msgid "Available Seats"
+msgstr "Brak dostępnych miejsc."
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_back
 msgid "Badge Back"
 msgstr "Identyfikator tył"
@@ -356,6 +359,12 @@ msgstr "Identyfikator środkowa prawa strona"
 #: model:event.event,description:event.event_3
 msgid "Banner Odoo Image"
 msgstr "Baner z obrazkiem Odoo"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_configuration
+#, fuzzy
+msgid "Barcode Interface"
+msgstr "Identyfikator środkowa lewa strona"
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -544,13 +553,6 @@ msgid "Course Summary"
 msgstr "Podsumowanie kursu"
 
 #. module: event
-#: model:web.tip,description:event.event_tip_1
-msgid ""
-"Create and manage registrations for this event, send emails to attendees and "
-"print identification badges."
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
 #: model:ir.model.fields,field_description:event.field_event_confirm_create_uid
 #: model:ir.model.fields,field_description:event.field_event_event_create_uid
@@ -736,6 +738,18 @@ msgid "Event Beginning Date"
 msgstr "Data początku wydarzenia"
 
 #. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+#, fuzzy
+msgid "Event Categories"
+msgstr "Data wydarzenia"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
+#, fuzzy
+msgid "Event Category"
+msgstr "Data wydarzenia"
+
+#. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
@@ -814,12 +828,17 @@ msgstr "Stan wydarzenia"
 #: model:ir.model,name:event.model_event_type
 #: model:ir.model.fields,field_description:event.field_event_type_name
 #: model:ir.model.fields,field_description:event.field_report_event_registration_event_type_id
-#: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 #: model:ir.ui.view,arch_db:event.view_event_type_tree
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event Type"
 msgstr "Typ wydarzenia"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+#, fuzzy
+msgid "Event Types"
+msgstr "Typy wydarzeń"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.report_event_registration_graph
@@ -849,11 +868,6 @@ msgstr "Analiza wydarzeń"
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
 msgstr "Planista wiadomości dla wydarzeń"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-msgid "Events Types"
-msgstr "Typy wydarzeń"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1007,6 +1021,12 @@ msgid "Install and administer your own server;"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_config_settings_module_event_barcode
+#, fuzzy
+msgid "Install the event_barcode module"
+msgstr "Install the website_event_questions module"
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_event_sale
 msgid "Install the event_sale module"
 msgstr ""
@@ -1142,7 +1162,7 @@ msgid "Mail Scheduler"
 msgstr "Planista wiadomości"
 
 #. module: event
-#: model:ir.ui.menu,name:event.menu_event_type
+#: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
 msgstr "Planowanie wiadomości"
 
@@ -1168,7 +1188,8 @@ msgstr "Menedżer"
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
-msgid "Manually confirm every subscription"
+#, fuzzy
+msgid "Manually confirm every registration"
 msgstr "Potwierdzaj ręcznie każdą subskrypcję"
 
 #. module: event
@@ -1178,7 +1199,6 @@ msgstr "Maksymalnie miejsc"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_availability
-#: model:ir.model.fields,field_description:event.field_event_event_seats_available
 msgid "Maximum Attendees"
 msgstr "Maksymalnie uczestników"
 
@@ -1221,7 +1241,8 @@ msgstr "Bez automatycznych wiadomości"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
-msgid "No extra questions on subscriptions"
+#, fuzzy
+msgid "No extra questions on registrations"
 msgstr "Bez dodatkowych pytań o subskrypcji"
 
 #. module: event
@@ -1243,7 +1264,8 @@ msgstr "Brak miejsc na wydarzenie"
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
-msgid "No validation step on subscription"
+#, fuzzy
+msgid "No validation step on registration"
 msgstr "Bez potwierdzania subskrypcji"
 
 #. module: event
@@ -1284,7 +1306,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid ""
 "Odoo helps you schedule and efficiently organize your events:\n"
-"    track subscriptions and participations, automate the confirmation "
+"    track registrations and participations, automate the confirmation "
 "emails,\n"
 "    sell tickets, etc."
 msgstr ""
@@ -1422,6 +1444,12 @@ msgid "Registration State"
 msgstr "Stan rejestracji"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_questions
+#, fuzzy
+msgid "Registration Survey"
+msgstr "Stan rejestracji"
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Registration contact"
 msgstr "Kontakt rejestracyjny"
@@ -1482,8 +1510,14 @@ msgid "Responsible"
 msgstr "Odpowiedzialny"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_barcode
+msgid "Scan badges to confirm attendances"
+msgstr ""
+
+#. module: event
 #: model:res.groups,name:event.group_email_scheduling
-msgid "Schedule Emails on Event Subscription"
+#, fuzzy
+msgid "Schedule Emails on Event Registration"
 msgstr "Planuj wiadomości dla subskrypcji wydarzenia"
 
 #. module: event
@@ -1568,11 +1602,6 @@ msgstr "Stan"
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
 msgstr "Subskrybuj"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_questions
-msgid "Subscription Survey"
-msgstr "Ankieta subskrypcji"
 
 #. module: event
 #: model:event.event,name:event.event_3
@@ -1681,7 +1710,7 @@ msgstr "Nieprzeczytane wiadomości"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
 msgid ""
-"Unselect this option to manually manage draft event and draft subscription"
+"Unselect this option to manually manage draft event and draft registration"
 msgstr ""
 
 #. module: event
@@ -1764,7 +1793,7 @@ msgstr "Musisz czekać na pierwszy dzień wydarzenia aby wykonać tę akcję."
 #: model:ir.model.fields,help:event.field_event_config_settings_group_email_scheduling
 msgid ""
 "You will be able to configure emails, and to schedule them to be "
-"automatically sent to the attendees on subscription and/or attendance"
+"automatically sent to the attendees on registration and/or attendance"
 msgstr ""
 
 #. module: event
@@ -1774,7 +1803,8 @@ msgstr "Twój identyfikator na ${object.event_id.name}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
-msgid "Your subscription at ${object.event_id.name}"
+#, fuzzy
+msgid "Your registration at ${object.event_id.name}"
 msgstr "Twoja subskrypcja ${object.event_id.name}"
 
 #. module: event
@@ -1858,6 +1888,22 @@ msgstr "materiały szkoleniowe."
 #~ "<p>Hello ${object.name},</p>\n"
 #~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
 #~ "has been recorded.\n"
+#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>Dzień dobry ${object.name},</p>\n"
+#~ "<p>Potwierdzamy, że twoja subskrypcja na wydarzenie ${object.event_id."
+#~ "name} została zarejestrowana.\n"
+#~ "Twój <b>Identyfikator uczestnika</b> została dołączony do tej wiadomości."
+#~ "</p>\n"
+#~ "<p>Dziękujemy za zgloszenie!</p>\n"
+#~ "<p>Pozdrawiamy</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
+#~ "has been recorded.\n"
 #~ "You will automatically receive an email providing you more practical "
 #~ "information (such as the schedule, the agenda...) as soon as the event is "
 #~ "confirmed.</p>\n"
@@ -1901,6 +1947,12 @@ msgstr "materiały szkoleniowe."
 
 #~ msgid "Action Needed"
 #~ msgstr "Wymagana akcja"
+
+#~ msgid "Badge Innner Left"
+#~ msgstr "Identyfikator środkowa lewa strona"
+
+#~ msgid "Controlers and Views"
+#~ msgstr "Kontrolery i widoki"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Data ostatniej wiadomości w rekordzie."
@@ -1946,6 +1998,9 @@ msgstr "materiały szkoleniowe."
 
 #~ msgid "Read Great Contents"
 #~ msgstr "Czytaj zawartość"
+
+#~ msgid "Subscription Survey"
+#~ msgstr "Ankieta subskrypcji"
 
 #~ msgid "Thanks for attending ${object.event_id.name}"
 #~ msgstr "Dziękujemy za uczestnictwo w ${object.event_id.name}"

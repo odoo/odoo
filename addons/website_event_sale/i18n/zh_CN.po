@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-01-02 04:31+0000\n"
 "Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -57,6 +57,12 @@ msgid "Product"
 msgstr "产品"
 
 #. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:63
+#, python-format
+msgid "Registration"
+msgstr "登记记录"
+
+#. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Remaining"
 msgstr "剩余"
@@ -73,13 +79,13 @@ msgid "Sold Out"
 msgstr "已售完"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:71
+#: code:addons/website_event_sale/models/sale_order.py:67
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
 msgstr "很抱歉，%(ticket)s门票%(event)s事件都卖完了。"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:77
+#: code:addons/website_event_sale/models/sale_order.py:73
 #, python-format
 msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
@@ -87,12 +93,6 @@ msgid ""
 msgstr ""
 "对不起，只有%(remaining_seats)d席位仍然可用于%(ticket)s的门票为%(event)s事"
 "件。"
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:65
-#, python-format
-msgid "Subscription"
-msgstr "订阅"
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:36
@@ -104,3 +104,6 @@ msgstr "这张票不符合这个产品。"
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
 msgstr "网站"
+
+#~ msgid "Subscription"
+#~ msgstr "订阅"

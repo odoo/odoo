@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
 "PO-Revision-Date: 2016-02-18 13:47+0000\n"
 "Last-Translator: Esteban Echeverry <tebanep@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/"
@@ -36,6 +36,12 @@ msgstr "Archivo"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Por categoría de nota fijada"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+#, fuzzy
+msgid "Click to add a new tag."
+msgstr "Clic para añadir una nota personal."
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -134,7 +140,7 @@ msgid "New"
 msgstr "Nueva"
 
 #. module: note
-#: code:addons/note/note.py:165
+#: code:addons/note/models/note.py:128
 #, python-format
 msgid "New Note"
 msgstr "Nueva Nota"
@@ -182,7 +188,8 @@ msgstr "Propietario"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
+#, fuzzy
+msgid "Owner of the note stage"
 msgstr "Propietario de la Etapa de la Nota"
 
 #. module: note
@@ -235,13 +242,15 @@ msgid "Tag name already exists !"
 msgstr "¡Ese nombre de etiqueta ya existe!"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Etiquetas"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "Esta Semana"

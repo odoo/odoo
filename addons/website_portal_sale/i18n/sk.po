@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
 "PO-Revision-Date: 2016-06-30 22:36+0000\n"
 "Last-Translator: palica <pavol.cupka@gmail.com>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -19,12 +19,12 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Pay Now"
 msgstr "<i class=\"fa fa-arrow-circle-right\"/> Zaplatiť teraz"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid ""
 "<span class=\"label label-danger\"><i class=\"fa fa-fw fa-warning\"/> "
 "Problem</span>"
@@ -33,7 +33,7 @@ msgstr ""
 "Problém</span>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/> Done</"
 "span>"
@@ -42,7 +42,7 @@ msgstr ""
 "span>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/> Paid</"
 "span>"
@@ -51,7 +51,7 @@ msgstr ""
 "Zaplatené</span>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-clock-o\"/> "
 "Expired</span>"
@@ -60,8 +60,8 @@ msgstr ""
 "Expirované</span>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
 "Cancelled</span>"
@@ -79,7 +79,7 @@ msgstr ""
 "fa-clock-o\"/> Čakajúce</span>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid ""
 "<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/> "
 "Invoiced</span>"
@@ -88,7 +88,7 @@ msgstr ""
 "Vyfaktúrované</span>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid ""
 "<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/> Waiting "
 "for Payment</span>"
@@ -104,13 +104,6 @@ msgid ""
 msgstr ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa fa-"
 "fw fa-check\"/> Zaplatené</span>"
-
-#. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
-msgid "<span>Show more</span><span class=\"hidden\">Show less</span>"
-msgstr "<span>Zobraziť viac</span><span class=\"hidden\">Zobraziť menej</span>"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
@@ -168,12 +161,12 @@ msgid "Access the complete Sale application"
 msgstr "Prístup k úplnej žiadosti predaja"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Amount Due"
 msgstr ""
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Due Date"
 msgstr "Dátum splatnosti"
 
@@ -187,19 +180,32 @@ msgstr ""
 "môžete pokračovať"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Invoice #"
 msgstr "Faktúra č."
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Invoice Date"
 msgstr "Dátum faktúry"
 
 #. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_menu_sale
+#, fuzzy
+msgid "Invoices"
+msgstr "Faktúra č."
+
+#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
-msgid "My Account"
-msgstr "Môj účet"
+#, fuzzy
+msgid "My Orders"
+msgstr "Poradie"
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
+#, fuzzy
+msgid "My Quotes"
+msgstr "Vaše cenové ponuky"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
@@ -207,12 +213,18 @@ msgid "Order"
 msgstr "Poradie"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid "Order Date"
 msgstr "Dátum objednávky"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_menu_sale
+#, fuzzy
+msgid "Orders"
+msgstr "Poradie"
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Pay Now"
 msgstr "Zaplatiť teraz"
 
@@ -222,12 +234,18 @@ msgid "Quotation"
 msgstr "Cenová ponuka"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid "Quotation #"
 msgstr "Cenová ponuka #"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_menu_sale
+#, fuzzy
+msgid "Quotes"
+msgstr "Vaše cenové ponuky"
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid "Sale Order #"
 msgstr "Predajná objednávka č."
 
@@ -242,23 +260,26 @@ msgid "Taxes:"
 msgstr "Dane :"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "There are currently no invoices for your account."
 msgstr "Momentálne nemáte žiadne faktúry na vašom účte."
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid "There are currently no orders for your account."
 msgstr "Momentálne nemáte žiadne objednávky na vašom účte."
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid "There are currently no quotes for your account."
 msgstr "Momentálne nemáte žiadne cenové ponuky na vašom účte."
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid "Total"
 msgstr "Celkom"
 
@@ -268,22 +289,25 @@ msgid "Untaxed Amount:"
 msgstr "Nezdanená suma:"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid "Valid Until"
 msgstr "Platné do"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.invoices
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Your Invoices and Payments"
 msgstr "Vaše faktúry a platby"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_orders
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Vaše objednávky"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.quotations
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid "Your Quotes"
 msgstr "Vaše cenové ponuky"
 
@@ -291,3 +315,10 @@ msgstr "Vaše cenové ponuky"
 #: model:ir.ui.view,arch_db:website_portal_sale.sales_backend_access
 msgid "this link"
 msgstr "tento odkaz"
+
+#~ msgid "<span>Show more</span><span class=\"hidden\">Show less</span>"
+#~ msgstr ""
+#~ "<span>Zobraziť viac</span><span class=\"hidden\">Zobraziť menej</span>"
+
+#~ msgid "My Account"
+#~ msgstr "Môj účet"
