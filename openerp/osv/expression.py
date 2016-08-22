@@ -909,38 +909,6 @@ class expression(object):
                         push(create_substitution_leaf(leaf, elem, model, internal=True))
 
             # -------------------------------------------------
-            # FUNCTION FIELD
-            # -> not stored: error if no _fnct_search, otherwise handle the result domain
-            # -> stored: management done in the remaining of parsing
-            # -------------------------------------------------
-
-            elif isinstance(column, fields.function) and not column.store:
-                # this is a function field that is not stored
-                if not column._fnct_search:
-                    _logger.error(
-                        "Field '%s' (%s) can not be searched: "
-                        "non-stored function field without fnct_search",
-                        column.string, left)
-                    # avoid compiling stack trace if not needed
-                    if _logger.isEnabledFor(logging.DEBUG):
-                        _logger.debug(''.join(traceback.format_stack()))
-                    # ignore it: generate a dummy leaf
-                    fct_domain = []
-                else:
-                    fct_domain = column.search(cr, uid, model._model, left, [leaf.leaf], context=context)
-
-                if not fct_domain:
-                    leaf.leaf = TRUE_LEAF
-                    push(leaf)
-                else:
-                    # we assume that the expression is valid
-                    # we create a dummy leaf for forcing the parsing of the resulting expression
-                    for domain_element in reversed(fct_domain):
-                        push(create_substitution_leaf(leaf, domain_element, model))
-                    # self.push(create_substitution_leaf(leaf, TRUE_LEAF, model))
-                    # self.push(create_substitution_leaf(leaf, AND_OPERATOR, model))
-
-            # -------------------------------------------------
             # RELATIONAL FIELDS
             # -------------------------------------------------
 

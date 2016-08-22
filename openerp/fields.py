@@ -447,10 +447,6 @@ class Field(object):
             if not attrs.get('readonly'):
                 attrs['inverse'] = self._inverse_sparse
 
-        # fix for function fields overridden by regular columns
-        if not isinstance(attrs.get('origin'), (NoneType, fields.function)):
-            attrs.pop('store', None)
-
         self.set_all_attrs(attrs)
 
         if not self.string and not self.related:

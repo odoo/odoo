@@ -19,7 +19,7 @@ from . import common
 from . import preprocess
 from .interface import report_rml
 from openerp.exceptions import AccessError
-from openerp.osv.fields import float as float_field, function as function_field, datetime as datetime_field
+from openerp.osv.fields import float as float_field, datetime as datetime_field
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval
 from openerp.tools.translate import _
@@ -177,7 +177,7 @@ class rml_parse(object):
             else:
                 d = res_digits(self.cr)[1]
         elif (hasattr(obj, '_field') and\
-                isinstance(obj._field, (float_field, function_field)) and\
+                isinstance(obj._field, float_field) and\
                 obj._field.digits):
                 d = obj._field.digits[1]
                 if not d and d is not 0:
