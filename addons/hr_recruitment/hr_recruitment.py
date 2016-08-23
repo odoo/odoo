@@ -168,6 +168,8 @@ class hr_applicant(osv.Model):
             department_ids = self.pool.get('hr.department').name_search(cr, uid, name=department_name, context=context)
             if len(department_ids) == 1:
                 return int(department_ids[0][0])
+        if context.get('search_default_job_id'):
+            return self.pool['hr.job'].browse(cr, uid, context.get('search_default_job_id'))[0].department_id.id
         return None
 
     def _get_default_company_id(self, cr, uid, department_id=None, context=None):
