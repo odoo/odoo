@@ -55,7 +55,7 @@ class WebsiteSaleOptions(WebsiteSale):
         pricelist = request.website.get_current_pricelist()
         product_context = dict(request.context)
         if not product_context.get('pricelist'):
-            product_context['pricelist'] = int(pricelist)
+            product_context['pricelist'] = pricelist.id
         # fetch quantity from custom context
         product_context.update(kw.get('kwargs', {}).get('context', {}))
 
