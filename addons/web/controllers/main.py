@@ -1093,7 +1093,7 @@ class Action(http.Controller):
             except Exception:
                 action_id = 0   # force failed read
 
-        base_action = Actions.read([action_id], ['type'], request.context)
+        base_action = Actions.read([action_id], ['type'], context=request.context)
         if base_action:
             ctx = request.context
             action_type = base_action[0]['type']
@@ -1101,7 +1101,7 @@ class Action(http.Controller):
                 ctx.update({'bin_size': True})
             if additional_context:
                 ctx.update(additional_context)
-            action = request.session.model(action_type).read([action_id], False, ctx)
+            action = request.session.model(action_type).read([action_id], False, context=ctx)
             if action:
                 value = clean_action(action[0])
         return value
