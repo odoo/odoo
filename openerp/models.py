@@ -1984,7 +1984,7 @@ class BaseModel(object):
     def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         self.check_access_rights('read')
         query = self._where_calc(domain)
-        fields = fields or self._columns.keys()
+        fields = fields or [f.name for f in self._fields.itervalues() if f.store]
 
         groupby = [groupby] if isinstance(groupby, basestring) else groupby
         groupby_list = groupby[:1] if lazy else groupby
@@ -2164,7 +2164,8 @@ class BaseModel(object):
         # fields which were required but have been removed (or will be added by
         # another module)
         cr = self._cr
-        cols = list(self._columns)
+        cols = [name for name, field in self._fields.iteritems()
+                     if field.store and field.column_type]
         cr.execute("SELECT a.attname, a.attnotnull"
                    "  FROM pg_class c, pg_attribute a"
                    " WHERE c.relname=%s"
@@ -2338,11 +2339,11 @@ class BaseModel(object):
         - create the corresponding table in database,
         - add the parent columns in database,
         - add the '_log_access' columns if required,
-        - report on database columns no more existing in ``self._columns``,
+        - report on database columns no more existing in ``self._fields``,
         - remove no more existing not null constraints,
-        - alter existing database columns to match ``self._columns``,
-        - create database tables to match ``self._columns``,
-        - add database indices to match ``self._columns``,
+        - alter existing database columns to match ``self._fields``,
+        - create database tables to match ``self._fields``,
+        - add database indices to match ``self._fields``,
         - save in self._foreign_keys a list a foreign keys to create (see
           _auto_end).
 
@@ -2647,17 +2648,17 @@ class BaseModel(object):
     def _create_parent_columns(self):
         self._cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_left" INTEGER' % (self._table,))
         self._cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_right" INTEGER' % (self._table,))
-        if 'parent_left' not in self._columns:
-            _logger.error('add a field parent_left on model %s: parent_left = fields.Integer(\'Left Parent\', index=True)', self._name)
+        if 'parent_left' not in self._fields:
+            _logger.error("add a field parent_left on model %s: parent_left = fields.Integer('Left Parent', index=True)", self._name)
             _schema.debug("Table '%s': added column '%s' with definition=%s", self._table, 'parent_left', 'INTEGER')
-        elif not self._columns['parent_left'].select:
+        elif not self._fields['parent_left'].index:
             _logger.error('parent_left field on model %s must be indexed! Add index=True to the field definition)', self._name)
-        if 'parent_right' not in self._columns:
-            _logger.error('add a field parent_right on model %s: parent_right = fields.Integer(\'Left Parent\', index=True)', self._name)
+        if 'parent_right' not in self._fields:
+            _logger.error("add a field parent_right on model %s: parent_right = fields.Integer('Left Parent', index=True)", self._name)
             _schema.debug("Table '%s': added column '%s' with definition=%s", self._table, 'parent_right', 'INTEGER')
-        elif not self._columns['parent_right'].select:
-            _logger.error('parent_right field on model %s must be indexed! Add index=True to the field definition)', self._name)
-        if self._columns[self._parent_name].ondelete not in ('cascade', 'restrict'):
+        elif not self._fields['parent_right'].index:
+            _logger.error("parent_right field on model %s must be indexed! Add index=True to the field definition)", self._name)
+        if self._fields[self._parent_name].ondelete not in ('cascade', 'restrict'):
             _logger.error("The field %s on model %s must be set as ondelete='cascade' or 'restrict'", self._parent_name, self._name)
         self._cr.commit()
 
@@ -3072,13 +3073,14 @@ class BaseModel(object):
         # split fields into stored and computed fields
         stored, inherited, computed = [], [], []
         for name in fields:
-            if name in self._columns:
-                stored.append(name)
-            elif name in self._fields:
-                computed.append(name)
-                field = self._fields[name]
-                if field.inherited and field.base_field.column:
+            field = self._fields.get(name)
+            if field:
+                if field.store:
+                    stored.append(name)
+                elif field.base_field.store:
                     inherited.append(name)
+                else:
+                    computed.append(name)
             else:
                 _logger.warning("%s.read() with unknown field '%s'", self._name, name)
 
@@ -3089,7 +3091,7 @@ class BaseModel(object):
         # retrieve results from records; this takes values from the cache and
         # computes remaining fields
         result = []
-        name_fields = [(name, self._fields[name]) for name in (stored + computed)]
+        name_fields = [(name, self._fields[name]) for name in (stored + inherited + computed)]
         use_name_get = (load == '_classic_read')
         for record in self:
             try:
@@ -3908,7 +3910,7 @@ class BaseModel(object):
         for key, val in vals.iteritems():
             field = self._fields.get(key)
             if field:
-                if field.column or field.inherited:
+                if field.store or field.inherited:
                     old_vals[key] = val
                 if field.inverse and not field.inherited:
                     new_vals[key] = val
