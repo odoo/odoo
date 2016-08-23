@@ -594,7 +594,7 @@ class AccountInvoice(models.Model):
                 'amount_currency': self.company_id.currency_id.with_context(date=credit_aml.date).compute(credit_aml.balance, self.currency_id),
                 'currency_id': self.currency_id.id})
         if credit_aml.payment_id:
-            credit_aml.payment_id.write({'invoice_ids': [(4, id, None)]})
+            credit_aml.payment_id.write({'invoice_ids': [(4, self.id, None)]})
         return self.register_payment(credit_aml)
 
     @api.multi
