@@ -192,7 +192,7 @@ class Report(osv.Model):
         # Get the ir.actions.report.xml record we are working on.
         report = self._get_report_from_name(cr, uid, report_name)
         # Check if we have to save the report or if we have to get one from the db.
-        save_in_attachment = self._check_attachment_use(cr, uid, ids, report)
+        save_in_attachment = self._check_attachment_use(cr, uid, ids, report, context=context)
         # Get the paperformat associated to the report, otherwise fallback on the company one.
         if not report.paperformat_id:
             user = self.pool['res.users'].browse(cr, uid, uid)
@@ -311,7 +311,7 @@ class Report(osv.Model):
     # Report generation helpers
     #--------------------------------------------------------------------------
     @api.v7
-    def _check_attachment_use(self, cr, uid, ids, report):
+    def _check_attachment_use(self, cr, uid, ids, report, context=None):
         """ Check attachment_use field. If set to true and an existing pdf is already saved, load
         this one now. Else, mark save it.
         """
@@ -320,7 +320,7 @@ class Report(osv.Model):
         save_in_attachment['loaded_documents'] = {}
 
         if report.attachment:
-            records = self.pool[report.model].browse(cr, uid, ids)
+            records = self.pool[report.model].browse(cr, uid, ids, context=context)
             filenames = self._attachment_filename(cr, uid, records, report)
             attachments = None
             if report.attachment_use:
