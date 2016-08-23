@@ -2399,12 +2399,9 @@ class BaseModel(object):
                     # Don't update custom (also called manual) fields
                     continue
 
-                if field.type == 'one2many':
-                    self._o2m_raise_on_missing_reference(field.column)
-
-                elif field.type == 'many2many':
-                    res = self._m2m_raise_or_create_relation(field.column)
-                    if res and field.compute:
+                if not field.column_type:
+                    # the field is not stored as a column
+                    if field.check_schema(self) and field.compute:
                         stored_fields.append(field)
 
                 else:
@@ -2537,7 +2534,7 @@ class BaseModel(object):
                                 if comodel._auto and comodel._table != 'ir_actions':
                                     self._m2o_fix_foreign_key(self._table, name, comodel, field.ondelete)
 
-                    elif field.column_type:
+                    else:
                         # the column doesn't exist in database, create it
                         cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, name, field.column_type[1]))
                         cr.execute("COMMENT ON COLUMN %s.\"%s\" IS %%s" % (self._table, name), (field.string,))
@@ -2672,48 +2669,6 @@ class BaseModel(object):
                     WHERE c.relname=%s AND c.oid=a.attrelid AND a.atttypid=t.oid """
         self._cr.execute(query, (self._table,))
         return {row['attname']: row for row in self._cr.dictfetchall()}
-
-    @api.model_cr
-    def _o2m_raise_on_missing_reference(self, column):
-        # TODO this check should be a method on fields.one2many.
-        if column._obj in self.env:
-            other = self.env[column._obj]
-            # TODO the condition could use fields_get_keys().
-            if column._fields_id not in other._fields:
-                raise UserError(_("There is no reference field '%s' found for '%s'") % (column._fields_id, column._obj))
-
-    @api.model_cr
-    def _m2m_raise_or_create_relation(self, column):
-        """ Create the table for the relation if necessary.
-        Return ``True`` if the relation had to be created.
-        """
-        cr = self._cr
-        m2m_tbl, col1, col2 = column._sql_names(self)
-        # do not create relations for custom fields as they do not belong to a module
-        # they will be automatically removed when dropping the corresponding ir.model.field
-        # table name for custom relation all starts with x_, see __init__
-        if not m2m_tbl.startswith('x_'):
-            self._save_relation_table(m2m_tbl, column._module)
-        cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
-        if not cr.dictfetchall():
-            if column._obj not in self.env:
-                raise UserError(_('Many2Many destination model does not exist: `%s`') % (column._obj,))
-            dest_model = self.env[column._obj]
-            cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s"))' % (m2m_tbl, col1, col2, col1, col2))
-            # create foreign key references with ondelete=cascade, unless the targets are SQL views
-            cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (dest_model._table,))
-            if not cr.fetchall():
-                self._m2o_add_foreign_key_unchecked(m2m_tbl, col2, dest_model, 'cascade', column._module)
-            cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (self._table,))
-            if not cr.fetchall():
-                self._m2o_add_foreign_key_unchecked(m2m_tbl, col1, self, 'cascade', column._module)
-
-            cr.execute('CREATE INDEX ON "%s" ("%s")' % (m2m_tbl, col1))
-            cr.execute('CREATE INDEX ON "%s" ("%s")' % (m2m_tbl, col2))
-            cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (m2m_tbl, self._table, dest_model._table))
-            cr.commit()
-            _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, dest_model._table)
-            return True
 
     @api.model_cr
     def _add_sql_constraints(self):

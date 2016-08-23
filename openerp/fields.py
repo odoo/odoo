@@ -20,13 +20,14 @@ from openerp.tools import float_precision, float_repr, float_round, frozendict, 
                           html_sanitize, human_size, pg_varchar, ustr, OrderedSet
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
-from openerp.tools.translate import html_translate
+from openerp.tools.translate import html_translate, _
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 EMPTY_DICT = frozendict()
 
 _logger = logging.getLogger(__name__)
+_schema = logging.getLogger(__name__[:-7] + '.schema')
 
 Default = object()                      # default value for __init__() methods
 
@@ -865,6 +866,12 @@ class Field(object):
     #
     # Read from/write to database
     #
+
+    def check_schema(self, model):
+        """ Make sure the database contains everything for this field. Return
+        ``True`` if the schema was altered and the field must be recomputed.
+        """
+        pass
 
     def read(self, records):
         """ Read the value of ``self`` on ``records``, and store it in cache. """
@@ -2172,6 +2179,12 @@ class One2many(_RelationalMulti):
             fnames = [name for name in fnames if name != self.inverse_name]
         return super(One2many, self).convert_to_onchange(value, record, fnames)
 
+    def check_schema(self, model):
+        if self.comodel_name in model.env:
+            comodel = model.env[self.comodel_name]
+            if self.inverse_name not in comodel._fields:
+                raise UserError(_("No inverse field %r found for %r") % (self.inverse_name, self.comodel_name))
+
     def read(self, records):
         # retrieve the lines in the comodel
         comodel = records.env[self.comodel_name].with_context(**self.context)
@@ -2285,12 +2298,21 @@ class Many2many(_RelationalMulti):
 
     def _setup_regular_base(self, model):
         super(Many2many, self)._setup_regular_base(model)
-        if not self.relation and self.store:
-            # retrieve self.relation from the corresponding column
-            column = self.to_column()
-            if isinstance(column, fields.many2many):
-                self.relation, self.column1, self.column2 = column._sql_names(model)
-        elif self.store:
+        if self.store:
+            if not (self.relation and self.column1 and self.column2):
+                # table name is based on the stable alphabetical order of tables
+                comodel = model.env[self.comodel_name]
+                if not self.relation:
+                    tables = sorted([model._table, comodel._table])
+                    assert tables[0] != tables[1], \
+                        "%s: Implicit/canonical naming of many2many relationship " \
+                        "table is not possible when source and destination models " \
+                        "are the same" % self
+                    self.relation = '%s_%s_rel' % tuple(tables)
+                if not self.column1:
+                    self.column1 = '%s_id' % model._table
+                if not self.column2:
+                    self.column2 = '%s_id' % comodel._table
             # check validity of table name
             check_pg_name(self.relation)
 
@@ -2313,6 +2335,35 @@ class Many2many(_RelationalMulti):
     _column_id2 = property(attrgetter('column2'))
     _column_auto_join = property(attrgetter('auto_join'))
     _column_limit = property(attrgetter('limit'))
+
+    def check_schema(self, model):
+        cr = model._cr
+        rel, id1, id2 = self.relation, self.column1, self.column2
+        # do not create relations for custom fields as they do not belong to a module
+        # they will be automatically removed when dropping the corresponding ir.model.field
+        # table name for custom relation all starts with x_, see __init__
+        if not rel.startswith('x_'):
+            model._save_relation_table(rel, self._module)
+        cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (rel,))
+        if not cr.dictfetchall():
+            if self.comodel_name not in model.env:
+                raise UserError(_('Many2many comodel does not exist: %r') % (self.comodel_name,))
+            comodel = model.env[self.comodel_name]
+            cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s"))' % (rel, id1, id2, id1, id2))
+            # create foreign key references with ondelete=cascade, unless the targets are SQL views
+            cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (comodel._table,))
+            if not cr.fetchall():
+                model._m2o_add_foreign_key_unchecked(rel, id2, comodel, 'cascade', self._module)
+            cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (model._table,))
+            if not cr.fetchall():
+                model._m2o_add_foreign_key_unchecked(rel, id1, model, 'cascade', self._module)
+
+            cr.execute('CREATE INDEX ON "%s" ("%s")' % (rel, id1))
+            cr.execute('CREATE INDEX ON "%s" ("%s")' % (rel, id2))
+            cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (rel, model._table, comodel._table))
+            cr.commit()
+            _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", rel, model._table, comodel._table)
+            return True
 
     def read(self, records):
         comodel = records.env[self.comodel_name]
@@ -2434,6 +2485,6 @@ class Id(Field):
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
-from .exceptions import AccessError, MissingError
+from .exceptions import AccessError, MissingError, UserError
 from .models import check_pg_name, BaseModel, IdType
 from .osv import fields
