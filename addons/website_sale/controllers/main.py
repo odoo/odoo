@@ -875,8 +875,7 @@ class WebsiteSale(http.Controller):
     def print_saleorder(self):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
-            order = request.env['sale.order'].browse(sale_order_id)
-            pdf = request.env['report'].sudo().get_pdf(order, 'sale.report_saleorder', data=None)
+            pdf = request.env['report'].sudo().get_pdf([sale_order_id], 'sale.report_saleorder', data=None)
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         else:
