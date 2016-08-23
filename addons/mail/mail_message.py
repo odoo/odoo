@@ -38,7 +38,9 @@ _logger = logging.getLogger(__name__)
 def decode(text):
     """Returns unicode() string conversion of the the given encoded smtp header text"""
     if text:
-        text = decode_header(text.replace('\r', ''))
+        # Artificially place multiple encoded parts in separate lines 
+        # by adding a newline \n between ending ?= and opening =?
+        text = decode_header(text.replace('\r', '').replace('?==?','?=\n=?'))
         # The joining space will not be needed as of Python 3.3
         # See https://hg.python.org/cpython/rev/8c03fe231877
         return ' '.join([tools.ustr(x[0], x[1]) for x in text])
