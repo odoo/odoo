@@ -31,8 +31,8 @@
         <field name="employee_id" ref="hr.employee_root"/>
     </record>
 
-    <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_allocation_cl"/>
-    <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_int_tour"/>
+    <!-- approve the first 2 leave allocations -->
+    <function model="hr.holidays" name="action_approve" eval="[[ref('hr_holidays.hr_holidays_employee1_allocation_cl'), ref('hr_holidays.hr_holidays_employee1_int_tour')]]"/>
 
     <record id="hr_holidays_employee1_cl" model="hr.holidays">
         <field name="name">Trip with Family</field>
@@ -55,7 +55,9 @@
         <field name="employee_id" ref="hr.employee_root"/>
     </record>
 
-    <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_sl"/>
+    <!-- confirm and approve the leave request -->
+    <function model="hr.holidays" name="action_confirm" eval="[[ref('hr_holidays.hr_holidays_employee1_sl')]]"/>
+    <function model="hr.holidays" name="action_approve" eval="[[ref('hr_holidays.hr_holidays_employee1_sl')]]"/>
 
 </data>
 </odoo>
