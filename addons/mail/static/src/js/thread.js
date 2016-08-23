@@ -151,7 +151,7 @@ var Thread = Widget.extend({
             msg.hour = msg.date.format('LT');
         }
 
-        if (message.tracking_value_ids && message.tracking_value_ids.length) {
+        if (message.tracking_value_ids && message.tracking_value_ids.length && ! message. tracking_value_ids_localized) {
             _.each(message.tracking_value_ids, function(f) {
                 if (_.contains(['date', 'datetime'], f.field_type)) {
                     var format = (f.field_type === 'date') ? 'LL' : 'LLL';
@@ -163,6 +163,7 @@ var Thread = Widget.extend({
                     }
                 }
             });
+            message. tracking_value_ids_localized = true;
         }
 
         if (_.contains(this.expanded_msg_ids, message.id)) {
