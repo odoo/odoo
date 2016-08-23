@@ -21,6 +21,26 @@ function get_running_delay_key() {
     return get_running_key() + "_delay";
 }
 
+function get_first_visible_element($elements) {
+    for (var i = 0 ; i < $elements.length ; i++) {
+        var $i = $elements.eq(i);
+        if ($i.is(":visible") && _has_visibility($i)) {
+            return $i;
+        }
+    }
+    return $();
+
+    function _has_visibility($elem) {
+        if ($elem.css("visibility") === "hidden") {
+            return false;
+        }
+        if ($elem.is("html")) {
+            return true;
+        }
+        return _has_visibility($elem.parent());
+    }
+}
+
 function do_before_unload(if_unload_callback, if_not_unload_callback) {
     if_unload_callback = if_unload_callback || function () {};
     if_not_unload_callback = if_not_unload_callback || if_unload_callback;
@@ -64,7 +84,11 @@ var RunningTourActionHelper = core.Class.extend({
         }
     },
     _get_action_values: function (element) {
-        var $element = element ? $(element).first() : this.tip_widget.$anchor;
+        var $e = $(element);
+        var $element = element ? get_first_visible_element($e) : this.tip_widget.$anchor;
+        if ($element.length === 0) {
+            $element = $e.first();
+        }
         var consume_event = element ? Tip.getConsumeEventType($element) : this.tip_widget.consume_event;
         return {
             $element: $element,
@@ -279,26 +303,6 @@ return core.Class.extend({
         } else {
             this._deactivate_tip(tip);
         }
-
-        function get_first_visible_element($elements) {
-            for (var i = 0 ; i < $elements.length ; i++) {
-                var $i = $elements.eq(i);
-                if ($i.is(":visible") && _has_visibility($i)) {
-                    return $i;
-                }
-            }
-            return $();
-
-            function _has_visibility($elem) {
-                if ($elem.css("visibility") === "hidden") {
-                    return false;
-                }
-                if ($elem.is("html")) {
-                    return true;
-                }
-                return _has_visibility($elem.parent());
-            }
-        }
     },
     _activate_tip: function(tip, tour_name, $anchor) {
         var tour = this.tours[tour_name];
@@ -438,5 +442,4 @@ return core.Class.extend({
         },
     },
 });
-
 });
