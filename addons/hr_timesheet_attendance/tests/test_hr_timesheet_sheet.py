@@ -48,7 +48,7 @@ class TestHrTimesheetSheet(TransactionCase):
         # I confirm Gilles' timesheet with over 1 hour difference
         # in attendance and actual worked hours
         try:
-            self.test_timesheet_sheet.button_confirm()
+            self.test_timesheet_sheet.action_timesheet_confirm()
         except Exception:
             pass
 
@@ -67,7 +67,7 @@ class TestHrTimesheetSheet(TransactionCase):
 
         # I confirm Gilles' timesheet with less than 1 hour difference
         # in attendance and actual worked hours
-        self.test_timesheet_sheet.button_confirm()
+        self.test_timesheet_sheet.action_timesheet_confirm()
 
         # I check the state is confirmed
         assert self.test_timesheet_sheet.state == 'confirm'
