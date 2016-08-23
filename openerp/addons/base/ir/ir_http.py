@@ -22,6 +22,7 @@ import openerp
 import openerp.exceptions
 import openerp.models
 from openerp import http
+from openerp.tools.mimetypes import guess_mimetype
 from openerp.http import request, STATIC_CACHE, content_disposition
 from openerp.modules.module import get_resource_path, get_module_path
 from openerp.osv import osv, orm
@@ -295,7 +296,8 @@ class ir_http(osv.AbstractModel):
                 attach_mimetype = env['ir.attachment'].search_read(domain=[('res_model', '=', model), ('res_id', '=', id), ('res_field', '=', field)], fields=['mimetype'], limit=1)
                 mimetype = attach_mimetype and attach_mimetype[0]['mimetype']
             if not mimetype:
-                mimetype = default_mimetype
+                mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
+
         headers += [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
 
         # cache
@@ -308,7 +310,6 @@ class ir_http(osv.AbstractModel):
         # content-disposition default name
         if download:
             headers.append(('Content-Disposition', self.content_disposition(filename)))
-
         return (status, headers, content)
 
 
