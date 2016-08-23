@@ -118,6 +118,10 @@ var Tip = Widget.extend({
     },
     _get_ideal_location: function () {
         var $location = this.$anchor;
+        if ($location.is("html,body")) {
+            return $(document.body);
+        }
+
         var o;
         var p;
         do {
