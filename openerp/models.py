@@ -3236,25 +3236,16 @@ class BaseModel(object):
 
             # determine the fields that must be processed now;
             # for the sake of simplicity, we ignore inherited fields
-            fields_post = [f for f in field_names if not self._columns[f]._classic_write]
-            for f in fields_post:
-                res2 = self._columns[f].get(cr, self._model, ids, f, user, context=context, values=result)
-                for vals in result:
-                    if res2:
-                        vals[f] = res2[vals['id']]
-                    else:
-                        vals[f] = []
+            for f in field_names:
+                field = self._fields[f]
+                if not field.column_type:
+                    field.read(fetched)
 
         # Warn about deprecated fields now that fields_pre and fields_post are computed
         for f in field_names:
             column = self._columns[f]
             if column.deprecated:
                 _logger.warning('Field %s.%s is deprecated: %s', self._name, f, column.deprecated)
-
-        # store result in cache
-        for vals in result:
-            record = self.browse(vals.pop('id'), self._prefetch)
-            record._cache.update(record._convert_to_cache(vals, validate=False))
 
         # store failed values in cache for the records that could not be read
         missing = self - fetched
@@ -3764,13 +3755,10 @@ class BaseModel(object):
                        for key, val in self._context.iteritems()
                        if not key.startswith('default_')}
 
-        # call the 'set' method of fields which are not classic_write
-        result_store = []
-        for name in sorted(upd_todo, key=lambda name: self._columns[name].priority):
-            column = self._columns[name]
-            for id in self.ids:
-                result_store += column.set(self._cr, self._model, id, name, vals[name],
-                                           self._uid, context=rel_context) or []
+        # call the 'write' method of fields which are not columns
+        for name in upd_todo:
+            field = self._fields[name]
+            field.write(self.with_context(rel_context), vals[name])
 
         # for recomputing new-style fields
         self.modified(upd_todo)
@@ -4060,12 +4048,10 @@ class BaseModel(object):
                            for key, val in self._context.iteritems()
                            if not key.startswith('default_')}
 
-            # call the 'set' method of fields which are not classic_write
-            result_store = []
-            for name in sorted(upd_todo, key=lambda name: self._columns[name].priority):
-                column = self._columns[name]
-                result_store += column.set(self._cr, self._model, id_new, name, vals[name],
-                                           self._uid, context=rel_context) or []
+            # call the 'write' method of fields which are not columns
+            for name in upd_todo:
+                field = self._fields[name]
+                field.write(self.with_context(rel_context), vals[name])
 
             # for recomputing new-style fields
             self.modified(upd_todo)
