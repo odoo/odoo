@@ -27,7 +27,6 @@ class ProductTemplate(models.Model):
 
     name = fields.Char('Name', index=True, required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help='Gives the sequence order when displaying a product list')
-    product_manager = fields.Many2one('res.users', 'Product Manager')
     description = fields.Text(
         'Description', translate=True,
         help="A precise description of the Product, used only for internal information purposes.")
