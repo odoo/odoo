@@ -966,7 +966,7 @@ class expression(object):
                     push(create_substitution_leaf(leaf, ('id', o2m_op, select_distinct_from_where_not_null(cr, column._fields_id, comodel._table)), model))
 
             elif column._type == 'many2many':
-                rel_table, rel_id1, rel_id2 = column._sql_names(model)
+                rel_table, rel_id1, rel_id2 = field.relation, field.column1, field.column2
 
                 if operator in HIERARCHY_FUNCS:
                     def _rec_convert(ids):
