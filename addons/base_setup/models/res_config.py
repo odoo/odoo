@@ -44,6 +44,14 @@ class BaseConfigSettings(models.TransientModel):
             'target': 'current',
         }
 
+    @api.multi
+    def open_default_user(self):
+        action = self.env.ref('base.action_res_users').read()[0]
+        action['context'] = self.env.context
+        action['res_id'] = self.env.ref('base.default_user').id
+        action['views'] = [[self.env.ref('base.view_users_form').id, 'form']]
+        return action
+
     @api.model
     def get_default_company_share_partner(self, fields):
         return {

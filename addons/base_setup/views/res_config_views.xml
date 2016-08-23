@@ -82,6 +82,10 @@
                     <group string="Shared resources" name="company_share_resources" attrs="{'invisible': [('group_multi_company','=',False)]}">
                         <field name="company_share_partner" class="oe_inline" />
                     </group>
+                    <div>
+                        <label string="New users access rights"/>
+                        <button type="object" name="open_default_user" string="Edit default access rights for new users" class="oe_inline oe_link" icon="fa-cogs"/>
+                    </div>
                     <group string="Google Integration" name="google">
                         <label for="id" string="Google Drive"/>
                         <div name="google_drive">

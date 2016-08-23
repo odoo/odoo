@@ -21,9 +21,6 @@
         <field name="implied_ids" eval="[(4, ref('group_account_user'))]"/>
     </record>
 
-    <record id="base.default_user" model="res.users">
-        <field name="groups_id" eval="[(4,ref('account.group_account_manager'))]"/>
-    </record>
 
     <record id="group_proforma_invoices" model="res.groups">
         <field name="name">Pro-forma Invoices</field>
@@ -38,6 +35,10 @@
 </data>
 
 <data noupdate="1">
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('account.group_account_manager'))]"/>
+    </record>
+
     <record id="account_move_comp_rule" model="ir.rule">
         <field name="name">Account Entry</field>
         <field name="model_id" ref="model_account_move"/>
