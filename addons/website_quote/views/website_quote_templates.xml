@@ -310,8 +310,8 @@
                             </div>
                             <div class="modal-footer">
                                 <div t-if="not acquirers">
-                                  <button type="submit" t-attf-class="btn btn-primary">Sign &amp; Confirm</button> or
-                                  <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
+                                  <button type="submit" t-attf-class="btn btn-primary">Sign &amp; Confirm</button>
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                 </div>
                             </div>
                           </form>
@@ -387,8 +387,8 @@
                               <textarea rows="4" name="decline_message" placeholder="Your feedback....." class="form-control"/>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" t-att-id="quotation.id" class="btn btn-primary">Reject</button> or
-                                <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
+                                <button type="submit" t-att-id="quotation.id" class="btn btn-primary">Reject</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                             </div>
                           </form>
                         </div>
@@ -440,7 +440,7 @@
       <xpath expr="//a[@data-target='#modaldecline']" position="before">
           <a type="submit" href="#discussion">
               Ask Changes
-          </a> or
+          </a>
       </xpath>
       <xpath expr="//div[@id='quotation_toolbar']/a[@data-target='#modaldecline']" position="before">
           <a class="btn btn-info" type="submit" href="#discussion">
