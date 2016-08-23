@@ -269,11 +269,15 @@ var ActionManager = Widget.extend({
         var old_action_stack = this.action_stack;
         var old_action = this.inner_action;
         var old_widget = this.inner_widget;
+        var actions_to_destroy;
         options = options || {};
 
-        // Empty action_stack if requested
+        // Empty action_stack or replace last action if requested
         if (options.clear_breadcrumbs) {
+            actions_to_destroy = this.action_stack;
             this.action_stack = [];
+        } else if (options.replace_last_action && this.action_stack.length > 0) {
+            actions_to_destroy = [this.action_stack.pop()];
         }
 
         // Instantiate the new action
@@ -318,8 +322,8 @@ var ActionManager = Widget.extend({
                 in_DOM: self.is_in_DOM,
                 callbacks: [{widget: self.inner_widget}],
             });
-            if (options.clear_breadcrumbs) {
-                self.clear_action_stack(old_action_stack);
+            if (actions_to_destroy) {
+                self.clear_action_stack(actions_to_destroy);
             }
             self.toggle_fullscreen();
         }).fail(function () {
@@ -561,6 +565,7 @@ var ActionManager = Widget.extend({
     do_action: function(action, options) {
         options = _.defaults(options || {}, {
             clear_breadcrumbs: false,
+            replace_last_action: false,
             on_reverse_breadcrumb: function() {},
             hide_breadcrumb: false,
             on_close: function() {},
