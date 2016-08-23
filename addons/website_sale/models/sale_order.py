@@ -301,14 +301,18 @@ class Website(models.Model):
             # Do not reload the cart of this user last visit if the cart is no longer draft or uses a pricelist no longer available.
             sale_order_id = last_order.state == 'draft' and last_order.pricelist_id in available_pricelists and last_order.id
 
-        # Test validity of the sale_order_id
-        sale_order = self.env['sale.order'].sudo().browse(sale_order_id).exists() if sale_order_id else None
         pricelist_id = request.session.get('website_sale_current_pl') or self.get_current_pricelist().id
 
         if self.env['product.pricelist'].browse(force_pricelist).exists():
             pricelist_id = force_pricelist
             request.session['website_sale_current_pl'] = pricelist_id
             update_pricelist = True
+
+        if not self._context.get('pricelist'):
+            self = self.with_context(pricelist=pricelist_id)
+
+        # Test validity of the sale_order_id
+        sale_order = self.env['sale.order'].sudo().browse(sale_order_id).exists() if sale_order_id else None
 
         # create so if needed
         if not sale_order and (force_create or code):

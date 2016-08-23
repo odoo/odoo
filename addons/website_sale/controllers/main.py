@@ -390,7 +390,7 @@ class WebsiteSale(http.Controller):
         value['website_sale.cart_lines'] = request.env['ir.ui.view'].render_template("website_sale.cart_lines", {
             'website_sale_order': order,
             'compute_currency': lambda price: from_currency.compute(price, to_currency),
-            'suggested_products': order.with_context(pricelist=order.pricelist_id.id)._cart_accessories()
+            'suggested_products': order._cart_accessories()
         })
         return value
 

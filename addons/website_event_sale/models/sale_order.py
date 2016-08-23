@@ -20,6 +20,10 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _website_product_id_change(self, order_id, product_id, qty=0):
+        order = self.env['sale.order'].sudo().browse(order_id)
+        if self._context.get('pricelist') != order.pricelist_id.id:
+            self = self.with_context(pricelist=order.pricelist_id.id)
+
         values = super(SaleOrder, self)._website_product_id_change(order_id, product_id, qty=qty)
         event_ticket_id = None
         if self.env.context.get("event_ticket_id"):
@@ -30,8 +34,7 @@ class SaleOrder(models.Model):
                 event_ticket_id = product.event_ticket_ids[0].id
 
         if event_ticket_id:
-            order = self.env['sale.order'].sudo().browse(order_id)
-            ticket = self.env['event.event.ticket'].with_context(pricelist=order.pricelist_id.id).browse(event_ticket_id)
+            ticket = self.env['event.event.ticket'].browse(event_ticket_id)
             if product_id != ticket.product_id.id:
                 raise UserError(_("The ticket doesn't match with this product."))
 
@@ -54,7 +57,8 @@ class SaleOrder(models.Model):
             line = OrderLine.browse(line_id)
             ticket = line.event_ticket_id
             old_qty = int(line.product_uom_qty)
-            self = self.with_context(event_ticket_id=ticket.id)
+            if ticket.id:
+                self = self.with_context(event_ticket_id=ticket.id)
         else:
             line = None
             ticket = self.env['event.event.ticket'].search([('product_id', '=', product_id)], limit=1)
