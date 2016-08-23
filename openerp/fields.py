@@ -863,6 +863,21 @@ class Field(object):
 
     ############################################################################
     #
+    # Read from/write to database
+    #
+
+    def read(self, records):
+        """ Read the value of ``self`` on ``records``, and store it in cache. """
+        return NotImplementedError("Method read() undefined on %s" % self)
+
+    def write(self, records, value):
+        """ Write the value of ``self`` on ``records``. The ``value`` must be in
+        the format of method :meth:`BaseModel.write`.
+        """
+        return NotImplementedError("Method write() undefined on %s" % self)
+
+    ############################################################################
+    #
     # Descriptor methods
     #
 
@@ -1617,6 +1632,46 @@ class Binary(Field):
             return human_size(value)
         return value
 
+    def read(self, records):
+        # values are stored in attachments, retrieve them
+        assert self.attachment
+        domain = [
+            ('res_model', '=', records._name),
+            ('res_field', '=', self.name),
+            ('res_id', 'in', records.ids),
+        ]
+        # Note: the 'bin_size' flag is handled by the field 'datas' itself
+        data = {att.res_id: att.datas
+                for att in records.env['ir.attachment'].sudo().search(domain)}
+        for record in records:
+            record._cache[self.name] = data.get(record.id, False)
+
+    def write(self, records, value):
+        # retrieve the attachments that stores the value, and adapt them
+        assert self.attachment
+        domain = [
+            ('res_model', '=', records._name),
+            ('res_field', '=', self.name),
+            ('res_id', 'in', records.ids),
+        ]
+        atts = records.env['ir.attachment'].sudo().search(domain)
+        with records.env.norecompute():
+            if value:
+                # update the existing attachments
+                atts.write({'datas': value})
+                # create the missing attachments
+                for record in (records - records.browse(atts.mapped('res_id'))):
+                    atts.create({
+                        'name': self.name,
+                        'res_model': record._name,
+                        'res_field': self.name,
+                        'res_id': record.id,
+                        'type': 'binary',
+                        'datas': value,
+                    })
+            else:
+                atts.unlink()
+
 
 class Selection(Field):
     """
@@ -1746,7 +1801,10 @@ class Reference(Selection):
                 return process(value._name, value.id) if value else False
         elif isinstance(value, basestring):
             res_model, res_id = value.split(',')
-            return process(res_model, int(res_id))
+            if record.env[res_model].browse(int(res_id)).exists():
+                return process(res_model, int(res_id))
+            else:
+                return False
         elif not value:
             return False
         raise ValueError("Wrong value for %s: %r" % (self, value))
@@ -2114,6 +2172,66 @@ class One2many(_RelationalMulti):
             fnames = [name for name in fnames if name != self.inverse_name]
         return super(One2many, self).convert_to_onchange(value, record, fnames)
 
+    def read(self, records):
+        # retrieve the lines in the comodel
+        comodel = records.env[self.comodel_name].with_context(**self.context)
+        inverse = self.inverse_name
+        domain = self.domain(records) if callable(self.domain) else self.domain
+        domain = domain + [(inverse, 'in', records.ids)]
+        lines = comodel.search(domain, limit=self.limit)
+
+        # group lines by inverse field (without prefetching other fields)
+        group = defaultdict(list)
+        for line in lines.with_context(prefetch_fields=False):
+            # line[inverse] may be a record or an integer
+            group[int(line[inverse])].append(line.id)
+
+        # store result in cache
+        for record in records:
+            record._cache[self.name] = tuple(group[record.id])
+
+    def write(self, records, value):
+        comodel = records.env[self.comodel_name].with_context(**self.context)
+        inverse = self.inverse_name
+
+        with records.env.norecompute():
+            for act in (value or []):
+                if act[0] == 0:
+                    for record in records:
+                        act[2][inverse] = record.id
+                        comodel.create(act[2])
+                elif act[0] == 1:
+                    comodel.browse(act[1]).write(act[2])
+                elif act[0] == 2:
+                    comodel.browse(act[1]).unlink()
+                elif act[0] == 3:
+                    inverse_field = comodel._fields[inverse]
+                    if inverse_field.ondelete == 'cascade':
+                        comodel.browse(act[1]).unlink()
+                    else:
+                        comodel.browse(act[1]).write({inverse: False})
+                elif act[0] == 4:
+                    record = records[-1]
+                    line = comodel.browse(act[1])
+                    line_sudo = line.sudo().with_context(prefetch_fields=False)
+                    if int(line_sudo[inverse]) != record.id:
+                        line.write({inverse: record.id})
+                elif act[0] == 5:
+                    domain = self.domain(records) if callable(self.domain) else self.domain
+                    domain = domain + [(inverse, 'in', records.ids)]
+                    inverse_field = comodel._fields[inverse]
+                    if inverse_field.ondelete == 'cascade':
+                        comodel.search(domain).unlink()
+                    else:
+                        comodel.search(domain).write({inverse: False})
+                elif act[0] == 6:
+                    record = records[-1]
+                    comodel.browse(act[2]).write({inverse: record.id})
+                    query = "SELECT id FROM %s WHERE %s=%%s AND id <> ALL(%%s)" % (comodel._table, inverse)
+                    comodel._cr.execute(query, (record.id, act[2] or [0]))
+                    lines = comodel.browse([row[0] for row in comodel._cr.fetchall()])
+                    lines.write({inverse: False})
+
 
 class Many2many(_RelationalMulti):
     """ Many2many field; the value of such a field is the recordset.
@@ -2195,6 +2313,85 @@ class Many2many(_RelationalMulti):
     _column_id2 = property(attrgetter('column2'))
     _column_auto_join = property(attrgetter('auto_join'))
     _column_limit = property(attrgetter('limit'))
+
+    def read(self, records):
+        comodel = records.env[self.comodel_name]
+
+        # String domains are supposed to be dynamic and evaluated on client-side
+        # only (thus ignored here).
+        domain = self.domain if isinstance(self.domain, list) else []
+
+        wquery = comodel._where_calc(domain)
+        comodel._apply_ir_rules(wquery, 'read')
+        order_by = comodel._generate_order_by(None, wquery)
+        from_c, where_c, where_params = wquery.get_sql()
+        query = """ SELECT {rel}.{id1}, {rel}.{id2} FROM {rel}, {from_c}
+                    WHERE {where_c} AND {rel}.{id1} IN %s AND {rel}.{id2} = {tbl}.id
+                    {order_by} {limit} OFFSET {offset}
+                """.format(rel=self.relation, id1=self.column1, id2=self.column2,
+                           tbl=comodel._table, from_c=from_c, where_c=where_c or '1=1',
+                           limit=(' LIMIT %d' % self.limit) if self.limit else '',
+                           offset=0, order_by=order_by)
+        where_params.append(tuple(records.ids))
+
+        # retrieve lines and group them by record
+        group = defaultdict(list)
+        records._cr.execute(query, where_params)
+        for row in records._cr.fetchall():
+            group[row[0]].append(row[1])
+
+        # store result in cache
+        for record in records:
+            record._cache[self.name] = tuple(group[record.id])
+
+    def write(self, records, value):
+        cr = records._cr
+        comodel = records.env[self.comodel_name]
+        parts = dict(rel=self.relation, id1=self.column1, id2=self.column2)
+
+        def link(ids):
+            # beware of duplicates when inserting
+            query = """ INSERT INTO {rel} ({id1}, {id2})
+                        (SELECT a, b FROM unnest(%s) AS a, unnest(%s) AS b)
+                        EXCEPT (SELECT {id1}, {id2} FROM {rel} WHERE {id1} IN %s)
+                    """.format(**parts)
+            for sub_ids in cr.split_for_in_conditions(ids):
+                cr.execute(query, (records.ids, list(sub_ids), tuple(records.ids)))
+
+        def unlink(ids):
+            query = """ DELETE FROM {rel}
+                        WHERE {id1} IN %s AND {id2} IN %s
+                    """.format(**parts)
+            cr.execute(query, (tuple(records.ids), tuple(ids)))
+
+        def unlink_all():
+            # remove all records for which user has access rights
+            clauses, params, tables = comodel.env['ir.rule'].domain_get(comodel._name)
+            cond = " AND ".join(clauses) if clauses else "1=1"
+            query = """ DELETE FROM {rel} USING {tables}
+                        WHERE {rel}.{id1} IN %s AND {rel}.{id2}={table}.id AND {cond}
+                    """.format(table=comodel._table, tables=','.join(tables), cond=cond, **parts)
+            cr.execute(query, [tuple(records.ids)] + params)
+
+        for act in (value or []):
+            if not isinstance(act, (list, tuple)) or not act:
+                continue
+            if act[0] == 0:
+                lines = records.mapped(lambda record: comodel.create(act[2]))
+                link(lines.ids)
+            elif act[0] == 1:
+                comodel.browse(act[1]).write(act[2])
+            elif act[0] == 2:
+                comodel.browse(act[1]).unlink()
+            elif act[0] == 3:
+                unlink([act[1]])
+            elif act[0] == 4:
+                link([act[1]])
+            elif act[0] == 5:
+                unlink_all()
+            elif act[0] == 6:
+                unlink_all()
+                link(act[2])
 
 
 class Serialized(Field):
