@@ -641,11 +641,12 @@ class Meeting(models.Model):
 
     def _get_duration(self, start, stop):
         """ Get the duration value between the 2 given dates. """
-        diff = fields.Datetime.from_string(stop) - fields.Datetime.from_string(start)
-        if diff:
-            duration = float(diff.days) * 24 + (float(diff.seconds) / 3600)
-            return round(duration, 2)
-        return 0.0
+        if start and stop:
+            diff = fields.Datetime.from_string(stop) - fields.Datetime.from_string(start)
+            if diff:
+                duration = float(diff.days) * 24 + (float(diff.seconds) / 3600)
+                return round(duration, 2)
+            return 0.0
 
     name = fields.Char('Meeting Subject', required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, track_visibility='onchange', default='draft')
