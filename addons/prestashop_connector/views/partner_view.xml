@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="connector.view_partner_connector_form" />
+            <field name="arch" type="xml">
+                <page name="connector" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </page>
+                <page name="connector" position="inside">
+                    <group string="PrestaShop Bindings">
+                        <field name="prestashop_bind_ids" nolabel="1"/>
+                    </group>
+                </page>
+            </field>
+        </record>
+
+        <record id="view_prestashop_res_partner_form" model="ir.ui.view">
+            <field name="name">prestashop.res.partner.form</field>
+            <field name="model">prestashop.res.partner</field>
+            <field name="arch" type="xml">
+                <form string="PrestaShop Partner" version="7.0">
+                    <group>
+                        <field name="shop_group_id"/>
+                        <field name="backend_id"/>
+                        <field name="prestashop_id"/>
+                        <field name="date_add"/>
+                        <field name="date_upd"/>
+                        <field name="group_ids"/>
+                        <field name="newsletter"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_prestashop_res_partner_tree" model="ir.ui.view">
+            <field name="name">prestashop.res.partner.tree</field>
+            <field name="model">prestashop.res.partner</field>
+            <field name="arch" type="xml">
+                <tree string="PrestaShop Partner" version="7.0">
+                    <field name="backend_id"/>
+                    <field name="shop_group_id"/>
+                    <button name="resync"
+                        type="object"
+                        string="Resync" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_prestashop_address_form" model="ir.ui.view">
+            <field name="name">prestashop.address.form</field>
+            <field name="model">prestashop.address</field>
+            <field name="arch" type="xml">
+                <form string="PrestaShop Address" version="7.0">
+                    <group>
+                        <field name="shop_group_id"/>
+                        <field name="backend_id"/>
+                        <field name="prestashop_partner_id"/>
+                        <field name="prestashop_id"/>
+                        <field name="date_add"/>
+                        <field name="date_upd"/>
+                        <field name="vat_number"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_prestashop_address_tree" model="ir.ui.view">
+            <field name="name">prestashop.address.tree</field>
+            <field name="model">prestashop.address</field>
+            <field name="arch" type="xml">
+                <tree string="PrestaShop Address" version="7.0">
+                    <field name="backend_id"/>
+                    <field name="shop_group_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_partner_category_form" model="ir.ui.view">
+            <field name="name">res.partner.category.form</field>
+            <field name="model">res.partner.category</field>
+            <field name="inherit_id" ref="base.view_partner_category_form" />
+            <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                    <field name="prestashop_bind_ids">
+                        <form string="PrestaShop">
+                            <field name="backend_id"/>
+                            <field name="prestashop_id"/>
+                        </form>
+                        <tree string="PrestaShop">
+                            <field name="backend_id"/>
+                        </tree>
+                    </field>
+                </field>
+            </field>
+        </record>
+
+        <!--<record id="res_partner_view_form" model="ir.ui.view">-->
+        <!--    <field name="name">prestashop.res_partner_view_form</field>-->
+        <!--    <field name="model">res.partner</field>-->
+        <!--    <field name="inherit_id" ref="base.view_partner_form" />-->
+        <!--    <field eval="24" name="priority"/>-->
+        <!--    <field name="type">form</field>-->
+        <!--    <field name="arch" type="xml">-->
+        <!--        <page string="Sales &amp; Purchases" position="after">-->
+        <!--            <page string="PrestaShop" name="prestashop">-->
+        <!--                <field name="prestashop_email" />-->
+        <!--                <field name="prestashop_default_category" />-->
+        <!--            </page>-->
+        <!--        </page>-->
+        <!--        <field name="email" position="attributes">-->
+        <!--            <attribute name="attrs">{'readonly': [('use_prestashop_email', '=', True)]}</attribute>-->
+        <!--        </field>-->
+        <!--        <field name="email" position="after">-->
+        <!--            <field name="use_prestashop_email"/>-->
+        <!--        </field>-->
+        <!--    </field>-->
+        <!--</record>-->
+        <!---->
+        <!--<record id="res_partner_address_view_form" model="ir.ui.view">-->
+        <!--    <field name="name">prestashop.res_partner_address_view_form</field>-->
+        <!--    <field name="model">res.partner.address</field>-->
+        <!--    <field name="inherit_id" ref="base.view_partner_address_form1"/>-->
+        <!--    <field name="type">form</field>-->
+        <!--    <field name="arch" type="xml">-->
+        <!--        <field name="email" position="attributes">-->
+        <!--            <attribute name="attrs">{'readonly': [('use_prestashop_email', '=', True)]}</attribute>-->
+        <!--        </field>-->
+        <!--        <field name="email" position="after">-->
+        <!--            <field name="use_prestashop_email"/>-->
+        <!--        </field>-->
+        <!--    </field>-->
+        <!--</record>-->
+
+    </data>
+</openerp>

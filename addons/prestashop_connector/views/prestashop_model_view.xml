@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<!--
+    Copyright (C) 2013 Akretion (http://www.akretion.com/)
+    @author Alexis de Lattre <alexis.delattre@akretion.com>
+    The licence is in the file __openerp__.py
+-->
+
+<record id="view_prestashop_backend_form" model="ir.ui.view">
+    <field name="name">prestashop.backend.form</field>
+    <field name="model">prestashop.backend</field>
+    <field name="arch" type="xml">
+        <form string="PrestaShop Backend" version="7.0">
+            <header>
+                <button name="synchronize_metadata"
+                        type="object"
+                        class="oe_highlight"
+                        help="Synchonize shop and shop groups"
+                        string="Synchronize Metadata"/>
+                <button name="synchronize_basedata"
+                        type="object"
+                        class="oe_highlight"
+                        help="Synchonize datas like language, country, currency, tax"
+                        string="Synchronize Base Data"/>
+            </header>
+            <sheet>
+                <h1>
+                    <field name="name" class="oe_inline"/>
+                </h1>
+                <group>
+                    <field name="company_id" />
+                </group>
+                <group>
+                    <field name="version"/>
+                </group>
+                <group col="4">
+                    <field name="location" colspan="4"/>
+                    <field name="webservice_key" colspan="4"/>
+                </group>
+                <group name="main_configuration" string="Main Configuration">
+                    <field name="warehouse_id"/>
+                    <field name="taxes_included"/>
+                    <field name="discount_product_id" />
+                    <field name="shipping_product_id" />
+                </group>
+                <notebook>
+                    <page name="import" string="Imports">
+                                <p class="oe_grey oe_inline">
+                                    By clicking on the buttons,
+                                    you will initiate the synchronizations
+                                    with Prestashop.
+                                    Note that the import or exports
+                                    won't be done directly,
+                                    they will create 'Jobs'
+                                    executed as soon as possible.
+                                </p>
+                                <p class="oe_grey oe_inline">
+                                    Once imported,
+                                    some types of records,
+                                    like the products or categories,
+                                    need a manual review.
+                                    You will find the list
+                                    of the new records to review
+                                    in the menu 'Connectors > Checkpoint'.
+                                </p>
+                        <group>
+                            <div>
+                                <label string="Import customer groups and customers since" class="oe_inline"/>
+                                <field name="import_partners_since"
+                                       class="oe_inline"
+                                       nolabel="1"/>
+                            </div>
+                            <button name="import_customers_since"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Import in background"/>
+                        </group>
+                        <group>
+                            <div>
+                                <label string="Import product categories and products" class="oe_inline"/>
+                                <field name="import_products_since"
+                                       class="oe_inline"
+                                       nolabel="1"/>
+                            </div>
+                            <button name="import_products"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Import in background"/>
+                        </group>
+                        <group>
+                            <div>
+                               <label string="Import sale orders since" class="oe_inline"/>
+                               <field name="import_orders_since"
+                                    class="oe_inline"
+                                    nolabel="1"/>
+                            </div>
+                            <button name="import_sale_orders"
+                                type="object"
+                                class="oe_highlight"
+                                string="Import in background"/>
+                        </group>
+                        <group>
+                            <div>
+                               <label string="Import refunds" class="oe_inline"/>
+                               <field name="import_refunds_since"
+                                    class="oe_inline"
+                                    nolabel="1"/>
+                            </div>
+                            <button name="import_refunds"
+                                type="object"
+                                class="oe_highlight"
+                                string="Import in background"/>
+                        </group>
+                        <group>
+                            <div>
+                               <label string="Import suppliers" class="oe_inline"/>
+                               <field name="import_suppliers_since"
+                                    class="oe_inline"
+                                    nolabel="1"/>
+                            </div>
+                            <button name="import_suppliers"
+                                type="object"
+                                class="oe_highlight"
+                                string="Import in background"/>
+                        </group>
+                        <group>
+                            <div>
+                                <label string="Import payment methods" class="oe_inline"/>
+                            </div>
+                            <button name="import_payment_methods"
+                                    type="object"
+                                    class="oe_highlight"
+                                    string="Import in background"/>
+                        </group>
+                        <group>
+                            <label string="Import carriers" class="oe_inline"/>
+                            <div>
+                                <button name="import_carriers"
+                                        type="object"
+                                        class="oe_highlight"
+                                        string="Import in background"/>
+                            </div>
+                        </group>
+                        <group>
+                            <label string="Export stock quantities" class="oe_inline"/>
+                            <button name="update_product_stock_qty"
+                                type="object"
+                                class="oe_highlight"
+                                string="Export in background"/>
+                        </group>
+                        <group>
+                            <label string="Import stock quantities" class="oe_inline"/>
+                            <button name="import_stock_qty"
+                                type="object"
+                                class="oe_highlight"
+                                string="Import in background"/>
+                        </group>
+                    </page>
+                    <page string="Languages">
+                        <field name="language_ids" nolabel="1">
+                            <tree>
+                                <field name="active"/>
+                                <field name="code"/>
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="view_prestashop_backend_tree" model="ir.ui.view">
+    <field name="name">prestashop.backend.tree</field>
+    <field name="model">prestashop.backend</field>
+    <field name="arch" type="xml">
+        <tree string="PrestaShop Backend" version="7.0">
+            <field name="name"/>
+            <field name="location"/>
+        </tree>
+    </field>
+</record>
+
+<record id="action_prestashop_backend" model="ir.actions.act_window">
+    <field name="name">PrestaShop Backends</field>
+    <field name="res_model">prestashop.backend</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+
+<record id="view_prestashop_shop_group_form" model="ir.ui.view">
+    <field name="name">prestashop.shop.group.form</field>
+    <field name="model">prestashop.shop.group</field>
+    <field name="arch" type="xml">
+        <form string="PrestaShop Shop Group" version="7.0">
+            <h1>
+                <field name="name" class="oe_inline"/>
+            </h1>
+            <group>
+                <field name="backend_id"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="view_prestashop_shop_group_tree" model="ir.ui.view">
+    <field name="name">prestashop.shop.group.tree</field>
+    <field name="model">prestashop.shop.group</field>
+    <field name="arch" type="xml">
+        <tree string="PrestaShop Shop Group" version="7.0">
+            <field name="name"/>
+            <field name="backend_id"/>
+        </tree>
+    </field>
+</record>
+
+<record id="action_prestashop_shop_group" model="ir.actions.act_window">
+    <field name="name">PrestaShop Shop Groups</field>
+    <field name="res_model">prestashop.shop.group</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+
+<record id="view_prestashop_shop_form" model="ir.ui.view">
+    <field name="name">prestashop.shop.form</field>
+    <field name="model">prestashop.shop</field>
+    <field name="arch" type="xml">
+        <form string="PrestaShop Shop" version="7.0">
+            <h1>
+                <field name="name" class="oe_inline"/>
+            </h1>
+            <group>
+                <field name="shop_group_id"/>
+                <field name="openerp_id"/>
+            </group>
+            <group>
+                <field name="default_category_id"/>
+                <field name="default_url"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="view_prestashop_shop_tree" model="ir.ui.view">
+    <field name="name">prestashop.shop.tree</field>
+    <field name="model">prestashop.shop</field>
+    <field name="arch" type="xml">
+        <tree string="PrestaShop Shop" version="7.0">
+            <field name="name"/>
+            <field name="shop_group_id"/>
+            <field name="openerp_id"/>
+        </tree>
+    </field>
+</record>
+
+<record id="action_prestashop_shop" model="ir.actions.act_window">
+    <field name="name">PrestaShop Shops</field>
+    <field name="res_model">prestashop.shop</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+
+</data>
+</openerp>

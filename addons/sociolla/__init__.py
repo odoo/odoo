@@ -2,5 +2,3 @@
 
 from . import controllers
 from . import models
-import backend
-import connector
