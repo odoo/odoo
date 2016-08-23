@@ -17,7 +17,7 @@
 </div>
 
 <t t-name="WidgetButton">
-    <button type="button" t-attf-class="btn btn-sm #{widget.node.attrs.class or ''}"
+    <button type="button" t-attf-class="btn btn-sm #{widget.node.attrs.class or 'btn-default'}"
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus"
