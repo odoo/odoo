@@ -1558,7 +1558,7 @@ class MailThread(models.AbstractModel):
         return result
 
     @api.multi
-    def _find_partner_from_emails(self, emails, res_model=None, res_id=None, check_followers=True, force_create=False):
+    def _find_partner_from_emails(self, emails, res_model=None, res_id=None, check_followers=True, force_create=False, exclude_aliases=True):
         """ Utility method to find partners from email addresses. The rules are :
             1 - check in document (model | self, id) followers
             2 - try to find a matching partner that is also an user
@@ -1570,6 +1570,9 @@ class MailThread(models.AbstractModel):
                 is used.
             :param boolean check_followers: check in document followers
             :param boolean force_create: create a new partner if not found
+            :param boolean exclude_aliases: do not try to find a partner that could match an alias. Normally aliases
+                                            should not be used as partner emails but it could be the case due to some
+                                            strange manipulation
         """
         if res_model is None:
             res_model = self._name
@@ -1591,12 +1594,14 @@ class MailThread(models.AbstractModel):
             if not email_address:
                 partner_ids.append(partner_id)
                 continue
+            if exclude_aliases and self.env['mail.alias'].search([('alias_name', 'ilike', email_address)], limit=1):
+                partner_ids.append(partner_id)
+                continue
+
             email_address = email_address[0]
             # first try: check in document's followers
-            for follower in followers:
-                if follower.email == email_address:
-                    partner_id = follower.id
-                    break
+            partner_id = next((partner.id for partner in followers if partner.email == email_address), False)
+
             # second try: check in partners that are also users
             # Escape special SQL characters in email_address to avoid invalid matches
             email_address = (email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_'))
@@ -1607,8 +1612,7 @@ class MailThread(models.AbstractModel):
                 if not partners:
                     # if no match with addr-spec, attempt substring match within name-addr pair
                     partners = Users.search([('email', 'ilike', email_brackets)], limit=1).mapped('partner_id')
-                if partners:
-                    partner_id = partners[0].id
+                partner_id = partners.id
             # third try: check in partners
             if not partner_id:
                 # exact, case-insensitive match
@@ -1616,8 +1620,7 @@ class MailThread(models.AbstractModel):
                 if not partners:
                     # if no match with addr-spec, attempt substring match within name-addr pair
                     partners = Partner.search([('email', 'ilike', email_brackets)], limit=1)
-                if partners:
-                    partner_id = partners[0].id
+                partner_id = partners.id
             if not partner_id and force_create:
                 partner_id = self.env['res.partner'].name_create(contact)[0]
             partner_ids.append(partner_id)
