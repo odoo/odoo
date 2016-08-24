@@ -15,12 +15,12 @@ class bom_structure(report_sxw.rml_parse):
     def get_children(self, object, level=0):
         result = []
 
-        def _get_rec(object, level):
+        def _get_rec(object, level, qty=1.0):
             for l in object:
                 res = {}
                 res['pname'] = l.product_id.name_get()[0][1]
                 res['pcode'] = l.product_id.default_code
-                res['pqty'] = l.product_qty
+                res['pqty'] = l.product_qty * qty
                 res['uname'] = l.product_uom.name
                 res['level'] = level
                 res['code'] = l.bom_id.code
@@ -28,7 +28,7 @@ class bom_structure(report_sxw.rml_parse):
                 if l.child_line_ids:
                     if level<6:
                         level += 1
-                    _get_rec(l.child_line_ids,level)
+                    _get_rec(l.child_line_ids, level, qty=res['pqty'])
                     if level>0 and level<6:
                         level -= 1
             return result
