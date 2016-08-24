@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2015-09-30 09:27+0000\n"
+"PO-Revision-Date: 2016-07-20 03:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/vi/)\n"
 "MIME-Version: 1.0\n"
@@ -85,7 +85,7 @@ msgstr "Tài khoản quản trị"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Archived"
-msgstr ""
+msgstr "Đã lưu "
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_open
@@ -295,7 +295,7 @@ msgstr "Chênh lệch về ngày giữa hành động cuối cùng và ngày hi�
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Tên hiển thị"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
@@ -335,12 +335,12 @@ msgstr "Người dõi theo"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Người theo dõi (Các kênh)"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Người theo dõi (Các đối tác)"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -377,15 +377,9 @@ msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
-#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
-msgid "Important Messages"
-msgstr ""
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Trở thành người theo dõi"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_name
@@ -511,7 +505,7 @@ msgstr "Ngày thông điệp cuối cùng"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue___last_update
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Sửa lần cuối vào"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_last_stage_update
@@ -755,6 +749,8 @@ msgstr "Chưa được gán"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Unread Messages"
 msgstr "Thông điệp chưa đọc"
 

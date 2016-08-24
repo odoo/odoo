@@ -3,15 +3,17 @@
 # * mass_mailing
 # 
 # Translators:
+# Eddie Lim <bhweelim@yahoo.com>, 2016
 # Gary Wei <Gary.wei@elico-corp.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
 # zhangpeiqing <zpq001@live.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:20+0000\n"
-"PO-Revision-Date: 2015-12-11 07:20+0000\n"
-"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>\n"
+"POT-Creation-Date: 2016-01-13 15:46+0000\n"
+"PO-Revision-Date: 2016-07-12 00:48+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -234,7 +236,7 @@ msgstr "内容"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_bounce
 msgid "Bounce"
-msgstr "反弹"
+msgstr "退回"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_bounced
@@ -295,7 +297,7 @@ msgstr "选择一个模板"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Choose a background image"
-msgstr "选择北京图片"
+msgstr "选择背景图像"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
@@ -405,7 +407,7 @@ msgstr "创建一个活动构建批量邮件并且从欧诺个邮件状态分析
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_create_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_create_uid
 msgid "Created by"
-msgstr "创建于"
+msgstr "创建者"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_create_date
@@ -415,7 +417,7 @@ msgstr "创建于"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_create_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_create_date
@@ -462,7 +464,7 @@ msgstr "此邮件首次回复日期"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_bounced
 msgid "Date when this email has bounced."
-msgstr "此电子邮件的日期已经反弹"
+msgstr "此邮件退回的日期"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -493,6 +495,7 @@ msgstr "刪除"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_delivered
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_delivered
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_delivered
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered"
 msgstr "已送货"
 
@@ -547,8 +550,10 @@ msgid "Domain"
 msgstr "域"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
 #: selection:mail.statistics.report,state:0
+#, python-format
 msgid "Draft"
 msgstr "草稿"
 
@@ -643,7 +648,7 @@ msgstr "关注者(频道)"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "关注者（合作伙伴）"
+msgstr "关注者（业务伙伴）"
 
 #. module: mass_mailing
 #: selection:mail.mass_mailing,reply_to_mode:0
@@ -668,7 +673,6 @@ msgstr "伟大的故事都是为每个人写的，即使只写一个人。如果
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
-#: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid ""
 "Great stories have personality. Consider telling a great story that provides"
 " personality. Writing a story with personality for potential clients will "
@@ -676,6 +680,16 @@ msgid ""
 "like word choices or phrases. Write from your point of view, not from "
 "someone else's experience.<br/>"
 msgstr "伟大的故事都有个性，试着去讲一个有个性的伟大故事。写一个带有的充满个性的故事也会附带着是你和你潜在的顾客中间建立起一种联系。这需要在谈话的时候养成选词或者成语的习惯。另外要讲你自己的观点，而不是讲别人的经验<br/>"
+
+#. module: mass_mailing
+#: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
+msgid ""
+"Great stories have personality. Consider telling a great story that provides"
+" personality. Writing a story with personality for potential clients will "
+"assist with making a relationship connection. This shows up in small quirks "
+"like word choices or phrases. Write from your point of view, not from "
+"someone else's experience.<br>"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
@@ -693,8 +707,10 @@ msgstr "分组..."
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.FieldTextHtmlInline
-msgid "Help"
-msgstr "帮助"
+msgid ""
+"Here you can design your own template from scratch by selecting your "
+"favorite theme."
+msgstr "在此处您可以从您自己喜欢的模板里头设计属于您自己的主题。"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_id
@@ -736,14 +752,16 @@ msgid ""
 msgstr "如果勾选此处，收件人将只收到一次邮件， 这就能在一次促销活动中发送各种不同的邮件， 以测试发送邮件的效果"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
+#, python-format
 msgid "In Queue"
 msgstr "排队"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_is_follower
 msgid "Is Follower"
-msgstr "是否关注者"
+msgstr "是关注者"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_keep_archives
@@ -773,7 +791,7 @@ msgstr "最后消息日期"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report___last_update
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings___last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
@@ -791,7 +809,7 @@ msgstr "最新的状态更新"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_write_uid
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新者"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_write_date
@@ -804,7 +822,7 @@ msgstr "最后更新"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_write_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_write_date
 msgid "Last Updated on"
-msgstr "最后更新"
+msgstr "最后更新时间"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_state_update
@@ -960,7 +978,7 @@ msgstr "群发邮件活动"
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_graph
 #: model:ir.ui.view,arch_db:mass_mailing.view_mass_mailing_configuration
 msgid "Mass Mailing"
-msgstr "海量发信"
+msgstr "邮件群发"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_mail_statistics_report
@@ -1016,7 +1034,7 @@ msgid ""
 "information like number of bounced mails, opened mails, replied mails. You "
 "can sort out your analysis by different groups to get accurate grained "
 "analysis."
-msgstr "您可将邮件按已读未读已回等分组类别来进行邮件发送统计。统计分析的结果可以由您设定的精确度来哦。"
+msgstr "群发邮件统计允许你检查邮件相关的各种信息，如 退回邮件的数量，开启邮件的数量，回复邮件的数量。你可以通过不同的分组挑选出你的分析，以得到精准的分析。"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_tag
@@ -1069,11 +1087,6 @@ msgid "Messages"
 msgstr "消息"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_message_ids
-msgid "Messages and communication history"
-msgstr "消息和通信历史"
-
-#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "Michael Fletcher"
@@ -1105,7 +1118,7 @@ msgstr "下一个分开"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "No background image"
-msgstr "没有背景图片"
+msgstr "没有背景图像"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_needaction_counter
@@ -1406,17 +1419,21 @@ msgid "Send to All"
 msgstr "发给全体"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
+#, python-format
 msgid "Sending"
 msgstr "发送"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_sent
 #: selection:mail.mail.statistics,state:0 selection:mail.mass_mailing,state:0
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_3
 #: selection:mail.statistics.report,state:0
+#, python-format
 msgid "Sent"
 msgstr "送出"
 
@@ -1604,6 +1621,12 @@ msgid "This mass mailing is scheduled to"
 msgstr "该批量邮件计划"
 
 #. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"This will send the email to all recipients. Do you still want to proceed ?"
+msgstr "这将发送电子邮件给所有收件人。是否仍要继续？"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_total
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_total
 msgid "Total"
@@ -1672,11 +1695,6 @@ msgid ""
 msgstr "您的订单已发货！要进一步跟踪订单或者要做出变更请点击以下\"我的订单\"的按钮"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_website_message_ids
-msgid "Website Messages"
-msgstr "网站消息"
-
-#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_group_website_popup_on_exit
 msgid "Website Pop-up"
 msgstr "网站弹出"
@@ -1689,12 +1707,7 @@ msgstr "网站弹出内容"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_popup_redirect_url
 msgid "Website Popup Redirect URL"
-msgstr "网站弹出重定向URL"
-
-#. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_website_message_ids
-msgid "Website communication history"
-msgstr "网站沟通记录"
+msgstr "网站弹出重定向网址"
 
 #. module: mass_mailing
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1

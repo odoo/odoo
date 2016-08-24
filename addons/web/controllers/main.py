@@ -4,6 +4,7 @@ import base64
 import csv
 import functools
 import glob
+import imghdr
 import itertools
 import jinja2
 import logging
@@ -24,11 +25,6 @@ import werkzeug.utils
 import werkzeug.wrappers
 from openerp.api import Environment
 
-try:
-    import xlwt
-except ImportError:
-    xlwt = None
-
 import openerp
 import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
@@ -36,8 +32,9 @@ from openerp.modules import get_resource_path
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp.tools import ustr
+from openerp.tools.misc import str2bool, xlwt
 from openerp import http
-from openerp.http import request, serialize_exception as _serialize_exception
+from openerp.http import request, serialize_exception as _serialize_exception, content_disposition
 from openerp.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
@@ -418,10 +415,6 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
     res["children"] = kids
     return res
 
-def content_disposition(filename):
-    return request.registry['ir.http'].content_disposition(filename)
-
-
 def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
     return request.registry['ir.http'].binary_content(
         xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field,
@@ -486,7 +479,7 @@ class Home(http.Controller):
                     redirect = '/web'
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
-            values['error'] = "Wrong login/password"
+            values['error'] = _("Wrong login/password")
         return request.render('web.login', values)
 
 class WebClient(http.Controller):
@@ -636,6 +629,7 @@ class Database(http.Controller):
         d['insecure'] = openerp.tools.config['admin_passwd'] == 'admin'
         d['list_db'] = openerp.tools.config['list_db']
         d['langs'] = openerp.service.db.exp_list_lang()
+        d['countries'] = openerp.service.db.exp_list_countries()
         # databases list
         d['databases'] = []
         try:
@@ -657,7 +651,9 @@ class Database(http.Controller):
     @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
     def create(self, master_pwd, name, lang, password, **post):
         try:
-            request.session.proxy("db").create_database(master_pwd, name, bool(post.get('demo')), lang,  password)
+            # country code could be = "False" which is actually True in python
+            country_code = post.get('country_code') or False
+            request.session.proxy("db").create_database(master_pwd, name, bool(post.get('demo')), lang, password, post.get('login'), country_code)
             request.session.authenticate(name, 'admin', password)
             return http.local_redirect('/web/')
         except Exception, e:
@@ -704,7 +700,7 @@ class Database(http.Controller):
     def restore(self, master_pwd, backup_file, name, copy=False):
         try:
             data = base64.b64encode(backup_file.read())
-            request.session.proxy("db").restore(master_pwd, name, data, copy)
+            request.session.proxy("db").restore(master_pwd, name, data, str2bool(copy))
             return http.local_redirect('/web/database/manager')
         except Exception, e:
             error = "Database restore error: %s" % e
@@ -951,6 +947,11 @@ class Binary(http.Controller):
         addons_path = http.addons_manifest['web']['addons_path']
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
 
+    def force_contenttype(self, headers, contenttype='image/png'):
+        dictheaders = dict(headers)
+        dictheaders['Content-Type'] = contenttype
+        return dictheaders.items()
+
     @http.route(['/web/content',
         '/web/content/<string:xmlid>',
         '/web/content/<string:xmlid>/<string:filename>',
@@ -1009,8 +1010,15 @@ class Binary(http.Controller):
             if height > 500:
                 height = 500
             content = openerp.tools.image_resize_image(base64_source=content, size=(width or None, height or None), encoding='base64', filetype='PNG')
+            # resize force png as filetype
+            headers = self.force_contenttype(headers, contenttype='image/png')
 
-        image_base64 = content and base64.b64decode(content) or self.placeholder()
+        if content:
+            image_base64 = base64.b64decode(content)
+        else:
+            image_base64 = self.placeholder(image='placeholder.png')  # could return (contenttype, content) in master
+            headers = self.force_contenttype(headers, contenttype='image/png')
+
         headers.append(('Content-Length', len(image_base64)))
         response = request.make_response(image_base64, headers)
         response.status_code = status
@@ -1064,7 +1072,7 @@ class Binary(http.Controller):
                 'id':  attachment_id
             }
         except Exception:
-            args = {'error': "Something horrible happened"}
+            args = {'error': _("Something horrible happened")}
             _logger.exception("Fail to upload attachment %s" % ufile.filename)
         return out % (json.dumps(callback), json.dumps(args))
 
@@ -1074,7 +1082,8 @@ class Binary(http.Controller):
         '/logo.png',
     ], type='http', auth="none", cors="*")
     def company_logo(self, dbname=None, **kw):
-        imgname = 'logo.png'
+        imgname = 'logo'
+        imgext = '.png'
         placeholder = functools.partial(get_resource_path, 'web', 'static', 'src', 'img')
         uid = None
         if request.session.db:
@@ -1087,7 +1096,7 @@ class Binary(http.Controller):
             uid = openerp.SUPERUSER_ID
 
         if not dbname:
-            response = http.send_file(placeholder(imgname))
+            response = http.send_file(placeholder(imgname + imgext))
         else:
             try:
                 # create an empty registry
@@ -1101,12 +1110,14 @@ class Binary(http.Controller):
                                """, (uid,))
                     row = cr.fetchone()
                     if row and row[0]:
-                        image_data = StringIO(str(row[0]).decode('base64'))
-                        response = http.send_file(image_data, filename=imgname, mtime=row[1])
+                        image_base64 = str(row[0]).decode('base64')
+                        image_data = StringIO(image_base64)
+                        imgext = '.' + (imghdr.what(None, h=image_base64) or 'png')
+                        response = http.send_file(image_data, filename=imgname + imgext, mtime=row[1])
                     else:
                         response = http.send_file(placeholder('nologo.png'))
             except Exception:
-                response = http.send_file(placeholder(imgname))
+                response = http.send_file(placeholder(imgname + imgext))
 
         return response
 
@@ -1322,7 +1333,7 @@ class ExportFormat(object):
 
         Model = request.session.model(model)
         context = dict(request.context or {}, **params.get('context', {}))
-        ids = ids or Model.search(domain, 0, False, False, context=context)
+        ids = ids or Model.search(domain, offset=0, limit=False, order=False, context=context)
 
         if not request.env[model]._is_an_ordinary_table():
             fields = [field for field in fields if field['name'] != 'id']
@@ -1365,13 +1376,17 @@ class CSVExport(ExportFormat, http.Controller):
         for data in rows:
             row = []
             for d in data:
-                if isinstance(d, basestring):
-                    d = d.replace('\n',' ').replace('\t',' ')
+                if isinstance(d, unicode):
                     try:
                         d = d.encode('utf-8')
                     except UnicodeError:
                         pass
                 if d is False: d = None
+
+                # Spreadsheet apps tend to detect formulas on leading =, + and -
+                if type(d) is str and d.startswith(('=', '-', '+')):
+                    d = "'" + d
+
                 row.append(d)
             writer.writerow(row)
 
@@ -1478,7 +1493,7 @@ class Reports(http.Controller):
         if 'name' not in action:
             reports = request.session.model('ir.actions.report.xml')
             res_id = reports.search([('report_name', '=', action['report_name']),],
-                                    0, False, False, context)
+                                    context=context)
             if len(res_id) > 0:
                 file_name = reports.read(res_id[0], ['name'], context)['name']
             else:

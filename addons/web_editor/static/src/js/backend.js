@@ -38,6 +38,7 @@ var FieldTextHtmlSimple = widget.extend({
                 ['insert', ['link', 'picture']],
                 ['history', ['undo', 'redo']]
             ],
+            'prettifyHtml': false,
             'styleWithSpan': false,
             'inlinemedia': ['p'],
             'lang': "odoo",
@@ -62,9 +63,23 @@ var FieldTextHtmlSimple = widget.extend({
     initialize_content: function() {
         var self = this;
         this.$textarea = this.$("textarea").val(this.get('value') || "<p><br/></p>");
+        this.$content = $();
 
         if (this.get("effective_readonly")) {
-            this.$textarea.hide().after('<div class="note-editable"/>');
+            if (this.options['style-inline']) {
+                var $iframe = $('<iframe class="o_readonly"/>');
+                this.$textarea.hide().after($iframe);
+                var load = function () {
+                    self.$content = $($iframe.contents()[0]).find("body");
+                    self.$content.html(self.text_to_html(self.get('value')));
+                    self.resize();
+                };
+                setTimeout(load);
+                $iframe.on('load', load);
+            } else {
+                this.$content = $('<div class="o_readonly"/>');
+                this.$textarea.hide().after(this.$content);
+            }
         } else {
             this.$textarea.summernote(this._config());
 
@@ -77,8 +92,12 @@ var FieldTextHtmlSimple = widget.extend({
             var reset = _.bind(this.reset_history, this);
             this.view.on('load_record', this, reset);
             setTimeout(reset, 0);
+
+            this.$content = this.$('.note-editable:first');
+            if (this.options['style-inline']) {
+                transcoder.style_to_class(this.$content);
+            }
         }
-        this.$content = this.$('.note-editable:first');
 
         $(".oe-view-manager-content").on("scroll", function () {
             $('.o_table_handler').remove();
@@ -98,22 +117,36 @@ var FieldTextHtmlSimple = widget.extend({
             value = '<p><br/></p>';
         } else {
             value = "<p>"+value.split(/<br\/?>/).join("<br/></p><p>")+"</p>";
-            value = value.replace(/<p><\/p>/g, '').replace('<p><p>', '<p>').replace('</p></p>', '</p>');
+            value = value.replace(/<p><\/p>/g, '').replace('<p><p>', '<p>').replace('<p><p ', '<p ').replace('</p></p>', '</p>');
         }
         return value;
     },
     focus: function() {
-        var input = !this.get("effective_readonly") && this.$textarea;
-        return input ? input.focus() : false;
+        if (this.get("effective_readonly")) {
+            return false;
+        }
+        // on IE an error may occur when creating range on not displayed element
+        try {
+            return this.$content.focusInEnd();
+        } catch (e) {
+            return this.$content.focus();
+        }
+    },
+    resize: function() {
+        this.$('iframe').css('height', '0px').css('height', Math.max(30, Math.min(this.$content[0] ? this.$content[0].scrollHeight : 0, 500)) + 'px');
     },
     render_value: function() {
         var value = this.get('value');
         this.$textarea.val(value || '');
         this.$content.html(this.text_to_html(value));
-        // on ie an error may occur when creating range on not displayed element
-        try {
-            this.$content.focusInEnd();
-        } catch (e) {}
+        if (this.get("effective_readonly")) {
+            this.resize();
+        } else {
+            transcoder.style_to_class(this.$content);
+        }
+        if (this.$content.is(document.activeElement)) {
+            this.focus();
+        }
         var history = this.$content.data('NoteHistory');
         if (history && history.recordUndo()) {
             this.$('.note-toolbar').find('button[data-event="undo"]').attr('disabled', false);
@@ -122,7 +155,7 @@ var FieldTextHtmlSimple = widget.extend({
     is_false: function() {
         return !this.get('value') || this.get('value') === "<p><br/></p>" || !this.get('value').match(/\S/);
     },
-    before_save: function() {
+    commit_value: function() {
         if (this.options['style-inline']) {
             transcoder.class_to_style(this.$content);
             transcoder.font_to_img(this.$content);
@@ -187,9 +220,12 @@ var FieldTextHtml = widget.extend({
         this.$translate = $();
         return def;
     },
+    get_datarecord: function() {
+        return this.view.get_fields_values();
+    },
     get_url: function (_attr) {
-        var src = this.options.editor_url ? this.options.editor_url+"?" : "/web_editor/field/html?";
-        var datarecord = this.view.get_fields_values();
+        var src = this.options.editor_url || "/web_editor/field/html";
+        var datarecord = this.get_datarecord();
 
         var attr = {
             'model': this.view.model,
@@ -204,6 +240,9 @@ var FieldTextHtml = widget.extend({
         }
         if (this.options.snippets) {
             attr.snippets = this.options.snippets;
+        }
+        if (this.options.template) {
+            attr.template = this.options.template;
         }
         if (!this.get("effective_readonly")) {
             attr.enable_editor = 1;
@@ -221,6 +260,10 @@ var FieldTextHtml = widget.extend({
             attr[k] = _attr[k];
         }
 
+        if (src.indexOf('?') === -1) {
+            src += "?";
+        }
+
         for (var k in attr) {
             if (attr[k] !== null) {
                 src += "&"+k+"="+(_.isBoolean(attr[k]) ? +attr[k] : attr[k]);
@@ -229,7 +272,6 @@ var FieldTextHtml = widget.extend({
 
         delete datarecord[this.name];
         src += "&datarecord="+ encodeURIComponent(JSON.stringify(datarecord));
-
         return src;
     },
     initialize_content: function() {
@@ -321,7 +363,7 @@ var FieldTextHtml = widget.extend({
     is_false: function() {
         return this.get('value') === false || !this.$content.html() || !this.$content.html().match(/\S/);
     },
-    before_save: function () {
+    commit_value: function () {
         if (this.lang !== 'en_US' && this.$body.find('.o_dirty').length) {
             this.internal_set_value( this.view.datarecord[this.name] );
             this._dirty_flag = false;
@@ -343,5 +385,10 @@ var FieldTextHtml = widget.extend({
 core.form_widget_registry
     .add('html', FieldTextHtmlSimple)
     .add('html_frame', FieldTextHtml);
+
+return {
+    FieldTextHtmlSimple: FieldTextHtmlSimple,
+    FieldTextHtml: FieldTextHtml,
+};
 
 });

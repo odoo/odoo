@@ -3,13 +3,14 @@
 # * rating_project
 # 
 # Translators:
+# Kris Krnacs, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-10-15 15:46+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-02-06 23:15+0000\n"
+"Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,12 +57,12 @@ msgid ""
 "</body>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n<body>\n    <div style=\"max-width:600px; height:auto; margin-left:30px;\">\n        <div style=\"margin-left:30px;align=center;\">\n            Tisztelt ${object.partner_id.name},\n        </div><br>\n        <div style=\"margin-left:30px;align=center;\" width=\"60%\">\n            Reméljük az elvárásainak megfelelő szolgáltatást nyújtunk.\n            <br>További felmerülő kérdésekben vagy megjegyzésben, kérjük vegye fel velünk a kapcsolatot erre az e-mail-re válaszolva.\n            <br><br>Kérjük, segítse fejlődésünket azzal, hogy értékeli az általunk nyújtott szolgáltatást.\n        </div><br>\n        <table style=\"margin-left:50px;\" width=\"70%\">\n            <tr>\n                <td>\n                    <a href=\"/rating/${object.access_token}/10\">\n                        <img alt=\"Great\" src=\"rating/static/src/img/rating_10.png\" title=\"It was great\"/>\n                    </a>\n                </td>\n                <td>\n                    <a href=\"/rating/${object.access_token}/5\">\n                        <img alt=\"Okay\" src=\"rating/static/src/img/rating_5.png\" title=\"It was okay\"/>\n                    </a>\n                </td>\n                <td>\n                    <a href=\"/rating/${object.access_token}/0\">\n                        <img alt=\"Bad\" src=\"rating/static/src/img/rating_0.png\" title=\"It wasn't good\"/>\n                    </a>\n                </td>\n            </tr>\n        </table><br>\n        <h4 style=\"margin-left:30px;font-weight:normal;\">Köszönjük</h4>\n        <h4 style=\"margin-left:30px;font-weight:normal;\">${object.rated_partner_id.name or ''} </h4>\n    </div>\n</body>\n                \n            "
 
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.res_name}"
-msgstr ""
+msgstr "${object.res_name}"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
@@ -72,7 +73,7 @@ msgstr "% Boldog"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Auto Kanban state validation"
-msgstr ""
+msgstr "Auto Kanban állapot jóváhagyás"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -80,29 +81,29 @@ msgid ""
 "Automatically modify the kanban state when the customer reply to the feedback for this stage.\n"
 " * A great feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
-msgstr ""
+msgstr "Automatikusan módosítja a kanban állapotot, ha a vásárló reagál az oldalon lévő visszajelzésen.\n * Egy nagyszerű vásárlói visszajelzés frissíti a kanban állapotot a 'készen áll a következő szakaszra' (zöld golyó).\n * Egy közepes vagy rossz visszajelzésre a kanban állapota 'blokkolt' (piros golyó).\n"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_is_visible_happy_customer
 msgid "Customer Satisfaction"
-msgstr ""
+msgstr "Vásárlói Elégedettség"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_project_is_visible_happy_customer
 msgid ""
 "Display informations about rating of the project on kanban and form view. "
 "This buttons will only be displayed if at least a rating exists."
-msgstr ""
+msgstr "Kanban és forma nézetben a projekt téma értékelésének kijelzése. Ezt a gombot csak akkor jelzi ki, ha minimum egy értékelés van."
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
 msgid "On tasks"
-msgstr ""
+msgstr "Feladatokon"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "Percentage of happy people about this project"
-msgstr ""
+msgstr "Boldog emberek százaléka ezen a projekt témán"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
@@ -113,19 +114,19 @@ msgstr "Projekt"
 #: model:ir.model,name:rating_project.model_rating_rating
 #: model:ir.model.fields,field_description:rating_project.field_project_task_rating_ids
 msgid "Rating"
-msgstr "Becslés"
+msgstr "Értékelés"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_rating_template_id
 msgid "Rating Email Template"
-msgstr ""
+msgstr "Értékelő email sablon"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
 msgid ""
 "Select an email template. An email will be sent to the customer when the "
 "task reach this step."
-msgstr ""
+msgstr "Egy email sablon kiválasztása. Egy emailt küld a vásárlónak, ha a feladat eléri ezt a lépést."
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task

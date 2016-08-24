@@ -16,15 +16,13 @@
                     <group>
                         <group string="Address">
                             <label for="street" string="Address"/>
-                            <div>
-                                <field name="street" placeholder="Street..."/>
-                                <field name="street2"/>
-                                <div>
-                                    <field name="zip" class="oe_inline" placeholder="ZIP"/>
-                                    <field name="city" class="oe_inline" placeholder="City"/>
-                                </div>
-                                <field name="state" placeholder="State"/>
-                                <field name="country" placeholder="Country"/>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="country" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                             </div>
                         </group>
                         <group string="Communication">

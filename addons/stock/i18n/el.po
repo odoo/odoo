@@ -3,14 +3,14 @@
 # * stock
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-05 14:22+0000\n"
-"PO-Revision-Date: 2015-12-18 23:48+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"POT-Creation-Date: 2016-01-13 09:40+0000\n"
+"PO-Revision-Date: 2016-08-04 20:25+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -150,7 +150,7 @@ msgid ""
 "                       \n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations\n"
 "                      "
-msgstr ""
+msgstr "* Τοποθεσία Προμηθευτή: Εικονική Τοποθεσία που αντιπροσωπεύει την τοποθεσία προέλευσης για τα προϊόντα που προέρχονται από τους προμηθευτές σας\n\n* Προβολή: Εικονική τοποθεσία που χρησιμοποιείται για να δημιουργηθεί  μια ιεραρχική δομή  για την αποθήκη σας, συγκεντρώνοντας τις θυγατρικές τοποθεσίες; Δεν μπορεί να περιέχει άμεσα προϊόντα\n\n* Εσωτερική Τοποθεσία: Φυσικές τοποθεσίες μέσα στις δικές σας αποθήκες, \n\n* Περιοχή Πελατών: Εικονική τοποθεσία η οποία αντιπροσωπεύει την τοποθεσία προορισμού για τα προϊόντα που αποστέλλονται στους πελάτες σας\n\n* Απογραφή: Εικονική τοποθεσία που χρησιμεύει ως αντιστάθμισμα για τις ενέργειες απογραφής που χρησιμοποιείται για να διορθώσει το επίπεδο των αποθεμάτων (Φυσικές απογραφές) \n\n* Προμήθεια: Εικονική τοποθεσία  που χρησιμεύει ως αντιστάθμισμα για τις ενέργειες προμηθειών όταν η πηγή (προμηθευτής ή παραγωγής) δεν είναι ακόμη γνωστή. Η τοποθεσία αυτή πρέπει να είναι κενή όταν ο προγραμματιστής προμηθειών θα  έχει τελειώσει την εκτέλεση \n\n* Παραγωγή: Εικονικό αντιστάθμισμα για δραστηριότητες παραγωγής: αυτή η τοποθεσία καταναλώνει τις πρώτες ύλες και παράγει τα τελικά προϊόντα\n\n* Τοποθεσία Διέλευσης: Τοποθεσία αντισταθμίσματος που θα πρέπει να χρησιμοποιείται  για λειτουργίες  μεταξύ επιχειρήσεων ή μεταξύ των αποθηκών "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -338,7 +338,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span>New</span>"
-msgstr ""
+msgstr "<span>Nέο</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -744,7 +744,7 @@ msgstr "Όλες οι κινήσεις αποθεμάτων έχουν ακυρ�
 #. module: stock
 #: selection:stock.config.settings,module_claim_from_delivery:0
 msgid "Allow claims on deliveries"
-msgstr ""
+msgstr "Επιτρέπετε 'Απαίτηση' σχετικά με τις παραδόσεις"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_show_entire_packs
@@ -775,7 +775,7 @@ msgstr "Σας επιτρέπει να δημιουργήσετε και να δ
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_uom
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr "Σας επιτρέπει να επιλέξετε και δυντηρήσετε διαφορετικές μονάδες μέτρησης για προϊόντα."
+msgstr "Σας επιτρέπει να επιλέξετε και συντηρήσετε διαφορετικές μονάδες μέτρησης για προϊόντα."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -827,7 +827,7 @@ msgstr "Εκχώρηση Ιδιοκτήτη"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Assigned Moves"
-msgstr "Εκχωρημένες Κινήσεις"
+msgstr "Ανατεθειμένες Κινήσεις"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_auto
@@ -1951,7 +1951,7 @@ msgstr "Λήψη το"
 #: selection:stock.inventory,state:0 selection:stock.pack.operation,state:0
 #: selection:stock.picking,state:0
 msgid "Draft"
-msgstr "Προσωρινό"
+msgstr "Πρόχειρο"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2500,14 +2500,6 @@ msgstr "Αν κάνεις ένα ολόκληρη απογραφή, μπορεί
 msgid ""
 "If you have less than 50 vendors, we recommend you\n"
 "                                        to create them manually."
-msgstr ""
-
-#. module: stock
-#: model:ir.ui.view,arch_db:stock.inventory_planner
-msgid ""
-"If you need help, do not hesitate to contact our experts\n"
-"                        using the <span class=\"fa fa-question-circle\"/> button on\n"
-"                        the top bar."
 msgstr ""
 
 #. module: stock
@@ -3106,6 +3098,7 @@ msgid "Localization"
 msgstr "Τοπικοποίηση"
 
 #. module: stock
+#: code:addons/stock/stock.py:4912
 #: model:ir.model.fields,field_description:stock.field_product_product_location_id
 #: model:ir.model.fields,field_description:stock.field_product_template_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_location_id
@@ -3119,6 +3112,7 @@ msgstr "Τοπικοποίηση"
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 #: model:ir.ui.view,arch_db:stock.view_move_search
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
+#, python-format
 msgid "Location"
 msgstr "Τοποθεσία"
 
@@ -3177,6 +3171,7 @@ msgid "Logistics"
 msgstr "Εφοδιαστική"
 
 #. module: stock
+#: code:addons/stock/stock.py:4913
 #: model:ir.model.fields,field_description:stock.field_stock_move_restrict_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_scrap_restrict_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_lot_id
@@ -3185,6 +3180,7 @@ msgstr "Εφοδιαστική"
 #: model:ir.ui.view,arch_db:stock.report_lot_barcode
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
 #: model:ir.ui.view,arch_db:stock.report_picking
+#, python-format
 msgid "Lot"
 msgstr "Παρτίδα"
 
@@ -3369,12 +3365,6 @@ msgid "Messages"
 msgstr "Μηνύματα"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking_message_ids
-#: model:ir.model.fields,help:stock.field_stock_production_lot_message_ids
-msgid "Messages and communication history"
-msgstr "Μηνύματα και ιστορικό επικοινωνίας"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway_method
 #: model:ir.model.fields,field_description:stock.field_product_removal_method
 msgid "Method"
@@ -3421,7 +3411,7 @@ msgstr "Διαφ."
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Modify"
-msgstr ""
+msgstr "Τροποποίηση"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -3963,11 +3953,13 @@ msgid "Pack Type"
 msgstr "Τύπος Συσκευασίας"
 
 #. module: stock
+#: code:addons/stock/stock.py:4914
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_id
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 #: model:ir.ui.view,arch_db:stock.view_quant_package_tree
+#, python-format
 msgid "Package"
 msgstr "Συσκευασία"
 
@@ -4126,7 +4118,7 @@ msgstr "Φυσικές Απογραφές ανά Μήνα"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations
 msgid "Physical Locations"
-msgstr "Φυσικές Τοποοθεσίες"
+msgstr "Φυσικές Τοποθεσίες"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_package
@@ -4404,7 +4396,7 @@ msgstr "Προμήθειες"
 #: code:addons/stock/product.py:323
 #, python-format
 msgid "Produced Qty"
-msgstr "Ποσ. Παραγωγής"
+msgstr "Ποσ. Παραχθέντων"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_product
@@ -5492,6 +5484,12 @@ msgid "Stockable"
 msgstr "Αποθηκεύσιμα"
 
 #. module: stock
+#: code:addons/stock/product.py:400
+#, python-format
+msgid "Stockable Product"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_supplied_wh_id
 msgid "Supplied Warehouse"
 msgstr "Εφοδιασμένη Αποθήκη"
@@ -6088,7 +6086,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.config.settings,group_stock_production_lot:0
 msgid "Track lots or serial numbers"
-msgstr "Ανιχνεύει παρτίδες ή σειριακούς αριθμούς"
+msgstr "Ανίχνευση παρτίδων ή σειριακών αριθμών"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_tracking
@@ -6104,6 +6102,11 @@ msgstr "Ανίχνευση"
 #, python-format
 msgid "Transfer"
 msgstr "Μεταφορά"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_picking_partner_id
+msgid "Transfer Destination Address"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_id
@@ -6154,9 +6157,15 @@ msgid "USPS integration"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:730
+#, python-format
+msgid "Under no circumstances should you delete or change quants yourselves!"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot_name
 msgid "Unique Serial Number"
-msgstr "Μοναδικό Serial Number"
+msgstr "Μοναδικός Σειριακός Αριθμός"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_cost
@@ -6249,7 +6258,7 @@ msgstr "Ποσ. Εκτός Προγραμματισμού"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_message_unread
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_message_unread
 msgid "Unread Messages"
-msgstr "Αδιάβαστα Μυνήματα"
+msgstr "Αδιάβαστα Μηνύματα"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_message_unread_counter

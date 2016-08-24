@@ -317,7 +317,7 @@ exports.PosModel = Backbone.Model.extend({
         fields: ['display_name', 'list_price','price','pos_categ_id', 'taxes_id', 'barcode', 'default_code', 
                  'to_weight', 'uom_id', 'description_sale', 'description',
                  'product_tmpl_id'],
-        order:  ['sequence','name'],
+        order:  ['sequence','default_code','name'],
         domain: [['sale_ok','=',true],['available_in_pos','=',true]],
         context: function(self){ return { pricelist: self.pricelist.id, display_default_code: false }; },
         loaded: function(self, products){
@@ -453,8 +453,8 @@ exports.PosModel = Backbone.Model.extend({
             self.company_logo.onerror = function(){
                 logo_loaded.reject();
             };
-                self.company_logo.crossOrigin = "anonymous";
-            self.company_logo.src = '/web/binary/company_logo' +'?_'+Math.random();
+            self.company_logo.crossOrigin = "anonymous";
+            self.company_logo.src = '/web/binary/company_logo' +'?dbname=' + session.db + '&_'+Math.random();
 
             return logo_loaded;
         },
@@ -1092,10 +1092,11 @@ exports.Orderline = Backbone.Model.extend({
     clone: function(){
         var orderline = new exports.Orderline({},{
             pos: this.pos,
-            order: null,
+            order: this.order,
             product: this.product,
             price: this.price,
         });
+        orderline.order = null;
         orderline.quantity = this.quantity;
         orderline.quantityStr = this.quantityStr;
         orderline.discount = this.discount;
@@ -1241,7 +1242,7 @@ exports.Orderline = Backbone.Model.extend({
         this.trigger('change',this);
     },
     get_unit_price: function(){
-        return this.price;
+        return round_di(this.price || 0, this.pos.dp['Product Price'])
     },
     get_unit_display_price: function(){
         if (this.pos.config.iface_tax_included) {
@@ -1320,8 +1321,8 @@ exports.Orderline = Backbone.Model.extend({
     },
     _compute_all: function(tax, base_amount, quantity) {
         if (tax.amount_type === 'fixed') {
-            var ret = tax.amount * quantity;
-            return base_amount >= 0 ? ret : ret * -1;
+            var sign_base_amount = base_amount >= 0 ? 1 : -1;
+            return (Math.abs(tax.amount) * sign_base_amount) * quantity;
         }
         if ((tax.amount_type === 'percent' && !tax.price_include) || (tax.amount_type === 'division' && tax.price_include)){
             return base_amount * tax.amount / 100;
@@ -1443,7 +1444,9 @@ exports.Paymentline = Backbone.Model.extend({
         return this.amount;
     },
     get_amount_str: function(){
-        return this.amount.toFixed(this.pos.currency.decimals);
+        return formats.format_value(this.amount, {
+            type: 'float', digits: [69, this.pos.currency.decimals]
+        });
     },
     set_selected: function(selected){
         if(this.selected !== selected){
@@ -1508,7 +1511,8 @@ exports.Order = Backbone.Model.extend({
         } else {
             this.sequence_number = this.pos.pos_session.sequence_number++;
             this.uid  = this.generate_unique_id();
-            this.name = _t("Order ") + this.uid; 
+            this.name = _t("Order ") + this.uid;
+            this.validation_date = undefined;
         }
 
         this.on('change',              function(){ this.save_to_db("order:change"); }, this);
@@ -1525,7 +1529,7 @@ exports.Order = Backbone.Model.extend({
         return this;
     },
     save_to_db: function(){
-        if (!this.init_locked) {
+        if (!this.temporary && !this.init_locked) {
             this.pos.db.save_unpaid_order(this);
         } 
     },
@@ -1536,6 +1540,20 @@ exports.Order = Backbone.Model.extend({
         this.session_id    = json.pos_session_id;
         this.uid = json.uid;
         this.name = _t("Order ") + this.uid;
+        this.validation_date = json.creation_date;
+
+        if (json.fiscal_position_id) {
+            var fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
+                return fp.id === json.fiscal_position_id;
+            });
+
+            if (fiscal_position) {
+                this.fiscal_position = fiscal_position;
+            } else {
+                console.error('ERROR: trying to load a fiscal position not available in the pos');
+            }
+        }
+
         if (json.partner_id) {
             client = this.pos.db.get_partner_by_id(json.partner_id);
             if (!client) {
@@ -1589,7 +1607,7 @@ exports.Order = Backbone.Model.extend({
             user_id: this.pos.cashier ? this.pos.cashier.id : this.pos.user.id,
             uid: this.uid,
             sequence_number: this.sequence_number,
-            creation_date: this.creation_date,
+            creation_date: this.validation_date || this.creation_date, // todo: rename creation_date in master
             fiscal_position_id: this.fiscal_position ? this.fiscal_position.id : false
         };
     },
@@ -1644,8 +1662,6 @@ exports.Order = Backbone.Model.extend({
             client: client ? client.name : null ,
             invoice_id: null,   //TODO
             cashier: cashier ? cashier.name : null,
-            header: this.pos.config.receipt_header || '',
-            footer: this.pos.config.receipt_footer || '',
             precision: {
                 price: 2,
                 money: 2,
@@ -1678,11 +1694,17 @@ exports.Order = Backbone.Model.extend({
         };
         
         if (is_xml(this.pos.config.receipt_header)){
+            receipt.header = '';
             receipt.header_xml = render_xml(this.pos.config.receipt_header);
+        } else {
+            receipt.header = this.pos.config.receipt_header || '';
         }
 
         if (is_xml(this.pos.config.receipt_footer)){
+            receipt.footer = '';
             receipt.footer_xml = render_xml(this.pos.config.receipt_footer);
+        } else {
+            receipt.footer = this.pos.config.receipt_footer || '';
         }
 
         return receipt;
@@ -1753,6 +1775,11 @@ exports.Order = Backbone.Model.extend({
             return 0;
         }
     },
+
+    initialize_validation_date: function () {
+        this.validation_date = this.validation_date || new Date();
+    },
+
     set_tip: function(tip) {
         var tip_product = this.pos.db.get_product_by_id(this.pos.config.tip_product_id[0]);
         var lines = this.get_orderlines();

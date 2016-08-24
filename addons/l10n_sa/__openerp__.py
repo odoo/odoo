@@ -4,7 +4,7 @@
     'name': 'Saudi Arabia - Accounting',
     'version': '1.1',
     'author': 'DVIT.ME',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 Odoo Arabic localization for most arabic countries and Saudi Arabia.
 

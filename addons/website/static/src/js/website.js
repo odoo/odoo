@@ -112,14 +112,17 @@ var prompt = function (options, _qweb) {
         dialog.modal('show');
         field.focus();
         dialog.on('click', '.btn-primary', function () {
+                var backdrop = $('.modal-backdrop');
             def.resolve(field.val(), field, dialog);
             dialog.modal('hide').remove();
+                backdrop.remove();
         });
     });
     dialog.on('hidden.bs.modal', function () {
+            var backdrop = $('.modal-backdrop');
         def.reject();
         dialog.remove();
-        $('.modal-backdrop').remove();
+            backdrop.remove();
     });
     if (field.is('input[type="text"], select')) {
         field.keypress(function (e) {

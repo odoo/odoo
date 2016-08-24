@@ -48,21 +48,16 @@ class resource_calendar(osv.osv):
                              leave intervals
         """
         resource_calendar = self.browse(cr, uid, id, context=context)
-        proc_obj = self.pool.get("procurement.order")
         leaves = []
         for leave in resource_calendar.leave_ids:
             if leave.resource_id and not resource_id == leave.resource_id.id:
                 continue
-            date_from_db = datetime.datetime.strptime(leave.date_from, DEFAULT_SERVER_DATETIME_FORMAT)
-            date_from = proc_obj._convert_to_tz(cr, uid, date_from_db, context=context)
+            date_from = datetime.datetime.strptime(leave.date_from, DEFAULT_SERVER_DATETIME_FORMAT)
             if end_datetime and date_from > end_datetime:
                 continue
-
-            date_to_db = datetime.datetime.strptime(leave.date_to, DEFAULT_SERVER_DATETIME_FORMAT)
-            date_to = proc_obj._convert_to_tz(cr, uid, date_to_db, context=context)
+            date_to = datetime.datetime.strptime(leave.date_to, DEFAULT_SERVER_DATETIME_FORMAT)
             if start_datetime and date_to < start_datetime:
                 continue
-
             leaves.append((date_from, date_to, leave.group_id.id))
         return leaves
 

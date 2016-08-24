@@ -239,7 +239,7 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <field name="name" string="Events"/>
-                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
                     <filter string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                     <filter string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
@@ -385,7 +385,7 @@
                 <search string="Event Registration">
                     <field name="id" string="Registration ID"/>
                     <field name="name" string="Participant" filter_domain="['|', '|', ('name', 'ilike', self), ('email', 'ilike', self), ('origin', 'ilike', self)]"/>
-                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Expected" name="expected" domain="[('state', 'in', ['draft', 'open', 'done'])]"/>
                     <separator/>
                     <field name="event_id"/>

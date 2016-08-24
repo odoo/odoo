@@ -25,6 +25,18 @@ from contextlib import closing
 from distutils.version import LooseVersion
 from functools import partial
 from pyPdf import PdfFileWriter, PdfFileReader
+from reportlab.graphics.barcode import createBarcodeDrawing
+
+
+# A lock occurs when the user wants to print a report having multiple barcode while the server is
+# started in threaded-mode. The reason is that reportlab has to build a cache of the T1 fonts
+# before rendering a barcode (done in a C extension) and this part is not thread safe. We attempt
+# here to init the T1 fonts cache at the start-up of Odoo so that rendering of barcode in multiple
+# thread does not lock the server.
+try:
+    createBarcodeDrawing('Code128', value='foo', format='png', width=100, height=100, humanReadable=1).asString('png')
+except Exception:
+    pass
 
 
 #--------------------------------------------------------------------------
@@ -49,7 +61,7 @@ except (OSError, IOError):
 else:
     _logger.info('Will use the Wkhtmltopdf binary at %s' % _get_wkhtmltopdf_bin())
     out, err = process.communicate()
-    version = re.search('([0-9.]+)', out).group(0)
+    version = re.search('([0-9.]+)', out or "0").group(0)
     if LooseVersion(version) < LooseVersion('0.12.0'):
         _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
         wkhtmltopdf_state = 'upgrade'
@@ -88,7 +100,7 @@ class Report(osv.Model):
 
         view_obj = self.pool['ir.ui.view']
 
-        user = self.pool['res.users'].browse(cr, uid, uid)
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         website = None
         if request and hasattr(request, 'website'):
             if request.website is not None:
@@ -114,11 +126,11 @@ class Report(osv.Model):
         """
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
-        try:
-            report_model_name = 'report.%s' % report_name
-            particularreport_obj = self.pool[report_model_name]
+        report_model_name = 'report.%s' % report_name
+        particularreport_obj = self.pool.get(report_model_name)
+        if particularreport_obj is not None:
             return particularreport_obj.render_html(cr, uid, ids, data=data, context=context)
-        except KeyError:
+        else:
             report = self._get_report_from_name(cr, uid, report_name)
             report_obj = self.pool[report.model]
             docs = report_obj.browse(cr, uid, ids, context=context)
@@ -131,8 +143,8 @@ class Report(osv.Model):
 
     @api.v8
     def get_html(self, records, report_name, data=None):
-        return self._model.get_html(self._cr, self._uid, records.ids, report_name,
-                                    data=data, context=self._context)
+        return Report.get_html(self._model, self._cr, self._uid, records.ids,
+                               report_name, data=data, context=self._context)
 
     @api.v7
     def get_pdf(self, cr, uid, ids, report_name, html=None, data=None, context=None):
@@ -245,8 +257,8 @@ class Report(osv.Model):
 
     @api.v8
     def get_pdf(self, records, report_name, html=None, data=None):
-        return self._model.get_pdf(self._cr, self._uid, records.ids, report_name,
-                                   html=html, data=data, context=self._context)
+        return Report.get_pdf(self._model, self._cr, self._uid, records.ids,
+                              report_name, html=html, data=data, context=self._context)
 
     @api.v7
     def get_action(self, cr, uid, ids, report_name, data=None, context=None):
@@ -279,8 +291,8 @@ class Report(osv.Model):
 
     @api.v8
     def get_action(self, records, report_name, data=None):
-        return self._model.get_action(self._cr, self._uid, records.ids, report_name,
-                                      data=data, context=self._context)
+        return Report.get_action(self._model, self._cr, self._uid, records.ids,
+                                 report_name, data=data, context=self._context)
 
     #--------------------------------------------------------------------------
     # Report generation helpers
@@ -295,19 +307,20 @@ class Report(osv.Model):
         save_in_attachment['loaded_documents'] = {}
 
         if report.attachment:
+            records = self.pool[report.model].browse(cr, uid, ids)
+            filenames = self._attachment_filename(cr, uid, records, report)
+            attachments = None
+            if report.attachment_use:
+                attachments = self._attachment_stored(cr, uid, records, report, filenames=filenames)
             for record_id in ids:
-                obj = self.pool[report.model].browse(cr, uid, record_id)
-                filename = eval(report.attachment, {'object': obj, 'time': time})
+                filename = filenames[record_id]
 
                 # If the user has checked 'Reload from Attachment'
-                if report.attachment_use:
-                    alreadyindb = [('datas_fname', '=', filename),
-                                   ('res_model', '=', report.model),
-                                   ('res_id', '=', record_id)]
-                    attach_ids = self.pool['ir.attachment'].search(cr, uid, alreadyindb)
-                    if attach_ids:
+                if attachments:
+                    attachment = attachments[record_id]
+                    if attachment:
                         # Add the loaded pdf in the loaded_documents list
-                        pdf = self.pool['ir.attachment'].browse(cr, uid, attach_ids[0]).datas
+                        pdf = attachment.datas
                         pdf = base64.decodestring(pdf)
                         save_in_attachment['loaded_documents'][record_id] = pdf
                         _logger.info('The PDF document %s was loaded from the database' % filename)
@@ -326,8 +339,22 @@ class Report(osv.Model):
 
     @api.v8
     def _check_attachment_use(self, records, report):
-        return self._model._check_attachment_use(
-            self._cr, self._uid, records.ids, report, context=self._context)
+        return Report._check_attachment_use(
+            self._model, self._cr, self._uid, records.ids, report, context=self._context)
+
+    @api.model
+    def _attachment_filename(self, records, report):
+        return dict((record.id, eval(report.attachment, {'object': record, 'time': time})) for record in records)
+
+    @api.model
+    def _attachment_stored(self, records, report, filenames=None):
+        if not filenames:
+            filenames = self._attachment_filename(records, report)
+        return dict((record.id, self.env['ir.attachment'].search([
+            ('datas_fname', '=', filenames[record.id]),
+            ('res_model', '=', report.model),
+            ('res_id', '=', record.id)
+        ], limit=1)) for record in records)
 
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
@@ -542,3 +569,18 @@ class Report(osv.Model):
             stream.close()
 
         return merged_file_path
+
+    def barcode(self, barcode_type, value, width=600, height=100, humanreadable=0):
+        if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
+            barcode_type = 'EAN13'
+            if len(value) in (11, 12):
+                value = '0%s' % value
+        try:
+            width, height, humanreadable = int(width), int(height), bool(int(humanreadable))
+            barcode = createBarcodeDrawing(
+                barcode_type, value=value, format='png', width=width, height=height,
+                humanReadable=humanreadable
+            )
+            return barcode.asString('png')
+        except (ValueError, AttributeError):
+            raise ValueError("Cannot convert into barcode.")

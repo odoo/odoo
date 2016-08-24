@@ -1830,6 +1830,20 @@
         <field name="reconcile" eval="True"/>
     </record>
 
+    <record id="pcg_4661" model="account.account.template">
+        <field name="name">>Datorii din operaţiuni de fiducie</field>
+        <field name="code">4661</field>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="ro_chart_template"/>
+    </record>
+
+    <record id="pcg_4662" model="account.account.template">
+        <field name="name">Creanţe din operaţiuni de fiducie</field>
+        <field name="code">4662</field>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="chart_template_id" ref="ro_chart_template"/>
+    </record>
+
     <record id="pcg_471" model="account.account.template">
         <field name="name">Cheltuieli înregistrate în avans</field>
         <field name="code">471</field>
@@ -2492,6 +2506,27 @@
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
 
+    <record id="pcg_6511" model="account.account.template">
+        <field name="name">Cheltuieli ocazionate de constituirea fiduciei</field>
+        <field name="code">6511</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="chart_template_id" ref="ro_chart_template"/>
+    </record>
+
+    <record id="pcg_6512" model="account.account.template">
+        <field name="name">Cheltuieli din derularea operaţiunilor de fiducie</field>
+        <field name="code">6512</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="chart_template_id" ref="ro_chart_template"/>
+    </record>
+
+    <record id="pcg_6513" model="account.account.template">
+        <field name="name">Cheltuieli din lichidarea operaţiunilor de fiducie</field>
+        <field name="code">6513</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="chart_template_id" ref="ro_chart_template"/>
+    </record>
+
     <record id="pcg_652" model="account.account.template">
         <field name="name">Cheltuieli cu protecţia mediului înconjurător</field>
         <field name="code">652</field>
@@ -2670,6 +2705,13 @@
     <record id="pcg_6864" model="account.account.template">
         <field name="name">Cheltuieli financiare privind ajustările pentru pierderea de valoare a activelor circulante</field>
         <field name="code">6864</field>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="chart_template_id" ref="ro_chart_template"/>
+    </record>
+
+    <record id="pcg_6865" model="account.account.template">
+        <field name="name">Cheltuieli financiare privind amortizarea diferențelor aferente titlurilor de stat</field>
+        <field name="code">6865</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>
@@ -2869,6 +2911,27 @@
     <record id="pcg_7419" model="account.account.template">
         <field name="name">Venituri din subvenţii de exploatare aferente altor venituri</field>
         <field name="code">7419</field>
+        <field name="user_type_id" ref="account.data_account_type_revenue"/>
+        <field name="chart_template_id" ref="ro_chart_template"/>
+    </record>
+
+    <record id="pcg_7511" model="account.account.template">
+        <field name="name">Venituri ocazionate de constituirea fiduciei</field>
+        <field name="code">7511</field>
+        <field name="user_type_id" ref="account.data_account_type_revenue"/>
+        <field name="chart_template_id" ref="ro_chart_template"/>
+    </record>
+
+    <record id="pcg_7512" model="account.account.template">
+        <field name="name">Venituri din derularea operaţiunilor de fiducie</field>
+        <field name="code">7512</field>
+        <field name="user_type_id" ref="account.data_account_type_revenue"/>
+        <field name="chart_template_id" ref="ro_chart_template"/>
+    </record>
+
+    <record id="pcg_7513" model="account.account.template">
+        <field name="name">Venituri din lichidarea operaţiunilor de fiducie</field>
+        <field name="code">7513</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
     </record>

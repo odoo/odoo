@@ -39,7 +39,7 @@
                                     <span t-esc="formatLang(net(line.id), currency_obj=res_company.currency_id)"/>
                                 </t>
                                 <t t-if="line.discount != 0.0">
-                                    <span t-esc="formatLang(line.discount, currency_obj=res_company.currency_id)"/>
+                                    <span t-esc="line.discount"/>%
                                 </t>
                             </td>
                         </tr>

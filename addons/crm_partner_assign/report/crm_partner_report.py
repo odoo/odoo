@@ -48,3 +48,13 @@ class crm_partner_report_assign(osv.osv):
                     left join account_invoice_report i
                         on (i.partner_id=p.id and i.type in ('out_invoice','out_refund') and i.state in ('open','paid'))
             )""")
+
+class account_invoice_report(osv.osv):
+    _inherit = 'account.invoice.report'
+
+    def init(self, cr):
+        # ensure we re-create the crm_partner_report_assign view whenever
+        # the underlying account_invoice_report view is changed
+        super(account_invoice_report, self).init(cr)
+        self.pool['crm.partner.report.assign'].init(cr)
+

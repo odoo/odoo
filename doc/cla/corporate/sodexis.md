@@ -17,3 +17,4 @@ Suganthi Karunanithi ksuganthi@sodexis.com https://github.com/suganthikarunanith
 Xavier Dass xavier@sodexis.com https://github.com/xavier-dass
 Atchuthan atchuthan@sodexis.com https://github.com/atchuthan
 Dhinesh dhinesh@sodexis.com https://github.com/dvdhinesh
+SodexisTeam dev@sodexis.com https://github.com/SodexisTeam

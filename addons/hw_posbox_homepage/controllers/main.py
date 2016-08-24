@@ -55,7 +55,7 @@ index_template = """
         Wi-Fi can be configured by visiting the <a href='/wifi'>Wi-Fi configuration page</a>.
         </p>
         <p>
-        The PosBox software installed on this posbox is <b>version 13</b>,
+        The PosBox software installed on this posbox is <b>version 14</b>,
         the posbox version number is independent from Odoo. You can upgrade
         the software on the <a href='/hw_proxy/upgrade/'>upgrade page</a>.
         </p>

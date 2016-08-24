@@ -216,6 +216,7 @@ class sale_order(osv.osv):
                 'product_uom': line.product_uom_id.id,
                 'website_description': line.website_description,
                 'state': 'draft',
+                'customer_lead': self._get_customer_lead(cr, uid, line.product_id.product_tmpl_id),
             })
             lines.append((0, 0, data))
         options = []
@@ -294,9 +295,9 @@ class sale_order(osv.osv):
         # create draft invoice if transaction is ok
         if tx and tx.state == 'done':
             if order.state in ['draft', 'sent']:
-                self.signal_workflow(cr, SUPERUSER_ID, [order.id], 'manual_invoice', context=context)
+                self.action_confirm(cr, SUPERUSER_ID, order.id, context=context)
             message = _('Order payed by %s. Transaction: %s. Amount: %s.') % (tx.partner_id.name, tx.acquirer_reference, tx.amount)
-            self.message_post(cr, uid, order_id, body=message, type='comment', subtype='mt_comment', context=context)
+            self.message_post(cr, uid, order_id, body=message, context=context)
             return True
         return False
 
@@ -307,6 +308,8 @@ class sale_order(osv.osv):
             values = dict(template_values, **values)
         return super(sale_order, self).create(cr, uid, values, context=context)
 
+    def _get_payment_type(self, cr, uid, ids, context=None):
+        return 'form'
 
 class sale_quote_option(osv.osv):
     _name = "sale.quote.option"
@@ -324,6 +327,29 @@ class sale_quote_option(osv.osv):
     _defaults = {
         'quantity': 1,
     }
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if not self.product_id:
+            return
+        product = self.product_id
+        self.price_unit = product.list_price
+        self.website_description = product.product_tmpl_id.quote_description
+        self.name = product.name
+        self.uom_id = product.uom_id
+        domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
+        return {'domain': domain}
+
+    @api.onchange('uom_id')
+    def _onchange_product_uom(self):
+        if not self.product_id:
+            return
+        if not self.uom_id:
+            self.price_unit = 0.0
+            return
+        if self.uom_id.id != self.product_id.uom_id.id:
+            new_price = self.product_id.uom_id._compute_price(self.product_id.uom_id.id, self.price_unit, self.uom_id.id)
+            self.price_unit = new_price
 
     def on_change_product_id(self, cr, uid, ids, product, uom_id=None, context=None):
         vals, domain = {}, []
@@ -414,13 +440,11 @@ class sale_order_option(osv.osv):
         self.name = product.name
         if product.description_sale:
             self.name += '\n' + product.description_sale
-        self.uom_id = product.product_tmpl_id.uom_id
-        if product and self.order_id.pricelist_id:
+        self.uom_id = self.uom_id or product.uom_id
+        pricelist = self.order_id.pricelist_id
+        if pricelist and product:
             partner_id = self.order_id.partner_id.id
-            pricelist = self.order_id.pricelist_id.id
-            self.price_unit = self.order_id.pricelist_id.price_get(product.id, self.quantity, partner_id)[pricelist]
-        if self.uom_id and self.uom_id != self.product_id.uom_id:
-            self.price_unit = self.product_id.uom_id._compute_price(self.price_unit, self.uom_id.id)
+            self.price_unit = pricelist.with_context(uom=self.uom_id.id).price_get(product.id, self.quantity, partner_id)[pricelist.id]
         domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         return {'domain': domain}
 

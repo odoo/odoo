@@ -38,16 +38,16 @@ function reload_favorite_list(result) {
             is_checked: true,
             is_remove: false,
         };
-        sidebar_items[filter_value] = filter_item ;
-        
+        sidebar_items[filter_value] = filter_item;
+
         filter_item = {
-                value: -1,
-                label: _lt("Everybody's calendars"),
-                color: self.get_color(-1),
-                avatar_model: self.avatar_model,
-                is_checked: false
-            };
-        sidebar_items[-1] = filter_item ;
+            value: -1,
+            label: _lt("Everybody's calendars"),
+            color: self.get_color(-1),
+            avatar_model: self.avatar_model,
+            is_checked: false
+        };
+        sidebar_items[-1] = filter_item;
         //Get my coworkers/contacts
         new Model("calendar.contacts").query(["partner_id"]).filter([["user_id", "=",self.dataset.context.uid]]).all().then(function(result) {
             _.each(result, function(item) {
@@ -59,12 +59,13 @@ function reload_favorite_list(result) {
                     avatar_model: self.avatar_model,
                     is_checked: true
                 };
-                sidebar_items[filter_value] = filter_item ;
+                sidebar_items[filter_value] = filter_item;
             });
+
             self.all_filters = sidebar_items;
             self.now_filter_ids = $.map(self.all_filters, function(o) { return o.value; });
             
-            self.sidebar.filter.events_loaded(self.all_filters);
+            self.sidebar.filter.events_loaded(self.get_all_filters_ordered());
             self.sidebar.filter.set_filters();
             self.sidebar.filter.add_favorite_calendar();
             self.sidebar.filter.destroy_filter();
@@ -84,6 +85,15 @@ CalendarView.include({
             return result.then(reload_favorite_list(this));
         }
         return result;
+    },
+    get_all_filters_ordered: function() {
+        var filters = this._super();
+        if (this.useContacts) {
+            var filter_me = _.first(_.values(this.all_filters));
+            var filter_all = this.all_filters[-1];
+            filters = [].concat(filter_me, _.difference(filters, [filter_me, filter_all]), filter_all);
+        }
+        return filters;
     }
 });
 
@@ -123,8 +133,11 @@ widgets.SidebarFilter.include({
             },
         });
         this.ir_model_m2o.appendTo(this.$el);
-        this.ir_model_m2o.on('change:value', self, function() { 
-            self.add_filter();
+        this.ir_model_m2o.on('change:value', self, function() {
+            // once selected, we reset the value to false.
+            if (self.ir_model_m2o.get_value()) {
+                self.add_filter();
+            }
         });
     },
     add_filter: function() {
@@ -200,7 +213,7 @@ WebClient.include({
     get_next_notif: function() {
         var self = this;
 
-        this.rpc("/calendar/notify")
+        this.rpc("/calendar/notify", {}, {shadow: true})
         .done(function(result) {
             _.each(result, function(res) {
                 setTimeout(function() {
@@ -240,17 +253,16 @@ WebClient.include({
 
 var Many2ManyAttendee = FieldMany2ManyTags.extend({
     tag_template: "Many2ManyAttendeeTag",
-    get_render_data: function(ids){
-        var dataset = new data.DataSetStatic(this, this.field.relation, this.build_context());
-        return dataset.call('get_attendee_detail',[ids, this.getParent().datarecord.id || false])
-                      .then(process_data);
+    get_render_data: function (ids) {
+        return this.dataset.call('get_attendee_detail', [ids, this.getParent().datarecord.id || false])
+                           .then(process_data);
 
         function process_data(data) {
-            return _.map(data, function(d) {
-                return _.object(['id', 'name', 'status'], d);
+            return _.map(data, function (d) {
+                return _.object(['id', 'display_name', 'status', 'color'], d);
             });
         }
-    }
+    },
 });
 
 function showCalendarInvitation(db, action, id, view, attendee_data) {

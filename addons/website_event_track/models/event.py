@@ -45,7 +45,7 @@ class event_track(models.Model):
         'Status', default='draft', required=True, copy=False, track_visibility='onchange')
     description = fields.Html('Track Description', translate=True)
     date = fields.Datetime('Track Date')
-    duration = fields.Float('Duration', digits=(16, 2), default=1.5)
+    duration = fields.Float('Duration', default=1.5)
     location_id = fields.Many2one('event.track.location', 'Room')
     event_id = fields.Many2one('event.event', 'Event', required=True)
     color = fields.Integer('Color Index')
@@ -53,15 +53,7 @@ class event_track(models.Model):
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
-    image = fields.Binary('Image', compute='_compute_image', store=True, attachment=True)
-
-    @api.one
-    @api.depends('speaker_ids.image')
-    def _compute_image(self):
-        if self.speaker_ids:
-            self.image = self.speaker_ids[0].image
-        else:
-            self.image = False
+    image = fields.Binary('Image', related='speaker_ids.image_medium', store=True, attachment=True)
 
     @api.model
     def create(self, vals):

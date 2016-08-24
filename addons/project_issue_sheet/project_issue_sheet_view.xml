@@ -24,7 +24,7 @@
                                 <field name="date"/>
                                 <field name="user_id" required="1"/>
                                 <field name="name"/>
-                                <field name="account_id" invisible="0" domain="[('account_type, '=', 'normal'), ('partner_id', '=', parent.partner_id)]" options="{'no_open': True, 'no_create': True}" groups="analytic.group_analytic_accounting"/>
+                                <field name="account_id" invisible="0" domain="[('account_type', '=', 'normal'), ('partner_id', '=', parent.partner_id)]" options="{'no_open': True, 'no_create': True}" groups="analytic.group_analytic_accounting"/>
                                 <field name="unit_amount" string="Duration" widget="float_time"/>
                                 <field name="is_timesheet" invisible="1"/>
                             </tree>

@@ -24,12 +24,12 @@
                     <group string="Journal Entries">
                         <field name="journal_id"/>
                         <div>
-                            <label for="account_asset_id" string="Asset Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_asset_id" string="Depreciation Asset Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             <label for="account_asset_id" string="Deferred Revenue Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_asset_id" nolabel="1" attrs="{'invisible': [('type','=', False)]}"/>
                         <div>
-                            <label for="account_depreciation_id" string="Depreciation Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_depreciation_id" string="Depreciation Expense Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             <label for="account_depreciation_id" string="Income Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_depreciation_id" nolabel="1"/>
@@ -123,11 +123,7 @@
                             <field name="value" widget="monetary" options="{'currency_field': 'currency_id'}" help="Gross value of asset"/>
                             <field name="salvage_value" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('type','=','sale')]}"/>
                             <field name="value_residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            <div>
-                                <label for="partner_id" string="Customer" attrs="{'invisible': [('type','==','purchase')]}"/>
-                                <label for="partner_id" string="Vendor" attrs="{'invisible': [('type','!=','purchase')]}"/>
-                            </div>
-                            <field name="partner_id" string="Partner" nolabel="1"/>
+                            <field name="partner_id" string="Vendor" domain="[('supplier', '=', True)]"/>
                             <field name="invoice_id" string="Invoice" options="{'no_create': True}"/>
                         </group>
                     </group>

@@ -53,16 +53,9 @@ can take the following attributes:
 ``attachment``
     python expression that defines the name of the report; the record is
     acessible as the variable ``object``
-
-.. warning::
-
-   The paper format cannot currently be declared via the ``<report>``
-   shortcut, it must be added afterwards using a ``<record>`` extension on the
-   report action itself::
-
-       <record id="<report_id>" model="ir.actions.report.xml">
-           <field name="paperformat_id" ref="<paperformat>"/>
-       </record>
+``paperformat``
+    external id of the paperformat you wish to use (defaults to the company's
+    paperformat if not specified)
 
 Example::
 
@@ -289,7 +282,7 @@ named :samp:`report.{module.report_name}`. If it exists, it will use it to
 call the QWeb engine; otherwise a generic function will be used. If you wish
 to customize your reports by including more things in the template (like
 records of others models, for example), you can define this model, overwrite
-the function ``render_html`` and pass objects in the ``docargs`` dictionnary:
+the function ``render_html`` and pass objects in the ``docargs`` dictionary:
 
 .. code-block:: python
 

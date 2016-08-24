@@ -3,14 +3,15 @@
 # * website_forum
 # 
 # Translators:
+# Leidy Sofía Peña Gahona <beta@nubark.com>, 2016
 # Mateo Tibaquirá <nestormateo@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-26 14:10+0000\n"
-"PO-Revision-Date: 2015-11-28 08:01+0000\n"
-"Last-Translator: Mateo Tibaquirá <nestormateo@gmail.com>\n"
+"PO-Revision-Date: 2016-02-18 13:46+0000\n"
+"Last-Translator: Felipe Palomino <omega@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +44,7 @@ msgid ""
 "${object.company_id.email or ''}\n"
 "${object.company_id.phone or ''}\n"
 "</pre>"
-msgstr ""
+msgstr "\n<p>\n    Hola ${object.name},\n</p>\n<p>\n    Ha sido invitado a validar su correo electrónico para poder obtener acceso a los foros de preguntas y respuestas de \"${object.company_id.name}\".\n</p>\n<p>\n    Para validar su correo electrónico, pulse por favor en el siguiente enlace:\n</p>\n<ul>\n    <li><a href=\"${ctx.get('token_url')}\">Validar mi cuenta para los foros de P/R de \"${object.company_id.name}\"</a></li>\n</ul>\n<p>\n    Gracias,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: website_forum
 #. openerp-web
@@ -57,7 +58,7 @@ msgstr "karma es requerido para ejecutar esta acción. Usted puede ganar karma t
 #. module: website_forum
 #: model:mail.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "${object.company_id.name} Validación de los foros"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -124,28 +125,28 @@ msgstr "<b> insignias:</b>"
 msgid ""
 "<b>Answers should not add or expand questions</b>. Instead\n"
 "    either edit the question or add a comment."
-msgstr ""
+msgstr "<b>Responder no debería añadir o expandir preguntas</b>. En su lugar se modifica la pregunta o se deja un comentario."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "<b>Answers should not add or expand questions</b>. Instead either edit the "
 "question edit or add a question comment."
-msgstr ""
+msgstr "<b>Las respuestas no deberían añadir o expandir las preguntas</b>. En vez de esto, edite la pregunta o añada un comentario de pregunta."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "<b>Answers should not comment other answers</b>. Instead\n"
 "    add a comment on the other answers."
-msgstr ""
+msgstr "<b> Las respuestas no se deben comentar sobre otras respuestas </b>. En su lugar\nañada un comentario sobre las otras respuestas."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "<b>Answers should not comment other answers</b>. Instead add a comment on "
 "the other answers."
-msgstr ""
+msgstr "<b> Las respuestas no se deben comentar sobre otras respuestas </b>. Mejor\nañada un comentario sobre las otras respuestas."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -154,7 +155,7 @@ msgid ""
 "    This community Q&amp;A is not a discussion group. Please avoid holding debates in\n"
 "    your answers as they tend to dilute the essence of questions and answers. For\n"
 "    brief discussions please use commenting facility."
-msgstr ""
+msgstr "<b>Las respuestas no deben iniciar debates </b>\nEsta comunidad de Preguntas y Respuestas no es un grupo de discusión. Por favor, evitar la celebración de debates en sus respuestas ya que tienden a diluir la esencia de preguntas y respuestas. Para breves discusiones por favor utilice comentando las instalaciones."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -163,7 +164,7 @@ msgid ""
 "question comment indication \"Possible duplicate of...\". However, it's ok "
 "to include links to other questions or answers providing relevant additional"
 " information."
-msgstr ""
+msgstr "<b>Las respuestas no debe apuntar a otras Preguntas </b>. En su lugar mejor añada un comentario indicando pregunta \"Posible duplicado de ...\". Sin embargo, está bien incluir enlaces a otras preguntas o respuestas que proporcionan información adicional relevante."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -173,7 +174,7 @@ msgid ""
 "    of...\"</i>. However, it's fine to include links to other\n"
 "    questions or answers providing relevant additional\n"
 "    information."
-msgstr ""
+msgstr "<b>Las respuestas no deben apuntar a otras preguntas </b>.\nEn su lugar mejor añada un comentario indicando <i>\"Posible duplicado de ...\"</i>. Sin embargo, está bien incluir enlaces a otras preguntas o respuestas que proporcionan información adicional relevante."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -183,7 +184,7 @@ msgid ""
 "    description text in your answer, even if it's just a\n"
 "    copy/paste. Links are welcome, but should complementary to\n"
 "    answer, referring sources or additional reading."
-msgstr ""
+msgstr "<b>Las respuestas no sólo deben proporcionar un enlace de una solución</b>. En lugar proporcione la descripción de la solución en su respuesta, incluso si es sólo un copiar / pegar. Los enlaces son bienvenidos, pero deben complementarse con la respuesta, refiriéndose a fuentes o lectura adicional."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -192,7 +193,7 @@ msgid ""
 " solution description text in your answer, even if it's just a copy/paste. "
 "Links are welcome, but should complementary to answer, referring sources or "
 "additional reading."
-msgstr ""
+msgstr "<b>Las respuestas no sólo deben proporcionar un enlace de una solución</b>. En lugar  proporcione la descripción de la solución en su respuesta, incluso si es sólo un copiar / pegar. Los enlaces son bienvenidos, pero deben complementarse con la respuesta, refiriéndose a fuentes o lectura adicional."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -200,7 +201,7 @@ msgid ""
 "<b>Before you ask - please make sure to search for a similar question.</b> You can\n"
 "    search questions by their title or tags.  It’s also OK to\n"
 "    answer your own question."
-msgstr ""
+msgstr "<b> Antes de preguntar - por favor asegúrese de buscar una pregunta similar </b> Puede\nhacer búsqueda de preguntas por su título o etiquetas. También está bien para responder a su propia pregunta."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_badges
@@ -217,7 +218,7 @@ msgstr "<b>Usted no ha votado aún!</b>"
 msgid ""
 "<b>Please avoid asking questions that are too subjective\n"
 "    and argumentative</b> or not relevant to this community."
-msgstr ""
+msgstr "<b>Por favor, evite las preguntas que son demasiado subjetivas y argumentativas </b> o no relevantes para esta comunidad."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
@@ -226,7 +227,7 @@ msgid ""
 "        <b>use the commenting tool.</b> Please remember that you can always <b>revise your answers</b>\n"
 "        - no need to answer the same question twice. Also, please <b>don't forget to vote</b>\n"
 "        - it really helps to select the best questions and answers!"
-msgstr ""
+msgstr "<b>Por favor, intente dar una respuesta sustancial. </b> Si desea hacer comentarios sobre la pregunta o respuesta, simplemente <b> utilice la herramienta de comentarios. </b> Por favor, recuerde que siempre puede <b> revisar su respuestas </b>\n- No hay necesidad de responder a la misma pregunta dos veces. También, por favor <b> no se olvide de votar </b>\n- ¡Esto realmente ayuda a seleccionar las mejores preguntas y respuestas!"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_discussion
@@ -263,7 +264,7 @@ msgid ""
 "<p>A new question <i>%s</i> has been asked on %s and require your "
 "validation. <a href=\"%s/forum/%s/question/%s\">Click here to access the "
 "question.</a></p>"
-msgstr ""
+msgstr "<p> Una nueva pregunta <i>%s </i> se ha realizado en el %s  y requiere su validación. <a href=\"%s/forum/%s/question/%s\"> Haga clic aquí para acceder a la pregunta. </a></p>"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:489
@@ -426,7 +427,7 @@ msgstr "Añadir página en el menú"
 msgid ""
 "After posting the user will be proposed to share its question or answer on "
 "social networks, enabling social network propagation of the forum content."
-msgstr ""
+msgstr "Después de publicar el usuario será propuesto para compartir su pregunta o la respuesta en las redes sociales, permitiendo el uso de la red social para la propagación del contenido del foro."
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:187
@@ -438,7 +439,7 @@ msgstr "Todo"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_bump
 msgid "Allow Bump"
-msgstr ""
+msgstr "Permitir Críticas"
 
 #. module: website_forum
 #. openerp-web
@@ -662,7 +663,7 @@ msgid ""
 "Besides gaining reputation with your questions and answers,\n"
 "            you receive badges for being especially helpful. Badges\n"
 "            appear on your profile page, and your posts."
-msgstr ""
+msgstr "Además de ganar reputación con sus preguntas y respuestas, recibirá insignias por ser especialmente útil. Las insignias aparecen en su página de perfil, y sus mensajes."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
@@ -672,7 +673,7 @@ msgstr "Biografía"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_bronze_badge
 msgid "Bronze badges count"
-msgstr ""
+msgstr "Insignias de bronce cuentan"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_bump_date
@@ -1130,7 +1131,7 @@ msgstr "Nombre Público"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_user_bio
 msgid "Display detailed user biography"
-msgstr ""
+msgstr "Mostrar una detallada biografía del usuario"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_downvote
@@ -1160,12 +1161,12 @@ msgstr "Editar Su Respuesta Anterior"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_all
 msgid "Edit all posts"
-msgstr ""
+msgstr "Editar todos los mensajes"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_own
 msgid "Edit own posts"
-msgstr ""
+msgstr "Editar mensajes propios"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
@@ -1222,7 +1223,7 @@ msgstr "Pregunta Popular"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_favourite_count
 msgid "Favorite Count"
-msgstr ""
+msgstr "Cuenta Favorita"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_5
@@ -1258,7 +1259,7 @@ msgstr "Preguntas Favoritas"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Filter on"
-msgstr ""
+msgstr "Filtrar en"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_relevancy_post_vote
@@ -1268,7 +1269,7 @@ msgstr "Primer Parámetro de Relevancia"
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_5
 msgid "First downvote"
-msgstr ""
+msgstr "Primer voto negativo"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_7
@@ -1334,7 +1335,7 @@ msgid ""
 "    will subtract 10 points. There is a limit of 200 points that can be accumulated\n"
 "    for a question or answer per day. The table given at the end explains reputation point\n"
 "    requirements for each type of moderation task."
-msgstr ""
+msgstr "Por ejemplo, si usted genera una pregunta interesante o da una respuesta útil, su entrada será valorada positivamente. Por otro lado, si la respuesta es engañosa - que será valorada negativamente. Cada voto a favor generará 10 puntos, cada voto en contra restará 10 puntos. Hay un límite de 200 puntos que se pueden acumular para una pregunta o una respuesta por día. El cuadro que figura al final explica requisitos de puntos de reputación para cada tipo de tarea de moderación."
 
 #. module: website_forum
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
@@ -1358,7 +1359,7 @@ msgstr "Nivel de Insignias del Foro"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_users_form_forum
 msgid "Forum Karma"
-msgstr ""
+msgstr "Karma del Foro"
 
 #. module: website_forum
 #. openerp-web
@@ -1366,7 +1367,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_name
 #, python-format
 msgid "Forum Name"
-msgstr ""
+msgstr "Nombre del Foro"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post
@@ -1388,7 +1389,7 @@ msgstr "Ajustes del Foro"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
 msgid "Forum Tag"
-msgstr ""
+msgstr "Etiquetas del Foro"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_forum
@@ -1418,7 +1419,7 @@ msgstr "Insignia de ludificación del usuario"
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:74
 #, python-format
 msgid "Give Tag"
-msgstr ""
+msgstr "Obtener Etiqueta"
 
 #. module: website_forum
 #. openerp-web
@@ -1430,7 +1431,7 @@ msgstr "Dele un título a su pregunta."
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_gold_badge
 msgid "Gold badges count"
-msgstr ""
+msgstr "Conteo de Insignias de oro"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_3
@@ -1452,7 +1453,7 @@ msgstr "Buena Pregunta"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_graph
 msgid "Graph of Posts"
-msgstr ""
+msgstr "Gráfico de Publicaciones"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_4
@@ -1496,7 +1497,7 @@ msgstr "Gurú (15)"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_uid_has_answered
 msgid "Has Answered"
-msgstr ""
+msgstr "Ha Respondido"
 
 #. module: website_forum
 #: model:forum.forum,name:website_forum.forum_help
@@ -1543,7 +1544,7 @@ msgid ""
 "If you close this post, it will be hidden for most users. Only\n"
 "            users having a high karma can see closed posts to moderate\n"
 "            them."
-msgstr ""
+msgstr "Si cierra esta publicación, se oculta para la mayoría de usuarios. Sólo los usuarios que tienen un alto Karma pueden ver las publicaciones cerradas y moderadas."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -1553,7 +1554,7 @@ msgid ""
 "    you should not be asking here but on our mailing lists.\n"
 "    However, if your motivation is “I would like others to explain ______ to me”,\n"
 "    then you are probably OK."
-msgstr ""
+msgstr "Si usted encaja en uno de estos ejemplos o si su motivación para hacer la pregunta es \"Me gustaría participar en una discusión acerca de ______\", entonces no se debería hacer aquí, pero si en nuestras listas de correo.\nSin embargo, si su motivación es \"Me gustaría explicar a los demás que  _____ para mí\", entonces usted está probablemente bien."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
@@ -1561,7 +1562,7 @@ msgid ""
 "If you mark this post as offensive, it will be hidden for most users. Only\n"
 "            users having a high karma can see offensive posts to moderate\n"
 "            them."
-msgstr ""
+msgstr "Si marca este post como ofensivo, estará oculto para la mayoría de usuarios. Solamente\nlos usuarios que tienen un alto Karma pueden ver los mensajes ofensivos a moderarlos."
 
 #. module: website_forum
 #. openerp-web
@@ -1589,12 +1590,12 @@ msgstr "Está respondido"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_display_biography
 msgid "Is the author's biography visible from his post"
-msgstr ""
+msgstr "Es la biografía del autor visible desde su publicación"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "It appears your email has not been verified."
-msgstr ""
+msgstr "Parece ser que su correo electrónico no ha sido verificado."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_karma
@@ -1605,27 +1606,27 @@ msgstr "Karma"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Karma Gains"
-msgstr ""
+msgstr "Ganancias de karma"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Karma Related Rights"
-msgstr ""
+msgstr "Derechos Relacionados karma"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_close
 msgid "Karma to close"
-msgstr ""
+msgstr "Karma para cerrar"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_comment
 msgid "Karma to comment"
-msgstr ""
+msgstr "Karma para comentar"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_comment_convert
 msgid "Karma to convert comment to answer"
-msgstr ""
+msgstr "Karma para convertir comentario a respuesta"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_edit
@@ -1635,7 +1636,7 @@ msgstr "Karma a editar"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_unlink
 msgid "Karma to unlink"
-msgstr ""
+msgstr "Karma para no vincular"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -1660,7 +1661,7 @@ msgstr "Última Modificación el"
 #. module: website_forum
 #: selection:forum.forum,default_order:0
 msgid "Last Updated"
-msgstr ""
+msgstr "Última Actualización"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_write_uid
@@ -1681,7 +1682,7 @@ msgstr "Actualizado"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Last activity date"
-msgstr ""
+msgstr "Fecha de la última actividad"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -1698,7 +1699,7 @@ msgstr "Dejó 10 respuestas con puntaje de 10 o más"
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:15
 #, python-format
 msgid "Let's go through the first steps to create a new question."
-msgstr ""
+msgstr "Lo guiamos a través de los primeros pasos para crear una nueva pregunta."
 
 #. module: website_forum
 #: selection:forum.forum,default_post_type:0
@@ -1845,7 +1846,7 @@ msgstr "Enlaces nofollow"
 #: code:addons/website_forum/models/forum.py:801
 #, python-format
 msgid "Not allowed to vote for its own post"
-msgstr ""
+msgstr "No se les permite votar para su propia publicación"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_2
@@ -1888,7 +1889,7 @@ msgstr "Número de mensajes que requieren una acción"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_count_posts_waiting_validation
 msgid "Number of posts waiting for validation"
-msgstr ""
+msgstr "Número de publicaciones esperando por validación"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_message_unread_counter
@@ -1934,7 +1935,7 @@ msgstr "Nuestros foros"
 #: model:gamification.challenge,name:website_forum.challenge_peer_pressure
 #: model:gamification.goal.definition,name:website_forum.definition_peer_pressure
 msgid "Peer Pressure"
-msgstr ""
+msgstr "Presión de Pares"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -1944,7 +1945,7 @@ msgstr "Pendiente"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "People"
-msgstr ""
+msgstr "Personas"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_plain_content
@@ -1999,22 +2000,22 @@ msgstr "Mensaje"
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 #, python-format
 msgid "Post Answer"
-msgstr ""
+msgstr "Publicar Respuestas"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
 msgid "Post Closing Reason"
-msgstr ""
+msgstr "Publicar Razón de Cierre"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Comment"
-msgstr ""
+msgstr "Publicar Comentario"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_website_message_ids
 msgid "Post Messages"
-msgstr ""
+msgstr "Publicar Mensajes"
 
 #. module: website_forum
 #. openerp-web
@@ -2026,12 +2027,12 @@ msgstr "Publicar Pregunta"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
 msgid "Post Title"
-msgstr ""
+msgstr "Titulo de la entrada"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Post Types"
-msgstr ""
+msgstr "Tipos de Publicaciones"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
@@ -2041,13 +2042,13 @@ msgstr "Publicar Su Pregunta"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_discussion
 msgid "Post Your Topic"
-msgstr ""
+msgstr "Publicar Su Tema"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:146
 #, python-format
 msgid "Post type in \"Default post\" must be activated"
-msgstr ""
+msgstr "Tipo de mensaje en \"Publicación predeterminada\" debe estar activado"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
@@ -2080,7 +2081,7 @@ msgstr "Mensajes"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "Provide enough details and, if possible, give an example."
-msgstr ""
+msgstr "Proporcionar suficientes detalles y, si es posible, dar un ejemplo."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
@@ -2092,7 +2093,7 @@ msgstr "Perfil público"
 #: model:gamification.challenge,name:website_forum.challenge_pundit
 #: model:gamification.goal.definition,name:website_forum.definition_pundit
 msgid "Pundit"
-msgstr ""
+msgstr "Experto"
 
 #. module: website_forum
 #. openerp-web
@@ -2107,7 +2108,7 @@ msgstr "Ponga esta pregunta al principio de la lista compartiéndola en las rede
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:98
 #, python-format
 msgid "Put your answer here."
-msgstr ""
+msgstr "Ponga su respuesta aquí."
 
 #. module: website_forum
 #. openerp-web
@@ -2119,7 +2120,7 @@ msgstr "Ponga su pregunta aquí."
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header_footer_custom
 msgid "Q&amp;amp;A"
-msgstr ""
+msgstr "P y R"
 
 #. module: website_forum
 #. openerp-web
@@ -2242,12 +2243,12 @@ msgstr "Razón:"
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_1
 msgid "Received at least 3 upvote for an answer for the first time"
-msgstr ""
+msgstr "Recibió por lo menos 3 votos positivos para una respuesta la primera vez"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Redirect to external link"
-msgstr ""
+msgstr "Redirigir a enlace externo"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2367,12 +2368,12 @@ msgstr "Comparta este contenido para incrementar sus posibilidades de ser destac
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_share
 msgid "Sharing Options"
-msgstr ""
+msgstr "Opciones para Compartir"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_silver_badge
 msgid "Silver badges count"
-msgstr ""
+msgstr "Cuenta de insignias de plata"
 
 #. module: website_forum
 #. openerp-web
@@ -2503,7 +2504,7 @@ msgid ""
 "Technical field allowing to bump a question. Writing on this field will "
 "trigger a write on write_date and therefore bump the post. Directly writing "
 "on write_date is currently not supported and this field is a workaround."
-msgstr ""
+msgstr "Campos técnicos que permiten impulsar una pregunta. Escribiendo en este campo se realiza la escritura en write_date y por lo tanto impulsar la publicación. La escritura directa en el campo write_date actualmente no está soportado y este campo es una solución."
 
 #. module: website_forum
 #. openerp-web
@@ -2546,7 +2547,7 @@ msgid ""
 "    this site in order to improve the overall quality of the knowledge base content.\n"
 "    Such privileges are granted based on user karma level: you will be able to do the same\n"
 "    once your karma gets high enough."
-msgstr ""
+msgstr "Por lo tanto, las preguntas y respuestas se pueden editar en páginas wiki por usuarios experimentados en este sitio con el fin de mejorar la calidad general del contenido de la base de conocimientos.\nEstos privilegios se conceden en base al nivel de usuario Karma: usted será capaz de hacer lo mismo una vez que su karma se eleva lo suficiente."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2561,7 +2562,7 @@ msgid ""
 "This community is for professionals and enthusiasts of our products and "
 "services. Share and discuss the best content and new marketing ideas, build "
 "your professional profile and become a better marketer together."
-msgstr ""
+msgstr "Esta comunidad es para los profesionales y aficionados de nuestros productos y servicios. Compartir y discutir las mejores y nuevas ideas de contenido de marketing, construir su perfil profesional y convertirse en un mejor comercializador juntos."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_relevancy_post_vote
@@ -2596,7 +2597,7 @@ msgstr "Esta página contiene una nueva pregunta creada."
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:49
 #, python-format
 msgid "This page contains all the information related to the new forum."
-msgstr ""
+msgstr "Esta página contiene toda la información relacionada con el nuevo foro."
 
 #. module: website_forum
 #. openerp-web
@@ -2675,7 +2676,7 @@ msgstr "URL"
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_post_content_link
 msgid "URL of Link Articles"
-msgstr ""
+msgstr "URL de Vínculo de Artículos"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
@@ -2685,17 +2686,17 @@ msgstr "URL a Compartir"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Unanswered"
-msgstr ""
+msgstr "Sin respuesta"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_unlink_all
 msgid "Unlink all comments"
-msgstr ""
+msgstr "Borrar todos los comentarios"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_unlink_own
 msgid "Unlink own comments"
-msgstr ""
+msgstr "Borrar sus propios comentarios"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_unread
@@ -2717,7 +2718,7 @@ msgstr "Actualizar"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_write_date
 msgid "Update on"
-msgstr ""
+msgstr "Actualizar en"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_write_uid
@@ -2773,7 +2774,7 @@ msgstr "Usuarios"
 msgid ""
 "Users can answer only once per question. Contributors can edit answers and "
 "mark the right ones."
-msgstr ""
+msgstr "Los usuarios pueden responder solamente una vez por pregunta. Los colaboradores pueden editar respuestas y marcar las correctas."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:726
@@ -2866,7 +2867,7 @@ msgstr "Qué tipo de preguntas puedo hacer aquí?"
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "What should I avoid in my answers?"
-msgstr ""
+msgstr "¿Qué debo evitar en mis respuestas?"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2885,7 +2886,7 @@ msgstr "Cuando una pregunta o respuesta es votada positivamente, el usuario que 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_allow_link
 msgid "When clicking on the post, it redirects to an external link"
-msgstr ""
+msgstr "Haciendo clic en el mensaje, se redirecciona a un enlace externo"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2906,7 +2907,7 @@ msgid ""
 "    on actual problems that you face. Chatty, open-ended\n"
 "    questions diminish the usefulness of this site and push\n"
 "    other questions off the front page."
-msgstr ""
+msgstr "Sólo debe hacer preguntas prácticas que puedan responderse sobre la base de los problemas reales que enfrentan. Preguntas sin sentido o demasiado abiertas disminuyen la utilidad de este sitio y empujan a otras preguntas más importantes de los primeros sitios."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
@@ -2961,7 +2962,7 @@ msgstr "por"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "by activity date"
-msgstr ""
+msgstr "por fecha de actividad"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
@@ -2986,7 +2987,7 @@ msgstr "por relevancia"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "close any posts"
-msgstr ""
+msgstr "cerrar cualquier publicación"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_7
@@ -2996,17 +2997,17 @@ msgstr "ontiene comentarios ofensivos o maliciosos"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "delete any comment"
-msgstr ""
+msgstr "borrar cualquier comentario"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "delete any question or answer"
-msgstr ""
+msgstr "borrar cualquier pregunta o respuesta"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "delete own comment"
-msgstr ""
+msgstr "borrar sus propios comentarios"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
@@ -3031,7 +3032,7 @@ msgstr "editar cualquier mensaje, ver reportes ofensivos"
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "every answer is equally valid: “What’s your favorite ______?”"
-msgstr ""
+msgstr "cada respuesta es igualmente válida: \"¿Cuál es su favorito ______?\""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
@@ -3051,7 +3052,7 @@ msgstr "seguidor(es)"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "for reason:"
-msgstr ""
+msgstr "por motivo:"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
@@ -3078,12 +3079,12 @@ msgstr "aquí"
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "how to configure or customize Odoo to specific business needs,"
-msgstr ""
+msgstr "cómo configurar o personalizar Odoo a las necesidades específicas del negocio,"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "how to develop modules for your own need,"
-msgstr ""
+msgstr "cómo desarrollar módulos para su propia necesidad,"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -3097,7 +3098,7 @@ msgstr "cómo instalar Odoo en una infraestructura específica,"
 msgid ""
 "if your\n"
 "        answer is selected as the right one. See what you can do with karma"
-msgstr ""
+msgstr "si su respuesta\nes seleccionada como la más adecuada. Vea lo que puede hacer con el karma"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_13
@@ -3117,7 +3118,7 @@ msgstr "lenguaje insultante y ofensivo"
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "it is a rant disguised as a question: “______ sucks, am I right?”"
-msgstr ""
+msgstr "es una queja encubierta de pregunta: \"______ apesta, estoy en lo cierto?\""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -3149,7 +3150,7 @@ msgstr "miembro desde"
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
 msgid "not a real post"
-msgstr ""
+msgstr "no en un comentario real"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_6
@@ -3174,7 +3175,7 @@ msgstr "en"
 msgid ""
 "on social networks get an answer within\n"
 "        5 hours. Questions shared on two social networks have"
-msgstr ""
+msgstr "en las redes sociales recibirá respuesta en 5 horas. Preguntas compartidas en dos redes sociales tienen"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -3211,7 +3212,7 @@ msgstr "preguntas específicas acerca del servicio que ofrece Odoo, etc."
 msgid ""
 "there is no actual problem to be solved: “I’m curious if other people feel "
 "like I do.”"
-msgstr ""
+msgstr "no hay ningún problema real que haya que resolver: \"Estoy ansioso por ver si otras personas se sienten como yo.\""
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_14
@@ -3278,7 +3279,7 @@ msgstr "esperando validación"
 msgid ""
 "we are being asked an open-ended, hypothetical question: “What if ______ "
 "happened?”"
-msgstr ""
+msgstr "se nos está pidiendo realizar una pregunta hipotética de composición abierta: \"¿Qué pasa si ______?\""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -3295,7 +3296,7 @@ msgstr "cual es la mejor manera de usar Odoo para necesidades específicas de ne
 msgid ""
 "your answer is provided along with the question, and you expect more "
 "answers: “I use ______ for ______, what do you use?”"
-msgstr ""
+msgstr "su respuesta se proporciona junto con la pregunta, y se puede esperar más respuestas: \"Yo uso _______ para ______, ¿qué uso le doy?\""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq

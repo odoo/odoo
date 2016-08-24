@@ -23,7 +23,7 @@ This module manages:
 * Voucher Receipt [Sales & Purchase]
 * Voucher Payment [Customer & Vendors]
     """,
-    'category': 'Accounting & Finance',
+    'category': 'Accounting',
     'sequence': 20,
     'website' : 'https://www.odoo.com/page/billing',
     'depends' : ['account'],

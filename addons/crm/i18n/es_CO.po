@@ -3,14 +3,17 @@
 # * crm
 # 
 # Translators:
-# Mateo Tibaquirá <nestormateo@gmail.com>, 2015
+# Esteban Echeverry <tebanep@nubark.com>, 2016
+# Felipe Palomino <omega@nubark.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2015
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-12-03 08:48+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-31 03:18+0000\n"
+"Last-Translator: Mateo Tibaquirá Palacios <nestormateo@gmail.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -306,6 +309,22 @@ msgid ""
 msgstr "<span class=\"panel-title\"><span data-icon=\"&#57463;\"/><strong> Ejercicio 2</strong></span>\n                                    <span>(Director de Ventas)</span>"
 
 #. module: crm
+#: model:web.tip,description:crm.crm_tip_4
+msgid ""
+"<span><b>This is a business opportunity.</b> Drag and drop it to another "
+"column while you move forward in the sales cycle. Click to zoom in the "
+"opportunity.</span>"
+msgstr "<span><b>Esta es una oportunidad de negocio. </b> Arrastre y suelte a otra columna, mientras se mueve hacia adelante en el ciclo de ventas. Presione para revisar la oportunidad. </span>"
+
+#. module: crm
+#: model:web.tip,description:crm.crm_tip_6
+msgid ""
+"<span><strong>Click to register a new business opportunity</strong>. Once "
+"the opportunity is created, you will be able to drag and drop it in your "
+"sales pipeline.</span>"
+msgstr "<span><strong> Haga clic aquí para registrar una nueva oportunidad de negocio </strong>. Una vez que haya creado la oportunidad, usted será capaz de arrastrarlo en su canal de ventas.</span>"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span><strong>Contact us to customize your application:</strong><br/>\n"
@@ -379,7 +398,7 @@ msgstr "<strong>Proyecte ingresos futuros</strong><br/>\nUsted puede evaluar la 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Mass mailing</strong>"
-msgstr "<strong>Envíos masivos</strong>"
+msgstr "<strong>Correo masivo</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -609,7 +628,7 @@ msgstr "Análisis de Actividades"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_target_sales_done
 msgid "Activities Done Target"
-msgstr "Objetivo de las Actividades Terminadas"
+msgstr "Objetivo de Actividades Terminadas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_subtype_id
@@ -697,7 +716,7 @@ msgstr "Analizando el canal de trabajo por fecha de cierre esperada ayudará a s
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_deduplicate
 msgid "Apply deduplication"
-msgstr "Aplicar desduplicación"
+msgstr "Aplicar deduplicación"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -955,6 +974,11 @@ msgid "Click to set a new stage in your lead/opportunity pipeline."
 msgstr "Clic para fijar una nueva etapa en su flujo de iniciativas/oportunidades."
 
 #. module: crm
+#: model:web.tip,description:crm.crm_tip_2
+msgid "Click to view the opportunities related to this customer."
+msgstr "Haga clic para ver las oportunidades relacionadas con este cliente."
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Close"
 msgstr "Cerrar"
@@ -1024,7 +1048,7 @@ msgstr "Consumidores"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Contact Information"
-msgstr ""
+msgstr "Información de Contacto"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
@@ -1860,13 +1884,6 @@ msgid "Import using the top left button in"
 msgstr "Importe usando el botón superior izquierdo"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "Important Messages"
-msgstr "Mensajes Importantes"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Improve average revenue per salesperson"
 msgstr "Mejorar el ingreso promedio por vendedor"
@@ -2034,6 +2051,14 @@ msgstr "Iniciativa / Cliente"
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Lead Created"
 msgstr "Iniciativa Creada"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_lead_tag_action
+#: model:ir.ui.menu,name:crm.menu_crm_lead_categ
+#: model:ir.ui.view,arch_db:crm.crm_lead_tag_form
+#: model:ir.ui.view,arch_db:crm.crm_lead_tag_tree
+msgid "Lead Tags"
+msgstr "Etiquetas de iniciativas"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
@@ -2255,6 +2280,8 @@ msgstr "Máximo del Grupo de Contactos"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_medium_id
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_medium_id
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
 msgstr "Media"
 
@@ -2437,6 +2464,11 @@ msgstr "Mes"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Motivation letter from the management"
 msgstr "Carta de motivación desde la administración"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+msgid "My Leads"
+msgstr "Mis Iniciativas"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -2934,7 +2966,7 @@ msgstr "Planee su estrategia de ventas: objetivos, iniciativas, KPIs, y mucho m�
 #. module: crm
 #: model:ir.model,name:crm.model_web_planner
 msgid "Planner"
-msgstr "Agenda"
+msgstr "Planificador"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:628
@@ -3401,6 +3433,13 @@ msgid "Subscription Management"
 msgstr "Gestion de Suscripciones"
 
 #. module: crm
+#: model:web.tip,description:crm.crm_tip_5
+msgid ""
+"Switch to the graph view to get a clear reporting on your opportunities "
+"pipeline."
+msgstr "Cambie a la vista del gráfico para obtener una información clara sobre su canal de oportunidades."
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Systematic organization is what makes the difference\n"
@@ -3685,6 +3724,9 @@ msgstr "A no ser que esté iniciando un nuevo negocio, probablemente usted tenga
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_unread
+#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Unread Messages"
 msgstr "Mensajes sin Leer"
 

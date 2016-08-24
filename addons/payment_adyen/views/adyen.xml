@@ -19,6 +19,10 @@
                 <!-- custom -->
                 <input t-if="merchantReturnData" type='hidden' name='merchantReturnData'
                     t-att-value="merchantReturnData"/>
+                <!-- shopperEmail is not included for SHA-1. To avoid breaking compatibility,
+                     include only if filled in -->
+                <input t-if="shopperEmail"
+                    type='hidden' name='shopperEmail' t-att-value="shopperEmail"/>
                 <!-- submit -->
                 <button type="submit" width="100px"
                     t-att-class="submit_class">

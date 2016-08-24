@@ -2,7 +2,7 @@
     'name' : 'Odoo Live Support',
     'version': '1.0',
     'summary': 'Chat with the Odoo collaborators',
-    'category': 'Tools',
+    'category': 'Website',
     'complexity': 'medium',
     'website': 'https://www.odoo.com/',
     'description':

@@ -19,7 +19,7 @@ class product_template(models.Model):
     def _get_product_template_type(self):
         res = super(product_template, self)._get_product_template_type()
         if 'digital' not in [item[0] for item in res]:
-            res.append(('digital', 'Digital Content'))
+            res.append(('digital', _('Digital Content')))
         return res
 
     @api.multi

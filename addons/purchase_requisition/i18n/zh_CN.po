@@ -4,14 +4,17 @@
 # 
 # Translators:
 # fausthuang, 2015
-# 珠海-老天 <liangjia@qq.com>, 2015
+# fausthuang, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-11-12 07:49+0000\n"
-"Last-Translator: fausthuang\n"
+"PO-Revision-Date: 2016-07-22 06:45+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +25,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Call for Tender Reference:</strong><br/>"
-msgstr "<strong>调用招标序列号:</strong><br/>"
+msgstr "<strong>招标参考:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -82,7 +85,7 @@ msgid ""
 "            products you need to buy and generate the creation of RfQs to\n"
 "            vendors. Once the tenders have been registered, you can review and\n"
 "            compare them and you can validate some and cancel others."
-msgstr "要求招标是产生竞争性要约来自不同投标人的过程。在招标中，你可以记录你需要购买并生成创建询价给厂商的产品。一旦投标已被注册，您可以查看并对它们进行比较，你可以验证一些，并取消其他人。"
+msgstr "招标是产生竞争性要约来自不同投标人的过程。在招标中，你可以记录你需要购买并生成创建询价给厂商的产品。一旦投标已被注册，您可以查看并对它们进行比较，你可以验证一些，并取消其他人。"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction
@@ -108,7 +111,7 @@ msgstr "出价数量"
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "Bid Selection"
-msgstr "招标"
+msgstr "出价选择"
 
 #. module: purchase_requisition
 #: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
@@ -119,22 +122,22 @@ msgstr "招标"
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
 msgid "Call for Tenders"
-msgstr "要求招标"
+msgstr "招标"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_name
 msgid "Call for Tenders Reference"
-msgstr "要求招标序列号"
+msgstr "招标参考"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Tenders in negotiation"
-msgstr "要求招聘谈判"
+msgstr "谈判中的招标"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Tenders where tenders are closed"
-msgstr "要求已关闭的招标"
+msgstr "投标关闭的招标"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_bid_line_qty
@@ -167,13 +170,13 @@ msgstr "已取消"
 #, python-format
 msgid ""
 "Cancelled by the call for tenders associated to this request for quotation."
-msgstr "取消通过关联到这个请求的报价标书"
+msgstr "被关联到此询价单的招标取消"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:67
 #, python-format
 msgid "Cancelled by the tender associated to this quotation."
-msgstr "与这个询价单相关的投标被取消。"
+msgstr "被关联到此询价单的招标取消"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_bid_line_qty
@@ -191,7 +194,7 @@ msgstr "变更数量"
 msgid ""
 "Check this box to generate Call for Tenders instead of generating requests "
 "for quotation from procurement."
-msgstr "选中该复选框，产生招标，而不是产生于从采购报价请求。"
+msgstr "选中该复选框，从补货生成招标，而不是询价。"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
@@ -207,17 +210,17 @@ msgstr "选择产品"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Click to start a new Call for Tenders process."
-msgstr "点击开始一个新的投标过程"
+msgstr "点击开始一个新的招标过程"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Close Call for Tenders"
-msgstr "关闭投标要求"
+msgstr "关闭招标"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Closed Tenders"
-msgstr "关闭的投标"
+msgstr "关闭的招标"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_company_id
@@ -249,12 +252,12 @@ msgstr "已确认"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_partner
 msgid "Create Request for Quotation"
-msgstr "创建询价请求"
+msgstr "创建询价"
 
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
 msgid "Create a draft purchase order"
-msgstr "生产一个采购单草稿"
+msgstr "创建草稿采购订单"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_create_uid
@@ -262,7 +265,7 @@ msgstr "生产一个采购单草稿"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_create_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_create_uid
 msgid "Created by"
-msgstr "创建于"
+msgstr "创建者"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_create_date
@@ -270,7 +273,7 @@ msgstr "创建于"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_create_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_last_post
@@ -281,7 +284,7 @@ msgstr "发布到记录上的最后消息的日期"
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:22
 #, python-format
 msgid "Define product(s) you want to include in the call for tenders."
-msgstr "定义你需要包含在投标中的产品(s)"
+msgstr "定义你需要包含在招标中的产品(s)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_description
@@ -324,7 +327,7 @@ msgstr "关注者(频道)"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "关注者（合作伙伴）"
+msgstr "关注者（业务伙伴）"
 
 #. module: purchase_requisition
 #. openerp-web
@@ -359,7 +362,7 @@ msgstr "确认后, 会出现新消息."
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_is_follower
 msgid "Is Follower"
-msgstr "是否关注者"
+msgstr "是关注者"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_last_post
@@ -372,7 +375,7 @@ msgstr "最后消息日期"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line___last_update
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner___last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_write_uid
@@ -380,7 +383,7 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_write_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新者"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_write_date
@@ -388,12 +391,12 @@ msgstr "最后更新"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_write_date
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_write_date
 msgid "Last Updated on"
-msgstr "最后更新"
+msgstr "最后更新时间"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_procurement_order_requisition_id
 msgid "Latest Requisition"
-msgstr "最近的请购"
+msgstr "最近的请求"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_ids
@@ -413,7 +416,7 @@ msgstr "供应商的多种询价"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Multiple Requisitions"
-msgstr "多个申请"
+msgstr "多个请求"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -506,7 +509,7 @@ msgstr "采购的产品"
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
 msgid "Propose a call for tenders"
-msgstr "招标目的"
+msgstr "提出招标"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
@@ -532,33 +535,33 @@ msgstr "采购订单"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Purchase Orders with requisition"
-msgstr "具有请购的采购单"
+msgstr "具有请求的采购单"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
 msgid "Purchase Requisition"
-msgstr "采购申请"
+msgstr "采购请求"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 msgid "Purchase Requisition Line"
-msgstr "采购申请明细"
+msgstr "采购请求行"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
 msgid "Purchase Requisition Partner"
-msgstr "采购申请业务伙伴"
+msgstr "采购请求业务伙伴"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:431
 #, python-format
 msgid "Purchase Requisition created"
-msgstr "采购请购单已建立"
+msgstr "采购请求已建立"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Purchase Requisitions (exclusive)"
-msgstr "采购请购单(排它的)"
+msgstr "采购请求(独家)"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
@@ -592,7 +595,7 @@ msgstr "询价单已创建"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Bids"
-msgstr "询价/投标"
+msgstr "RFQ  & 出价"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -602,7 +605,7 @@ msgstr "引用"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Request a Quotation"
-msgstr "请求询价"
+msgstr "询价"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -612,12 +615,12 @@ msgstr "询价单"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Requests for Quotation Details"
-msgstr "询价单明细"
+msgstr "询价单详细情况"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Requisition"
-msgstr "采购申请"
+msgstr "请求"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -644,7 +647,7 @@ msgstr "计划下单日期"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Search Call for Tenders"
-msgstr "查询招标"
+msgstr "搜索招标"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
@@ -654,7 +657,7 @@ msgstr "选择多个询价单"
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Select only one RFQ (exclusive)"
-msgstr "选择唯一的询价单（专属）"
+msgstr "仅选择一个询价单(独家)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_exclusive
@@ -676,7 +679,7 @@ msgstr "原文"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_origin
 msgid "Source Document"
-msgstr "源文档"
+msgstr "源单据"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_state
@@ -699,7 +702,7 @@ msgstr "招标最后期限"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.purchase_line_tree
 msgid "Tender Lines"
-msgstr "标线"
+msgstr "招标明细行"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_exclusive
@@ -725,7 +728,7 @@ msgstr "未分配"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned  Requisition"
-msgstr "未指派的请购单"
+msgstr "未指派的请求"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread
@@ -766,7 +769,7 @@ msgstr "网站沟通记录"
 #: code:addons/purchase_requisition/purchase_requisition.py:72
 #, python-format
 msgid "You can not confirm call because there is no product line."
-msgstr "你不能确认要求因为没有生产线"
+msgstr "你不能确认要求因为没有产品明细行"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:249
@@ -786,7 +789,7 @@ msgstr "你对这个供应商已经有个一个 %s 采购单 ,  你必须取消�
 #: code:addons/purchase_requisition/purchase_requisition.py:258
 #, python-format
 msgid "You have no line selected for buying."
-msgstr "你没有选择可买的生产线"
+msgstr "你没有选择可买的产品明细行"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

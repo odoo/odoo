@@ -5,7 +5,7 @@
 
 {
     'name': 'Brazilian - Accounting',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 Base module for the Brazilian localization
 ==========================================
@@ -45,7 +45,7 @@ come with any additional paid permission for online use of 'private modules'.
 """,
     'author': 'Akretion, OpenERP Brasil',
     'website': 'http://openerpbrasil.org',
-    'version': '0.6',
+    'version': '1.0',
     'depends': ['account'],
     'data': [
                 'data/account_chart_template.xml',

@@ -28,8 +28,8 @@ class SaleConfiguration(models.TransientModel):
         ], "Order Routing",
         implied_group='sale_stock.group_route_so_lines')
 
-    @api.multi
-    def get_default_sale_config(self):
+    @api.model
+    def get_default_sale_config(self, fields):
         default_picking_policy = self.env['ir.values'].get_default('sale.order', 'picking_policy')
         return {
             'default_picking_policy': 1 if default_picking_policy == 'one' else 0,

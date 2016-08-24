@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2015-12-05 23:18+0000\n"
+"POT-Creation-Date: 2016-07-06 07:28+0000\n"
+"PO-Revision-Date: 2016-07-06 08:35+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -21,19 +21,19 @@ msgstr ""
 #: code:addons/mrp/stock.py:230
 #, python-format
 msgid " Manufacture"
-msgstr ""
+msgstr "Producció"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product_bom_count
 #: model:ir.model.fields,field_description:mrp.field_product_template_bom_count
 msgid "# Bill of Material"
-msgstr ""
+msgstr "# Llista de Mtaerials"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product_mo_count
 #: model:ir.model.fields,field_description:mrp.field_product_template_mo_count
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "# Ordres de Producció"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:332
@@ -45,7 +45,7 @@ msgstr "%s (còpia)"
 #: code:addons/mrp/mrp.py:1009
 #, python-format
 msgid "%s produced"
-msgstr ""
+msgstr "% produït"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_product_produce_mode
@@ -152,7 +152,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_product_efficiency
 msgid "A factor of 0.9 means a loss of 10% during the production process."
-msgstr ""
+msgstr "Un factor de 0.9 significa una pèrdua del 10% durant el procés de producció. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_efficiency
@@ -185,14 +185,14 @@ msgstr "Actiu"
 #: code:addons/mrp/wizard/change_production_qty.py:51
 #, python-format
 msgid "Active Id not found"
-msgstr ""
+msgstr "ID actiu no trobat"
 
 #. module: mrp
 #: sql_constraint:mrp.bom.line:0
 msgid ""
 "All product quantities must be greater than 0.\n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
-msgstr ""
+msgstr "Totes les quantitats de productes han de ser majors de 0.\nHauria d'instal·lar el mòdul 'mrp_byproduct' si vol gestionar productes extres en les LdM!"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_operations:0
@@ -222,11 +222,16 @@ msgstr "Aprova"
 msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
-msgstr ""
+msgstr "Endarreriment mig en dies per produir aquest producte. En cas de LdM multinivell, els temps de fabricació dels components seran afegits."
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
+msgstr "Esperant matèries primes"
+
+#. module: mrp
+#: model:ir.actions.report.xml,name:mrp.action_report_bom_price
+msgid "BOM Cost"
 msgstr ""
 
 #. module: mrp
@@ -237,7 +242,7 @@ msgstr "Nom LdM"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_attribute_value_ids
 msgid "BOM Product Variants needed form apply this line."
-msgstr ""
+msgstr "Variants de producte de la LdM necessàries per aquesta línia."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
@@ -253,7 +258,7 @@ msgstr "Estructura LdM"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_child_line_ids
 msgid "BOM lines of the referred bom"
-msgstr ""
+msgstr "Línies de la LdM a la que es refereix"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:25
@@ -262,7 +267,7 @@ msgid ""
 "Because the product %s requires it, you must assign a serial number to your "
 "raw material %s to proceed further in your production. Please use the "
 "'Produce' button to do so."
-msgstr ""
+msgstr "Perquè el producte %s ho requereix, ha d'assignar un núm. de sèrie a la seva matèria primera %s per poder continuar amb la producció. Utilitzi el botó 'Produir' per això."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -301,7 +306,7 @@ msgstr "Estructura llista de materials"
 msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
-msgstr ""
+msgstr "La llista de materials que li permeten definir la llista de les matèries primeres requerides per realitzar un producte final."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -325,7 +330,7 @@ msgstr "Llista de materials (LdM)"
 #: code:addons/mrp/mrp.py:303
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
-msgstr ""
+msgstr "La LdM \"%s\" conte una línia amb una recursió de producte: \"%s\"."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_bom_line_ids
@@ -356,7 +361,7 @@ msgstr ""
 #: code:addons/mrp/stock.py:227
 #, python-format
 msgid "Can't find any generic Manufacture route."
-msgstr ""
+msgstr "No es pot trobar cap ruta genèrica de producció"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -369,7 +374,7 @@ msgstr "Cancel·la"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Cancel Production"
-msgstr ""
+msgstr "Cancel·la la producció"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -380,26 +385,26 @@ msgstr "Cancel·lada"
 #: code:addons/mrp/stock.py:149
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
-msgstr ""
+msgstr "No es pot consumir un moviment amb quantitat zero o negativa. "
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:639
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
-msgstr ""
+msgstr "No es pot suprimir una ordre de producció en estat '%s'."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:709
 #, python-format
 msgid "Cannot find a bill of material for this product."
-msgstr ""
+msgstr "No es pot trobar una llista de materials per aquest producte. "
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:66
 #: code:addons/mrp/wizard/change_production_qty.py:71
 #, python-format
 msgid "Cannot find bill of material for this product."
-msgstr ""
+msgstr "No es pot trobar llista de materials per aquest producte. "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -506,7 +511,7 @@ msgstr "Configuració"
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Configure Manufacturing"
-msgstr ""
+msgstr "Configurar Producció"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
@@ -526,7 +531,7 @@ msgstr "Consumeix i produeix"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "Consumeix les línies"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
@@ -555,6 +560,11 @@ msgstr "Productes consumits"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consumed_for
 msgid "Consumed for"
+msgstr "Consumit per "
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Cost Structure"
 msgstr ""
 
 #. module: mrp
@@ -681,6 +691,7 @@ msgstr "Ubic. destinació"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_display_name
@@ -719,14 +730,14 @@ msgstr "Informació extra"
 msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
-msgstr ""
+msgstr "Omplir només si es volen entrades de comptabilitat analítica automàtiques en les ordres de producció. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_product_id
 msgid ""
 "Fill this product to easily track your production costs in the analytic "
 "accounting."
-msgstr ""
+msgstr "Omplir aquest producte per fer seguiment de costos de producció en la comptabilitat analítica."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -792,7 +803,7 @@ msgstr "Indica l'ordre de seqüència quan es mostra una llista de llistes de ma
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_sequence
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr ""
+msgstr "Indica l'ordre de seqüència quan es mostra una llista de rutes de producció de centres de producció."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_sequence
@@ -802,7 +813,7 @@ msgstr "Indica l'ordre de seqüència quan es mostra una llista d'ordres de treb
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_sequence
 msgid "Gives the sequence order when displaying."
-msgstr ""
+msgstr "Indica l'ordre de seqüencia quan es mostra una llista d'ordres de treball."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
@@ -838,6 +849,7 @@ msgstr "Compte hores"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_id
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_id
@@ -849,7 +861,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:mrp.field_mrp_bom_product_id
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr ""
+msgstr "Si es defineix una variant de producte, la LdM només estarà disponible per aquest producte."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_message_unread
@@ -939,6 +951,7 @@ msgstr "Data Últim Missatge"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load___last_update
@@ -1046,17 +1059,17 @@ msgstr "Director"
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
 #, python-format
 msgid "Manufacture"
-msgstr ""
+msgstr "Producció"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_pull_id
 msgid "Manufacture Rule"
-msgstr ""
+msgstr "Regla de producció"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_to_resupply
 msgid "Manufacture in this Warehouse"
-msgstr ""
+msgstr "Produir en aquest magatzem"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -1095,7 +1108,7 @@ msgstr "Ordre de fabricació"
 #: code:addons/mrp/procurement.py:112
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
-msgstr ""
+msgstr "Ordre de producció <em> %s </em> creada. "
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_mrp_production
@@ -1113,17 +1126,17 @@ msgstr "Ordres de producció"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are currently in production."
-msgstr ""
+msgstr "Ordres de producció en marxa actualment. "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are ready to start production."
-msgstr ""
+msgstr "Ordres de producció a punt per iniciar-se."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are waiting for raw materials."
-msgstr ""
+msgstr "ORdres de producció esperant components."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1148,7 +1161,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Mark as Started"
-msgstr ""
+msgstr "Marcar com a iniciada"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
@@ -1177,7 +1190,7 @@ msgstr "Mode"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Mrp Workcenter"
-msgstr ""
+msgstr "Centre de producció mrp"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_name
@@ -1198,7 +1211,7 @@ msgstr "Nou"
 #: code:addons/mrp/procurement.py:108
 #, python-format
 msgid "No BoM exists for this product!"
-msgstr ""
+msgstr "No s'ha definit LdM per aquest producte!"
 
 #. module: mrp
 #: selection:mrp.product.produce,tracking:0
@@ -1218,7 +1231,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr ""
+msgstr "Sense variants de productes"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1304,7 +1317,7 @@ msgstr "Acepta"
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_client_mrp_menu
 msgid "Open MRP Menu"
-msgstr ""
+msgstr "Obrir menú MRP"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
@@ -1314,12 +1327,12 @@ msgstr "Operació"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 msgid "Order Planning"
-msgstr ""
+msgstr "Planificació d'ordres"
 
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
-msgstr ""
+msgstr "La quantiat de l'ordre no pot ser negativa o zero!"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_bom_id
@@ -1345,7 +1358,7 @@ msgstr "Planificació"
 #: code:addons/mrp/stock.py:135
 #, python-format
 msgid "Please provide proper quantity."
-msgstr ""
+msgstr "Siusplau indiqueu una quantitat correcta."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_priority
@@ -1360,7 +1373,7 @@ msgstr "Proveïment"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Regla de proveïment"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -1374,7 +1387,7 @@ msgstr "Produeix"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_created_ids2
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Produced Products"
-msgstr ""
+msgstr "Productes produits"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -1394,7 +1407,7 @@ msgstr "Producte"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_prod_id
 msgid "Product Move"
-msgstr ""
+msgstr "Moviment de producte"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -1404,7 +1417,7 @@ msgstr "Produeix producte"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Product Produce Consume lines"
-msgstr ""
+msgstr "Línia de consum dels productes produïts"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
@@ -1474,12 +1487,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_production_id
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "Ordre de producció per a productes produits"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_raw_material_production_id
 msgid "Production Order for Raw Materials"
-msgstr ""
+msgstr "Ordre de producció per a matèries primes"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -1489,7 +1502,7 @@ msgstr "Fabricació planificada producte"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
-msgstr ""
+msgstr "Producció iniciada"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1499,12 +1512,12 @@ msgstr "Centres de treball de producció"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_progress
 msgid "Production progress"
-msgstr ""
+msgstr "Progrés de la producció"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Production started late"
-msgstr ""
+msgstr "Producció iniciada amb retard"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_production_gantt
@@ -1521,14 +1534,14 @@ msgstr "Productes"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_consume_lines
 msgid "Products Consumed"
-msgstr ""
+msgstr "Productes consumits"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr ""
+msgstr "Els productes tenen diferents atributs, definicions de variants (Exemple: talla, color, ...)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines
@@ -1545,7 +1558,7 @@ msgstr "Productes per acabar"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_created_ids
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Products to Produce"
-msgstr ""
+msgstr "Productes a consumir"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -1590,6 +1603,7 @@ msgstr "Grups de propietats"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_qty
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
@@ -1599,6 +1613,11 @@ msgstr "Quantitat"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_qty
 msgid "Quantity (in default UoM)"
+msgstr "Quantiat (en UdM per defecte)"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Raw Materials"
 msgstr ""
 
 #. module: mrp
@@ -1630,7 +1649,7 @@ msgstr "Referència"
 #. module: mrp
 #: sql_constraint:mrp.production:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "La referència ha de ser única per companyia!"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_origin
@@ -1741,12 +1760,12 @@ msgstr "Data prevista"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "Dia del mes planificat: "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Mes planificat"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1778,7 +1797,7 @@ msgstr "Cerca llista de materials"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr ""
+msgstr "Cercar components de la Llista de Materials. "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1813,7 +1832,7 @@ msgstr "Seqüència"
 msgid ""
 "Set: When processing a sales order for this product, the delivery order will"
 " contain the raw materials, instead of the finished product."
-msgstr ""
+msgstr "Conjunt: quan es processi una comanda de venda per aquest producte, l'ordre d'entrega contindrà les components enlloc del producte acabat. "
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -1833,7 +1852,7 @@ msgstr "Especifiqueu el cost de centre de treball per cicle."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_hour
 msgid "Specify Cost of Work Center per hour."
-msgstr ""
+msgstr "Especifiqueu el cost de centre de treball per hora."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_start
@@ -1867,7 +1886,7 @@ msgstr "Variació del valor de l'estoc"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_consumed_for
 msgid "Technical field used to make the traceability of produced products"
-msgstr ""
+msgstr "Camp tècnic utilitzat per mantenir la traçabilitat dels productes produïts"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:342 code:addons/mrp/mrp.py:441
@@ -1918,7 +1937,7 @@ msgstr "La llista d'operacions (llista dels centres de treball) per produir els 
 msgid ""
 "This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
 "-This installs the module mrp_operations."
-msgstr ""
+msgstr "Permet afegir estat, data d'inici i data de finalització en les línies d'operacions de les ordres de producció (en la pestanya \"Centres de treball\").\n- Això instal·la el mòdul mrp_operations."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_efficiency
@@ -1964,11 +1983,21 @@ msgstr "Temps en hores per la configuració."
 msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified"
 " routing."
-msgstr ""
+msgstr "Temps en hores per aquest camp de producció per realitzar l'operació específica en la ruta de producció."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
+msgstr "A consumir"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Total Cost"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Total Cost of Raw Materials"
 msgstr ""
 
 #. module: mrp
@@ -1994,6 +2023,11 @@ msgid "Type"
 msgstr "Tipus"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Unit Cost"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unit of Measure"
 msgstr "Unitat de mesura"
@@ -2004,7 +2038,7 @@ msgstr "Unitat de mesura"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
+msgstr "Unitat de mesura és la unitat de mesura pel control d'inventari"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_unread
@@ -2046,13 +2080,13 @@ msgstr "Vàlid des de"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Valid From Date by Month"
-msgstr ""
+msgstr "Vàlid des del dia del mes"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Valid From Month"
-msgstr ""
+msgstr "Vàlid des del mes"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_date_stop
@@ -2064,13 +2098,13 @@ msgstr "Vàlid fins"
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_date_start
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_date_stop
 msgid "Validity of component. Keep empty if it's always valid."
-msgstr ""
+msgstr "Validesa del component. Mantenir buit si és sempre valida."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_date_start
 #: model:ir.model.fields,help:mrp.field_mrp_bom_date_stop
 msgid "Validity of this BoM. Keep empty if it's always valid."
-msgstr ""
+msgstr "Validesa de la LdM. Mantenir buit si sempre és vàlid."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_attribute_value_ids
@@ -2125,13 +2159,13 @@ msgid ""
 "Weekly Stock Value Variation enables you to track the stock value evolution "
 "linked to manufacturing activities, receipts of products and delivery "
 "orders."
-msgstr ""
+msgstr "Variacions setmanals de la valorització d'existències li permeten seguir l'evolució de la valoració d'existències vinculada a les activitats de producció, rebuts de productes i ordres d'entrega."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_manufacture_to_resupply
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr ""
+msgstr "Quan els productes són produïts, poden ser produïts en aquest magatzem."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_state
@@ -2236,7 +2270,7 @@ msgstr "Ordres de producció"
 msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
-msgstr ""
+msgstr "Treballar amb variants de productes ens permet definir diferents variants sobre el mateix producte, una facilitat en la gestió de productes en el comerç electrònic, per exemple."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_calendar_id
@@ -2251,7 +2285,7 @@ msgid ""
 "Without this module: A + B + C -> D.\n"
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
-msgstr ""
+msgstr "Pot configurar semielaborats a la llista de materials.\nSense aquest mòdul: A + B + C -> D.\nAmb aquest mòdul: A + B + C -> D + E.\n- Això instal·la el mòdul mrp_byproduct."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:348
@@ -2259,7 +2293,7 @@ msgstr ""
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
-msgstr ""
+msgstr "No pots esborrar una llista de materials mentre s'està executant ordres de producció. Si us plau, tanqui-la o cancel·li-la."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited

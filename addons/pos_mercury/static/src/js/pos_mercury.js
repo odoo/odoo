@@ -18,14 +18,17 @@ var ScreenWidget = screens.ScreenWidget;
 var PaymentScreenWidget = screens.PaymentScreenWidget;
 var round_pr = utils.round_precision;
 
+pos_model.load_fields("account.journal", "pos_mercury_config_id");
+
 var _modelproto = pos_model.PosModel.prototype;
 pos_model.PosModel = pos_model.PosModel.extend({
     getOnlinePaymentJournals: function () {
+        var self = this;
         var online_payment_journals = [];
 
         $.each(this.journals, function (i, val) {
             if (val.pos_mercury_config_id) {
-                online_payment_journals.push({label:val.display_name, item:val.id});
+                online_payment_journals.push({label:self.getCashRegisterByJournalID(val.id).journal_id[1], item:val.id});
             }
         });
 

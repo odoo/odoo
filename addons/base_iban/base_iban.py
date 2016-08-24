@@ -32,7 +32,7 @@ def validate_iban(iban):
     iban_template = _map_iban_template[country_code]
     if len(iban) != len(iban_template.replace(' ', '')):
         raise ValidationError(_("The IBAN does not seem to be correct. You should have entered something like this %s\n"\
-            "Where B = National bank code, S = Branch code, C = Account No, k = Check digit" % iban_template))
+            "Where B = National bank code, S = Branch code, C = Account No, k = Check digit") % iban_template)
 
     check_chars = iban[4:] + iban[:4]
     digits = int(''.join(str(int(char, 36)) for char in check_chars))  # BASE 36: 0..9,A..Z -> 0..35

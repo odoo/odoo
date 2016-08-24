@@ -8,7 +8,7 @@
         <record id="email_template_edi_invoice" model="mail.template">
             <field name="name">Invoice - Send by Email</field>
             <field name="email_from">${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
-            <field name="subject">${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})</field>
+            <field name="subject">${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="model_id" ref="account.model_account_invoice"/>
             <field name="auto_delete" eval="True"/>

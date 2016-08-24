@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-10-26 16:26+0000\n"
+"PO-Revision-Date: 2016-08-19 08:20+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,7 @@ msgstr "# Analytických pravidel"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_count
 msgid "# Bill of Material"
-msgstr ""
+msgstr "Kusovník"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_num_invoiced
@@ -40,7 +40,7 @@ msgstr "poč. fakturovaný při prodeji"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_mo_count
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "Výrobní příkazy"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_count
@@ -103,7 +103,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Vyžadována akce"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -163,7 +163,7 @@ msgstr "Prům. jedn. cena"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_barcode
 msgid "Barcode"
-msgstr ""
+msgstr "Čárový kód"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_list_price
@@ -333,7 +333,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Aktuální množství produktů.\nV kontextu s jedním umístěním zásob, toto zahrnuje i zboží uložené na tomto místě, nebo kterémkoliv z jeho potomků.\nV kontextu s jedním skladem, toto zahrnuje i zboží uložené v sortimentu tohoto skladu, nebo některém z jeho potomků.\nUložené v Umístění zásob  Skladu tohoto Obchodu, nebo v některém z jeho potomků.\nV opačném případě, toto zahrnuje zboží uložené v kterémkoliv Umístění zásob typu \"interní\"."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_delay
@@ -417,7 +417,7 @@ msgstr "Dodání výrobku"
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
-msgstr ""
+msgstr "V závislosti na nainstalovaných modulech vám toto umožní definovat trasu produktu: jestli bude koupený, vyrobený, MTO / MTS, ..."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description
@@ -544,7 +544,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
 msgid "Forecast Quantity"
-msgstr ""
+msgstr "Předpoklad množství"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_virtual_available
@@ -881,7 +881,7 @@ msgstr "Odchozí"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
 msgid "Packages"
-msgstr ""
+msgstr "Balíky"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -1132,6 +1132,14 @@ msgstr ""
 #: code:addons/delivery/models/stock_picking.py:88
 #, python-format
 msgid "Shipment sent to carrier %s for expedition with tracking number %s"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:106
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
 msgstr ""
 
 #. module: delivery
@@ -1439,7 +1447,7 @@ msgstr "Nepřečtené zprávy"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Počítadlo nepřečtených zpráv"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable

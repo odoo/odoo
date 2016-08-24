@@ -3,7 +3,7 @@
     'version': '1.0',
     'summary': 'Create Issues from Leads',
     'sequence': '19',
-    'category': 'Project Management',
+    'category': 'Project',
     'complexity': 'easy',
     'description': """
 Lead to Issues

@@ -5,7 +5,7 @@
 {
     'name': 'Warning Messages and Alerts',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Extra Tools',
     'description': """
 Module to trigger warnings in OpenERP objects.
 ==============================================

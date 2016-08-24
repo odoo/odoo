@@ -36,10 +36,13 @@ function get_fc_defaultOptions() {
         dayNames: moment.weekdays(),
         dayNamesShort: moment.weekdaysShort(),
         firstDay: moment._locale._week.dow,
+        weekNumberCalculation: function(date) {
+            return moment(date).week();
+        },
         weekNumbers: true,
         titleFormat: {
             month: 'MMMM yyyy',
-            week: "W",
+            week: "w",
             day: dateFormat,
         },
         columnFormat: {
@@ -83,6 +86,9 @@ var CalendarView = View.extend({
         this.title = (this.options.action)? this.options.action.name : '';
 
         this.shown = $.Deferred();
+        self.current_start = null;
+        self.current_end = null;
+        self.previous_ids = [];
     },
 
     set_default_options: function(options) {
@@ -630,7 +636,7 @@ var CalendarView = View.extend({
                 r.className = 'o_calendar_color_'+ this.get_color(color_key);
             }
         } else { // if form all, get color -1
-            r.className = 'o_calendar_color_'+ self.all_filters[-1] ? self.all_filters[-1].color : 1;
+            r.className = 'o_calendar_color_'+ (self.all_filters[-1] ? self.all_filters[-1].color : 1);
         }
         return r;
     },
@@ -727,11 +733,25 @@ var CalendarView = View.extend({
                             );
                         }
                     }
+
+                // read_slice is launched uncoditionally, when quickly
+                // changing the range in the calender view, all of
+                // these RPC calls will race each other. Because of
+                // this we keep track of the current range of the
+                // calendar view.
+                self.current_start = start;
+                self.current_end = end;
                 self.dataset.read_slice(_.keys(self.fields), {
                     offset: 0,
                     domain: event_domain,
                     context: context,
                 }).done(function(events) {
+                    // undo the read_slice if it the range has changed since it launched
+                    if (self.current_start.getTime() != start.getTime() || self.current_end.getTime() != end.getTime()) {
+                        self.dataset.ids = self.previous_ids;
+                        return;
+                    }
+                    self.previous_ids = self.dataset.ids.slice();
                     if (self.dataset.index === null) {
                         if (events.length) {
                             self.dataset.index = 0;
@@ -821,16 +841,23 @@ var CalendarView = View.extend({
      * between given start, end dates.
      */
     get_range_domain: function(domain, start, end) {
-        var format = time.date_to_str;
-        
+        var format = time.datetime_to_str;
         var extend_domain = [[this.date_start, '<=', format(end)]];
-
         if (this.date_stop) {
-            extend_domain.push(
-                    [this.date_stop, '>=', format(start)]
-            );
+            extend_domain.push([this.date_stop, '>=', format(start)]);
+        } else if (!this.date_delay) {
+            extend_domain.push([this.date_start, '>=', format(start)]);
         }
         return new CompoundDomain(domain, extend_domain);
+    },
+
+    /**
+     * Get all_filters ordered by label
+     */
+    get_all_filters_ordered: function() {
+        return _.values(this.all_filters).sort(function(f1,f2) {
+            return _.string.naturalCmp(f1.label, f2.label);
+        });
     },
 
     /**
@@ -843,7 +870,7 @@ var CalendarView = View.extend({
         var index = this.dataset.get_id_index(id);
         if (index !== null) {
             event_id = this.dataset.ids[index];
-            this.dataset.write(event_id, data, {}).done(function() {
+            this.dataset.write(event_id, data, {}).always(function() {
                 if (is_virtual_id(event_id)) {
                     // this is a virtual ID and so this will create a new event
                     // with an unknown id for us.

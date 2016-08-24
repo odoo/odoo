@@ -643,7 +643,7 @@ odoo.define_section('search.completions', ['web.search_inputs', 'web.SearchView'
         var view = {inputs: []};
         var f = new DateField(
             {attrs: {string: "Dummy"}}, {type: 'datetime'}, view);
-        return f.complete('2012-05-21T21:21:21')
+        return f.complete('2012-05-21T21:21:21Z')
             .done(function (completions) {
                 assert.equal(completions.length, 1, "should provide a single completion");
                 var c = completions[0];
@@ -1615,5 +1615,3 @@ odoo.define_section('search.advanced', ['web.search_inputs', 'web.SearchView', '
     });
 
 });
-
-

@@ -69,7 +69,16 @@ class PaymentAcquirerAuthorize(models.Model):
             'first_name': values.get('partner_first_name'),
             'last_name': values.get('partner_last_name'),
             'phone': values.get('partner_phone'),
-            'state': values.get('partner_state') and values['partner_state'].name or '',
+            'state': values.get('partner_state') and values['partner_state'].code or '',
+            'billing_address': values.get('billing_partner_address'),
+            'billing_city': values.get('billing_partner_city'),
+            'billing_country': values.get('billing_partner_country') and values.get('billing_partner_country').name or '',
+            'billing_email': values.get('billing_partner_email'),
+            'billing_zip_code': values.get('billing_partner_zip'),
+            'billing_first_name': values.get('billing_partner_first_name'),
+            'billing_last_name': values.get('billing_partner_last_name'),
+            'billing_phone': values.get('billing_partner_phone'),
+            'billing_state': values.get('billing_partner_state') and values['billing_partner_state'].code or '',
         }
         temp_authorize_tx_values['returndata'] = authorize_tx_values.pop('return_url', '')
         temp_authorize_tx_values['x_fp_hash'] = self._authorize_generate_hashing(temp_authorize_tx_values)

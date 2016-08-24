@@ -5,7 +5,7 @@ var base = require('web_editor.base');
 var core = require('web.core');
 var _t = core._t;
 
-var shopping_cart_link = $('ul#top_menu li a[href^="/shop/cart"]');
+var shopping_cart_link = $('ul#top_menu li a[href$="/shop/cart"]');
 var shopping_cart_link_counter;
 shopping_cart_link.popover({
     trigger: 'manual',
@@ -101,7 +101,7 @@ $('.oe_website_sale').each(function () {
 
     $(oe_website_sale).on("change", 'input[name="add_qty"]', function (event) {
         var product_ids = [];
-        var product_dom = $(".js_add_cart_variants[data-attribute_value_ids]").last();
+        var product_dom = $(".js_product .js_add_cart_variants[data-attribute_value_ids]").last();
         if (!product_dom.length) {
             return;
         }
@@ -332,19 +332,23 @@ $('.oe_website_sale').each(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
     });
 
+    var state_options = $("select[name='state_id']:enabled option:not(:first)");
     $(oe_website_sale).on('change', "select[name='country_id']", function () {
-        var $select = $("select[name='state_id']:enabled");
-        $select.find("option:not(:first)").hide();
-        var nb = $select.find("option[data-country_id="+($(this).val() || 0)+"]").show().size();
-        $select.parent().toggle(nb>=1);
+        var select = $("select[name='state_id']");
+        state_options.detach();
+        var displayed_state = state_options.filter("[data-country_id="+($(this).val() || 0)+"]");
+        var nb = displayed_state.appendTo(select).show().size();
+        select.parent().toggle(nb>=1);
     });
     $(oe_website_sale).find("select[name='country_id']").change();
 
+    var shipping_state_options = $("select[name='shipping_state_id']:enabled option:not(:first)");
     $(oe_website_sale).on('change', "select[name='shipping_country_id']", function () {
-        var $select = $("select[name='shipping_state_id']:enabled");
-        $select.find("option:not(:first)").hide();
-        var nb = $select.find("option[data-country_id="+($(this).val() || 0)+"]").show().size();
-        $select.parent().toggle(nb>=1);
+        var select = $("select[name='shipping_state_id']");
+        shipping_state_options.detach();
+        var displayed_state = shipping_state_options.filter("[data-country_id="+($(this).val() || 0)+"]");
+        var nb = displayed_state.appendTo(select).show().size();
+        select.parent().toggle(nb>=1);
     });
     $(oe_website_sale).find("select[name='shipping_country_id']").change();
 });

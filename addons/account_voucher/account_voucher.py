@@ -73,7 +73,7 @@ class AccountVoucher(models.Model):
     date = fields.Date(readonly=True, select=True, states={'draft': [('readonly', False)]},
                            help="Effective date for accounting entries", copy=False, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=_default_journal)
-    account_id = fields.Many2one('account.account', 'Account', required=True, readonly=True, states={'draft': [('readonly', False)]}, domain="[('deprecated', '=', False), ('internal_type','=', (pay_now == 'pay_now' and 'liquidity' or 'receivable'))]")
+    account_id = fields.Many2one('account.account', 'Account', required=True, readonly=True, states={'draft': [('readonly', False)]}, domain="[('deprecated', '=', False), ('internal_type','=', (pay_now == 'pay_now' and 'liquidity' or voucher_type == 'purchase' and 'payable' or 'receivable'))]")
     line_ids = fields.One2many('account.voucher.line', 'voucher_id', 'Voucher Lines',
                                    readonly=True, copy=True,
                                    states={'draft': [('readonly', False)]})
@@ -102,8 +102,8 @@ class AccountVoucher(models.Model):
     pay_now = fields.Selection([
             ('pay_now', 'Pay Directly'),
             ('pay_later', 'Pay Later'),
-        ], 'Payment', select=True, readonly=True, states={'draft': [('readonly', False)]}, default='pay_later')
-    date_due = fields.Date('Due Date', readonly=True, select=True, states={'draft': [('readonly', False)]})
+        ], 'Payment', index=True, readonly=True, states={'draft': [('readonly', False)]}, default='pay_later')
+    date_due = fields.Date('Due Date', readonly=True, index=True, states={'draft': [('readonly', False)]})
 
     @api.onchange('partner_id', 'pay_now')
     def onchange_partner_id(self):
@@ -144,7 +144,7 @@ class AccountVoucher(models.Model):
     def unlink(self):
         for voucher in self:
             if voucher.state not in ('draft', 'cancel'):
-                raise Warning(_('Cannot delete voucher(s) which are already opened or paid.'))
+                raise UserError(_('Cannot delete voucher(s) which are already opened or paid.'))
         return super(AccountVoucher, self).unlink()
 
     @api.multi
@@ -322,7 +322,7 @@ class account_voucher_line(models.Model):
     account_id = fields.Many2one('account.account', string='Account',
         required=True, domain=[('deprecated', '=', False)],
         help="The income or expense account related to the selected product.")
-    price_unit = fields.Monetary(string='Unit Price', required=True, oldname='amount')
+    price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'), oldname='amount')
     price_subtotal = fields.Monetary(string='Amount',
         store=True, readonly=True, compute='_compute_subtotal')
     quantity = fields.Float(digits=dp.get_precision('Product Unit of Measure'),
@@ -351,7 +351,7 @@ class account_voucher_line(models.Model):
             self = self.with_context(lang=part.lang)
 
         product = self.env['product.product'].browse(product_id)
-        fpos = part.property_account_position_id.id
+        fpos = part.property_account_position_id
         account = self._get_account(product, fpos, type)
         values = {
             'name': product.partner_ref,

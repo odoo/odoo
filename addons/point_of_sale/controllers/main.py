@@ -18,7 +18,7 @@ class PosController(http.Controller):
         PosSession = request.registry['pos.session']
         pos_session_ids = PosSession.search(cr, uid, [('state','=','opened'),('user_id','=',session.uid)], context=context)
         if not pos_session_ids:
-            return werkzeug.utils.redirect('/web#action=point_of_sale.action_pos_session_opening')
+            return werkzeug.utils.redirect('/web#action=point_of_sale.action_client_pos_menu')
         PosSession.login(cr, uid, pos_session_ids, context=context)
         
         return request.render('point_of_sale.index')

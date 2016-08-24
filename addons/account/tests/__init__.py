@@ -12,6 +12,7 @@ from . import test_chart_of_account
 from . import test_fiscal_position
 from . import test_manual_reconciliation
 from . import test_payment
+from . import test_product_id_change
 from . import test_reconciliation
 from . import test_search
 from . import test_tax

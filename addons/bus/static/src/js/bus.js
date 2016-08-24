@@ -32,8 +32,9 @@ bus.Bus = Widget.extend({
                 this.trigger('window_focus', this.is_master);
             }
         });
-        $(window).on("focus", _.bind(this.window_focus, this));
-        $(window).on("blur", _.bind(this.window_blur, this));
+        $(window).on("focus", _.bind(this.focus_change, this, true));
+        $(window).on("blur", _.bind(this.focus_change, this, false));
+        $(window).on("unload", _.bind(this.focus_change, this, false));
         _.each('click,keydown,keyup'.split(','), function(evtype) {
             $(window).on(evtype, function() {
                 self.last_presence = new Date().getTime();
@@ -65,7 +66,7 @@ bus.Bus = Widget.extend({
         }
         var data = {channels: self.channels, last: self.last, options: options};
         session.rpc('/longpolling/poll', data, {shadow : true}).then(function(result) {
-            self._notification_receive(result);
+            self.on_notification(result);
             if(!self.stop){
                 self.poll();
             }
@@ -76,14 +77,15 @@ bus.Bus = Widget.extend({
             setTimeout(_.bind(self.poll, self), bus.ERROR_DELAY + (Math.floor((Math.random()*20)+1)*1000));
         });
     },
-    _notification_receive: function(notifications){
-        _.each(notifications, this.on_notification);
-    },
-    on_notification: function(notification) {
-        if (notification.id > this.last) {
-            this.last = notification.id;
-        }
-        this.trigger("notification", [notification.channel, notification.message]);
+    on_notification: function(notifications) {
+        var self = this;
+        var notifs = _.map(notifications, function (notif) {
+            if (notif.id > self.last) {
+                self.last = notif.id;
+            }
+            return [notif.channel, notif.message];
+        });
+        this.trigger("notification", notifs);
     },
     add_channel: function(channel){
         this.channels.push(channel);
@@ -93,11 +95,8 @@ bus.Bus = Widget.extend({
         this.channels = _.without(this.channels, channel);
     },
     // bus presence : window focus/unfocus
-    window_focus: function() {
-        this.set("window_focus", true);
-    },
-    window_blur: function() {
-        this.set("window_focus", false);
+    focus_change: function(focus) {
+        this.set("window_focus", focus);
     },
     is_odoo_focused: function () {
         return this.get("window_focus");
@@ -175,7 +174,7 @@ var CrossTabBus = bus.Bus.extend({
             this._super.apply(this, arguments);
         }
      },
-    _notification_receive: function(notifications){
+    on_notification: function(notifications){
         if(this.is_master) { // broadcast to other tabs
             var last = getItem('bus.last', -1);
             var max_id = Math.max(last, 0);
@@ -201,7 +200,7 @@ var CrossTabBus = bus.Bus.extend({
         // notifications changed
         if(e.key === 'bus.notification'){
             var notifs = JSON.parse(value);
-            _.each(notifs, this.on_notification);
+            this.on_notification(notifs);
         }
         // update channels
         if(e.key === 'bus.channels'){
@@ -210,6 +209,10 @@ var CrossTabBus = bus.Bus.extend({
         // update options
         if(e.key === 'bus.options'){
             this.options = JSON.parse(value);
+        }
+        // update focus
+        if(e.key === 'bus.focus'){
+            this.set('window_focus', JSON.parse(value));
         }
     },
     add_channel: function(){
@@ -230,6 +233,10 @@ var CrossTabBus = bus.Bus.extend({
     delete_option: function(){
         this._super.apply(this, arguments);
         setItem('bus.options', this.options);
+    },
+    focus_change: function(focus) {
+        this._super.apply(this, arguments);
+        setItem('bus.focus', focus);
     },
 });
 

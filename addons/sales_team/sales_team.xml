@@ -67,7 +67,7 @@
                         </group>
                         <notebook>
                             <page name="members" string="Team Members">
-                                <field name="member_ids" widget="many2many_kanban">
+                                <field name="member_ids" widget="many2many_kanban" options="{'not_delete': True}">
                                     <kanban quick_create="false" create="true" delete="true">
                                         <field name="name"/>
                                         <templates>

@@ -5,14 +5,20 @@
 # Translators:
 # fausthuang, 2015
 # fausthuang, 2015
-# 珠海-老天 <liangjia@qq.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Joray <13637815@qq.com>, 2016
+# Joray <13637815@qq.com>, 2016
+# Joray <13637815@qq.com>, 2016
+# Joray <13637815@qq.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-12-24 13:47+0000\n"
-"Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
+"PO-Revision-Date: 2016-07-31 02:38+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,12 +34,12 @@ msgstr "＃供应商账单"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_nbr
 msgid "# of Lines"
-msgstr "明细#"
+msgstr "# 明细"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_purchase_order_count
 msgid "# of Purchase Order"
-msgstr "采购订单号"
+msgstr "# 采购订单"
 
 #. module: point_of_sale
 #. openerp-web
@@ -101,12 +107,12 @@ msgstr "<span class=\"o_stat_text\">放</span>\n                                
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "<span class=\"o_stat_text\">Set Closing Balance</span>"
-msgstr "<span class=\"o_stat_text\">设置期末余额</span>"
+msgstr "<span class=\"o_stat_text\">设置关张余额</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "<span class=\"o_stat_text\">Set Opening Balance</span>"
-msgstr "<span class=\"o_stat_text\">设置期余额</span>"
+msgstr "<span class=\"o_stat_text\">设置开张余额</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -123,7 +129,7 @@ msgstr "<span>现金余额 </span>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Last Closing Date</span>"
-msgstr "<span>上一次关结日期</span>"
+msgstr "<span>上一次关张日期</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -158,7 +164,7 @@ msgstr "<strong>公司</strong>:<br/>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
 msgid "<strong>Currency</strong>"
-msgstr "<strong>币别</strong>"
+msgstr "<strong>货币</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
@@ -213,12 +219,12 @@ msgstr "<strong>已开票</strong>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
 msgid "<strong>Journal</strong>"
-msgstr "<strong>分类账</strong>"
+msgstr "<strong>日记账</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Journal</strong>:<br/>"
-msgstr "<strong>分类账</strong>:<br/>"
+msgstr "<strong>日记账</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_payment
@@ -234,7 +240,7 @@ msgstr "<strong>物品编号</strong>:<br/>"
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Opening Date</strong>:<br/>"
-msgstr "<strong>开始日期</strong>:<br/>"
+msgstr "<strong>开张日期</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
@@ -249,7 +255,7 @@ msgstr "<strong>付款</strong>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
 msgid "<strong>Point of Sale</strong>:<br/>"
-msgstr "<strong>销售点</strong>:<br/>"
+msgstr "<strong>POS</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
@@ -300,7 +306,7 @@ msgstr "<strong>数量</strong>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
 msgid "<strong>Reference</strong>"
-msgstr "参考信息"
+msgstr "参考"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
@@ -437,7 +443,7 @@ msgstr "客户名称是必须的"
 #: model:ir.model.fields,help:point_of_sale.field_res_users_pos_security_pin
 msgid ""
 "A Security PIN used to protect sensible functionality in the Point of Sale"
-msgstr "一个用来在销售点中保护敏感功用安全PIN"
+msgstr "一个用来在POS保护敏感功用安全PIN"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
@@ -461,7 +467,7 @@ msgstr "该POS配置的全局唯一标识符，用来防止客户端数据的冲
 msgid ""
 "A sequence number that is incremented each time a user resumes the pos "
 "session"
-msgstr "每次用户重启POS工作时的自增长序号"
+msgstr "每次用户重启POS工作时的自增长序列"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_sequence_number
@@ -475,7 +481,7 @@ msgid ""
 "                you sell through the point of sale. The user has to check the\n"
 "                currencies in your cash registers at the beginning and the end\n"
 "                of each session."
-msgstr "一个会话是一段时间，通常是通过销售点卖东西的一天。\n用户需要在一个会话的开始清点钱箱并在会话结束再次清点钱箱"
+msgstr "一个会话是一段时间，通常是通过销售点卖东西的一天。用户需要在每一个会话的开始和结束时清点货币。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_sequence_number
@@ -539,7 +545,7 @@ msgstr "有效"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal_journal_user
 msgid "Active in Point of Sale"
-msgstr "在销售点中激活"
+msgstr "在POS中激活"
 
 #. module: point_of_sale
 #. openerp-web
@@ -579,7 +585,7 @@ msgstr "所有销售行"
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_reprint:0
 msgid "Allow cashier to reprint receipts"
-msgstr "允许收银员重新打印收款"
+msgstr "允许收银员再次打印收据"
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_discount:0
@@ -633,7 +639,7 @@ msgstr "能够让收银员给一个客户所有的订单一次性的给予折扣
 msgid ""
 "Allows you to define a loyalty program in the point of sale, where the "
 "customers earn loyalty points and get rewards"
-msgstr "能够让你在销售点定义一个忠诚项目，这样客户可以得到忠诚分并得到奖励"
+msgstr "能够让你在销售点定义一个忠诚计划，这样客户可以得到忠诚分并得到奖励"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_amount
@@ -643,7 +649,7 @@ msgstr "能够让你在销售点定义一个忠诚项目，这样客户可以得
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 #: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
 msgid "Amount"
-msgstr "总额"
+msgstr "金额"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal_amount_authorized_diff
@@ -659,7 +665,7 @@ msgstr "总额合计"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_name
 msgid "An internal identification of the point of sale"
-msgstr "一个PoS内部标示"
+msgstr "一个POS内部标示"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
@@ -697,7 +703,7 @@ msgstr "自动生成的‘孤立订单’，忽略了约束"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_auto
 msgid "Automatic Receipt Printing"
-msgstr "自动打印收款"
+msgstr "自动收据打印"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_cashdrawer
@@ -714,7 +720,7 @@ msgstr "可用的付款方式"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_available_in_pos
 msgid "Available in the Point of Sale"
-msgstr "可用于PoS"
+msgstr "可用于POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_average_price
@@ -847,17 +853,17 @@ msgstr "胡萝卜"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_cash_control
 msgid "Cash Control"
-msgstr "现金控制"
+msgstr "现金管理"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_journal_id
 msgid "Cash Journal"
-msgstr "现金分类账"
+msgstr "现金日记账"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_jl_id
 msgid "Cash Journals"
-msgstr "现金分类账"
+msgstr "现金日记账"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_id
@@ -868,12 +874,18 @@ msgstr "现金出纳机"
 #: code:addons/point_of_sale/point_of_sale.py:364
 #, python-format
 msgid "Cash control can only be applied to cash journals."
-msgstr "只能在现金分类账上进行现金控制"
+msgstr "只能在现金日记账上进行现金控制"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_cashdrawer
 msgid "Cashdrawer"
 msgstr "钱箱"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1604
+#, python-format
+msgid "Cashier"
+msgstr "收银员"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -894,7 +906,7 @@ msgstr "更改"
 #: code:addons/point_of_sale/static/src/js/chrome.js:101
 #, python-format
 msgid "Change Cashier"
-msgstr "更换出纳"
+msgstr "更换收银员"
 
 #. module: point_of_sale
 #. openerp-web
@@ -933,26 +945,26 @@ msgstr "请检查此商品是否需要使用集成的测试硬件来称重"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_template_available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
-msgstr "如果你想这个产品适用于PoS，勾选此项"
+msgstr "如果你想这个产品适用于POS，勾选此项"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_cash_control
 msgid "Check the amount of the cashbox at opening and closing."
-msgstr "在期初和期末检查钱箱中现金总额"
+msgstr "在开张和关张检查钱箱的总额"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_journal_journal_user
 msgid ""
 "Check this box if this journal define a payment method that can be used in a"
 " point of sale."
-msgstr "如果这个分类账中定义了能够在‘销售点’用的付款方式就勾选这个选项"
+msgstr "如果这个日记账中定义了能够在‘POS’用的付款方式就勾选这个选项"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_by
 msgid ""
 "Check this if you want to group the Journal Items by Product while closing a"
 " Session"
-msgstr "如果你想在关闭一个会话时，按产品来对分类账项目进行分组，请勾选此项。"
+msgstr "如果你想在关闭一个会话时，按产品来对日记账项目进行分组，请勾选此项。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1003,7 +1015,7 @@ msgstr "点击创建一个新的订单"
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
 msgid "Click to define a new category."
-msgstr "按此定义一个新的类别。"
+msgstr "按此定义一个新类别。"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -1039,14 +1051,14 @@ msgstr "关闭"
 #: selection:pos.session,state:0
 #, python-format
 msgid "Closed & Posted"
-msgstr "关闭 & 登账"
+msgstr "关闭 & 过账"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:333
 #, python-format
 msgid "Closing ..."
-msgstr "关闭……"
+msgstr "关张……"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:166
@@ -1112,7 +1124,7 @@ msgstr "配置"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_configuration
 msgid "Configure Point of Sale"
-msgstr "配置销售点"
+msgstr "配置POS"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
@@ -1146,7 +1158,7 @@ msgstr "继续销售"
 #: code:addons/point_of_sale/static/src/js/screens.js:1233
 #, python-format
 msgid "Could Not Read Image"
-msgstr "不能读取图片。"
+msgstr "不能读取图像。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1175,7 +1187,7 @@ msgstr "国家"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_create_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_create_uid
 msgid "Created by"
-msgstr "创建于"
+msgstr "创建者"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_create_date
@@ -1189,7 +1201,7 @@ msgstr "创建于"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_create_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_create_date
@@ -1232,7 +1244,7 @@ msgstr "客户发票"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
-msgstr "仪表盘"
+msgstr "仪表板"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.partner_product_7
@@ -1326,7 +1338,7 @@ msgstr "交货方法"
 #. module: point_of_sale
 #: selection:pos.config,state:0
 msgid "Deprecated"
-msgstr "反对"
+msgstr "废弃"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_receipt
@@ -1403,6 +1415,12 @@ msgid "Discount:"
 msgstr "折扣："
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1602
+#, python-format
+msgid "Discounted Product"
+msgstr "折扣的产品"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:791
 #, python-format
@@ -1412,7 +1430,7 @@ msgstr "折扣"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_display_categ_images
 msgid "Display Category Pictures"
-msgstr "展示种类图片"
+msgstr "展示类别图片"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_display_name
@@ -1443,7 +1461,7 @@ msgstr "显示名称"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_fullscreen
 msgid "Display the Point of Sale in full screen mode"
-msgstr "用全屏模式显示销售点"
+msgstr "用全屏模式显示POS"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_template_action
@@ -1452,7 +1470,7 @@ msgid ""
 "                in which it should appear. If a product has no point of sale\n"
 "                category, you can not sell it through the point of sale\n"
 "                interface."
-msgstr "不要忘记设置价格和产品的销售点种类。如果产品没有销售点种类，就不能通过销售点卖出该产品"
+msgstr "不要忘记设置价格和产品的销售点类别。如果产品没有销售点类别，就不能通过销售点卖出该产品"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
@@ -1540,7 +1558,7 @@ msgstr "启用完整的虚拟键盘"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_invoicing
 msgid "Enables invoice generation from the Point of Sale"
-msgstr "允许从本POS创建发票。"
+msgstr "启用从本POS生成发票"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -1662,12 +1680,12 @@ msgstr "导入订单已经完成"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_fiscal_position_id
 msgid "Fiscal Position"
-msgstr "财政位置"
+msgstr "财政状态"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_fiscal_position_ids
 msgid "Fiscal Positions"
-msgstr "财政位置"
+msgstr "财政状况"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
@@ -1702,14 +1720,14 @@ msgstr "生成分录"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_confirm
 msgid "Generate Journal Entries"
-msgstr "生成会计分录"
+msgstr "生成日记账分录"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_confirm
 msgid ""
 "Generate all sale journal entries for non invoiced orders linked to a closed"
 " cash register or statement."
-msgstr "为已关闭的钱箱对应的未开票订单生成会计凭证。"
+msgstr "为已关闭的钱箱对应的未开票订单生成日记账分录。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_portal
@@ -1762,7 +1780,7 @@ msgstr "分组"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_by
 msgid "Group Journal Items"
-msgstr "分类账项目分组"
+msgstr "分组日记账项目"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1781,7 +1799,7 @@ msgstr "硬件事件"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Hardware Proxy / PosBox"
-msgstr "硬件代理/收银台"
+msgstr "硬件代理/PosBox"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1793,7 +1811,7 @@ msgstr "硬件状态"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_control
 msgid "Has Cash Control"
-msgstr "有现金控制"
+msgstr "现金管理"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
@@ -1831,7 +1849,7 @@ msgstr "ID"
 #: code:addons/point_of_sale/static/src/js/popups.js:113
 #, python-format
 msgid "IMPORTANT: Bug Report From Odoo Point Of Sale"
-msgstr "重要：Odoo销售点的Bug报表"
+msgstr "重要：来自Odoo POS的Bug报告"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_proxy_ip
@@ -1856,7 +1874,7 @@ msgid ""
 "If you put a photo on the category, the layout of the\n"
 "                touchscreen interface will automatically. We suggest not to put\n"
 "                a photo on categories for small (1024x768) screens."
-msgstr "如果你给中欧诺个类设置了图片，触摸屏就会自动显示。\n对于小屏幕(1024x768)不建议给种类设置图片"
+msgstr "如果你给中欧诺个类设置了图片，触摸屏就会自动显示。\n对于小屏幕(1024x768)不建议给类别设置图片"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image
@@ -1965,17 +1983,17 @@ msgstr "蜜餞小紅莓、焦糖蘋果、"
 #: model:ir.model,name:point_of_sale.model_account_journal
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_journal_id
 msgid "Journal"
-msgstr "分类账"
+msgstr "日记账"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_account_move
 msgid "Journal Entry"
-msgstr "分类账分录"
+msgstr "日记账分录"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Journals"
-msgstr "分类账"
+msgstr "日记账"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_big_scrollbars
@@ -2006,7 +2024,7 @@ msgstr "大滚动条"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_month___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos___last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_write_uid
@@ -2021,7 +2039,7 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_write_uid
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新者"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_write_date
@@ -2036,7 +2054,7 @@ msgstr "最后更新"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_write_date
 msgid "Last Updated on"
-msgstr "最后更新"
+msgstr "最后更新时间"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_review
@@ -2091,13 +2109,13 @@ msgstr "行号"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
 msgid "Lines of Point of Sale"
-msgstr "PoS明细"
+msgstr "POS明细"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:59
 #, python-format
 msgid "List of Cash Registers"
-msgstr "收款机清单"
+msgstr "出纳机列表"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2116,14 +2134,14 @@ msgstr "位置"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_login_number
 msgid "Login Sequence Number"
-msgstr "登陆序号"
+msgstr "登录序列号码"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:291
 #, python-format
 msgid "Login as a Manager"
-msgstr "用经理的身份登陆"
+msgstr "用管理员的身份登陆"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_pos_loyalty
@@ -2138,17 +2156,17 @@ msgstr "付款"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_inter_company_rules
 msgid "Manage Inter Company"
-msgstr "管理公司间"
+msgstr "管理公司间交易"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_group_product_variant
 msgid "Manage Product Variants"
-msgstr "管理产品规格"
+msgstr "管理产品变型"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
 msgid "Manage loyalty program with points and rewards for customers"
-msgstr "设置忠诚项目并且给客户奖励"
+msgstr "管理忠诚计划，给予给客户积分和奖励"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_group_light_multi_company
@@ -2158,12 +2176,12 @@ msgstr "管理多公司"
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
 msgid "Manager"
-msgstr "经理"
+msgstr "管理员"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image_medium
 msgid "Medium-sized image"
-msgstr "中等尺寸图片"
+msgstr "中等尺寸图像"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_image_medium
@@ -2171,7 +2189,7 @@ msgid ""
 "Medium-sized image of the category. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "中等尺寸的分类图片.它将保持长宽比,并被自动调整为128x128px大小.它将在一些表单界面或看板界面上显示."
+msgstr "中等尺寸的类别图像.它将保持长宽比,并被自动调整为128x128px大小.它将在一些表单界面或看板界面上显示."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2199,7 +2217,7 @@ msgstr "更多 <i class=\"fa fa-caret-down\"/>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "My Sales"
-msgstr "我的销售订单"
+msgstr "我的销售"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2261,7 +2279,7 @@ msgstr "下一个合作伙伴评价"
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
-msgstr "本次工作没有现金记录.不能登记交回的现金."
+msgstr "本次工作没有现金记录。不能记录交回的现金."
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_mercury:0
@@ -2283,7 +2301,7 @@ msgstr "没有重打印"
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:40
 #, python-format
 msgid "No sequence defined on the journal"
-msgstr "分类账没有设置序列号"
+msgstr "日记账没有设置序列号"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2307,7 +2325,7 @@ msgstr "注意你可能用到<i>你的会话</i>这个菜单\n来快速的开启
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Notes"
-msgstr "便签"
+msgstr "备注"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_nb_print
@@ -2363,7 +2381,7 @@ msgstr "洋葱"
 #: code:addons/point_of_sale/static/src/js/screens.js:1219
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported"
-msgstr "仅仅支持与网页兼容的图片格式，如.png 或 .jpeg"
+msgstr "仅仅支持与网页兼容的图像格式，如.png 或 .jpeg"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -2427,7 +2445,7 @@ msgstr "开张日期"
 #: model:product.product,name:point_of_sale.papillon_orange
 #: model:product.template,name:point_of_sale.papillon_orange_product_template
 msgid "Orange Butterfly"
-msgstr "橙色"
+msgstr "Orange Butterfly"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2577,7 +2595,7 @@ msgstr "已付"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_parent_id
 msgid "Parent Category"
-msgstr "父级分类"
+msgstr "父级类别"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_partner
@@ -2654,7 +2672,7 @@ msgid ""
 "                field <i>PoS Payment Method</i> checked. In order to be useable\n"
 "                from the touchscreen interface, you must set the payment method\n"
 "                on the <i>Point of Sale</i> configuration."
-msgstr "勾选了<i>PoS支付方式</i>的会计分类账定义了付款方式。为了能在触摸屏上能用，\n你需要在<i>销售点</i>配置上设置付款方式"
+msgstr "勾选了<i>POS支付方式</i>的会计日记账定义了付款方式。为了能在触摸屏上能用，\n你需要在<i>POS</i>配置上设置付款方式"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_statement_ids
@@ -2756,19 +2774,19 @@ msgstr "POS 订单"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
 msgid "Point of Sale"
-msgstr "POS "
+msgstr "POS"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_graph
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_pivot
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Point of Sale Analysis"
-msgstr "PoS分析"
+msgstr "POS分析"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_pos_categ_id
 msgid "Point of Sale Category"
-msgstr "PoS类别"
+msgstr "POS类别"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
@@ -2784,56 +2802,56 @@ msgstr "POS配置"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pos_manager_id
 msgid "Point of Sale Manager Group"
-msgstr "销售点管理组"
+msgstr "POS管理组"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_name
 msgid "Point of Sale Name"
-msgstr "PoS名称"
+msgstr "POS名称"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Point of Sale Orders"
-msgstr "PoS订单"
+msgstr "POS订单"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Statistics"
-msgstr "PoS订单统计"
+msgstr "POS订单统计"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
-msgstr "PoS付款"
+msgstr "POS付款"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_tree
 msgid "Point of Sale Session"
-msgstr "PoS会话"
+msgstr "POS会话"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pos_user_id
 msgid "Point of Sale User Group"
-msgstr "销售点用户组"
+msgstr "POS用户组"
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_restaurant:0
 msgid "Point of sale for shops"
-msgstr "门店销售点"
+msgstr "POS商店"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "Pos Categories"
-msgstr "PoS类别"
+msgstr "POS类别"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_product_pos_category
 msgid "Pos Product Categories"
-msgstr "PoS产品类别"
+msgstr "POS产品类别"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_confirm
@@ -2843,7 +2861,7 @@ msgstr "登录所有订单"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirm
 msgid "Post POS Journal Entries"
-msgstr "登录PoS机日记帐分录"
+msgstr "登录POS日记帐分录"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2856,7 +2874,7 @@ msgstr "邮政编码"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "Posted"
-msgstr "已登帐"
+msgstr "已过账"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.pomme_de_terre
@@ -2867,7 +2885,7 @@ msgstr "土豆"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_precompute_cash
 msgid "Prefill Cash Payment"
-msgstr "预先填好现金支付"
+msgstr "预先填好现金付款"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2876,6 +2894,12 @@ msgstr "预先填好现金支付"
 #, python-format
 msgid "Price"
 msgstr "价格"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1601
+#, python-format
+msgid "Priced Product"
+msgstr "标价产品"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pricelist_id
@@ -2962,12 +2986,12 @@ msgstr "产品"
 #: model:ir.model,name:point_of_sale.model_pos_category
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_pos_categ_id
 msgid "Public Category"
-msgstr "公开的分类"
+msgstr "公开类别"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_in
 msgid "Put Money In"
-msgstr "放入现金"
+msgstr "把钱放入"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3021,7 +3045,7 @@ msgstr "收据页眉"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Receipt Printer"
-msgstr "收款打印机"
+msgstr "票据打印机"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_pos_reference
@@ -3063,7 +3087,7 @@ msgstr "重新打印"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_rescue
 msgid "Rescue session"
-msgstr "抢救会话"
+msgstr "恢复会话"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3097,7 +3121,7 @@ msgstr "重新开始"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Return Products"
-msgstr "退货产品"
+msgstr "退返产品"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_return
@@ -3120,7 +3144,7 @@ msgstr "销售详情"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_journal_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_sale_journal
 msgid "Sale Journal"
-msgstr "销售分类账"
+msgstr "销售日记账"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
@@ -3137,7 +3161,7 @@ msgstr "销售明细"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_journal_id
 msgid "Sales Journal"
-msgstr "销售分类账"
+msgstr "销售日记账"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_report
@@ -3362,7 +3386,7 @@ msgstr "会话:"
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_session_all
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Sessions"
-msgstr "会话记录:"
+msgstr "会话"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3452,7 +3476,7 @@ msgstr "跳过"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_skip_screen
 msgid "Skip Receipt Screen"
-msgstr "跳过收款屏幕"
+msgstr "跳过收据屏幕"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image_small
@@ -3465,7 +3489,7 @@ msgid ""
 "Small-sized image of the category. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "中等尺寸保持长宽比的分类图片，自动调整为64x64px大小用于在一些表单界面或看板界面上以及任何需要显示小图片的界面上。"
+msgstr "中等尺寸保持长宽比的类别图像，自动调整为64x64px大小用于在一些表单界面或看板界面上以及任何需要显示小图像的界面上。"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.soft
@@ -3482,12 +3506,12 @@ msgstr "有些订单不能提交给"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_start_categ_id
 msgid "Start Category"
-msgstr "开启种类"
+msgstr "开始类别"
 
 #. module: point_of_sale
 #: model:ir.actions.act_url,name:point_of_sale.action_pos_pos
 msgid "Start Point of Sale"
-msgstr "开启PoS"
+msgstr "开启POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_start
@@ -3612,7 +3636,7 @@ msgstr "小计总计"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Summary by Payment Methods"
-msgstr "摘要，按付款方法"
+msgstr "汇总，按付款方法"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_property_purchase_currency_id
@@ -3629,7 +3653,7 @@ msgstr "总计"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_out
 msgid "Take Money Out"
-msgstr "取出现金"
+msgstr "把钱拿出"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3694,7 +3718,7 @@ msgstr "当调用此方法时，POS订单中必须要有内容。"
 msgid ""
 "The Point of Sale could not find any product, client, employee\n"
 "                    or action associated with the scanned barcode."
-msgstr "PoS扫描的条形码找不到对应的产品,客户,员工或相关记录"
+msgstr "POS扫描的条形码找不到对应的产品,客户,员工或相关记录"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_google_drive_uri
@@ -3705,19 +3729,19 @@ msgstr "以从谷歌的授权码的网址"
 #: constraint:pos.config:0
 msgid ""
 "The company of a payment method is different than the one of point of sale"
-msgstr "支付方式的公司不同于PoS所在公司"
+msgstr "支付方式的公司不同于POS所在公司"
 
 #. module: point_of_sale
 #: constraint:pos.config:0
 msgid ""
 "The company of the sale journal is different than the one of point of sale"
-msgstr "销售帐簿所属公司不同于PoS所属公司"
+msgstr "销售帐簿所属公司不同于POS所属公司"
 
 #. module: point_of_sale
 #: constraint:pos.config:0
 msgid ""
 "The company of the stock location is different than the one of point of sale"
-msgstr "库位所属公司不同于PoS所属公司"
+msgstr "库位所属公司不同于POS所属公司"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_tax_included
@@ -3762,14 +3786,14 @@ msgstr "付款会和银行的付款差不多，并且提前填好了准确的金
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_config_id
 msgid "The physical point of sale you will use."
-msgstr "您要使用的物理PoS。"
+msgstr "您要使用的物理POS。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_start_categ_id
 msgid ""
 "The point of sale will display this product category by default. If no "
 "category is specified, all available products will be shown"
-msgstr "销售点会默认的显示产品种类。让如果没有制定种类，所有的产品都可以显示"
+msgstr "销售点会默认的显示产品类别。让如果没有制定类别，所有的产品都可以显示"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_display_categ_images
@@ -3795,12 +3819,12 @@ msgstr " 由于未知的错误，提供的文件不能被读取"
 msgid ""
 "The receipt screen will be skipped if the receipt can be printed "
 "automatically."
-msgstr "如果自动打印收款，那么收款屏幕就会跳过"
+msgstr "如果自动打印收据，那么收据屏幕就会跳过"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order"
-msgstr "每张订单的最后会自动的打印出收款"
+msgstr "每张订单的最后会自动的打印出收据"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3827,7 +3851,7 @@ msgstr "该交易用MercuryPay完成"
 #, python-format
 msgid ""
 "The type of the journal for your payment method should be bank or cash "
-msgstr "你的付款方式的分类账应该为银行或现金"
+msgstr "你的付款方式的日记账应该为银行或现金"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_end
@@ -3851,7 +3875,7 @@ msgid ""
 "There is no cash payment method available in this point of sale to handle the change.\n"
 "\n"
 " Please pay the exact amount or add a cash payment method in the point of sale configuration"
-msgstr "PoS上没有有效的现金支付方式来处理收款。\n\n请支付准确的金额或者在PoS配置里添加现金支付方式。"
+msgstr "POS上没有有效的现金支付方式来处理收款。\n\n请支付准确的金额或者在PoS配置里添加现金支付方式。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box.py:23
@@ -3891,7 +3915,7 @@ msgstr "用户可以在登录页点击来重置密码"
 msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
-msgstr "对当前供应商的采购这种币别被用来替代默认的币别"
+msgstr "对当前供应商的采购这种币种被用来替代默认的币种"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_users_property_delivery_carrier_id
@@ -3912,21 +3936,21 @@ msgstr "该字段定义了在关闭一个会话时候理论的余额和实际余
 msgid ""
 "This field holds the image used as image for the cateogry, limited to "
 "1024x1024px."
-msgstr "用来代表类型的图片大小, 限制在 1024x1024px。"
+msgstr "用来代表类型的图像大小, 限制在 1024x1024px。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_pos_manager_id
 msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client"
-msgstr "该字段用来传递Pos经理组的ID到销售点客户端"
+msgstr "该字段用来传递POS管理员组的ID到销售点客户端"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_pos_user_id
 msgid ""
 "This field is there to pass the id of the pos user group to the point of "
 "sale client"
-msgstr "该字段用来传递Pos经理组的ID到销售点客户端"
+msgstr "该字段用来传递POS经理组的ID到销售点客户端"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_google_calendar
@@ -3955,7 +3979,7 @@ msgid ""
 "- Bill Splitting: Allows you to split an order into different orders \n"
 "\n"
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers"
-msgstr "本模块在销售点添加了几个饭店特性\n\n- 账单打印: 能在订单付款之前打印收款\n\n- 账单分离: 能把一个订单分开成不同的几个单子 \n\n- 厨房订单打印: 能够打印出来给到厨房的订单或者条形打印机"
+msgstr "本模块在销售点添加了几个饭店特性\n\n- 账单打印: 能在订单付款之前打印收款\n\n- 账单拆分: 能把一个订单分开成不同的几个单子 \n\n- 厨房订单打印: 能够打印出来给到厨房的订单或者条形打印机"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3986,7 +4010,7 @@ msgstr "这个序列号是由Odoo自动产生的，不过你可以自己定义�
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_template_pos_categ_id
 msgid "Those categories are used to group similar products for point of sale."
-msgstr "这些分类用于为PoS的类似产品分组。"
+msgstr "这些分类用于为POS的类似产品分组。"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.timmermans_kriek_37,5cl
@@ -4044,7 +4068,7 @@ msgstr "总计"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_total_entry_encoding
 msgid "Total Cash Transaction"
-msgstr "总共现金交易"
+msgstr "现金交易合计"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_total_discount
@@ -4124,7 +4148,7 @@ msgstr "不能取消分拣."
 msgid ""
 "Unable to open the session. You have to assign a sale journal to your point "
 "of sale."
-msgstr "不能进行交易，你必须为你的PoS设置一个销售分类账。"
+msgstr "不能进行交易，你必须为你的POS设置一个销售日记账。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_unit
@@ -4155,7 +4179,7 @@ msgstr "不支持的文件格式"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_auth_oauth
 msgid "Use external authentication providers, sign in with Google..."
-msgstr "用外部授权通过Google登陆……"
+msgstr "使用外部身份验证服务商，通过Google登陆……"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
@@ -4234,6 +4258,12 @@ msgid "Warehouse"
 msgstr "仓库"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1600
+#, python-format
+msgid "Weighted Product"
+msgstr "称重的产品"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1180
 #, python-format
@@ -4293,7 +4323,7 @@ msgstr "你不能确认所有的交易订单，因为它们中还有一些不是
 #: constraint:pos.session:0
 msgid ""
 "You cannot create two active sessions related to the same point of sale!"
-msgstr "对同一个PoS，你不能创建两个活动会话。"
+msgstr "对同一个POS，你不能创建两个活动会话。"
 
 #. module: point_of_sale
 #: constraint:pos.session:0
@@ -4306,7 +4336,7 @@ msgstr "同一个负责人不能创建两个活动销售会话"
 msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
 "still opened."
-msgstr "当会话仍打开时，你不能在PoS中删除一个可销售的产品。"
+msgstr "当会话仍打开时，你不能在POS中删除一个可销售的产品。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4323,7 +4353,7 @@ msgstr "在银行付款单中，你不能输入一个负数。使用现金付款
 msgid ""
 "You cannot use the session of another users. This session is owned by %s. "
 "Please first close this one to use this point of sale."
-msgstr "你不能使用其他用户的会话，这个会话属于 %s。请先关闭当前会话然后使用PoS。"
+msgstr "你不能使用其他用户的会话，这个会话属于 %s。请先关闭当前会话然后使用POS。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:32
@@ -4335,7 +4365,7 @@ msgid ""
 "Method\" from the \"Point of Sale\" tab. You can also create new payment "
 "methods directly from menu \"PoS Backend / Configuration / Payment "
 "Methods\"."
-msgstr "使用菜单\"科目/设置/分类账/分类账\"，通过再次使用银行和现金，你必须定义哪个付款方法必须在PoS中有效。选择一个分类账并在 \"POS\"选项卡中点选\"PoS付款方式\"。你也可以直接通过菜单 \"PoS后台 / 设置 /付款方式\"来新建一个付款方式。"
+msgstr "使用菜单\"科目/设置/日记账/日记账\"，通过再次使用银行和现金，你必须定义哪个付款方法必须在POS中有效。选择一个日记账并在 \"POS\"选项卡中点选\"POS付款方式\"。你也可以直接通过菜单 \"POS后台 / 设置 /付款方式\"来新建一个付款方式。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1036
@@ -4375,7 +4405,7 @@ msgstr "如果需要给开票，就需要先给订单找到一个客户"
 #: code:addons/point_of_sale/point_of_sale.py:491
 #, python-format
 msgid "You should assign a Point of Sale to your session."
-msgstr "您需要为您的销售会话指定一个PoS"
+msgstr "您需要为您的销售会话指定一个POS"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4398,7 +4428,7 @@ msgid ""
 "Your ending balance is too different from the theoretical cash closing "
 "(%.2f), the maximum allowed is: %.2f. You can contact your manager to force "
 "it."
-msgstr "你的计算余额跟实际的期末余额 (%.2f)偏差太大，允许的最大差额为： %.2f。你可以联系你的经理来进行此项操作。"
+msgstr "你的计算余额跟实际的关张余额 (%.2f)偏差太大，允许的最大差额为： %.2f。你可以联系你的经理来强制它。"
 
 #. module: point_of_sale
 #. openerp-web

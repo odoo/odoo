@@ -11,3 +11,4 @@ Yoshi Tashiro tashiro@roomsfor.hk https://github.com/yostashiro
 List of contributors:
 
 Yoshi Tashiro tashiro@roomsfor.hk https://github.com/yostashiro
+Manami Hashi manami@roomsfor.hk https://github.com/manamirfhk

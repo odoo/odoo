@@ -117,8 +117,8 @@ class AcquirerPaypal(osv.Model):
             'currency_code': values['currency'] and values['currency'].name or '',
             'address1': values.get('partner_address'),
             'city': values.get('partner_city'),
-            'country': values.get('partner_country') and values.get('partner_country').name or '',
-            'state': values.get('partner_state') and values.get('partner_state').name or '',
+            'country': values.get('partner_country') and values.get('partner_country').code or '',
+            'state': values.get('partner_state') and (values.get('partner_state').code or values.get('partner_state').name) or '',
             'email': values.get('partner_email'),
             'zip_code': values.get('partner_zip'),
             'first_name': values.get('partner_first_name'),
@@ -198,11 +198,7 @@ class TxPaypal(osv.Model):
 
     def _paypal_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
         invalid_parameters = []
-        if data.get('notify_version')[0] != '3.4':
-            _logger.warning(
-                'Received a notification from Paypal with version %s instead of 2.6. This could lead to issues when managing it.' %
-                data.get('notify_version')
-            )
+        _logger.info('Received a notification from Paypal with IPN version %s', data.get('notify_version'))
         if data.get('test_ipn'):
             _logger.warning(
                 'Received a notification from Paypal using sandbox'

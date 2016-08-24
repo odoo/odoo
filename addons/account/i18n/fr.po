@@ -4,39 +4,47 @@
 # 
 # Translators:
 # Abdelhak LAKEL <abdelhak.lakel@gmail.com>, 2015
+# Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2016
 # Benjamin Delagoutte <ben@ampletus.fr>, 2015
 # Clo <clo@odoo.com>, 2015
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2015
 # Fabien Pinckaers <fp@openerp.com>, 2015
 # Florian Hatat, 2015
+# Frédéric Clementi <frederic.clementi@camptocamp.com>, 2016
 # Hamid Darabi, 2015
 # Ilone Math <ilonemail2@gmail.com>, 2015
 # Loic <loic.richard2@gmail.com>, 2015
 # lucasdeliege <deliegelucas@gmail.com>, 2015
 # Lucas Deliege <lud@odoo.com>, 2015
 # Martin Trigaux, 2015
-# Matillon Samantha <smatillon@gmail.com>, 2015
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
+# Matillon Samantha <smatillon@gmail.com>, 2015-2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2015
 # Maxime Solinas <msolinas@t2o.ca>, 2015
 # Melanie Bernard <mbe@odoo.com>, 2015
-# Mickaël Audigane <mickael@olackim.net>, 2015
+# Mickaël Audigane <maudigane@teclib.com>, 2015
 # Nacim ABOURA <nacim.aboura@gmail.com>, 2015
 # Nancy Bolognesi <nb@microcom.ca>, 2015
 # Nicolas JEUDY <nicolas@sudokeys.com>, 2015
 # Nissar Chababy <funilrys@outlook.com>, 2015
 # Olivier Dony <odo@odoo.com>, 2015
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Patrick Strzempek <contact@3idata.nc>, 2015
+# Quentin THEURET <quentin@theuret.net>, 2016
 # Sandro Botta <sbo@odoo.com>, 2015
+# Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
+# Simon Jejcic <simon.jejcic@gmail.com>, 2016
 # Stanislas Sodonon <stanislas.sodonon@gmail.com>, 2015
-# Symons Xavier <xsy@openerp.com>, 2015
+# Stéphane Bidoul (ACSONE), 2016
+# Xavier Symons <xsy@openerp.com>, 2015
+# Tony Barbou <tonybarbou@live.fr>, 2016
 # zoe <yann.hoareau@migs.re>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2015-12-24 14:14+0000\n"
-"Last-Translator: Matillon Samantha <smatillon@gmail.com>\n"
+"PO-Revision-Date: 2016-08-11 09:51+0000\n"
+"Last-Translator: Frédéric Clementi <frederic.clementi@camptocamp.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,7 +108,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n    <p>Bonjour, ${object.partner_id.name},</p>\n    <p>Vous avez une nouvelle facture disponible : </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Montant total : <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Date de facturation : ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Origine : ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Votre contact : <a href=\"mailto:${object.user_id.email or ''}?subject=Facture%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Il est aussi possible de payer directement avec Paypal :</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Si vous avez la moindre question, n'hésitez pas à nous contacter.</p>\n    <p>Merci d'avoir choisi ${object.company_id.name or 'nous'} !</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Téléphone :&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -1355,7 +1363,7 @@ msgstr "Toutes les écritures"
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "All Posted Entries"
-msgstr "Toutes les écritures passées"
+msgstr "Toutes les écritures comptabilisées"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -1390,14 +1398,14 @@ msgid ""
 "journal. In that case, they will behave as journal entries automatically "
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
-msgstr "Toutes les nouvelles entrées de journal créées manuellement sont généralement à l'état \"Non validé\", mais vous pouvez définir l'option  de sauter ce statut dans le journal lié. Dans ce cas, elles se comporteront comme des entrées de journal créées automatiquement par le système de validation de document (factures, relevés bancaires, etc.) et seront créées avec le statut \"Validé\"."
+msgstr "Toute nouvelle écriture créée manuellement est généralement à l'état \"non-comptabilisée\", mais vous pouvez définir l'option  de sauter ce statut dans le journal lié. Dans ce cas, elles se comporteront comme des entrées de journal créées automatiquement par le système de validation de document (factures, relevés bancaires, etc.) et seront créées avec le statut \"Comptabilisée\"."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
 msgid ""
 "All selected journal entries will be validated and posted. You won't be able"
 " to modify them afterwards."
-msgstr "Toutes les entrées de journal sélectionnées seront validées et passées. Vous ne serez pas en mesure de les modifier par la suite."
+msgstr "Toutes les écritures sélectionnées seront directement comptabilisées. Vous ne serez pas en mesure de les modifier par la suite."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:246
@@ -1474,6 +1482,7 @@ msgstr "Vous permet d'utiliser la comptabilité analytique"
 #: model:ir.model.fields,field_description:account.field_account_tax_template_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Amount"
@@ -1665,9 +1674,8 @@ msgstr "Demander un avoir"
 msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
-"Revenue recognition: This allows you to manage the Revenue recognition on selling product. It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "Gestion d'actifs : Ceci vous permet de gérer les actifs possédés par une société ou une personne. Il garde une trace des dévalorisations survenus sur ces actifs, et crée une pièce comptable pour ces lignes de dévalorisation.\n\nReconnaissance de revenu : Cela vous permet de gérer la reconnaissance de revenu lors de la vente d'article. Il garde une trace des acomptes pour la reconnaissance des revenus et crée une pièce comptable pour les lignes de l'acompte.\n- Ceci install le module account_asset. Si vous ne cochez pas cette case, vous serez capable de faire votre facturation et vos paiements, mais pas votre comptabilité (pièces comptables, charte de comptes, ...)"
+msgstr "Gestion d'actifs : Ceci vous permet de gérer les actifs possédés par une société ou une personne. \nIl garde une trace des dévalorisations survenues sur ces actifs et crée un mouvement de compte pour ces lignes de dévalorisation.\n-Ceci installe le module account_asset. Si vous ne cochez pas cette case, vous serez capable de faire la facturation et les paiements, mais pas la comptabilité (Articles de Journal, Plan comptable, ...)"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1676,8 +1684,8 @@ msgstr "Immobilisations"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
-msgid "Assets management & Revenue recognition"
-msgstr "Gestion des immobilisations & reconnaissance des revenus"
+msgid "Assets management"
+msgstr "Gestion d'actifs"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -3777,7 +3785,7 @@ msgstr "Compte financier"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report
 msgid "Financial Report"
-msgstr "Rapport financier"
+msgstr "Rapports financiers"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_style_overwrite
@@ -4384,14 +4392,6 @@ msgstr "Si vous voulez être capable d'envoyer à vos clients leurs relevés\n  
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "If you want to do it yourself:"
 msgstr "Pour le faire soi-même :"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
-msgid ""
-"If you'd like some assistance on any of the above, please do not hesitate \n"
-"                        to contact our accounting experts by using the \n"
-"                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
-msgstr "Si vous souhaitez de l'aide sur ce qui précède, n'esitez pas à contacter nos experts comptables en utilisant \n<span class=\"fa fa-question-circle\"/> l'icône dans la barre du haut."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -5615,7 +5615,7 @@ msgstr "Nouvelle opération"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New Statement"
-msgstr "Nouvelle Déclaration"
+msgstr "Nouveau Relevé"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5904,7 +5904,7 @@ msgstr "Seulement un modèle de charte disponible"
 #, python-format
 msgid ""
 "Only a draft payment can be posted. Trying to post a payment in state %s."
-msgstr "Seul un paiement en brouillon peut être comptabilisé. En train d'essayer de comptabiliser un paiement dans l'état %s."
+msgstr "Seul un paiement à l'état brouillon peut être comptabilisé. En train d'essayer de comptabiliser un paiement dans l'état %s."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:699
@@ -6552,7 +6552,7 @@ msgstr "Comptabiliser les écritures"
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
-msgstr "Comptabilisé"
+msgstr "Comptabilisée"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
@@ -6817,7 +6817,7 @@ msgstr "Comptes de tiers"
 #: selection:account.register.payments,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Receive Money"
-msgstr "Recevoir de l'argent"
+msgstr "Règlement"
 
 #. module: account
 #. openerp-web
@@ -6840,7 +6840,7 @@ msgstr "Lettrer les écritures"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 msgid "Reconcile With Write-Off"
-msgstr "Lettrer avec une radiation"
+msgstr "Lettrage avec écart"
 
 #. module: account
 #: code:addons/account/wizard/account_reconcile.py:79
@@ -7604,6 +7604,7 @@ msgstr "Mouvements cibles"
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_tax_id
 #: model:ir.model.fields,field_description:account.field_account_operation_template_second_tax_id
 #: model:ir.model.fields,field_description:account.field_account_operation_template_tax_id
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 #, python-format
 msgid "Tax"
@@ -8716,17 +8717,17 @@ msgstr "Factures Impayées"
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
-msgstr "Décomptabilisé"
+msgstr "non-comptabilisée"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "Écritures non validées"
+msgstr "Écritures non-comptabilisées"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "Écritures brouillon"
+msgstr "Écritures non-comptabilisées"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_unread
@@ -8746,12 +8747,12 @@ msgstr "Compteur de messages non lus"
 #: model:ir.ui.view,arch_db:account.account_unreconcile_view
 #, python-format
 msgid "Unreconcile"
-msgstr "Non réconcilié"
+msgstr "Annuler le lettrage"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
 msgid "Unreconcile Entries"
-msgstr "Entrées non réconciliées "
+msgstr "Annuler le lettrage"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_unreconcile_view
@@ -8777,7 +8778,7 @@ msgstr "Ecritures comptables non réconciliées"
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
 msgid "Untaxed Amount"
-msgstr "Montant non taxé"
+msgstr "Montant HT"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9255,6 +9256,14 @@ msgid ""
 msgstr "Vous ne pouvez pas effectuer cette modification sur une écriture lettrée. Vous pouvez uniquement changer certains champs légalement libres, ou bien vous devez d'abord annuler le lettrage l'entrée.\n%s."
 
 #. module: account
+#: code:addons/account/models/account.py:329
+#, python-format
+msgid ""
+"You cannot empty the account number once set.\n"
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
+msgstr "On ne peut pas vider un numéro de compte lorsqu'il a été défini.\nPour supprimer un numéro de compte, passer par la liste de Comptes Bancaires."
+
+#. module: account
 #: code:addons/account/models/account.py:96
 #, python-format
 msgid ""
@@ -9651,6 +9660,11 @@ msgstr "la liste des clients"
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
 msgstr "la société parente"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "the product list"
+msgstr "la liste des produits"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

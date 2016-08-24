@@ -53,7 +53,7 @@ class ReportAssertAccount(models.AbstractModel):
                     return ', '.join(["%s: %s" % (tup[0], tup[1]) for tup in order_columns(item, column_order)])
                 else:
                     return item
-            result = [_(_format(rec)) for rec in result]
+            result = [_format(rec) for rec in result]
 
         return result
 

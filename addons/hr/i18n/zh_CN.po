@@ -6,16 +6,22 @@
 # fausthuang, 2015
 # fausthuang, 2015
 # Gary Wei <Gary.wei@elico-corp.com>, 2015
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
 # liulixia <liu.lixia@elico-corp.com>, 2015
+# Rona Lin <ssauapw@qq.com>, 2016
 # Xia Fajin <xia.fajin@elico-corp.com>, 2015
+# yuwei.zhang <yuwei.pro@gmail.com>, 2016
+# yuwei.zhang <yuwei.pro@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-12-11 03:25+0000\n"
-"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>\n"
+"POT-Creation-Date: 2016-01-15 10:41+0000\n"
+"PO-Revision-Date: 2016-07-12 01:08+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -129,12 +135,12 @@ msgstr "有效"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Analyse needs, write specification documents and quotation"
-msgstr "分析需求，编写规范文件和报价"
+msgstr "分析需求，编写规范文件和报价单"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
-msgstr "归档"
+msgstr "存档"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -201,6 +207,11 @@ msgid "City"
 msgstr "城市"
 
 #. module: hr
+#: model:web.tip,description:hr.hr_tip_2
+msgid "Click here to change the recruitment goal!"
+msgstr "点击这里改变招聘目标"
+
+#. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
@@ -219,7 +230,7 @@ msgstr "单击定义一个新的部门"
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid "Click to define a new job position."
-msgstr "单机定义一个新的职位"
+msgstr "点击定义一个新的职位"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -241,7 +252,7 @@ msgstr "师傅"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_code
 msgid "Code"
-msgstr "代码"
+msgstr "代号"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_color
@@ -297,7 +308,7 @@ msgstr "创建您的部门"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job_create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_date
@@ -406,7 +417,7 @@ msgstr "员工标签"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_bank_account_id
 msgid "Employee bank salary account"
-msgstr "银行支付员工工资的科目"
+msgstr "员工工资银行账户"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -442,7 +453,7 @@ msgstr "员工标签"
 #: code:addons/hr/hr.py:299 constraint:hr.department:0
 #, python-format
 msgid "Error! You cannot create recursive departments."
-msgstr "错误！你不能创建循环的部门"
+msgstr "错误！你不能创建递归的部门"
 
 #. module: hr
 #: code:addons/hr/hr.py:269 constraint:hr.employee:0
@@ -453,7 +464,7 @@ msgstr "错误！您不能创建递归的员工层级。"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
 msgid "Expected New Employees"
-msgstr "预期的新员工"
+msgstr "预计的新员工"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_expected_employees
@@ -479,7 +490,7 @@ msgstr "关注"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Follow and check the development part"
-msgstr "关注和检查开发部"
+msgstr "关注和检查开发部分"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_follower_ids
@@ -501,7 +512,7 @@ msgstr "关注者(频道)"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "关注者（合作伙伴）"
+msgstr "关注者（业务伙伴）"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
@@ -562,7 +573,7 @@ msgstr "HR 部门"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
-msgstr "人力资源设置"
+msgstr "HR 设置"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -602,7 +613,7 @@ msgstr "人力资源"
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
 msgid "Human Resources Manager"
-msgstr "人力资源经理"
+msgstr "人力资源管理员"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_id
@@ -637,14 +648,6 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr "如果这有效字段设为否，那么可以隐藏此记录且并不删除它。"
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
-msgid "Important Messages"
-msgstr "重要信息"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -682,7 +685,7 @@ msgstr "增加产品的可见性"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_is_follower
 msgid "Is Follower"
-msgstr "是否关注者"
+msgstr "是关注者"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
@@ -710,14 +713,14 @@ msgstr "工作岗位"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Job Position Name"
-msgstr "职位名称"
+msgstr "工作岗位名称"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job_position
 #: model:ir.ui.menu,name:hr.menu_hr_job_position_config
 msgid "Job Positions"
-msgstr "职位"
+msgstr "工作岗位"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -737,7 +740,7 @@ msgstr "工作头衔"
 #: model:ir.model.fields,field_description:hr.field_hr_department_jobs_ids
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Jobs"
-msgstr "作业"
+msgstr "工作"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_last_post
@@ -752,7 +755,12 @@ msgstr "最后消息日期"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_job___last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_last_website_so_id
+msgid "Last Online Sale Order"
+msgstr "最近的在线销售订单"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
@@ -760,7 +768,7 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job_write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_date
@@ -809,7 +817,7 @@ msgstr "男性"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_parent_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Manager"
-msgstr "经理"
+msgstr "管理员"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_marital
@@ -819,7 +827,7 @@ msgstr "婚姻状况"
 #. module: hr
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
-msgstr "市场沟通经理"
+msgstr "市场及社区经理"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -844,7 +852,7 @@ msgid ""
 "Medium-sized photo of the employee. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "员工的中等尺寸照片。保留纵横比例，自动缩放为128x128px的图片。这个字段用在表单视图和某些看板视图。"
+msgstr "员工的中等尺寸照片。保留纵横比例，自动缩放为128x128px的图像。这个字段用在表单视图和某些看板视图。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_member_ids
@@ -858,13 +866,6 @@ msgstr "成员"
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Messages"
 msgstr "消息"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_ids
-#: model:ir.model.fields,help:hr.field_hr_employee_message_ids
-#: model:ir.model.fields,help:hr.field_hr_job_message_ids
-msgid "Messages and communication history"
-msgstr "消息和通信历史"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -908,7 +909,7 @@ msgstr "最好有"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
 msgid "Note"
-msgstr "笔记"
+msgstr "备注"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_notes
@@ -958,7 +959,7 @@ msgid ""
 "Odoo's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves and holidays, recruitments, etc."
-msgstr "Odoo的部门结构用来管理所有不同部门员工的文档：费用，工时单，请假和假期，招聘等等"
+msgstr "Odoo的部门结构用来管理所有不同部门员工的文档：费用，工时单，休假和假期，招聘等等"
 
 #. module: hr
 #: model:ir.actions.client,name:hr.action_client_hr_menu
@@ -1160,7 +1161,7 @@ msgid ""
 "Small-sized photo of the employee. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "小尺寸的员工照片。保留纵横比，自动缩放为64x64px。用在任何需要小图片的场合"
+msgstr "小尺寸的员工照片。保留纵横比，自动缩放为64x64px。用在任何需要小图像的场合"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_sinid
@@ -1170,7 +1171,7 @@ msgstr "社会保险号"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_ssnid
 msgid "Social Security Number"
-msgstr "社会保险号"
+msgstr "社会保障号"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_state
@@ -1193,6 +1194,11 @@ msgstr "下属层级"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_child_ids
 msgid "Subordinates"
 msgstr "下属"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_subscription_count
+msgid "Subscriptions"
+msgstr "订阅"
 
 #. module: hr
 #: sql_constraint:hr.employee.category:0
@@ -1254,6 +1260,10 @@ msgstr "将我们的产品转化为一套好的商务应用程序"
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_unread
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+#: model:ir.ui.view,arch_db:hr.view_department_filter
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "未读消息"
 
@@ -1297,7 +1307,7 @@ msgid ""
 "products people love to use. We need someone who is ambitious, passionated, "
 "and ..... not afraid to start new things, a lot of new things and scale "
 "them."
-msgstr "我们在寻找一个热情的人资经理，来帮产品人员喜欢用它，需要有上进心的，热情的，和……，不害怕接触新事物，接触这些新的事物并规划它们"
+msgstr "我们在寻找一个热情的人力资源经理，来帮产品人员喜欢用它，需要有上进心的，热情的，和……，不害怕接触新事物，接触这些新的事物并规划它们"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1582,7 +1592,7 @@ msgid ""
 "Your departments structure is used to manage all documents\n"
 "                related to employees by departments: expenses and timesheets,\n"
 "                leaves and holidays, recruitments, etc."
-msgstr "部门结构用来管理所有的不同部门员工的相关文档：费用和工时单，请假和假期，招聘等等"
+msgstr "部门结构用来管理所有的不同部门员工的相关文档：费用和工时单，休假和假期，招聘等等"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form

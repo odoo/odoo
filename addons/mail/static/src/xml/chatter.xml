@@ -54,7 +54,7 @@
 
         <!-- Add a button to open the full composer dialog -->
         <t t-jquery=".o_composer_button_add_attachment" t-operation="after">
-            <button class="btn btn-sm btn-icon fa fa-pencil-square-o o_composer_button_full_composer" type="button"/>
+            <button tabindex="6" class="btn btn-sm btn-icon fa fa-pencil-square-o o_composer_button_full_composer" type="button"/>
         </t>
     </t>
 
@@ -117,8 +117,8 @@
                t-att-title="record.name"
                t-att-data-oe-model="record.res_model"
                t-att-data-oe-id="record.res_id"><t t-esc="record.name"/></a>
-            <i t-if="record.is_editable and (widget.records_length &gt; 1)"
-               class="fa fa-pencil o_edit_subtype hide" title="Edit subscription"
+            <i t-if="record.is_editable" class="fa fa-pencil o_edit_subtype hide"
+               title="Edit subscription"
                t-att-data-id="record.id"
                t-att-data-oe-id="record.res_id"
                t-att-data-oe-model="record.res_model"/>
@@ -154,7 +154,13 @@
             <span t-att-for="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')">
                 <t t-esc="record.name"/>
             </span>
+            <i t-if="display_warning" class="fa fa-warning text-warning"/>
         </li>
+    </t>
+    <t t-name="mail.Followers.subtypes.warning">
+        <span class="text-warning">
+            <i class="fa fa-warning"/> Be careful with channels following internal notifications
+        </span>
     </t>
 
 </templates>

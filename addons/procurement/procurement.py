@@ -90,7 +90,6 @@ class procurement_order(osv.osv):
     _description = "Procurement"
     _order = 'priority desc, date_planned, id asc'
     _inherit = ['mail.thread','ir.needaction_mixin']
-    _log_create = False
     _columns = {
         'name': fields.text('Description', required=True),
 
@@ -137,7 +136,7 @@ class procurement_order(osv.osv):
                 unlink_ids.append(s['id'])
             else:
                 raise UserError(_('Cannot delete Procurement Order(s) which are in %s state.') % s['state'])
-        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+        return super(procurement_order, self).unlink(cr, uid, unlink_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
         context = context or {}
@@ -183,11 +182,6 @@ class procurement_order(osv.osv):
     def reset_to_confirmed(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
 
-    @api.v8
-    def run(self, autocommit=False):
-        return self._model.run(self._cr, self._uid, self.ids, autocommit=False, context=self._context)
-
-    @api.v7
     def run(self, cr, uid, ids, autocommit=False, context=None):
         for procurement_id in ids:
             #we intentionnaly do the browse under the for loop to avoid caching all ids which would be resource greedy

@@ -3,7 +3,7 @@
 {
     'name': 'Google Analytics',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Extra Tools',
     'complexity': "easy",
     'description': """
 Google Analytics.

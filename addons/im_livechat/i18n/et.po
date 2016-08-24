@@ -3,12 +3,13 @@
 # * im_livechat
 # 
 # Translators:
+# Arma Gedonsky <armagedonsky@hot.ee>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:20+0000\n"
-"PO-Revision-Date: 2015-10-10 09:48+0000\n"
+"POT-Creation-Date: 2016-05-26 12:06+0000\n"
+"PO-Revision-Date: 2016-05-27 09:03+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Estonian (http://www.transifex.com/odoo/odoo-9/language/et/)\n"
 "MIME-Version: 1.0\n"
@@ -16,20 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:222
-#, python-format
-msgid " for the following reason: %s"
-msgstr ""
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.loader
-msgid ""
-"\", {modules:modules, use_cors: false});\n"
-"                    });"
-msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_nbr_channel
@@ -45,21 +32,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rating_percentage_satisfaction
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "% Happy"
-msgstr ""
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.support_page
-msgid "&lt;!DOCTYPE html&gt;"
-msgstr ""
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.loader
-msgid ""
-");\n"
-"                        button.appendTo($('body'));\n"
-"                        window.livechat_button = button;\n"
-"                    });\n"
-"                });"
 msgstr ""
 
 #. module: im_livechat
@@ -97,9 +69,15 @@ msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:26
+#: code:addons/im_livechat/static/src/js/im_livechat.js:27
 #, python-format
 msgid "Ask something ..."
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "Attendees"
 msgstr ""
 
 #. module: im_livechat
@@ -116,7 +94,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_duration
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_duration
 msgid "Average duration"
-msgstr ""
+msgstr "Keskmine pikkus"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_nbr_message
@@ -149,7 +127,7 @@ msgstr "Allikas"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_channel_name
 msgid "Channel Name"
-msgstr ""
+msgstr "Kanali nimi"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
@@ -186,6 +164,7 @@ msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_technical_name
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Code"
 msgstr "Kood"
 
@@ -198,8 +177,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
-"Copy and paste this code into your website, within the &amp;lt;head&amp;gt; "
-"tag:"
+"Copy and paste this code into your website, within the &lt;head&gt; tag:"
 msgstr ""
 
 #. module: im_livechat
@@ -230,7 +208,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Creation date (hour)"
-msgstr ""
+msgstr "Loomise kuupäev (tund)"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
@@ -284,7 +262,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Näidatav nimi"
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
@@ -306,15 +284,10 @@ msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/xml/im_livechat.xml:16
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:19
 #, python-format
 msgid "Explain your note"
-msgstr ""
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
-msgid "Feedback"
-msgstr ""
+msgstr "Selgita oma märkust"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -323,11 +296,6 @@ msgid ""
 " Then go to Settings &gt; Website Settings and select the Website Live Chat "
 "Channel you want to add on your website."
 msgstr ""
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
-msgid "General"
-msgstr "Üldine"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_sequence
@@ -382,9 +350,9 @@ msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:220
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:15
 #, python-format
-msgid "I rated you with :rating_%d"
+msgid "I don't want to rate this conversation"
 msgstr ""
 
 #. module: im_livechat
@@ -422,19 +390,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel___last_update
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Viimati muudetud"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Viimati uuendatud"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_date
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Viimati uuendatud"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
@@ -609,6 +577,11 @@ msgid "Options"
 msgstr "Seaded"
 
 #. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rating_percentage_satisfaction
+msgid "Percentage of happy ratings over the past 7 days"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Quit"
 msgstr ""
@@ -617,6 +590,13 @@ msgstr ""
 #: model:ir.model,name:im_livechat.model_rating_rating
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel_rating_ids
 msgid "Rating"
+msgstr "Hinnang"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/im_livechat.js:308
+#, python-format
+msgid "Rating: :rating_%d"
 msgstr ""
 
 #. module: im_livechat
@@ -654,8 +634,9 @@ msgid "Search report"
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-msgid "Session"
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "Session Date"
 msgstr ""
 
 #. module: im_livechat
@@ -812,7 +793,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_default_message
 msgid "Welcome Message"
-msgstr ""
+msgstr "Tervitusteade"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -820,11 +801,6 @@ msgid ""
 "You can create channels for each website on which you want\n"
 "                to integrate the website live chat widget, allowing you website\n"
 "                visitors to talk in real time with your operators."
-msgstr ""
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.loader
-msgid "document.addEventListener(\"DOMContentLoaded\", function(event) {"
 msgstr ""
 
 #. module: im_livechat
@@ -838,32 +814,6 @@ msgid "e.g. YourWebsite.com"
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:6
-#, python-format
-msgid "livechat"
-msgstr ""
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.loader
-msgid ""
-"odoo.define('im_livechat.livesupport', function (require) {\n"
-"                        var im_livechat = require('im_livechat.im_livechat');\n"
-"                        var button = new im_livechat.LivechatButton(\n"
-"                            $('body'),\n"
-"                            \""
-msgstr ""
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.loader
-msgid ""
-"odoo.define('web.session', function (require) {\n"
-"                        var Session = require('web.Session');\n"
-"                        var modules = odoo._modules;\n"
-"                        return new Session(undefined, \""
-msgstr ""
-
-#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
 msgstr ""
@@ -871,12 +821,4 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "seconds"
-msgstr ""
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:9
-#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:12
-#, python-format
-msgid "true"
 msgstr ""

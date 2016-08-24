@@ -131,6 +131,7 @@
                         <group>
                             <!-- Preload all the partner's information -->
                             <field name="partner_id" string="Customer"
+                                on_change="on_change_partner_id(partner_id)"
                                 options='{"create_name_field": "name"}'
                                 context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_team_id': team_id}" groups="base.group_no_one"/>
                             <field name="partner_name" string="Company Name"/>
@@ -316,7 +317,7 @@
                                         <t t-if="record.planned_revenue.raw_value"><field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/></t> <span t-if="record.partner_id.value"> - <t t-esc="record.partner_id.value"/></span>
                                     </div>
                                     <div class="text-muted">
-                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                        <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                         <span t-attf-class="#{red || ''}">
                                             <field name="date_action"/>
                                             <t t-if="record.date_action.raw_value"> : </t>
@@ -326,7 +327,7 @@
                                     <div class="o_kanban_footer">
                                         <field name="priority" widget="priority" groups="base.group_user"/>
                                         <t t-if="record.message_needaction_counter.raw_value">
-                                            <span class='oe_kanban_mail_new' title='Important Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     </div>
@@ -361,7 +362,7 @@
                             domain="[('user_id','=', False)]"
                             help="No salesperson"/>
                     <separator />
-                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                     <separator />
                     <filter string="Exclude Opt Out"
@@ -452,7 +453,13 @@
                                 <field name="partner_id"
                                     on_change="on_change_partner_id(partner_id)"
                                     string="Customer"
-                                    context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
+                                    context="{'default_name': partner_name, 'default_street': street, 
+                                        'default_street2': street2, 'default_city': city, 
+                                        'default_state_id': state_id, 'default_zip': zip, 
+                                        'default_country_id': country_id, 'default_function': function, 
+                                        'default_phone': phone, 'default_mobile': mobile, 
+                                        'default_fax': fax, 'default_email': email_from, 
+                                        'default_user_id': user_id, 'default_team_id': team_id}"/>
                                 <field name="email_from" string="Email" widget="email"/>
                                 <field name="phone" widget="phone"/>
                             </group>
@@ -610,7 +617,7 @@
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]"/>
                     <filter string="Lost" name="lost"
-                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.fold', '=', True)]"/>
+                            domain="['&amp;', ('probability', '=', 0), ('active', '=', False)]"/>
                     <separator/>
                     <filter string="My Opportunities" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]"
@@ -631,7 +638,7 @@
                             domain="[('date_action', '&lt;=', context_today().strftime('%Y-%m-%d') )]"
                             help="Show all opportunities for which the next action date is today or before"/>
                     <separator/>
-                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By" colspan="16">
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>

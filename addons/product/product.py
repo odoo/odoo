@@ -238,7 +238,7 @@ class produce_price_history(osv.osv):
         'company_id': fields.many2one('res.company', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade'),
         'datetime': fields.datetime('Date'),
-        'cost': fields.float('Cost'),
+        'cost': fields.float('Cost', digits_compute=dp.get_precision('Product Price')),
     }
 
     def _get_default_company(self, cr, uid, context=None):
@@ -261,7 +261,7 @@ class produce_price_history(osv.osv):
 class product_attribute(osv.osv):
     _name = "product.attribute"
     _description = "Product Attribute"
-    _order = 'sequence,id'
+    _order = 'sequence, name'
     _columns = {
         'name': fields.char('Name', translate=True, required=True),
         'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values', copy=True),
@@ -350,8 +350,10 @@ class product_attribute_line(osv.osv):
     }
 
     def _check_valid_attribute(self, cr, uid, ids, context=None):
-        obj_pal = self.browse(cr, uid, ids[0], context=context)
-        return obj_pal.value_ids <= obj_pal.attribute_id.value_ids
+        for obj_pal in self.browse(cr, uid, ids, context=context):
+            if not (obj_pal.value_ids <= obj_pal.attribute_id.value_ids):
+                return False
+        return True
 
     _constraints = [
         (_check_valid_attribute, 'Error ! You cannot use this attribute with the following value.', ['attribute_id'])
@@ -421,6 +423,18 @@ class product_template(osv.osv):
 
         return product.write({'list_price': value})
 
+    def _product_currency(self, cr, uid, ids, name, arg, context=None):
+        uid = SUPERUSER_ID
+        try:
+            main_company = self.pool['ir.model.data'].get_object(cr, uid, 'base', 'main_company')
+        except ValueError:
+            company_ids = self.pool['res.company'].search(cr, uid, [], limit=1, order="id", context=context)
+            main_company = self.pool['res.company'].browse(cr, uid, company_ids[0], context=context)
+        res = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            res[product.id] = product.company_id.currency_id.id or main_company.currency_id.id
+        return res
+
     def _get_product_variant_count(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for product in self.browse(cr, uid, ids, context=context):
@@ -457,7 +471,7 @@ class product_template(osv.osv):
         return [x['product_tmpl_id'][0] for x in r]
 
     def _get_product_template_type(self, cr, uid, context=None):
-        return [('consu', 'Consumable'), ('service', 'Service')]
+        return [('consu', _('Consumable')), ('service', _('Service'))]
     _get_product_template_type_wrapper = lambda self, *args, **kwargs: self._get_product_template_type(*args, **kwargs)
 
     _columns = {
@@ -477,11 +491,7 @@ class product_template(osv.osv):
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Internal Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'price': fields.function(_product_template_price, fnct_inv=_set_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
-        'currency_id': fields.related(
-            'company_id', 'currency_id',
-            type='many2one',
-            relation='res.currency',
-            string='Currency'),
+        'currency_id': fields.function(_product_currency, type='many2one', relation='res.currency', string='Currency'),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'standard_price': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, fnct_search=_search_by_standard_price, multi='_compute_product_template_field', type='float', string='Cost', digits_compute=dp.get_precision('Product Price'),
@@ -527,37 +537,19 @@ class product_template(osv.osv):
     # image: all image fields are base64 encoded and PIL-supported
     image = openerp.fields.Binary("Image", attachment=True,
         help="This field holds the image used as image for the product, limited to 1024x1024px.")
-    image_medium = openerp.fields.Binary("Medium-sized image",
-        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+    image_medium = openerp.fields.Binary("Medium-sized image", attachment=True,
         help="Medium-sized image of the product. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved, "\
              "only when the image exceeds one of those sizes. Use this field in form views or some kanban views.")
-    image_small = openerp.fields.Binary("Small-sized image",
-        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+    image_small = openerp.fields.Binary("Small-sized image", attachment=True,
         help="Small-sized image of the product. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
-
-    @api.depends('image')
-    def _compute_images(self):
-        for rec in self:
-            rec.image_medium = tools.image_resize_image_medium(rec.image, avoid_if_small=True)
-            rec.image_small = tools.image_resize_image_small(rec.image)
-
-    def _inverse_image_medium(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_medium)
-
-    def _inverse_image_small(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_small)
 
     def _price_get(self, cr, uid, products, ptype='list_price', context=None):
         if context is None:
             context = {}
 
-        if 'currency_id' in context:
-            currency_id = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id
         res = {}
         product_uom_obj = self.pool.get('product.uom')
         for product in products:
@@ -567,7 +559,7 @@ class product_template(osv.osv):
             if ptype != 'standard_price':
                 res[product.id] = product[ptype] or 0.0
             else:
-                company_id = product.env.user.company_id.id
+                company_id = context.get('force_company') or product.env.user.company_id.id
                 product = product.with_context(force_company=company_id)
                 res[product.id] = res[product.id] = product.sudo()[ptype]
             if ptype == 'list_price':
@@ -580,7 +572,7 @@ class product_template(osv.osv):
             if 'currency_id' in context:
                 # Take current user company currency.
                 # This is right cause a field cannot be in more than one currency
-                res[product.id] = self.pool.get('res.currency').compute(cr, uid, currency_id,
+                res[product.id] = self.pool.get('res.currency').compute(cr, uid, product.currency_id.id,
                     context['currency_id'], res[product.id], context=context)
         return res
 
@@ -637,7 +629,7 @@ class product_template(osv.osv):
             for variant_id in variant_alone:
                 product_ids = []
                 for product_id in tmpl_id.product_variant_ids:
-                    if variant_id.id not in map(int, product_id.attribute_value_ids):
+                    if not variant_id.attribute_id <= product_id.mapped('attribute_value_ids').mapped('attribute_id'):
                         product_ids.append(product_id.id)
                 product_obj.write(cr, uid, product_ids, {'attribute_value_ids': [(4, variant_id.id)]}, context=ctx)
 
@@ -679,6 +671,7 @@ class product_template(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
+        tools.image_resize_images(vals)
         product_template_id = super(product_template, self).create(cr, uid, vals, context=context)
         if not context or "create_product_product" not in context:
             self.create_variant_ids(cr, uid, [product_template_id], context=context)
@@ -702,6 +695,7 @@ class product_template(osv.osv):
         return product_template_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        tools.image_resize_images(vals)
         res = super(product_template, self).write(cr, uid, ids, vals, context=context)
         if 'attribute_line_ids' in vals or vals.get('active'):
             self.create_variant_ids(cr, uid, ids, context=context)
@@ -710,15 +704,16 @@ class product_template(osv.osv):
             ctx.update(active_test=False)
             product_ids = []
             for product in self.browse(cr, uid, ids, context=ctx):
-                product_ids = map(int,product.product_variant_ids)
+                product_ids += map(int, product.product_variant_ids)
             self.pool.get("product.product").write(cr, uid, product_ids, {'active': vals.get('active')}, context=ctx)
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        template = self.browse(cr, uid, id, context=context)
-        default['name'] = _("%s (copy)") % (template['name'])
+        if 'name' not in default:
+            template = self.browse(cr, uid, id, context=context)
+            default['name'] = _("%s (copy)") % (template['name'])
         return super(product_template, self).copy(cr, uid, id, default=default, context=context)
 
     _defaults = {
@@ -947,6 +942,13 @@ class product_product(osv.osv):
             break
         return res
 
+    def _get_items(self, cr, uid, ids, field_name, args, context=None):
+        res = {}
+        for prod in self.browse(cr, uid, ids, context=context):
+            item_ids = self.pool['product.pricelist.item'].search(cr, uid, ['|', ('product_id', '=', prod.id), ('product_tmpl_id', '=', prod.product_tmpl_id.id)], context=context)
+            res[prod.id] = item_ids
+        return res
+
     _columns = {
         'price': fields.function(_product_price, fnct_inv=_set_product_lst_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is the sum of the extra price of all attributes", digits_compute=dp.get_precision('Product Price')),
@@ -983,6 +985,7 @@ class product_product(osv.osv):
                                           groups="base.group_user", string="Cost"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents in Kg, not including any packaging, etc."),
+        'item_ids': fields.function(_get_items, type='many2many', relation='product.pricelist.item', string='Pricelist Items', store=False),
     }
 
     _defaults = {
@@ -1164,7 +1167,7 @@ class product_product(osv.osv):
             # if we copy a variant or create one, we keep the same template
             default['product_tmpl_id'] = product.product_tmpl_id.id
         elif 'name' not in default:
-            default['name'] = _("%s (copy)") % (product.name,)
+            default['name'] = product.name
 
         return super(product_product, self).copy(cr, uid, id, default=default, context=context)
 

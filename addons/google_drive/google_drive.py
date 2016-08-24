@@ -223,9 +223,25 @@ class config(osv.Model):
 class base_config_settings(osv.TransientModel):
     _inherit = "base.config.settings"
 
+    def _get_drive_uri(self, cr, uid, ids, field_name, arg, context=None):
+        return {
+            wizard_id: self.default_get(cr, uid, ['google_drive_uri']).get('google_drive_uri')
+            for wizard_id in ids
+        }
+
+    def _get_wizard_ids(self, cr, uid, ids, context=None):
+        result = []
+        if any(rec.key in ['google_drive_client_id', 'google_redirect_uri'] for rec in self.browse(cr, uid, ids, context=context)):
+            result.extend(self.pool['base.config.settings'].search(cr, uid, [], context=context))
+        return result
+
     _columns = {
         'google_drive_authorization_code': fields.char('Authorization Code'),
-        'google_drive_uri': fields.char('URI', readonly=True, help="The URL to generate the authorization code from Google"),
+        'google_drive_uri': fields.function(_get_drive_uri, string='URI', help="The URL to generate the authorization code from Google", type="char", store={
+            'ir.config_parameter': (_get_wizard_ids, None, 20),
+        }),  # TODO: 1. in master, remove the store, there is no reason for this field to be stored. It's just a dynamic link.
+             # TODO: 2. when converted to the new API, the code to get the default value can be moved to the compute method directly, and the default value can be removed
+             #          the only reason the default value is defined is because function fields are not computed in draft mode in the old API.
     }
     _defaults = {
         'google_drive_uri': lambda s, cr, uid, c: s.pool['google.service']._get_google_token_uri(cr, uid, 'drive', scope=s.pool['google.drive.config'].get_google_scope(), context=c),

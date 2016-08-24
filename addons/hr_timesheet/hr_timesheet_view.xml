@@ -80,6 +80,8 @@
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field> <!-- reset to empty -->
+            <field name="context">{}</field> <!-- reset to empty -->
         </record>
 
         <menuitem name="Configuration" id="menu_hr_timesheet_config" sequence="100"

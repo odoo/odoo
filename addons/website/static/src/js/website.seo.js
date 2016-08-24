@@ -354,7 +354,7 @@ var Configurator = Widget.extend({
     canEditKeywords: false,
     canEditLanguage: false,
     maxTitleSize: 65,
-    maxDescriptionSize: 150,
+    maxDescriptionSize: 160,  // TODO master: remove me and add warning
     start: function () {
         var self = this;
         var $modal = self.$el;

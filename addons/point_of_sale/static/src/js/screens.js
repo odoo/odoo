@@ -131,6 +131,8 @@ var ScreenWidget = PosBaseWidget.extend({
         this.pos.barcode_reader.set_action_callback({
             'cashier': _.bind(self.barcode_cashier_action, self),
             'product': _.bind(self.barcode_product_action, self),
+            'weight': _.bind(self.barcode_product_action, self),
+            'price': _.bind(self.barcode_product_action, self),
             'client' : _.bind(self.barcode_client_action, self),
             'discount': _.bind(self.barcode_discount_action, self),
             'error'   : _.bind(self.barcode_error_action, self),
@@ -295,6 +297,15 @@ var ScaleScreenWidget = ScreenWidget.extend({
         var product = this.get_product();
         return (product ? product.price : 0) || 0;
     },
+    get_product_uom: function(){
+        var product = this.get_product();
+
+        if(product){
+            return this.pos.units_by_id[product.uom_id[0]].name;
+        }else{
+            return '';
+        }
+    },
     set_weight: function(weight){
         this.weight = weight;
         this.$('.weight').text(this.get_product_weight_string());
@@ -313,7 +324,7 @@ var ScaleScreenWidget = ScreenWidget.extend({
         var unit = this.pos.units_by_id[unit_id[0]];
         var weight = round_pr(this.weight || 0, unit.rounding);
         var weightstr = weight.toFixed(Math.ceil(Math.log(1.0/unit.rounding) / Math.log(10) ));
-            weightstr += ' Kg';
+        weightstr += ' ' + unit.name;
         return weightstr;
     },
     get_computed_price_string: function(){
@@ -1023,7 +1034,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
         if (this.editing_client) {
             this.$('.detail.barcode').val(code.code);
         } else if (this.pos.db.get_partner_by_barcode(code.code)) {
-            this.display_client_details('show',this.pos.db.get_partner_by_barcode(code.code));
+            var partner = this.pos.db.get_partner_by_barcode(code.code);
+            this.new_client = partner;
+            this.display_client_details('show', partner);
         }
     },
     perform_search: function(query, associate_result){
@@ -1300,7 +1313,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             contents.append($(QWeb.render('ClientDetailsEdit',{widget:this,partner:partner})));
             this.toggle_save_button();
 
-            contents.find('.image-uploader').on('change',function(){
+            contents.find('.image-uploader').on('change',function(event){
                 self.load_image_file(event.target.files[0],function(res){
                     if (res) {
                         contents.find('.client-picture img, .client-picture .fa').remove();
@@ -1519,7 +1532,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                             event.keyCode === 110 ||  // Decimal point (numpad)
                             event.keyCode === 188 ||  // Comma
                             event.keyCode === 46 ) {  // Numpad dot
-                    key = '.';
+                    key = self.decimal_point;
                 } else if (event.keyCode >= 48 && event.keyCode <= 57) { // Numbers
                     key = '' + (event.keyCode - 48);
                 } else if (event.keyCode === 45) { // Minus
@@ -1578,7 +1591,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 order.selected_paymentline.set_amount(amount);
                 this.order_changes();
                 this.render_paymentlines();
-                this.$('.paymentline.selected .edit').text(this.inputbuffer);
+                this.$('.paymentline.selected .edit').text(this.format_currency_no_symbol(amount));
             }
         }
     },
@@ -1704,9 +1717,9 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
         this.gui.show_popup('number',{
             'title': tip ? _t('Change Tip') : _t('Add Tip'),
-            'value': value,
+            'value': self.format_currency_no_symbol(value),
             'confirm': function(value) {
-                order.set_tip(Number(value));
+                order.set_tip(formats.parse_value(value, {type: "float"}, 0));
                 self.order_changes();
                 self.render_paymentlines();
             }
@@ -1817,11 +1830,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
             return;
         }
 
-        // get rid of payment lines with an amount of 0, because
-        // since accounting v9 we cannot have bank statement lines
-        // with an amount of 0
-        order.clean_empty_paymentlines();
-
         var plines = order.get_paymentlines();
         for (var i = 0; i < plines.length; i++) {
             if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
@@ -1876,6 +1884,8 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
                 this.pos.proxy.open_cashbox();
         }
+
+        order.initialize_validation_date();
 
         if (order.is_to_invoice()) {
             var invoiced = this.pos.push_and_invoice_order(order);
@@ -1961,6 +1971,12 @@ return {
     NumpadWidget: NumpadWidget,
     ProductScreenWidget: ProductScreenWidget,
     ProductListWidget: ProductListWidget,
+    ClientListScreenWidget: ClientListScreenWidget,
+    ActionpadWidget: ActionpadWidget,
+    DomCache: DomCache,
+    ProductCategoriesWidget: ProductCategoriesWidget,
+    ScaleScreenWidget: ScaleScreenWidget,
+    set_fiscal_position_button: set_fiscal_position_button,
 };
 
 });

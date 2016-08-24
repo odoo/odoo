@@ -59,16 +59,15 @@
                     t-field="product.lst_price"
                     t-field-options='{
                       "widget": "monetary",
-                      "from_currency": "product.company_id.currency_id",
-                      "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                      "from_currency": "product.currency_id",
+                      "display_currency": "website.currency_id"
                    }'/>
                   <span class="oe_price" style="white-space: nowrap;"
                     t-att-data-product-id="product.id"
                     t-field="product.price"
                     t-field-options='{
                        "widget": "monetary",
-                       "from_currency": "product.company_id.currency_id",
-                       "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                       "display_currency": "website.currency_id"
                    }'/>
                 </td>
                 <td>
@@ -107,14 +106,14 @@
                     t-field="product.lst_price"
                     t-field-options='{
                       "widget": "monetary",
-                      "from_currency": "product.company_id.currency_id",
-                      "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                      "from_currency": "product.currency_id",
+                      "display_currency": "website.currency_id"
                    }'/><br/>
                   <span class="oe_price" style="white-space: nowrap;"
                     t-field="product.price"
                     t-field-options='{
                        "widget": "monetary",
-                       "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                       "display_currency": "website.currency_id"
                    }'/>
                   <p class="css_not_available_msg bg-danger" style="position:absolute; padding: 15px;">Product not available</p>
                 </td>

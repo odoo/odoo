@@ -8,7 +8,11 @@ from pytz import timezone
 import pytz
 
 from openerp.osv import fields, osv
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import (
+    DEFAULT_SERVER_DATE_FORMAT,
+    DEFAULT_SERVER_DATETIME_FORMAT,
+    drop_view_if_exists,
+)
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
@@ -70,8 +74,6 @@ class hr_timesheet_sheet(osv.osv):
                 raise UserError(_('In order to create a timesheet for this employee, you must link him/her to a user.'))
             if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id, context=context):
                 raise UserError(_('You cannot have 2 timesheets that overlap!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
-            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).product_id:
-                raise UserError(_('In order to create a timesheet for this employee, you must link the employee to a product.'))
         if vals.get('attendances_ids'):
             # If attendances, we sort them by date asc before writing them, to satisfy the alternance constraint
             # In addition to the date order, deleting attendances are done before inserting attendances
@@ -513,6 +515,7 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
     }
 
     def init(self, cr):
+        drop_view_if_exists(cr, 'hr_timesheet_sheet_sheet_day')
         cr.execute("""create or replace view hr_timesheet_sheet_sheet_day as
             SELECT
                 id,
@@ -602,6 +605,7 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
     }
 
     def init(self, cr):
+        drop_view_if_exists(cr, 'hr_timesheet_sheet_sheet_account')
         cr.execute("""create or replace view hr_timesheet_sheet_sheet_account as (
             select
                 min(l.id) as id,

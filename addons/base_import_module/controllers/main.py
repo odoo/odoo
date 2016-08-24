@@ -21,7 +21,7 @@ class ImportModule(Controller):
         if not is_admin:
             raise openerp.exceptions.AccessError("Only administrators can upload a module")
 
-    @route('/base_import_module/login', type='http', auth='none', methods=['POST'])
+    @route('/base_import_module/login', type='http', auth='none', methods=['POST'], csrf=False)
     @webservice
     def login(self, login, password, db=None):
         if db and db != request.db:
@@ -30,7 +30,9 @@ class ImportModule(Controller):
         if not uid:
             return Response(response="Wrong login/password", status=401)
         self.check_user(uid)
-        return "ok"
+        return Response(headers={
+            'X-CSRF-TOKEN': request.csrf_token(),
+        })
 
     @route('/base_import_module/upload', type='http', auth='user', methods=['POST'])
     @webservice

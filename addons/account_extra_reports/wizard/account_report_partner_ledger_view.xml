@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_report_partner_ledger_view" model="ir.ui.view">
+        <field name="name">Partner Ledger</field>
+        <field name="model">account.report.partner.ledger</field>
+        <field name="inherit_id" ref="account.account_common_report_view"/>
+        <field name="arch" type="xml">
+        <data>
+        <xpath expr="//field[@name='target_move']" position="after">
+                <field name="result_selection"/>
+                <field name="amount_currency" groups="base.group_multi_currency"/>
+                <newline/>
+                <field name="reconciled"/>
+                <newline/>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="action_account_partner_ledger_menu" model="ir.actions.act_window">
+        <field name="name">Partner Ledger</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.report.partner.ledger</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_report_partner_ledger_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_account_partner_ledger_values" model="ir.values">
+        <field name="model_id" ref="account.model_account_account" />
+        <field name="name">Partner Ledger</field>
+        <field name="key2">client_print_multi</field>
+        <field name="value" eval="'ir.actions.act_window,' +str(ref('action_account_partner_ledger_menu'))" />
+        <field name="key">action</field>
+        <field name="model">account.account</field>
+    </record>
+
+    <menuitem
+        id="menu_partner_ledger"
+        name="Partner Ledger"
+        parent="account.account_reports_management_menu"
+        action="action_account_partner_ledger_menu"
+        groups="account.group_account_manager,account.group_account_user"
+       />
+
+</odoo>

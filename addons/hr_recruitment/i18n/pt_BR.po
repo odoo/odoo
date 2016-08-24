@@ -3,15 +3,17 @@
 # * hr_recruitment
 # 
 # Translators:
+# danimaribeiro <danimaribeiro@gmail.com>, 2016
 # Grazziano Duarte <g.negocios@outlook.com.br>, 2015
 # Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
+# Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-12-14 00:57+0000\n"
-"Last-Translator: Grazziano Duarte <g.negocios@outlook.com.br>\n"
+"PO-Revision-Date: 2016-03-14 03:01+0000\n"
+"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +35,7 @@ msgid ""
 "            </p>\n"
 "            <p>Please welcome him/her and help him/her finding his/her marks.</p>\n"
 "            "
-msgstr "\n            <p>\n                %if object.department_id:\n                    Estou muito satisfeito em anunciar que <strong> ${object.name} </strong> vai se juntar a nós como ${object.job_id.name}\n                    in ${object.department_id.name}.\n                %else:\n                    Estou muito satisfeito em anunciar que <strong> ${object.name} </strong> vai se juntar a nós como ${object.job_id.name}.\n                %endif\n            </p>\n            <p>Dêem as boas vindas a ele/ela e ajude ele/ela a encontrar suas marcas.</p>\n            "
+msgstr "\n            <p>\n                %if object.department_id:\n                    Estou muito satisfeito em anunciar que <strong> ${object.name} </strong> vai se juntar a nós como ${object.job_id.name}\n                    em ${object.department_id.name}.\n                %else:\n                    Estou muito satisfeito em anunciar que <strong> ${object.name} </strong> vai se juntar a nós como ${object.job_id.name}.\n                %endif\n            </p>\n            <p>Dêem as boas vindas a ele/ela e ajude ele/ela a encontrar suas marcas.</p>\n            "
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_1
@@ -520,9 +522,9 @@ msgstr "Criar apelido"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
-"Create email and url for each distinct source. <br/>\n"
+"Create email and url for each distinct source. <br>\n"
 "                When the applicant will arrive, you will know from wich source the Job position is coming."
-msgstr "Criar e-mail e URL para cada fonte distinta. <br/>\n                 Quando o candidato chegar, você vai saber de qual fonte o cargo vem."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -898,6 +900,11 @@ msgid "HR Department"
 msgstr "Departamento de RH"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Hired Employees"
+msgstr "Funcionários Contratados"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_id
@@ -960,13 +967,6 @@ msgstr "Importância "
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "Importante"
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
-#: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
-msgid "Important Messages"
-msgstr "Mensagens Importantes"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
@@ -1800,6 +1800,9 @@ msgstr "Não atribuído"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_unread
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
 msgid "Unread Messages"
 msgstr "Mensagens não lidas"
 

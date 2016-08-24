@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Dafao Berto <netmastersgr@gmail.com>, 2015
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-12-17 09:20+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"POT-Creation-Date: 2016-01-15 10:41+0000\n"
+"PO-Revision-Date: 2016-08-04 20:23+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,7 +72,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>Reports</span>"
-msgstr ""
+msgstr "<span>Αναφορές</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -195,6 +195,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_city
 msgid "City"
 msgstr "Πόλη"
+
+#. module: hr
+#: model:web.tip,description:hr.hr_tip_2
+msgid "Click here to change the recruitment goal!"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
@@ -635,14 +640,6 @@ msgid ""
 msgstr "Αν το ενεργό πεδίο έχει οριστεί σε Ψευδές, θα σας επιτρέψει να αποκρύψετε την εγγραφή πόρου χωρίς να την καταργήσετε."
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
-msgid "Important Messages"
-msgstr "Σημαντικά Μηνύματα "
-
-#. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
@@ -751,6 +748,11 @@ msgid "Last Modified on"
 msgstr "Τελευταία αλλαγή στις"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_last_website_so_id
+msgid "Last Online Sale Order"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
@@ -854,13 +856,6 @@ msgstr "Μέλη"
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Messages"
 msgstr "Μηνύματα"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_ids
-#: model:ir.model.fields,help:hr.field_hr_employee_message_ids
-#: model:ir.model.fields,help:hr.field_hr_job_message_ids
-msgid "Messages and communication history"
-msgstr "Μηνύματα και ιστορικό επικοινωνίας"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -1191,6 +1186,11 @@ msgid "Subordinates"
 msgstr "Υφιστάμενοι"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_subscription_count
+msgid "Subscriptions"
+msgstr ""
+
+#. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
 msgstr "Το όνομα ετικέτας υπάρχει ήδη !"
@@ -1250,8 +1250,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_unread
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+#: model:ir.ui.view,arch_db:hr.view_department_filter
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
-msgstr "Αδιάβαστα Μυνήματα"
+msgstr "Αδιάβαστα Μηνύματα"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_unread_counter
@@ -1379,7 +1383,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_mobile_phone
 msgid "Work Mobile"
-msgstr "Κινητή Εργασία"
+msgstr "Κινητό Εργασίας"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_phone

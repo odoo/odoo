@@ -3,16 +3,21 @@
 # * website_quote
 # 
 # Translators:
+# Eddie Lim <bhweelim@yahoo.com>, 2016
 # fausthuang, 2015
 # fausthuang, 2015
-# 珠海-老天 <liangjia@qq.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# lttlsnk <lttlsnk@gmail.com>, 2016
+# Martin Trigaux, 2016
+# 卓忆科技 <zhanghao@jointd.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:19+0000\n"
-"PO-Revision-Date: 2015-12-24 12:11+0000\n"
-"Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
+"POT-Creation-Date: 2016-04-18 12:33+0000\n"
+"PO-Revision-Date: 2016-07-22 06:34+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +29,7 @@ msgstr ""
 #: model:mail.template,body_html:website_quote.email_template_edi_sale
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "\n"
@@ -45,17 +50,13 @@ msgid ""
 "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
-"\n"
-"    <% set signup_url = object.get_signup_url() %>\n"
-"    % if signup_url and object.amount_total > 0 :\n"
 "    <p>\n"
-"    You can access this document and pay online via our Customer Portal:\n"
+"        You can view your quotation online:\n"
 "    </p>\n"
-"        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"           href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-"    % endif\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "\n"
-"    % if object.paypal_url and object.amount_total > 0 :\n"
+"    % if object.paypal_url and object.amount_total:\n"
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
@@ -74,18 +75,7 @@ msgid ""
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
-"        % endif\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
@@ -101,7 +91,12 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \"> <p>你好 ${object.partner_id.name},</p> <p>这是你的 ${object.state in ('draft', 'sent') and '报价单' or '订单'} 来自 ${object.company_id.name}: </p> <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\"> &nbsp;&nbsp;<strong>摘要</strong><br /> &nbsp;&nbsp;订单号: <strong>${object.name}</strong><br /> &nbsp;&nbsp;订单总额: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br /> &nbsp;&nbsp;订单日期: ${object.date_order}<br /> % if object.origin: &nbsp;&nbsp;订单偏向: ${object.origin}<br /> % endif % if object.client_order_ref: &nbsp;&nbsp;你的偏好: ${object.client_order_ref}<br /> % endif % if object.user_id: &nbsp;&nbsp;你的联系人: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a> % endif </p> % if object.paypal_url: <br/> <p>也可能直接通过贝宝支付:</p> <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\"> <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/> </a> % endif <br/> <p>如果你有任何问题的话，请直接联系我们！</p> <p>感谢您选择${object.company_id.name or 'us'}!</p> <br/> <br/> <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\"> <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\"> <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3> </div> <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\"> <span style=\"color: #222; margin-bottom: 5px; display: block; \"> % if object.company_id.street: ${object.company_id.street}<br/> % endif % if object.company_id.street2: ${object.company_id.street2}<br/> % endif % if object.company_id.city or object.company_id.zip: ${object.company_id.zip} ${object.company_id.city}<br/> % endif % if object.company_id.country_id: ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/> % endif </span> % if object.company_id.phone: <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \"> 电话:&nbsp; ${object.company_id.phone} </div> % endif % if object.company_id.website: <div> 网址 :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a> </div> %endif <p></p> </div> </div>\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \"> <p>Hello ${object.partner_id.name},</p> <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p> <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\"> &nbsp;&nbsp;<strong>REFERENCES</strong><br /> &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br /> &nbsp;&nbsp;Order total: <strong>${object.amount_total} <br /> &nbsp;&nbsp;Order date: ${object.date_order}<br /> % if object.origin: &nbsp;&nbsp;Order reference: ${object.origin}<br /> % endif % if object.client_order_ref: &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br /> % endif % if object.user_id: &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a> % endif </p> <;p> You can view your quotation online: </p> <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\" href=\";/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a> % if object.paypal_url: <br/> <p>It is also possible to directly pay with Paypal:</p> <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\"> <img class=\"oe_edi_paypal_button\" src=\";https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/> </a> % endif <br/> <p>If you have any question, do not hesitate to contact us.</p> <p>Thank you for choosing ${object.company_id.name or 'us'}!</p> <br/> <br/> <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\"> <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\"> <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3> </div> <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\"> <span style=\"color: #222; margin-bottom: 5px; display: block; \"> % if object.company_id.street: ${object.company_id.street}<br/> % endif % if object.company_id.street2: ${object.company_id.street2}<br/> % endif % if object.company_id.city or object.company_id.zip: ${object.company_id.zip} ${object.company_id.city}<br/> % endif % if object.company_id.country_id: ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/> % endif </span> % if object.company_id.phone: <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \"> Phone:&nbsp; ${object.company_id.phone} </div> % endif % if object.company_id.website: <div> Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a> </div> %endif <p></p> </div> </div>{255}"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "! You can"
+msgstr "! 您可以"
 
 #. module: website_quote
 #: model:mail.template,report_name:website_quote.email_template_edi_sale
@@ -113,9 +108,9 @@ msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and '�
 #. module: website_quote
 #: model:mail.template,subject:website_quote.email_template_edi_sale
 msgid ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} ${object.state in ('draft', 'sent') and '报价单' or '订单'} (单号 ${object.name or 'n/a' })"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -156,7 +151,7 @@ msgstr ":\n                                此内容只出现在当前报价\n  
 msgid ""
 "<b> To write a quotation description, edit your product, go the sales tab "
 "and add a text in \"Description for quotations\"</b>"
-msgstr "<b>要编写一个报价的描述，编辑你的产品，去销售标签，并在添加文本“描述的语录”</ B>"
+msgstr "<b> 要编写一个报价单的描述，编辑你的产品，去销售标签，并在添加文本“描述的语录”\"</b>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -166,22 +161,22 @@ msgstr "接受"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept Order"
-msgstr "接受订单"
+msgstr "<i class=\"fa fa-check\"/> 接受订单"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Pay Now"
-msgstr "马上支付"
+msgstr "<i class=\"fa fa-check\"/>立即支付"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
 msgid "<i class=\"fa fa-comment\"/> Feedback"
-msgstr "反馈"
+msgstr "<i class=\"fa fa-comment\"/> 反馈"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-times\"/> Reject"
-msgstr "拒绝"
+msgstr "<i class=\"fa fa-times\"/> 拒绝"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
@@ -207,7 +202,7 @@ msgstr "您将能够在HTML页面开发简单的动态组件"
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-clock-o\"/> "
 "Expired</span>"
-msgstr "过期的"
+msgstr "<span class=\"label label-default\"><i class=\"fa fa-fw fa-clock-o\"/> 过期</span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.quotations
@@ -223,7 +218,7 @@ msgid ""
 "developers who need to grasp knowledge of the <strong>business applications "
 "development </strong>process. This course is for new developers or for IT "
 "professionals eager to learn more about technical aspects.</span>"
-msgstr "本课程是专门针对需要掌握业务应用程序的开发过程中知识的开发者的。这课程是对新的开发人员或IT专业人员渴望了解更多有关技术方面的问题。"
+msgstr "<span style=\"text-align: -webkit-center; \">本课程是专门针对需要掌握业务应用程序的开发过程中知识的开发者的。这课程是对新的开发人员或IT专业人员渴望了解更多有关技术方面的问题。"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -242,55 +237,55 @@ msgstr "为了...的"
 msgid ""
 "<span>I agree that by paying this proposal, I\n"
 "                                accept it on the behalf of </span>"
-msgstr "<SPAN>本人同意支付这个建议，我接受</ SPAN>"
+msgstr "<SPAN>本人同意支付这个建议，我接受</SPAN>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid ""
 "<span>I agree that by signing this proposal, I\n"
 "                                  accept it on the behalf of </span>"
-msgstr "<SPAN>本人同意签署这项提案，我接受</ SPAN>"
+msgstr "<SPAN>本人同意签署这项提案，我接受</SPAN>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "<span>Suggested Products</span>"
-msgstr "<SPAN>推荐产品</ SPAN>"
+msgstr "<SPAN>推荐产品</SPAN>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<span>with payment terms: </span>"
-msgstr "<SPAN>付款方式：</ SPAN>"
+msgstr "<SPAN>付款方式：</SPAN>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.opt_quotation_signature
 msgid "<strong>Draw your signature</strong>"
-msgstr "<STRONG>绘制你的签名</ STRONG>"
+msgstr "<STRONG>绘制你的签名</STRONG>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "<strong>Expiration Date:</strong>"
-msgstr "<STRONG>到期日：</ STRONG>"
+msgstr "<STRONG>到期日：</STRONG>"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "<strong>Get high billing rates</strong> as you deliver a\n"
 "                                     highly valuable software."
-msgstr "<strong>获取高结算利率</ strong>作为你提供一个非常有价值的软件。"
+msgstr "<strong>获取高开单率</strong>作为你提供一个非常有价值的软件。"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "<strong>Grow with your existing customer base</strong>\n"
 "                                       by continuously proposing new modules."
-msgstr "<STRONG>与您现有的客户群成长</ STRONG>通过不断提出新的模块。"
+msgstr "<STRONG>与您现有的客户群成长</STRONG>通过不断提出新的模块。"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid ""
 "<strong>Having attended this course, participants should be able "
 "to:</strong>"
-msgstr "<STRONG>已经参加了这门课程，学员应能：</ STRONG>"
+msgstr "<STRONG>已经参加了这门课程，学员应能：</STRONG>"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
@@ -310,7 +305,7 @@ msgstr "<strong>需求:</strong>"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "<strong>Subtotal:</strong>"
-msgstr "<STRONG>小计：</ STRONG>"
+msgstr "<STRONG>小计：</STRONG>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -318,31 +313,31 @@ msgid ""
 "<strong>Template Header:</strong> this content\n"
 "                                will appear on all quotations using this\n"
 "                                template."
-msgstr "<STRONG>模板头：</ STRONG>此内容将出现在使用该模板的所有报价。"
+msgstr "<STRONG>模板头：</STRONG>此内容将出现在使用该模板的所有报价。"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "<strong>There are three components to the training</strong>"
-msgstr "<STRONG>有三个组成部分的训练</ STRONG>"
+msgstr "<STRONG>有三个组成部分的训练</STRONG>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid ""
 "<strong>This offer expired!</strong><br/>\n"
 "                                  Contact us for new quote."
-msgstr "<STRONG>此优惠过期！</ STRONG><BR/>联系我们新的报价。"
+msgstr "<STRONG>此优惠过期！</STRONG><BR/>联系我们新的报价。"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<strong>This offer expires in</strong>"
-msgstr "<STRONG>此报价在</ STRONG>到期"
+msgstr "<STRONG>此报价在</STRONG>到期"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid ""
 "<strong>This quotation has been canceled.</strong> Contact us to get a new "
 "quote."
-msgstr "<STRONG>此报价已取消。</ STRONG>与我们联系获得一个新的报价。"
+msgstr "<STRONG>此报价已取消。</STRONG>与我们联系获得一个新的报价。"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -516,7 +511,7 @@ msgstr "课程总结"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_create_uid
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_create_uid
 msgid "Created by"
-msgstr "创建于"
+msgstr "创建者"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_create_date
@@ -524,7 +519,7 @@ msgstr "创建于"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_create_date
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -565,7 +560,7 @@ msgid ""
 "Deliver <strong>strong value added services</strong> as you can\n"
 "                                       rely on a leading open source software, with\n"
 "                                       the support of the publisher."
-msgstr "交付<strong>强大的增值服务</ strong>作为你可以依靠领先的开源软件，和发行者的支持。"
+msgstr "交付<strong>强大的增值服务</strong>作为你可以依靠领先的开源软件，和发行者的支持。"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_name
@@ -639,7 +634,7 @@ msgstr "编辑模板"
 msgid ""
 "Enjoy the traction of the <strong>fastest growing\n"
 "                                    management software</strong> in the world."
-msgstr "享受<strong>世界上成长最快的管理软件</ STRONG>的牵引。"
+msgstr "享受<strong>世界上成长最快的管理软件</STRONG>的牵引。"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -704,7 +699,7 @@ msgstr "生成销售订单;直接邮寄给客户"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Get access to our experts"
-msgstr "可以访问我们的专家"
+msgstr "访问我们的专家"
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_line_sequence
@@ -717,7 +712,7 @@ msgid ""
 "Grow by developing a <strong>recurring\n"
 "                                     revenue flow</strong> from Odoo\n"
 "                                     Enterprise's commission system."
-msgstr "通过制定<STRONG>Odoo企业的佣金制度经常性收入流程</ STRONG>成长。"
+msgstr "通过制定<STRONG>Odoo企业的佣金制度经常性收入流程</STRONG>成长。"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
@@ -789,7 +784,7 @@ msgstr "安装和配置"
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Integrated Help"
-msgstr "帮助集成"
+msgstr "集成的帮助"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.navigation_menu
@@ -823,7 +818,7 @@ msgid ""
 "                                the <strong>partner portal</strong>, rights to\n"
 "                                <strong>use the trademark</strong>, sales support\n"
 "                                from a <strong>dedicated account manager</strong>."
-msgstr "它包括Odoo企业</ STRONG>，技术和/或功能的<strong>培训</ STRONG><STRONG>支持</ STRONG>服务，<STRONG>营销文件</ STRONG>，进入<STRONG>折扣在<strong>合作伙伴门户网站</ STRONG>，权限<strong>使用该商标</ STRONG>，销售支持从<STRONG>专门的客户经理</ STRONG>。"
+msgstr "它包括Odoo企业</STRONG>，技术和/或功能的<strong>培训</STRONG><STRONG>支持</STRONG>服务，<STRONG>营销文件</STRONG>，进入<STRONG>折扣在<strong>合作伙伴门户网站</STRONG>，权限<strong>使用该商标</STRONG>，销售支持从<STRONG>专门的客户经理</STRONG>。"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option___last_update
@@ -831,7 +826,7 @@ msgstr "它包括Odoo企业</ STRONG>，技术和/或功能的<strong>培训</ S
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option___last_update
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template___last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_write_uid
@@ -839,7 +834,7 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_write_uid
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新者"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_write_date
@@ -847,7 +842,7 @@ msgstr "最后更新"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_write_date
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_write_date
 msgid "Last Updated on"
-msgstr "最后更新"
+msgstr "最后更新时间"
 
 #. module: website_quote
 #: model:product.product,description_sale:website_quote.product_product_quote_1
@@ -925,7 +920,7 @@ msgstr "我的账户"
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Negotiation and Quotation Revisions"
-msgstr "谈判和报价修订"
+msgstr "谈判和报价单修订"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
@@ -941,7 +936,7 @@ msgstr "不强制对网报价验证"
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr "天数为报价的有效期计算"
+msgstr "天数用于报价单的有效期计算"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -983,12 +978,12 @@ msgstr "在线培训+认证"
 #. module: website_quote
 #: model:ir.actions.client,name:website_quote.open_quotation_menu
 msgid "Open Quotations"
-msgstr "打开报价"
+msgstr "打开报价单"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Opening Stock and Physical Inventory"
-msgstr "打开仓库和库存盘点"
+msgstr "开张库存以及库存盘点"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1109,6 +1104,13 @@ msgid "Payment Transaction"
 msgstr "支付交易"
 
 #. module: website_quote
+#: model:web.tip,description:website_quote.quotation_tip_1
+msgid ""
+"Preview the online quotation. You'll be able to edit the quotation content "
+"before send it to the customer."
+msgstr "预览在线报价单。在发送给客户之前您可以编辑报价内容。"
+
+#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -1118,7 +1120,7 @@ msgstr "价格"
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Pricelist and auto Segmentation"
-msgstr "价目表和经销商的分割"
+msgstr "价格表以及自动细分"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -1168,7 +1170,7 @@ msgstr "产品"
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Purchase Requisition and Purchase Order Management"
-msgstr "采购申请和采购订单管理"
+msgstr "采购请求和采购订单管理"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
@@ -1196,53 +1198,53 @@ msgstr "数量"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Quotation"
-msgstr "报价"
+msgstr "报价单"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_number_of_days
 msgid "Quotation Duration"
-msgstr "报价时间"
+msgstr "报价单时长"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_option
 msgid "Quotation Option"
-msgstr "报价选项"
+msgstr "报价单选项"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_template_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_name
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Quotation Template"
-msgstr "报价模板"
+msgstr "报价单模板"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_line
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_quote_line
 msgid "Quotation Template Lines"
-msgstr "报价模板行"
+msgstr "报价单模板行"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_quote_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_template_id
 msgid "Quotation Template Reference"
-msgstr "报价模板参考"
+msgstr "报价单模板参考"
 
 #. module: website_quote
 #: model:ir.actions.act_window,name:website_quote.action_sale_quotation_template
 #: model:ir.ui.menu,name:website_quote.menu_sale_quote_template
 msgid "Quotation Templates"
-msgstr "报价模板"
+msgstr "报价单模板"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_quote_viewed
 msgid "Quotation Viewed"
-msgstr "报价浏览过"
+msgstr "查看过的报价单"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:32
 #, python-format
 msgid "Quotation viewed by customer"
-msgstr "客户报价单"
+msgstr "客户查看过的报价单"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1298,7 +1300,7 @@ msgstr "销售订单参考"
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_tree
 msgid "Sale Quotation Template"
-msgstr "销售报价模板"
+msgstr "销售报价单模板"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order
@@ -1403,7 +1405,7 @@ msgstr "技术培训"
 msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
-msgstr "请告诉我们你为什么拒绝这个报价，这将帮助我们改进我们的服务。"
+msgstr "请告诉我们你为什么拒绝这个报价单，这将帮助我们改进我们的服务。"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -1426,7 +1428,7 @@ msgstr "测试自动发展"
 msgid ""
 "The description of products/services from your quotation will be displayed "
 "below"
-msgstr "产品说明/从你的报价服务，将在下面显示"
+msgstr "来自你的报价单的产品/服务说明将显示在下面"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
@@ -1441,6 +1443,11 @@ msgstr "这些课程特点在我们传统的课堂培训，发现相同的高品
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "This order"
+msgstr "此订单"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid ""
 "This order has been validated. Thanks for your trust\n"
 "                          and do not hesitate to"
@@ -1449,7 +1456,7 @@ msgstr "此订单已被确认。感谢您的信任不要犹豫"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "This quotation has been rejected."
-msgstr "此报价已被拒绝。"
+msgstr "此报价单已被拒绝。"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -1457,7 +1464,7 @@ msgid ""
 "Titles with style <i>Heading 1</i> and\n"
 "                                <i>Heading 2</i> will be used to generate the\n"
 "                                table of content automatically."
-msgstr "标题风格的<i>标题1</ I>and<I>标题2</ i>的将被用于自动生成表的内容。"
+msgstr "标题风格的<i>标题1</I>and<I>标题2</i>的将被用于自动生成表的内容。"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
@@ -1527,7 +1534,7 @@ msgstr "视频详细的演示"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "View Online Quotation"
-msgstr "查看网上报价"
+msgstr "查看在线报价单"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1555,7 +1562,7 @@ msgstr "我们会为您指定专门的客户经理，有经验的销售人员，
 #. module: website_quote
 #: model:ir.actions.report.xml,name:website_quote.report_web_quote
 msgid "Web Quotation"
-msgstr "网站报价"
+msgstr "网站报价单"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -1597,7 +1604,7 @@ msgstr "您的订单"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Your Quotation"
-msgstr "您的报价"
+msgstr "你的报价单"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1666,6 +1673,21 @@ msgid ""
 "for\n"
 "                          any question."
 msgstr "用于\n                           任何问题。"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has already been cancelled"
+msgstr "已经被取消"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has already been validated"
+msgstr "已经通过验证"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has not yet been sent"
+msgstr "尚未发送"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation

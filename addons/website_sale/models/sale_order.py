@@ -54,8 +54,8 @@ class sale_order(osv.Model):
         context = dict(context or {})
         order = self.pool['sale.order'].browse(cr, SUPERUSER_ID, order_id, context=context)
         product_context = context.copy()
+        product_context.setdefault('lang', order.partner_id.lang)
         product_context.update({
-            'lang': order.partner_id.lang,
             'partner': order.partner_id.id,
             'quantity': qty,
             'date': order.date_order,
@@ -139,8 +139,8 @@ class website(orm.Model):
 
     def _get_pricelist_id(self, cr, uid, ids, name, args, context=None):
         res = {}
-        pricelist = self.get_current_pricelist(cr, uid, context=context)
         for data in self.browse(cr, uid, ids, context=context):
+            pricelist = self.get_current_pricelist(cr, uid, context=dict(context, website_id=data.id))
             res[data.id] = pricelist.id
         return res
 
@@ -156,8 +156,8 @@ class website(orm.Model):
                                                  string='Price list available for this Ecommerce/Website'),
     }
 
-    @tools.ormcache('uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl')
-    def _get_pl(self, cr, uid, country_code, show_visible, website_pl, current_pl, all_pl):
+    @tools.ormcache('uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl', 'partner_pl', 'order_pl')
+    def _get_pl_partner_order(self, cr, uid, country_code, show_visible, website_pl, current_pl, all_pl, partner_pl=False, order_pl=False):
         """ Return the list of pricelists that can be used on website for the current user.
 
         :param str country_code: code iso or False, If set, we search only price list available for this country
@@ -166,6 +166,8 @@ class website(orm.Model):
         :param int current_pl: The current pricelist used on the website
                                (If not selectable but the current pricelist we had this pricelist anyway)
         :param list all_pl: List of all pricelist available for this website
+        :param int partner_pl: the partner pricelist
+        :param int order_pl: the current cart pricelist
 
         :returns: list of pricelist ids
         """
@@ -175,12 +177,12 @@ class website(orm.Model):
             groups = self.pool['res.country.group'].search(cr, uid, [('country_ids.code', '=', country_code)])
             for cgroup in self.pool['res.country.group'].browse(cr, uid, groups):
                 for pll in cgroup.website_pricelist_ids:
-                    if not show_visible or pll.selectable or pll.pricelist_id.id == current_pl:
+                    if not show_visible or pll.selectable or pll.pricelist_id.id in (current_pl, order_pl):
                         pcs.append(pll.pricelist_id)
 
         if not pcs:  # no pricelist for this country, or no GeoIP
             pcs = [pll.pricelist_id for pll in all_pl
-                   if not show_visible or pll.selectable or pll.pricelist_id.id == current_pl]
+                   if not show_visible or pll.selectable or pll.pricelist_id.id in (current_pl, order_pl)]
 
         partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid).partner_id
         if not pcs or partner.property_product_pricelist.id != website_pl:
@@ -188,6 +190,10 @@ class website(orm.Model):
         # remove duplicates and sort by name
         pcs = sorted(set(pcs), key=lambda pl: pl.name)
         return [pl.id for pl in pcs]
+
+    @tools.ormcache('uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl')
+    def _get_pl(self, cr, uid, country_code, show_visible, website_pl, current_pl, all_pl):
+        return self._get_pl_partner_order(cr, uid, country_code, show_visible, website_pl, current_pl, all_pl)
 
     def get_pricelist_available(self, cr, uid, show_visible=False, context=None):
         """ Return the list of pricelists that can be used on website for the current user.
@@ -198,12 +204,23 @@ class website(orm.Model):
 
         :returns: pricelist recordset
         """
+        website = request.website
+        if not request.website:
+            if context.get('website_id'):
+                website_id = context['website_id']
+            else:
+                website_id = self.search(cr, uid, [], context=context)
+            website = self.browse(cr, uid, website_id, context=context)
         isocountry = request.session.geoip and request.session.geoip.get('country_code') or False
-        user_id = self.pool['res.users'].browse(cr, uid, request.uid or uid, context=context)
-        pl_ids = self._get_pl(cr, uid, isocountry, show_visible,
-                              user_id.partner_id.property_product_pricelist.id,
-                              request.session.get('website_sale_current_pl'),
-                              request.website.website_pricelist_ids)
+        partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
+        order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
+        partner_pl = partner.property_product_pricelist
+        pl_ids = self._get_pl_partner_order(cr, uid, isocountry, show_visible,
+                                            website.user_id.sudo().partner_id.property_product_pricelist.id,
+                                            request.session.get('website_sale_current_pl'),
+                                            website.website_pricelist_ids,
+                                            partner_pl=partner_pl and partner_pl.id or None,
+                                            order_pl=order_pl and order_pl.id or None)
         return self.pool['product.pricelist'].browse(cr, uid, pl_ids, context=context)
 
     def is_pricelist_available(self, cr, uid, pl_id, context=None):
@@ -220,13 +237,38 @@ class website(orm.Model):
         """
         :returns: The current pricelist record
         """
-        pl_id = request.session.get('website_sale_current_pl')
-        if pl_id:
-            return self.pool['product.pricelist'].browse(cr, uid, [pl_id], context=context)[0]
-        else:
-            pl = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.property_product_pricelist
-            request.session['website_sale_current_pl'] = pl.id
-            return pl
+        # The list of available pricelists for this user.
+        # If the user is signed in, and has a pricelist set different than the public user pricelist
+        # then this pricelist will always be considered as available
+        available_pricelists = self.get_pricelist_available(cr, uid, context=context)
+        pl = None
+        if request.session.get('website_sale_current_pl'):
+            # `website_sale_current_pl` is set only if the user specifically chose it:
+            #  - Either, he chose it from the pricelist selection
+            #  - Either, he entered a coupon code
+            pl = self.pool['product.pricelist'].browse(cr, uid, [request.session['website_sale_current_pl']], context=context)[0]
+            if pl not in available_pricelists:
+                pl = None
+                request.session.pop('website_sale_current_pl')
+        if not pl:
+            partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
+            # If the user has a saved cart, it take the pricelist of this cart, except if
+            # the order is no longer draft (It has already been confirmed, or cancelled, ...)
+            pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
+            if not pl:
+                # The pricelist of the user set on its partner form.
+                # If the user is not signed in, it's the public user pricelist
+                pl = partner.property_product_pricelist
+            if available_pricelists and pl not in available_pricelists:
+                # If there is at least one pricelist in the available pricelists
+                # and the chosen pricelist is not within them
+                # it then choose the first available pricelist.
+                # This can only happen when the pricelist is the public user pricelist and this pricelist is not in the available pricelist for this localization
+                # If the user is signed in, and has a special pricelist (different than the public user pricelist),
+                # then this special pricelist is amongs these available pricelists, and therefore it won't fall in this case.
+                pl = available_pricelists[0]
+
+        return pl
 
     def sale_product_domain(self, cr, uid, ids, context=None):
         return [("sale_ok", "=", True)]
@@ -247,7 +289,12 @@ class website(orm.Model):
         """
         partner = self.get_partner(cr, uid)
         sale_order_obj = self.pool['sale.order']
-        sale_order_id = request.session.get('sale_order_id') or (partner.last_website_so_id.id if partner.last_website_so_id and partner.last_website_so_id.state == 'draft' else False)
+        sale_order_id = request.session.get('sale_order_id')
+        if not sale_order_id:
+            last_order = partner.last_website_so_id
+            available_pricelists = self.get_pricelist_available(cr, uid, context=context)
+            # Do not reload the cart of this user last visit if the cart is no longer draft or uses a pricelist no longer available.
+            sale_order_id = last_order and last_order.state == 'draft' and last_order.pricelist_id in available_pricelists and last_order.id
 
         sale_order = None
         # Test validity of the sale_order_id
@@ -255,7 +302,7 @@ class website(orm.Model):
             sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
         else:
             sale_order_id = None
-        pricelist_id = request.session.get('website_sale_current_pl')
+        pricelist_id = request.session.get('website_sale_current_pl') or self.get_current_pricelist(cr, uid, context=context).id
 
         if force_pricelist and self.pool['product.pricelist'].search_count(cr, uid, [('id', '=', force_pricelist)], context=context):
             pricelist_id = force_pricelist
@@ -395,6 +442,7 @@ class website_pricelist(osv.Model):
         # we change the config of website price list to force to recompute.
         website = self.pool['website']
         website._get_pl.clear_cache(website)
+        website._get_pl_partner_order.clear_cache(website)
 
     def create(self, cr, uid, data, context=None):
         res = super(website_pricelist, self).create(cr, uid, data, context=context)

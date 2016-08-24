@@ -2,9 +2,8 @@
 {
     "name" : "Product extension to track sales and purchases",
     "version" : "1.0",
-    "author" : "OpenERP S.A.",
     "depends" : ["product", "purchase", "sale", "mrp", "stock_account"],
-    "category" : "Generic Modules/Inventory Control",
+    "category" : "Manufacturing",
     "description": """
 Product extension. This module adds:
   * Computes standard price from the BoM of the product with a button on the product variant based

@@ -47,10 +47,10 @@ var RTE_Translate = rte.Class.extend({
 
             return ajax.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.translation',
-                method: 'write',
+                method: 'save_html',
                 args: [
                     [+$el.data('oe-translation-id')],
-                    {'value': translation_content, 'state': 'translated'},
+                    translation_content,
                     context || base.get_context()
                 ],
             });
@@ -319,7 +319,7 @@ if (edit_translations) {
             this.action = this.action.replace(/[$?]edit_translations[^&?]+/, '');
         });
 
-        $('title').html($('title').html().replace(/&lt;span data-oe-translation-id.+?&gt;(.+?)&lt;\/span&gt;/, '\$1'));
+        $('title').html($('title').html().replace(/&lt;span data-oe-model.+?&gt;(.+?)&lt;\/span&gt;/, '\$1'));
     });
 }
 

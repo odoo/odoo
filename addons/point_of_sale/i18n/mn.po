@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-11-21 09:40+0000\n"
+"PO-Revision-Date: 2016-01-27 10:50+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -155,7 +155,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
 msgid "<strong>Currency</strong>"
-msgstr ""
+msgstr "<strong>Валют</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
@@ -165,7 +165,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>Тайлбар</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
@@ -287,7 +287,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
 #: model:ir.ui.view,arch_db:point_of_sale.report_payment
 msgid "<strong>Qty</strong>"
-msgstr ""
+msgstr "<strong>Тоо хэмжээ</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
@@ -353,7 +353,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
 #: model:ir.ui.view,arch_db:point_of_sale.report_receipt
 msgid "<strong>Taxes</strong>"
-msgstr ""
+msgstr "<strong>Татварууд</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
@@ -398,7 +398,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.report_payment
 #: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
 msgid "<strong>Unit Price</strong>"
-msgstr ""
+msgstr "<strong>Нэгж үнэ</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
@@ -870,6 +870,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_cashdrawer
 msgid "Cashdrawer"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1604
+#, python-format
+msgid "Cashier"
 msgstr ""
 
 #. module: point_of_sale
@@ -1397,6 +1403,12 @@ msgstr "Хөнгөлөлтийн санамж"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1313
 #, python-format
 msgid "Discount:"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1602
+#, python-format
+msgid "Discounted Product"
 msgstr ""
 
 #. module: point_of_sale
@@ -2875,6 +2887,12 @@ msgid "Price"
 msgstr "Үнэ"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1601
+#, python-format
+msgid "Priced Product"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pricelist_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_pricelist_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_pricelist_id
@@ -4231,6 +4249,12 @@ msgid "Warehouse"
 msgstr "Агуулах"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1600
+#, python-format
+msgid "Weighted Product"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1180
 #, python-format
@@ -4268,13 +4292,6 @@ msgstr "Жил"
 #: model:product.product,name:point_of_sale.poivron_jaunes
 #: model:product.template,name:point_of_sale.poivron_jaunes_product_template
 msgid "Yellow Peppers"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid ""
-"You can define another list of available currencies on the\n"
-"                                    <i>Cash Registers</i> tab of the"
 msgstr ""
 
 #. module: point_of_sale
@@ -4515,11 +4532,6 @@ msgstr "хэрэглэгдээгүй"
 #, python-format
 msgid "paid orders"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "payment method."
-msgstr "Төлбөрийн арга"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config

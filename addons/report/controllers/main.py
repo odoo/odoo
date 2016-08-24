@@ -66,12 +66,7 @@ class ReportController(Controller):
         at the bottom of the output image
         """
         try:
-            width, height, humanreadable = int(width), int(height), bool(int(humanreadable))
-            barcode = createBarcodeDrawing(
-                type, value=value, format='png', width=width, height=height,
-                humanReadable = humanreadable
-            )
-            barcode = barcode.asString('png')
+            barcode = request.registry['report'].barcode(type, value, width=width, height=height, humanreadable=humanreadable)
         except (ValueError, AttributeError):
             raise exceptions.HTTPException(description='Cannot convert into barcode.')
 

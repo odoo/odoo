@@ -37,7 +37,7 @@ class TestReconciliation(AccountingTestCase):
         self.diff_income_account = self.env['res.users'].browse(self.env.uid).company_id.income_currency_exchange_account_id
         self.diff_expense_account = self.env['res.users'].browse(self.env.uid).company_id.expense_currency_exchange_account_id
 
-    def create_invoice(self, type='out_invoice', currency_id=None):
+    def create_invoice(self, type='out_invoice', invoice_amount=50, currency_id=None):
         #we create an invoice in given currency
         invoice = self.account_invoice_model.create({'partner_id': self.partner_agrolait_id,
             'reference_type': 'none',
@@ -49,9 +49,9 @@ class TestReconciliation(AccountingTestCase):
             })
         self.account_invoice_line_model.create({'product_id': self.product.id,
             'quantity': 1,
-            'price_unit': 100,
+            'price_unit': invoice_amount,
             'invoice_id': invoice.id,
-            'name': 'product that cost 100',
+            'name': 'product that cost ' + str(invoice_amount),
             'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id,
         })
 
@@ -95,7 +95,7 @@ class TestReconciliation(AccountingTestCase):
             self.assertEquals(round(move_line.credit, 2), aml_dict[move_line.account_id.id]['credit'])
             self.assertEquals(round(move_line.amount_currency, 2), aml_dict[move_line.account_id.id]['amount_currency'])
             self.assertEquals(move_line.currency_id.id, aml_dict[move_line.account_id.id]['currency_id'])
-            if aml_dict[move_line.account_id.id].get('currency_diff'):
+            if 'currency_diff' in aml_dict[move_line.account_id.id]:
                 if move_line.credit:
                     rec_ids = [r.id for r in move_line.matched_debit_ids]
                 else:
@@ -103,37 +103,38 @@ class TestReconciliation(AccountingTestCase):
                 currency_diff_move = self.env['account.move'].search([('rate_diff_partial_rec_id', 'in', rec_ids)])
                 self.assertEqual(len(currency_diff_move), 1)
                 for currency_diff_line in currency_diff_move[0].line_ids:
+                    if aml_dict[move_line.account_id.id].get('currency_diff') == 0:
+                        if currency_diff_line.account_id.id == move_line.account_id.id:
+                            self.assertAlmostEquals(currency_diff_line.amount_currency, aml_dict[move_line.account_id.id].get('amount_currency_diff'))
                     if aml_dict[move_line.account_id.id].get('currency_diff') > 0:
                         if currency_diff_line.account_id.id == move_line.account_id.id:
                             self.assertAlmostEquals(currency_diff_line.debit, aml_dict[move_line.account_id.id].get('currency_diff'))
                         else:
                             self.assertAlmostEquals(currency_diff_line.credit, aml_dict[move_line.account_id.id].get('currency_diff'))
                             self.assertIn(currency_diff_line.account_id.id, [self.diff_expense_account.id, self.diff_income_account.id], 'The difference accounts should be used correctly. ')
-                            #self.assertEquals(currency_diff_line.account_id.id, self.account_rsa.id)
                     else:
                         if currency_diff_line.account_id.id == move_line.account_id.id:
                             self.assertAlmostEquals(currency_diff_line.credit, abs(aml_dict[move_line.account_id.id].get('currency_diff')))
                         else:
                             self.assertAlmostEquals(currency_diff_line.debit, abs(aml_dict[move_line.account_id.id].get('currency_diff')))
                             self.assertIn(currency_diff_line.account_id.id, [self.diff_expense_account.id, self.diff_income_account.id], 'The difference accounts should be used correctly. ')
-                            #self.assertEquals(currency_diff_line.account_id.id, self.account_rsa.id)
 
-    def make_customer_and_supplier_flows(self, invoice_currency_id, bank_journal, amount, amount_currency, transaction_currency_id):
+    def make_customer_and_supplier_flows(self, invoice_currency_id, invoice_amount, bank_journal, amount, amount_currency, transaction_currency_id):
         #we create an invoice in given invoice_currency
-        invoice_record = self.create_invoice(type='out_invoice', currency_id=invoice_currency_id)
+        invoice_record = self.create_invoice(type='out_invoice', invoice_amount=invoice_amount, currency_id=invoice_currency_id)
         #we encode a payment on it, on the given bank_journal with amount, amount_currency and transaction_currency given
         bank_stmt = self.make_payment(invoice_record, bank_journal, amount=amount, amount_currency=amount_currency, currency_id=transaction_currency_id)
         customer_move_lines = bank_stmt.move_line_ids
 
         #we create a supplier bill in given invoice_currency
-        invoice_record = self.create_invoice(type='in_invoice', currency_id=invoice_currency_id)
+        invoice_record = self.create_invoice(type='in_invoice', invoice_amount=invoice_amount, currency_id=invoice_currency_id)
         #we encode a payment on it, on the given bank_journal with amount, amount_currency and transaction_currency given
         bank_stmt = self.make_payment(invoice_record, bank_journal, amount=-amount, amount_currency=-amount_currency, currency_id=transaction_currency_id)
         supplier_move_lines = bank_stmt.move_line_ids
         return customer_move_lines, supplier_move_lines
 
     def test_statement_usd_invoice_eur_transaction_eur(self):
-        customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_euro_id, self.bank_journal_usd, 42, 30, self.currency_euro_id)
+        customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_euro_id, 30, self.bank_journal_usd, 42, 30, self.currency_euro_id)
         self.check_results(customer_move_lines, {
             self.account_usd.id: {'debit': 30.0, 'credit': 0.0, 'amount_currency': 42, 'currency_id': self.currency_usd_id},
             self.account_rcv.id: {'debit': 0.0, 'credit': 30.0, 'amount_currency': -42, 'currency_id': self.currency_usd_id},
@@ -144,7 +145,7 @@ class TestReconciliation(AccountingTestCase):
         })
 
     def test_statement_usd_invoice_usd_transaction_usd(self):
-        customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, self.bank_journal_usd, 50, 0, False)
+        customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_usd, 50, 0, False)
         self.check_results(customer_move_lines, {
             self.account_usd.id: {'debit': 32.70, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_usd_id},
             self.account_rcv.id: {'debit': 0.0, 'credit': 32.70, 'amount_currency': -50, 'currency_id': self.currency_usd_id},
@@ -155,7 +156,7 @@ class TestReconciliation(AccountingTestCase):
         })
 
     def test_statement_usd_invoice_usd_transaction_eur(self):
-        customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, self.bank_journal_usd, 50, 40, self.currency_euro_id)
+        customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_usd, 50, 40, self.currency_euro_id)
         self.check_results(customer_move_lines, {
             self.account_usd.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_usd_id},
             self.account_rcv.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': -50, 'currency_id': self.currency_usd_id, 'currency_diff': 7.30},
@@ -166,7 +167,7 @@ class TestReconciliation(AccountingTestCase):
         })
 
     def test_statement_usd_invoice_chf_transaction_chf(self):
-        customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_swiss_id, self.bank_journal_usd, 42, 50, self.currency_swiss_id)
+        customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_swiss_id, 50, self.bank_journal_usd, 42, 50, self.currency_swiss_id)
         self.check_results(customer_move_lines, {
             self.account_usd.id: {'debit': 27.47, 'credit': 0.0, 'amount_currency': 42, 'currency_id': self.currency_usd_id},
             self.account_rcv.id: {'debit': 0.0, 'credit': 27.47, 'amount_currency': -50, 'currency_id': self.currency_swiss_id, 'currency_diff': -10.74},
@@ -177,7 +178,7 @@ class TestReconciliation(AccountingTestCase):
         })
 
     def test_statement_eur_invoice_usd_transaction_usd(self):
-        customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, self.bank_journal_euro, 40, 50, self.currency_usd_id)
+        customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_euro, 40, 50, self.currency_usd_id)
         self.check_results(customer_move_lines, {
             self.account_euro.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_usd_id},
             self.account_rcv.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': -50, 'currency_id': self.currency_usd_id, 'currency_diff': 7.30},
@@ -188,7 +189,7 @@ class TestReconciliation(AccountingTestCase):
         })
 
     def test_statement_eur_invoice_usd_transaction_eur(self):
-        customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, self.bank_journal_euro, 40, 0.0, False)
+        customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_euro, 40, 0.0, False)
         self.check_results(customer_move_lines, {
             self.account_euro.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
             self.account_rcv.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': -61.16, 'currency_id': self.currency_usd_id},
@@ -199,7 +200,7 @@ class TestReconciliation(AccountingTestCase):
         })
 
     def test_statement_euro_invoice_usd_transaction_chf(self):
-        customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, self.bank_journal_euro, 42, 50, self.currency_swiss_id)
+        customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_euro, 42, 50, self.currency_swiss_id)
         self.check_results(customer_move_lines, {
             self.account_euro.id: {'debit': 42.0, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_swiss_id},
             self.account_rcv.id: {'debit': 0.0, 'credit': 42.0, 'amount_currency': -50, 'currency_id': self.currency_swiss_id},
@@ -209,6 +210,50 @@ class TestReconciliation(AccountingTestCase):
             self.account_rcv.id: {'debit': 42.0, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_swiss_id},
         })
 
+    def test_statement_euro_invoice_usd_transaction_euro_full(self):
+        #we create an invoice in given invoice_currency
+        invoice_record = self.create_invoice(type='out_invoice', invoice_amount=50, currency_id=self.currency_usd_id)
+        #we encode a payment on it, on the given bank_journal with amount, amount_currency and transaction_currency given
+        bank_stmt = self.acc_bank_stmt_model.create({
+            'journal_id': self.bank_journal_euro.id,
+            'date': time.strftime('%Y') + '-01-01',
+        })
+
+        bank_stmt_line = self.acc_bank_stmt_line_model.create({'name': 'payment',
+            'statement_id': bank_stmt.id,
+            'partner_id': self.partner_agrolait_id,
+            'amount': 40,
+            'date': time.strftime('%Y') + '-01-01',})
+
+        #reconcile the payment with the invoice
+        for l in invoice_record.move_id.line_ids:
+            if l.account_id.id == self.account_rcv.id:
+                line_id = l
+                break
+        bank_stmt_line.process_reconciliation(counterpart_aml_dicts=[{
+              'move_line': line_id,
+              'debit': 0.0,
+              'credit': 32.7,
+              'name': line_id.name,
+            }], new_aml_dicts=[{
+              'debit': 0.0,
+              'credit': 7.3,
+              'name': 'exchange difference',
+              'account_id': self.diff_income_account.id
+            }])
+        self.check_results(bank_stmt.move_line_ids, {
+            self.account_euro.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0, 'currency_id': False},
+            self.account_rcv.id: {'debit': 0.0, 'credit': 32.7, 'amount_currency': -41.97, 'currency_id': self.currency_usd_id, 'currency_diff': 0, 'amount_currency_diff': -8.03},
+            self.diff_income_account.id: {'debit': 0.0, 'credit': 7.3, 'amount_currency': 0, 'currency_id': False},
+        })
+
+        # The invoice should be paid, as the payments totally cover its total
+        self.assertEquals(invoice_record.state, 'paid', 'The invoice should be paid by now')
+        invoice_rec_line = invoice_record.move_id.line_ids.filtered(lambda x: x.account_id.reconcile)
+        self.assertTrue(invoice_rec_line.reconciled, 'The invoice should be totally reconciled')
+        self.assertEquals(invoice_rec_line.amount_residual, 0, 'The invoice should be totally reconciled')
+        self.assertEquals(invoice_rec_line.amount_residual_currency, 0, 'The invoice should be totally reconciled')
+
     @unittest.skip('adapt to new accounting')
     def test_balanced_exchanges_gain_loss(self):
         # The point of this test is to show that we handle correctly the gain/loss exchanges during reconciliations in foreign currencies.
@@ -217,9 +262,9 @@ class TestReconciliation(AccountingTestCase):
         # will lead to an exchange loss, that should be handled correctly within the journal items.
         cr, uid = self.cr, self.uid
         # We update the currency rate of the currency USD in order to force the gain/loss exchanges in next steps
-        self.res_currency_rate_model.create(cr, uid, {
+        rateUSDbis_id = self.registry("ir.model.data").get_object_reference(self.cr, self.uid, "base", "rateUSDbis")[1]
+        self.res_currency_rate_model.write(cr, uid, rateUSDbis_id, {
             'name': time.strftime('%Y-%m-%d') + ' 00:00:00',
-            'currency_id': self.currency_usd_id,
             'rate': 0.033,
         })
         # We create a customer invoice of 2.00 USD
@@ -303,3 +348,61 @@ class TestReconciliation(AccountingTestCase):
                 counterpart_exchange_loss_line = line
         #  We should be able to find a move line of 0.01 EUR on the Foreign Exchange Loss account
         self.assertTrue(counterpart_exchange_loss_line, 'There should be one move line of 0.01 EUR on account "Foreign Exchange Loss"')
+
+    def test_manual_reconcile_wizard_opw678153(self):
+
+        def create_move(name, amount, amount_currency, currency_id):
+            debit_line_vals = {
+                'name': name,
+                'debit': amount > 0 and amount or 0.0,
+                'credit': amount < 0 and -amount or 0.0,
+                'account_id': self.account_rcv.id,
+                'amount_currency': amount_currency,
+                'currency_id': currency_id,
+            }
+            credit_line_vals = debit_line_vals.copy()
+            credit_line_vals['debit'] = debit_line_vals['credit']
+            credit_line_vals['credit'] = debit_line_vals['debit']
+            credit_line_vals['account_id'] = self.account_rsa.id
+            credit_line_vals['amount_currency'] = -debit_line_vals['amount_currency']
+            vals = {
+                'journal_id': self.bank_journal_euro.id,
+                'line_ids': [(0,0, debit_line_vals), (0, 0, credit_line_vals)]
+            }
+            return self.env['account.move'].create(vals).id
+        move_list_vals = [
+            ('1', -1.83, 0, self.currency_swiss_id),
+            ('2', 728.35, 795.05, self.currency_swiss_id),
+            ('3', -4.46, 0, self.currency_swiss_id),
+            ('4', 0.32, 0, self.currency_swiss_id),
+            ('5', 14.72, 16.20, self.currency_swiss_id),
+            ('6', -737.10, -811.25, self.currency_swiss_id),
+        ]
+        move_ids = []
+        for name, amount, amount_currency, currency_id in move_list_vals:
+            move_ids.append(create_move(name, amount, amount_currency, currency_id))
+        aml_recs = self.env['account.move.line'].search([('move_id', 'in', move_ids), ('account_id', '=', self.account_rcv.id)])
+        wizard = self.env['account.move.line.reconcile'].with_context(active_ids=[x.id for x in aml_recs]).create({})
+        wizard.trans_rec_reconcile_full()
+        for aml in aml_recs:
+            self.assertTrue(aml.reconciled, 'The journal item should be totally reconciled')
+            self.assertEquals(aml.amount_residual, 0, 'The journal item should be totally reconciled')
+            self.assertEquals(aml.amount_residual_currency, 0, 'The journal item should be totally reconciled')
+
+        move_list_vals = [
+            ('2', 728.35, 795.05, self.currency_swiss_id),
+            ('3', -4.46, 0, False),
+            ('4', 0.32, 0, False),
+            ('5', 14.72, 16.20, self.currency_swiss_id),
+            ('6', -737.10, -811.25, self.currency_swiss_id),
+        ]
+        move_ids = []
+        for name, amount, amount_currency, currency_id in move_list_vals:
+            move_ids.append(create_move(name, amount, amount_currency, currency_id))
+        aml_recs = self.env['account.move.line'].search([('move_id', 'in', move_ids), ('account_id', '=', self.account_rcv.id)])
+        wizard = self.env['account.move.line.reconcile.writeoff'].with_context(active_ids=[x.id for x in aml_recs]).create({'journal_id': self.bank_journal_usd.id, 'writeoff_acc_id': self.account_rsa.id})
+        wizard.trans_rec_reconcile()
+        for aml in aml_recs:
+            self.assertTrue(aml.reconciled, 'The journal item should be totally reconciled')
+            self.assertEquals(aml.amount_residual, 0, 'The journal item should be totally reconciled')
+            self.assertEquals(aml.amount_residual_currency, 0, 'The journal item should be totally reconciled')

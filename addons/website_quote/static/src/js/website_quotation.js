@@ -2,6 +2,7 @@ odoo.define('website_quote.website_quote', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');
+var config = require('web.config');
 var Widget = require('web.Widget');
 var website = require('website.website');
 
@@ -134,7 +135,7 @@ if(!$('.o_website_quote').length) {
                     case "h1":
                         var id = self.setElementId('quote_header_', el);
                         var text = self.extractText($(el));
-                        last_li = $("<li>").html('<a href="#'+id+'">'+text+'</a>').appendTo(self.$el);
+                        last_li = $("<li>").append($('<a href="#'+id+'"/>').text(text)).appendTo(self.$el);
                         last_ul = false;
                         break;
                     case "h2":
@@ -144,7 +145,7 @@ if(!$('.o_website_quote').length) {
                             if (!last_ul) {
                                 last_ul = $("<ul class='nav'>").appendTo(last_li);
                             }
-                            $("<li>").html('<a href="#'+id+'">'+text+'</a>').appendTo(last_ul);
+                            $("<li>").append($('<a href="#'+id+'"/>').text(text)).appendTo(last_ul);
                         }
                         break;
                 }
@@ -175,6 +176,22 @@ if(!$('.o_website_quote').length) {
     nav_menu.setElement($('[data-id="quote_sidebar"]'));
     nav_menu.start($('body[data-target=".navspy"]'));
 
+    var $bs_sidebar = $(".o_website_quote .bs-sidebar");
+    $(window).on('resize', _.throttle(adapt_sidebar_position, 200, {leading: false}));
+    adapt_sidebar_position();
+
+    function adapt_sidebar_position() {
+        $bs_sidebar.css({
+            position: "",
+            width: "",
+        });
+        if (config.device.size_class >= config.device.SIZES.MD) {
+            $bs_sidebar.css({
+                position: "fixed",
+                width: $bs_sidebar.outerWidth(),
+            });
+        }
+    }
 });
 
 odoo.define('website_quote.payment_method', function (require) {
@@ -209,8 +226,11 @@ odoo.define('website_quote.payment_method', function (require) {
       }
       var href = $(location).attr("href");
       var order_id = href.match(/quote\/([0-9]+)/)[1];
-      ajax.jsonRpc('/quote/' + order_id +'/transaction/' + acquirer_id, 'call', {}).then(function (data) {
-        $form.submit();
+      var token = href.match(/quote\/[0-9]+\/([^\/?]*)/);
+      token = token ? token[1] : '';
+      ajax.jsonRpc('/quote/' + order_id +'/transaction/' + acquirer_id + (token ? '/' + token : ''), 'call', {}).then(function (data) {
+          $form.html(data);
+          $form.submit();
       });
    });
 });

@@ -15,6 +15,7 @@ var Priority = require('web.Priority');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
 var utils = require('web.utils');
+var dom_utils = require('web.dom_utils');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -50,9 +51,14 @@ var WidgetButton = common.FormWidget.extend({
     },
     on_click: function() {
         var self = this;
+        if (this.view.is_disabled) {
+            return;
+        }
         this.force_disabled = true;
         this.check_disable();
+        this.view.disable_button();
         this.execute_action().always(function() {
+            self.view.enable_button();
             self.force_disabled = false;
             self.check_disable();
             if (self.$el.hasClass('o_wow')) {
@@ -80,7 +86,6 @@ var WidgetButton = common.FormWidget.extend({
     },
     on_confirmed: function() {
         var self = this;
-
         var context = this.build_context();
         return this.view.do_execute_action(
             _.extend({}, this.node.attrs, {context: context}),
@@ -88,6 +93,8 @@ var WidgetButton = common.FormWidget.extend({
                 if (!_.isObject(reason)) {
                     self.view.recursive_reload();
                 }
+            }).fail(function () {
+                self.view.recursive_reload();
             });
     },
     check_disable: function() {
@@ -429,20 +436,40 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
         this._super.apply(this, arguments);
         this.debug = session.debug;
     },
+    start: function() {
+        var self = this;
+        var tmp = this._super();
+        if (this.options.model_field){
+            this.field_manager.fields[this.options.model_field].on("change:value", this, function(){
+                if (self.view && self.view.record_loaded.state == "resolved" && self.view.onchanges_mutex){
+                    self.view.onchanges_mutex.def.then(function(){
+                        self.render_value();
+                    });
+                }
+            });
+        }
+        return tmp;
+    },
     render_value: function() {
         var self = this;
 
         if (this.get('value')) {
             var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
-            var domain = pyeval.eval('domain', this.get('value'));
+            try{
+                var domain = pyeval.eval('domain', this.get('value'));
+            }
+            catch(e){
+                this.do_warn(_t('Error: Bad domain'), _t('The domain is wrong.'));
+                return;
+            }
             var ds = new data.DataSetStatic(self, model, self.build_context());
             ds.call('search_count', [domain]).then(function (results) {
-                self.$('.o_count').text(results + ' selected records');
+                self.$('.o_count').text(results + _t(' selected records'));
                 if (self.get('effective_readonly')) {
-                    self.$('button').text('See selection ');
+                    self.$('button').text(_t('See selection '));
                 }
                 else {
-                    self.$('button').text('Change selection ');
+                    self.$('button').text(_t('Change selection '));
                 }
                 self.$('button').append($("<span/>").addClass('fa fa-arrow-right'));
             });
@@ -451,9 +478,10 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
                 this.$('.o_debug_input').val(this.get('value'));
             }
         } else {
-            this.$('.o_count').text('No selected record');
+            this.$('.o_form_input').val('');
+            this.$('.o_count').text(_t('No selected record'));
             var $arrow = this.$('button span').detach();
-            this.$('button').text('Select records ').append($("<span/>").addClass('fa fa-arrow-right'));
+            this.$('button').text(_('Select records ')).append($("<span/>").addClass('fa fa-arrow-right'));
         }
     },
     on_click: function(event) {
@@ -463,7 +491,7 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
         var dialog = new common.DomainEditorDialog(this, {
             res_model: this.options.model || this.field_manager.get_field_value(this.options.model_field),
             default_domain: this.get('value'),
-            title: this.get('effective_readonly') ? 'Selected records' : 'Select records...',
+            title: this.get('effective_readonly') ? _t('Selected records') : _t('Select records...'),
             readonly: this.get('effective_readonly'),
             disable_multiple_selection: this.get('effective_readonly'),
             no_create: this.get('effective_readonly'),
@@ -573,16 +601,8 @@ var FieldText = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     render_value: function() {
         if (! this.get("effective_readonly")) {
             var show_value = formats.format_value(this.get('value'), this, '');
-            if (show_value === '') {
-                this.$textarea.css('height', parseInt(this.default_height, 10)+"px");
-            }
             this.$textarea.val(show_value);
-            if (! this.auto_sized) {
-                this.auto_sized = true;
-                autosize(this.$textarea);
-            } else {
-                this.$textarea.trigger("autosize");
-            }
+            dom_utils.autoresize(this.$textarea, {parent: this, min_height: parseInt(this.default_height)});
         } else {
             var txt = this.get("value") || '';
             this.$(".oe_form_text_content").text(txt);
@@ -1048,7 +1068,7 @@ var FieldRadio = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     render_value: function () {
         var self = this;
         this.$el.toggleClass("oe_readonly", this.get('effective_readonly'));
-        this.$("input").filter(function () {return this.value == self.get_value();}).prop("checked", true);
+        this.$("input").prop("checked", false).filter(function () {return this.value == self.get_value();}).prop("checked", true);
         this.$(".oe_radio_readonly").text(this.get('value') ? this.get('value')[1] : "");
     }
 });
@@ -1349,6 +1369,7 @@ var FieldBinaryImage = FieldBinary.extend({
             $img.css("max-height", "" + self.options.size[1] + "px");
         });
         $img.on('error', function() {
+            self.on_clear();
             $img.attr('src', self.placeholder);
             self.do_warn(_t("Image"), _t("Could not display the selected image."));
         });
@@ -1502,10 +1523,17 @@ var FieldStatus = common.AbstractField.extend({
             return fields;
         });
     },
-    on_click_stage: function (ev) {
+    on_click_stage: _.debounce(function (ev) {
         var self = this;
         var $li = $(ev.currentTarget);
+        var ul = $li.closest('.oe_form_field_status');
+        if (this.view.is_disabled) {
+            return;
+        }
         var val;
+        if (ul.attr('disabled')) {
+            return;
+        }
         if (this.field.type == "many2one") {
             val = parseInt($li.data("id"), 10);
         }
@@ -1513,15 +1541,25 @@ var FieldStatus = common.AbstractField.extend({
             val = $li.data("id");
         }
         if (val != self.get('value')) {
-            this.view.recursive_save().done(function() {
-                var change = {};
-                change[self.name] = val;
-                self.view.dataset.write(self.view.datarecord.id, change).done(function() {
-                    self.view.reload();
+            if (!this.view.datarecord.id ||
+                    this.view.datarecord.id.toString().match(data.BufferedDataSet.virtual_id_regex)) {
+                // don't save, only set value for not-yet-saved many2ones
+                self.set_value(val);
+            }
+            else {
+                this.view.recursive_save().done(function() {
+                    var change = {};
+                    change[self.name] = val;
+                    ul.attr('disabled', true);
+                    self.view.dataset.write(self.view.datarecord.id, change).done(function() {
+                        self.view.reload();
+                    }).always(function() {
+                        ul.removeAttr('disabled');
+                    });
                 });
-            });
+            }
         }
-    },
+    }, 300),
 });
 
 var FieldMonetary = FieldFloat.extend({

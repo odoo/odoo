@@ -5,7 +5,6 @@ import cStringIO
 import csv
 import logging
 import os.path
-import pickle
 import re
 import sys
 import time
@@ -26,7 +25,7 @@ import misc
 from config import config
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from misc import SKIPPED_ELEMENT_TYPES
-from misc import unquote
+from misc import pickle, unquote
 from openerp import SUPERUSER_ID
 from translate import _
 from yaml_import import convert_yaml_import
@@ -858,11 +857,7 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
         fp.close()
 
 def convert_sql_import(cr, fp):
-    queries = fp.read().split(';')
-    for query in queries:
-        new_query = ' '.join(query.split())
-        if new_query:
-            cr.execute(new_query)
+    cr.execute(fp.read())
 
 def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         noupdate=False):

@@ -3,13 +3,13 @@
 # * delivery
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-12-18 17:13+0000\n"
+"PO-Revision-Date: 2016-03-16 22:33+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -84,7 +84,7 @@ msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr "Μια περιγραφή του προϊόντος που θέλετε να γνωστοποιήσετε στους πελάτες σας. Αυτή η περιγραφή θα πρέπει να αντιγραφεί σε κάθε παραγγελία πώλησης, εντολή παράδοσης και κάθε Τιμολόγιο / Επιστροφή"
+msgstr "Μια περιγραφή του προϊόντος που θέλετε να γνωστοποιήσετε στους πελάτες σας. Αυτή η περιγραφή θα πρέπει να αντιγραφεί σε κάθε παραγγελία, εντολή παράδοσης και κάθε Τιμολόγιο / Επιστροφή"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_purchase
@@ -207,7 +207,7 @@ msgstr "Μπορεί να Ενοικιαστεί"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_sale_ok
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_ok
 msgid "Can be Sold"
-msgstr "Μπορεί να πουληθεί"
+msgstr "Μπορεί να Πωληθεί"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
@@ -1086,12 +1086,12 @@ msgstr "Κενό Πωλήσεων"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr "Εντολή Πώλησης"
+msgstr "Παραγγελία"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Γραμμή Εντολής Πώλησης"
+msgstr "Γραμμή Παραγγελίας"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_categ_id
@@ -1136,6 +1136,14 @@ msgid "Shipment sent to carrier %s for expedition with tracking number %s"
 msgstr ""
 
 #. module: delivery
+#: code:addons/delivery/models/stock_picking.py:106
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
 msgid "Shipping Cost"
 msgstr ""
@@ -1161,7 +1169,7 @@ msgstr "Καθορίστε εδώ μια μονάδα μέτρησης εάν η
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_product_sale_ok
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_ok
 msgid "Specify if the product can be selected in a sales order line."
-msgstr "Καθορίστε εάν το προϊόν μπορεί να επιλεγεί σε μια γραμμή εντολής πωλήσεων"
+msgstr "Καθορίστε εάν το προϊόν μπορεί να επιλεγεί σε μια γραμμή παραγγελίας"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_can_be_expensed
@@ -1287,14 +1295,14 @@ msgstr ""
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "Αυτός ο λογαριασμός θα χρησιμοποιείται για τα τιμολόγια αντί για την προκαθορισμένη αξιολόγηση των εξόδων για το τρέχον προϊόν."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "Αυτός ο λογαριασμός θα χρησιμοποιείται για τα τιμολόγια αντί για την προκαθορισμένη αξιολόγηση των πωλήσεων για το τρέχον προϊόν."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_creditor_price_difference
@@ -1435,7 +1443,7 @@ msgstr "Μονάδα Μέτρησης για το Βάρος"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread
 msgid "Unread Messages"
-msgstr "Αδιάβαστα Μυνήματα"
+msgstr "Αδιάβαστα Μηνύματα"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread_counter
@@ -1518,7 +1526,7 @@ msgstr ""
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr ""
+msgstr "Όταν ένα νέος Σειριακός Αριθμός εκδοθεί, αυτός είναι ο αριθμός των ημερών πριν τα αγαθά μπορεί να γίνουν επικίνδυνα και δεν πρέπει να καταναλωθούν."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
@@ -1541,7 +1549,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
+msgstr "Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο, τα αντίστοιχα είδη του ημερολογίου για όλες τις εισερχόμενες κινήσεις αποθέματος θα αναρτηθεί σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος λογαριασμός αποτίμησης στη θέση προέλευσης. Όταν δεν έχει οριστεί επί του προϊόντος, ένα από την κατηγορία προϊόντος θα  χρησιμοποιηθεί."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_output
@@ -1550,7 +1558,7 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
+msgstr "Όταν κάνει την αποτίμηση των αποθεμάτων σε πραγματικό χρόνο,τα αντίστοιχά είδη του ημερολογίου  για όλες τις εξερχόμενες κινήσεις των αποθεμάτων θα αναρτηθούν σε αυτό το λογαριασμό, εκτός εάν υπάρχει ένας συγκεκριμένος λογαριασμός αποτίμησης στην τοποθεσία προορισμού. Όταν δεν έχει οριστεί επί του προϊόντος, ένα από την κατηγορία προϊόντος θα χρησιμοποιηθεί."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id

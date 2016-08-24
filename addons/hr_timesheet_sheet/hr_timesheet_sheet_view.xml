@@ -134,14 +134,16 @@
                                     <field name="is_timesheet" invisible="1"/>
                                 </tree>
                                 <form string="Timesheet Activities">
-                                    <field name="date"/>
-                                    <field name="account_id"/>
-                                    <field name="name"/>
-                                    <field name="unit_amount" widget="float_time"/>
-                                    <field name="amount"/>
-                                    <field name="general_account_id"/>
-                                    <field name="user_id" required="1"/>
-                                    <field name="is_timesheet" invisible="1"/>
+                                    <group>
+                                        <field name="date"/>
+                                        <field name="account_id"/>
+                                        <field name="name"/>
+                                        <field name="unit_amount" widget="float_time"/>
+                                        <field name="amount"/>
+                                        <field name="general_account_id"/>
+                                        <field name="user_id" required="1"/>
+                                        <field name="is_timesheet" invisible="1"/>
+                                    </group>
                                 </form>
                             </field>
                         </page>
@@ -183,7 +185,7 @@
                     <field name="date_from"/>
                     <filter name="new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
                     <filter name="to_approve" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
-                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <group expand="0" string="Group By">
@@ -262,16 +264,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='account_grp']" position="after">
                     <group name="timesheets_grp" string="Timesheets">
-                        <field name="timesheet_range"/>
-                        <field name="timesheet_max_difference"/>
-                        <div>
-                            <label for="timesheet_range"/>
-                            <field name="timesheet_range" required="1" class="oe_inline"/>
-                        </div>
-                        <div>
-                            <label for="timesheet_max_difference"/>
-                            <field name="timesheet_max_difference" required="1" class="oe_inline"/>
-                        </div>
+                        <field name="timesheet_range" required="1"/>
+                        <field name="timesheet_max_difference" required="1"/>
                     </group>
                 </xpath>
             </field>

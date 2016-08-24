@@ -2,6 +2,7 @@
 
 import babel.dates
 import time
+import re
 import werkzeug.urls
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -161,6 +162,14 @@ class website_event(http.Controller):
 
         if '.' not in page:
             page = 'website_event.%s' % page
+
+        try:
+            request.website.get_template(page)
+        except ValueError:
+            # page not found
+            values['path'] = re.sub(r"^website_event\.", '', page)
+            values['from_template'] = 'website_event.default_page'  # .strip('website_event.')
+            page = 'website.page_404'
 
         return request.website.render(page, values)
 

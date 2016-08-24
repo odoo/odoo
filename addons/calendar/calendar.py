@@ -35,8 +35,8 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
     @return: real event id
     """
     if calendar_id and isinstance(calendar_id, (basestring)):
-        res = calendar_id.split('-')
-        if len(res) >= 2:
+        res = filter(None, calendar_id.split('-'))
+        if len(res) == 2:
             real_id = res[0]
             if with_date:
                 real_date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT, time.strptime(res[1], "%Y%m%d%H%M%S"))
@@ -260,7 +260,7 @@ class calendar_attendee(osv.Model):
         meeting_obj = self.pool['calendar.event']
         res = self.write(cr, uid, ids, {'state': 'accepted'}, context)
         for attendee in self.browse(cr, uid, ids, context=context):
-            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_(("%s has accepted invitation") % (attendee.cn)),
+            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_("%s has accepted invitation") % (attendee.cn),
                                      subtype="calendar.subtype_invitation", context=context)
 
         return res
@@ -275,7 +275,7 @@ class calendar_attendee(osv.Model):
         meeting_obj = self.pool['calendar.event']
         res = self.write(cr, uid, ids, {'state': 'declined'}, context)
         for attendee in self.browse(cr, uid, ids, context=context):
-            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_(("%s has declined invitation") % (attendee.cn)), subtype="calendar.subtype_invitation", context=context)
+            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_("%s has declined invitation") % (attendee.cn), subtype="calendar.subtype_invitation", context=context)
         return res
 
     def create(self, cr, uid, vals, context=None):
@@ -307,10 +307,11 @@ class res_partner(osv.Model):
             meeting = self.pool['calendar.event'].browse(cr, uid, get_real_ids(meeting_id), context=context)
         for partner in self.browse(cr, uid, ids, context=context):
             data = self.name_get(cr, uid, [partner.id], context)[0]
+            data = [data[0], data[1], False, partner.color]
             if meeting:
                 for attendee in meeting.attendee_ids:
                     if attendee.partner_id.id == partner.id:
-                        data = (data[0], data[1], attendee.state)
+                        data[2] = attendee.state
             datas.append(data)
         return datas
 
@@ -798,6 +799,11 @@ class calendar_event(osv.Model):
                     meeting_data[field] = meeting.stop_date if meeting.allday else meeting.stop_datetime
         return res
 
+    def _get_recurrent_fields(self, cr, uid, context=None):
+        return ['byday', 'recurrency', 'final_date', 'rrule_type', 'month_by',
+                'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa',
+                'su', 'day', 'week_list']
+
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
         """
         Gets Recurrence rule string according to value type RECUR of iCalendar from the values given.
@@ -808,10 +814,8 @@ class calendar_event(osv.Model):
             ids = [ids]
 
         #read these fields as SUPERUSER because if the record is private a normal search could raise an error
-        events = self.read(cr, SUPERUSER_ID, ids,
-                           ['id', 'byday', 'recurrency', 'final_date', 'rrule_type', 'month_by',
-                            'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa',
-                            'su', 'day', 'week_list'], context=context)
+        recurrent_fields = self._get_recurrent_fields(cr, uid, context=context)
+        events = self.read(cr, SUPERUSER_ID, ids, recurrent_fields, context=context)
         for event in events:
             if event['recurrency']:
                 result[event['id']] = self.compute_rule_string(event)
@@ -957,7 +961,9 @@ class calendar_event(osv.Model):
 
     def _check_closing_date(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context=context):
-            if event.stop < event.start:
+            if event.start_datetime and event.stop_datetime and event.stop_datetime < event.start_datetime:
+                return False
+            if event.start_date and event.stop_date and event.stop_date < event.start_date:
                 return False
         return True
 
@@ -1120,7 +1126,8 @@ class calendar_event(osv.Model):
         if r_date:
             sort_fields['sort_start'] = r_date.strftime("%Y%m%d%H%M%S")
         else:
-            sort_fields['sort_start'] = browse_event['display_start'].replace(' ', '').replace('-', '')
+            display_start = browse_event['display_start']
+            sort_fields['sort_start'] = display_start and display_start.replace(' ', '').replace('-', '') or False
         return sort_fields
 
     def get_recurrent_ids(self, cr, uid, event_id, domain, order=None, context=None):
@@ -1229,7 +1236,7 @@ class calendar_event(osv.Model):
         """
         if data['interval'] and data['interval'] < 0:
             raise UserError(_('interval cannot be negative.'))
-        if data['count'] and data['count'] <= 0:
+        if data['end_type'] == 'count' and int(data['count']) <= 0:
             raise UserError(_('Event recurrence interval cannot be negative.'))
 
         def get_week_string(freq, data):
@@ -1376,7 +1383,37 @@ class calendar_event(osv.Model):
             ('user_id', '=', uid),
         ]
 
+    @api.multi
+    def _get_message_unread(self):
+        id_map = {x: calendar_id2real_id(x) for x in self.ids}
+        real = self.browse(set(id_map.values()))
+        super(calendar_event, real)._get_message_unread()
+        for event in self:
+            if event.id == id_map[event.id]:
+                continue
+            rec = self.browse(id_map[event.id])
+            event.message_unread_counter = rec.message_unread_counter
+            event.message_unread = rec.message_unread
+
+    @api.multi
+    def _get_message_needaction(self):
+        id_map = {x: calendar_id2real_id(x) for x in self.ids}
+        real = self.browse(set(id_map.values()))
+        super(calendar_event, real)._get_message_needaction()
+        for event in self:
+            if event.id == id_map[event.id]:
+                continue
+            rec = self.browse(id_map[event.id])
+            event.message_needaction_counter = rec.message_needaction_counter
+            event.message_needaction = rec.message_needaction
+
+    @api.multi
+    def get_metadata(self):
+        real = self.browse(set({x: calendar_id2real_id(x) for x in self.ids}.values()))
+        return super(calendar_event, real).get_metadata()
+
     @api.cr_uid_ids_context
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, cr, uid, thread_id, context=None, **kwargs):
         if isinstance(thread_id, basestring):
             thread_id = get_real_ids(thread_id)
@@ -1469,7 +1506,7 @@ class calendar_event(osv.Model):
         for arg in args:
             new_arg = arg
 
-            if arg[0] in ('start_date', 'start_datetime', 'start',) and arg[1] == ">=":
+            if arg[0] in ('stop_date', 'stop_datetime', 'stop',) and arg[1] == ">=":
                 if context.get('virtual_id', True):
                     new_args += ['|', '&', ('recurrency', '=', 1), ('final_date', arg[1], arg[2])]
             elif arg[0] == "id":
@@ -1505,6 +1542,7 @@ class calendar_event(osv.Model):
                 recurrent_id=real_event_id,
                 recurrent_id_date=data.get('start'),
                 rrule_type=False,
+                end_type=False,
                 rrule='',
                 recurrency=False,
                 final_date=datetime.strptime(data.get('start'), DEFAULT_SERVER_DATETIME_FORMAT if data['allday'] else DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(hours=values.get('duration', False) or data.get('duration'))
@@ -1539,75 +1577,64 @@ class calendar_event(osv.Model):
         return super(calendar_event, self)._name_search(cr, user, name=name, args=args, operator=operator, context=context, limit=limit, name_get_uid=name_get_uid)
 
     def write(self, cr, uid, ids, values, context=None):
-        def _only_changes_to_apply_on_real_ids(field_names):
-            ''' return True if changes are only to be made on the real ids'''
-            for field in field_names:
-                if field in ['start', 'start_date', 'start_datetime', 'stop', 'stop_date', 'stop_datetime', 'active']:
-                    return True
-            return False
-
+        context = context or {}
         if not isinstance(ids, (tuple, list)):
             ids = [ids]
 
-        context = context or {}
-        self._set_date(cr, uid, values, id=ids[0], context=context)
+        values0 = values
 
-        for one_ids in ids:
-            if isinstance(one_ids, (basestring, int, long)):
-                if len(str(one_ids).split('-')) == 1:
-                    ids = [int(one_ids)]
-                else:
-                    ids = [one_ids]
+        # process events one by one
+        for event_id in ids:
+            # make a copy, since _set_date() modifies values depending on event
+            values = dict(values0)
+            self._set_date(cr, uid, values, event_id, context=context)
 
-        res = False
-        new_id = False
-
-        # Special write of complex IDS
-        for event_id in list(ids):
-            if len(str(event_id).split('-')) == 1:
-                continue
-
-            ids.remove(event_id)
-            real_event_id = calendar_id2real_id(event_id)
-
-            # if we are setting the recurrency flag to False or if we are only changing fields that
-            # should be only updated on the real ID and not on the virtual (like message_follower_ids):
-            # then set real ids to be updated.
-            if not values.get('recurrency', True) or not _only_changes_to_apply_on_real_ids(values.keys()):
-                ids.append(real_event_id)
-                continue
+            # special write of complex IDS
+            real_ids = []
+            new_ids = []
+            if '-' not in str(event_id):
+                real_ids = [int(event_id)]
             else:
-                data = self.read(cr, uid, event_id, ['start', 'stop', 'rrule', 'duration'])
-                if data.get('rrule'):
-                    new_id = self._detach_one_event(cr, uid, event_id, values, context=None)
+                real_event_id = calendar_id2real_id(event_id)
 
-        res = super(calendar_event, self).write(cr, uid, [int(event_id) for event_id in ids], values, context=context)
-
-        # set end_date for calendar searching
-        if values.get('recurrency', True) and values.get('end_type', 'count') in ('count', unicode('count')) and \
-                (values.get('rrule_type') or values.get('count') or values.get('start') or values.get('stop')):
-            for id in ids:
-                final_date = self._get_recurrency_end_date(cr, uid, id, context=context)
-                super(calendar_event, self).write(cr, uid, [id], {'final_date': final_date}, context=context)
-
-        attendees_create = False
-        if values.get('partner_ids', False):
-            attendees_create = self.create_attendees(cr, uid, ids, context)
-
-        if (values.get('start_date') or values.get('start_datetime', False)) and values.get('active', True):
-            the_id = new_id or (ids and int(ids[0]))
-            if the_id:
-                if attendees_create:
-                    attendees_create = attendees_create[the_id]
-                    mail_to_ids = list(set(attendees_create['old_attendee_ids']) - set(attendees_create['removed_attendee_ids']))
+                # if we are setting the recurrency flag to False or if we are only changing fields that
+                # should be only updated on the real ID and not on the virtual (like message_follower_ids):
+                # then set real ids to be updated.
+                blacklisted = any(key in values for key in ('start', 'stop', 'active'))
+                if not values.get('recurrency', True) or not blacklisted:
+                    real_ids = [real_event_id]
                 else:
-                    mail_to_ids = [att.id for att in self.browse(cr, uid, the_id, context=context).attendee_ids]
+                    data = self.read(cr, uid, event_id, ['start', 'stop', 'rrule', 'duration'])
+                    if data.get('rrule'):
+                        new_ids = [self._detach_one_event(cr, uid, event_id, values, context=None)]
 
-                if mail_to_ids:
-                    current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-                    if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, mail_to_ids, template_xmlid='calendar_template_meeting_changedate', email_from=current_user.email, context=context):
-                        self.message_post(cr, uid, the_id, body=_("A email has been send to specify that the date has been changed !"), subtype="calendar.subtype_invitation", context=context)
-        return res or True and False
+            super(calendar_event, self).write(cr, uid, real_ids, values, context=context)
+
+            # set end_date for calendar searching
+            if values.get('recurrency') and values.get('end_type', 'count') in ('count', unicode('count')) and \
+                    (values.get('rrule_type') or values.get('count') or values.get('start') or values.get('stop')):
+                for id in real_ids:
+                    final_date = self._get_recurrency_end_date(cr, uid, id, context=context)
+                    super(calendar_event, self).write(cr, uid, [id], {'final_date': final_date}, context=context)
+
+            attendees_create = False
+            if values.get('partner_ids', False):
+                attendees_create = self.create_attendees(cr, uid, real_ids + new_ids, context)
+
+            if (values.get('start_date') or values.get('start_datetime')) and values.get('active', True):
+                for the_id in real_ids + new_ids:
+                    if attendees_create:
+                        attendees_create = attendees_create[the_id]
+                        mail_to_ids = list(set(attendees_create['old_attendee_ids']) - set(attendees_create['removed_attendee_ids']))
+                    else:
+                        mail_to_ids = [att.id for att in self.browse(cr, uid, the_id, context=context).attendee_ids]
+
+                    if mail_to_ids:
+                        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+                        if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, mail_to_ids, template_xmlid='calendar_template_meeting_changedate', email_from=current_user.email, context=context):
+                            self.message_post(cr, uid, the_id, body=_("A email has been send to specify that the date has been changed !"), subtype="calendar.subtype_invitation", context=context)
+
+        return True
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -1687,7 +1714,9 @@ class calendar_event(osv.Model):
                     continue
             if r['class'] == 'private':
                 for f in r.keys():
-                    if f not in ('id', 'allday', 'start', 'stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule'):
+                    recurrent_fields = self._get_recurrent_fields(cr, uid, context=context)
+                    public_fields = list(set(recurrent_fields + ['id', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule']))
+                    if f not in public_fields:
                         if isinstance(r[f], list):
                             r[f] = []
                         else:
@@ -1737,10 +1766,11 @@ class mail_message(osv.Model):
         '''
         convert the search on real ids in the case it was asked on virtual ids, then call super()
         '''
+        args = list(args)
         for index in range(len(args)):
             if args[index][0] == "res_id":
                 if isinstance(args[index][2], basestring):
-                    args[index][2] = get_real_ids(args[index][2])
+                    args[index] = (args[index][0], args[index][1], get_real_ids(args[index][2]))
                 elif isinstance(args[index][2], list):
                     args[index] = (args[index][0], args[index][1], map(lambda x: get_real_ids(x), args[index][2]))
         return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
@@ -1762,9 +1792,11 @@ class ir_attachment(osv.Model):
         '''
         convert the search on real ids in the case it was asked on virtual ids, then call super()
         '''
-        for index in range(len(args)):
-            if args[index][0] == "res_id" and isinstance(args[index][2], basestring):
-                args[index][2] = get_real_ids(args[index][2])
+        args = list(args)
+        if any([leaf for leaf in args if leaf[0] ==  "res_model" and leaf[2] == 'calendar.event']):
+            for index in range(len(args)):
+                if args[index][0] == "res_id" and isinstance(args[index][2], basestring):
+                    args[index] = (args[index][0], args[index][1], get_real_ids(args[index][2]))
         return super(ir_attachment, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     def write(self, cr, uid, ids, vals, context=None):

@@ -48,13 +48,11 @@ class ImLivechatChannel(models.Model):
     # images fields
     image = fields.Binary('Image', default=_default_image, attachment=True,
         help="This field holds the image used as photo for the group, limited to 1024x1024px.")
-    image_medium = fields.Binary('Medium',
-        compute='_compute_image', store=True, attachment=True,
+    image_medium = fields.Binary('Medium', attachment=True,
         help="Medium-sized photo of the group. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = fields.Binary('Thumbnail',
-        compute='_compute_image', store=True, attachment=True,
+    image_small = fields.Binary('Thumbnail', attachment=True,
         help="Small-sized photo of the group. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
@@ -68,12 +66,6 @@ class ImLivechatChannel(models.Model):
     @api.one
     def _are_you_inside(self):
         self.are_you_inside = bool(self.env.uid in [u.id for u in self.user_ids])
-
-    @api.one
-    @api.depends('image')
-    def _compute_image(self):
-        self.image_medium = tools.image_resize_image_medium(self.image)
-        self.image_small = tools.image_resize_image_small(self.image)
 
     @api.multi
     def _compute_script_external(self):
@@ -111,6 +103,16 @@ class ImLivechatChannel(models.Model):
             else:
                 record.rating_percentage_satisfaction = -1
 
+    @api.model
+    def create(self, vals):
+        tools.image_resize_images(vals)
+        return super(ImLivechatChannel, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        tools.image_resize_images(vals)
+        return super(ImLivechatChannel, self).write(vals)
+
     # --------------------------
     # Action Methods
     # --------------------------
@@ -144,7 +146,7 @@ class ImLivechatChannel(models.Model):
             :retuns : return the res.users having their im_status online
         """
         self.ensure_one()
-        return self.sudo().user_ids.filtered(lambda user: user.im_status == 'online' or user.im_status == 'away')
+        return self.sudo().user_ids.filtered(lambda user: user.im_status == 'online')
 
     @api.model
     def get_mail_channel(self, livechat_channel_id, anonymous_name):
@@ -174,11 +176,9 @@ class ImLivechatChannel(models.Model):
             'anonymous_name': anonymous_name,
             'channel_type': 'livechat',
             'name': ', '.join([anonymous_name, user.name]),
-            'public': 'public',
+            'public': 'private',
             'email_send': False,
         })
-        # minimize channel on operator's side
-        mail_channel._minimize([operator_partner_id])
         return mail_channel.sudo().with_context(im_livechat_operator_partner_id=operator_partner_id).channel_info()[0]
 
     @api.model
@@ -195,13 +195,17 @@ class ImLivechatChannel(models.Model):
     @api.model
     def get_livechat_info(self, channel_id, username='Visitor'):
         info = {}
-        info['available'] = self.browse(channel_id).get_available_users(),
+        info['available'] = len(self.browse(channel_id).get_available_users()) > 0
+        info['server_url'] = self.env['ir.config_parameter'].get_param('web.base.url')
         if info['available']:
-            info['server_url'] = self.env['ir.config_parameter'].get_param('web.base.url')
             info['options'] = self.sudo().get_channel_infos(channel_id)
             info['options']["default_username"] = username
         return info
 
+    # FIXME: to remove in master
+    @api.model
+    def match_rules(self, request, channel_id, username='Visitor'):
+        pass
 
 class ImLivechatChannelRule(models.Model):
     """ Channel Rules

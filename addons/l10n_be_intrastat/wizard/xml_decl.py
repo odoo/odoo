@@ -144,7 +144,8 @@ class xml_decl(osv.TransientModel):
         invoiceline_mod = self.pool['account.invoice.line']
         product_mod = self.pool['product.product']
         region_mod = self.pool['l10n_be_intrastat.region']
-        warehouse_mod = self.pool['stock.warehouse']
+        warehouse_mod = self.pool['stock.warehouse'].browse(cr, uid, [], context=context)
+        location_mod = warehouse_mod.env['stock.location']
 
         if dispatchmode:
             mode1 = 'out_invoice'
@@ -231,8 +232,8 @@ class xml_decl(osv.TransientModel):
                     cr, uid, [('invoice_lines', 'in', inv_line.id)], context=context)
                 if poline_ids:
                     purchaseorder = POL.browse(cr, uid, poline_ids[0], context=context).order_id
-                    region_id = warehouse_mod.get_regionid_from_locationid(
-                        cr, uid, purchaseorder.location_id.id, context=context)
+                    location = location_mod.browse(purchaseorder._get_destination_location())
+                    region_id = warehouse_mod.get_regionid_from_locationid(location)
                     if region_id:
                         exreg = region_mod.browse(cr, uid, region_id).code
             elif inv_line.invoice_id.type in ('out_invoice', 'out_refund'):
@@ -303,15 +304,9 @@ class xml_decl(osv.TransientModel):
                 amount = inv_line.price_unit * inv_line.quantity
             else:
                 amount = 0
-            if (not inv_line.uom_id.category_id
-                    or not inv_line.product_id.uom_id.category_id
-                    or inv_line.uos_id.category_id.id != inv_line.product_id.uom_id.category_id.id):
-                weight = inv_line.product_id.weight * inv_line.quantity
-            else:
-                weight = (inv_line.product_id.weight *
-                          inv_line.quantity * inv_line.uos_id.factor)
-            if (not inv_line.uos_id.category_id or not inv_line.product_id.uom_id.category_id
-                    or inv_line.uos_id.category_id.id != inv_line.product_id.uom_id.category_id.id):
+            weight = (inv_line.product_id.weight or 0.0) * \
+                self.pool.get('product.uom')._compute_qty(cr, uid, inv_line.uom_id.id, inv_line.quantity, inv_line.product_id.uom_id.id)
+            if not inv_line.product_id.uom_id.category_id:
                 supply_units = inv_line.quantity
             else:
                 supply_units = inv_line.quantity * inv_line.uom_id.factor

@@ -54,6 +54,7 @@
 
         <template id="documentation" name="Documentation Index">
             <t t-call="website.layout">
+            <div id="wrap">
                 <section class="container mt16" t-if="toc">
                     <div class="row">
                         <div class="col-sm-8">
@@ -87,6 +88,7 @@
                     <t t-call="website_forum_doc.toc"/>
                 </section>
                 <div class="oe_structure"/>
+            </div>
             </t>
         </template>
 

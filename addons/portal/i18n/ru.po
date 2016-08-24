@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Max Belyanin <maxbelyanin@gmail.com>, 2015
+# Viktor Pogrebniak <vp@aifil.ru>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-10-20 07:27+0000\n"
-"Last-Translator: Max Belyanin <maxbelyanin@gmail.com>\n"
+"PO-Revision-Date: 2016-03-24 22:27+0000\n"
+"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,7 +56,7 @@ msgid ""
 "                </p>\n"
 "            \n"
 "            "
-msgstr "\n<p>\nУважаемый ${object.user_id.name or ''},\n</p>\n<p>\nВам предоставили доступ к ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n</p>\n<p>\nДанные Вашего аккаунта:\n</p>\n<ul>\n<li>Username: ${object.user_id.login or ''}</li>\n</ul>\n<ul>\n<li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n</ul>\n<ul>\n<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n</ul>\n<p>\nВы можете изменить свой пароль перейдя по ссылке:\n</p>\n<ul>\n<li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n</ul>\n<p>\n${object.wizard_id.welcome_message or ''}\n</p>\n<p>---<br />\nOdoo - Open Source Business Applications<br />\nhttp://www.odoo.com<br />\n</p>"
+msgstr "\n<p>\nУважаемый ${object.user_id.name or ''},\n</p>\n<p>\nВам предоставили доступ к ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n</p>\n<p>\nДанные Вашего аккаунта:\n</p>\n<ul>\n<li>Логин: ${object.user_id.login or ''}</li>\n</ul>\n<ul>\n<li>Адрес портала: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n</ul>\n<ul>\n<li>База данных: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n</ul>\n<p>\nВы можете изменить свой пароль по ссылке:\n</p>\n<ul>\n<li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n</ul>\n<p>\n${object.wizard_id.welcome_message or ''}\n</p>\n<p>---<br />\nOdoo - Бизнес-приложения с открытым исходным кодом<br />\nhttp://www.odoo.com<br />\n</p>"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
@@ -108,7 +109,7 @@ msgstr "Создан"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email

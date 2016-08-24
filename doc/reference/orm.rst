@@ -309,9 +309,9 @@ Default values are defined as parameters on fields, either a value::
 or a function called to compute the default value, which should return that
 value::
 
-    a_field = fields.Char(default=compute_default_value)
     def compute_default_value(self):
         return self.get_value()
+    a_field = fields.Char(default=compute_default_value)
 
 Computed fields
 ---------------
@@ -376,9 +376,9 @@ it uses the values of other *fields*, it should specify those fields using
     def _apply_discount(self):
         for record in self:
             # compute actual discount from discount percentage
-            discount = self.value * self.discount
-            self.discount_value = discount
-            self.total = self.value - discount
+            discount = record.value * record.discount
+            record.discount_value = discount
+            record.total = record.value - discount
 
 Related fields
 ''''''''''''''
@@ -639,8 +639,9 @@ Model Reference
     .. automethod:: write
 
     .. automethod:: read
+    .. automethod:: read_group
 
-    .. rubric:: Research
+    .. rubric:: Searching
 
     .. automethod:: search
     .. automethod:: search_count

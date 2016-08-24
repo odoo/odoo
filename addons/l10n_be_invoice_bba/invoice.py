@@ -198,7 +198,7 @@ class account_invoice(osv.osv):
             required=True, readonly=True),
     }
     _constraints = [
-        (_check_communication, 'Invalid BBA Structured Communication !', ['Communication']),
+        (_check_communication, 'Invalid BBA Structured Communication !', ['reference', 'reference_type']),
         ]
 
 account_invoice()

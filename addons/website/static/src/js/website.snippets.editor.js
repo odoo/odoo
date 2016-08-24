@@ -326,7 +326,9 @@ options.registry.marginAndResize = options.Class.extend({
                 $body.removeClass(cursor);
                 setTimeout(function () {
                     self.buildingBlock.editor_busy = false;
-                    self.$target.closest(".o_editable").trigger("content_changed");
+                    if (begin !== current) {
+                        self.buildingBlock.parent.rte.historyRecordUndo(self.$target, 'resize_' + XY);
+                    }
                 },0);
                 self.$target.removeClass("resize_editor_busy");
             };
@@ -336,8 +338,8 @@ options.registry.marginAndResize = options.Class.extend({
         this.$overlay.find(".oe_handle.size .auto_size").on('click', function (event){
             self.$target.css("height", "");
             self.$target.css("overflow", "");
+            self.buildingBlock.parent.rte.historyRecordUndo(self.$target, 'resize_Y');
             self.buildingBlock.cover_target(self.$overlay, self.$target);
-            self.$target.closest(".o_editable").trigger("content_changed");
             return false;
         });
     },
@@ -727,7 +729,9 @@ options.registry.collapse = options.Class.extend(preventParentEmpty).extend({
         this.create_ids(this.$target);
     },
     on_clone: function ($clone) {
-        this._super();
+        this._super.apply(this, arguments);
+        $clone.find('[data-toggle="collapse"]').removeAttr('data-target').removeData('target');
+        $clone.find('.panel-collapse').removeAttr('id');
         this.create_ids($clone);
     },
     on_move: function () {

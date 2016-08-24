@@ -6,6 +6,9 @@
             <t t-if='receipt.table'>
                 at table <t t-esc='receipt.table' />
             </t>
+            <t t-if='receipt.customer_count'>
+                <div>Guests: <t t-esc='receipt.customer_count' /></div>
+            </t>
         </t>
     </t>
 
@@ -13,6 +16,9 @@
         <t t-jquery='.cashier' t-operation='append'>
             <t t-if='receipt.table'>
                 at table <t t-esc='receipt.table' />
+            </t>
+            <t t-if='receipt.customer_count'>
+                <div>Guests: <t t-esc='receipt.customer_count' /></div>
             </t>
         </t>
     </t>

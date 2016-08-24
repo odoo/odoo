@@ -4,17 +4,19 @@
 # 
 # Translators:
 # Daniel C Santos <dcs@thinkopensolutions.pt>, 2015
+# João Pedro Carneiro, 2016
 # José Gomes <jg@opencloud.pro>, 2015
-# Manuela Silva <h_manuela_rodsilva@gmail.com>, 2015
-# Manuela Silva <h_manuela_rodsilva@gmail.com>, 2015
+# Manuela Silva <inactive+alfalb@transifex.com>, 2016
+# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2015-2016
+# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2015
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2015-12-19 08:46+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-08-12 23:19+0000\n"
+"Last-Translator: João Pedro Carneiro\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -402,7 +404,7 @@ msgstr "<strong>Gestão Ativos</strong>"
 msgid ""
 "<strong>Automated documents sending:</strong> automatically send your "
 "invoices by email or snail mail."
-msgstr ""
+msgstr "<strong></strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -598,7 +600,7 @@ msgstr "<strong>Conciliar com transacção existente</strong><br/>\nNeste caso, 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Reconcile your Bank Statements</strong>"
-msgstr ""
+msgstr "<strong>Reconciliar os Seus Extratos Bancários</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1452,6 +1454,7 @@ msgstr "Permite usar a contabilidade analítica."
 #: model:ir.model.fields,field_description:account.field_account_tax_template_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Amount"
@@ -1643,9 +1646,8 @@ msgstr "Pedir reembolso"
 msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
-"Revenue recognition: This allows you to manage the Revenue recognition on selling product. It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "Permite-lhe gerir os activos de pertencentes a uma empresa ou de uma pessoa. \nMantém o controle da amortização ocorrida nesses activos, e cria movimentos para essas linhas de amortização.\n\nReconhecimento de Receita: Permite que consiga gerir o reconhecimento de receita na venda do produto. Mantém o controle da parcela que ocorreu naqueles reconhecimentos de receitas, e cria movimentos para essas linhas.\n\n- Isto instala o módulo account_asset . Se não marcar esta caixa, vai ser capaz de gerir a facturação e pagamentos, mas não Contabilidade (Itens Jornal, Plano de Contas, ...)"
+msgstr ""
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1654,8 +1656,8 @@ msgstr "Ativos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
-msgid "Assets management & Revenue recognition"
-msgstr "Gestão de Ativos e Realização de Receitas"
+msgid "Assets management"
+msgstr "Gestão de ativos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -2199,7 +2201,7 @@ msgstr "Linhas de Caixa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_cashbox_id
 msgid "Cashbox"
-msgstr ""
+msgstr "Caixa de Dinheiro"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_expense_categ_id
@@ -3482,7 +3484,7 @@ msgstr "Mês Devido"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_print_overdue
 msgid "Due Payments"
-msgstr ""
+msgstr "Pagamentos Vencidos"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_tree
@@ -3755,7 +3757,7 @@ msgstr "Conta Financeira"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report
 msgid "Financial Report"
-msgstr ""
+msgstr "Relatório Financeiro"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_style_overwrite
@@ -4011,21 +4013,21 @@ msgstr "Começar"
 msgid ""
 "Get your bank statements from you bank and import them through plaid.com.\n"
 "-that installs the module account_plaid."
-msgstr "Obtenha os seus extratos bancários do seu banco e importe-os via plaid.com.\n- Isto instará o módulo account_plaid."
+msgstr "Obtenha os seus extratos bancários do seu banco e importe-os via plaid.com.\n- Isso instala o módulo account_plaid."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_ofx
 msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .OFX format.\n"
 "This installs the module account_bank_statement_import_ofx."
-msgstr "Obtenha os seus extratos bancários do seu banco e importe-os no formato .OFX.\n- Isto instará o módulo account_bank_statement_import_ofx."
+msgstr "Obtenha os seus extratos bancários do seu banco e importe-os no Odoo no formato .OFX.\nIsto instala o módulo account_bank_statement_import_ofx."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_qif
 msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .QIF format.\n"
 "This installs the module account_bank_statement_import_qif."
-msgstr "Obtenha os seus extratos bancários do seu banco e importe-os no formato .QIF.\n- Isto instará o módulo account_bank_statement_import_qif."
+msgstr "Obtenha os seus extratos bancários do seu banco e importe-os no Odoo no formato .QIF.\nIsto instala o módulo account_bank_statement_import_qif."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_yodlee
@@ -4269,7 +4271,7 @@ msgstr "Se esta caixa estiver assinalada, o sistema vai tentar agrupar as linhas
 msgid ""
 "If you check this box, you will be able to register your payment using SEPA.\n"
 "-This installs the module account_sepa."
-msgstr "Obtenha os seus extratos bancários do seu banco e importe-os via SEPA.\n- Isto instará o módulo account_sepa."
+msgstr "Se selecionar esta caixa, irá poder registar o seu pagamento utilizando SEPA.\n- Isto instala o módulo account_sepa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_accountant
@@ -4364,14 +4366,6 @@ msgid "If you want to do it yourself:"
 msgstr "Se quiser fazê-lo você mesmo:"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
-msgid ""
-"If you'd like some assistance on any of the above, please do not hesitate \n"
-"                        to contact our accounting experts by using the \n"
-"                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
-msgstr ""
-
-#. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
 msgid "Immediate Payment"
 msgstr "Pagamento imediato"
@@ -4389,14 +4383,14 @@ msgstr "Importar no formato .ofx"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Import using the \"Import\" button on the top left corner of"
-msgstr ""
+msgstr "Importe utilizando o botão de \"Importar\" no canto superior esquerdo do"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Importing your statements in via a supported file format (QIF, OFX, CODA or "
 "CSV format)"
-msgstr ""
+msgstr "A importar os seus extratos através do formato de ficheiro suportado (formato CODA, CSV, QIF ou QFX)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5865,12 +5859,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Once your company information is correct, you should"
-msgstr ""
+msgstr "Assim que a informação da sua empresa estiver correta, deverá"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "One bank statement for each bank account you hold."
-msgstr ""
+msgstr "Um extrato bancário por cada conta bancária que possua."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_only_one_chart_template
@@ -6873,7 +6867,7 @@ msgstr "Reconciliando"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Reconciling journal entries"
-msgstr ""
+msgstr "Reconciliar entradas de diário"
 
 #. module: account
 #: selection:account.journal,bank_statements_source:0
@@ -7582,6 +7576,7 @@ msgstr "Movimentos alvo"
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_tax_id
 #: model:ir.model.fields,field_description:account.field_account_operation_template_second_tax_id
 #: model:ir.model.fields,field_description:account.field_account_operation_template_tax_id
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 #, python-format
 msgid "Tax"
@@ -8252,14 +8247,14 @@ msgstr "Permite que os contabilistas giram orçamentos analíticos e cruzados/re
 msgid ""
 "This allows to automate letters for unpaid invoices, with multi-level recalls.\n"
 "-This installs the module account_reports_followup."
-msgstr "Permite automatizar cartas para faturas vencidas, com vários níveis de aviso.\n- Instala o módulo account_reports_followup"
+msgstr "Isto permite automatizar as cartas para as faturas não pagas, com vários níveis de aviso.\n- Isto instala o módulo account_reports_followup"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_batch_deposit
 msgid ""
 "This allows you to group received checks before you deposit them to the bank.\n"
 "-This installs the module account_batch_deposit."
-msgstr "Permite agrupar os cheques recebidos antes de os depositar no banco.\n- Instala o módulo account_batch_deposit."
+msgstr "Isto permite agrupar os cheques recebidos antes de os depositar no banco.\n- Isto instala o módulo account_batch_deposit."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_complete_tax_set
@@ -9233,6 +9228,14 @@ msgid ""
 msgstr "Não pode fazer esta modificação num movimento reconciliado. Pode mudar alguns dados ou pode desreconciliar primeiro.\n%s."
 
 #. module: account
+#: code:addons/account/models/account.py:329
+#, python-format
+msgid ""
+"You cannot empty the account number once set.\n"
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:96
 #, python-format
 msgid ""
@@ -9440,7 +9443,7 @@ msgstr "account.tax.group"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "accounting settings"
-msgstr ""
+msgstr "configurações da contabilidade"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9629,6 +9632,11 @@ msgstr "a lista de clientes"
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
 msgstr "a empresa ascendente"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "the product list"
+msgstr "a lista de produtos"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

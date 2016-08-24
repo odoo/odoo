@@ -39,6 +39,10 @@ var Dialog = Widget.extend({
     close: function () {
         this.$el.modal('hide');
     },
+    destroy: function () {
+        this._super();
+        $("body:has('> .modal:visible')").addClass('modal-open');
+    },
     stop_escape: function(event) {
         if($(".modal.in").length>0 && event.which == 27){
             event.stopPropagation();
@@ -832,6 +836,10 @@ function createVideoNode(url) {
         .attr('src', '//player.youku.com/embed/' + youkuMatch[1]);
     } else {
       // this is not a known video link. Now what, Cat? Now what?
+          $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>')
+            .attr('width', '640')
+            .attr('height', '360')
+            .attr('src', url);
     }
 
     $video.attr('frameborder', 0);
@@ -1057,17 +1065,17 @@ var LinkDialog = Dialog.extend({
         var isNewWindow = this.$('input.window-new').prop('checked');
 
         if ($e.hasClass('email-address') && $e.val().indexOf("@") !== -1) {
-            self.get_data_buy_mail(def, $e, isNewWindow, label, classes);
+            self.get_data_buy_mail(def, $e, isNewWindow, label, classes, test);
         } else {
-            self.get_data_buy_url(def, $e, isNewWindow, label, classes);
+            self.get_data_buy_url(def, $e, isNewWindow, label, classes, test);
         }
         return def;
     },
-    get_data_buy_mail: function (def, $e, isNewWindow, label, classes) {
+    get_data_buy_mail: function (def, $e, isNewWindow, label, classes, test) {
         var val = $e.val();
         def.resolve(val.indexOf("mailto:") === 0 ? val : 'mailto:' + val, isNewWindow, label, classes);
     },
-    get_data_buy_url: function (def, $e, isNewWindow, label, classes) {
+    get_data_buy_url: function (def, $e, isNewWindow, label, classes, test) {
         def.resolve($e.val(), isNewWindow, label, classes);
     },
     save: function () {

@@ -103,9 +103,33 @@ class Channel(models.Model):
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id',
         string='Upload Groups', help="Groups allowed to upload presentations in this channel. If void, every user can upload.")
     # not stored access fields, depending on each user
-    can_see = fields.Boolean('Can See', compute='_compute_access')
+    can_see = fields.Boolean('Can See', compute='_compute_access', search='_search_can_see')
     can_see_full = fields.Boolean('Full Access', compute='_compute_access')
     can_upload = fields.Boolean('Can Upload', compute='_compute_access')
+
+    def _search_can_see(self, operator, value):
+        if operator not in ('=', '!=', '<>'):
+            raise ValueError('Invalid operator: %s' % (operator,))
+
+        if not value:
+            operator = operator == "=" and '!=' or '='
+
+        if self._uid == SUPERUSER_ID:
+            return [(1, '=', 1)]
+
+        # Better perfs to split request and use inner join that left join
+        req = """
+            SELECT id FROM slide_channel WHERE visibility='public'
+                UNION
+            SELECT c.id
+                FROM slide_channel c
+                    INNER JOIN rel_channel_groups rg on c.id = rg.channel_id
+                    INNER JOIN res_groups g on g.id = rg.group_id
+                    INNER JOIN res_groups_users_rel u on g.id = u.gid and uid = %s
+        """
+        op = operator == "=" and "inselect" or "not inselect"
+        # don't use param named because orm will add other param (test_active, ...)
+        return [('id', op, (req, (self._uid)))]
 
     @api.one
     @api.depends('visibility', 'group_ids', 'upload_group_ids')
@@ -167,7 +191,7 @@ class EmbeddedSlide(models.Model):
     _description = 'Embedded Slides View Counter'
     _rec_name = 'slide_id'
 
-    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, select=1)
+    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, index=True)
     url = fields.Char('Third Party Website URL', required=True)
     count_views = fields.Integer('# Views', default=1)
 
@@ -349,6 +373,9 @@ class Slide(models.Model):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.iteritems():
                 values.setdefault(key, value)
+        if values.get('channel_id'):
+            custom_channels = self.env['slide.channel'].search([('custom_slide_id', '=', self.id), ('id', '!=', values.get('channel_id'))])
+            custom_channels.write({'custom_slide_id': False})
         res = super(Slide, self).write(values)
         if values.get('website_published'):
             self.date_published = datetime.datetime.now()
@@ -459,7 +486,10 @@ class Slide(models.Model):
             return fetch_res
 
         values = {'slide_type': 'video', 'document_id': document_id}
-        youtube_values = fetch_res['values'].get('items', list(dict()))[0]
+        items = fetch_res['values'].get('items')
+        if not items:
+            return {'error': _('Please enter valid Youtube or Google Doc URL')}
+        youtube_values = items[0]
         if youtube_values.get('snippet'):
             snippet = youtube_values['snippet']
             if only_preview_fields:

@@ -10,7 +10,7 @@
     "name": "Mexico - Accounting",
     "version": "2.0",
     "author": "Vauxoo",
-    "category": "Localization/Account Charts",
+    'category': 'Localization',
     "description": """
 Minimal accounting configuration for Mexico.
 ============================================

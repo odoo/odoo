@@ -3,14 +3,16 @@
 # * point_of_sale
 # 
 # Translators:
-# Kris Krnacs, 2015
+# krnkris, 2015-2016
+# krnkris, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-12-04 13:47+0000\n"
-"Last-Translator: Kris Krnacs\n"
+"PO-Revision-Date: 2016-06-06 19:55+0000\n"
+"Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -592,7 +594,7 @@ msgstr "Dokumentumok megoszásának engedélyezése"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
-msgstr "Külső felhasználók bejelentkezésének engedéjezése"
+msgstr "Külső felhasználók bejelentkezésének engedélyezése"
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_discount:0
@@ -872,6 +874,12 @@ msgstr "Készpénz felügyeletet csak a készpénz naplókra alkalmazhat."
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_cashdrawer
 msgid "Cashdrawer"
 msgstr "Készpénz fiók"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1604
+#, python-format
+msgid "Cashier"
+msgstr "Pénztáros"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -1401,6 +1409,12 @@ msgid "Discount:"
 msgstr "Árengedmény:"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1602
+#, python-format
+msgid "Discounted Product"
+msgstr "Árengedményes termék"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:791
 #, python-format
@@ -1839,7 +1853,7 @@ msgstr "IP cím"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_auth_signup_uninvited
 msgid "If unchecked, only invited users may sign up."
-msgstr "He nincs bejelölve, vsak maghívott felhasználók jelentkezhetnek be."
+msgstr "Ha nincs bejelölve, csak meghívott felhasználók jelentkezhetnek be."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_alias_domain
@@ -2004,7 +2018,7 @@ msgstr "Nagy gördítősávok"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_sales_by_user_pos_month___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos___last_update
 msgid "Last Modified on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Utolsó frissítés dátuma"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_write_uid
@@ -2034,7 +2048,7 @@ msgstr "Utoljára frissítve, által"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_write_date
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Utoljára frissítve "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_review
@@ -2658,7 +2672,7 @@ msgstr " Fizetési módokat határoznak meg a bejelölt <i>PoS Fizetési Mód</i
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_statement_ids
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Payments"
-msgstr "Kifizetések"
+msgstr "Vevői befizetések"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.peche
@@ -2874,6 +2888,12 @@ msgstr "Készpénz fizetés előre feltöltése"
 #, python-format
 msgid "Price"
 msgstr "Érték"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1601
+#, python-format
+msgid "Priced Product"
+msgstr "Árazott termék"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pricelist_id
@@ -4030,7 +4050,7 @@ msgstr "Mai kifizetés"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_payment
 msgid "Today's Payments"
-msgstr "Mai kifizetések"
+msgstr "Mai Vásárlói befizetések"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_total
@@ -4230,6 +4250,12 @@ msgstr "Virtuális billentyűzet"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_stock_location_id
 msgid "Warehouse"
 msgstr "Raktár"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1600
+#, python-format
+msgid "Weighted Product"
+msgstr "Súlyozott termék"
 
 #. module: point_of_sale
 #. openerp-web

@@ -195,7 +195,7 @@
 
 <t t-name="WebClient.DebugManager">
     <li class="oe_debug_manager">
-        <a href="#" t-att-title='_t("Open Debug Menu")' class="dropdown-toggle oe_debug_button" data-toggle="dropdown">
+        <a href="#" title="Open Debug Menu" class="dropdown-toggle oe_debug_button" data-toggle="dropdown">
             <span class="fa fa-bug"/>
             <b class="caret"/>
         </a>
@@ -204,7 +204,9 @@
 </t>
 <t t-name="WebClient.DebugDropdown">
     <t t-if="active_view.type === 'form'">
-        <li class="oe_metadata"><a href="#" data-action="get_metadata">View Metadata</a></li>
+        <t t-if="active_view.controller.get_selected_ids().length == 1">
+            <li class="oe_metadata"><a href="#" data-action="get_metadata">View Metadata</a></li>
+        </t>
         <li class="oe_layout"><a href="#" data-action="toggle_layout_outline">Toggle Form Layout Outline</a></li>
         <li class="oe_defaults"><a href="#" data-action="set_defaults">Set Defaults</a></li>
     </t>
@@ -626,7 +628,7 @@
                 <a><t t-esc="measure[1].string"/></a>
             </li>
             <li class="divider"></li>
-            <li data-field="__count__"><a>Quantity</a></li>
+            <li data-field="__count__"><a>Count</a></li>
         </ul>
     </div>
 </t>
@@ -658,7 +660,7 @@
                 <a><t t-esc="measure[1].string"/></a>
             </li>
             <li class="divider"></li>
-            <li data-field="__count__"><a>Quantity</a></li>
+            <li data-field="__count__"><a>Count</a></li>
         </ul>
     </div>
 </t>
@@ -792,7 +794,7 @@
         <span class="o_count"/>
         <button class="btn btn-link" type="button"
             t-att-accesskey="widget.node.attrs.accesskey"/>
-        <input t-if="widget.debug" type="text" class="o_form_input o_debug_input"/>
+        <input t-if="widget.debug" t-att-readonly="widget.get('effective_readonly')" type="text" class="o_form_input o_debug_input"/>
     </div>
 </t>
 <t t-name="web.datepicker">
@@ -869,13 +871,11 @@
     ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png" t-att-alt="widget.string" width="16" height="16"/>
 </t>
 <t t-name="FieldMany2ManyTag">
-    <t t-set="i" t-value="0"/>
     <t t-foreach="elements" t-as="el">
-        <span t-attf-class="badge dropdown #{'o_tag_color_' + (el['color'] || 0)}" t-att-data-color="(el['color'] || 0)" t-att-data-index="i" t-att-data-id="el['id']">
+        <span t-attf-class="badge dropdown #{'o_tag_color_' + (el['color'] || 0)}" t-att-data-color="(el['color'] || 0)" t-att-data-index="el_index" t-att-data-id="el['id']">
             <t t-esc="el['display_name']"/>
             <span t-if="!readonly" class="fa fa-times o_delete"/>
         </span>
-        <t t-set="i" t-value="i + 1"/>
     </t>
 </t>
 <t t-name="FieldMany2ManyTag.colorpicker">
@@ -1064,7 +1064,7 @@
                         <t t-raw="file.name || file.filename"/>
                     </span>
                     <t t-if="(!file.upload or file.percent_loaded&gt;=100)">
-                        <a class="o_image" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-att-data-mimetype="file.mimetype" t-attf-data-src="/web/image/#{file.id}/100x80">
+                        <a class="o_image" target="_blank" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-att-data-mimetype="file.mimetype" t-attf-data-src="/web/image/#{file.id}/100x80">
                             <t t-raw="file.name || file.filename"/>
                         </a>
                         <span class="fa fa-stack oe_delete" title="Delete this file" t-attf-data-id="#{file.id}">
@@ -1079,7 +1079,7 @@
             <t t-foreach="widget.get('value')" t-as="id">
                 <t t-set="file" t-value="widget.data[id]"/>
                 <div>
-                    <a t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
+                    <a target="_blank" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
                         <t t-raw="file.name || file.filename"/>
                     </a>
                 </div>
@@ -1114,13 +1114,6 @@
 <t t-name="One2Many.listview" t-extend="ListView">
     <t t-jquery="thead > tr:first">
         this.removeAttr('t-if');
-    </t>
-
-    <t t-jquery="td.oe-actions">
-        this.removeAttr('t-if');
-    </t>
-    <t t-jquery="td.oe-actions" t-operation="prepend">
-        <h3 class="oe_view_title"><t t-esc="fields_view.arch.attrs.string"/></h3>
     </t>
 </t>
 
@@ -1448,13 +1441,11 @@
 <t t-name="FieldMany2ManyCheckBoxes">
     <t t-foreach="widget.get('records')" t-as="record">
         <div>
-            <t t-if="widget.get('value').indexOf(record[0]) !== -1">
-                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])" checked="true"/>
-            </t>
-            <t t-if="widget.get('value').indexOf(record[0]) === -1">
-                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])"/>
-            </t>
-            <t t-esc="record[1]"/>
+            <label style="font-weight: normal">
+                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])"
+                       t-att-checked="(widget.get('value').indexOf(record[0]) !== -1) or null"/>
+                <t t-esc="record[1]"/>
+            </label>
         </div>
     </t>
 </t>

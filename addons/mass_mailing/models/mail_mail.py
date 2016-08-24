@@ -3,7 +3,6 @@
 
 import re
 import urlparse
-import re
 import werkzeug.urls
 
 from openerp import tools

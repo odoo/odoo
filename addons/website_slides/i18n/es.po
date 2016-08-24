@@ -4,15 +4,19 @@
 # 
 # Translators:
 # Ana Juaristi <ajuaristio@gmail.com>, 2015
-# Jesus Alan Ramos Rodriguez <alan.ramos@jarsa.com.mx>, 2015
-# Mateo Tibaquirá <nestormateo@gmail.com>, 2015
+# Antonio Trueba, 2016
+# Carlos rodriguez <carlosalbertor436@gmail.com>, 2016
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2015
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-21 09:20+0000\n"
-"PO-Revision-Date: 2015-12-07 22:36+0000\n"
-"Last-Translator: Ana Juaristi <ajuaristio@gmail.com>\n"
+"PO-Revision-Date: 2016-07-30 07:29+0000\n"
+"Last-Translator: Inigo Zuluaga <inigo_zuluaga@yahoo.es>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +70,7 @@ msgid ""
 "    </tr></tbody>\n"
 "</table>\n"
 "</div>"
-msgstr ""
+msgstr "\n<div style=\"padding:0px; margin:0px;\">\n<table cellpadding=\"0\" cellspacing=\"0\" style=\"width: 600px; margin: 10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; font-size:12px; background-color:#ffffff\">\n<tbody><tr>\n<td style=\"width: 600px; text-align:center\" valign=\"center\">\n<a href=\"${user.company_id.website}\" style=\"text-decoration:none\">\n<img alt=\"Odoo\" src=\"${ctx['base_url']}/logo.png\" style=\"display:block; border:none; min-height:60px; margin:0 auto;\">\n</a>\n</td>\n</tr></tbody>\n</table>\n</div>\n<div style=\"padding:0px; margin:0px;\">\n<table cellpadding=\"0\" cellspacing=\"0\" style=\"width: 600px; margin: 10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; font-size:12px;\">\n<tbody><tr>\n<td style=\"width: 600px; text-align:center; color: #ffffff; background-color:#a24689;\" valign=\"center\">\n<h2 style=\"margin:0px;\">\n¡${user.name} ha compartido ${object.slide_type} ${object.name} contigo!\n</h2>\n</td>\n</tr><tr>\n<td style=\"width: 600px; vertical-align:top; text-align:center; background-color:#FFFFF; color:#414141\">\n<a href=\"${object.website_url}\" style=\"color: #a24689;\">\n<img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\"\nstyle=\"height:auto; width:500px; background-color: #cccccc; margin: 16px;\">\n</a>\n<p style=\"font-size:24px; font-weight:bold\"><a href=\"${object.website_url}\">${object.name}</a></p>\n<p style=\"color: #ccc;\">Publicado el ${object.write_date}</p>\n<p><a href=\"${object.website_url}\">Click aquí para abrir el ${object.slide_type}</a></p>\n</td>\n</tr></tbody>\n</table>\n</div>\n<div style=\"padding:0px; margin:0px;\">\n<table cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 10px 0px 0px 0px; vertical-align: top;padding: 0px; font-family:arial; font-size:12px; color: #ffffff; background-color:#8f8f8f;\">\n<tbody><tr>\n<td style=\"width: 600px; font-size:12px; text-align:center; padding-top:10px; color:#a24689; padding-bottom:5px\">\n<a href=\"${object.website_url}\" style=\"color:#a24689\">Ver en navegador</a> |\n<a href=\"/page/contactus\" style=\"color:#a24689\">Contacto</a>\n</td>\n</tr></tbody>\n</table>\n</div>"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -847,7 +851,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: selection:slide.channel,promote_strategy:0
 msgid "Most Voted"
-msgstr ""
+msgstr "Más votado"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_name
@@ -926,7 +930,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_videos
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_videos
 msgid "Number of Videos"
-msgstr ""
+msgstr "Número de videos"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction_counter
@@ -983,7 +987,7 @@ msgstr ""
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_5
 msgid "Odoo POS Indiegogo Campaign"
-msgstr ""
+msgstr "Odoo POS Indiegogo Campaign"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_10
@@ -1025,7 +1029,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides.xml:28
 #, python-format
 msgid "PDF or Image File"
-msgstr ""
+msgstr "PDF o archivo de imagen"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_partial
@@ -1035,7 +1039,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Please"
-msgstr ""
+msgstr "Por favor"
 
 #. module: website_slides
 #. openerp-web
@@ -1048,13 +1052,13 @@ msgstr ""
 #: code:addons/website_slides/models/slides.py:272
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
-msgstr ""
+msgstr "Por favor, introduzca una URL válida de Youtube o Google Doc"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:281
 #, python-format
 msgid "Please enter valid youtube or google doc url"
-msgstr ""
+msgstr "Introduzca una URL válida de Youtube o Google Doc"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1072,20 +1076,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_slide_id
 #: selection:slide.slide,slide_type:0
 msgid "Presentation"
-msgstr ""
+msgstr "Presentación"
 
 #. module: website_slides
 #: model:mail.message.subtype,description:website_slides.mt_channel_slide_published
 #: model:mail.message.subtype,name:website_slides.mt_channel_slide_published
 msgid "Presentation Published"
-msgstr ""
+msgstr "Presentación publicada"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_footer
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: model:website.menu,name:website_slides.website_menu_slides
 msgid "Presentations"
-msgstr ""
+msgstr "Presentaciones"
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
@@ -1095,7 +1099,7 @@ msgstr "Privado"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.channels
 msgid "Private channel"
-msgstr ""
+msgstr "Canal privado"
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
@@ -1105,7 +1109,7 @@ msgstr "Público"
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_public
 msgid "Public Channel"
-msgstr ""
+msgstr "Canal público"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_date_published
@@ -1120,7 +1124,7 @@ msgstr "Publicado"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_publish_template_id
 msgid "Published Template"
-msgstr ""
+msgstr "Plantilla publicada"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1130,7 +1134,7 @@ msgstr "Relacionado"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "Results for"
-msgstr ""
+msgstr "Resultados para"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -1152,7 +1156,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides.xml:70
 #, python-format
 msgid "Save and Publish"
-msgstr ""
+msgstr "Guardar y publicar"
 
 #. module: website_slides
 #. openerp-web
@@ -1174,7 +1178,7 @@ msgstr "Seguridad"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.channels
 msgid "Select a Channel"
-msgstr ""
+msgstr "Seleccione un canal"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_embed
@@ -1190,7 +1194,7 @@ msgstr "Secuencia"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid "Share Link"
-msgstr ""
+msgstr "Compartir enlace"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1317,7 +1321,7 @@ msgstr ""
 #: model:slide.channel,access_error_msg:website_slides.channel_private
 #: model:slide.channel,access_error_msg:website_slides.channel_public
 msgid "This channel is private and its content is restricted to some users."
-msgstr ""
+msgstr "Este es un canal privado, y su contenido está restringido a determinados usuarios."
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:285
@@ -1330,7 +1334,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_thumb
 msgid "Thumbnail"
-msgstr ""
+msgstr "Miniatura"
 
 #. module: website_slides
 #. openerp-web
@@ -1437,7 +1441,7 @@ msgstr "Video"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Videos"
-msgstr ""
+msgstr "Videos"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1541,7 +1545,7 @@ msgstr "Su nombre"
 #: code:addons/website_slides/static/src/xml/website_slides.xml:36
 #, python-format
 msgid "Youtube Video URL"
-msgstr ""
+msgstr "URL vídeo de Youtube"
 
 #. module: website_slides
 #. openerp-web
@@ -1563,7 +1567,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "by email!"
-msgstr ""
+msgstr "por correo!"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -1573,19 +1577,19 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "is private"
-msgstr ""
+msgstr "es privado"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 #: model:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
 msgid "is private."
-msgstr ""
+msgstr "es privado"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "login"
-msgstr ""
+msgstr "iniciar sesión"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1617,7 +1621,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "to send this"
-msgstr ""
+msgstr "para enviar esto"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_website_config_settings
@@ -1627,4 +1631,4 @@ msgstr "website.config.settings"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "your-friend@domain.com"
-msgstr ""
+msgstr "tu-amigo@dominio.com"

@@ -166,6 +166,10 @@ class TestORM(common.TransactionCase):
                         ['date'], ['date:month', 'date:day'], lazy=False)
         self.assertEqual(len(rg), len(all_partners))
 
+    def test_write_duplicate(self):
+        cr, uid, p1 = self.cr, self.uid, self.p1
+        self.partner.write(cr, uid, [p1, p1], {'name': 'X'})
+
     def test_m2m_store_trigger(self):
         group_user = self.env.ref('base.group_user')
 

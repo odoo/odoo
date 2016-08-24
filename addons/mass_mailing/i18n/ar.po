@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:20+0000\n"
-"PO-Revision-Date: 2015-11-05 05:34+0000\n"
+"POT-Creation-Date: 2016-01-13 15:46+0000\n"
+"PO-Revision-Date: 2016-06-25 15:07+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -450,7 +450,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_sent
 msgid "Date when the email has been sent"
-msgstr ""
+msgstr "تاريخ إرسال رسالة البريد الإلكتروني"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_replied
@@ -491,6 +491,7 @@ msgstr "حذف"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_delivered
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_delivered
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_delivered
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered"
 msgstr "تم التسليم"
 
@@ -545,8 +546,10 @@ msgid "Domain"
 msgstr "النطاق"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
 #: selection:mail.statistics.report,state:0
+#, python-format
 msgid "Draft"
 msgstr "مسودة"
 
@@ -666,13 +669,22 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
-#: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid ""
 "Great stories have personality. Consider telling a great story that provides"
 " personality. Writing a story with personality for potential clients will "
 "assist with making a relationship connection. This shows up in small quirks "
 "like word choices or phrases. Write from your point of view, not from "
 "someone else's experience.<br/>"
+msgstr ""
+
+#. module: mass_mailing
+#: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
+msgid ""
+"Great stories have personality. Consider telling a great story that provides"
+" personality. Writing a story with personality for potential clients will "
+"assist with making a relationship connection. This shows up in small quirks "
+"like word choices or phrases. Write from your point of view, not from "
+"someone else's experience.<br>"
 msgstr ""
 
 #. module: mass_mailing
@@ -691,8 +703,10 @@ msgstr "تجميع حسب ..."
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.FieldTextHtmlInline
-msgid "Help"
-msgstr "المساعدة"
+msgid ""
+"Here you can design your own template from scratch by selecting your "
+"favorite theme."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_id
@@ -734,7 +748,9 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
+#, python-format
 msgid "In Queue"
 msgstr ""
 
@@ -875,7 +891,7 @@ msgstr "القائمة البريدية"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts
 msgid "Mailing List Subscribers"
-msgstr ""
+msgstr "مشتركو قائمة المراسلة"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_lists
@@ -896,7 +912,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_tree
 msgid "Mailing Lists Subscribers"
-msgstr ""
+msgstr "مشتركو قوائم المراسلة"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_links_tree
@@ -927,12 +943,12 @@ msgstr "رسائل"
 #. module: mass_mailing
 #: model:res.groups,name:mass_mailing.group_mass_mailing_campaign
 msgid "Manage Mass Mailing Campaigns"
-msgstr ""
+msgstr "استخدام حملات المراسلة الجماعية"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mass_mailing_config_settings_group_mass_mailing_campaign
 msgid "Manage mass mailign using Campaigns"
-msgstr ""
+msgstr "إدارة المراسلات الجماعية باستخدام الحملات"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_name
@@ -942,7 +958,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_campaign
 msgid "Mass Mail Campaign"
-msgstr ""
+msgstr "حملة المراسلة الجماعية"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing
@@ -963,7 +979,7 @@ msgstr "المراسلات الجماعية"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_mail_statistics_report
 msgid "Mass Mailing Analysis"
-msgstr ""
+msgstr "تحليل المراسلات الجماعية"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_campaign
@@ -975,7 +991,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "Mass Mailing Campaign"
-msgstr ""
+msgstr "حملة المراسلة الجماعية"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_stage
@@ -1065,11 +1081,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_ids
 msgid "Messages"
 msgstr "الرسائل"
-
-#. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_message_ids
-msgid "Messages and communication history"
-msgstr "الرسائل و سجل التواصل"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -1404,17 +1415,21 @@ msgid "Send to All"
 msgstr "إرسال للكل"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
+#, python-format
 msgid "Sending"
 msgstr ""
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_sent
 #: selection:mail.mail.statistics,state:0 selection:mail.mass_mailing,state:0
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_3
 #: selection:mail.statistics.report,state:0
+#, python-format
 msgid "Sent"
 msgstr "أرسِل"
 
@@ -1545,7 +1560,7 @@ msgstr "الدعم"
 #. module: mass_mailing
 #: sql_constraint:mail.mass_mailing.tag:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "بطاقة الاسم موجودة بالأصل"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_tag_ids
@@ -1599,6 +1614,12 @@ msgstr "هذا هو مصدر الرابط، مثل: محرك بحث، موقع �
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "This mass mailing is scheduled to"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"This will send the email to all recipients. Do you still want to proceed ?"
 msgstr ""
 
 #. module: mass_mailing
@@ -1670,11 +1691,6 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_website_message_ids
-msgid "Website Messages"
-msgstr "رسائل الموقع"
-
-#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_group_website_popup_on_exit
 msgid "Website Pop-up"
 msgstr ""
@@ -1688,11 +1704,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_popup_redirect_url
 msgid "Website Popup Redirect URL"
 msgstr ""
-
-#. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_website_message_ids
-msgid "Website communication history"
-msgstr "سجل تواصل الموقع"
 
 #. module: mass_mailing
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1

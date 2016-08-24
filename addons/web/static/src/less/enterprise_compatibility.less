@@ -326,6 +326,27 @@ div.o_checkbox {
         > .o_address_zip {
             margin-right: 0;
         }
+        &.o_zip_city {
+            > .o_address_zip {
+                margin-right: 2%;
+            }
+            > .o_address_city {
+                margin-right: 0;
+            }
+            > .o_address_state {
+                clear: left;
+                margin-right: 0;
+            }
+        }
+        &.o_city_state {
+            > .o_address_state {
+                margin-right: 0;
+            }
+            > .o_address_zip {
+                clear: left;
+                margin-right: 0;
+            }
+        }
     }
     &.oe_form_editable .o_address_format {
         > .o_address_city {
@@ -336,6 +357,28 @@ div.o_checkbox {
         }
         > .o_address_zip {
             width: 25%;
+        }
+        &.o_zip_city {
+            > .o_address_zip {
+                width: 38%;
+            }
+            > .o_address_city {
+                width: 60%;
+            }
+            > .o_address_state {
+                width: 100%;
+            }
+        }
+        &.o_city_state {
+            > .o_address_city {
+                width: 50%;
+            }
+            > .o_address_state {
+                width: 48%;
+            }
+            > .o_address_zip {
+                width: 100%;
+            }
         }
     }
 }

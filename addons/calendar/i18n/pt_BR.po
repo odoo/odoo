@@ -7,13 +7,14 @@
 # Grazziano Duarte <g.negocios@outlook.com.br>, 2015
 # Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
 # Planeta Odoo <planetaodoo@gmail.com>, 2015
+# Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-26 09:05+0000\n"
-"PO-Revision-Date: 2015-12-14 01:02+0000\n"
-"Last-Translator: Grazziano Duarte <g.negocios@outlook.com.br>\n"
+"POT-Creation-Date: 2016-01-20 13:58+0000\n"
+"PO-Revision-Date: 2016-01-28 13:10+0000\n"
+"Last-Translator: Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,14 +57,14 @@ msgid ""
 "                                            <tr>\n"
 "                                                <td style=\"vertical-align:top;\">\n"
 "                                                    % if object.event_id.location:\n"
-"                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                            Where\n"
 "                                                        </div>\n"
 "                                                    % endif\n"
 "                                                </td>\n"
 "                                                <td  style=\"vertical-align:top;\">\n"
 "                                                    % if object.event_id.location:\n"
-"                                                        <div style = \"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px\" >\n"
+"                                                        <div style = \"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px\" >\n"
 "                                                            : ${object.event_id.location}\n"
 "                                                            <span style= \"color:#A9A9A9; \">(<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
 "                                                                </span>\n"
@@ -75,14 +76,14 @@ msgid ""
 "                                            <tr>\n"
 "                                                <td style=\"vertical-align:top;\">\n"
 "                                                    % if object.event_id.description :\n"
-"                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                            What\n"
 "                                                        </div>\n"
 "                                                    % endif\n"
 "                                                </td>\n"
 "                                                <td style=\"vertical-align:text-top;\">\n"
 "                                                    % if object.event_id.description :\n"
-"                                                        <div style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div style=\"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                            : ${object.event_id.description}\n"
 "                                                        </div>\n"
 "                                                    % endif\n"
@@ -92,21 +93,21 @@ msgid ""
 "                                            <tr>\n"
 "                                                <td style=\"vertical-align:top;\">\n"
 "                                                    % if not object.event_id.allday and object.event_id.duration:\n"
-"                                                        <div style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                            Duration\n"
 "                                                        </div>\n"
 "                                                    % endif\n"
 "                                                </td>\n"
 "                                                <td colspan=\"3\" style=\"vertical-align:text-top;\">\n"
 "                                                    % if not object.event_id.allday and object.event_id.duration:\n"
-"                                                        <div style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div style=\"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                            : ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}\n"
 "                                                        </div>\n"
 "                                                    % endif\n"
 "                                                </td>\n"
 "                                            </tr>                                                \n"
 "                                        <tr style=\" height: 30px;\">\n"
-"                                            <td style=\"height: 25px;width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                            <td style=\"height: 25px;width: 120px; background : # CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                <div>\n"
 "                                                    Attendees\n"
 "                                                </div>\n"
@@ -131,7 +132,7 @@ msgid ""
 "                </div>\n"
 "                \n"
 "                "
-msgstr "\n                <style>\n                    span.oe_mail_footer_access {\n                        display:block;    \n                        text-align:center;\n                        color:grey;                                \n                    }\n                </style>\n                <div style=\"border-radius: 2px; max-width: 1200px; height: auto;margin-left: auto;margin-right: auto;background-color:#f9f9f9;\">\n                    <div style=\"height:auto;text-align: center;font-size : 30px;color: #8A89BA;\">\n                        <strong>${object.event_id.name}</strong>                                \n                    </div>\n                    <div style=\"height: 50px;text-align: left;font-size : 14px;border-collapse: separate;margin-top:10px\">\n                        <strong style=\"margin-left:12px\">Estimado ${object.cn}</strong> ,<br/>\n                        <p style=\"margin-left:12px\">Este é um lembrete para o evento abaixo : </p>\n                    </div>\n                    <div style=\"height: auto;margin-left:12px;margin-top:30px;\">\n                        <table>\n                            <tr>\n                                <td>\n                                    <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n                                    <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n                                      ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n                                    </div>\n                                    <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n                                    <div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n                                </td>\n                                <td>\n                                    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin-top: 15px; margin-left: 10px;font-size: 16px;\">\n                                            <tr>\n                                                <td style=\"vertical-align:top;\">\n                                                    % if object.event_id.location:\n                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                            Onde\n                                                        </div>\n                                                    % endif\n                                                </td>\n                                                <td  style=\"vertical-align:top;\">\n                                                    % if object.event_id.location:\n                                                        <div style = \"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px\" >\n                                                            : ${object.event_id.location}\n                                                            <span style= \"color:#A9A9A9; \">(<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">Exibir Mapa</a>)\n                                                                </span>\n                                                        </div>\n                                                    % endif\n                                                </td>                                                        \n                                            </tr> \n                                                                                        \n                                            <tr>\n                                                <td style=\"vertical-align:top;\">\n                                                    % if object.event_id.description :\n                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                            O que\n                                                        </div>\n                                                    % endif\n                                                </td>\n                                                <td style=\"vertical-align:text-top;\">\n                                                    % if object.event_id.description :\n                                                        <div style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                            : ${object.event_id.description}\n                                                        </div>\n                                                    % endif\n                                                </td>\n                                            </tr>\n                                                                                        \n                                            <tr>\n                                                <td style=\"vertical-align:top;\">\n                                                    % if not object.event_id.allday and object.event_id.duration:\n                                                        <div style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                            Duração\n                                                        </div>\n                                                    % endif\n                                                </td>\n                                                <td colspan=\"3\" style=\"vertical-align:text-top;\">\n                                                    % if not object.event_id.allday and object.event_id.duration:\n                                                        <div style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                            : ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}\n                                                        </div>\n                                                    % endif\n                                                </td>\n                                            </tr>                                                \n                                        <tr style=\" height: 30px;\">\n                                            <td style=\"height: 25px;width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                <div>\n                                                    Participantes\n                                                </div>\n                                            </td>\n                                            <td colspan=\"3\">\n                                               : \n                                                % for attendee in object.event_id.attendee_ids:\n                                                    <div style=\"display:inline-block; border-radius: 50%; width:10px; height:10px;background:${'color' in ctx and ctx['color'][attendee.state] or 'white'};\"></div>\n                                                    % if attendee.cn != object.cn:\n                                                        <span style=\"margin-left:5px\">${attendee.cn}</span>\n                                                    % else:\n                                                        <span style=\"margin-left:5px\">Você</span>\n                                                    % endif\n                                                % endfor\n                                            </td>\n                                        </tr>\n                                    </table>\n                                </td>\n                            </tr>\n                        </table>\n                    </div>            \n                </div>\n                \n                "
+msgstr "\n                <style>\n                    span.oe_mail_footer_access {\n                        display:block;    \n                        text-align:center;\n                        color:grey;                                \n                    }\n                </style>\n                <div style=\"border-radius: 2px; max-width: 1200px; height: auto;margin-left: auto;margin-right: auto;background-color:#f9f9f9;\">\n                    <div style=\"height:auto;text-align: center;font-size : 30px;color: #8A89BA;\">\n                        <strong>${object.event_id.name}</strong>                                \n                    </div>\n                    <div style=\"height: 50px;text-align: left;font-size : 14px;border-collapse: separate;margin-top:10px\">\n                        <strong style=\"margin-left:12px\">Estimado ${object.cn}</strong> ,<br/>\n                        <p style=\"margin-left:12px\">Este é um lembrete para o evento abaixo : </p>\n                    </div>\n                    <div style=\"height: auto;margin-left:12px;margin-top:30px;\">\n                        <table>\n                            <tr>\n                                <td>\n                                    <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n                                    <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n                                      ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n                                    </div>\n                                    <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n                                    <div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n                                </td>\n                                <td>\n                                    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin-top: 15px; margin-left: 10px;font-size: 16px;\">\n                                            <tr>\n                                                <td style=\"vertical-align:top;\">\n                                                    % if object.event_id.location:\n                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                            Onde\n                                                        </div>\n                                                    % endif\n                                                </td>\n                                                <td  style=\"vertical-align:top;\">\n                                                    % if object.event_id.location:\n                                                        <div style = \"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px\" >\n                                                            : ${object.event_id.location}\n                                                            <span style= \"color:#A9A9A9; \">(<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">Exibir Mapa</a>)\n                                                                </span>\n                                                        </div>\n                                                    % endif\n                                                </td>                                                        \n                                            </tr> \n                                                                                        \n                                            <tr>\n                                                <td style=\"vertical-align:top;\">\n                                                    % if object.event_id.description :\n                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                            O que\n                                                        </div>\n                                                    % endif\n                                                </td>\n                                                <td style=\"vertical-align:text-top;\">\n                                                    % if object.event_id.description :\n                                                        <div style=\"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                            : ${object.event_id.description}\n                                                        </div>\n                                                    % endif\n                                                </td>\n                                            </tr>\n                                                                                        \n                                            <tr>\n                                                <td style=\"vertical-align:top;\">\n                                                    % if not object.event_id.allday and object.event_id.duration:\n                                                        <div style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                            Duração\n                                                        </div>\n                                                    % endif\n                                                </td>\n                                                <td colspan=\"3\" style=\"vertical-align:text-top;\">\n                                                    % if not object.event_id.allday and object.event_id.duration:\n                                                        <div style=\"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                            : ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}\n                                                        </div>\n                                                    % endif\n                                                </td>\n                                            </tr>                                                \n                                        <tr style=\" height: 30px;\">\n                                            <td style=\"height: 25px;width: 120px; background : # CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                <div>\n                                                    Participantes\n                                                </div>\n                                            </td>\n                                            <td colspan=\"3\">\n                                               : \n                                                % for attendee in object.event_id.attendee_ids:\n                                                    <div style=\"display:inline-block; border-radius: 50%; width:10px; height:10px;background:${'color' in ctx and ctx['color'][attendee.state] or 'white'};\"></div>\n                                                    % if attendee.cn != object.cn:\n                                                        <span style=\"margin-left:5px\">${attendee.cn}</span>\n                                                    % else:\n                                                        <span style=\"margin-left:5px\">Você</span>\n                                                    % endif\n                                                % endfor\n                                            </td>\n                                        </tr>\n                                    </table>\n                                </td>\n                            </tr>\n                        </table>\n                    </div>            \n                </div>\n                \n                "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
@@ -167,14 +168,14 @@ msgid ""
 "                                            <tr>\n"
 "                                                <td style=\"vertical-align:top;\">\n"
 "                                                    % if object.event_id.location:\n"
-"                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                            Where\n"
 "                                                        </div>\n"
 "                                                    % endif\n"
 "                                                </td>\n"
 "                                                <td  style=\"vertical-align:top;\">\n"
 "                                                    % if object.event_id.location:\n"
-"                                                        <div style = \"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px\" >\n"
+"                                                        <div style = \"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px\" >\n"
 "                                                            : ${object.event_id.location}\n"
 "                                                            <span style= \"color:#A9A9A9; \">(<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
 "                                                                </span>\n"
@@ -186,14 +187,14 @@ msgid ""
 "                                            <tr>\n"
 "                                                <td style=\"vertical-align:top;\">\n"
 "                                                    % if object.event_id.description :\n"
-"                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                            What\n"
 "                                                        </div>\n"
 "                                                    % endif\n"
 "                                                </td>\n"
 "                                                <td style=\"vertical-align:text-top;\">\n"
 "                                                    % if object.event_id.description :\n"
-"                                                        <div style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div style=\"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                            : ${object.event_id.description}\n"
 "                                                        </div>\n"
 "                                                    % endif\n"
@@ -203,21 +204,21 @@ msgid ""
 "                                            <tr>\n"
 "                                                <td style=\"vertical-align:top;\">\n"
 "                                                    % if not object.event_id.allday and object.event_id.duration:\n"
-"                                                        <div style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                            Duration\n"
 "                                                        </div>\n"
 "                                                    % endif\n"
 "                                                </td>\n"
 "                                                <td colspan=\"3\" style=\"vertical-align:text-top;\">\n"
 "                                                    % if not object.event_id.allday and object.event_id.duration:\n"
-"                                                        <div style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div style=\"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                            : ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}\n"
 "                                                        </div>\n"
 "                                                    % endif\n"
 "                                                </td>\n"
 "                                            </tr>                                                \n"
 "                                        <tr style=\" height: 30px;\">\n"
-"                                            <td style=\"height: 25px;width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                            <td style=\"height: 25px;width: 120px; background : # CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                <div>\n"
 "                                                    Attendees\n"
 "                                                </div>\n"
@@ -247,7 +248,7 @@ msgid ""
 "                </div>\n"
 "                \n"
 "                "
-msgstr "\n<style> \nspan.oe_mail_footer_access {\ndisplay:block; \ntext-align:center;\ncolor:grey; \n}\n</style>\n<div style=\"border-radius: 2px; max-width: 1200px; height: auto;margin-left: auto;margin-right: auto;background-color:#f9f9f9;\">\n<div style=\"height:auto;text-align: center;font-size : 30px;color: #8A89BA;\">\n<strong>${object.event_id.name}</strong>\n</div>\n<div style=\"height: 50px;text-align: left;font-size : 14px;border-collapse: separate;margin-top:10px\">\n<strong style=\"margin-left:12px\">Caro(a) ${object.cn}</strong> ,<br/><p style=\"margin-left:12px\">${object.event_id.user_id.partner_id.name} convidou você para o(a) ${object.event_id.name} reunião de ${object.event_id.user_id.company_id.name}.</p> \n</div>\n<div style=\"height: auto;margin-left:12px;margin-top:30px;\">\n<table>\n<tr>\n<td>\n<div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n<div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n</div>\n<div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n<div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n</td>\n<td>\n<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin-top: 15px; margin-left: 10px;font-size: 16px;\">\n<tr>\n<td style=\"vertical-align:top;\">\n% if object.event_id.location:\n<div style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\nOnde\n</div>\n% endif\n</td>\n<td style=\"vertical-align:top;\">\n% if object.event_id.location:\n<div style = \"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 14px\" >\n: ${object.event_id.location}\n<span style= \"color:#A9A9A9; \">(<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">Ver Mapa</a>)\n</span>\n</div>\n% endif\n</td> \n</tr> \n\n<tr>\n<td style=\"vertical-align:top;\">\n% if object.event_id.description :\n<div style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\nO Que\n</div>\n% endif\n</td>\n<td style=\"vertical-align:text-top;\">\n% if object.event_id.description :\n<div style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n: ${object.event_id.description}\n</div>\n% endif\n</td>\n</tr>\n\n<tr>\n<td style=\"vertical-align:top;\">\n% if not object.event_id.allday and object.event_id.duration:\n<div style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\nDuração\n</div>\n% endif\n</td>\n<td colspan=\"3\" style=\"vertical-align:text-top;\">\n% if not object.event_id.allday and object.event_id.duration:\n<div style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}\n</div>\n% endif\n</td>\n</tr> \n<tr style=\" height: 30px;\">\n<td style=\"height: 25px;width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n<div>\nParticipantes\n</div>\n</td>\n<td colspan=\"3\">\n: \n% for attendee in object.event_id.attendee_ids:\n<div style=\"display:inline-block; border-radius: 50%; width:10px; height:10px;background:${'color' in ctx and ctx['color'][attendee.state] or 'white'};\"></div>\n% if attendee.cn != object.cn:\n<span style=\"margin-left:5px\">${attendee.cn}</span>\n% else:\n<span style=\"margin-left:5px\">Você</span>\n% endif\n% endfor\n</td>\n</tr>\n</table>\n</td>\n</tr>\n</table>\n</div>\n<div style=\"height: auto;width:450px; margin:0 auto;padding-top:20px;padding-bottom:40px;\">\n<a style=\"padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#8A89BA;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;\" href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\">Aceitar</a>\n<a style=\"padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#808080;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;\" href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\">Recusar</a>\n<a style=\"padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#D8D8D8;text-decoration: none;color:#FFFFFF;\" href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\">Visualizar</a>\n</div> \n</div>"
+msgstr "\n<style> \nspan.oe_mail_footer_access {\ndisplay:block; \ntext-align:center;\ncolor:grey; \n}\n</style>\n<div style=\"border-radius: 2px; max-width: 1200px; height: auto;margin-left: auto;margin-right: auto;background-color:#f9f9f9;\">\n<div style=\"height:auto;text-align: center;font-size : 30px;color: #8A89BA;\">\n<strong>${object.event_id.name}</strong>\n</div>\n<div style=\"height: 50px;text-align: left;font-size : 14px;border-collapse: separate;margin-top:10px\">\n<strong style=\"margin-left:12px\">Caro(a) ${object.cn}</strong> ,<br/><p style=\"margin-left:12px\">${object.event_id.user_id.partner_id.name} convidou você para o(a) ${object.event_id.name} reunião de ${object.event_id.user_id.company_id.name}.</p> \n</div>\n<div style=\"height: auto;margin-left:12px;margin-top:30px;\">\n<table>\n<tr>\n<td>\n<div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n<div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n</div>\n<div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n<div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n</td>\n<td>\n<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin-top: 15px; margin-left: 10px;font-size: 16px;\">\n<tr>\n<td style=\"vertical-align:top;\">\n% if object.event_id.location:\n<div style=\"width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\nOnde\n</div>\n% endif\n</td>\n<td style=\"vertical-align:top;\">\n% if object.event_id.location:\n<div style = \"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 14px\" >\n: ${object.event_id.location}\n<span style= \"color:#A9A9A9; \">(<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">Ver Mapa</a>)\n</span>\n</div>\n% endif\n</td> \n</tr> \n\n<tr>\n<td style=\"vertical-align:top;\">\n% if object.event_id.description :\n<div style=\"width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\nO Que\n</div>\n% endif\n</td>\n<td style=\"vertical-align:text-top;\">\n% if object.event_id.description :\n<div style=\"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n: ${object.event_id.description}\n</div>\n% endif\n</td>\n</tr>\n\n<tr>\n<td style=\"vertical-align:top;\">\n% if not object.event_id.allday and object.event_id.duration:\n<div style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\nDuração\n</div>\n% endif\n</td>\n<td colspan=\"3\" style=\"vertical-align:text-top;\">\n% if not object.event_id.allday and object.event_id.duration:\n<div style=\"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}\n</div>\n% endif\n</td>\n</tr> \n<tr style=\" height: 30px;\">\n<td style=\"height: 25px;width: 120px; background : # CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n<div>\nParticipantes\n</div>\n</td>\n<td colspan=\"3\">\n: \n% for attendee in object.event_id.attendee_ids:\n<div style=\"display:inline-block; border-radius: 50%; width:10px; height:10px;background:${'color' in ctx and ctx['color'][attendee.state] or 'white'};\"></div>\n% if attendee.cn != object.cn:\n<span style=\"margin-left:5px\">${attendee.cn}</span>\n% else:\n<span style=\"margin-left:5px\">Você</span>\n% endif\n% endfor\n</td>\n</tr>\n</table>\n</td>\n</tr>\n</table>\n</div>\n<div style=\"height: auto;width:450px; margin:0 auto;padding-top:20px;padding-bottom:40px;\">\n<a style=\"padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#8A89BA;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;\" href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\">Aceitar</a>\n<a style=\"padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#808080;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;\" href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\">Recusar</a>\n<a style=\"padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#D8D8D8;text-decoration: none;color:#FFFFFF;\" href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\">Visualizar</a>\n</div> \n</div>"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
@@ -285,14 +286,14 @@ msgid ""
 "                                            <tr>\n"
 "                                                <td style=\"vertical-align:top;\">\n"
 "                                                    % if object.event_id.location:\n"
-"                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                            Where\n"
 "                                                        </div>\n"
 "                                                    % endif\n"
 "                                                </td>\n"
 "                                                <td  style=\"vertical-align:top;\">\n"
 "                                                    % if object.event_id.location:\n"
-"                                                        <div style = \"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px\" >\n"
+"                                                        <div style = \"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px\" >\n"
 "                                                            : ${object.event_id.location}\n"
 "                                                            <span style= \"color:#A9A9A9; \">(<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
 "                                                                </span>\n"
@@ -304,14 +305,14 @@ msgid ""
 "                                            <tr>\n"
 "                                                <td style=\"vertical-align:top;\">\n"
 "                                                    % if object.event_id.description :\n"
-"                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                            What\n"
 "                                                        </div>\n"
 "                                                    % endif\n"
 "                                                </td>\n"
 "                                                <td style=\"vertical-align:text-top;\">\n"
 "                                                    % if object.event_id.description :\n"
-"                                                        <div style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div style=\"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                            : ${object.event_id.description}\n"
 "                                                        </div>\n"
 "                                                    % endif\n"
@@ -321,21 +322,21 @@ msgid ""
 "                                            <tr>\n"
 "                                                <td style=\"vertical-align:top;\">\n"
 "                                                    % if not object.event_id.allday and object.event_id.duration:\n"
-"                                                        <div style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                            Duration\n"
 "                                                        </div>\n"
 "                                                    % endif\n"
 "                                                </td>\n"
 "                                                <td colspan=\"3\" style=\"vertical-align:text-top;\">\n"
 "                                                    % if not object.event_id.allday and object.event_id.duration:\n"
-"                                                        <div style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                                        <div style=\"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                            : ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}\n"
 "                                                        </div>\n"
 "                                                    % endif\n"
 "                                                </td>\n"
 "                                            </tr>                                                \n"
 "                                        <tr style=\" height: 30px;\">\n"
-"                                            <td style=\"height: 25px;width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
+"                                            <td style=\"height: 25px;width: 120px; background : # CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n"
 "                                                <div>\n"
 "                                                    Attendees\n"
 "                                                </div>\n"
@@ -365,7 +366,7 @@ msgid ""
 "                </div>\n"
 "                \n"
 "                "
-msgstr " \n<style>\nspan.oe_mail_footer_access {\ndisplay:block; \ntext-align:center;\ncolor:grey; \n}\n</style>\n<div style=\"border-radius: 2px; max-width: 1200px; height: auto;margin-left: auto;margin-right: auto;background-color:#f9f9f9;\">\n<div style=\"height:auto;text-align: center;font-size : 30px;color: #8A89BA;\">\n<strong>${object.event_id.name}</strong>\n</div>\n<div style=\"height: 50px;text-align: left;font-size : 14px;border-collapse: separate;margin-top:10px\">\n<strong style=\"margin-left:12px\">Dear ${object.cn}</strong> ,<br/>\n<p style=\"margin-left:12px\">A data da reunião foi alterada...<br/>\nThe meeting created by ${object.event_id.user_id.partner_id.name} agora está prevista para : ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.</p>\n</div>\n<div style=\"height: auto;margin-left:12px;margin-top:30px;\">\n<table>\n<tr> \n<td>\n<div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n<div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n</div>\n<div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n<div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n</td>\n<td>\n<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin-top: 15px; margin-left: 10px;font-size: 16px;\">\n<tr>\n<td style=\"vertical-align:top;\">\n% if object.event_id.location:\n<div style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\nOnde\n</div>\n% endif\n</td>\n<td style=\"vertical-align:top;\">\n% if object.event_id.location:\n<div style = \"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 14px\" >\n: ${object.event_id.location}\n<span style= \"color:#A9A9A9; \">(<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">Ver Mapa</a>)\n</span>\n</div>\n% endif\n</td> \n</tr> \n\n<tr>\n<td style=\"vertical-align:top;\">\n% if object.event_id.description :\n<div style=\"width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\nO Que\n</div>\n% endif\n</td>\n<td style=\"vertical-align:text-top;\">\n% if object.event_id.description :\n<div style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n: ${object.event_id.description}\n</div>\n% endif\n</td>\n</tr>\n\n<tr>\n<td style=\"vertical-align:top;\">\n% if not object.event_id.allday and object.event_id.duration:\n<div style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\nDuração\n</div>\n% endif\n</td>\n<td colspan=\"3\" style=\"vertical-align:text-top;\">\n% if not object.event_id.allday and object.event_id.duration:\n<div style=\"font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}\n</div>\n% endif\n</td>\n</tr> \n<tr style=\" height: 30px;\">\n<td style=\"height: 25px;width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n<div>\nParticipantes\n</div>\n</td>\n<td colspan=\"3\">\n: \n% for attendee in object.event_id.attendee_ids:\n<div style=\"display:inline-block; border-radius: 50%; width:10px; height:10px;background:${'color' in ctx and ctx['color'][attendee.state] or 'white'};\"></div>\n% if attendee.cn != object.cn:\n<span style=\"margin-left:5px\">${attendee.cn}</span>\n% else:\n<span style=\"margin-left:5px\">Você</span>\n% endif\n% endfor\n</td>\n</tr>\n</table>\n</td>\n</tr>\n</table> \n</div>\n<div style=\"height: auto;width:450px; margin:0 auto;padding-top:20px;padding-bottom:40px;\">\n<a style=\"padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#8A89BA;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;\" href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\">Aceitar</a>\n<a style=\"padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#808080;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;\" href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\">Recusar</a>\n<a style=\"padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#D8D8D8;text-decoration: none;color:#FFFFFF;\" href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\">Visualizar</a>\n</div> \n</div>"
+msgstr " \n<style>\nspan.oe_mail_footer_access {\ndisplay:block; \ntext-align:center;\ncolor:grey; \n}\n</style>\n<div style=\"border-radius: 2px; max-width: 1200px; height: auto;margin-left: auto;margin-right: auto;background-color:#f9f9f9;\">\n<div style=\"height:auto;text-align: center;font-size : 30px;color: #8A89BA;\">\n<strong>${object.event_id.name}</strong>\n</div>\n<div style=\"height: 50px;text-align: left;font-size : 14px;border-collapse: separate;margin-top:10px\">\n<strong style=\"margin-left:12px\">Dear ${object.cn}</strong> ,<br/>\n<p style=\"margin-left:12px\">A data da reunião foi alterada...<br/>\nThe meeting created by ${object.event_id.user_id.partner_id.name} agora está prevista para : ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.</p>\n</div>\n<div style=\"height: auto;margin-left:12px;margin-top:30px;\">\n<table>\n<tr> \n<td>\n<div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n<div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n</div>\n<div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n<div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n</td>\n<td>\n<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin-top: 15px; margin-left: 10px;font-size: 16px;\">\n<tr>\n<td style=\"vertical-align:top;\">\n% if object.event_id.location:\n<div style=\"width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\nOnde\n</div>\n% endif\n</td>\n<td style=\"vertical-align:top;\">\n% if object.event_id.location:\n<div style = \"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 14px\" >\n: ${object.event_id.location}\n<span style= \"color:#A9A9A9; \">(<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">Ver Mapa</a>)\n</span>\n</div>\n% endif\n</td> \n</tr> \n\n<tr>\n<td style=\"vertical-align:top;\">\n% if object.event_id.description :\n<div style=\"width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\nO Que\n</div>\n% endif\n</td>\n<td style=\"vertical-align:text-top;\">\n% if object.event_id.description :\n<div style=\"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n: ${object.event_id.description}\n</div>\n% endif\n</td>\n</tr>\n\n<tr>\n<td style=\"vertical-align:top;\">\n% if not object.event_id.allday and object.event_id.duration:\n<div style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\nDuração\n</div>\n% endif\n</td>\n<td colspan=\"3\" style=\"vertical-align:text-top;\">\n% if not object.event_id.allday and object.event_id.duration:\n<div style=\"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}\n</div>\n% endif\n</td>\n</tr> \n<tr style=\" height: 30px;\">\n<td style=\"height: 25px;width: 120px; background : # CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n<div>\nParticipantes\n</div>\n</td>\n<td colspan=\"3\">\n: \n% for attendee in object.event_id.attendee_ids:\n<div style=\"display:inline-block; border-radius: 50%; width:10px; height:10px;background:${'color' in ctx and ctx['color'][attendee.state] or 'white'};\"></div>\n% if attendee.cn != object.cn:\n<span style=\"margin-left:5px\">${attendee.cn}</span>\n% else:\n<span style=\"margin-left:5px\">Você</span>\n% endif\n% endfor\n</td>\n</tr>\n</table>\n</td>\n</tr>\n</table> \n</div>\n<div style=\"height: auto;width:450px; margin:0 auto;padding-top:20px;padding-bottom:40px;\">\n<a style=\"padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#8A89BA;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;\" href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\">Aceitar</a>\n<a style=\"padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#808080;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;\" href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\">Recusar</a>\n<a style=\"padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#D8D8D8;text-decoration: none;color:#FFFFFF;\" href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\">Visualizar</a>\n</div> \n</div>"
 
 #. module: calendar
 #. openerp-web
@@ -390,7 +391,7 @@ msgid "${object.event_id.name} - Reminder"
 msgstr "${object.event_id.name} - Lembrete"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:775
+#: code:addons/calendar/calendar.py:776
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -398,10 +399,22 @@ msgid ""
 msgstr "%s em %s Para\n%s em %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:773
+#: code:addons/calendar/calendar.py:774
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "%s em (%s Para %s) (%s)"
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:263
+#, python-format
+msgid "%s has accepted invitation"
+msgstr "%s Ele aceitou o convite"
+
+#. module: calendar
+#: code:addons/calendar/calendar.py:278
+#, python-format
+msgid "%s has declined invitation"
+msgstr "%s tem um convite não aceito"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -410,7 +423,7 @@ msgid "<span> hours</span>"
 msgstr "<span> horas</span>"
 
 #. module: calendar
-#: code:addons/calendar/calendar.py:1620
+#: code:addons/calendar/calendar.py:1613
 #, python-format
 msgid "A email has been send to specify that the date has been changed !"
 msgstr "Foi enviado um e-mail notificando que a data foi alterada!"
@@ -525,6 +538,13 @@ msgstr "Calendário"
 #: model:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
 msgstr "Alarme do Calendário"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:43
+#, python-format
+msgid "Calendar Invitation"
+msgstr "Convite de Calendário"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -844,11 +864,6 @@ msgid ""
 msgstr "Se o campo Ativo é definido como verdadeiro, permite esconder a informação de eventos de alarme sem removê-los."
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
-msgid "Important Messages"
-msgstr "Mensagens Importantes"
-
-#. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
 msgid "Invitation"
 msgstr "Convite"
@@ -994,11 +1009,6 @@ msgid "Messages"
 msgstr "Mensagens"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_message_ids
-msgid "Messages and communication history"
-msgstr "Histórico de mensagens e comunicação"
-
-#. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Minute(s)"
 msgstr "Minutos(s)"
@@ -1044,6 +1054,13 @@ msgstr "Nome"
 #: selection:calendar.event,attendee_status:0
 msgid "Needs Action"
 msgstr "Necessita Ação"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:36
+#, python-format
+msgid "No I'm not going."
+msgstr "Não irei."
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
@@ -1385,6 +1402,7 @@ msgstr "Unidade"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_message_unread
+#: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Unread Messages"
 msgstr "Mensagens não lidas"
 
@@ -1441,9 +1459,37 @@ msgid "Weekday"
 msgstr "Dia da semana"
 
 #. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:48
+#, python-format
+msgid "When"
+msgstr "Quando"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:52
+#, python-format
+msgid "Where"
+msgstr "Onde"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:56
+#, python-format
+msgid "Who"
+msgstr "Quem"
+
+#. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Year(s)"
 msgstr "Ano(s)"
+
+#. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:35
+#, python-format
+msgid "Yes I'm going."
+msgstr "Sim Irei."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:106

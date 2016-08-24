@@ -24,10 +24,6 @@ var Tips = Class.extend({
                 self.tips = tips;
             });
 
-        bus.on('action', this, function(action) {
-            self.on_action(action);
-        });
-
         bus.on('view_shown', this, function(view) {
             if (_.keys(view.fields_view).length === 0) {
                 view.on('view_loaded', this, function(fields_view) {
@@ -39,13 +35,6 @@ var Tips = Class.extend({
                 self.on_view();
             }
         });
-    },
-
-    // stub
-    on_action: function(action) {
-        var self = this;
-        var action_id = action.id;
-        var model = action.res_model;
     },
 
     on_view: function() {

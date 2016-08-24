@@ -180,7 +180,7 @@ class barcode_rule(models.Model):
     @api.model
     def _encoding_selection_list(self):
         return [
-                ('any', 'Any'),
+                ('any', _('Any')),
                 ('ean13', 'EAN-13'),
                 ('ean8', 'EAN-8'),
                 ('upca', 'UPC-A'),
@@ -188,7 +188,7 @@ class barcode_rule(models.Model):
 
     @api.model
     def _get_type_selection(self):
-        return [('alias','Alias'),('product','Unit Product')]
+        return [('alias', _('Alias')), ('product', _('Unit Product'))]
 
     _columns = {
         'name':     fields.char('Rule Name', size=32, required=True, help='An internal identification for this barcode nomenclature rule'),

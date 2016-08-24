@@ -3,14 +3,14 @@
 # * mrp
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+# Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2015-12-17 11:04+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"POT-Creation-Date: 2016-07-06 07:28+0000\n"
+"PO-Revision-Date: 2016-07-06 08:35+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +58,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Consumed Products</strong>"
-msgstr "<strong>Καταναλωτικά Προϊόντα</strong>"
+msgstr "<strong>Αναλωθέντα Προϊόντα</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -103,7 +103,7 @@ msgstr "<strong>Προϊόν</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Products to Consume</strong>"
-msgstr "<strong>Προϊόντα για Κατανάλωση</strong>"
+msgstr "<strong>Προϊόντα για Ανάλωση</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -229,6 +229,11 @@ msgstr ""
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
 msgstr "Αναμονή Πρώτων Υλών"
+
+#. module: mrp
+#: model:ir.actions.report.xml,name:mrp.action_report_bom_price
+msgid "BOM Cost"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
@@ -381,7 +386,7 @@ msgstr "Ακυρωμένο"
 #: code:addons/mrp/stock.py:149
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
-msgstr ""
+msgstr "Δεν μπορεί να αναλωθεί μια κίνηση με αρνητική ή μηδενική ποσότητα."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:639
@@ -522,23 +527,23 @@ msgstr "Επιβεβαίωση Παραγωγής"
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume & Produce"
-msgstr ""
+msgstr "Ανάλωση & Παραγωγή"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "Γραμμή Ανάλωσης"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
 #: model:ir.ui.view,arch_db:mrp.view_stock_move_consume_wizard
 msgid "Consume Move"
-msgstr ""
+msgstr "Κίνηση Ανάλωσης"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume Only"
-msgstr ""
+msgstr "Αναλώσιμα Μόνο"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_consume
@@ -556,6 +561,11 @@ msgstr "Αναλωθέντα Προϊόντα"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consumed_for
 msgid "Consumed for"
+msgstr "Αναλωθέντα για"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Cost Structure"
 msgstr ""
 
 #. module: mrp
@@ -682,6 +692,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_display_name
@@ -839,6 +850,7 @@ msgstr "Λογαριασμός Ώρας"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_id
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_id
@@ -940,6 +952,7 @@ msgstr "Τελευταία ημερομηνία μηνύματος"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load___last_update
@@ -1069,7 +1082,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Manufacturing"
-msgstr "Μεταποίηση"
+msgstr "Παραγωγή"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_efficiency
@@ -1109,7 +1122,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.view_production_graph
 #: model:ir.ui.view,arch_db:mrp.view_production_pivot
 msgid "Manufacturing Orders"
-msgstr ""
+msgstr "Εντολές Παραγωγής"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1375,7 +1388,7 @@ msgstr "Παραγωγή"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_created_ids2
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Produced Products"
-msgstr ""
+msgstr "Παραχθέντα Προϊόντα"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -1400,12 +1413,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
-msgstr ""
+msgstr "Παραγωγή Προϊόντος"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Product Produce Consume lines"
-msgstr ""
+msgstr "Γραμμές Ανάλωσης Παραγωγής Προϊόντος"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
@@ -1475,7 +1488,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_production_id
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "Εντολή Παραγωγής για Παραχθέντα Προϊόντα"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_raw_material_production_id
@@ -1522,7 +1535,7 @@ msgstr "Προϊόντα"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_consume_lines
 msgid "Products Consumed"
-msgstr ""
+msgstr "Αναλωθέντα Προϊόντα"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
@@ -1535,7 +1548,7 @@ msgstr "Τα προϊόντα μπορεί να έχουν διάφορα χαρ
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Products to Consume"
-msgstr ""
+msgstr "Προϊόντα για Κατανάλωση"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1546,7 +1559,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_created_ids
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Products to Produce"
-msgstr ""
+msgstr "Προϊόντα για Παραγωγή"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -1591,6 +1604,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_qty
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
@@ -1601,6 +1615,11 @@ msgstr "Ποσότητα"
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_qty
 msgid "Quantity (in default UoM)"
 msgstr "Ποσότητα (στην προεπιλεγμένη μονάδα μέτρησης)"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Raw Materials"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1970,6 +1989,16 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
+msgstr "Προς Ανάλωση"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Total Cost"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Total Cost of Raw Materials"
 msgstr ""
 
 #. module: mrp
@@ -1995,6 +2024,11 @@ msgid "Type"
 msgstr "Τύπος"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Unit Cost"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unit of Measure"
 msgstr "Μονάδα Μέτρησης"
@@ -2012,7 +2046,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_message_unread
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_unread
 msgid "Unread Messages"
-msgstr "Αδιάβαστα Μυνήματα"
+msgstr "Αδιάβαστα Μηνύματα"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_unread_counter

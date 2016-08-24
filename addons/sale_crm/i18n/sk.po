@@ -3,13 +3,14 @@
 # * sale_crm
 # 
 # Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-12-19 19:50+0000\n"
-"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
+"PO-Revision-Date: 2016-01-11 16:07+0000\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +21,7 @@ msgstr ""
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_claim_count
 msgid "# Claims"
-msgstr ""
+msgstr "# Nároky"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
@@ -35,29 +36,29 @@ msgstr "# úloh"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
 msgid "# of Sales Order"
-msgstr ""
+msgstr "# objednávok predaja"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Orders</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Objednávky</span>"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Quote(s) </span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Cenová ponuka(y) </span>"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
 msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
-msgstr ""
+msgstr "Člen, s ktorým sa chcete spojiť svoje členstvo. To zváži stav členstva pridruženého člena."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
 msgid "Associate Member"
-msgstr ""
+msgstr "Pridružený člen"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_campaign_id
@@ -67,17 +68,17 @@ msgstr "Kampaň"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
 msgid "Cancel Membership Date"
-msgstr ""
+msgstr "Dátum zrušenia členstva"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
 msgid "Count Payment Method"
-msgstr ""
+msgstr "Zrátať platobné metódy"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
 msgid "Current Membership Status"
-msgstr ""
+msgstr "Súčasný stav členstva"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_customer
@@ -87,42 +88,42 @@ msgstr "Umiestnenie zákazníka"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_start
 msgid "Date from which membership becomes active."
-msgstr ""
+msgstr "Dátum od ktorého bude členstvo aktívne."
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_cancel
 msgid "Date on which membership has been cancelled"
-msgstr ""
+msgstr "Dátum kedy bolo členstvo zrušené"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_stop
 msgid "Date until which membership remains active."
-msgstr ""
+msgstr "Dátum dokedy bude členstvo aktívne"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_free_member
 msgid "Free Member"
-msgstr ""
+msgstr "Bezplatný člen"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_latitude
 msgid "Geo Latitude"
-msgstr ""
+msgstr "Geo zemepisná šírka"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_date_localization
 msgid "Geo Localization Date"
-msgstr ""
+msgstr "Dátum geolokalizácie"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_longitude
 msgid "Geo Longitude"
-msgstr ""
+msgstr "Geo zemepisná dĺžka"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
 msgid "Invoiced in Sale Orders Target"
-msgstr ""
+msgstr "Cieľ faktúrovania v objednávkach predaja"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
@@ -134,17 +135,17 @@ msgid ""
 "-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
-msgstr ""
+msgstr "To indikuje stav členstva.\n-Nečlen: Partner, ktorý nepožiadal o akékoľvek členstvo.\n-Zrušený člen: Člen, ktorý zrušil svoje členstvo.\n-Bývalý člen: Člen, ktorého dátum členstva vypršal.\n-Čakajúci člen: Člen, ktorý požiadal o členstvo a ktorého faktúra bude vytvorená.\n-Vyfaktúrovaný člen: Člen, ktorého faktúra bola vytvorená.\n-Platiaci člen: Člen, ktorý zaplatil členský poplatok."
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr ""
+msgstr "Iniciatíva/Príležitosť"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
-msgstr ""
+msgstr "Prihláste sa do chatter-u, z ktorého pochádza príležitosť objednávky"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_medium_id
@@ -154,32 +155,32 @@ msgstr "Stredné"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
 msgid "Membership"
-msgstr ""
+msgstr "Členstvo"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_amount
 msgid "Membership Amount"
-msgstr ""
+msgstr "Suma členstva"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_stop
 msgid "Membership End Date"
-msgstr ""
+msgstr "Dátum ukončenia členstva"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_start
 msgid "Membership Start Date"
-msgstr ""
+msgstr "Dátum začiatku členstva"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "New Quotation"
-msgstr ""
+msgstr "Nová cenová ponuka"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
 msgid "Number of Quotations"
-msgstr ""
+msgstr "Počet cenových ponúk"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
@@ -189,12 +190,12 @@ msgstr "Príležitosť"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
 msgid "Orders"
-msgstr ""
+msgstr "Objednávky"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
 msgid "Payment Methods"
-msgstr ""
+msgstr "Platobné metódy"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
@@ -215,7 +216,7 @@ msgstr "Objednávka predaja"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_free_member
 msgid "Select if you want to give free membership."
-msgstr ""
+msgstr "Vyberte ak chcete dať bezplatné členstvo."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_source_id
@@ -225,7 +226,7 @@ msgstr "Výraz"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
 msgid "Sum of Orders"
-msgstr ""
+msgstr "Súčet objednávok"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
@@ -235,12 +236,12 @@ msgstr "Popisky"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
 msgid "Tasks"
-msgstr ""
+msgstr "Úlohy"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
 msgid "The price negotiated by the partner"
-msgstr ""
+msgstr "Cena vyjednaná partnerom"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_sale_order_campaign_id
@@ -266,14 +267,14 @@ msgstr "Toto je zdroj odkazu. Príklad: vyhľadávaci prostriedok, iná doména,
 msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
-msgstr ""
+msgstr "Táto lokácia skladu bude použitá namiesto predvolenej, ako cieľová lokácia tovaru ktorý posielate tomuto partnerovi"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
-msgstr ""
+msgstr "Táto lokácia skladu bude použitá namiesto predvolenej, ako cieľová lokácia tovaru ktorý obdržíte od súčasného partnera"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -283,4 +284,4 @@ msgstr "Používatelia"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
-msgstr ""
+msgstr "Lokácia predajcu"

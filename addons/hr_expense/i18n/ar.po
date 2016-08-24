@@ -3,12 +3,15 @@
 # * hr_expense
 # 
 # Translators:
+# AMAAL RU <Fabu1410@yahoo.com>, 2016
+# Mohammed Albasha <m.albasha.ma@gmail.com>, 2016
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2015-11-04 07:23+0000\n"
+"POT-Creation-Date: 2016-08-17 07:54+0000\n"
+"PO-Revision-Date: 2016-08-17 08:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -19,28 +22,28 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Date:</strong>"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Description:</strong>"
+msgid "<strong>Currency:</strong>"
 msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Employee:</strong>"
+msgstr "<strong>الموظف:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
+msgid "<strong>Manager:</strong>"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
+msgid "<strong>Status:</strong>"
 msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Total</strong>"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Validated By:</strong>"
-msgstr ""
+msgstr "<strong>المجموع</strong>"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction
@@ -51,10 +54,11 @@ msgstr "الاجراء المطلوب"
 #: model:product.product,name:hr_expense.air_ticket
 #: model:product.template,name:hr_expense.air_ticket_product_template
 msgid "Air Flight"
-msgstr ""
+msgstr "رحلة جوية"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Analytic Account"
 msgstr "الحساب التحليلي"
 
@@ -72,7 +76,7 @@ msgstr "مقبول"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_bank_journal_id
 msgid "Bank Journal"
-msgstr ""
+msgstr "يومية البنك"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_template_can_be_expensed
@@ -99,7 +103,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_my_tree
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 msgid "Click here to approve"
-msgstr ""
+msgstr "انقر هنا للموافقة"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense
@@ -111,6 +115,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_my_tree
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 msgid "Click here to refuse"
+msgstr ""
+
+#. module: hr_expense
+#: model:web.tip,description:hr_expense.expense_tip_2
+msgid "Click on Action to submit multiple expenses to your manager."
 msgstr ""
 
 #. module: hr_expense
@@ -154,6 +163,7 @@ msgstr "العملة"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_date
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Date"
 msgstr "التاريخ"
 
@@ -176,6 +186,7 @@ msgstr "الوصف"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_display_name
+#: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense_display_name
 msgid "Display Name"
 msgstr "اسم العرض"
 
@@ -215,7 +226,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_journal_id
 msgid "Expense Journal"
-msgstr ""
+msgstr "المصروفات اليوميه"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
@@ -226,12 +237,12 @@ msgstr ""
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense approved"
-msgstr ""
+msgstr "مصروف تم الموافقه عليه "
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
 msgid "Expense confirmed, waiting confirmation"
-msgstr ""
+msgstr "مصروف مؤكد ، في انتظار التأكيد "
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -241,7 +252,7 @@ msgstr ""
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense refused"
-msgstr ""
+msgstr "مصروف تم رفضه "
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
@@ -265,7 +276,7 @@ msgstr "تحليل النفقات"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Expenses Month"
-msgstr ""
+msgstr "مصروفات الشهر "
 
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_department_expense_confirmed
@@ -275,7 +286,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Expenses by Month"
-msgstr ""
+msgstr "المصروفات بالشهر "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:206
@@ -326,7 +337,7 @@ msgstr "المتابعون (الشرماء)"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Former Employees"
-msgstr ""
+msgstr "الموظفين السابقين"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_approved_expense
@@ -337,7 +348,7 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
-msgid "Generate Single Accounting Entry"
+msgid "Generate Accounting Entries"
 msgstr ""
 
 #. module: hr_expense
@@ -348,12 +359,12 @@ msgstr "تجميع حسب"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
 msgid "HR Department"
-msgstr ""
+msgstr "قسم الموارد البشرية"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
 msgid "HR Expense"
-msgstr ""
+msgstr "مصروف موارد بشريه "
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -374,6 +385,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
+#: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense_id
 msgid "ID"
 msgstr "المعرف"
 
@@ -410,6 +422,7 @@ msgstr "تاريخ آخر رسالة"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard___last_update
+#: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense___last_update
 msgid "Last Modified on"
 msgstr "آخر تعديل في"
 
@@ -490,7 +503,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "Notes..."
-msgstr ""
+msgstr "ملاحظات..."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction_counter
@@ -523,7 +536,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.actions.client,name:hr_expense.action_client_expense_menu
 msgid "Open Expense Menu"
-msgstr ""
+msgstr "فتح قائمة المصروفات"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -533,7 +546,7 @@ msgstr "مدفوعة"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_payment_mode
 msgid "Payment By"
-msgstr ""
+msgstr "دفعة بواسطة"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:264
@@ -607,12 +620,17 @@ msgid "Reporting"
 msgstr "التقارير"
 
 #. module: hr_expense
+#: model:web.tip,description:hr_expense.expense_tip_1
+msgid "Select the lines you want to submit to be reimbursed."
+msgstr ""
+
+#. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:73
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product"
 " Unit of Measure"
-msgstr ""
+msgstr "وحدة القياس المختاره  لا تنتمي إلى نفس فئة وحدة قياس المنتج "
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -632,7 +650,7 @@ msgstr "الحالة"
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
 msgid "Submit Expenses"
-msgstr ""
+msgstr "قدم المصاريف"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -644,7 +662,7 @@ msgstr "قدم للمدير"
 #. module: hr_expense
 #: selection:hr.expense,state:0
 msgid "Submitted"
-msgstr ""
+msgstr "قدمت"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_untaxed_amount
@@ -664,7 +682,7 @@ msgstr "الضرائب"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_journal_id
 msgid "The journal used when the expense is done."
-msgstr ""
+msgstr "يتم استخدام اليوميه عندما تتم المصروفات ."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_bank_journal_id
@@ -674,7 +692,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "This document must be dated and signed for reimbursement."
-msgstr ""
+msgstr " هذه الوثيقة يجب أن تكون مؤرخة و موقع عليها للتسديد "
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_expense_to_approve
@@ -728,22 +746,19 @@ msgstr "عداد الرسائل الغير مقروءة"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "UoM"
+msgstr "وحده القياس "
+
+#. module: hr_expense
+#: model:web.tip,description:hr_expense.expense_tip_3
+msgid ""
+"Use the messaging tool to log a note and attach a document to the expense. "
+"(e.g. scan of the bill)"
 msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
 msgid "Waiting Payment"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_website_message_ids
-msgid "Website Messages"
-msgstr "رسائل الموقع"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_website_message_ids
-msgid "Website communication history"
-msgstr "سجل تواصل الموقع"
+msgstr "فى انتظار الدفع .. "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_state

@@ -241,7 +241,7 @@ with directly by external objects or search view controls
 .. js:class:: openerp.web.search.Facet
 
     A `backbone model`_ representing a single facet of the current
-    research. May map to a search field, or to a more complex or
+    search. May map to a search field, or to a more complex or
     fuzzier input (e.g. a custom filter or an advanced search).
 
     .. js:attribute:: category

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-14 10:56+0000\n"
+"POT-Creation-Date: 2015-09-21 09:20+0000\n"
+"PO-Revision-Date: 2016-07-24 18:32+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
 "MIME-Version: 1.0\n"
@@ -318,6 +318,12 @@ msgid "A tag must be unique!"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction
+msgid "Action Needed"
+msgstr "נדרשת פעולה"
+
+#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Actions"
 msgstr "פעולות"
@@ -399,7 +405,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_slides.menu_action_slide_channels
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Channels"
-msgstr ""
+msgstr "ערוצים"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_datas
@@ -507,7 +513,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "השם המוצג"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_category_sequence
@@ -607,7 +613,7 @@ msgstr "הודעת שגיאה"
 #. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Everyone"
-msgstr ""
+msgstr "כולם"
 
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
@@ -702,12 +708,16 @@ msgid "ID"
 msgstr "מזהה"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_unread
-#: model:ir.model.fields,help:website_slides.field_slide_slide_message_needaction
 #: model:ir.model.fields,help:website_slides.field_slide_slide_message_unread
 msgid "If checked new messages require your attention."
 msgstr "אם מסומן אז הודעה חדשה דורשת התייחסותכם."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction
+#: model:ir.model.fields,help:website_slides.field_slide_slide_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image
@@ -765,7 +775,7 @@ msgstr "תאריך הודעה אחרונה"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide___last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "תאריך שינוי אחרון"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_write_uid
@@ -846,18 +856,6 @@ msgid "Name"
 msgstr "שם"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction_counter
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction_counter
-msgid "Need Action Counter"
-msgstr ""
-
-#. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
 msgstr ""
@@ -898,6 +896,12 @@ msgid "Not Published"
 msgstr "לא פורסם"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_needaction_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_message_needaction_counter
+msgid "Number of Actions"
+msgstr "מספר הפעולות"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
 msgid "Number of Documents"
@@ -924,14 +928,14 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_needaction_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
+msgid "Number of messages which requires an action"
+msgstr "מספר ההודעות שדורשות פעולה"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_unread_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "מספר ההודעות שלא נקראו"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_3
@@ -1504,6 +1508,11 @@ msgstr "מילות מפתח לאתר (meta keywords)"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_website_meta_title
 msgid "Website meta title"
 msgstr "שורת כותרת לאתר (meta title)"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Write a comment..."
+msgstr ""
 
 #. module: website_slides
 #. openerp-web

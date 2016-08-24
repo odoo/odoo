@@ -19,7 +19,7 @@
                       <t t-call="website_portal.contact" />
                       <div class="oe_structure"/>
                     </div>
-                    <div class="col-md-3 col-md-offset-1 o_my_sidebar">
+                    <div id="o_my_sidebar" class="col-md-3 col-md-offset-1 o_my_sidebar">
                         <div class="o_my_details">
                             <h3 class="page-header">Your Details <a href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
                             <div t-field="user.partner_id" t-field-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
@@ -32,7 +32,7 @@
     </template>
 
     <template id="website_portal.custom_panel" inherit_id='website_portal.account' customize_show="True" name="Editable Panel" active="False">
-        <xpath expr="//div[@class='o_my_sidebar']" position="inside">
+        <xpath expr="//div[@id='o_my_sidebar']" position="inside">
             <div class="oe_structure">
               <h3 class="page-header">Custom Panel</h3>
               <p>Place your content here.</p>

@@ -47,7 +47,7 @@ class MassMailingList(osv.Model):
             _get_contact_nbr, type='integer',
             string='Number of Contacts',
         ),
-        'popup_content': fields.html("Website Popup Content", translate=True, required=True, sanitize=False),
+        'popup_content': fields.html("Website Popup Content", translate=True, sanitize=False),
         'popup_redirect_url': fields.char("Website Popup Redirect URL"),
     }
 
@@ -431,7 +431,10 @@ class MassMailing(osv.Model):
         for model_name in self.pool:
             model = self.pool[model_name]
             if hasattr(model, '_mail_mass_mailing') and getattr(model, '_mail_mass_mailing'):
-                res.append((model._name, getattr(model, '_mail_mass_mailing')))
+                if getattr(model, 'message_mass_mailing_enabled'):
+                    res.append((model._name, model.message_mass_mailing_enabled()))
+                else:
+                    res.append((model._name, model._mail_mass_mailing))
         res.append(('mail.mass_mailing.contact', _('Mailing List')))
         return res
 
@@ -635,7 +638,7 @@ class MassMailing(osv.Model):
         if groupby and groupby[0] == "state":
             # Default result structure
             # states = self._get_state_list(cr, uid, context=context)
-            states = [('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')]
+            states = [('draft', _('Draft')), ('in_queue', _('In Queue')), ('sending', _('Sending')), ('done', _('Sent'))]
             read_group_all_states = [{
                 '__context': {'group_by': groupby[1:]},
                 '__domain': domain + [('state', '=', state_value)],
@@ -685,6 +688,8 @@ class MassMailing(osv.Model):
                 value['mailing_domain'] = "[('list_id', 'in', %s), ('opt_out', '=', False)]" % list(mailing_list_ids)
             else:
                 value['mailing_domain'] = "[('list_id', '=', False)]"
+        elif 'opt_out' in self.pool[mailing_model]._fields:
+            value['mailing_domain'] = "[('opt_out', '=', False)]"
         else:
             value['mailing_domain'] = []
         value['body_html'] = "on_change_model_and_list"

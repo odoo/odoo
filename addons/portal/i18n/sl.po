@@ -3,13 +3,15 @@
 # * portal
 # 
 # Translators:
+# Dejan Sraka <dejan.sraka@picolabs.si>, 2016
+# Dejan Sraka <dejan.sraka@picolabs.si>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-11-19 10:08+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-27 18:32+0000\n"
+"Last-Translator: Dejan Sraka <dejan.sraka@picolabs.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +56,7 @@ msgid ""
 "                </p>\n"
 "            \n"
 "            "
-msgstr ""
+msgstr "\n            \t<p>\n                    Spoštovani ${object.user_id.name or ''},\n                </p>\n                <p>\n                    Prejeli ste dostop do ${user.company_id.name} ${object.wizard_id.portal_id.name}.\n                </p>\n                <p>\n                    Vaši prijavni podatki so:\n                </p>\n                <ul>\n                    <li>Uporabniško ime: ${object.user_id.login or ''}</li>\n                </ul>\n                <ul>\n                    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n                </ul>\n                <ul>\n                \t<li>Podatkovna baza: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n                </ul>\n                <p>\n                \tGeslo lahko nastavite ali spremenite na naslednjem naslovu:\n                </p>\n                <ul>\n                    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n                </ul>\n                <p>\n                \t${object.wizard_id.welcome_message or ''}\n                </p>\n                <p>---<br />\n                    Odoo - Open Source Business Applications<br />\n                    http://www.odoo.com<br />\n                </p>\n            \n            "
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
@@ -156,7 +158,7 @@ msgstr "Zadnjič posodobljeno"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
 msgid "Login User"
-msgstr ""
+msgstr "Prijavljen uporabnik"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.group_search_view
@@ -262,4 +264,4 @@ msgstr "V vaših nastavitvah uporabnika morate imeti elektronski naslov, da lahk
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your Odoo account at ${user.company_id.name|safe}"
-msgstr ""
+msgstr "Vaš Odoo račun pri ${user.company_id.name|safe}"

@@ -50,6 +50,12 @@ class utm_mixin(osv.AbstractModel):
     }
 
     def tracking_fields(self):
+        # This function cannot be overridden in a model which inherit utm.mixin
+        # Limitation by the heritage on AbstractModel
+        # record_crm_lead.tracking_fields() will call tracking_fields() from module utm.mixin (if not overridden on crm.lead)
+        # instead of the overridden method from utm.mixin.
+        # To force the call of overridden method, we use self.pool['utm.mixin'].tracking_fields() which respects overridden
+        # methods of utm.mixin, but will ignore overridden method on crm.lead
         return [
             # ("URL_PARAMETER", "FIELD_NAME_MIXIN", "NAME_IN_COOKIES")
             ('utm_campaign', 'campaign_id', 'odoo_utm_campaign'),
@@ -58,7 +64,7 @@ class utm_mixin(osv.AbstractModel):
         ]
 
     def tracking_get_values(self, cr, uid, vals, context=None):
-        for key, fname, cook in self.tracking_fields():
+        for key, fname, cook in self.pool['utm.mixin'].tracking_fields():
             field = self._fields[fname]
             value = vals.get(fname) or (request and request.httprequest.cookies.get(cook))  # params.get should be always in session by the dispatch from ir_http
             if field.type == 'many2one' and isinstance(value, basestring):

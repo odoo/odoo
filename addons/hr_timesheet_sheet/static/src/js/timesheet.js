@@ -191,6 +191,7 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
         }
     },
     is_valid_value:function(value){
+        this.view.do_notify_change();
         var split_value = value.split(":");
         var valid_value = true;
         if (split_value.length > 2) {
@@ -259,6 +260,7 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
                 type: "many2one",
                 domain: [
                     ['id', 'not in', _.pluck(this.accounts, "account")],
+                    ['account_type', '=', 'normal'], // TODO: Do not forward-port to master
                 ],
                 modifiers: '{"required": true}',
             },

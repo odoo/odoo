@@ -532,6 +532,7 @@ class module(osv.osv):
         api.Environment.reset()
         registry = openerp.modules.registry.RegistryManager.new(cr.dbname, update_module=True)
 
+        cr.commit()
         config = registry['res.config'].next(cr, uid, [], context=context) or {}
         if config.get('type') not in ('ir.actions.act_window_close',):
             return config
@@ -545,7 +546,6 @@ class module(osv.osv):
             'params': {'menu_id': menu_ids and menu_ids[0] or False}
         }
 
-    #TODO remove me in master, not called anymore
     def button_immediate_uninstall(self, cr, uid, ids, context=None):
         """
         Uninstall the selected module(s) immediately and fully,
@@ -622,8 +622,8 @@ class module(osv.osv):
             'auto_install': terp.get('auto_install', False),
             'icon': terp.get('icon', False),
             'summary': terp.get('summary', ''),
+            'url': terp.get('url') or terp.get('live_test_url', ''),
         }
-
 
     def create(self, cr, uid, vals, context=None):
         new_id = super(module, self).create(cr, uid, vals, context=context)

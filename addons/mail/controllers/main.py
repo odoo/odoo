@@ -1,4 +1,5 @@
 import base64
+import json
 from operator import itemgetter
 import psycopg2
 import werkzeug
@@ -143,6 +144,7 @@ class MailController(http.Controller):
             'id': res_id,
             'active_id': res_id,
             'view_id': record_sudo.get_formview_id(),
+            'action': record_action.get('id'),
         }
         url = '/web?%s#%s' % (url_encode(query), url_encode(url_params))
         return werkzeug.utils.redirect(url)
@@ -186,7 +188,7 @@ class MailController(http.Controller):
         Model = request.env[model]
         try:
             record = Model.browse(int(res_id)).exists()
-            getattr(record, method)()
+            getattr(record, method)(**json.loads(kwargs.get('params', {})))
         except:
             return self._redirect_to_messaging()
         return werkzeug.utils.redirect('/mail/view?%s' % url_encode({'model': model, 'res_id': res_id}))

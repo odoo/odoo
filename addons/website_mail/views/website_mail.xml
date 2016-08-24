@@ -67,9 +67,13 @@
             </section>
             <div class="clearfix"/>
             <ul class="media-list o_website_comments">
-                <t t-foreach="object.message_ids" t-as="message">
+                <t t-set="messages" t-value="object.message_ids"/>
+                <t groups="base.group_portal,base.group_public">
+                    <t t-set="messages" t-value="object.message_ids.filtered(lambda m: m.subtype_id.internal == False)"/>
+                </t>
+                <t t-foreach="messages" t-as="message">
                     <t t-if="message.website_published or website.env.user.sudo(website.env.user.id).has_group('base.group_website_publisher')">
-                        <li class="media" t-if="message.message_type == 'comment'" t-att-id="'message-%s' % message.id">
+                        <li class="media" t-if="message.message_type != 'notification'" t-att-id="'message-%s' % message.id">
                             <div class="media-body">
                                 <img class="media-object pull-left img-circle" t-attf-src="/mail/#{message.model}/#{message.res_id}/avatar/#{message.author_id.id}"
                                     style="width: 50px; margin-right: 10px;"/>
@@ -80,6 +84,14 @@
                                 <t t-set="object" t-value="message"/>
                                 <t t-call="website.publish_short"/>
                                 <div t-field="message.body"/>
+                                <div class="o_mg_link_content">
+                                    <div class="col-md-2 col-sm-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
+                                        <a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">
+                                            <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80"/>
+                                            <div class='oe_attachment_name'><t t-raw='attachment.name' /></div>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                             </div>
                         </li>

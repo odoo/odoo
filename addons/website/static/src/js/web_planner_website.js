@@ -19,6 +19,7 @@ var WebsitePlannerLauncher = Widget.extend({
     start: function() {
         var self = this;
         var res = this._super.apply(this, arguments);
+        this.$('.progress').show();
         return res.then(this.get_website_planner.bind(this)).then(function(planner) {
             self.$el.on('click', self, self.show_dialog.bind(self));
             if (planner.length) {

@@ -4,40 +4,68 @@
 
      <!-- Account Tags -->
 
-        <record id="tax_tag_ivat19" model="account.account.tag">
-            <field name="name">Πωλήσεις ΦΠΑ 19%</field>
+        <record id="tag_ivat_01" model="account.account.tag">
+            <field name="name">311 Σύνολο Εκροών</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_ivat21" model="account.account.tag">
-            <field name="name">Πωλήσεις ΦΠΑ 21%</field>
+
+        <record id="tag_ivat_02" model="account.account.tag">
+            <field name="name">307 Σύνολο φορολ. Εκροών</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_ivat23" model="account.account.tag">
-            <field name="name">Πωλήσεις ΦΠΑ 23%</field>
+
+        <record id="tag_ivat_03" model="account.account.tag">
+            <field name="name">303 Πωλήσεις 19-23%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_pvat19" model="account.account.tag">
-            <field name="name">Αγορές ΦΠΑ19%</field>
+
+        <record id="tag_ivat_04" model="account.account.tag">
+            <field name="name">358 Σύνολο φορολ. Εισροών</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_pvat21" model="account.account.tag">
-            <field name="name">Αγορές ΦΠΑ21%</field>
+
+        <record id="tag_ivat_05" model="account.account.tag">
+            <field name="name">353 Αγορές ΦΠΑ 19-23%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_pvat23" model="account.account.tag">
-            <field name="name">Αγορές ΦΠΑ23%</field>
+
+        <record id="tag_ivat_06" model="account.account.tag">
+            <field name="name">357 Δαπάνες/Έξοδα φορολ.</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_evat19" model="account.account.tag">
-            <field name="name">Δαπάνες ΦΠΑ19%</field>
+
+        <record id="tag_ivat_07" model="account.account.tag">
+            <field name="name">501-511 Υπόλοιπο ΦΠΑ</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_evat21" model="account.account.tag">
-            <field name="name">Δαπάνες ΦΠΑ21%</field>
+
+        <record id="tag_ivat_08" model="account.account.tag">
+            <field name="name">337 ΦΠΑ Πωλήσεων</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_evat23" model="account.account.tag">
-            <field name="name">Δαπάνες ΦΠΑ23%</field>
+
+        <record id="tag_ivat_09" model="account.account.tag">
+            <field name="name">333 ΦΠΑ 19-23%</field>
+             <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_ivat_10" model="account.account.tag">
+            <field name="name">420 ΦΠΑ Αγορών</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_ivat_11" model="account.account.tag">
+            <field name="name">378 Σύνολο Φορ. Αγορών</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_ivat_12" model="account.account.tag">
+            <field name="name">373 ΦΠΑ Αγορών 19-23%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_ivat_13" model="account.account.tag">
+            <field name="name">377 ΦΠΑ Δαπανών</field>
             <field name="applicability">taxes</field>
         </record>
 
@@ -52,7 +80,7 @@
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_ivat19')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_03'), ref('tag_ivat_09')])]"/>
     </record>
 
     <record id="ivat21" model="account.tax.template">
@@ -65,7 +93,7 @@
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_ivat21')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_03'), ref('tag_ivat_09')])]"/>
     </record>
 
     <record id="ivat23" model="account.tax.template">
@@ -77,7 +105,7 @@
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_ivat23')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_03'), ref('tag_ivat_09')])]"/>
     </record>
     
     <!-- tax definitions for return VAT from purchases -->
@@ -92,7 +120,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pvat19')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_12'), ref('tag_ivat_05')])]"/>
     </record>
 
 
@@ -106,7 +134,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pvat21')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_12'), ref('tag_ivat_05')])]"/>
     </record>
 
     <record id="pvat23" model="account.tax.template">
@@ -118,7 +146,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_pvat23')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_12'), ref('tag_ivat_05')])]"/>
     </record>
 
     <!-- return VAT on expenses (different from purchases ) -->
@@ -132,7 +160,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_evat19')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_13'), ref('tag_ivat_06')])]"/>
     </record>
 
     <record id="evat21" model="account.tax.template">
@@ -145,7 +173,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_evat21')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_13'), ref('tag_ivat_06')])]"/>
     </record>
 
     <record id="evat23" model="account.tax.template">
@@ -158,7 +186,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_evat23')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('l10n_gr.tag_ivat_13'), ref('l10n_gr.tag_ivat_06')])]"/>
     </record>
 
 </data>

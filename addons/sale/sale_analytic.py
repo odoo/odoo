@@ -12,7 +12,8 @@ class SaleOrderLine(models.Model):
     def _compute_analytic(self, domain=None):
         lines = {}
         if not domain:
-            domain = [('so_line', 'in', self.ids), ('unit_amount', '<=', 0.0)]
+            # To filter on analyic lines linked to an expense
+            domain = [('so_line', 'in', self.ids), ('amount', '<=', 0.0)]
         data = self.env['account.analytic.line'].read_group(
             domain,
             ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
@@ -42,8 +43,9 @@ class AccountAnalyticLine(models.Model):
         if self.unit_amount == 0.0:
             return 0.0
         price_unit = abs(self.amount / self.unit_amount)
-        if self.currency_id and self.currency_id != order.currency_id:
-            price_unit = self.currency_id.compute(price_unit, order.currency_id)
+        currency_id = self.company_id.currency_id
+        if currency_id and currency_id != order.currency_id:
+            price_unit = currency_id.compute(price_unit, order.currency_id)
         return price_unit
 
     def _get_sale_order_line_vals(self):
@@ -51,7 +53,7 @@ class AccountAnalyticLine(models.Model):
         if not order:
             return False
         if order.state != 'sale':
-            raise UserError(_('The Sale Order %s linked to the Analytic Account must be validated before registering expenses.' % order.name))
+            raise UserError(_('The Sale Order %s linked to the Analytic Account must be validated before registering expenses.') % order.name)
 
         last_so_line = self.env['sale.order.line'].search([('order_id', '=', order.id)], order='sequence desc', limit=1)
         last_sequence = last_so_line.sequence + 1 if last_so_line else 100

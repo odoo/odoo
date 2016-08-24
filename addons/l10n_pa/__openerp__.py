@@ -17,7 +17,7 @@ Con la Colaboración de
     """,
     "author": "Cubic ERP",
     "website": "http://cubicERP.com",
-    "category": "Localization/Account Charts",
+    'category': 'Localization',
     "depends": ["account"],
     "data": [
         "l10n_pa_chart.xml",

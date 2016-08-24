@@ -274,7 +274,7 @@ class base_action_rule(osv.osv):
 
                 # check conditions, and execute actions on the records that satisfy them
                 for action in actions:
-                    action._process(action._filter_post(pre[action]))
+                    action._process(action._filter_post(records))
 
                 # call original method
                 return unlink.origin(self, **kwargs)

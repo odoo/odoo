@@ -33,7 +33,7 @@ class account_abstract_payment(models.AbstractModel):
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], string='Payment Type', required=True)
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Type', required=True, oldname="payment_method")
     payment_method_code = fields.Char(related='payment_method_id.code',
-        help="Technical field used to adapt the interface to the payment type selected.")
+        help="Technical field used to adapt the interface to the payment type selected.", readonly=True)
 
     partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')])
     partner_id = fields.Many2one('res.partner', string='Partner')
@@ -87,10 +87,12 @@ class account_abstract_payment(models.AbstractModel):
         if all(inv.currency_id == payment_currency for inv in invoices):
             total = sum(invoices.mapped('residual_signed'))
         else:
-            total = sum(invoices.mapped('residual_company_signed'))
-            company_currency = self.company_id.currency_id if self.company_id else self.env.user.company_id.currency_id
-            if company_currency and company_currency != payment_currency:
-                total = company_currency.with_context(date=self.payment_date).compute(total, payment_currency)
+            total = 0
+            for inv in invoices:
+                if inv.company_currency_id != payment_currency:
+                    total += inv.company_currency_id.with_context(date=self.payment_date).compute(inv.residual_company_signed, payment_currency)
+                else:
+                    total += inv.residual_company_signed
         return abs(total)
 
 
@@ -118,7 +120,7 @@ class account_register_payments(models.TransientModel):
         if not active_model or not active_ids:
             raise UserError(_("Programmation error: wizard action executed without active_model or active_ids in context."))
         if active_model != 'account.invoice':
-            raise UserError(_("Programmation error: the expected model for this action is 'account.invoice'. The provided one is '%d'." % active_model))
+            raise UserError(_("Programmation error: the expected model for this action is 'account.invoice'. The provided one is '%d'.") % active_model)
 
         # Checks on received invoice records
         invoices = self.env[active_model].browse(active_ids)
@@ -179,7 +181,10 @@ class account_payment(models.Model):
     def _compute_payment_difference(self):
         if len(self.invoice_ids) == 0:
             return
-        self.payment_difference = self._compute_total_invoices_amount() - self.amount
+        if self.invoice_ids[0].type in ['in_invoice', 'out_refund']:
+            self.payment_difference = self.amount - self._compute_total_invoices_amount()
+        else:
+            self.payment_difference = self._compute_total_invoices_amount() - self.amount
 
     company_id = fields.Many2one(store=True)
 
@@ -246,7 +251,7 @@ class account_payment(models.Model):
         invoice_defaults = self.resolve_2many_commands('invoice_ids', rec.get('invoice_ids'))
         if invoice_defaults and len(invoice_defaults) == 1:
             invoice = invoice_defaults[0]
-            rec['communication'] = invoice['reference']
+            rec['communication'] = invoice['reference'] or invoice['name'] or invoice['number']
             rec['currency_id'] = invoice['currency_id'][0]
             rec['payment_type'] = invoice['type'] in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
             rec['partner_type'] = MAP_INVOICE_TYPE_PARTNER_TYPE[invoice['type']]
@@ -262,7 +267,7 @@ class account_payment(models.Model):
         return {
             'name': _('Journal Items'),
             'view_type': 'form',
-            'view_mode': 'tree',
+            'view_mode': 'tree,form',
             'res_model': 'account.move.line',
             'view_id': False,
             'type': 'ir.actions.act_window',
@@ -284,6 +289,17 @@ class account_payment(models.Model):
     @api.multi
     def button_dummy(self):
         return True
+
+    @api.multi
+    def unreconcile(self):
+        """ Set back the payments in 'posted' or 'sent' state, without deleting the journal entries.
+            Called when cancelling a bank statement line linked to a pre-registered payment.
+        """
+        for payment in self:
+            if payment.payment_reference:
+                payment.write({'state': 'sent'})
+            else:
+                payment.write({'state': 'posted'})
 
     @api.multi
     def cancel(self):
@@ -319,19 +335,19 @@ class account_payment(models.Model):
 
             # Use the right sequence to set the name
             if rec.payment_type == 'transfer':
-                sequence = rec.env.ref('account.sequence_payment_transfer')
+                sequence_code = 'account.payment.transfer'
             else:
                 if rec.partner_type == 'customer':
                     if rec.payment_type == 'inbound':
-                        sequence = rec.env.ref('account.sequence_payment_customer_invoice')
+                        sequence_code = 'account.payment.customer.invoice'
                     if rec.payment_type == 'outbound':
-                        sequence = rec.env.ref('account.sequence_payment_customer_refund')
+                        sequence_code = 'account.payment.customer.refund'
                 if rec.partner_type == 'supplier':
                     if rec.payment_type == 'inbound':
-                        sequence = rec.env.ref('account.sequence_payment_supplier_refund')
+                        sequence_code = 'account.payment.supplier.refund'
                     if rec.payment_type == 'outbound':
-                        sequence = rec.env.ref('account.sequence_payment_supplier_invoice')
-            rec.name = sequence.with_context(ir_sequence_date=rec.payment_date).next_by_id()
+                        sequence_code = 'account.payment.supplier.invoice'
+            rec.name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.payment_date).next_by_code(sequence_code)
 
             # Create the journal entry
             amount = rec.amount * (rec.payment_type in ('outbound', 'transfer') and 1 or -1)
@@ -351,23 +367,41 @@ class account_payment(models.Model):
             Return the journal entry.
         """
         aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
-        debit, credit, amount_currency = aml_obj.with_context(date=self.payment_date).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id)
+        invoice_currency = False
+        if self.invoice_ids and all([x.currency_id == self.invoice_ids[0].currency_id for x in self.invoice_ids]):
+            #if all the invoices selected share the same currency, record the paiement in that currency too
+            invoice_currency = self.invoice_ids[0].currency_id
+        debit, credit, amount_currency, currency_id = aml_obj.with_context(date=self.payment_date).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id, invoice_currency)
 
         move = self.env['account.move'].create(self._get_move_vals())
 
         #Write line corresponding to invoice payment
         counterpart_aml_dict = self._get_shared_move_line_vals(debit, credit, amount_currency, move.id, False)
         counterpart_aml_dict.update(self._get_counterpart_move_line_vals(self.invoice_ids))
-        counterpart_aml_dict.update({'currency_id': self.currency_id != self.company_id.currency_id and self.currency_id.id or False})
+        counterpart_aml_dict.update({'currency_id': currency_id})
         counterpart_aml = aml_obj.create(counterpart_aml_dict)
 
         #Reconcile with the invoices
-        if self.payment_difference_handling == 'reconcile':
-            self.invoice_ids.register_payment(counterpart_aml, self.writeoff_account_id, self.journal_id)
-        else:
-            self.invoice_ids.register_payment(counterpart_aml)
+        if self.payment_difference_handling == 'reconcile' and self.payment_difference:
+            writeoff_line = self._get_shared_move_line_vals(0, 0, 0, move.id, False)
+            debit_wo, credit_wo, amount_currency_wo, currency_id = aml_obj.with_context(date=self.payment_date).compute_amount_fields(self.payment_difference, self.currency_id, self.company_id.currency_id, invoice_currency)
+            writeoff_line['name'] = _('Counterpart')
+            writeoff_line['account_id'] = self.writeoff_account_id.id
+            writeoff_line['debit'] = debit_wo
+            writeoff_line['credit'] = credit_wo
+            writeoff_line['amount_currency'] = amount_currency_wo
+            writeoff_line['currency_id'] = currency_id
+            writeoff_line = aml_obj.create(writeoff_line)
+            if counterpart_aml['debit']:
+                counterpart_aml['debit'] += credit_wo - debit_wo
+            if counterpart_aml['credit']:
+                counterpart_aml['credit'] += debit_wo - credit_wo
+            counterpart_aml['amount_currency'] -= amount_currency_wo
+        self.invoice_ids.register_payment(counterpart_aml)
 
         #Write counterpart lines
+        if not self.currency_id != self.company_id.currency_id:
+            amount_currency = 0
         liquidity_aml_dict = self._get_shared_move_line_vals(credit, debit, -amount_currency, move.id, False)
         liquidity_aml_dict.update(self._get_liquidity_move_line_vals(-amount))
         aml_obj.create(liquidity_aml_dict)
@@ -379,7 +413,7 @@ class account_payment(models.Model):
         """ Create the journal entry corresponding to the 'incoming money' part of an internal transfer, return the reconciliable move line
         """
         aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
-        debit, credit, amount_currency = aml_obj.with_context(date=self.payment_date).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id)
+        debit, credit, amount_currency, dummy = aml_obj.with_context(date=self.payment_date).compute_amount_fields(amount, self.currency_id, self.company_id.currency_id)
         amount_currency = self.destination_journal_id.currency_id and self.currency_id.with_context(date=self.payment_date).compute(amount, self.destination_journal_id.currency_id) or 0
 
         dst_move = self.env['account.move'].create(self._get_move_vals(self.destination_journal_id))
@@ -455,7 +489,8 @@ class account_payment(models.Model):
             if invoice:
                 name += ': '
                 for inv in invoice:
-                    name += inv.number+', '
+                    if inv.move_id:
+                        name += inv.number + ', '
                 name = name[:len(name)-2] 
         return {
             'name': name,
@@ -480,7 +515,7 @@ class account_payment(models.Model):
         # If the journal has a currency specified, the journal item need to be expressed in this currency
         if self.journal_id.currency_id and self.currency_id != self.journal_id.currency_id:
             amount = self.currency_id.with_context(date=self.payment_date).compute(amount, self.journal_id.currency_id)
-            debit, credit, amount_currency = self.env['account.move.line'].with_context(date=self.payment_date).compute_amount_fields(amount, self.journal_id.currency_id, self.company_id.currency_id)
+            debit, credit, amount_currency, dummy = self.env['account.move.line'].with_context(date=self.payment_date).compute_amount_fields(amount, self.journal_id.currency_id, self.company_id.currency_id)
             vals.update({
                 'amount_currency': amount_currency,
                 'currency_id': self.journal_id.currency_id.id,

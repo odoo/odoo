@@ -3,21 +3,27 @@
 # * product
 # 
 # Translators:
+# Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2016
 # Clo <clo@odoo.com>, 2015
-# Leo Schmitt <lschmitt@yziact.fr>, 2015
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
+# François Honoré <chiendesenfers@outlook.be>, 2016
+# Léa Geffroy <geffroylea@gmail.com>, 2016
+# Leo Schmitt <inactive+lschmitt@transifex.com>, 2015
+# Martin Trigaux, 2016
+# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015-2016
 # Melanie Bernard <mbe@odoo.com>, 2015
 # Nancy Bolognesi <nb@microcom.ca>, 2015
-# Quentin THEURET <quentin@theuret.net>, 2015
-# Symons Xavier <xsy@openerp.com>, 2015
+# Quentin THEURET <quentin@theuret.net>, 2015-2016
+# Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
+# Shark McGnark <peculiarcheese@gmail.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2015
 # zoe <yann.hoareau@migs.re>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-12-02 16:08+0000\n"
-"Last-Translator: Saad Thaifa <saad.thaifa@gmail.com>\n"
+"PO-Revision-Date: 2016-06-14 16:22+0000\n"
+"Last-Translator: Léa Geffroy <geffroylea@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,7 +148,7 @@ msgstr "75 pourcents de réflection en moins"
 #: model:product.product,name:product.product_product_51
 #: model:product.template,name:product.product_product_51_product_template
 msgid "8-port Switch"
-msgstr "Switch 8 ports"
+msgstr "Switch de 8 ports"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -169,12 +175,12 @@ msgstr "<strong>Description</strong>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr "<strong>Nom de la liste de prix</strong>:<br/>"
+msgstr "<strong>Nom de la liste de prix</strong> :<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Print date</strong>:<br/>"
-msgstr "<strong>Date d'impression</strong>:<br/>"
+msgstr "<strong>Date d'impression</strong> :<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -182,13 +188,13 @@ msgid ""
 "<strong>Warning</strong>: adding or deleting attributes\n"
 "                            will delete and recreate existing variants and lead\n"
 "                            to the loss of their possible customizations."
-msgstr "<strong>Attention</strong>: ajouter ou supprimer des attribut\nsupprimera ou recréera les variantes et pistes existantes\nen risquant de perdre leur éventuelles personnalisations."
+msgstr "<strong>Avertissement</strong> : ajouter ou supprimer des attributs\nsupprimera ou recréera les variantes et pistes existantes\nen risquant de perdre leur éventuelles personnalisations."
 
 #. module: product
 #: code:addons/product/product.py:977 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
-msgstr "Un code barre ne peut être assigné qu'a un seul produit !"
+msgstr "Un code-barre ne peut être assigné qu'à un seul produit!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_type
@@ -221,7 +227,7 @@ msgid ""
 "A description of the Product that you want to communicate to your vendors. "
 "This description will be copied to every Purchase Order, Receipt and Vendor "
 "Bill/Refund."
-msgstr "Une description du produit que vous souhaitez communiquer à vos fournisseurs . Cette description sera copié dans chaque bon de commande, la réception et le vendeur bon de commande / remboursement ."
+msgstr "Une description de l'article que vous souhaitez communiquer à vos fournisseurs. Cette description sera copiée dans chaque bon de commande, réception et facture/avoir fournisseur."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_9
@@ -586,7 +592,7 @@ msgstr "Charge iPod/iPhone"
 msgid ""
 "Charging cradle recharges the battery and serves as a convenient\n"
 "                                    home base for your speaker, and it lets you play while it charges."
-msgstr ""
+msgstr "La station de recharge charge la batterie et joue le rôle de support\npratique pour votre enceinte, et vous permet d'écouter tout en rechargeant."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
@@ -689,6 +695,12 @@ msgid "Computers"
 msgstr "Ordinateurs"
 
 #. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr "Consommable"
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
@@ -770,7 +782,7 @@ msgid ""
 "technological innovation. We refined,re-imagined,or re-engineered everything"
 " about iMac from the inside out. The result is an advanced, elegant all-in-"
 "one computer that’s as much a work of art as it is state of the art."
-msgstr ""
+msgstr "La conception d'un modèle si extraordinairement fin relève de l'exploit en matière d'innovation technologique. Nous avons intégralement raffiné, repensé, ou restructuré tout ce qui composait l'iMac. Le résultat : un ordinateur tout-en-un sophistiqué, élégant, qui est autant un chef d'œuvre qu'une technologie de pointe."
 
 #. module: product
 #: model:ir.model,name:product.model_res_currency
@@ -1099,7 +1111,7 @@ msgstr "Disque dur externe"
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Fast connections.The world over."
-msgstr ""
+msgstr "Connexions rapides. A travers le monde."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -2502,6 +2514,12 @@ msgid "Server"
 msgstr "Serveur"
 
 #. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
+msgstr "Service"
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:product.category,name:product.product_category_3
 #: model:product.public.category,name:product.services
@@ -2662,7 +2680,7 @@ msgstr "Commutateur, 24 ports"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Sync to your heart’s content."
-msgstr ""
+msgstr "Synchroniser avec le contenu de votre coeur."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2820,7 +2838,7 @@ msgstr ""
 msgid ""
 "The sleek aluminium Apple Wireless Keyboard.\n"
 "            "
-msgstr ""
+msgstr "Le lisse clavier sans fil en aluminium d'Apple."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2860,13 +2878,13 @@ msgstr "Le poids du contenu en kilogrammes, sans compter tout emballage, etc."
 #: model:product.template,website_description:product.product_product_4c_product_template
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid "There is less of it, but no less to it."
-msgstr ""
+msgstr "Il y en a moins que ça, mais pas moins pour ça."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "There's less of it, but no less to it."
-msgstr ""
+msgstr "Il y en a moins que ça, mais pas moins pour ça."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2980,7 +2998,7 @@ msgstr "Adaptateur USB"
 msgid ""
 "USB port allows for software update to ensure ongoing Bluetooth device "
 "compatibility"
-msgstr ""
+msgstr "Port USB de la mise à jour logiciel pour assurer une compatibilité de l'appareil Bluetooth utilisé."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -3130,7 +3148,7 @@ msgstr "Variantes"
 #: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
-msgstr "Vendeur"
+msgstr "Fournisseur"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3161,7 +3179,7 @@ msgstr "Fournisseur de cet article"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendors"
-msgstr "Vendeur"
+msgstr "Fournisseurs"
 
 #. module: product
 #: selection:product.category,type:0
@@ -3224,7 +3242,7 @@ msgstr "Quand une seule playlist n'est plus assez. "
 msgid ""
 "When this field is filled in, the vendor data will only apply to the "
 "variant."
-msgstr "Lorsque ce champ est rempli, les données du vendeur ne seront appliquées uniquement sur la variante."
+msgstr "Lorsque ce champ est rempli, les données du fournisseur ne seront appliquées uniquement sur la variante."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
@@ -3320,7 +3338,7 @@ msgid ""
 "                                        to iPod, and you can play the perfect mix for whatever\n"
 "                                        mood strikes you. VoiceOver tells you the name of each playlist,\n"
 "                                        so it’s easy to switch between them and find the one you want without looking."
-msgstr ""
+msgstr "Vous avez probablement plusieurs listes de lecture dans iTunes sur votre ordinateur.\nUne pour vos déplacements. Une pour le sport. Synchronisez ces listes de lecture\navec votre iPod, et vous pouvez lire un mix parfait à chaque fois que vous en ressentez le besoin. VoiceOver vous dit le nom de chaque liste de lecture,\ndonc il est facile de passer de l'une à l'autre et de trouver celle que vous cherchez."
 
 #. module: product
 #: model:product.product,name:product.product_product_43
@@ -3429,7 +3447,7 @@ msgid ""
 "iTunes on your Mac or PC makes it easy to load up\n"
 "                                        your iPod. Just choose the playlists, audiobooks,\n"
 "                                        podcasts, and other audio files you want, then sync."
-msgstr ""
+msgstr "iTumes sur votre Mac ou votre PC permettra de charger \nfacilement votre iPod. Choisissez simplement vos listes de lecture, vos\nlivres audio, vos podcasts et les autres fichiers que vous voulez, et synchronisez."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_inch

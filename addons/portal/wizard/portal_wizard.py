@@ -123,12 +123,15 @@ class wizard_user(osv.osv_memory):
         return error_msg
 
     def action_apply(self, cr, uid, ids, context=None):
+        self.pool['res.partner'].check_access_rights(cr, uid, 'write')
         error_msg = self.get_error_messages(cr, uid, ids, context=context)
         if error_msg:
             raise UserError( "\n\n".join(error_msg))
 
         for wizard_user in self.browse(cr, SUPERUSER_ID, ids, dict(context, active_test=False)):
             portal = wizard_user.wizard_id.portal_id
+            if not portal.is_portal:
+                raise UserError('Not a portal: ' + portal.name)
             user = wizard_user.partner_id.user_ids and wizard_user.partner_id.user_ids[0] or False
             if wizard_user.partner_id.email != wizard_user.email:
                 wizard_user.partner_id.write({'email': wizard_user.email})
@@ -136,7 +139,8 @@ class wizard_user(osv.osv_memory):
                 user_id = False
                 # create a user if necessary, and make sure it is in the portal group
                 if not user:
-                    user_id = self._create_user(cr, SUPERUSER_ID, wizard_user.id, context)
+                    company_id = wizard_user.partner_id.company_id.id
+                    user_id = self._create_user(cr, SUPERUSER_ID, wizard_user.id, dict(context, company_id=company_id))
                 else:
                     user_id = user.id
                 wizard_user.write({'user_id': user_id})
@@ -164,6 +168,8 @@ class wizard_user(osv.osv_memory):
         res_users = self.pool.get('res.users')
         create_context = dict(context or {}, noshortcut=True, no_reset_password=True)       # to prevent shortcut creation
         values = {
+            'company_id': context.get('company_id'),
+            'company_ids': [(6, 0, [context.get('company_id')])],
             'email': extract_email(wizard_user.email),
             'login': extract_email(wizard_user.email),
             'partner_id': wizard_user.partner_id.id,

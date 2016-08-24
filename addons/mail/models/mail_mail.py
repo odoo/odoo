@@ -154,7 +154,7 @@ class MailMail(models.Model):
         if partner:
             email_to = [formataddr((partner.name, partner.email))]
         else:
-            email_to = tools.email_split(self.email_to)
+            email_to = tools.email_split_and_format(self.email_to)
         return email_to
 
     @api.multi

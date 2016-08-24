@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="True">
+    <data>
         <!-- ust Codes -->
         <!-- Purchases + Input ust -->
 
@@ -13,7 +13,7 @@
             <field name="refund_account_id" ref="account_1774"/>
             <field name="account_id" ref="account_1774"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_innergem_erwerb_USt_19')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_15')])]"/>
         </record>
         <record id="tax_eu_19_purchase_vst_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -24,7 +24,7 @@
             <field name="refund_account_id" ref="account_1574"/>
             <field name="account_id" ref="account_1574"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_innergem_erwerb_VSt_19')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_27')])]"/>
         </record>
         <record id="tax_eu_19_purchase_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -34,7 +34,7 @@
             <field name="amount">0</field>
             <field name="type_tax_use">purchase</field>
             <field name="children_tax_ids" eval="[(6,0,[ref('tax_eu_19_purchase_ust_skr03'), ref('tax_eu_19_purchase_vst_skr03')])]"/>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_innergem_erwerb_19')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_53')])]"/>
         </record>
         <record id="tax_eu_7_purchase_ust_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -45,7 +45,7 @@
             <field name="refund_account_id" ref="account_1772"/>
             <field name="account_id" ref="account_1772"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_innergem_erwerb_USt_7')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_54')])]"/>
         </record>
         <record id="tax_eu_7_purchase_vst_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -56,7 +56,7 @@
             <field name="refund_account_id" ref="account_1572"/>
             <field name="account_id" ref="account_1572"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_innergem_erwerb_VSt_7')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_27')])]"/>
         </record>
         <record id="tax_eu_7_purchase_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -66,7 +66,7 @@
             <field name="amount">0</field>
             <field name="type_tax_use">purchase</field>
             <field name="children_tax_ids" eval="[(6,0,[ref('tax_eu_7_purchase_ust_skr03'), ref('tax_eu_7_purchase_vst_skr03')])]"/>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_innergem_erwerb_7')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_53')])]"/>
         </record>
         <record id="tax_eu_sale_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -77,7 +77,7 @@
             <field name="refund_account_id" ref="account_1770"/>
             <field name="account_id" ref="account_1770"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_steuerfreie_Lieferung')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_36')])]"/>
         </record>
         <record id="tax_export_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -88,7 +88,7 @@
             <field name="refund_account_id" ref="account_1770"/>
             <field name="account_id" ref="account_1770"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_steuerfreie_Ausfuhr')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_37')])]"/>
         </record>
         <record id="tax_import_19_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -99,7 +99,7 @@
             <field name="refund_account_id" ref="account_1588"/>
             <field name="account_id" ref="account_1588"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_EUSt_19')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_28'), ref('l10n_de.tag_de_67')])]"/>
         </record>
         <record id="tax_import_7_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -110,7 +110,7 @@
             <field name="refund_account_id" ref="account_1588"/>
             <field name="account_id" ref="account_1588"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_EUSt_7')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_28'), ref('l10n_de.tag_de_68')])]"/>
         </record>
         <record id="tax_not_taxable_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -121,7 +121,7 @@
             <field name="refund_account_id" ref="account_1770"/>
             <field name="account_id" ref="account_1770"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_nicht_steuerbar')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_59')])]"/>
         </record>
         <record id="tax_ust_19_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -132,7 +132,7 @@
             <field name="refund_account_id" ref="account_1776"/>
             <field name="account_id" ref="account_1776"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_USt_19')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_09'), ref('l10n_de.tag_de_44')])]"/>
         </record>
         <record id="tax_ust_7_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -143,7 +143,7 @@
             <field name="refund_account_id" ref="account_1771"/>
             <field name="account_id" ref="account_1771"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_USt_7')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_10'), ref('l10n_de.tag_de_45')])]"/>
         </record>
         <record id="tax_vst_19_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -154,7 +154,7 @@
             <field name="refund_account_id" ref="account_1576"/>
             <field name="account_id" ref="account_1576"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_VSt_19')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_31'), ref('l10n_de.tag_de_70')])]"/>
         </record>
         <record id="tax_vst_7_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -165,7 +165,7 @@
             <field name="refund_account_id" ref="account_1571"/>
             <field name="account_id" ref="account_1571"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_VSt_7')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_31'), ref('l10n_de.tag_de_71')])]"/>
         </record>
         <record id="tax_ust_19_eu_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -176,7 +176,7 @@
             <field name="refund_account_id" ref="account_1778"/>
             <field name="account_id" ref="account_1778"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_USt_EU_19')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_09'), ref('l10n_de.tag_de_44')])]"/>
         </record>
         <record id="tax_ust_eu_skr03" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -187,7 +187,7 @@
             <field name="refund_account_id" ref="account_1777"/>
             <field name="account_id" ref="account_1777"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_USt_EU')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_45'), ref('l10n_de.tag_de_10')])]"/>
         </record>
 
 

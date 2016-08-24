@@ -64,6 +64,10 @@ var SalesTeamDashboardView = KanbanView.extend({
             } else if (action_extra === 'overdue') {
                 additional_context['search_default_overdue'] = 1;
             }
+        } else if (action_name === 'crm.action_your_pipeline') {
+            if (action_extra === 'overdue') {
+                additional_context['search_default_overdue'] = 1;
+            }
         } else if (action_name === 'crm.crm_opportunity_report_action_graph') {
             additional_context['search_default_won'] = 1;
         }
@@ -87,7 +91,7 @@ var SalesTeamDashboardView = KanbanView.extend({
             this.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
         } else {
             this._updated = new Model('crm.lead')
-                            .call('modify_target_sales_dashboard', [target_name, target_value])
+                            .call('modify_target_sales_dashboard', [target_name, parseInt(target_value)])
                             .then(function() {
                                 return self.render();
                             });

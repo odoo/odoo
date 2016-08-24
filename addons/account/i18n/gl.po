@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2015-12-19 08:46+0000\n"
+"PO-Revision-Date: 2016-04-04 10:10+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Galician (http://www.transifex.com/odoo/odoo-9/language/gl/)\n"
 "MIME-Version: 1.0\n"
@@ -1223,17 +1223,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_move_form
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Add an internal note..."
-msgstr ""
+msgstr "Poñer unha nota interna..."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_comment
 msgid "Additional Information"
-msgstr ""
+msgstr "Información adicional"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Additional notes..."
-msgstr ""
+msgstr "Notas adicionais"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1249,7 +1249,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Advanced Settings"
-msgstr ""
+msgstr "Axustes avanzados"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries
@@ -1314,7 +1314,7 @@ msgstr "Todos"
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "All Entries"
-msgstr ""
+msgstr "Tódalas entradas"
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -1334,12 +1334,12 @@ msgstr "Todos os asientos asentados"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "All accounts"
-msgstr ""
+msgstr "Tódalas contas"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "All accounts'"
-msgstr ""
+msgstr "Tódalas contas'"
 
 #. module: account
 #. openerp-web
@@ -1354,7 +1354,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_all_lines_reconciled
 msgid "All lines reconciled"
-msgstr ""
+msgstr "Tódalas liñas reconciliadas"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_state
@@ -1379,7 +1379,7 @@ msgstr ""
 msgid ""
 "All the account entries lines must be processed in order to close the "
 "statement."
-msgstr ""
+msgstr "Tódalas liñas de anotación en conta deben procesarse co fin de pechar o seu estado."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_update_posted
@@ -1424,12 +1424,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_proforma_invoices
 msgid "Allows you to put invoices in pro-forma state."
-msgstr ""
+msgstr "Permíteche poñer facturas en estado pro-forma"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_analytic_accounting
 msgid "Allows you to use the analytic accounting."
-msgstr ""
+msgstr "Permíteche usar a contabilidade analítica."
 
 #. module: account
 #. openerp-web
@@ -1448,6 +1448,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_template_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Amount"
@@ -1499,7 +1500,7 @@ msgstr ""
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
-msgstr ""
+msgstr "Unha posición de conta fiscal só pode ser definida unha vez para a mesma conta."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -1525,7 +1526,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic"
-msgstr ""
+msgstr "Analítica"
 
 #. module: account
 #. openerp-web
@@ -1533,7 +1534,7 @@ msgstr ""
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:156
 #, python-format
 msgid "Analytic Acc."
-msgstr ""
+msgstr "Conta Analítica"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_account_analytic_id
@@ -1639,7 +1640,6 @@ msgstr ""
 msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
-"Revenue recognition: This allows you to manage the Revenue recognition on selling product. It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
 msgstr ""
 
@@ -1650,7 +1650,7 @@ msgstr "Activo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
-msgid "Assets management & Revenue recognition"
+msgid "Assets management"
 msgstr ""
 
 #. module: account
@@ -1751,7 +1751,7 @@ msgstr "Banco"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Bank & Cash"
-msgstr ""
+msgstr "Banco & Caixa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_bank_account_id
@@ -1869,7 +1869,7 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_liquidity
 msgid "Bank and Cash"
-msgstr ""
+msgstr "Banco e Caixa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_statement_line_id
@@ -1920,7 +1920,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
 msgid "Billing"
-msgstr ""
+msgstr "Facturación"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1998,7 +1998,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_visible
 msgid "Can be Visible?"
-msgstr ""
+msgstr "Pódese ver?"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -2029,7 +2029,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "Cancel Entry"
-msgstr ""
+msgstr "Cancelar Entrada"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -2045,7 +2045,7 @@ msgstr "Cancelar Facturas"
 #: model:ir.actions.act_window,name:account.action_account_invoice_cancel
 #: model:ir.ui.view,arch_db:account.account_invoice_cancel_view
 msgid "Cancel Selected Invoices"
-msgstr ""
+msgstr "Cancelar Facturas Seleccionadas"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -2084,7 +2084,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:164
 #, python-format
 msgid "Cannot create moves for different companies."
-msgstr ""
+msgstr "Non podo crear movementos para "
 
 #. module: account
 #: code:addons/account/models/account_move.py:192
@@ -2154,7 +2154,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_view_account_bnk_stmt_cashbox
 #, python-format
 msgid "Cash Control"
-msgstr ""
+msgstr "Control de Caixa"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
@@ -2174,7 +2174,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_bank_account_ids
 msgid "Cash and Banks"
-msgstr ""
+msgstr "Caixa e Bancos"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:176
@@ -4357,14 +4357,6 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "If you want to do it yourself:"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
-msgid ""
-"If you'd like some assistance on any of the above, please do not hesitate \n"
-"                        to contact our accounting experts by using the \n"
-"                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
 msgstr ""
 
 #. module: account
@@ -7578,6 +7570,7 @@ msgstr "Movementos destino"
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_tax_id
 #: model:ir.model.fields,field_description:account.field_account_operation_template_second_tax_id
 #: model:ir.model.fields,field_description:account.field_account_operation_template_tax_id
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 #, python-format
 msgid "Tax"
@@ -9229,6 +9222,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account.py:329
+#, python-format
+msgid ""
+"You cannot empty the account number once set.\n"
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:96
 #, python-format
 msgid ""
@@ -9624,6 +9625,11 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "the product list"
 msgstr ""
 
 #. module: account

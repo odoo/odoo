@@ -152,7 +152,6 @@ class HrExpense(models.Model):
             'date_maturity': line.get('date_maturity'),
             'partner_id': partner_id,
             'name': line['name'][:64],
-            'date': self.date,
             'debit': line['price'] > 0 and line['price'],
             'credit': line['price'] < 0 and -line['price'],
             'account_id': line['account_id'],
@@ -168,7 +167,7 @@ class HrExpense(models.Model):
         }
 
     @api.multi
-    def _compute_expense_totals(self, company_currency, account_move_lines):
+    def _compute_expense_totals(self, company_currency, account_move_lines, move_date):
         '''
         internal method used for computation of total amount of an expense in the company currency and
         in the expense currency, given the account_move_lines that will be created. It also do some small
@@ -189,7 +188,7 @@ class HrExpense(models.Model):
             if self.currency_id != company_currency:
                 line['currency_id'] = self.currency_id.id
                 line['amount_currency'] = line['price']
-                line['price'] = self.currency_id.with_context(date=self.date or fields.Date.context_today(self)).compute(line['price'], company_currency)
+                line['price'] = self.currency_id.with_context(date=move_date or fields.Date.context_today(self)).compute(line['price'], company_currency)
             total -= line['price']
             total_currency -= line['amount_currency'] or line['price']
         return total, total_currency, account_move_lines
@@ -209,16 +208,20 @@ class HrExpense(models.Model):
             raise UserError(_("Expenses must have an expense journal specified to generate accounting entries."))
 
         journal_dict = {}
+        maxdate = False
         for expense in self:
-            if expense.journal_id not in journal_dict:
-                journal_dict[expense.journal_id] = []
-            journal_dict[expense.journal_id].append(expense)
+            if expense.date > maxdate:
+                maxdate = expense.date
+            jrn = expense.bank_journal_id if expense.payment_mode == 'company_account' else expense.journal_id
+            journal_dict.setdefault(jrn, [])
+            journal_dict[jrn].append(expense)
 
         for journal, expense_list in journal_dict.items():
             #create the move that will contain the accounting entries
             move = self.env['account.move'].create({
                 'journal_id': journal.id,
                 'company_id': self.env.user.company_id.id,
+                'date': maxdate,
             })
             for expense in expense_list:
                 company_currency = expense.company_id.currency_id
@@ -227,7 +230,7 @@ class HrExpense(models.Model):
                 move_lines = expense._move_line_get()
 
                 #create one more move line, a counterline for the total on payable account
-                total, total_currency, move_lines = expense._compute_expense_totals(company_currency, move_lines)
+                total, total_currency, move_lines = expense._compute_expense_totals(company_currency, move_lines, maxdate)
                 if expense.payment_mode == 'company_account':
                     if not expense.bank_journal_id.default_credit_account_id:
                         raise UserError(_("No credit account found for the %s journal, please configure one.") % (expense.bank_journal_id.name))

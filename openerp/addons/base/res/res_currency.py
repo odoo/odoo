@@ -104,16 +104,6 @@ class res_currency(osv.osv):
         reads = self.read(cr, uid, ids, ['name','symbol'], context=context, load='_classic_write')
         return [(x['id'], tools.ustr(x['name'])) for x in reads]
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-        if not default:
-            default = {}
-        default.update(name=_("%s (copy)")
-                       % (self.browse(cr, uid, id, context=context).name))
-        return super(res_currency, self).copy(
-            cr, uid, id, default=default, context=context)
-
     @api.v8
     def round(self, amount):
         """ Return `amount` rounded according to currency `self`. """
@@ -262,6 +252,24 @@ class res_currency(osv.osv):
         function = "if (arguments[1] === false || arguments[1] === undefined) {" + company_currency_format + " }" + function
         return function
 
+    def _select_companies_rates(self):
+        return """
+            SELECT
+                r.currency_id,
+                COALESCE(r.company_id, c.id) as company_id,
+                r.rate,
+                r.name AS date_start,
+                (SELECT name FROM res_currency_rate r2
+                 WHERE r2.name > r.name AND
+                       r2.currency_id = r.currency_id AND
+                       (r2.company_id is null or r2.company_id = c.id)
+                 ORDER BY r2.name ASC
+                 LIMIT 1) AS date_end
+            FROM res_currency_rate r
+            JOIN res_company c ON (r.company_id is null or r.company_id = c.id)
+        """
+
+
 class res_currency_rate(osv.osv):
     _name = "res.currency.rate"
     _description = "Currency Rate"
@@ -274,6 +282,7 @@ class res_currency_rate(osv.osv):
     }
     _defaults = {
         'name': lambda *a: time.strftime('%Y-%m-%d 00:00:00'),
+        'company_id': lambda s, cr, uid, ctx=None: s.pool['res.users']._get_company(cr, uid, context=ctx)
     }
     _order = "name desc"
 

@@ -12,7 +12,7 @@ class WebsiteAccount(website_account):
         user = request.env.user
         # TDE FIXME: shouldn't that be mnaged by the access rule itself ?
         # portal projects where you or someone from your company are a follower
-        project_issues = request.env['project.issue'].search([
+        project_issues = request.env['project.issue'].sudo().search([
             '&',
             ('project_id.privacy_visibility', '=', 'portal'),
             '|',

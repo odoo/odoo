@@ -14,11 +14,8 @@
                         <field name="move_id" readonly="1"/>
                     </xpath>
                     <xpath expr="//field[@name='amount']" position="after">
-                        <label for="amount_currency" groups="base.group_multi_currency"/>
-                        <div groups="base.group_multi_currency">
-                            <field name="amount_currency" class="oe_inline"/>
-                            <field name="currency_id" class="oe_inline"/>
-                        </div>
+                        <field name="company_currency_id" invisible="1"/>
+                        <field name="amount_currency"/>
                         <field name="product_id"/>
                         <field name="product_uom_id" class="oe_inline"/>
                     </xpath>

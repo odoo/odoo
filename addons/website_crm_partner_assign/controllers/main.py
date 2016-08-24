@@ -111,7 +111,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         # search partners matching current search parameters
         partner_ids = partner_obj.search(
             request.cr, SUPERUSER_ID, base_partner_domain,
-            order="grade_id DESC",
+            order="grade_id DESC, display_name ASC",
             context=request.context)  # todo in trunk: order="grade_id DESC, implemented_count DESC", offset=pager['offset'], limit=self._references_per_page
         partners = partner_obj.browse(request.cr, SUPERUSER_ID, partner_ids, request.context)
         # remove me in trunk
@@ -131,7 +131,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             'searches': post,
             'search_path': "%s" % werkzeug.url_encode(post),
         }
-        return request.website.render("website_crm_partner_assign.index", values)
+        return request.render("website_crm_partner_assign.index", values, status=partners and 200 or 404)
+
 
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True)

@@ -62,8 +62,10 @@
             <field name="body_html"><![CDATA[
 <div itemscope itemtype="http://schema.org/EmailMessage">
     <div itemprop="potentialAction" itemscope itemtype="http://schema.org/ViewAction">
+        % if ctx.get('button_access'):
         <link itemprop="target" href="${ctx['button_access']['url']}"/>
         <link itemprop="url" href="${ctx['button_access']['url']}"/>
+        % endif
         <meta itemprop="name" content="View ${ctx['model_name']}"/>
     </div>
 </div>

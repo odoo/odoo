@@ -47,6 +47,8 @@ class Rating(models.Model):
         domain = [('access_token', '=', token)] if token else [('res_model', '=', res_model), ('res_id', '=', res_id)]
         rating = self.search(domain, limit=1)
         if rating:
+            if token:
+                rating = rating.sudo()
             rating.write({'rating' : rate})
             if hasattr(self.env[rating.res_model], 'message_post'):
                 record = self.env[rating.res_model].sudo().browse(rating.res_id)

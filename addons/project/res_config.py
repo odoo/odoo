@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -65,4 +66,5 @@ class project_configuration(osv.osv_memory):
 
     def set_default_generate_project_alias(self, cr, uid, ids, context=None):
         config_value = self.browse(cr, uid, ids, context=context).generate_project_alias
-        self.pool.get('ir.values').set_default(cr, uid, 'project.config.settings', 'generate_project_alias', config_value)
+        check = self.pool['res.users'].has_group(cr, uid, 'base.group_system')
+        self.pool.get('ir.values').set_default(cr, check and SUPERUSER_ID or uid, 'project.config.settings', 'generate_project_alias', config_value)

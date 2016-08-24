@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 18:35+0000\n"
+"POT-Creation-Date: 2016-01-13 13:41+0000\n"
+"PO-Revision-Date: 2016-03-12 14:09+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Estonian (http://www.transifex.com/odoo/odoo-9/language/et/)\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgstr "Loodud"
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Näidatav nimi"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_id
@@ -40,16 +40,40 @@ msgstr "ID"
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Viimati muudetud"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Viimati uuendatud"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_write_date
 msgid "Last Updated on"
+msgstr "Viimati uuendatud"
+
+#. module: google_account
+#: code:addons/google_account/google_account.py:98
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid"
+msgstr ""
+
+#. module: google_account
+#: code:addons/google_account/google_account.py:37
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid or already expired"
+msgstr ""
+
+#. module: google_account
+#: code:addons/google_account/google_account.py:128
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid or already expired [%s]"
 msgstr ""
 
 #. module: google_account

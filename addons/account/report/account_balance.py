@@ -58,9 +58,9 @@ class ReportTrialBalance(models.AbstractModel):
     @api.multi
     def render_html(self, data):
         self.model = self.env.context.get('active_model')
-        docs = self.env[self.model].browse(self.env.context.get('active_id'))
+        docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
         display_account = data['form'].get('display_account')
-        accounts = self.env['account.account'].search([])
+        accounts = docs if self.model == 'account.account' else self.env['account.account'].search([])
         account_res = self.with_context(data['form'].get('used_context'))._get_accounts(accounts, display_account)
 
         docargs = {
