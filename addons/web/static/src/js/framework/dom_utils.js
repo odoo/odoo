@@ -11,6 +11,9 @@ var core = require('web.core');
  * not in the dom when the autoresize is declared.
  */
 function autoresize ($textarea, options) {
+    if ($textarea.data("auto_resize")) {
+        return;
+    }
     options = options || {};
 
     var $fixed_text_area;
@@ -25,6 +28,7 @@ function autoresize ($textarea, options) {
         });
         $fixed_text_area.addClass($textarea[0].className);
         $fixed_text_area.insertAfter($textarea);
+        $fixed_text_area.data("auto_resize", true);
     }
 
     var style = window.getComputedStyle($textarea[0], null);
@@ -34,10 +38,7 @@ function autoresize ($textarea, options) {
         $textarea[0].style.resize = 'horizontal';
     }
     resize();
-    if ($textarea.__auto_resized) {
-        return;
-    }
-    $textarea.__auto_resized = true;
+    $textarea.data("auto_resize", true);
 
     $textarea.on('input focus', resize);
     if (options.parent) {
