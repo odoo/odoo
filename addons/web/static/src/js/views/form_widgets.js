@@ -641,17 +641,12 @@ var FieldBooleanButton = common.AbstractField.extend({
                 this.string_false = _t("Archived");
                 this.hover_false = _t("Unarchive");
                 break;
-            case "prod_environment":
-                this.string_true = _t("Production Environment");
-                this.hover_true = _t("Switch to test environment");
-                this.string_false = _t("Test Environment");
-                this.hover_false = _t("Switch to production environment");
-                break;
             default:
-                this.string_true = _t("On");
-                this.hover_true = _t("Switch Off");
-                this.string_false = _t("Off");
-                this.hover_false = _t("Switch On");
+                var terms = typeof this.options["terminology"] === 'string' ? {} : this.options["terminology"];
+                this.string_true = _t(terms.string_true || "On");
+                this.hover_true = _t(terms.hover_true || terms.string_false || "Switch Off");
+                this.string_false = _t(terms.string_false || "Off");
+                this.hover_false = _t(terms.hover_false || terms.string_true || "Switch On");
         }
     },
     render_value: function() {
