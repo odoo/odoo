@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <notebook>
-                        <page string="General Information">
+                        <page string="General Information" name="general_information">
                             <group>
                                 <group name="group_general">
                                     <field name="type"/>
@@ -51,37 +51,12 @@
                                     <div name="standard_price_uom" groups="base.group_user">
                                         <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}" class="oe_inline"/>
                                     </div>
+                                    <field name="company_id" groups="base.group_multi_company"
+                                        options="{'no_create': True}"/>
                                     <field name="uom_id" groups="product.group_uom" options="{'no_create': True}"/>
                                     <field name="uom_po_id" groups="product.group_uom" options="{'no_create': True}"/>
                                     <field name="currency_id" invisible="1"/> 
                                 </group>
-                            </group>
-                        </page>
-                        <page string="Inventory">
-                            <group name="inventory">
-                                <group>
-                                    <field name="company_id" groups="base.group_multi_company"
-                                        options="{'no_create': True}"/>
-                                    <field name="categ_id" string="Internal Category"/>
-                                </group>
-                                <group name="group_lots_and_weight">
-                                    <label for="weight" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
-                                    <div class="o_row" name="weight" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
-                                        <field name="weight"/>
-                                    </div>
-                                    <label for="volume" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
-                                    <div class="o_row" name="volume" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
-                                        <field name="volume" string="Volume"/>
-                                    </div>
-                                </group>
-                            </group>
-                            <separator string="Vendors"/>
-                            <field name="seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}"/>
-                            <group name="packaging" string="Packaging"
-                                colspan="4"
-                                attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
-                                groups="product.group_stock_packaging">
-                                <field name="packaging_ids" nolabel="1"/>
                             </group>
                         </page>
                         <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
