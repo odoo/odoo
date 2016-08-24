@@ -98,6 +98,7 @@ class ProductTemplate(models.Model):
         ('warning', 'Warning'),
     ], "Availability", default='empty', help="This field is used to display a availability banner with a message on the ecommerce")
     availability_warning = fields.Text("Availability Warning", translate=True)
+    product_image_ids = fields.One2many('product.image', 'product_tmpl_id', string='Images')
 
     def _default_website_sequence(self):
         self._cr.execute("SELECT MIN(website_sequence) FROM %s" % self._table)
@@ -172,3 +173,11 @@ class ProductAttributeValue(models.Model):
     html_color = fields.Char(string='HTML Color Index', oldname='color', help="Here you can set a "
                              "specific HTML color index (e.g. #ff0000) to display the color on the website if the "
                              "attibute type is 'Color'.")
+
+
+class ProductImage(models.Model):
+    _name = 'product.image'
+
+    name = fields.Char('Name')
+    image = fields.Binary('Image', attachment=True)
+    product_tmpl_id = fields.Many2one('product.template', 'Related Product', copy=True)

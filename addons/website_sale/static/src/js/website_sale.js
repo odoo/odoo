@@ -232,10 +232,24 @@ odoo.define('website_sale.website_sale', function (require) {
         }
 
         function update_product_image(event_source, product_id) {
-            var $img = $(event_source).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img:first, img.product_detail_img');
-            $img.attr("src", "/web/image/product.product/" + product_id + "/image");
-            $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
-                .data('oe-model', 'product.product').data('oe-id', product_id);
+            if ($('#o-carousel-product').length) {
+                var $img = $(event_source).closest('tr.js_product, .oe_website_sale').find('img.js_variant_img');
+                $img.attr("src", "/web/image/product.product/" + product_id + "/image");
+                $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
+                    .data('oe-model', 'product.product').data('oe-id', product_id);
+                
+                $img = $(event_source).closest('tr.js_product, .oe_website_sale').find('img.js_variant_img_small');
+                if ($img) { // if only one, thumbnails are not displayed
+                    $img.attr("src", "/web/image/product.product/" + product_id + "/image/90x90");
+                    $('.carousel').carousel(0);
+                }
+            }
+            else {
+                var $img = $(event_source).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img:first, img.product_detail_img');
+                $img.attr("src", "/web/image/product.product/" + product_id + "/image");
+                $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
+                    .data('oe-model', 'product.product').data('oe-id', product_id);
+            }
         }
 
         $(oe_website_sale).on('change', 'input.js_product_change', function () {
