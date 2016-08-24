@@ -326,6 +326,7 @@ var ActionManager = Widget.extend({
                 self.clear_action_stack(actions_to_destroy);
             }
             self.toggle_fullscreen();
+            self.trigger_up('current_action_updated', {action: new_action});
         }).fail(function () {
             // Destroy failed action and restore internal state
             new_action.destroy();
@@ -408,6 +409,7 @@ var ActionManager = Widget.extend({
                         callbacks: [{widget: action.widget}],
                     });
                 }
+                self.trigger_up('current_action_updated', {action: action});
             });
         }).fail(function() {
             return $.Deferred().reject();

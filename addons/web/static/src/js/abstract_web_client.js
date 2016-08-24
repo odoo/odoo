@@ -30,6 +30,9 @@ var WebClient = Widget.extend({
         toggle_fullscreen: function (event) {
             this.toggle_fullscreen(event.data.fullscreen);
         },
+        current_action_updated: function (e) {
+            this.current_action_updated(e.data.action);
+        },
     },
     init: function(parent) {
         this.client_options = {};
@@ -219,6 +222,9 @@ var WebClient = Widget.extend({
             );
             this.connection_notification = false;
         }
+    },
+    // Handler to be overwritten
+    current_action_updated: function () {
     },
     // --------------------------------------------------------------
     // Scrolltop handling

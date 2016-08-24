@@ -264,6 +264,7 @@ var DashBoard = form_common.FormWidget.extend({
                 }
             });
             am.do_action = self.do_action.bind(self);
+            am.current_action_updated = function() {};
         });
     },
     renderElement: function() {

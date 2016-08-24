@@ -48,7 +48,6 @@ var DebugManager = Widget.extend({
         }
     },
     start: function () {
-        core.bus.on('current_action_updated', this, this.update.bind(this, 'action'));
         core.bus.on('rpc:result', this, function (req, resp) {
             this._debug_events(resp.debug);
         });
@@ -647,26 +646,12 @@ if (core.debug) {
     SystrayMenu.Items.push(DebugManager);
 
     WebClient.include({
-        start: function() {
-            var self = this;
-            return this._super().then(function () {
-                // Override push_action and select_action so that it triggers
-                // an event each time a new action is pushed.
-                // The DebugManager listens to this event to keep itself up-to-date
-                var push_action = self.action_manager.push_action;
-                self.action_manager.push_action = function(widget, descr) {
-                    return push_action.apply(self.action_manager, arguments).then(function () {
-                        core.bus.trigger('current_action_updated', descr, widget);
-                    });
-                };
-                var select_action = self.action_manager.select_action;
-                self.action_manager.select_action = function() {
-                    return select_action.apply(self.action_manager, arguments).then(function () {
-                        var action = self.action_manager.get_inner_action();
-                        core.bus.trigger('current_action_updated', action.action_descr, action.widget);
-                    });
-                };
-            });
+        current_action_updated: function(action) {
+            this._super.apply(this, arguments);
+            var action_descr = action && action.action_descr;
+            var action_widget = action && action.widget;
+            var debug_manager = _.find(this.systray_menu.widgets, function(item) {return item instanceof DebugManager; });
+            debug_manager.update('action', action_descr, action_widget);
         },
     });
 

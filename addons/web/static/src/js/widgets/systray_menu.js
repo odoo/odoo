@@ -11,6 +11,7 @@ var SystrayMenu = Widget.extend({
     init: function(parent) {
         this._super(parent);
         this.items = [];
+        this.widgets = [];
         this.load = $.Deferred();
     },
     start: function() {
@@ -29,6 +30,7 @@ var SystrayMenu = Widget.extend({
         });
         _.each(SystrayMenu.Items, function(widgetCls) {
             var cur_systray_item = new widgetCls(self);
+            self.widgets.push(cur_systray_item);
             self.items.push(cur_systray_item.prependTo(self.$el));
         });
     },
