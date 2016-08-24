@@ -117,17 +117,17 @@ class DirectBinder(ConnectorUnit):
         return True
 
 
-@prestashop
-class CarrierDirectBinder(DirectBinder):
-    _model_name = 'prestashop.delivery.carrier'
-    _erp_field = 'name'
-    _ps_field = 'name_ext'
+# @prestashop
+# class CarrierDirectBinder(DirectBinder):
+#     _model_name = 'prestashop.delivery.carrier'
+#     _erp_field = 'name'
+#     _ps_field = 'name_ext'
 
-    #def _compare_function(self, ps_val, erp_val, ps_dict, erp_dict):
-    #    if len(erp_val) >= 2 and len(ps_val) >= 2 and \
-    #            erp_val[0:2].lower() == ps_val[0:2].lower():
-    #        return True
-    #    return False
+#     #def _compare_function(self, ps_val, erp_val, ps_dict, erp_dict):
+#     #    if len(erp_val) >= 2 and len(ps_val) >= 2 and \
+#     #            erp_val[0:2].lower() == ps_val[0:2].lower():
+#     #        return True
+#     #    return False
 
 
 @prestashop

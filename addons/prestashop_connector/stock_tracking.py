@@ -26,7 +26,7 @@ import logging
 from openerp.tools.translate import _
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.exception import FailedJobError, NoExternalId
-from openerp.addons.connector.unit.synchronizer import ExportSynchronizer
+from openerp.addons.connector.unit.synchronizer import Exporter
 from openerp.addons.connector_ecommerce.event import on_tracking_number_added
 from .connector import get_environment
 from .backend import prestashop
@@ -35,7 +35,7 @@ from .unit.backend_adapter import PrestaShopCRUDAdapter
 _logger = logging.getLogger(__name__)
 
 @prestashop
-class PrestashopTrackingExport(ExportSynchronizer):
+class PrestashopTrackingExport(Exporter):
     _model_name = ['prestashop.sale.order']
 
     def _get_tracking(self):

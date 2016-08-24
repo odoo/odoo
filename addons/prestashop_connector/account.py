@@ -158,13 +158,13 @@ class RefundMapper(PrestashopImportMapper):
         sale_order_id = binder.to_openerp(record['id_order'])
         sale_order = self.session.browse('prestashop.sale.order', sale_order_id)
 
-        if not sale_order.carrier_id:
-            return None
+        # if not sale_order.carrier_id:
+        #     return None
 
-        sale_order_line_ids = self.session.search('sale.order.line', [
-            ('order_id', '=', sale_order_id),
-            ('product_id', '=', sale_order.carrier_id.product_id.id),
-        ])
+        # sale_order_line_ids = self.session.search('sale.order.line', [
+        #     ('order_id', '=', sale_order_id),
+        #     ('product_id', '=', sale_order.carrier_id.product_id.id),
+        # ])
         if not sale_order_line_ids:
             return None
         return self.session.read('sale.order.line', sale_order_line_ids[0], [])

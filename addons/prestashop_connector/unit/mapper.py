@@ -488,14 +488,14 @@ class SaleOrderMapper(PrestashopImportMapper):
         method_id = method_ids[0]
         return {'payment_method_id': method_id}
 
-    @mapping
-    def carrier_id(self, record):
-        if record['id_carrier'] == '0':
-            return {}
-        return {'carrier_id': self.get_openerp_id(
-            'prestashop.delivery.carrier',
-            record['id_carrier']
-        )}
+    # @mapping
+    # def carrier_id(self, record):
+    #     if record['id_carrier'] == '0':
+    #         return {}
+    #     return {'carrier_id': self.get_openerp_id(
+    #         'prestashop.delivery.carrier',
+    #         record['id_carrier']
+    #     )}
 
     @mapping
     def total_tax_amount(self, record):

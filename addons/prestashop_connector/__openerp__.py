@@ -22,6 +22,8 @@
     ],
 
     'data': [
-        
+        'views/prestashop_model_view.xml',
+        'views/prestashoperpconnect_menu.xml',
+        'views/partner_view.xml',
     ],
 }

@@ -15,7 +15,7 @@ from ..unit.import_synchronizer import (
     import_orders_since,
     import_products,
     import_refunds,
-    import_carriers,
+    # import_carriers,
     import_suppliers,
     import_record,
     export_product_quantities,
@@ -23,7 +23,7 @@ from ..unit.import_synchronizer import (
 from ..unit.direct_binder import DirectBinder
 from ..connector import get_environment
 
-from openerp.addons.prestashopconnector.product import import_inventory
+from ..product import import_inventory
 
 _logger = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ class prestashop_backend(orm.Model):
 
         Can be inherited to add custom versions.
         """
-        return [('1.5', '1.5')]
+        return [('1.6', 'Version 1.6')]
 
     _columns = {
         'version': fields.selection(
@@ -150,13 +150,13 @@ class prestashop_backend(orm.Model):
             import_products.delay(session, backend_record.id, since_date, priority=10)
         return True
 
-    def import_carriers(self, cr, uid, ids, context=None):
-        if not hasattr(ids, '__iter__'):
-            ids = [ids]
-        session = ConnectorSession(cr, uid, context=context)
-        for backend_id in ids:
-            import_carriers.delay(session, backend_id, priority=10)
-        return True
+    # def import_carriers(self, cr, uid, ids, context=None):
+    #     if not hasattr(ids, '__iter__'):
+    #         ids = [ids]
+    #     session = ConnectorSession(cr, uid, context=context)
+    #     for backend_id in ids:
+    #         import_carriers.delay(session, backend_id, priority=10)
+    #     return True
 
     def update_product_stock_qty(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
@@ -243,9 +243,9 @@ class prestashop_backend(orm.Model):
         self._scheduler_launch(cr, uid, self.import_products, domain=domain,
                                context=context)
 
-    def _scheduler_import_carriers(self, cr, uid, domain=None, context=None):
-        self._scheduler_launch(cr, uid, self.import_carriers, domain=domain,
-                               context=context)
+    # def _scheduler_import_carriers(self, cr, uid, domain=None, context=None):
+    #     self._scheduler_launch(cr, uid, self.import_carriers, domain=domain,
+    #                            context=context)
 
     def _scheduler_import_payment_methods(self, cr, uid, domain=None, context=None):
         self._scheduler_launch(cr, uid, self.import_payment_methods,
@@ -398,6 +398,13 @@ class sale_shop(orm.Model):
             'prestashop.shop', 'openerp_id',
             string='PrestaShop Bindings',
             readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', select=1, required=True),
+        'warehouse_id': fields.many2one(
+            'stock.warehouse',
+            'Warehouse',
+            required=True,
+            help='Warehouse used to compute the stock quantities.'
+        ),
     }
 
 

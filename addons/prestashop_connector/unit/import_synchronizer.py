@@ -64,16 +64,17 @@ class PrestashopImportSynchronizer(Importer):
     def _context(self, **kwargs):
         return dict(self.session.context, connector_no_export=True, **kwargs)
 
+    def _create_data(self, map_record, **kwargs):
+        return map_record.values(for_create=True, **kwargs)
+
+    def _update_data(self, map_record, **kwargs):
+        return map_record.values(**kwargs)
+    
     def _create(self, data, context=None):
         """ Create the ERP record """
         if context is None:
             context = self._context()
-        erp_id = self.model.create(
-            self.session.cr,
-            self.session.uid,
-            data,
-            context=context
-        )
+        erp_id = self.model.with_context(context).create(data)
         _logger.debug('%s %d created from prestashop %s',
                       self.model._name, erp_id, self.prestashop_id)
         return erp_id
@@ -82,11 +83,12 @@ class PrestashopImportSynchronizer(Importer):
         """ Update an ERP record """
         if context is None:
             context = self._context()
-        self.model.write(self.session.cr,
-                         self.session.uid,
-                         erp_id,
-                         data,
-                         context=context)
+        erp_id.with_context(context).write(data)
+        #self.model.write(self.session.cr,
+        #                 self.session.uid,
+        #                 erp_id,
+        #                 data,
+        #                 context=context)
         _logger.debug('%s %d updated from prestashop %s',
                       self.model._name, erp_id, self.prestashop_id)
         return
@@ -113,9 +115,9 @@ class PrestashopImportSynchronizer(Importer):
         map_record = self.mapper.map_record(self.prestashop_record)
         erp_id = self._get_openerp_id()
         if erp_id:
-            record = map_record.values()
+            record = self._update_data(map_record)
         else:
-            record = map_record.values(for_create=True)
+            record = self._create_data(map_record)
 
         # special check on data before import
         self._validate_data(record)
@@ -524,9 +526,9 @@ class SaleOrderImport(PrestashopImportSynchronizer):
             record['id_address_delivery'], 'prestashop.address'
         )
 
-        if record['id_carrier'] != '0':
-            self._check_dependency(record['id_carrier'],
-                                   'prestashop.delivery.carrier')
+        # if record['id_carrier'] != '0':
+        #     self._check_dependency(record['id_carrier'],
+        #                            'prestashop.delivery.carrier')
 
         orders = record['associations']\
             .get('order_rows', {})\
@@ -1129,11 +1131,11 @@ def import_suppliers(session, backend_id, since_date):
     )
 
 
-@job
-def import_carriers(session, backend_id):
-    import_batch(
-        session, 'prestashop.delivery.carrier', backend_id, priority=5
-    )
+# @job
+# def import_carriers(session, backend_id):
+#     import_batch(
+#         session, 'prestashop.delivery.carrier', backend_id, priority=5
+#     )
 
 
 @job

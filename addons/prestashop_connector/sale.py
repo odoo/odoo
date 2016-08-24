@@ -5,7 +5,7 @@ from openerp.osv import fields, orm
 import openerp.addons.decimal_precision as dp
 from openerp.addons.connector.queue.job import job
 from openerp.addons.connector.event import on_record_write
-from openerp.addons.connector.unit.synchronizer import (ExportSynchronizer)
+from openerp.addons.connector.unit.synchronizer import (Exporter)
 from .unit.backend_adapter import GenericAdapter
 
 from openerp.addons.connector_ecommerce.unit.sale_order_onchange import (
@@ -52,11 +52,11 @@ class SaleOrderAdapter(GenericAdapter):
             result += api.search(self._prestashop_model, filters)
         return result
 
-@prestashop
-class OrderCarriers(GenericAdapter):
-    _model_name = '__not_exit_prestashop.order_carrier'
-    _prestashop_model = 'order_carriers'
-    _export_node_name = 'order_carrier'
+# @prestashop
+# class OrderCarriers(GenericAdapter):
+#     _model_name = '__not_exit_prestashop.order_carrier'
+#     _prestashop_model = 'order_carriers'
+#     _export_node_name = 'order_carrier'
  
 
 @prestashop
@@ -80,7 +80,7 @@ class SaleOrderLineAdapter(GenericAdapter):
 
 
 @prestashop
-class SaleStateExport(ExportSynchronizer):
+class SaleStateExport(Exporter):
     _model_name = ['prestashop.sale.order']
 
     def run(self, prestashop_id, state):
