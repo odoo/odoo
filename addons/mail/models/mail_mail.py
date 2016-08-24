@@ -222,9 +222,9 @@ class MailMail(models.Model):
                 catchall_domain = self.env['ir.config_parameter'].get_param("mail.catchall.domain")
                 if bounce_alias and catchall_domain:
                     if mail.model and mail.res_id:
-                        headers['Return-Path'] = '%s-%d-%s-%d@%s' % (bounce_alias, mail.id, mail.model, mail.res_id, catchall_domain)
+                        headers['Return-Path'] = '%s+%d-%s-%d@%s' % (bounce_alias, mail.id, mail.model, mail.res_id, catchall_domain)
                     else:
-                        headers['Return-Path'] = '%s-%d@%s' % (bounce_alias, mail.id, catchall_domain)
+                        headers['Return-Path'] = '%s+%d@%s' % (bounce_alias, mail.id, catchall_domain)
                 if mail.headers:
                     try:
                         headers.update(safe_eval(mail.headers))
