@@ -1732,6 +1732,7 @@ class stock_picking(models.Model):
     def put_in_pack(self, cr, uid, ids, context=None):
         stock_move_obj = self.pool["stock.move"]
         stock_operation_obj = self.pool["stock.pack.operation"]
+        stock_operation_lot_obj = self.pool["stock.pack.operation.lot"]
         package_obj = self.pool["stock.quant.package"]
         package_id = False
         for pick in self.browse(cr, uid, ids, context=context):
@@ -1747,6 +1748,16 @@ class stock_picking(models.Model):
                     if operation.pack_lot_ids:
                         packlots_transfer = [(4, x.id) for x in operation.pack_lot_ids]
                         stock_operation_obj.write(cr, uid, [new_operation], {'pack_lot_ids': packlots_transfer}, context=context)
+
+                        # the stock.pack.operation.lot records now belong to the new, packaged stock.pack.operation
+                        # we have to create new ones with new quantities for our original, unfinished stock.pack.operation
+                        for pack_lot_id in stock_operation_obj.browse(cr, uid, new_operation, context=context).pack_lot_ids:
+                            new_qty_todo = pack_lot_id.qty_todo - pack_lot_id.qty
+
+                            if new_qty_todo > 0:
+                                stock_operation_lot_obj.copy(cr, uid, pack_lot_id.id, {'operation_id': operation.id,
+                                                                                       'qty_todo': new_qty_todo,
+                                                                                       'qty': 0}, context=context)
 
                     op = stock_operation_obj.browse(cr, uid, new_operation, context=context)
                 pack_operation_ids.append(op.id)
