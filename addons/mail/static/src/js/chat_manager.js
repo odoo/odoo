@@ -712,7 +712,7 @@ var chat_manager = {
             // post a message in a channel
             return ChannelModel.call('message_post', [options.channel_id], _.extend(msg, {
                 message_type: 'comment',
-                content_subtype: 'html',
+                content_subtype: 'plaintext',
                 subtype: 'mail.mt_comment',
             }));
         }
