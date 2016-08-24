@@ -20,13 +20,6 @@
                             </div>
                             <div class="col-md-12">
                                 <p>
-                                    With a small team of smart people, we released the most
-                                    disruptive enterprise management software in the world.
-                                    Odoo is fully open source, super easy, full featured
-                                    (3000+ apps) and its online offer is 3 times cheaper than
-                                    traditional competitors like SAP and Ms Dynamics.
-                                </p>
-                                <p>
                                     Join us, we offer you an extraordinary chance to learn, to
                                     develop and to be part of an exciting experience and
                                     team.
@@ -45,12 +38,11 @@
                     <div class="col-md-12" id="jobs_grid">
                         <div t-if="not jobs">
                             <div class="text-center text-muted">
-                              <h4 class="css_editable_display">No job offer found</h4>
-                              <h4 class="css_editable_hidden">There isn't job offer published now, click <a t-attf-href="/page/website.contactus">here</a> to contact us</h4>
+                              <h3 class="css_editable_hidden"><a t-attf-href="/page/website.contactus">Contact us</a> for job opportunities.</h3>
                               <t groups="base.group_website_publisher">
-                                <t groups="base.group_hr_manager">
-                                  <p>Click on "Content" to define a new job offer or "Help" for more informations.</p>
-                                </t>
+                                <h4 groups="base.group_hr_manager">
+                                    Create new job pages from the <strong><i>+New</i></strong> top-right button.
+                                </h4>
                               </t>
                             </div>
                         </div>
@@ -94,48 +86,30 @@
             <!-- Breadcrumb -->
             <section class="mb16 bg-white">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-sm-5">
-                            <ol class="breadcrumb mb0 bg-white">
-                                <li><a href="/jobs">Our Jobs</a></li>
-                                <li class="active"><span t-field="job.name"></span></li>
-                            </ol>
-                        </div>
-                        <div class="col-sm-7 mt8 mb8">
-                            <t t-call="website.publish_management">
-                                <t t-set="object" t-value="job"/>
-                                <t t-set="publish_edit" t-value="True"/>
-                            </t>
-                        </div>
+                    <div class="pull-right">
+                        <a t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg pull-right mt32 mb4">Apply Now!</a>
+                        <br/>
+                        <t t-call="website.publish_management">
+                            <t t-set="object" t-value="job"/>
+                            <t t-set="publish_edit" t-value="True"/>
+                        </t>
                     </div>
+                    <label class="mb0 mt16"><a href="/jobs">Jobs</a></label> /
+                    <h1 class="mb0 mt0" t-field="job.name"/>
+                    <h4 class="mt0" t-field="job.address_id" t-field-options='{
+                        "widget": "contact",
+                        "fields": ["city"],
+                        "no_tag_br": True
+                    }'/>
                 </div>
             </section>
-
-            <!-- Content -->
-            <div class="oe_structure">
-                <section class="o_job_top_bar">
-                    <div class="container mb32">
-                        <h4 class="text-uppercase mb0 mt32" t-field="job.name"/>
-                        <h6 class="text-uppercase mb0 mt0" t-field="job.address_id" t-field-options='{
-                            "widget": "contact",
-                            "fields": ["city"],
-                            "no_tag_br": True
-                        }'/>
-                        <a t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg mt32">Apply Now!</a>
-                    </div>
-                </section>
-            </div>
 
             <div t-field="job.website_description"/>
 
             <div class="oe_structure">
-                <section class="o_job_bottom_bar mt16">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12 text-center mt16 mb16">
-                                <a t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg">Apply</a>
-                            </div>
-                        </div>
+                <section class="o_job_bottom_bar mt32 mb32">
+                    <div class="text-center">
+                        <a t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg">Apply Now!</a>
                     </div>
                 </section>
             </div>
@@ -216,13 +190,13 @@
     <!-- Description -->
     <section class="mb32">
         <div class="container">
-            <div class="row">
-                <div class="col-md-10">
-                    <p class="mt0 lead">
-                        A sales job for smart people who likes software and can easily learn different management practices and industries. You will be in charge of the full sales cycle from the opportunity qualification to the negotiation, going through business needs analysis and an astonishing product demos.
-                    </p>
-                </div>
-            </div>
+            <p class="mt0 lead">
+                Short summary of the job: A sales job for smart people and can
+                learn quickly new industries management practices. You will be
+                in charge of the full sales cycle from the opportunity
+                qualification to the negotiation, going through astonishing
+                product demos.
+            </p>
         </div>
     </section>
 
@@ -231,19 +205,19 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-6 col-md-4">
-                    <h5 class="text-uppercase">Responsibilities</h5>
+                    <h4><strong>Responsibilities</strong></h4>
                     <p>Full sales cycle</p>
                     <p>Achieve monthly targets</p>
                     <p>US + Canada Territory</p>
                 </div>
                 <div class="col-sm-6 col-md-4">
-                    <h5 class="text-uppercase">Challenges</h5>
+                    <h4><strong>Challenges</strong></h4>
                     <p>Full sales cycle</p>
                     <p>Achieve monthly targets</p>
                     <p>US + Canada Territory</p>
                 </div>
                 <div class="col-sm-6 col-md-4">
-                    <h5 class="text-uppercase">Must Have</h5>
+                    <h4><strong>Must Have</strong></h4>
                     <p>Full sales cycle</p>
                     <p>Achieve monthly targets</p>
                     <p>US + Canada Territory</p>
@@ -253,20 +227,16 @@
     </section>
 
     <!-- What's great -->
-    <section class="mb32 mt32">
+    <section class="mb32 mt16">
         <div class="container">
-            <div class="row">
-                <div class="col-md-8">
-                    <h3 class="mt0">What's great in the job?</h3>
-                    <ul>
-                        <li>No outbound calls, you get leads and focus on providing value to them</li>
-                        <li>You sell management software to directors of SMEs: interesting projects and people</li>
-                        <li>Large apps scope: CRM, MRP, Accounting, Inventory, HR, Project Mgt, etc.</li>
-                        <li>Direct coordination with functional consultants for qualification and follow ups</li>
-                        <li>High commissions for good performers</li>
-                    </ul>
-                </div>
-            </div>
+            <h4><strong>What's great in the job?</strong></h4>
+            <ul>
+                <li>No outbound calls, you get leads and focus on providing value to them</li>
+                <li>You sell management software to directors of SMEs: interesting projects and people</li>
+                <li>Large apps scope: CRM, MRP, Accounting, Inventory, HR, Project Mgt, etc.</li>
+                <li>Direct coordination with functional consultants for qualification and follow ups</li>
+                <li>High commissions for good performers</li>
+            </ul>
         </div>
     </section>
 
@@ -323,8 +293,7 @@
                     <ul>
                         <li><a href="#">The founder’s story</a></li>
                         <li><a href="#">The culture</a></li>
-                        <li><a href="#">Who is your manager?</a></li>
-                        <li><a href="#">What people say about us?</a></li>
+                        <li><a href="https://twitter.com/odoo/likes">What people say about us?</a></li>
                     </ul>
                 </div>
             </div>
@@ -355,6 +324,7 @@
                     <h4 class="mb0 mt8">Discount Programs</h4>
                     <p>Brand-name product and services in categories like travel, electronics, health, fitness, cellular, and more</p>
                 </div>
+            </div><div class="row">
                 <div class="text-center col-md-3 mt16 mb16">
                     <span class="fa fa-2x fa-map-marker"/>
                     <h4 class="mb0 mt8">Prime location</h4>
