@@ -34,6 +34,29 @@
                     <field name="website_published" widget="website_button"/>
                 </button>
             </div>
+            <xpath expr="//notebook[last()]" position="inside">
+                <page string="Images" groups="website_sale.group_website_multi_image">
+                    <field name="product_image_ids" mode="kanban" context="{'default_name': name, 'default_product_tmpl_id': active_id}">
+                        <kanban string="Product Images">
+                            <field name="name"/>
+                            <field name="image" />
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right"/>
+                                        <div class="o_kanban_image">
+                                            <img t-if="record.image.raw_value" t-att-src="'data:image/png;base64,'+record.image.raw_value"/>
+                                        </div>
+                                        <div class="oe_kanban_details">
+                                            <field name="name"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </page>
+            </xpath>
         </field>
     </record>
 
@@ -166,4 +189,22 @@
             </group>
         </field>
     </record>
+
+    <record model="ir.ui.view" id="view_product_image_form">
+        <field name="name">product.image.form</field>
+        <field name="model">product.image</field>
+        <field name="arch" type="xml">
+            <form string="Product Images">
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label class="oe_edit_only" for="name" string="Image Name"/>
+                        <h1><field name="name" placeholder="Image Name" required="True"/></h1>
+                        <field name="product_tmpl_id" invisible="1"/>
+                    </div>                        
+                </sheet>
+            </form>
+        </field>
+    </record>
+
 </odoo>
