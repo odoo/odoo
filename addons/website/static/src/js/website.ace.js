@@ -23,7 +23,7 @@ var Ace = Widget.extend({
     launchAce: function (e) {
         var self = this;
         if (!window.ace && !this.loadJS_def) {
-            this.loadJS_def = ajax.loadJS('/web/static/lib/ace/ace.js').then(function () {
+            this.loadJS_def = ajax.loadJS('/web/static/lib/ace/ace.odoo-custom.js').then(function () {
                 return $.when(ajax.loadJS('/web/static/lib/ace/mode-xml.js'),
                     ajax.loadJS('/web/static/lib/ace/theme-monokai.js'));
             });
