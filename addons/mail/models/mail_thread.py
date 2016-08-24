@@ -1060,6 +1060,15 @@ class MailThread(models.AbstractModel):
             return []
 
         # 1. message is a reply to an existing message (exact match of message_id or compat-mode)
+        if reply_model and reply_thread_id:
+            other_alias = Alias.search([
+                '&',
+                ('alias_name', '!=', False),
+                ('alias_name', '=', email_to_localpart)
+            ])
+            if other_alias and other_alias.alias_model_id.model != reply_model:
+                reply_match = False
+
         if reply_match:
             compat_mode = False
             msg_references = tools.mail_header_msgid_re.findall(thread_references)

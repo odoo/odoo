@@ -298,6 +298,14 @@ class TestMailgateway(TestMail):
             'alias_model_id': self.mail_channel_model.id,
             'alias_contact': 'everyone'})
 
+        # test@.. will cause the creation of new mail.test
+        self.mail_test_model = self.env['ir.model'].search([('model', '=', 'mail.test')], limit=1)
+        self.alias_2 = self.env['mail.alias'].create({
+            'alias_name': 'test',
+            'alias_user_id': False,
+            'alias_model_id': self.mail_test_model.id,
+            'alias_contact': 'everyone'})
+
         # Set a first message on public group to test update and hierarchy
         self.fake_email = self.env['mail.message'].create({
             'model': 'mail.channel',
@@ -529,6 +537,34 @@ class TestMailgateway(TestMail):
             MAIL_TEMPLATE, to='erroneous@example.com',
             extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % self.fake_email.message_id,
             msg_id='<1198923581.41972151344608186800.JavaMail.4@agrolait.com>')
+
+        self.assertEqual(len(self.group_public.message_ids), 2, 'message_process: group should contain one new message')
+        self.assertEqual(len(self.fake_email.child_ids), 1, 'message_process: new message should be children of the existing one')
+
+    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    def test_message_process_references_forward(self):
+        """ Incoming email using references but with alias forward should not go into references destination """
+        res_test = self.format_and_process(
+            MAIL_TEMPLATE, to='test@example.com',
+            subject='My Dear Forward',
+            extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % self.fake_email.message_id,
+            msg_id='<1198923581.41972151344608186800.JavaMail.4@agrolait.com>',
+            target_model='mail.test')
+
+        self.assertEqual(len(self.group_public.message_ids), 1, 'message_process: group should not contain new message')
+        self.assertEqual(len(self.fake_email.child_ids), 0, 'message_process: original email should not contain childs')
+        self.assertEqual(res_test.name, 'My Dear Forward')
+        self.assertEqual(len(res_test.message_ids), 1)
+
+    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    def test_message_process_references_forward_cc(self):
+        """ Incoming email using references but with alias forward should not go into references destination """
+        self.format_and_process(
+            MAIL_TEMPLATE, to='erroneous@example.com', cc='test@example.com',
+            subject='My Dear Forward',
+            extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % self.fake_email.message_id,
+            msg_id='<1198923581.41972151344608186800.JavaMail.4@agrolait.com>',
+            target_model='mail.test')
 
         self.assertEqual(len(self.group_public.message_ids), 2, 'message_process: group should contain one new message')
         self.assertEqual(len(self.fake_email.child_ids), 1, 'message_process: new message should be children of the existing one')
